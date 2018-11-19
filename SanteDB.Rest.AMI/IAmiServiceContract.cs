@@ -1,0 +1,209 @@
+﻿using SanteDB.Core.Interop;
+using SanteDB.Core.Model;
+using SanteDB.Core.Model.DataTypes;
+using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Model.Patch;
+using SanteDB.Core.Model.Security;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.ServiceModel;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Schema;
+using SanteDB.Core.Mail;
+using SanteDB.Core.Model.Collection;
+using RestSrvr.Attributes;
+using SanteDB.Core.Model.AMI.Diagnostics;
+using SanteDB.Core.Model.AMI.Logging;
+using SanteDB.Core.Model.AMI.Collections;
+using SanteDB.Core.Model.AMI.Auth;
+
+namespace SanteDB.Rest.AMI
+{
+    /// <summary>
+    /// Represents a service contract for the AMI 
+    /// </summary>
+    [RestContract(Name = "AMI")]
+    public interface IAmiServiceContract
+    {
+        /// <summary>
+        /// Get the schema for this service
+        /// </summary>
+        [Get("/?xsd={schemaId}")]
+        XmlSchema GetSchema(int schemaId);
+
+        /// <summary>
+        /// Creates the specified resource 
+        /// </summary>
+        /// <param name="resourceType">The type of resource to be created</param>
+        /// <param name="data">The resource data to be created</param>
+        /// <returns>The stored resource</returns>
+        [Post("/{resourceType}")]
+        Object Create(String resourceType, Object data);
+
+        /// <summary>
+        /// Creates the specified resource if it does not exist, otherwise updates it
+        /// </summary>
+        /// <param name="resourceType">The type of resource to be created</param>
+        /// <param name="key">The key of the resource </param>
+        /// <param name="data">The resource itself</param>
+        /// <returns>The updated or created resource</returns>
+        [Post("/{resourceType}/{key}")]
+        Object CreateUpdate(String resourceType, String key, Object data);
+
+        /// <summary>
+        /// Updates the specified resource
+        /// </summary>
+        /// <param name="resourceType">The type of resource to be updated</param>
+        /// <param name="key">The key of the resource</param>
+        /// <param name="data">The resource data to be updated</param>
+        /// <returns>The updated resource</returns>
+        [Put("/{resourceType}/{key}")]
+        Object Update(String resourceType, String key, Object data);
+
+        /// <summary>
+        /// Deletes the specified resource
+        /// </summary>
+        /// <param name="resourceType">The type of resource being deleted</param>
+        /// <param name="key">The key of the resource being deleted</param>
+        /// <returns>The last version of the deleted resource</returns>
+        [Delete("/{resourceType}/{key}")]
+        Object Delete(String resourceType, String key);
+
+        /// <summary>
+        /// Gets the specified resource from the service
+        /// </summary>
+        /// <param name="resourceType">The type of resource to be fetched</param>
+        /// <param name="key">The key of the resource</param>
+        /// <returns>The retrieved resource</returns>
+        [Get("/{resourceType}/{key}")]
+        Object Get(String resourceType, String key);
+
+        /// <summary>
+        /// Locks the specified resource from the service
+        /// </summary>
+        /// <param name="resourceType">The type of resource to be locked</param>
+        /// <param name="key">The key of the resource</param>
+        /// <returns>The locked resource</returns>
+        [RestInvoke("LOCK","/{resourceType}/{key}")]
+        Object Lock(String resourceType, String key);
+
+        /// <summary>
+        /// Unlocks the specified resource from the service
+        /// </summary>
+        /// <param name="resourceType">The type of resource to be unlocked</param>
+        /// <param name="key">The key of the resource</param>
+        /// <returns>The unlocked resource</returns>
+        [RestInvoke("UNLOCK","/{resourceType}/{key}")]
+        Object UnLock(String resourceType, String key);
+
+        /// <summary>
+        /// Heads the specified resource from the service
+        /// </summary>
+        /// <param name="resourceType">The type of resource to be fetched</param>
+        /// <param name="key">The key of the resource</param>
+        /// <returns>Headers for the specified resource</returns>
+        [RestInvoke("HEAD", "/{resourceType}/{key}")]
+        void Head(String resourceType, String key);
+
+        /// <summary>
+        /// Gets the specified versioned copy of the data
+        /// </summary>
+        /// <param name="resourceType">The type of resource</param>
+        /// <param name="key">The key of the resource</param>
+        /// <param name="versionKey">The version key to retrieve</param>
+        /// <returns>The object as it existed at that version</returns>
+        [Get("/{resourceType}/{key}/history/{versionKey}")]
+        Object GetVersion(String resourceType, String key, String versionKey);
+
+        /// <summary>
+        /// Gets a complete history of changes made to the object (if supported)
+        /// </summary>
+        /// <param name="resourceType">The type of resource</param>
+        /// <param name="key">The key of the object to retrieve the history for</param>
+        /// <returns>The history</returns>
+        [Get("/{resourceType}/{key}/history")]
+        AmiCollection History(String resourceType, String key);
+
+        /// <summary>
+        /// Searches the specified resource type for matches
+        /// </summary>
+        /// <param name="resourceType">The resource type to be searched</param>
+        /// <returns>The results of the search</returns>
+        [Get("/{resourceType}")]
+        AmiCollection Search(String resourceType);
+
+        /// <summary>
+        /// Get the service options
+        /// </summary>
+        /// <returns>The options of the server</returns>
+        [RestInvoke("OPTIONS", "/")]
+        ServiceOptions Options();
+
+        /// <summary>
+        /// Get the specific options supported for the 
+        /// </summary>
+        /// <param name="resourceType">The type of resource to get service options</param>
+        [RestInvoke("OPTIONS", "/{resourceType}")]
+        ServiceResourceOptions ResourceOptions(String resourceType);
+
+        #region Diagnostic / Ad-Hoc interfaces
+
+        /// <summary>
+		/// Creates a diagnostic report.
+		/// </summary>
+		/// <param name="report">The diagnostic report to be created.</param>
+		/// <returns>Returns the created diagnostic report.</returns>
+		[Post("/Sherlock")]
+        DiagnosticReport CreateDiagnosticReport(DiagnosticReport report);
+
+        /// <summary>
+		/// Gets a specific log file.
+		/// </summary>
+		/// <param name="logId">The log identifier.</param>
+		/// <returns>Returns the log file information.</returns>
+		[Get("/Log/{logId}")]
+        LogFileInfo GetLog(string logId);
+
+        /// <summary>
+        /// Get log files on the server and their sizes.
+        /// </summary>
+        /// <returns>Returns a collection of log files.</returns>
+        [Get("/Log")]
+        AmiCollection GetLogs();
+
+        /// <summary>
+		/// Gets a server diagnostic report.
+		/// </summary>
+		/// <returns>Returns the created diagnostic report.</returns>
+		[Get("/Sherlock")]
+        DiagnosticReport GetServerDiagnosticReport();
+
+        /// <summary>
+		/// Ping the service to determine up/down
+		/// </summary>
+		[RestInvoke("PING", "/")]
+        void Ping();
+
+        #endregion
+
+        #region Two-Factor Authentication
+
+        /// <summary>
+		/// Creates a request that the server issue a reset code
+		/// </summary>
+		[Post("/Tfa")]
+        void SendTfaSecret(TfaRequestInfo resetInfo);
+
+        /// <summary>
+        /// Gets the list of TFA mechanisms.
+        /// </summary>
+        /// <returns>Returns a list of TFA mechanisms.</returns>
+        [Get("/Tfa")]
+        AmiCollection GetTfaMechanisms();
+
+        #endregion
+
+    }
+}

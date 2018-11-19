@@ -1,0 +1,146 @@
+﻿/*
+ * Copyright 2015-2018 Mohawk College of Applied Arts and Technology
+ *
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you 
+ * may not use this file except in compliance with the License. You may 
+ * obtain a copy of the License at 
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0 
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
+ * License for the specific language governing permissions and limitations under 
+ * the License.
+ * 
+ * User: fyfej
+ * Date: 2017-9-1
+ */
+using RestSrvr.Attributes;
+using SanteDB.Core.Interop;
+using SanteDB.Core.Model;
+using SanteDB.Core.Model.Acts;
+using SanteDB.Core.Model.Collection;
+using SanteDB.Core.Model.DataTypes;
+using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Model.Patch;
+using SanteDB.Core.Model.Roles;
+using SanteDB.Core.Model.Security;
+using System;
+using System.Xml.Schema;
+
+namespace SanteDB.Rest.HDSI
+{
+	/// <summary>
+	/// The HDSI service interface
+	/// </summary>
+	[RestContract(Name = "HDSI")]
+    public interface IHdsiServiceContract 
+    {
+
+        /// <summary>
+        /// Gets the operations that each resource in this IMS instance supports.
+        /// </summary>
+        [RestInvoke("OPTIONS", "/")]
+        ServiceOptions Options();
+
+        /// <summary>
+        /// Options for resource
+        /// </summary>
+        [RestInvoke("OPTIONS", "/{resourceType}")]
+        ServiceResourceOptions ResourceOptions(string resourceType);
+
+        /// <summary>
+        /// Performs a minimal PING request to test service uptime
+        /// </summary>
+        [RestInvoke("PING", "/")]
+        void Ping();
+
+        /// <summary>
+        /// Performs a search for the specified resource, returning only current version items.
+        /// </summary>
+        [Get("/{resourceType}")]
+        IdentifiedData Search(string resourceType);
+
+        /// <summary>
+        /// Searches for the specified resource and returns only the HEADer metadata
+        /// </summary>
+        [RestInvoke("HEAD", "/{resourceType}")]
+        void HeadSearch(string resourceType);
+
+        /// <summary>
+        /// Retrieves the current version of the specified resource from the IMS.
+        /// </summary>
+        [Get("/{resourceType}/{id}")]
+        IdentifiedData Get(string resourceType, string id);
+
+        /// <summary>
+        /// Retrieves only the metadata of the specified resource
+        /// </summary>
+        [RestInvoke("HEAD", "/{resourceType}/{id}")]
+        void Head(string resourceType, string id);
+
+        /// <summary>
+        /// Gets a complete history of all changes made to the specified resource
+        /// </summary>
+        [Get("/{resourceType}/{id}/history")]
+        IdentifiedData History(string resourceType, string id);
+
+        /// <summary>
+        /// Updates the specified resource according to the instructions in the PATCH file
+        /// </summary>
+        /// <returns></returns>
+        [RestInvoke("PATCH", "/{resourceType}/{id}")]
+        void Patch(string resourceType, string id , Patch body);
+
+        /// <summary>
+        /// Returns a list of patches for the specified resource 
+        /// </summary>
+        [Get("/{resourceType}/{id}/patch")]
+        Patch GetPatch(string resourceType, string id);
+
+        /// <summary>
+        /// Retrieves a specific version of the specified resource
+        /// </summary>
+        [Get("/{resourceType}/{id}/history/{versionId}")]
+        IdentifiedData GetVersion(string resourceType, string id, string versionId);
+
+        /// <summary>
+        /// Creates the resource. If the resource already exists, then a 409 is thrown
+        /// </summary>
+        [Post("/{resourceType}")]
+        IdentifiedData Create(string resourceType, IdentifiedData body);
+
+        /// <summary>
+        /// Updates the specified resource. If the resource does not exist than a 404 is thrown
+        /// </summary>
+        [Put("/{resourceType}/{id}")]
+        IdentifiedData Update(string resourceType, string id, IdentifiedData body);
+
+        /// <summary>
+        /// Creates or updates a resource. That is, creates the resource if it does not exist, or updates it if it does
+        /// </summary>
+        [Post("/{resourceType}/{id}")]
+        IdentifiedData CreateUpdate(string resourceType, string id, IdentifiedData body);
+
+        /// <summary>
+        /// Deletes the specified resource from the IMS instance
+        /// </summary>
+        [Delete("/{resourceType}/{id}")]
+        IdentifiedData Delete(string resourceType, string id);
+
+        /// <summary>
+        /// Get the current time
+        /// </summary>
+        /// <returns></returns>
+        [Get("/time")]
+        DateTime Time();
+
+        /// <summary>
+        /// Get the schema
+        /// </summary>
+        [Get("/?xsd={schemaId}")]
+        XmlSchema GetSchema(int schemaId);
+    }
+}
