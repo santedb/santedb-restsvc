@@ -80,6 +80,7 @@
           <Project>{16EF1840-0361-439D-806C-92D0411122EB}</Project>
           <Name>RestSrvr</Name>
         </ProjectReference>
+        <PackageReference Include="MARC.HI.EHRS.SVC.Auditing.Core" Version="2.0.1.8"/>
       </ItemGroup>
     </When>
     <Otherwise>
