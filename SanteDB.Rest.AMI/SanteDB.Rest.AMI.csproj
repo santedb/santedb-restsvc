@@ -94,7 +94,7 @@
     </Otherwise>
   </Choose>
   <Choose>
-    <When Condition="$(SolutionName.Contains('santedb-rest'))">
+    <When Condition="$(SolutionName.Contains('santedb-rest')) or $(SolutionName.Contains('-ext'))">
       <ItemGroup>
         <ProjectReference Include="..\SanteDB.Core.Model.AMI\SanteDB.Core.Model.AMI.csproj">
           <Project>{65ef51c6-5cb8-43b8-ae65-4a68f0b44ad2}</Project>

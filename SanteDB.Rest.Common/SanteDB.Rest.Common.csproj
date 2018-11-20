@@ -56,6 +56,10 @@
   <Choose>
     <When Condition="$(SolutionName.Contains('-ext'))">
       <ItemGroup>
+        <ProjectReference Include="..\SanteDB.Core.Model.RISI\SanteDB.Core.Model.RISI.csproj">
+          <Project>{f3d2fa84-c398-4390-9834-1272cc2d6f89}</Project>
+          <Name>SanteDB.Core.Model.RISI</Name>
+        </ProjectReference>
         <ProjectReference Include="..\..\santedb-model\SanteDB.Core.Model\SanteDB.Core.Model.csproj">
           <Project>{F1A82A4F-4A57-47D7-AE76-444C8A4FF54A}</Project>
           <Name>SanteDB.Core.Model</Name>
