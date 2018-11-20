@@ -73,6 +73,7 @@
       <Link>SanteDB.licenseheader</Link>
     </None>
     <None Include="app.config" />
+    <None Include="SanteDB.Core.Model.AMI.nuspec" />
   </ItemGroup>
   <Choose>
     <When Condition="$(SolutionName.Contains('-ext'))">

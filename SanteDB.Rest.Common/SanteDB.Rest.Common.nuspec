@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>1.9.6.0</version>
+    <title>$title$</title>
+    <authors>Mohawk College of Applied Arts and Technology</authors>
+    <owners>Mohawk College of Applied Arts and Technology</owners>
+    <licenseUrl>https://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>http://santedb.org</projectUrl>
+    <iconUrl>http://santedb.org/img/logo.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>SanteDB Base REST Contracts and Tools for Services</description>
+    <releaseNotes>Alpha version</releaseNotes>
+    <copyright>Copyright 2015-2018, Mohawk College of Applied Arts and Technology</copyright>
+    <tags>WCF RestServer</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="11.0.2.0"/>
+      <dependency id="SanteDB.Rest.Common" version="1.9.5.0"/>
+      <dependency id="SanteDB.Core.Api" version="1.9.5.0"/>
+      <dependency id="SanteDB.Core.Model" version="1.9.5.0"/>
+      <dependency id="RestSrvr" version="1.9.5.0"/>
+      <dependency id="SanteDB.Core.Model.RISI" version="1.9.5.0"/>
+    </dependencies>
+  </metadata>
+</package>
