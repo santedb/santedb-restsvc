@@ -74,7 +74,6 @@
     </None>
     <None Include="app.config" />
   </ItemGroup>
-
   <Choose>
     <When Condition="$(SolutionName.Contains('-ext'))">
       <ItemGroup>
@@ -99,13 +98,13 @@
         <PackageReference Include="MARC.HI.EHRS.SVC.Auditing.Core" Version="2.0.1.8" />
         <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
         <PackageReference Include="SanteDB.Core.Api">
-          <Version>1.9.6</Version>
+          <Version>1.9.8</Version>
         </PackageReference>
         <PackageReference Include="SanteDB.Core.Applets">
-          <Version>1.9.0</Version>
+          <Version>1.9.5</Version>
         </PackageReference>
         <PackageReference Include="SanteDB.Core.Model">
-          <Version>1.9.0</Version>
+          <Version>1.9.5</Version>
         </PackageReference>
       </ItemGroup>
     </Otherwise>
