@@ -24,7 +24,7 @@ namespace SanteDB.Rest.AMI
     /// <summary>
     /// Represents a service contract for the AMI 
     /// </summary>
-    [RestContract(Name = "AMI")]
+    [ServiceContractAttribute(Name = "AMI")]
     public interface IAmiServiceContract
     {
         /// <summary>

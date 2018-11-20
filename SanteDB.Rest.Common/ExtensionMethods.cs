@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,47 @@ namespace SanteDB.Rest.Common
     /// </summary>
     public static class ExtensionMethods
     {
+
+        /// <summary>
+        /// Get if modified since
+        /// </summary>
+        public static DateTime? GetIfModifiedSince(this HttpListenerRequest me)
+        {
+            if (me.Headers["If-Modified-Since"] != null)
+                return DateTime.Parse(me.Headers["If-Modified-Since"]);
+            return null;
+        }
+
+        /// <summary>
+        /// Get if non match header
+        /// </summary>
+        public static String[] GetIfNoneMatch(this HttpListenerRequest me)
+        {
+            if (me.Headers["If-None-Match"] != null)
+                return me.Headers["If-None-Match"].Split(',');
+            return null;
+        }
+
+        /// <summary>
+        /// Set the e-tag
+        /// </summary>
+        /// <param name="me"></param>
+        /// <param name="etag"></param>
+        public static void SetETag(this HttpListenerResponse me, String etag)
+        {
+            if (!String.IsNullOrEmpty(etag))
+                me.SetETag(etag);
+        }
+
+        /// <summary>
+        /// Set last modified time
+        /// </summary>
+        /// <param name="me"></param>
+        /// <param name="lastModified"></param>
+        public static void SetLastModified(this HttpListenerResponse me, DateTime lastModified)
+        {
+            me.AppendHeader("Last-Modified", lastModified.ToString("r"));
+        }
 
         /// <summary>
         /// Convert query types

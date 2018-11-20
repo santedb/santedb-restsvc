@@ -187,7 +187,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         private void SetAppletHeaders(AppletInfo package)
         {
-            RestOperationContext.Current.OutgoingResponse.AppendHeader("ETag", package.Version);
+            RestOperationContext.Current.OutgoingResponse.SetETag(package.Version);
             RestOperationContext.Current.OutgoingResponse.Headers.Add("X-SanteDB-PakID", package.Id);
             if (package.Hash != null)
                 RestOperationContext.Current.OutgoingResponse.AppendHeader("X-SanteDB-Hash", Convert.ToBase64String(package.Hash));

@@ -35,7 +35,7 @@ namespace SanteDB.Rest.HDSI
 	/// <summary>
 	/// The HDSI service interface
 	/// </summary>
-	[RestContract(Name = "HDSI")]
+	[ServiceContractAttribute(Name = "HDSI")]
     public interface IHdsiServiceContract 
     {
 
