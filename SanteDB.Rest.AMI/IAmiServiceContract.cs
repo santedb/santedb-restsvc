@@ -18,6 +18,9 @@ using SanteDB.Core.Model.AMI.Diagnostics;
 using SanteDB.Core.Model.AMI.Logging;
 using SanteDB.Core.Model.AMI.Collections;
 using SanteDB.Core.Model.AMI.Auth;
+using SanteDB.Core.Model.AMI.Security;
+using SanteDB.Core.Model.AMI.Applet;
+using SanteDB.Core.Applets.Model;
 
 namespace SanteDB.Rest.AMI
 {
@@ -25,6 +28,39 @@ namespace SanteDB.Rest.AMI
     /// Represents a service contract for the AMI 
     /// </summary>
     [ServiceContractAttribute(Name = "AMI")]
+    [ServiceKnownResource(typeof(SecurityUserInfo))]
+    [ServiceKnownResource(typeof(Entity))]
+    [ServiceKnownResource(typeof(ExtensionType))]
+    [ServiceKnownResource(typeof(MailMessage))]
+    [ServiceKnownResource(typeof(SecurityApplication))]
+    [ServiceKnownResource(typeof(TfaRequestInfo))]
+    [ServiceKnownResource(typeof(SecurityDeviceInfo))]
+    [ServiceKnownResource(typeof(SecurityApplicationInfo))]
+    [ServiceKnownResource(typeof(SecurityPolicyInfo))]
+    [ServiceKnownResource(typeof(SecurityProvenance))]
+    [ServiceKnownResource(typeof(SecurityRoleInfo))]
+    [ServiceKnownResource(typeof(AuditSubmission))]
+    [ServiceKnownResource(typeof(AuditInfo))]
+    [ServiceKnownResource(typeof(AppletManifest))]
+    [ServiceKnownResource(typeof(AppletManifestInfo))]
+    [ServiceKnownResource(typeof(DeviceEntity))]
+    [ServiceKnownResource(typeof(DiagnosticApplicationInfo))]
+    [ServiceKnownResource(typeof(DiagnosticAttachmentInfo))]
+    [ServiceKnownResource(typeof(DiagnosticBinaryAttachment))]
+    [ServiceKnownResource(typeof(DiagnosticTextAttachment))]
+    [ServiceKnownResource(typeof(DiagnosticEnvironmentInfo))]
+    [ServiceKnownResource(typeof(DiagnosticReport))]
+    [ServiceKnownResource(typeof(DiagnosticSyncInfo))]
+    [ServiceKnownResource(typeof(DiagnosticVersionInfo))]
+    [ServiceKnownResource(typeof(SubmissionInfo))]
+    [ServiceKnownResource(typeof(SubmissionResult))]
+    [ServiceKnownResource(typeof(ApplicationEntity))]
+    [ServiceKnownResource(typeof(SubmissionRequest))]
+    [ServiceKnownResource(typeof(ServiceOptions))]
+    [ServiceKnownResource(typeof(X509Certificate2Info))]
+    [ServiceKnownResource(typeof(CodeSystem))]
+    [ServiceKnownResource(typeof(LogFileInfo))]
+    [ServiceKnownResource(typeof(AmiCollection))]
     public interface IAmiServiceContract
     {
         /// <summary>

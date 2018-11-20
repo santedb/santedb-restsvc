@@ -65,7 +65,6 @@
     <Compile Include="Resources\PlaceResourceHandler.cs" />
     <Compile Include="Resources\ProcedureResourceHandler.cs" />
     <Compile Include="Resources\ProviderResourceHandler.cs" />
-    <Compile Include="Resources\ReferenceTermNameResourceHandler.cs" />
     <Compile Include="Resources\ReferenceTermResourceHandler.cs" />
     <Compile Include="Resources\ResourceHandlerBase.cs" />
     <Compile Include="Resources\SubstanceAdministrationResourceHandler.cs" />

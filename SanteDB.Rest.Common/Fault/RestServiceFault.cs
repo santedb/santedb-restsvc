@@ -20,6 +20,15 @@ namespace SanteDB.Rest.Common.Fault
     {
         private DetectedIssue itm;
 
+        public RestServiceFault()
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new rest service fault
+        /// </summary>
+        /// <param name="ex"></param>
         public RestServiceFault(Exception ex)
         {
             this.Type = ex.GetType().Name;
