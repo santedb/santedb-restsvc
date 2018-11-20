@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AmiServiceBehaviorBase.cs" />
     <Compile Include="Resources\AppletResourceHandler.cs" />
     <Compile Include="Resources\AppletSolutionResourceHandler.cs" />
     <Compile Include="Resources\ApplicationEntityResourceHandler.cs" />
@@ -116,6 +117,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\SanteDB.licenseheader">
+      <Link>SanteDB.licenseheader</Link>
+    </None>
     <None Include="SanteDB.Rest.AMI.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

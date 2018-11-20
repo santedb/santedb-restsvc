@@ -42,11 +42,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\DemandAttribute.cs" />
+    <Compile Include="BundleUtil.cs" />
     <Compile Include="Contracts\IRisiContract.Adhoc.cs" />
     <Compile Include="Contracts\IRisiContract.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Fault\RestServiceFault.cs" />
     <Compile Include="IResourceHandler.cs" />
+    <Compile Include="ObjectExpander.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceHandlerBase.cs" />
     <Compile Include="ResourceHandlerTool.cs" />

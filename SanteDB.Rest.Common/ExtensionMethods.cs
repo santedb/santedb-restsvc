@@ -42,7 +42,7 @@ namespace SanteDB.Rest.Common
         public static void SetETag(this HttpListenerResponse me, String etag)
         {
             if (!String.IsNullOrEmpty(etag))
-                me.SetETag(etag);
+                me.AppendHeader("ETag", etag);
         }
 
         /// <summary>
