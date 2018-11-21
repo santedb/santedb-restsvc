@@ -16,7 +16,6 @@
     <tags>WCF RestServer</tags>
     <dependencies>
       <dependency id="Newtonsoft.Json" version="11.0.2.0"/>
-      <dependency id="SanteDB.Rest.Common" version="1.9.5.0"/>
       <dependency id="SanteDB.Core.Api" version="1.9.5.0"/>
       <dependency id="SanteDB.Core.Model" version="1.9.5.0"/>
       <dependency id="RestSrvr" version="1.9.5.0"/>
