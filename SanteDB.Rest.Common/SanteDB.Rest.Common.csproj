@@ -43,8 +43,8 @@
   <ItemGroup>
     <Compile Include="Attributes\DemandAttribute.cs" />
     <Compile Include="BundleUtil.cs" />
-    <Compile Include="Contracts\IRisiContract.Adhoc.cs" />
-    <Compile Include="Contracts\IRisiContract.cs" />
+    <Compile Include="Contracts\IRisiServiceContract.Adhoc.cs" />
+    <Compile Include="Contracts\IRisiServiceContract.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Fault\RestServiceFault.cs" />
     <Compile Include="IResourceHandler.cs" />

@@ -29,7 +29,7 @@ namespace SanteDB.Rest.RISI
 	/// <summary>
 	/// RISI contract members for the data-warehouse
 	/// </summary>
-	public partial interface IRisiContract
+	public partial interface IRisiServiceContract
 	{
 		/// <summary>
 		/// Create a datamart

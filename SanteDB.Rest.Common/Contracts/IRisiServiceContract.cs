@@ -38,7 +38,7 @@ namespace SanteDB.Rest.RISI
     [ServiceKnownResource(typeof(RisiCollection<ReportDefinition>))]
     [ServiceKnownResource(typeof(ListAutoCompleteSourceDefinition))]
     [ServiceKnownResource(typeof(QueryAutoCompleteSourceDefinition))]
-    public partial interface IRisiContract
+    public partial interface IRisiServiceContract
 	{
 		/// <summary>
 		/// Creates a new parameter type.
