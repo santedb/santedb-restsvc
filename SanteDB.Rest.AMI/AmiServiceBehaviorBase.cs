@@ -181,7 +181,6 @@ namespace SanteDB.Messaging.AMI.Wcf
                     if (versioned != null)
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}/history/{3}",
                            RestOperationContext.Current.IncomingRequest.Url,
-                           resourceType,
                            (retVal as IdentifiedData).Key,
                            versioned.Key));
                     else
@@ -229,13 +228,11 @@ namespace SanteDB.Messaging.AMI.Wcf
                     if (versioned != null)
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}/history/{3}",
                             RestOperationContext.Current.IncomingRequest.Url,
-                            resourceType,
                             retVal.Key,
                             versioned.Key));
                     else
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}",
                             RestOperationContext.Current.IncomingRequest.Url,
-                            resourceType,
                             retVal.Key));
 
                     return retVal;
@@ -274,13 +271,11 @@ namespace SanteDB.Messaging.AMI.Wcf
                     if (versioned != null)
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}/history/{3}",
                             RestOperationContext.Current.IncomingRequest.Url,
-                            resourceType,
                             retVal.Key,
                             versioned.Key));
                     else
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}",
                             RestOperationContext.Current.IncomingRequest.Url,
-                            resourceType,
                             retVal.Key));
 
                     return retVal;
@@ -541,13 +536,11 @@ namespace SanteDB.Messaging.AMI.Wcf
                     if (versioned != null)
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}/history/{3}",
                             RestOperationContext.Current.IncomingRequest.Url,
-                            resourceType,
                             (retVal as IIdentifiedEntity)?.Key?.ToString() ?? (retVal as IAmiIdentified)?.Key,
                             versioned.Key));
                     else
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}",
                             RestOperationContext.Current.IncomingRequest.Url,
-                            resourceType,
                             (retVal as IIdentifiedEntity)?.Key?.ToString() ?? (retVal as IAmiIdentified)?.Key));
 
                     return retVal;
