@@ -43,7 +43,7 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// IRepository service
         /// </summary>
-        private IRepositoryService<TResource> m_repository = null;
+        protected IRepositoryService<TResource> m_repository = null;
 
         /// <summary>
         /// Constructs the resource handler base

@@ -44,10 +44,8 @@
     <Compile Include="AmiServiceBehaviorBase.cs" />
     <Compile Include="Resources\AppletResourceHandler.cs" />
     <Compile Include="Resources\AppletSolutionResourceHandler.cs" />
-    <Compile Include="Resources\ApplicationEntityResourceHandler.cs" />
     <Compile Include="Resources\AssigningAuthorityResourceHandler.cs" />
     <Compile Include="Resources\AuditResourceHandler.cs" />
-    <Compile Include="Resources\DeviceEntityResourceHandler.cs" />
     <Compile Include="Resources\ExtensionTypeResourceHandler.cs" />
     <Compile Include="IAmiServiceContract.cs" />
     <Compile Include="Resources\MailMessageResourceHandler.cs" />

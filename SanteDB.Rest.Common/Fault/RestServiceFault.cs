@@ -4,6 +4,7 @@ using SanteDB.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -35,7 +36,11 @@ namespace SanteDB.Rest.Common.Fault
             this.Message = ex.Message;
 #if DEBUG
             this.StackTrace = ex.StackTrace;
+            this.Detail = ex.ToString();
 #endif
+
+            this.PolicyId = ex.GetType().GetRuntimeProperty("Policy")?.GetValue(ex)?.ToString();
+
             if(ex.InnerException != null)
                 this.CausedBy = new RestServiceFault(ex.InnerException);
         }
@@ -64,8 +69,20 @@ namespace SanteDB.Rest.Common.Fault
         /// <summary>
         /// Detail of exception
         /// </summary>
-        [XmlElement("detail"), JsonProperty("detail")]
+        [XmlElement("stack"), JsonProperty("stack")]
         public String StackTrace { get; set; }
+
+        /// <summary>
+        /// Policy ID was violated
+        /// </summary>
+        [XmlElement("policyId"), JsonProperty("policyId")]
+        public String PolicyId { get; set; }
+
+        /// <summary>
+        /// Detail of exception
+        /// </summary>
+        [XmlElement("detail"), JsonProperty("detail")]
+        public String Detail { get; set; }
 
         /// <summary>
         /// Gets or sets the caused by

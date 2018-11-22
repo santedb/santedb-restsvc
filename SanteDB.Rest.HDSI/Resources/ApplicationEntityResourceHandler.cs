@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SanteDB.Rest.AMI.Resources
+namespace SanteDB.Rest.HDSI.Resources
 {
     /// <summary>
     /// Represents the adminstrative application entity resource handler

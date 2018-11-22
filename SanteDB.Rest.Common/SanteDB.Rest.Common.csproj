@@ -47,6 +47,9 @@
     <Compile Include="Contracts\IRisiServiceContract.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Fault\RestServiceFault.cs" />
+    <Compile Include="ICancelResourceHandler.cs" />
+    <Compile Include="ILockableResourceHandler.cs" />
+    <Compile Include="INullifyResourceHandler.cs" />
     <Compile Include="IResourceHandler.cs" />
     <Compile Include="ObjectExpander.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -40,5 +40,6 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Get the capabilities of this handler
         /// </summary>
         public override ResourceCapability Capabilities => ResourceCapability.Get | ResourceCapability.Search;
+
     }
 }
