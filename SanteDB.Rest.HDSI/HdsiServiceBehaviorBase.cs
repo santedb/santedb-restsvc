@@ -73,13 +73,11 @@ namespace SanteDB.Rest.HDSI
                     if (versioned != null)
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}/history/{3}",
                             RestOperationContext.Current.IncomingRequest.Url,
-                            resourceType,
                             retVal.Key,
                             versioned.Key));
                     else
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}",
                             RestOperationContext.Current.IncomingRequest.Url,
-                            resourceType,
                             retVal.Key));
 
                     return retVal;
@@ -116,13 +114,11 @@ namespace SanteDB.Rest.HDSI
                     if (versioned != null)
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}/history/{3}",
                             RestOperationContext.Current.IncomingRequest.Url,
-                            resourceType,
                             retVal.Key,
                             versioned.Key));
                     else
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}",
                             RestOperationContext.Current.IncomingRequest.Url,
-                            resourceType,
                             retVal.Key));
 
                     return retVal;
@@ -429,13 +425,11 @@ namespace SanteDB.Rest.HDSI
                     if (versioned != null)
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}/history/{3}",
                             RestOperationContext.Current.IncomingRequest.Url,
-                            resourceType,
                             retVal.Key,
                             versioned.Key));
                     else
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}",
                             RestOperationContext.Current.IncomingRequest.Url,
-                            resourceType,
                             retVal.Key));
 
                     return retVal;
@@ -474,13 +468,11 @@ namespace SanteDB.Rest.HDSI
                     if (versioned != null)
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}/history/{3}",
                             RestOperationContext.Current.IncomingRequest.Url,
-                            resourceType,
                             retVal.Key,
                             versioned.Key));
                     else
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}",
                             RestOperationContext.Current.IncomingRequest.Url,
-                            resourceType,
                             retVal.Key));
 
                     return retVal;
@@ -569,13 +561,11 @@ namespace SanteDB.Rest.HDSI
                     if (versioned != null)
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}/history/{3}",
                                 RestOperationContext.Current.IncomingRequest.Url,
-                                resourceType,
                                 id,
                                 versioned));
                     else
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}",
                                 RestOperationContext.Current.IncomingRequest.Url,
-                                resourceType,
                                 id));
                 }
             }
