@@ -32,6 +32,7 @@ using RestSrvr.Attributes;
 using RestSrvr;
 using SanteDB.Rest.AMI;
 using SanteDB.Core;
+using SanteDB.Rest.Common.Attributes;
 
 namespace SanteDB.Messaging.AMI.Wcf
 {
@@ -43,7 +44,7 @@ namespace SanteDB.Messaging.AMI.Wcf
     {
 
         // The trace source for logging
-        private Tracer m_traceSource = Tracer.GetTracer(typeof(AmiServiceBehaviorBase));
+        protected Tracer m_traceSource = Tracer.GetTracer(typeof(AmiServiceBehaviorBase));
 
         private ResourceHandlerTool m_resourceHandler;
 
@@ -72,6 +73,20 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// </summary>
         /// <returns>Returns a collection of log files.</returns>
         public abstract AmiCollection GetLogs();
+
+        /// <summary>
+        /// Callers provide the demand method for access control
+        /// </summary>
+        protected abstract void Demand(String policyId);
+
+        /// <summary>
+        /// Perform an ACL check
+        /// </summary>
+        private void AclCheck(Object handler, String action)
+        {
+            foreach (var dmn in handler.GetType().GetMethods().Where(o => o.Name == action).SelectMany(method => method.GetCustomAttributes<DemandAttribute>()))
+                this.Demand(dmn.PolicyId);
+        }
 
         /// <summary>
         /// Gets the schema for the administrative interface.
@@ -157,6 +172,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                 IResourceHandler handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null)
                 {
+                    this.AclCheck(handler, nameof(IResourceHandler.Create));
                     var retVal = handler.Create(data, false);
 
                     var versioned = retVal as IVersionedEntity;
@@ -203,6 +219,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                     else if (data is IAmiIdentified)
                         (data as IAmiIdentified).Key = key;
 
+                    this.AclCheck(handler, nameof(IResourceHandler.Create));
                     var retVal = handler.Create(data, true) as IdentifiedData;
                     var versioned = retVal as IVersionedEntity;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.Created;
@@ -245,6 +262,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                 if (handler != null)
                 {
 
+                    this.AclCheck(handler, nameof(IResourceHandler.Obsolete));
                     var retVal = handler.Obsolete(Guid.Parse(key)) as IdentifiedData;
 
                     var versioned = retVal as IVersionedEntity;
@@ -293,6 +311,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                     if (Guid.TryParse(key, out guidKey))
                         strongKey = guidKey;
 
+                    this.AclCheck(handler, nameof(IResourceHandler.Get));
                     var retVal = handler.Get(strongKey, Guid.Empty);
                     if (retVal == null)
                         throw new FileNotFoundException(key);
@@ -349,6 +368,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                     if (Guid.TryParse(versionKey, out guidKey))
                         strongVersionKey = guidKey;
 
+                    this.AclCheck(handler, nameof(IResourceHandler.Get));
                     var retVal = handler.Get(strongKey, strongVersionKey) as IdentifiedData;
                     if (retVal == null)
                         throw new FileNotFoundException(key);
@@ -386,6 +406,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                     Guid sinceGuid = since != null ? Guid.Parse(since) : Guid.Empty;
 
                     // Query 
+                    this.AclCheck(handler, nameof(IResourceHandler.Get));
                     var retVal = handler.Get(Guid.Parse(key), Guid.Empty) as IVersionedEntity;
                     List<IVersionedEntity> histItm = new List<IVersionedEntity>() { retVal };
                     while (retVal.PreviousVersionKey.HasValue)
@@ -457,7 +478,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                     bool parsedLean = false;
                     bool.TryParse(lean, out parsedLean);
 
-
+                    this.AclCheck(handler, nameof(IResourceHandler.Query));
                     var retVal = handler.Query(query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).ToList();
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.OfType<IdentifiedData>().OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now);
 
@@ -502,6 +523,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                     else if (data is IAmiIdentified)
                         (data as IAmiIdentified).Key = key;
 
+                    this.AclCheck(handler, nameof(IResourceHandler.Update));
                     var retVal = handler.Update(data);
                     if (retVal == null)
                         RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.NoContent;
@@ -564,6 +586,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                 var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null && handler is ILockableResourceHandler)
                 {
+                    this.AclCheck(handler, nameof(ILockableResourceHandler.Lock));
                     var retVal = (handler as ILockableResourceHandler).Lock(Guid.Parse(key));
                     if (retVal == null)
                         throw new FileNotFoundException(key);
@@ -604,6 +627,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                 var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null && handler is ILockableResourceHandler)
                 {
+                    this.AclCheck(handler, nameof(ILockableResourceHandler.Unlock));
                     var retVal = (handler as ILockableResourceHandler).Unlock(Guid.Parse(key));
                     if (retVal == null)
                         throw new FileNotFoundException(key);
@@ -631,5 +655,7 @@ namespace SanteDB.Messaging.AMI.Wcf
 
             }
         }
+
+
     }
 }

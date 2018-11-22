@@ -10,12 +10,14 @@ using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
+using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Schema;
@@ -31,9 +33,9 @@ namespace SanteDB.Rest.HDSI
     public abstract class HdsiServiceBehaviorBase : IHdsiServiceContract
     {
         // Trace source
-        private Tracer m_traceSource = Tracer.GetTracer(typeof(HdsiServiceBehaviorBase));
+        protected Tracer m_traceSource = Tracer.GetTracer(typeof(HdsiServiceBehaviorBase));
         // Resource Handler
-        private ResourceHandlerTool m_resourceHandler;
+        protected ResourceHandlerTool m_resourceHandler;
 
         /// <summary>
         /// HDSI Service Behavior
@@ -41,6 +43,20 @@ namespace SanteDB.Rest.HDSI
         public HdsiServiceBehaviorBase(ResourceHandlerTool handler)
         {
             this.m_resourceHandler = handler;
+        }
+
+        /// <summary>
+        /// Callers provide the demand method for access control
+        /// </summary>
+        protected abstract void Demand(String policyId);
+
+        /// <summary>
+        /// Perform an ACL check
+        /// </summary>
+        private void AclCheck(Object handler, String action)
+        {
+            foreach (var dmn in handler.GetType().GetMethods().Where(o => o.Name == action).SelectMany(method => method.GetCustomAttributes<DemandAttribute>()))
+                this.Demand(dmn.PolicyId);
         }
 
         /// <summary>
@@ -65,6 +81,7 @@ namespace SanteDB.Rest.HDSI
                 if (handler != null)
                 {
 
+                    this.AclCheck(handler, nameof(IResourceHandler.Create));
                     var retVal = handler.Create(body, false) as IdentifiedData;
 
                     var versioned = retVal as IVersionedEntity;
@@ -106,6 +123,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
+                    this.AclCheck(handler, nameof(IResourceHandler.Create));
                     var retVal = handler.Create(body, true) as IdentifiedData;
                     var versioned = retVal as IVersionedEntity;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
@@ -150,6 +168,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
+                    this.AclCheck(handler, nameof(IResourceHandler.Get));
                     var retVal = handler.Get(Guid.Parse(id), Guid.Empty) as IdentifiedData;
                     if (retVal == null)
                         throw new FileNotFoundException(id);
@@ -203,11 +222,10 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
+                    this.AclCheck(handler, nameof(IResourceHandler.Get));
                     var retVal = handler.Get(Guid.Parse(id), Guid.Parse(versionId)) as IdentifiedData;
                     if (retVal == null)
                         throw new FileNotFoundException(id);
-
-
 
                     if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true")
                         return Bundle.CreateBundle(retVal);
@@ -285,6 +303,7 @@ namespace SanteDB.Rest.HDSI
                     Guid sinceGuid = since != null ? Guid.Parse(since) : Guid.Empty;
 
                     // Query 
+                    this.AclCheck(handler, nameof(IResourceHandler.Get));
                     var retVal = handler.Get(Guid.Parse(id), Guid.Empty) as IVersionedEntity;
                     List<IVersionedEntity> histItm = new List<IVersionedEntity>() { retVal };
                     while (retVal.PreviousVersionKey.HasValue)
@@ -344,6 +363,7 @@ namespace SanteDB.Rest.HDSI
                     bool parsedLean = false;
                     bool.TryParse(lean, out parsedLean);
 
+                    this.AclCheck(handler, nameof(IResourceHandler.Query));
 
                     var retVal = handler.Query(query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).OfType<IdentifiedData>().Select(o => o.GetLocked()).ToList();
                     RestOperationContext.Current.OutgoingResponse.SetLastModified((retVal.OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now));
@@ -415,6 +435,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
+                    this.AclCheck(handler, nameof(IResourceHandler.Update));
 
                     var retVal = handler.Update(body) as IdentifiedData;
 
@@ -459,7 +480,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
-
+                    this.AclCheck(handler, nameof(IResourceHandler.Obsolete));
                     var retVal = handler.Obsolete(Guid.Parse(id)) as IdentifiedData;
 
                     var versioned = retVal as IVersionedEntity;
@@ -535,6 +556,8 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
 
                 // Next we get the current version
+                this.AclCheck(handler, nameof(IResourceHandler.Get));
+
                 var existing = handler.Get(Guid.Parse(id), Guid.Empty) as IdentifiedData;
                 var force = Convert.ToBoolean(RestOperationContext.Current.IncomingRequest.Headers["X-Patch-Force"] ?? "false");
 
@@ -553,6 +576,7 @@ namespace SanteDB.Rest.HDSI
                 {
                     // Force load all properties for existing
                     var applied = ApplicationServiceContext.Current.GetService<IPatchService>().Patch(body, existing, force);
+                    this.AclCheck(handler, nameof(IResourceHandler.Update));
                     var data = handler.Update(applied) as IdentifiedData;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 204;
                     RestOperationContext.Current.OutgoingResponse.SetETag(data.Tag);
