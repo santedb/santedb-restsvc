@@ -31,6 +31,7 @@ using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Interfaces;
 using SanteDB.Core;
+using SanteDB.Core.Diagnostics;
 
 namespace SanteDB.Rest.Common
 {
@@ -39,6 +40,9 @@ namespace SanteDB.Rest.Common
     /// </summary>
     public abstract class ResourceHandlerBase<TResource> : IResourceHandler, IAuditEventSource where TResource : IdentifiedData
     {
+
+        // Tracer
+        private Tracer m_tracer = Tracer.GetTracer(typeof(ResourceHandlerBase<TResource>));
 
         /// <summary>
         /// IRepository service
@@ -59,7 +63,11 @@ namespace SanteDB.Rest.Common
         {
             if (this.m_repository == null)
                 this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<TResource>>();
-            
+            if(this.m_repository == null)
+            {
+                this.m_tracer.TraceWarning("IRepositoryService<{0}> was not found, has it been registered with this provider?", typeof(TResource).FullName);
+                throw new KeyNotFoundException($"IRepositoryService<{typeof(TResource).FullName}> has not been registered with this provider");
+            }
             return this.m_repository;
         }
 
