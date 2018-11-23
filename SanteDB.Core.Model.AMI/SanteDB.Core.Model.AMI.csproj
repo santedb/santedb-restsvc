@@ -102,10 +102,10 @@
           <Version>1.9.8</Version>
         </PackageReference>
         <PackageReference Include="SanteDB.Core.Applets">
-          <Version>1.9.5</Version>
+          <Version>1.9.8</Version>
         </PackageReference>
         <PackageReference Include="SanteDB.Core.Model">
-          <Version>1.9.5</Version>
+          <Version>1.9.8</Version>
         </PackageReference>
       </ItemGroup>
     </Otherwise>
