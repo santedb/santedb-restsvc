@@ -67,6 +67,18 @@ namespace SanteDB.Rest.Common
         }
 
         /// <summary>
+        /// Convert query types
+        /// </summary>
+        public static List<KeyValuePair<String, Object>> ToList(this System.Collections.Specialized.NameValueCollection nvc)
+        {
+            var retVal = new List<KeyValuePair<String, Object>>();
+            foreach (var k in nvc.AllKeys)
+                foreach(var v in nvc.GetValues(k))
+                    retVal.Add(new KeyValuePair<String, Object>(k, v));
+            return retVal;
+        }
+
+        /// <summary>
         /// Adds a handler to the Started event
         /// </summary>
         public static void AddStarted(this IServiceProvider me, EventHandler handler)

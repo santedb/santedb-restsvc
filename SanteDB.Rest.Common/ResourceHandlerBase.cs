@@ -50,7 +50,16 @@ namespace SanteDB.Rest.Common
         /// </summary>
         public ResourceHandlerBase()
         {
-            ApplicationServiceContext.Current.AddStarted((o, e) => this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<TResource>>());
+        }
+
+        /// <summary>
+        /// Gets the repository
+        /// </summary>
+        protected IRepositoryService<TResource> GetRepository()
+        {
+            if (this.m_repository == null)
+                this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<TResource>>();
+            return this.m_repository;
         }
 
         /// <summary>
@@ -140,7 +149,7 @@ namespace SanteDB.Rest.Common
                 if (processData is TResource)
                 {
                     var resourceData = processData as TResource;
-                    resourceData = updateIfExists ? this.m_repository.Save(resourceData) : this.m_repository.Insert(resourceData);
+                    resourceData = updateIfExists ? this.GetRepository().Save(resourceData) : this.GetRepository().Insert(resourceData);
                     this.DataCreated?.Invoke(this, new AuditDataEventArgs(resourceData));
                     return resourceData;
                 }
@@ -165,7 +174,7 @@ namespace SanteDB.Rest.Common
 
             try
             {
-                var retVal = this.m_repository.Get((Guid)id, (Guid)versionId);
+                var retVal = this.GetRepository().Get((Guid)id, (Guid)versionId);
                 this.DataDisclosed?.Invoke(this, new AuditDataDisclosureEventArgs(id.ToString(), new object[] { retVal }));
                 return retVal;
             }
@@ -186,7 +195,7 @@ namespace SanteDB.Rest.Common
 
             try
             {
-                var retVal = this.m_repository.Obsolete((Guid)key);
+                var retVal = this.GetRepository().Obsolete((Guid)key);
                 this.DataObsoleted?.Invoke(this, new AuditDataEventArgs(retVal));
                 return retVal;
             }
@@ -235,29 +244,29 @@ namespace SanteDB.Rest.Common
 
                 IEnumerable<TResource> retVal = null;
                 if (queryParameters.TryGetValue("_id", out id)) {
-                    var obj = this.m_repository.Get(Guid.Parse(id.First()));
+                    var obj = this.GetRepository().Get(Guid.Parse(id.First()));
                     if (obj != null)
                         retVal = new List<TResource>() { obj };
                     else
                         retVal = new List<TResource>();
                     totalCount = retVal.Count();
                 }
-                else if (queryParameters.TryGetValue("_queryId", out query) && this.m_repository is IPersistableQueryRepositoryService)
+                else if (queryParameters.TryGetValue("_queryId", out query) && this.GetRepository() is IPersistableQueryRepositoryService)
                 {
                     Guid queryId = Guid.Parse(query[0]);
                     List<String> lean = null;
-                    if (queryParameters.TryGetValue("_lean", out lean) && lean[0] == "true" && this.m_repository is IFastQueryRepositoryService)
-                        retVal = (this.m_repository as IFastQueryRepositoryService).FindFast<TResource>(queryExpression, offset, count, out totalCount, queryId);
+                    if (queryParameters.TryGetValue("_lean", out lean) && lean[0] == "true" && this.GetRepository() is IFastQueryRepositoryService)
+                        retVal = (this.GetRepository() as IFastQueryRepositoryService).FindFast<TResource>(queryExpression, offset, count, out totalCount, queryId);
                     else
-                        retVal = (this.m_repository as IPersistableQueryRepositoryService).Find<TResource>(queryExpression, offset, count, out totalCount, queryId);
+                        retVal = (this.GetRepository() as IPersistableQueryRepositoryService).Find<TResource>(queryExpression, offset, count, out totalCount, queryId);
                 }
                 else
                 {
                     List<String> lean = null;
-                    if (queryParameters.TryGetValue("_lean", out lean) && lean[0] == "true" && this.m_repository is IFastQueryRepositoryService)
-                        retVal = (this.m_repository as IFastQueryRepositoryService).FindFast<TResource>(queryExpression, offset, count, out totalCount, Guid.Empty);
+                    if (queryParameters.TryGetValue("_lean", out lean) && lean[0] == "true" && this.GetRepository() is IFastQueryRepositoryService)
+                        retVal = (this.GetRepository() as IFastQueryRepositoryService).FindFast<TResource>(queryExpression, offset, count, out totalCount, Guid.Empty);
                     else
-                        retVal = this.m_repository.Find(queryExpression, offset, count, out totalCount);
+                        retVal = this.GetRepository().Find(queryExpression, offset, count, out totalCount);
                 }
 
                 this.DataDisclosed?.Invoke(this, new AuditDataDisclosureEventArgs(queryParameters.ToString(), retVal));
@@ -291,7 +300,7 @@ namespace SanteDB.Rest.Common
                 {
                     var entityData = data as TResource;
 
-                    var retVal = this.m_repository.Save(entityData);
+                    var retVal = this.GetRepository().Save(entityData);
                     this?.DataUpdated(this, new AuditDataEventArgs(retVal));
                     return retVal;
                 }

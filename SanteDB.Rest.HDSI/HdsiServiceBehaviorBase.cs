@@ -359,9 +359,9 @@ namespace SanteDB.Rest.HDSI
                     int totalResults = 0;
 
                     // Lean mode
-                    var lean = RestOperationContext.Current.IncomingRequest.QueryString["_lean"];
-                    bool parsedLean = false;
-                    bool.TryParse(lean, out parsedLean);
+                    var inclusive = RestOperationContext.Current.IncomingRequest.QueryString["_includeRefs"];
+                    bool parsedInclusive = false;
+                    bool.TryParse(inclusive, out parsedInclusive);
 
                     this.AclCheck(handler, nameof(IResourceHandler.Query));
 
@@ -399,7 +399,7 @@ namespace SanteDB.Rest.HDSI
                             }).ToList();
                         }
 
-                        return BundleUtil.CreateBundle(retVal, totalResults, Int32.Parse(offset ?? "0"), parsedLean);
+                        return BundleUtil.CreateBundle(retVal, totalResults, Int32.Parse(offset ?? "0"), !parsedInclusive);
                     }
                 }
                 else
