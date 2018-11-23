@@ -19,7 +19,7 @@
  */
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Collection;
-using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Rest.Common.Attributes;
@@ -27,67 +27,73 @@ using SanteDB.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Security.Permissions;
+using SanteDB.Core.Interop;
+using SanteDB.Rest.Common;
+using SanteDB.Core;
 
-namespace SanteDB.Rest.HDSI.Resources
+namespace SanteDB.Rest.AMI.Resources
 {
 	/// <summary>
-	/// Represents an organization resource handler.
+	/// Represents an identifier type resource handler.
 	/// </summary>
-	public class OrganizationResourceHandler : ResourceHandlerBase<Organization>
+	public class IdentifierTypeResourceHandler : ResourceHandlerBase<IdentifierType>
 	{
+
         /// <summary>
-        /// Create the specified material
+        /// Get capabilities for this resource handler
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.WritePlacesAndOrgs)]
-        public override Object Create(Object data, bool updateIfExists)
+        public override ResourceCapability Capabilities => ResourceCapability.Create | ResourceCapability.CreateOrUpdate | ResourceCapability.Delete | ResourceCapability.Get | ResourceCapability.Search | ResourceCapability.Update;
+
+        /// <summary>
+        /// Create identifier type
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.UnrestrictedMetadata)]
+        public override object Create(object data, bool updateIfExists)
         {
             return base.Create(data, updateIfExists);
         }
 
         /// <summary>
-        /// Gets the specified manufactured material
+        /// Read metadata
         /// </summary>
-        /// <returns></returns>
-        [Demand(PermissionPolicyIdentifiers.ReadPlacesAndOrgs)]
-        public override Object Get(object id, object versionId)
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        public override object Get(object id, object versionId)
         {
             return base.Get(id, versionId);
         }
 
         /// <summary>
-        /// Obsoletes the specified material
+        /// Demand unrestricted
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.DeletePlacesAndOrgs)]
-        public override Object Obsolete(object key)
+        [Demand(PermissionPolicyIdentifiers.UnrestrictedMetadata)]
+        public override object Obsolete(object key)
         {
             return base.Obsolete(key);
         }
 
         /// <summary>
-        /// Query for the specified material
+        /// Query override
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.ReadPlacesAndOrgs)]
-        public override IEnumerable<Object> Query(NameValueCollection queryParameters)
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        public override IEnumerable<object> Query(NameValueCollection queryParameters)
         {
             return base.Query(queryParameters);
         }
 
-
         /// <summary>
-        /// Query for the specified material with restrictions
+        /// Query permission override
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.ReadPlacesAndOrgs)]
-        public override IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        public override IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
         {
             return base.Query(queryParameters, offset, count, out totalCount);
         }
 
-
         /// <summary>
-        /// Update the specified material
+        /// Update permission override
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.WritePlacesAndOrgs)]
-        public override Object Update(Object data)
+        [Demand(PermissionPolicyIdentifiers.UnrestrictedMetadata)]
+        public override object Update(object data)
         {
             return base.Update(data);
         }

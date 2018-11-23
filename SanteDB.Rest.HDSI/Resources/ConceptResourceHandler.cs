@@ -37,84 +37,40 @@ namespace SanteDB.Rest.HDSI.Resources
 	/// <summary>
 	/// A resource handler for a concept
 	/// </summary>
-	public class ConceptResourceHandler : IResourceHandler
+	public class ConceptResourceHandler : ResourceHandlerBase<Concept>
 	{
-        /// <summary>
-        /// Get resource capabilities
-        /// </summary>
-        public ResourceCapability Capabilities
-        {
-            get
-            {
-                return ResourceCapability.Get | ResourceCapability.GetVersion | ResourceCapability.Search | ResourceCapability.History;
-            }
-        }
-
-        /// <summary>
-        /// Gets the resource name
-        /// </summary>
-        public string ResourceName => nameof(Concept);
-
-        /// <summary>
-        /// Gets the scope
-        /// </summary>
-        public Type Scope => typeof(IHdsiServiceContract);
-
-        /// <summary>
-        /// Gets the model type of the handler
-        /// </summary>
-        public Type Type => typeof(Concept);
-
 		/// <summary>
 		/// Create the specified object in the database
 		/// </summary>
 		[Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
-		public Object Create(Object data, bool updateIfExists)
+		public override Object Create(Object data, bool updateIfExists)
 		{
-			var conceptService = ApplicationServiceContext.Current.GetService<IConceptRepositoryService>();
-
-			Bundle bundleData = data as Bundle;
-			bundleData?.Reconstitute();
-			var processData = bundleData?.Entry ?? data;
-
-			if (processData is Bundle)
-			{
-				throw new InvalidOperationException("Bundle must have entry of type Concept");
-			}
-
-			if (processData is Concept)
-			{
-				return updateIfExists ? conceptService.SaveConcept(processData as Concept) : conceptService.InsertConcept(processData as Concept);
-			}
-
-			throw new ArgumentException("Invalid persistence type");
+            return base.Create(data, updateIfExists);
 		}
 
         /// <summary>
         /// Get the specified instance
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public Object Get(object id, object versionId)
+        public override Object Get(object id, object versionId)
 		{
-			var conceptService = ApplicationServiceContext.Current.GetService<IConceptRepositoryService>();
-			return conceptService.GetConcept((Guid)id, (Guid)versionId);
+            return base.Get(id, versionId);
 		}
 
 		/// <summary>
 		/// Obsolete the specified concept
 		/// </summary>
 		[Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
-		public Object Obsolete(object  key)
+		public override Object Obsolete(object  key)
 		{
-			var conceptService = ApplicationServiceContext.Current.GetService<IConceptRepositoryService>();
-			return conceptService.ObsoleteConcept((Guid)key);
+            return base.Obsolete(key);
 		}
 
         /// <summary>
         /// Query the specified data
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public IEnumerable<Object> Query(NameValueCollection queryParameters)
+        public override IEnumerable<Object> Query(NameValueCollection queryParameters)
 		{
             int tr = 0;
 			return this.Query(queryParameters, 0, 100, out tr);
@@ -124,40 +80,18 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Query with offsets
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out Int32 totalCount)
+        public override IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out Int32 totalCount)
 		{
-            var conceptService = ApplicationServiceContext.Current.GetService<IConceptRepositoryService>();
-
-            var filter = QueryExpressionParser.BuildLinqExpression<Concept>(queryParameters);
-            List<String> queryId = null;
-            if (conceptService is IPersistableQueryRepositoryService && queryParameters.TryGetValue("_queryId", out queryId))
-                return (conceptService as IPersistableQueryRepositoryService).Find(filter, offset, count, out totalCount, Guid.Parse(queryId[0]));
-            else
-                return conceptService.FindConcepts(filter, offset, count, out totalCount);
-            
+            return base.Query(queryParameters, offset, count, out totalCount);
 		}
 
 		/// <summary>
 		/// Update the specified data
 		/// </summary>
 		[Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
-		public Object Update(Object  data)
+		public override Object Update(Object  data)
 		{
-			var conceptService = ApplicationServiceContext.Current.GetService<IConceptRepositoryService>();
-
-			Bundle bundleData = data as Bundle;
-			bundleData?.Reconstitute();
-			var processData = bundleData?.Entry ?? data;
-
-			if (processData is Bundle)
-				throw new InvalidOperationException("Bundle must have entry of type Concept");
-			else if (processData is Concept)
-			{
-				var conceptData = processData as Concept;
-				return conceptService.SaveConcept(conceptData);
-			}
-			else
-				throw new ArgumentException("Invalid persistence type");
+            return base.Update(data);
 		}
 	}
 }

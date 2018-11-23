@@ -36,18 +36,11 @@ namespace SanteDB.Rest.Common.Fault
 #if DEBUG
             this.StackTrace = ex.StackTrace;
 #endif
+            this.Rules = (ex as DetectedIssueException)?.Issues;
             if(ex.InnerException != null)
                 this.CausedBy = new RestServiceFault(ex.InnerException);
         }
 
-        /// <summary>
-        /// Fault from detected issue exception
-        /// </summary>
-        /// <param name="dte"></param>
-        public RestServiceFault(DetectedIssueException dte) : this((Exception)dte)
-        {
-            this.Rules = dte.Issues;
-        }
         
         /// <summary>
         /// Gets or sets the type of fault

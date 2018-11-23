@@ -50,6 +50,7 @@
     <Compile Include="Resources\DeviceEntityResourceHandler.cs" />
     <Compile Include="Resources\ExtensionTypeResourceHandler.cs" />
     <Compile Include="IAmiServiceContract.cs" />
+    <Compile Include="Resources\IdentifierTypeResourceHandler.cs" />
     <Compile Include="Resources\MailMessageResourceHandler.cs" />
     <Compile Include="Resources\MetadataResourceHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

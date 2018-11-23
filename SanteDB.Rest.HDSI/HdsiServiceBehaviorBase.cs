@@ -88,12 +88,12 @@ namespace SanteDB.Rest.HDSI
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
                     RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
                     if (versioned != null)
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}/history/{3}",
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/history/{2}",
                             RestOperationContext.Current.IncomingRequest.Url,
                             retVal.Key,
                             versioned.Key));
                     else
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}",
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}",
                             RestOperationContext.Current.IncomingRequest.Url,
                             retVal.Key));
 
@@ -130,12 +130,12 @@ namespace SanteDB.Rest.HDSI
                     RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
 
                     if (versioned != null)
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}/history/{3}",
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/history/{2}",
                             RestOperationContext.Current.IncomingRequest.Url,
                             retVal.Key,
                             versioned.Key));
                     else
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}",
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}",
                             RestOperationContext.Current.IncomingRequest.Url,
                             retVal.Key));
 
@@ -444,12 +444,12 @@ namespace SanteDB.Rest.HDSI
                     RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
 
                     if (versioned != null)
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}/history/{3}",
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/history/{2}",
                             RestOperationContext.Current.IncomingRequest.Url,
                             retVal.Key,
                             versioned.Key));
                     else
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}",
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}",
                             RestOperationContext.Current.IncomingRequest.Url,
                             retVal.Key));
 
@@ -487,12 +487,12 @@ namespace SanteDB.Rest.HDSI
 
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
                     if (versioned != null)
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}/history/{3}",
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/history/{2}",
                             RestOperationContext.Current.IncomingRequest.Url,
                             retVal.Key,
                             versioned.Key));
                     else
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}",
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}",
                             RestOperationContext.Current.IncomingRequest.Url,
                             retVal.Key));
 
@@ -583,12 +583,12 @@ namespace SanteDB.Rest.HDSI
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(applied.ModifiedOn.DateTime);
                     var versioned = (data as IVersionedEntity)?.VersionKey;
                     if (versioned != null)
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}/history/{3}",
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/history/{2}",
                                 RestOperationContext.Current.IncomingRequest.Url,
                                 id,
                                 versioned));
                     else
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}",
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}",
                                 RestOperationContext.Current.IncomingRequest.Url,
                                 id));
                 }

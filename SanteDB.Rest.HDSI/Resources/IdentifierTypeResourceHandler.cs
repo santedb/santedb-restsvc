@@ -42,7 +42,25 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Get capabilities for this resource handler
         /// </summary>
-        public override ResourceCapability Capabilities => ResourceCapability.Create | ResourceCapability.CreateOrUpdate | ResourceCapability.Delete | ResourceCapability.Get | ResourceCapability.Search | ResourceCapability.Update;
+        public override ResourceCapability Capabilities => ResourceCapability.Get | ResourceCapability.Search;
 
-	}
+        /// <summary>
+        /// Permission override
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        public override object Get(object id, object versionId)
+        {
+            return base.Get(id, versionId);
+        }
+
+        /// <summary>
+        /// Permission override
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        public override IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        {
+            return base.Query(queryParameters, offset, count, out totalCount);
+        }
+
+    }
 }

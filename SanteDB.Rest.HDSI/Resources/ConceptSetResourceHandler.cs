@@ -36,96 +36,41 @@ namespace SanteDB.Rest.HDSI.Resources
 	/// <summary>
 	/// Resource handler for concept sets
 	/// </summary>
-	public class ConceptSetResourceHandler : IResourceHandler
+	public class ConceptSetResourceHandler : ResourceHandlerBase<ConceptSet>
 	{
-		/// <summary>
-		/// The internal reference to the <see cref="IConceptRepositoryService"/> instance.
-		/// </summary>
-		private IConceptRepositoryService repositoryService;
-
-        /// <summary>
-        /// Gets the scope
-        /// </summary>
-        public Type Scope => typeof(IHdsiServiceContract);
-
-        /// <summary>
-        /// Get the capabilities of this handler
-        /// </summary>
-        public ResourceCapability Capabilities
-        {
-            get
-            {
-                return ResourceCapability.Create | ResourceCapability.CreateOrUpdate | ResourceCapability.Delete | ResourceCapability.Get | ResourceCapability.Search | ResourceCapability.Update;
-            }
-        }
-
-        /// <summary>
-        /// Gets the resource name
-        /// </summary>
-        public string ResourceName => "ConceptSet";
-
-		/// <summary>
-		/// Gets the type of serialization
-		/// </summary>
-		public Type Type => typeof(ConceptSet);
-
+        
 		/// <summary>
 		/// Creates the specified data
 		/// </summary>
 		[Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
-		public Object Create(Object data, bool updateIfExists)
+		public override Object Create(Object data, bool updateIfExists)
 		{
-			if (data == null)
-			{
-				throw new ArgumentNullException(nameof(data));
-			}
-
-			var bundleData = data as Bundle;
-
-			bundleData?.Reconstitute();
-
-			var processData = bundleData?.Entry ?? data;
-
-			if (processData is Bundle)
-			{
-				throw new InvalidOperationException("Bundle must have entry of type ConceptSet");
-			}
-
-			if (processData is ConceptSet)
-			{
-				return updateIfExists ? this.repositoryService.SaveConceptSet(processData as ConceptSet) : this.repositoryService.InsertConceptSet(processData as ConceptSet);
-			}
-
-			throw new ArgumentException("Invalid persistence type");
+            return base.Create(data, updateIfExists);
 		}
 
 		/// <summary>
 		/// Gets the specified conceptset
 		/// </summary>
-		public Object Get(object id, object versionId)
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+		public override Object Get(object id, object versionId)
 		{
-			if ((Guid)versionId != Guid.Empty)
-			{
-				throw new NotSupportedException();
-			}
-
-			return this.repositoryService.GetConceptSet((Guid)id);
+            return base.Get(id, versionId);
 		}
 
 		/// <summary>
 		/// Obsolete the specified concept set
 		/// </summary>
 		[Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
-		public Object Obsolete(object key)
+		public override Object Obsolete(object key)
 		{
-			return this.repositoryService.ObsoleteConceptSet((Guid)key);
+			return base.Obsolete((Guid)key);
 		}
 
 		/// <summary>
 		/// Perform query
 		/// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public IEnumerable<Object> Query(NameValueCollection queryParameters)
+        public override IEnumerable<Object> Query(NameValueCollection queryParameters)
 		{
             int tr = 0;
             return this.Query(queryParameters, 0, 100, out tr);
@@ -135,14 +80,9 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Query with specified parameter data
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        public override IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
 		{
-            var filter = QueryExpressionParser.BuildLinqExpression<ConceptSet>(queryParameters);
-            List<String> queryId = null;
-            if (this.repositoryService is IPersistableQueryRepositoryService && queryParameters.TryGetValue("_queryId", out queryId))
-                return (this.repositoryService as IPersistableQueryRepositoryService).Find(filter, offset, count, out totalCount, Guid.Parse(queryId[0]));
-            else
-                return this.repositoryService.FindConceptSets(filter, offset, count, out totalCount);
+            return base.Query(queryParameters, offset, count, out totalCount);
 		}
 
 		/// <summary>
@@ -151,30 +91,9 @@ namespace SanteDB.Rest.HDSI.Resources
 		/// <param name="data"></param>
 		/// <returns></returns>
 		[Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
-		public Object Update(Object  data)
+		public override Object Update(Object  data)
 		{
-			if (data == null)
-			{
-				throw new ArgumentNullException(nameof(data));
-			}
-
-			var bundleData = data as Bundle;
-
-			bundleData?.Reconstitute();
-
-			var processData = bundleData?.Entry ?? data;
-
-			if (processData is Bundle)
-			{
-				throw new InvalidOperationException("Bundle must have entry of type Concept");
-			}
-
-			if (processData is ConceptSet)
-			{
-				return this.repositoryService.SaveConceptSet(processData as ConceptSet);
-			}
-
-			throw new ArgumentException("Invalid persistence type");
+            return base.Update(data);
 		}
 	}
 }

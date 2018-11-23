@@ -42,7 +42,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Create the specified material
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.UnrestrictedMetadata)]
+        [Demand(PermissionPolicyIdentifiers.WriteMaterials)]
         public override Object Create(Object data, bool updateIfExists)
         {
             return base.Create(data, updateIfExists);
@@ -52,7 +52,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Gets the specified manufactured material
         /// </summary>
         /// <returns></returns>
-        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        [Demand(PermissionPolicyIdentifiers.ReadMaterials)]
         public override Object Get(object id, object versionId)
         {
             return base.Get(id, versionId);
@@ -61,7 +61,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Obsoletes the specified material
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.UnrestrictedMetadata)]
+        [Demand(PermissionPolicyIdentifiers.DeleteMaterials)]
         public override Object Obsolete(object key)
         {
             return base.Obsolete(key);
@@ -70,7 +70,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Query for the specified material
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        [Demand(PermissionPolicyIdentifiers.ReadMaterials)]
         public override IEnumerable<Object> Query(NameValueCollection queryParameters)
         {
             return base.Query(queryParameters);
@@ -80,7 +80,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Query for the specified material with restrictions
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        [Demand(PermissionPolicyIdentifiers.ReadMaterials)]
         public override IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
         {
             var retVal = base.Query(queryParameters, offset, count, out totalCount);
@@ -99,7 +99,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Update the specified material
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.UnrestrictedMetadata)]
+        [Demand(PermissionPolicyIdentifiers.WriteMaterials)]
         public override Object Update(Object data)
         {
             return base.Update(data);

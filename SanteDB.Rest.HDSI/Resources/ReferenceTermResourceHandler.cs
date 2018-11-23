@@ -46,11 +46,40 @@ namespace SanteDB.Rest.HDSI.Resources
         /// </summary>
         public override Type Scope => typeof(IHdsiServiceContract);
         
+        [Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
+        public override object Create(object data, bool updateIfExists)
+        {
+            return base.Create(data, updateIfExists);
+        }
 
-        /// <summary>
-        /// Get capabilities of this interface
-        /// </summary>
-        public override ResourceCapability Capabilities =>ResourceCapability.Search | ResourceCapability.Get;
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        public override object Get(object id, object versionId)
+        {
+            return base.Get(id, versionId);
+        }
 
-	}
+        [Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
+        public override object Obsolete(object key)
+        {
+            return base.Obsolete(key);
+        }
+
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        public override IEnumerable<object> Query(NameValueCollection queryParameters)
+        {
+            return base.Query(queryParameters);
+        }
+
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        public override IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        {
+            return base.Query(queryParameters, offset, count, out totalCount);
+        }
+
+        [Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
+        public override object Update(object data)
+        {
+            return base.Update(data);
+        }
+    }
 }
