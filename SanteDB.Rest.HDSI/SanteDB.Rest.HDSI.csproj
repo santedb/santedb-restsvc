@@ -45,6 +45,7 @@
     <Compile Include="IHdsiServiceContract.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ActResourceHandler.cs" />
+    <Compile Include="Resources\ApplicationEntityResourceHandler.cs" />
     <Compile Include="Resources\AssigningAuthorityResourceHandler.cs" />
     <Compile Include="Resources\BundleResourceHandler.cs" />
     <Compile Include="Resources\CareplanResourceHandler.cs" />
@@ -52,6 +53,7 @@
     <Compile Include="Resources\ConceptClassResourceHandler.cs" />
     <Compile Include="Resources\ConceptResourceHandler.cs" />
     <Compile Include="Resources\ConceptSetResourceHandler.cs" />
+    <Compile Include="Resources\DeviceEntityResourceHandler.cs" />
     <Compile Include="Resources\EntityRelationshipResourceHandler.cs" />
     <Compile Include="Resources\EntityResourceHandler.cs" />
     <Compile Include="Resources\ExtensionTypeResourceHandler.cs" />

@@ -36,6 +36,7 @@ namespace SanteDB.Rest.HDSI.Resources
 	/// </summary>
 	public class PlaceResourceHandler : ResourceHandlerBase<Place>
 	{
+
         /// <summary>
         /// Create the specified place
         /// </summary>

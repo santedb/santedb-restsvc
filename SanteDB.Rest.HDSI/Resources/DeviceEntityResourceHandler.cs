@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SanteDB.Core.Model.Entities;
 
-namespace SanteDB.Rest.AMI.Resources
+namespace SanteDB.Rest.HDSI.Resources
 {
     /// <summary>
     /// Represents a device entity handler for security devices

@@ -359,9 +359,9 @@ namespace SanteDB.Rest.HDSI
                     int totalResults = 0;
 
                     // Lean mode
-                    var lean = RestOperationContext.Current.IncomingRequest.QueryString["_lean"];
-                    bool parsedLean = false;
-                    bool.TryParse(lean, out parsedLean);
+                    var inclusive = RestOperationContext.Current.IncomingRequest.QueryString["_includeRefs"];
+                    bool parsedInclusive = false;
+                    bool.TryParse(inclusive, out parsedInclusive);
 
                     this.AclCheck(handler, nameof(IResourceHandler.Query));
 
@@ -399,7 +399,7 @@ namespace SanteDB.Rest.HDSI
                             }).ToList();
                         }
 
-                        return BundleUtil.CreateBundle(retVal, totalResults, Int32.Parse(offset ?? "0"), parsedLean);
+                        return BundleUtil.CreateBundle(retVal, totalResults, Int32.Parse(offset ?? "0"), !parsedInclusive);
                     }
                 }
                 else
@@ -480,8 +480,34 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
-                    this.AclCheck(handler, nameof(IResourceHandler.Obsolete));
-                    var retVal = handler.Obsolete(Guid.Parse(id)) as IdentifiedData;
+                    IdentifiedData retVal = null;
+                    switch(RestOperationContext.Current.IncomingRequest.Headers["X-Delete-Mode"]?.ToLower() ?? "obsolete")
+                    {
+                        case "nullify":
+                            if (handler is INullifyResourceHandler)
+                            {
+                                this.AclCheck(handler, nameof(INullifyResourceHandler.Nullify));
+                                retVal = (handler as INullifyResourceHandler).Nullify(Guid.Parse(id)) as IdentifiedData;
+                                break;
+                            }
+                            else
+                                throw new NotSupportedException("X-Delete-Mode NULLIFY is not supported on this resource");
+                        case "cancel":
+                            if (handler is ICancelResourceHandler)
+                            {
+                                this.AclCheck(handler, nameof(ICancelResourceHandler.Cancel));
+                                retVal = (handler as ICancelResourceHandler).Cancel(Guid.Parse(id)) as IdentifiedData;
+                                break;
+                            }
+                            else
+                                throw new NotSupportedException("X-Delete-Mode CANCEL is not supported on this resource");
+                        case "obsolete":
+                            this.AclCheck(handler, nameof(IResourceHandler.Obsolete));
+                            retVal = handler.Obsolete(Guid.Parse(id)) as IdentifiedData;
+                            break;
+                        default:
+                            throw new InvalidOperationException($"Can't understand X-Delete-Mode header");
+                    }
 
                     var versioned = retVal as IVersionedEntity;
 
