@@ -51,7 +51,7 @@ namespace SanteDB.Rest.Common
         /// <param name="resourceTypes">The type of resource handlers</param>
         public ResourceHandlerTool(IEnumerable<Type> resourceHandlerTypes)
         {
-            foreach (var t in resourceHandlerTypes)
+            foreach (var t in resourceHandlerTypes.Where(t=>!t.ContainsGenericParameters && !t.IsAbstract && !t.IsInterface))
             {
                 try
                 {
