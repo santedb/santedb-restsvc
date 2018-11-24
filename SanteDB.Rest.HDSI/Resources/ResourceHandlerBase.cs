@@ -43,8 +43,8 @@ namespace SanteDB.Rest.HDSI.Resources
         /// </summary>
         public object Cancel(object key)
         {
-            if (this.GetRepository() is ICancelRepositoryService)
-                return (this.GetRepository() as ICancelRepositoryService).Cancel<TData>((Guid)key);
+            if (this.GetRepository() is ICancelRepositoryService<TData>)
+                return (this.GetRepository() as ICancelRepositoryService<TData>).Cancel((Guid)key);
             else
                 throw new NotSupportedException($"Repository for {this.ResourceName} does not support Cancel");
         }
@@ -54,8 +54,8 @@ namespace SanteDB.Rest.HDSI.Resources
         /// </summary>
         public object Nullify(object key)
         {
-            if (this.GetRepository() is INullifyRepositoryService)
-                return (this.GetRepository() as INullifyRepositoryService).Nullify<TData>((Guid)key);
+            if (this.GetRepository() is INullifyRepositoryService<TData>)
+                return (this.GetRepository() as INullifyRepositoryService<TData>).Nullify((Guid)key);
             else
                 throw new NotSupportedException($"Repository for {this.ResourceName} does not support Nullify");
         }

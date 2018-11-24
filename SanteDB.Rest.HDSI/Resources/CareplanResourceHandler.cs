@@ -147,8 +147,8 @@ namespace SanteDB.Rest.HDSI.Resources
             Expression<Func<Patient, bool>> queryExpr = QueryExpressionParser.BuildLinqExpression<Patient>(queryParameters);
             List<String> queryId = null;
             IEnumerable<Patient> patients = null;
-            if (queryParameters.TryGetValue("_queryId", out queryId) && repositoryService is IPersistableQueryRepositoryService)
-                patients = (repositoryService as IPersistableQueryRepositoryService).Find(queryExpr, offset, count, out totalCount, new Guid(queryId[0]));
+            if (queryParameters.TryGetValue("_queryId", out queryId) && repositoryService is IPersistableQueryRepositoryService<Patient>)
+                patients = (repositoryService as IPersistableQueryRepositoryService<Patient>).Find(queryExpr, offset, count, out totalCount, new Guid(queryId[0]));
             else
                 patients = repositoryService.Find(queryExpr, offset, count, out totalCount);
 

@@ -65,8 +65,11 @@ namespace SanteDB.Rest.Common
                 this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<TResource>>();
             if(this.m_repository == null)
             {
-                this.m_tracer.TraceWarning("IRepositoryService<{0}> was not found, has it been registered with this provider?", typeof(TResource).FullName);
-                throw new KeyNotFoundException($"IRepositoryService<{typeof(TResource).FullName}> has not been registered with this provider");
+                this.m_tracer.TraceWarning("IRepositoryService<{0}> was not found will generate a default one using IRepositoryServiceFactory", typeof(TResource).FullName);
+                var factoryService = ApplicationServiceContext.Current.GetService<IRepositoryServiceFactory>();
+                if (factoryService == null)
+                    throw new KeyNotFoundException($"IRepositoryService<{typeof(TResource).FullName}> not found and no repository is found");
+                this.m_repository = factoryService.CreateRepository<TResource>();
             }
             return this.m_repository;
         }
@@ -149,15 +152,15 @@ namespace SanteDB.Rest.Common
             bundle?.Reconstitute();
 
             var processData = bundle?.Entry ?? data;
-
-            if (processData is Bundle)
-                throw new InvalidOperationException("Bundle must have an entry point");
-
+            
             try
             {
-                if (processData is TResource)
+                if (!(processData is TResource))
+                    throw new ArgumentException($"Invalid data submission. Expected {typeof(TResource).FullName} but received {processData.GetType().FullName}. If you are submitting a bundle, ensure it has an entry point.");
+                else if (processData is TResource)
                 {
-                    var resourceData = processData as TResource;
+                    
+                    var resourceData = (this.GetRepository() as IValidatingRepositoryService<TResource>)?.Validate(processData as TResource) ?? processData as TResource;
                     resourceData = updateIfExists ? this.GetRepository().Save(resourceData) : this.GetRepository().Insert(resourceData);
                     this.DataCreated?.Invoke(this, new AuditDataEventArgs(resourceData));
                     return resourceData;
@@ -260,20 +263,20 @@ namespace SanteDB.Rest.Common
                         retVal = new List<TResource>();
                     totalCount = retVal.Count();
                 }
-                else if (queryParameters.TryGetValue("_queryId", out query) && this.GetRepository() is IPersistableQueryRepositoryService)
+                else if (queryParameters.TryGetValue("_queryId", out query) && this.GetRepository() is IPersistableQueryRepositoryService<TResource>)
                 {
                     Guid queryId = Guid.Parse(query[0]);
                     List<String> lean = null;
-                    if (queryParameters.TryGetValue("_lean", out lean) && lean[0] == "true" && this.GetRepository() is IFastQueryRepositoryService)
-                        retVal = (this.GetRepository() as IFastQueryRepositoryService).FindFast<TResource>(queryExpression, offset, count, out totalCount, queryId);
+                    if (queryParameters.TryGetValue("_lean", out lean) && lean[0] == "true" && this.GetRepository() is IFastQueryRepositoryService<TResource>)
+                        retVal = (this.GetRepository() as IFastQueryRepositoryService<TResource>).FindFast(queryExpression, offset, count, out totalCount, queryId);
                     else
-                        retVal = (this.GetRepository() as IPersistableQueryRepositoryService).Find<TResource>(queryExpression, offset, count, out totalCount, queryId);
+                        retVal = (this.GetRepository() as IPersistableQueryRepositoryService<TResource>).Find(queryExpression, offset, count, out totalCount, queryId);
                 }
                 else
                 {
                     List<String> lean = null;
-                    if (queryParameters.TryGetValue("_lean", out lean) && lean[0] == "true" && this.GetRepository() is IFastQueryRepositoryService)
-                        retVal = (this.GetRepository() as IFastQueryRepositoryService).FindFast<TResource>(queryExpression, offset, count, out totalCount, Guid.Empty);
+                    if (queryParameters.TryGetValue("_lean", out lean) && lean[0] == "true" && this.GetRepository() is IFastQueryRepositoryService<TResource>)
+                        retVal = (this.GetRepository() as IFastQueryRepositoryService<TResource>).FindFast(queryExpression, offset, count, out totalCount, Guid.Empty);
                     else
                         retVal = this.GetRepository().Find(queryExpression, offset, count, out totalCount);
                 }
@@ -303,12 +306,12 @@ namespace SanteDB.Rest.Common
 
             try
             {
-                if (processData is Bundle)
-                    throw new InvalidOperationException(string.Format("Bundle must have entry of type {0}", typeof(TResource).Name));
+                if (!(processData is TResource))
+                    throw new ArgumentException($"Invalid data submission. Expected {typeof(TResource).FullName} but received {processData.GetType().FullName}. If you are submitting a bundle, ensure it has an entry point.");
                 else if (processData is TResource)
                 {
-                    var entityData = data as TResource;
-
+                    var entityData = (this.GetRepository() as IValidatingRepositoryService<TResource>)?.Validate(processData as TResource) ?? processData as TResource;
+                    
                     var retVal = this.GetRepository().Save(entityData);
                     this?.DataUpdated(this, new AuditDataEventArgs(retVal));
                     return retVal;
