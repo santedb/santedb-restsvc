@@ -20,10 +20,6 @@
 using MARC.HI.EHRS.SVC.Auditing.Data;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Security
@@ -39,7 +35,8 @@ namespace SanteDB.Core.Model.AMI.Security
         /// <summary>
         /// Get the key for this object
         /// </summary>
-        public string Key {
+        public string Key
+        {
             get => this.CorrelationToken.ToString();
             set
             {

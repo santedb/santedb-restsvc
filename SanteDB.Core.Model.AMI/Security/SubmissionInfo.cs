@@ -25,105 +25,105 @@ using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Security
 {
-	/// <summary>
-	/// Enrollment information
-	/// </summary>
-	[XmlType(nameof(SubmissionInfo), Namespace = "http://santedb.org/ami")]
-	[XmlRoot(nameof(SubmissionInfo), Namespace = "http://santedb.org/ami")]
+    /// <summary>
+    /// Enrollment information
+    /// </summary>
+    [XmlType(nameof(SubmissionInfo), Namespace = "http://santedb.org/ami")]
+    [XmlRoot(nameof(SubmissionInfo), Namespace = "http://santedb.org/ami")]
     [JsonObject(nameof(SubmissionInfo))]
-	public class SubmissionInfo
-	{
-		/// <summary>
-		/// Administration contact
-		/// </summary>
-		[XmlElement("adminContact"), JsonProperty("adminContact")]
-		public string AdminContact { get; set; }
+    public class SubmissionInfo
+    {
+        /// <summary>
+        /// Administration contact
+        /// </summary>
+        [XmlElement("adminContact"), JsonProperty("adminContact")]
+        public string AdminContact { get; set; }
 
-		/// <summary>
-		/// Administration
-		/// </summary>
+        /// <summary>
+        /// Administration
+        /// </summary>
         [XmlElement("adminAddress"), JsonProperty("adminAddress")]
-		public String AdminSiteAddress { get; set; }
+        public String AdminSiteAddress { get; set; }
 
-		/// <summary>
-		/// Disposition message
-		/// </summary>
-		[XmlElement("message"), JsonProperty("message")]
-		public string DispositionMessage { get; set; }
+        /// <summary>
+        /// Disposition message
+        /// </summary>
+        [XmlElement("message"), JsonProperty("message")]
+        public string DispositionMessage { get; set; }
 
-		/// <summary>
-		/// DN
-		/// </summary>
-		[XmlElement("dn"), JsonProperty("dn")]
-		public string DistinguishedName { get; set; }
+        /// <summary>
+        /// DN
+        /// </summary>
+        [XmlElement("dn"), JsonProperty("dn")]
+        public string DistinguishedName { get; set; }
 
-		/// <summary>
-		/// Email address of user
-		/// </summary>
-		[XmlElement("email"), JsonProperty("email")]
-		public string EMail { get; set; }
+        /// <summary>
+        /// Email address of user
+        /// </summary>
+        [XmlElement("email"), JsonProperty("email")]
+        public string EMail { get; set; }
 
-		/// <summary>
-		/// Expiry
-		/// </summary>
-		[XmlElement("notAfter"), JsonProperty("notAfter")]
-		public string NotAfter { get; set; }
+        /// <summary>
+        /// Expiry
+        /// </summary>
+        [XmlElement("notAfter"), JsonProperty("notAfter")]
+        public string NotAfter { get; set; }
 
-		/// <summary>
-		/// Before date
-		/// </summary>
-		[XmlElement("notBefore"), JsonProperty("notBefore")]
-		public string NotBefore { get; set; }
+        /// <summary>
+        /// Before date
+        /// </summary>
+        [XmlElement("notBefore"), JsonProperty("notBefore")]
+        public string NotBefore { get; set; }
 
-		/// <summary>
-		/// RequestId
-		/// </summary>
-		[XmlAttribute("id"), JsonProperty("id")]
-		public string RequestID { get; set; }
+        /// <summary>
+        /// RequestId
+        /// </summary>
+        [XmlAttribute("id"), JsonProperty("id")]
+        public string RequestID { get; set; }
 
-		/// <summary>
-		/// Resolved on
-		/// </summary>
-		[XmlElement("resolved"), JsonProperty("resolved")]
-		public string ResolvedWhen { get; set; }
+        /// <summary>
+        /// Resolved on
+        /// </summary>
+        [XmlElement("resolved"), JsonProperty("resolved")]
+        public string ResolvedWhen { get; set; }
 
-		/// <summary>
-		/// Revoke reason from Keystore
-		/// </summary>
-		[XmlIgnore]
-		public String RevokedReason
-		{
-			get { return ((int)this.XmlRevokeReason).ToString(); }
-			set
-			{
-				if (value != null)
-					this.XmlRevokeReason = (RevokeReason)Int32.Parse(value);
-			}
-		}
+        /// <summary>
+        /// Revoke reason from Keystore
+        /// </summary>
+        [XmlIgnore]
+        public String RevokedReason
+        {
+            get { return ((int)this.XmlRevokeReason).ToString(); }
+            set
+            {
+                if (value != null)
+                    this.XmlRevokeReason = (RevokeReason)Int32.Parse(value);
+            }
+        }
 
-		/// <summary>
-		/// Revoked on
-		/// </summary>
-		[XmlElement("revoked"), JsonProperty("revoked")]
-		public string RevokedWhen { get; set; }
+        /// <summary>
+        /// Revoked on
+        /// </summary>
+        [XmlElement("revoked"), JsonProperty("revoked")]
+        public string RevokedWhen { get; set; }
 
-		/// <summary>
-		/// Submitted on
-		/// </summary>
-		[XmlElement("submitted"), JsonProperty("submitted")]
-		public string SubmittedWhen { get; set; }
+        /// <summary>
+        /// Submitted on
+        /// </summary>
+        [XmlElement("submitted"), JsonProperty("submitted")]
+        public string SubmittedWhen { get; set; }
 
-		/// <summary>
-		/// Revokation reason
-		/// </summary>
-		[XmlElement("revokationReason"), JsonProperty("revokationReason")]
-		public RevokeReason XmlRevokeReason { get; set; }
+        /// <summary>
+        /// Revokation reason
+        /// </summary>
+        [XmlElement("revokationReason"), JsonProperty("revokationReason")]
+        public RevokeReason XmlRevokeReason { get; set; }
 
-		/// <summary>
-		/// Status code
-		/// </summary>
-		[XmlAttribute("status"), JsonProperty("status")]
-		public SubmissionStatus XmlStatusCode { get; set; }
+        /// <summary>
+        /// Status code
+        /// </summary>
+        [XmlAttribute("status"), JsonProperty("status")]
+        public SubmissionStatus XmlStatusCode { get; set; }
 
         /// <summary>
         /// Create new submission info from attributes

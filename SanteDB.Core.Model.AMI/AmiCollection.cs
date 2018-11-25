@@ -18,9 +18,9 @@
  * Date: 2018-11-20
  */
 using Newtonsoft.Json;
-using SanteDB.Core.Mail;
 using SanteDB.Core.Applets.Model;
 using SanteDB.Core.Interop;
+using SanteDB.Core.Mail;
 using SanteDB.Core.Model.AMI.Applet;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.AMI.Diagnostics;
@@ -36,11 +36,11 @@ using System.Xml.Serialization;
 namespace SanteDB.Core.Model.AMI.Collections
 {
 
-    
-	/// <summary>
-	/// Represents an administrative collection item.
-	/// </summary>
-	[XmlType(nameof(AmiCollection), Namespace = "http://santedb.org/ami")]
+
+    /// <summary>
+    /// Represents an administrative collection item.
+    /// </summary>
+    [XmlType(nameof(AmiCollection), Namespace = "http://santedb.org/ami")]
     [JsonObject(nameof(AmiCollection))]
     [XmlInclude(typeof(Entity))]
     [XmlInclude(typeof(ExtensionType))]
@@ -77,51 +77,51 @@ namespace SanteDB.Core.Model.AMI.Collections
     [XmlInclude(typeof(CodeSystem))]
     [XmlInclude(typeof(LogFileInfo))]
     public class AmiCollection
-	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AmiCollection"/> class.
-		/// </summary>
-		public AmiCollection()
-		{
-			this.CollectionItem = new List<Object>();
-		}
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AmiCollection"/> class.
+        /// </summary>
+        public AmiCollection()
+        {
+            this.CollectionItem = new List<Object>();
+        }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AmiCollection"/> class
-		/// with a specific list of collection items.
-		/// </summary>
-		public AmiCollection(List<Object> collectionItems)
-		{
-			this.CollectionItem = collectionItems;
-		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AmiCollection"/> class
+        /// with a specific list of collection items.
+        /// </summary>
+        public AmiCollection(List<Object> collectionItems)
+        {
+            this.CollectionItem = collectionItems;
+        }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AmiCollection"/> class
-		/// with a specific list of collection items.
-		/// </summary>
-		public AmiCollection(IEnumerable<Object> collectionItems, int offset, int totalCount)
-		{
-			this.CollectionItem = new List<Object>(collectionItems);
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AmiCollection"/> class
+        /// with a specific list of collection items.
+        /// </summary>
+        public AmiCollection(IEnumerable<Object> collectionItems, int offset, int totalCount)
+        {
+            this.CollectionItem = new List<Object>(collectionItems);
             this.Offset = offset;
             this.Size = totalCount;
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets a list of collection items.
-		/// </summary>
-		[XmlElement("item"), JsonProperty("item")]
-		public List<Object> CollectionItem { get; set; }
+        /// <summary>
+        /// Gets or sets a list of collection items.
+        /// </summary>
+        [XmlElement("item"), JsonProperty("item")]
+        public List<Object> CollectionItem { get; set; }
 
-		/// <summary>
-		/// Gets or sets the total offset.
-		/// </summary>
-		[XmlAttribute("offset"), JsonProperty("offset")]
-		public int Offset { get; set; }
+        /// <summary>
+        /// Gets or sets the total offset.
+        /// </summary>
+        [XmlAttribute("offset"), JsonProperty("offset")]
+        public int Offset { get; set; }
 
-		/// <summary>
-		/// Gets or sets the total collection size.
-		/// </summary>
-		[XmlAttribute("size"), JsonProperty("size")]
-		public int Size { get; set; }
+        /// <summary>
+        /// Gets or sets the total collection size.
+        /// </summary>
+        [XmlAttribute("size"), JsonProperty("size")]
+        public int Size { get; set; }
     }
 }

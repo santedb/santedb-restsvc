@@ -20,11 +20,8 @@
 using Newtonsoft.Json;
 using SanteDB.Core.Applets.Model;
 using SanteDB.Core.Model.AMI.Security;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Applet

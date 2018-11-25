@@ -22,26 +22,26 @@ using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.RISI
 {
-	/// <summary>
-	/// Represents a report bundle.
-	/// </summary>
-	/// <seealso cref="SanteDB.Core.Model.BaseEntityData" />
-	[JsonObject]
-	[XmlType(nameof(ReportBundle), Namespace = "http://santedb.org/risi")]
-	[XmlRoot(nameof(ReportBundle), Namespace = "http://santedb.org/risi")]
-	public class ReportBundle : BaseEntityData
-	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ReportBundle"/> class.
-		/// </summary>
-		public ReportBundle()
-		{
-		}
+    /// <summary>
+    /// Represents a report bundle.
+    /// </summary>
+    /// <seealso cref="SanteDB.Core.Model.BaseEntityData" />
+    [JsonObject]
+    [XmlType(nameof(ReportBundle), Namespace = "http://santedb.org/risi")]
+    [XmlRoot(nameof(ReportBundle), Namespace = "http://santedb.org/risi")]
+    public class ReportBundle : BaseEntityData
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReportBundle"/> class.
+        /// </summary>
+        public ReportBundle()
+        {
+        }
 
-		/// <summary>
-		/// Gets or sets the parameters.
-		/// </summary>
-		/// <value>The parameters.</value>
-		public RisiCollection<ReportParameter> Parameters { get; set; }
-	}
+        /// <summary>
+        /// Gets or sets the parameters.
+        /// </summary>
+        /// <value>The parameters.</value>
+        public RisiCollection<ReportParameter> Parameters { get; set; }
+    }
 }

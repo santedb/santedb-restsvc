@@ -24,35 +24,35 @@ using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.RISI
 {
-	/// <summary>
-	/// Represents an auto complete source which is fed from a static list of members.
-	/// </summary>
-	[XmlType(nameof(ListAutoCompleteSourceDefinition), Namespace = "http://santedb.org/risi")]
-	[JsonObject(nameof(ListAutoCompleteSourceDefinition))]
-	public class ListAutoCompleteSourceDefinition : AutoCompleteSourceDefinition
-	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ListAutoCompleteSourceDefinition"/> class.
-		/// </summary>
-		public ListAutoCompleteSourceDefinition()
-		{
-			this.Items = new List<IdentifiedData>();
-		}
+    /// <summary>
+    /// Represents an auto complete source which is fed from a static list of members.
+    /// </summary>
+    [XmlType(nameof(ListAutoCompleteSourceDefinition), Namespace = "http://santedb.org/risi")]
+    [JsonObject(nameof(ListAutoCompleteSourceDefinition))]
+    public class ListAutoCompleteSourceDefinition : AutoCompleteSourceDefinition
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListAutoCompleteSourceDefinition"/> class.
+        /// </summary>
+        public ListAutoCompleteSourceDefinition()
+        {
+            this.Items = new List<IdentifiedData>();
+        }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ListAutoCompleteSourceDefinition"/> class
-		/// with a specific list of items.
-		/// </summary>
-		/// <param name="items">The list of items.</param>
-		public ListAutoCompleteSourceDefinition(IEnumerable<IdentifiedData> items)
-		{
-			this.Items = items.ToList();
-		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListAutoCompleteSourceDefinition"/> class
+        /// with a specific list of items.
+        /// </summary>
+        /// <param name="items">The list of items.</param>
+        public ListAutoCompleteSourceDefinition(IEnumerable<IdentifiedData> items)
+        {
+            this.Items = items.ToList();
+        }
 
-		/// <summary>
-		/// Gets or sets the static list of auto-complete items.
-		/// </summary>
-		[XmlElement("items"), JsonProperty("items")]
-		public List<IdentifiedData> Items { get; set; }
-	}
+        /// <summary>
+        /// Gets or sets the static list of auto-complete items.
+        /// </summary>
+        [XmlElement("items"), JsonProperty("items")]
+        public List<IdentifiedData> Items { get; set; }
+    }
 }

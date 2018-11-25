@@ -22,22 +22,22 @@ using System.Collections.Generic;
 
 namespace SanteDB.Core.Model.RISI.Interfaces
 {
-	/// <summary>
-	/// Represents a parameter provider.
-	/// </summary>
-	public interface IParameterValuesProvider
-	{
-		/// <summary>
-		/// Gets or sets the query identifier.
-		/// </summary>
-		/// <value>The query identifier.</value>
-		Guid QueryId { get; }
+    /// <summary>
+    /// Represents a parameter provider.
+    /// </summary>
+    public interface IParameterValuesProvider
+    {
+        /// <summary>
+        /// Gets or sets the query identifier.
+        /// </summary>
+        /// <value>The query identifier.</value>
+        Guid QueryId { get; }
 
-		/// <summary>
-		/// Gets a list of values.
-		/// </summary>
-		/// <typeparam name="T">The type of parameter for which to retrieve values.</typeparam>
-		/// <returns>Returns a list of values.</returns>
-		IEnumerable<T> GetValues<T>() where T : IdentifiedData;
-	}
+        /// <summary>
+        /// Gets a list of values.
+        /// </summary>
+        /// <typeparam name="T">The type of parameter for which to retrieve values.</typeparam>
+        /// <returns>Returns a list of values.</returns>
+        IEnumerable<T> GetValues<T>() where T : IdentifiedData;
+    }
 }

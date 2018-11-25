@@ -25,48 +25,48 @@ using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Diagnostics
 {
-	/// <summary>
-	/// Diagnostics report
-	/// </summary>
-	[JsonObject(nameof(DiagnosticReport)), XmlType(nameof(DiagnosticReport), Namespace = "http://santedb.org/ami/diagnostics")]
-	[XmlRoot(nameof(DiagnosticReport), Namespace = "http://santedb.org/ami/diagnostics")]
-	public class DiagnosticReport : BaseEntityData
-	{
-		/// <summary>
-		/// Application configuration information
-		/// </summary>
-		[XmlElement("appInfo"), JsonProperty("appInfo")]
-		public DiagnosticApplicationInfo ApplicationInfo { get; set; }
+    /// <summary>
+    /// Diagnostics report
+    /// </summary>
+    [JsonObject(nameof(DiagnosticReport)), XmlType(nameof(DiagnosticReport), Namespace = "http://santedb.org/ami/diagnostics")]
+    [XmlRoot(nameof(DiagnosticReport), Namespace = "http://santedb.org/ami/diagnostics")]
+    public class DiagnosticReport : BaseEntityData
+    {
+        /// <summary>
+        /// Application configuration information
+        /// </summary>
+        [XmlElement("appInfo"), JsonProperty("appInfo")]
+        public DiagnosticApplicationInfo ApplicationInfo { get; set; }
 
-		/// <summary>
-		/// Represents the most recent logs for the bug report
-		/// </summary>
-		[XmlElement("attachText", typeof(DiagnosticTextAttachment)), JsonProperty("attach")]
-		[XmlElement("attachBin", typeof(DiagnosticBinaryAttachment))]
-		public List<DiagnosticAttachmentInfo> Attachments { get; set; }
+        /// <summary>
+        /// Represents the most recent logs for the bug report
+        /// </summary>
+        [XmlElement("attachText", typeof(DiagnosticTextAttachment)), JsonProperty("attach")]
+        [XmlElement("attachBin", typeof(DiagnosticBinaryAttachment))]
+        public List<DiagnosticAttachmentInfo> Attachments { get; set; }
 
-		/// <summary>
-		/// Gets or sets any ticket related information
-		/// </summary>
-		[XmlElement("ticketId"), JsonProperty("ticketId")]
-		public string CorrelationId { get; set; }
+        /// <summary>
+        /// Gets or sets any ticket related information
+        /// </summary>
+        [XmlElement("ticketId"), JsonProperty("ticketId")]
+        public string CorrelationId { get; set; }
 
-		/// <summary>
-		/// Gets or sets the note
-		/// </summary>
-		[XmlElement("note"), JsonProperty("note")]
-		public String Note { get; set; }
+        /// <summary>
+        /// Gets or sets the note
+        /// </summary>
+        [XmlElement("note"), JsonProperty("note")]
+        public String Note { get; set; }
 
-		/// <summary>
-		/// Represents the submitter
-		/// </summary>
-		[XmlElement("submitter"), JsonProperty("submitter")]
-		public UserEntity Submitter { get; set; }
+        /// <summary>
+        /// Represents the submitter
+        /// </summary>
+        [XmlElement("submitter"), JsonProperty("submitter")]
+        public UserEntity Submitter { get; set; }
 
-		/// <summary>
-		/// Thread information
-		/// </summary>
-		[XmlElement("thread"), JsonProperty("thread")]
-		public List<DiagnosticThreadInfo> Threads { get; set; }
-	}
+        /// <summary>
+        /// Thread information
+        /// </summary>
+        [XmlElement("thread"), JsonProperty("thread")]
+        public List<DiagnosticThreadInfo> Threads { get; set; }
+    }
 }

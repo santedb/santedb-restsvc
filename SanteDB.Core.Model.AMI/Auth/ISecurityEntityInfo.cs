@@ -18,11 +18,7 @@
  * Date: 2018-11-20
  */
 using SanteDB.Core.Model.Security;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SanteDB.Core.Model.AMI.Auth
 {
@@ -41,6 +37,6 @@ namespace SanteDB.Core.Model.AMI.Auth
         /// <summary>
         /// Gets the policies for the object
         /// </summary>
-        List<SecurityPolicyInfo> Policies { get; set;  }
+        List<SecurityPolicyInfo> Policies { get; set; }
     }
 }

@@ -23,64 +23,64 @@ using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.RISI
 {
-	/// <summary>
-	/// Represents a parameter type.
-	/// </summary>
-	[XmlType(nameof(ParameterType), Namespace = "http://santedb.org/risi")]
-	[XmlRoot(nameof(ParameterType), Namespace = "http://santedb.org/risi")]
-	[JsonObject(nameof(ParameterType))]
-	public class ParameterType : BaseEntityData
-	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ParameterType"/> class.
-		/// </summary>
-		public ParameterType()
-		{
-			this.CreationTime = DateTimeOffset.Now;
-		}
+    /// <summary>
+    /// Represents a parameter type.
+    /// </summary>
+    [XmlType(nameof(ParameterType), Namespace = "http://santedb.org/risi")]
+    [XmlRoot(nameof(ParameterType), Namespace = "http://santedb.org/risi")]
+    [JsonObject(nameof(ParameterType))]
+    public class ParameterType : BaseEntityData
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ParameterType"/> class.
+        /// </summary>
+        public ParameterType()
+        {
+            this.CreationTime = DateTimeOffset.Now;
+        }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ParameterType"/> class.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		public ParameterType(Guid key) : this()
-		{
-			this.Key = key;
-		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ParameterType"/> class.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        public ParameterType(Guid key) : this()
+        {
+            this.Key = key;
+        }
 
-		/// <summary>
-		/// Gets or sets the auto-complete source.
-		/// </summary>
-		[XmlElement("listAutoComplete", Type = typeof(ListAutoCompleteSourceDefinition))]
-		[XmlElement("queryAutoComplete", Type = typeof(QueryAutoCompleteSourceDefinition))]
-		public AutoCompleteSourceDefinition AutoCompleteSourceDefinition { get; set; }
+        /// <summary>
+        /// Gets or sets the auto-complete source.
+        /// </summary>
+        [XmlElement("listAutoComplete", Type = typeof(ListAutoCompleteSourceDefinition))]
+        [XmlElement("queryAutoComplete", Type = typeof(QueryAutoCompleteSourceDefinition))]
+        public AutoCompleteSourceDefinition AutoCompleteSourceDefinition { get; set; }
 
-		/// <summary>
-		/// Gets or sets the system type.
-		/// </summary>
-		[XmlIgnore]
-		public Type SystemType { get; set; }
+        /// <summary>
+        /// Gets or sets the system type.
+        /// </summary>
+        [XmlIgnore]
+        public Type SystemType { get; set; }
 
-		/// <summary>
-		/// Gets or sets the system type in XML.
-		/// </summary>
-		[XmlElement("systemType")]
-		public string SystemTypeXml
-		{
-			get
-			{
-				return this.SystemType?.AssemblyQualifiedName;
-			}
-			set
-			{
-				this.SystemType = System.Type.GetType(value);
-			}
-		}
+        /// <summary>
+        /// Gets or sets the system type in XML.
+        /// </summary>
+        [XmlElement("systemType")]
+        public string SystemTypeXml
+        {
+            get
+            {
+                return this.SystemType?.AssemblyQualifiedName;
+            }
+            set
+            {
+                this.SystemType = System.Type.GetType(value);
+            }
+        }
 
-		/// <summary>
-		/// Gets or sets the values provider of the report data type.
-		/// </summary>
-		[XmlAttribute("provider")]
-		public string ValuesProvider { get; set; }
-	}
+        /// <summary>
+        /// Gets or sets the values provider of the report data type.
+        /// </summary>
+        [XmlAttribute("provider")]
+        public string ValuesProvider { get; set; }
+    }
 }

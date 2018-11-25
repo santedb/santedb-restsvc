@@ -23,68 +23,68 @@ using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Auth
 {
-	/// <summary>
-	/// Wrapper for policy information
-	/// </summary>
-	[XmlType(nameof(SecurityPolicyInfo), Namespace = "http://santedb.org/ami")]
-	[XmlRoot(nameof(SecurityPolicyInfo), Namespace = "http://santedb.org/ami")]
+    /// <summary>
+    /// Wrapper for policy information
+    /// </summary>
+    [XmlType(nameof(SecurityPolicyInfo), Namespace = "http://santedb.org/ami")]
+    [XmlRoot(nameof(SecurityPolicyInfo), Namespace = "http://santedb.org/ami")]
     [JsonObject(nameof(SecurityPolicyInfo))]
-	public class SecurityPolicyInfo
-	{
-		/// <summary>
-		/// Policy information
-		/// </summary>
-		public SecurityPolicyInfo()
-		{
-		}
+    public class SecurityPolicyInfo
+    {
+        /// <summary>
+        /// Policy information
+        /// </summary>
+        public SecurityPolicyInfo()
+        {
+        }
 
-		/// <summary>
-		/// Constructs this policy information object from an IMS policy instane
-		/// </summary>
-		public SecurityPolicyInfo(SecurityPolicy o)
-		{
-			this.Name = o.Name;
-			this.Oid = o.Oid;
-			this.CanOverride = o.CanOverride;
-			this.Policy = o;
-		}
+        /// <summary>
+        /// Constructs this policy information object from an IMS policy instane
+        /// </summary>
+        public SecurityPolicyInfo(SecurityPolicy o)
+        {
+            this.Name = o.Name;
+            this.Oid = o.Oid;
+            this.CanOverride = o.CanOverride;
+            this.Policy = o;
+        }
 
-		/// <summary>
-		/// Constructs this policy information object from an IMS policy instane
-		/// </summary>
-		public SecurityPolicyInfo(SecurityPolicyInstance o) : this(o.Policy)
-		{
-			this.Grant = o.GrantType;
-		}
+        /// <summary>
+        /// Constructs this policy information object from an IMS policy instane
+        /// </summary>
+        public SecurityPolicyInfo(SecurityPolicyInstance o) : this(o.Policy)
+        {
+            this.Grant = o.GrantType;
+        }
 
-		/// <summary>
-		/// True if the policy can be overridden
-		/// </summary>
-		[XmlAttribute("canOverride"), JsonProperty("canOverride")]
-		public bool CanOverride { get; set; }
+        /// <summary>
+        /// True if the policy can be overridden
+        /// </summary>
+        [XmlAttribute("canOverride"), JsonProperty("canOverride")]
+        public bool CanOverride { get; set; }
 
-		/// <summary>
-		/// The outcome grant if an instance
-		/// </summary>
-		[XmlAttribute("grant"), JsonProperty("grant")]
-		public PolicyGrantType Grant { get; set; }
+        /// <summary>
+        /// The outcome grant if an instance
+        /// </summary>
+        [XmlAttribute("grant"), JsonProperty("grant")]
+        public PolicyGrantType Grant { get; set; }
 
-		/// <summary>
-		/// The name of the policy
-		/// </summary>
-		[XmlAttribute("name"), JsonProperty("name")]
-		public string Name { get; set; }
+        /// <summary>
+        /// The name of the policy
+        /// </summary>
+        [XmlAttribute("name"), JsonProperty("name")]
+        public string Name { get; set; }
 
-		/// <summary>
-		/// The OID of the policy
-		/// </summary>
-		[XmlAttribute("oid"), JsonProperty("oid")]
-		public string Oid { get; set; }
+        /// <summary>
+        /// The OID of the policy
+        /// </summary>
+        [XmlAttribute("oid"), JsonProperty("oid")]
+        public string Oid { get; set; }
 
-		/// <summary>
-		/// Gets or sets the policy information
-		/// </summary>
-		[XmlElement("policyInfo"), JsonProperty("policyInfo")]
-		public SecurityPolicy Policy { get; set; }
-	}
+        /// <summary>
+        /// Gets or sets the policy information
+        /// </summary>
+        [XmlElement("policyInfo"), JsonProperty("policyInfo")]
+        public SecurityPolicy Policy { get; set; }
+    }
 }

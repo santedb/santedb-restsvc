@@ -26,58 +26,58 @@ using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Security
 {
-	/// <summary>
-	/// Audit information which wraps audit data from service core
-	/// </summary>
-	[XmlRoot("audit", Namespace = "http://santedb.org/ami")]
-	[XmlType(nameof(AuditSubmission), Namespace = "http://santedb.org/ami")]
+    /// <summary>
+    /// Audit information which wraps audit data from service core
+    /// </summary>
+    [XmlRoot("audit", Namespace = "http://santedb.org/ami")]
+    [XmlType(nameof(AuditSubmission), Namespace = "http://santedb.org/ami")]
     [JsonObject(nameof(AuditSubmission))]
-	public class AuditSubmission : IdentifiedData
-	{
-		/// <summary>
-		/// Creates a new instance of audit information
-		/// </summary>
-		public AuditSubmission()
-		{
-			this.Audit = new List<AuditData>();
-		}
+    public class AuditSubmission : IdentifiedData
+    {
+        /// <summary>
+        /// Creates a new instance of audit information
+        /// </summary>
+        public AuditSubmission()
+        {
+            this.Audit = new List<AuditData>();
+        }
 
-		/// <summary>
-		///  Audit info with data
-		/// </summary>
-		/// <param name="data"></param>
-		public AuditSubmission(AuditData data)
-		{
-			this.Audit = new List<AuditData>() { data };
-		}
+        /// <summary>
+        ///  Audit info with data
+        /// </summary>
+        /// <param name="data"></param>
+        public AuditSubmission(AuditData data)
+        {
+            this.Audit = new List<AuditData>() { data };
+        }
 
-		/// <summary>
-		/// Gets or sets the audit
-		/// </summary>
-		[XmlElement("audit"), JsonProperty("audit")]
-		public List<AuditData> Audit { get; set; }
+        /// <summary>
+        /// Gets or sets the audit
+        /// </summary>
+        [XmlElement("audit"), JsonProperty("audit")]
+        public List<AuditData> Audit { get; set; }
 
-		/// <summary>
-		/// When was the audit modified
-		/// </summary>
-		public override DateTimeOffset ModifiedOn
-		{
-			get
-			{
-				return this.Audit.Min(o => o.Timestamp);
-			}
-		}
+        /// <summary>
+        /// When was the audit modified
+        /// </summary>
+        public override DateTimeOffset ModifiedOn
+        {
+            get
+            {
+                return this.Audit.Min(o => o.Timestamp);
+            }
+        }
 
-		/// <summary>
-		/// Gets the process identifier of the mobile application
-		/// </summary>
-		[XmlElement("pid")]
-		public int ProcessId { get; set; }
+        /// <summary>
+        /// Gets the process identifier of the mobile application
+        /// </summary>
+        [XmlElement("pid")]
+        public int ProcessId { get; set; }
 
-		/// <summary>
-		/// Gets or sets the device identifier which sent the audit
-		/// </summary>
-		[XmlElement("deviceId")]
-		public Guid SecurityDeviceId { get; set; }
-	}
+        /// <summary>
+        /// Gets or sets the device identifier which sent the audit
+        /// </summary>
+        [XmlElement("deviceId")]
+        public Guid SecurityDeviceId { get; set; }
+    }
 }

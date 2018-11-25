@@ -18,22 +18,22 @@
  * Date: 2018-11-20
  */
 using Newtonsoft.Json;
+using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Entities;
 using System.Xml.Serialization;
-using SanteDB.Core.Model.DataTypes;
 
 namespace SanteDB.Core.Model.RISI
 {
-	/// <summary>
-	/// Represents an auto complete source definition.
-	/// </summary>
-	[XmlInclude(typeof(Place))]
-	[XmlInclude(typeof(Concept))]
-	[XmlInclude(typeof(Material))]
-	[XmlInclude(typeof(Organization))]
-	[JsonObject(nameof(AutoCompleteSourceDefinition))]
-	[XmlType(nameof(AutoCompleteSourceDefinition), Namespace = "http://santedb.org/risi")]
-	public abstract class AutoCompleteSourceDefinition : BaseEntityData
-	{
-	}
+    /// <summary>
+    /// Represents an auto complete source definition.
+    /// </summary>
+    [XmlInclude(typeof(Place))]
+    [XmlInclude(typeof(Concept))]
+    [XmlInclude(typeof(Material))]
+    [XmlInclude(typeof(Organization))]
+    [JsonObject(nameof(AutoCompleteSourceDefinition))]
+    [XmlType(nameof(AutoCompleteSourceDefinition), Namespace = "http://santedb.org/risi")]
+    public abstract class AutoCompleteSourceDefinition : BaseEntityData
+    {
+    }
 }

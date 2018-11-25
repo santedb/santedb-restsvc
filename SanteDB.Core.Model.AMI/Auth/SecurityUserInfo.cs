@@ -22,8 +22,6 @@ using SanteDB.Core.Model.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Auth
@@ -76,7 +74,8 @@ namespace SanteDB.Core.Model.AMI.Auth
         /// Get polocies for the user
         /// </summary>
         [XmlElement("policy"), JsonProperty("policy")]
-        public List<SecurityPolicyInfo> Policies {
+        public List<SecurityPolicyInfo> Policies
+        {
             get
             {
                 return this.Entity?.Policies.Select(o => new SecurityPolicyInfo(o)).ToList();

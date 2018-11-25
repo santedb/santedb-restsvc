@@ -23,30 +23,30 @@ using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Security
 {
-	/// <summary>
-	/// Submission request
-	/// </summary>
-	[XmlType(nameof(SubmissionRequest), Namespace = "http://santedb.org/ami")]
-	[XmlRoot(nameof(SubmissionRequest), Namespace = "http://santedb.org/ami")]
+    /// <summary>
+    /// Submission request
+    /// </summary>
+    [XmlType(nameof(SubmissionRequest), Namespace = "http://santedb.org/ami")]
+    [XmlRoot(nameof(SubmissionRequest), Namespace = "http://santedb.org/ami")]
     [JsonObject(nameof(SubmissionRequest))]
-	public class SubmissionRequest
-	{
-		/// <summary>
-		/// Gets or sets the admin address
-		/// </summary>
-		[XmlElement("address"), JsonProperty("address")]
-		public String AdminAddress { get; set; }
+    public class SubmissionRequest
+    {
+        /// <summary>
+        /// Gets or sets the admin address
+        /// </summary>
+        [XmlElement("address"), JsonProperty("address")]
+        public String AdminAddress { get; set; }
 
-		/// <summary>
-		/// Gets or sets the contact name
-		/// </summary>
-		[XmlElement("contact"), JsonProperty("contact")]
-		public String AdminContactName { get; set; }
+        /// <summary>
+        /// Gets or sets the contact name
+        /// </summary>
+        [XmlElement("contact"), JsonProperty("contact")]
+        public String AdminContactName { get; set; }
 
-		/// <summary>
-		/// Gets or sets the cmc request
-		/// </summary>
-		[XmlElement("cmc"), JsonProperty("cmc")]
-		public String CmcRequest { get; set; }
-	}
+        /// <summary>
+        /// Gets or sets the cmc request
+        /// </summary>
+        [XmlElement("cmc"), JsonProperty("cmc")]
+        public String CmcRequest { get; set; }
+    }
 }

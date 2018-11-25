@@ -24,51 +24,51 @@ using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.RISI
 {
-	/// <summary>
-	/// Represents a RISI collection.
-	/// </summary>
-	/// <typeparam name="T">The type of the collection.</typeparam>
-	[XmlType(Namespace = "http://santedb.org/risi")]
-	[XmlRoot(Namespace = "http://santedb.org/risi")]
-	[XmlInclude(typeof(ReportFormat))]
-	[XmlInclude(typeof(ParameterType))]
-	[XmlInclude(typeof(ReportParameter))]
-	[XmlInclude(typeof(ReportDefinition))]
-	[XmlInclude(typeof(RisiCollection<ReportParameter>))]
-	[XmlInclude(typeof(AutoCompleteSourceDefinition))]
-	[XmlInclude(typeof(ListAutoCompleteSourceDefinition))]
-	[XmlInclude(typeof(QueryAutoCompleteSourceDefinition))]
-	[JsonObject(nameof(RisiCollection<T>))]
-	public class RisiCollection<T>
-	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="RisiCollection{T}"/> class.
-		/// </summary>
-		public RisiCollection() : this(new List<T>())
-		{
-		}
+    /// <summary>
+    /// Represents a RISI collection.
+    /// </summary>
+    /// <typeparam name="T">The type of the collection.</typeparam>
+    [XmlType(Namespace = "http://santedb.org/risi")]
+    [XmlRoot(Namespace = "http://santedb.org/risi")]
+    [XmlInclude(typeof(ReportFormat))]
+    [XmlInclude(typeof(ParameterType))]
+    [XmlInclude(typeof(ReportParameter))]
+    [XmlInclude(typeof(ReportDefinition))]
+    [XmlInclude(typeof(RisiCollection<ReportParameter>))]
+    [XmlInclude(typeof(AutoCompleteSourceDefinition))]
+    [XmlInclude(typeof(ListAutoCompleteSourceDefinition))]
+    [XmlInclude(typeof(QueryAutoCompleteSourceDefinition))]
+    [JsonObject(nameof(RisiCollection<T>))]
+    public class RisiCollection<T>
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RisiCollection{T}"/> class.
+        /// </summary>
+        public RisiCollection() : this(new List<T>())
+        {
+        }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="RisiCollection{T}"/> class
-		/// with a specific <see cref="List{T}"/> of items.
-		/// </summary>
-		/// <param name="items">The list of items.</param>
-		public RisiCollection(IEnumerable<T> items)
-		{
-			this.Size = items.Count();
-			this.Items = items.ToList();
-		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RisiCollection{T}"/> class
+        /// with a specific <see cref="List{T}"/> of items.
+        /// </summary>
+        /// <param name="items">The list of items.</param>
+        public RisiCollection(IEnumerable<T> items)
+        {
+            this.Size = items.Count();
+            this.Items = items.ToList();
+        }
 
-		/// <summary>
-		/// Gets or sets the list of items in the <see cref="RisiCollection{T}"/>.
-		/// </summary>
-		[XmlElement("item"), JsonProperty("item")]
-		public List<T> Items { get; set; }
+        /// <summary>
+        /// Gets or sets the list of items in the <see cref="RisiCollection{T}"/>.
+        /// </summary>
+        [XmlElement("item"), JsonProperty("item")]
+        public List<T> Items { get; set; }
 
-		/// <summary>
-		/// Gets or sets the count of the items.
-		/// </summary>
-		[XmlAttribute("size"), JsonProperty("size")]
-		public int Size { get; set; }
-	}
+        /// <summary>
+        /// Gets or sets the count of the items.
+        /// </summary>
+        [XmlAttribute("size"), JsonProperty("size")]
+        public int Size { get; set; }
+    }
 }

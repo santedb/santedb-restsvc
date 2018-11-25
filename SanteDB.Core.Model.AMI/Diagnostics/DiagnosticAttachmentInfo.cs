@@ -23,40 +23,40 @@ using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Diagnostics
 {
-	/// <summary>
-	/// Runtime file inforamtion
-	/// </summary>
-	[JsonObject(nameof(DiagnosticAttachmentInfo)), XmlType(nameof(DiagnosticAttachmentInfo), Namespace = "http://santedb.org/ami/diagnostics")]
-	public class DiagnosticAttachmentInfo
-	{
-		/// <summary>
-		/// Description
-		/// </summary>
-		[JsonProperty("description"), XmlElement("description")]
-		public String FileDescription { get; set; }
+    /// <summary>
+    /// Runtime file inforamtion
+    /// </summary>
+    [JsonObject(nameof(DiagnosticAttachmentInfo)), XmlType(nameof(DiagnosticAttachmentInfo), Namespace = "http://santedb.org/ami/diagnostics")]
+    public class DiagnosticAttachmentInfo
+    {
+        /// <summary>
+        /// Description
+        /// </summary>
+        [JsonProperty("description"), XmlElement("description")]
+        public String FileDescription { get; set; }
 
-		/// <summary>
-		/// Gets or sets the file name
-		/// </summary>
-		[JsonProperty("file"), XmlAttribute("file")]
-		public String FileName { get; set; }
+        /// <summary>
+        /// Gets or sets the file name
+        /// </summary>
+        [JsonProperty("file"), XmlAttribute("file")]
+        public String FileName { get; set; }
 
-		/// <summary>
-		/// Size of the file
-		/// </summary>
-		[JsonProperty("size"), XmlAttribute("size")]
-		public long FileSize { get; set; }
+        /// <summary>
+        /// Size of the file
+        /// </summary>
+        [JsonProperty("size"), XmlAttribute("size")]
+        public long FileSize { get; set; }
 
-		/// <summary>
-		/// Gets or sets the identiifer
-		/// </summary>
-		[XmlAttribute("id"), JsonProperty("id")]
-		public String Id { get; set; }
+        /// <summary>
+        /// Gets or sets the identiifer
+        /// </summary>
+        [XmlAttribute("id"), JsonProperty("id")]
+        public String Id { get; set; }
 
-		/// <summary>
-		/// Last write date
-		/// </summary>
-		[JsonProperty("lastWrite"), XmlAttribute("lastWrite")]
-		public DateTime LastWriteDate { get; set; }
-	}
+        /// <summary>
+        /// Last write date
+        /// </summary>
+        [JsonProperty("lastWrite"), XmlAttribute("lastWrite")]
+        public DateTime LastWriteDate { get; set; }
+    }
 }

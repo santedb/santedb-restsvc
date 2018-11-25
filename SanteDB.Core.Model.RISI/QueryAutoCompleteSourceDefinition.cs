@@ -22,30 +22,30 @@ using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.RISI
 {
-	/// <summary>
-	/// Represents an auto-complete source definition which is that of a query.
-	/// </summary>
-	[XmlType(nameof(QueryAutoCompleteSourceDefinition), Namespace = "http://santedb.org/risi")]
-	[JsonObject(nameof(QueryAutoCompleteSourceDefinition))]
-	public class QueryAutoCompleteSourceDefinition : AutoCompleteSourceDefinition
-	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="QueryAutoCompleteSourceDefinition"/> class.
-		/// </summary>
-		public QueryAutoCompleteSourceDefinition()
-		{
-		}
+    /// <summary>
+    /// Represents an auto-complete source definition which is that of a query.
+    /// </summary>
+    [XmlType(nameof(QueryAutoCompleteSourceDefinition), Namespace = "http://santedb.org/risi")]
+    [JsonObject(nameof(QueryAutoCompleteSourceDefinition))]
+    public class QueryAutoCompleteSourceDefinition : AutoCompleteSourceDefinition
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QueryAutoCompleteSourceDefinition"/> class.
+        /// </summary>
+        public QueryAutoCompleteSourceDefinition()
+        {
+        }
 
-		/// <summary>
-		/// Gets or sets the query itself.
-		/// </summary>
-		[XmlElement("query")]
-		public string Query { get; set; }
+        /// <summary>
+        /// Gets or sets the query itself.
+        /// </summary>
+        [XmlElement("query")]
+        public string Query { get; set; }
 
-		/// <summary>
-		/// Gets or sets the source of the auto-complete source.
-		/// </summary>
-		[XmlElement("source"), JsonProperty("source")]
-		public string Source { get; set; }
-	}
+        /// <summary>
+        /// Gets or sets the source of the auto-complete source.
+        /// </summary>
+        [XmlElement("source"), JsonProperty("source")]
+        public string Source { get; set; }
+    }
 }

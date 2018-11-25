@@ -23,40 +23,40 @@ using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Diagnostics
 {
-	/// <summary>
-	/// Environment information
-	/// </summary>
-	[JsonObject(nameof(DiagnosticEnvironmentInfo)), XmlType(nameof(DiagnosticEnvironmentInfo), Namespace = "http://santedb.org/ami/diagnostics")]
-	public class DiagnosticEnvironmentInfo
-	{
-		/// <summary>
-		/// Is platform 64 bit
-		/// </summary>
-		[JsonProperty("is64bit"), XmlAttribute("is64Bit")]
-		public bool Is64Bit { get; set; }
+    /// <summary>
+    /// Environment information
+    /// </summary>
+    [JsonObject(nameof(DiagnosticEnvironmentInfo)), XmlType(nameof(DiagnosticEnvironmentInfo), Namespace = "http://santedb.org/ami/diagnostics")]
+    public class DiagnosticEnvironmentInfo
+    {
+        /// <summary>
+        /// Is platform 64 bit
+        /// </summary>
+        [JsonProperty("is64bit"), XmlAttribute("is64Bit")]
+        public bool Is64Bit { get; set; }
 
-		/// <summary>
-		/// OS Version
-		/// </summary>
-		[JsonProperty("osVersion"), XmlAttribute("osVersion")]
-		public String OSVersion { get; set; }
+        /// <summary>
+        /// OS Version
+        /// </summary>
+        [JsonProperty("osVersion"), XmlAttribute("osVersion")]
+        public String OSVersion { get; set; }
 
-		/// <summary>
-		/// CPU count
-		/// </summary>
-		[JsonProperty("processorCount"), XmlAttribute("processorCount")]
-		public int ProcessorCount { get; set; }
+        /// <summary>
+        /// CPU count
+        /// </summary>
+        [JsonProperty("processorCount"), XmlAttribute("processorCount")]
+        public int ProcessorCount { get; set; }
 
-		/// <summary>
-		/// Used memory
-		/// </summary>
-		[JsonProperty("usedMem"), XmlElement("mem")]
-		public long UsedMemory { get; set; }
+        /// <summary>
+        /// Used memory
+        /// </summary>
+        [JsonProperty("usedMem"), XmlElement("mem")]
+        public long UsedMemory { get; set; }
 
-		/// <summary>
-		/// Version
-		/// </summary>
-		[JsonProperty("version"), XmlElement("version")]
-		public String Version { get; set; }
-	}
+        /// <summary>
+        /// Version
+        /// </summary>
+        [JsonProperty("version"), XmlElement("version")]
+        public String Version { get; set; }
+    }
 }

@@ -18,48 +18,48 @@
  * Date: 2018-11-20
  */
 using Newtonsoft.Json;
-using SanteDB.Core.Model.Interfaces;
 using System;
 using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Logging
 {
-	/// <summary>
-	/// Log file information
-	/// </summary>
-	[XmlRoot(nameof(LogFileInfo), Namespace = "http://santedb.org/ami")]
-	[JsonObject(nameof(LogFileInfo))]
-	public class LogFileInfo : IAmiIdentified
-	{
-		/// <summary>
-		/// Gets or sets the content
-		/// </summary>
-		[XmlElement("text"), JsonProperty("text")]
-		public byte[] Contents { get; set; }
+    /// <summary>
+    /// Log file information
+    /// </summary>
+    [XmlRoot(nameof(LogFileInfo), Namespace = "http://santedb.org/ami")]
+    [JsonObject(nameof(LogFileInfo))]
+    public class LogFileInfo : IAmiIdentified
+    {
+        /// <summary>
+        /// Gets or sets the content
+        /// </summary>
+        [XmlElement("text"), JsonProperty("text")]
+        public byte[] Contents { get; set; }
 
-		/// <summary>
-		/// Gets or sets the last write time
-		/// </summary>
-		[XmlElement("modified"), JsonProperty("modified")]
-		public DateTime LastWrite { get; set; }
+        /// <summary>
+        /// Gets or sets the last write time
+        /// </summary>
+        [XmlElement("modified"), JsonProperty("modified")]
+        public DateTime LastWrite { get; set; }
 
-		/// <summary>
-		/// The key of the logfile
-		/// </summary>
-		[XmlElement("name"), JsonProperty("name")]
-		public String Name { get; set; }
+        /// <summary>
+        /// The key of the logfile
+        /// </summary>
+        [XmlElement("name"), JsonProperty("name")]
+        public String Name { get; set; }
 
-		/// <summary>
-		/// Gets or sets the size of the file
-		/// </summary>
-		[XmlElement("size"), JsonProperty("size")]
-		public long Size { get; set; }
+        /// <summary>
+        /// Gets or sets the size of the file
+        /// </summary>
+        [XmlElement("size"), JsonProperty("size")]
+        public long Size { get; set; }
 
         /// <summary>
         /// Get the requested key
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        public string Key {
+        public string Key
+        {
             get => this.Name;
             set {; }
         }

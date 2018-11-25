@@ -18,10 +18,6 @@
  * Date: 2018-11-20
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SanteDB.Core.Model.AMI
 {
@@ -34,7 +30,7 @@ namespace SanteDB.Core.Model.AMI
         /// <summary>
         /// Get the desired url resource key 
         /// </summary>
-        String Key { get; set;  }
+        String Key { get; set; }
 
         /// <summary>
         /// Gets the tag for the resource
