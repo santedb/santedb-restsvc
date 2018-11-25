@@ -160,7 +160,7 @@ namespace SanteDB.Rest.Common
                 else if (processData is TResource)
                 {
                     
-                    var resourceData = (this.GetRepository() as IValidatingRepositoryService<TResource>)?.Validate(processData as TResource) ?? processData as TResource;
+                    var resourceData = processData as TResource;
                     resourceData = updateIfExists ? this.GetRepository().Save(resourceData) : this.GetRepository().Insert(resourceData);
                     this.DataCreated?.Invoke(this, new AuditDataEventArgs(resourceData));
                     return resourceData;
@@ -310,7 +310,7 @@ namespace SanteDB.Rest.Common
                     throw new ArgumentException($"Invalid data submission. Expected {typeof(TResource).FullName} but received {processData.GetType().FullName}. If you are submitting a bundle, ensure it has an entry point.");
                 else if (processData is TResource)
                 {
-                    var entityData = (this.GetRepository() as IValidatingRepositoryService<TResource>)?.Validate(processData as TResource) ?? processData as TResource;
+                    var entityData = processData as TResource;
                     
                     var retVal = this.GetRepository().Save(entityData);
                     this?.DataUpdated(this, new AuditDataEventArgs(retVal));
