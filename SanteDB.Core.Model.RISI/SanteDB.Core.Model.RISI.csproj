@@ -74,10 +74,10 @@
       <ItemGroup>
         <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
         <PackageReference Include="SanteDB.Core.Api">
-          <Version>1.9.11</Version>
+          <Version>1.9.12</Version>
         </PackageReference>
         <PackageReference Include="SanteDB.Core.Model">
-          <Version>1.9.10</Version>
+          <Version>1.9.12</Version>
         </PackageReference>
       </ItemGroup>
     </Otherwise>
