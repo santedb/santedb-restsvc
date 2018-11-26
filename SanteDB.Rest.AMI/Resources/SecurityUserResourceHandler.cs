@@ -52,7 +52,7 @@ namespace SanteDB.Rest.AMI.Resources
 
             // User information to roles
             if (td.Roles.Count > 0)
-                ApplicationServiceContext.Current.GetService<IRoleProviderService>().AddUsersToRoles(new string[] { retVal.Entity.UserName }, td.Roles.ToArray());
+                ApplicationServiceContext.Current.GetService<IRoleProviderService>().AddUsersToRoles(new string[] { retVal.Entity.UserName }, td.Roles.ToArray(), AuthenticationContext.Current.Principal);
 
             return new SecurityUserInfo(retVal.Entity)
             {
@@ -88,7 +88,7 @@ namespace SanteDB.Rest.AMI.Resources
             // Update the user
             if (td.PasswordOnly)
             {
-                ApplicationServiceContext.Current.GetService<IIdentityProviderService>().ChangePassword(td.Entity.UserName, td.Entity.Password);
+                ApplicationServiceContext.Current.GetService<IIdentityProviderService>().ChangePassword(td.Entity.UserName, td.Entity.Password, AuthenticationContext.Current.Principal);
                 return null;
             }
             else
@@ -101,8 +101,8 @@ namespace SanteDB.Rest.AMI.Resources
                 {
                     var irps = ApplicationServiceContext.Current.GetService<IRoleProviderService>();
                     // Remove the user from all roles
-                    irps.RemoveUsersFromRoles(new string[] { retVal.Entity.UserName }, irps.GetAllRoles());
-                    irps.AddUsersToRoles(new string[] { retVal.Entity.UserName }, td.Roles.ToArray());
+                    irps.RemoveUsersFromRoles(new string[] { retVal.Entity.UserName }, irps.GetAllRoles(), AuthenticationContext.Current.Principal);
+                    irps.AddUsersToRoles(new string[] { retVal.Entity.UserName }, td.Roles.ToArray(), AuthenticationContext.Current.Principal);
                 }
 
                 return new SecurityUserInfo(retVal.Entity)
