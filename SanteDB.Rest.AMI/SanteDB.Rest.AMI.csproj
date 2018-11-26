@@ -86,7 +86,7 @@
       <ItemGroup>
         <PackageReference Include="RestSrvr" Version="1.9.10" />
         <PackageReference Include="SanteDB.Core.Applets" Version="1.9.10" />
-        <PackageReference Include="SanteDB.Core.Api" Version="1.9.10" />
+        <PackageReference Include="SanteDB.Core.Api" Version="1.9.11" />
         <PackageReference Include="SanteDB.Core.Model" Version="1.9.10" />
       </ItemGroup>
     </Otherwise>
