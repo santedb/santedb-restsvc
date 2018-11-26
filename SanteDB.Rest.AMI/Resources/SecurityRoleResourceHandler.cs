@@ -21,11 +21,8 @@ using SanteDB.Core;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -50,7 +47,7 @@ namespace SanteDB.Rest.AMI.Resources
             
             if(td.Users.Count > 0)
             {
-                ApplicationServiceContext.Current.GetService<ISecurityInformationService>().AddUsersToRoles(td.Users.ToArray(), new string[] { td.Entity.Name });
+                ApplicationServiceContext.Current.GetService<IRoleProviderService>().AddUsersToRoles(td.Users.ToArray(), new string[] { td.Entity.Name });
             }
             return new SecurityRoleInfo(retVal.Entity);
         }

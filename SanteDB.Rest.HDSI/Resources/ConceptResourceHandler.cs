@@ -17,27 +17,19 @@
  * User: justin
  * Date: 2018-11-20
  */
-using SanteDB.Core.Model;
-using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
-using SanteDB.Core.Services;
+using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Permissions;
-using SanteDB.Core.Interop;
-using SanteDB.Rest.Common;
-using SanteDB.Rest.Common.Attributes;
-using SanteDB.Core;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
-	/// <summary>
-	/// A resource handler for a concept
-	/// </summary>
-	public class ConceptResourceHandler : ResourceHandlerBase<Concept>
+    /// <summary>
+    /// A resource handler for a concept
+    /// </summary>
+    public class ConceptResourceHandler : ResourceHandlerBase<Concept>
 	{
 		/// <summary>
 		/// Create the specified object in the database

@@ -17,16 +17,8 @@
  * User: justin
  * Date: 2018-11-20
  */
-using SanteDB.Core.Model;
-using SanteDB.Core.Model.DataTypes;
-using SanteDB.Core.Model.Query;
-using SanteDB.Core.Security;
-using SanteDB.Rest.Common.Attributes;
-using SanteDB.Core.Services;
-using System;
-using System.Collections.Generic;
 using SanteDB.Core.Interop;
-using SanteDB.Rest.Common;
+using SanteDB.Core.Model.DataTypes;
 
 namespace SanteDB.Rest.HDSI.Resources
 {

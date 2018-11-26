@@ -17,23 +17,15 @@
  * User: justin
  * Date: 2018-11-20
  */
-using SanteDB.Core.Model;
-using SanteDB.Core.Model.Collection;
-using SanteDB.Core.Model.DataTypes;
-using SanteDB.Core.Model.Query;
-using SanteDB.Core.Services;
-using System;
-using System.Collections.Generic;
 using SanteDB.Core.Interop;
-using SanteDB.Rest.Common;
-using SanteDB.Core;
+using SanteDB.Core.Model.DataTypes;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
-	/// <summary>
-	/// Represents concept class resource handler.
-	/// </summary>
-	public class ConceptClassResourceHandler : ResourceHandlerBase<ConceptClass>
+    /// <summary>
+    /// Represents concept class resource handler.
+    /// </summary>
+    public class ConceptClassResourceHandler : ResourceHandlerBase<ConceptClass>
 	{
         /// <summary>
         /// Get capabilities

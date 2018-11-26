@@ -19,14 +19,9 @@
  */
 using SanteDB.Core;
 using SanteDB.Core.Interop;
-using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SanteDB.Rest.AMI.Resources
 {

@@ -32,10 +32,10 @@ using System.Xml.Schema;
 
 namespace SanteDB.Rest.HDSI
 {
-	/// <summary>
-	/// The HDSI service interface
-	/// </summary>
-	[ServiceContractAttribute(Name = "HDSI")]
+    /// <summary>
+    /// The HDSI service interface
+    /// </summary>
+    [ServiceContractAttribute(Name = "HDSI")]
     [ServiceKnownResource(typeof(Concept))]
     [ServiceKnownResource(typeof(ConceptClass))]
     [ServiceKnownResource(typeof(ConceptRelationship))]

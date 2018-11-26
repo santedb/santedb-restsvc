@@ -19,7 +19,6 @@
  */
 using SanteDB.Core.Model;
 using SanteDB.Core.Services;
-using SanteDB.Messaging.HDSI.Wcf;
 using SanteDB.Rest.Common;
 using System;
 

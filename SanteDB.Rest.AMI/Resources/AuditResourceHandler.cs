@@ -17,22 +17,19 @@
  * User: justin
  * Date: 2018-11-20
  */
+using SanteDB.Core;
+using SanteDB.Core.Auditing;
+using SanteDB.Core.Interop;
+using SanteDB.Core.Model;
 using SanteDB.Core.Model.AMI.Security;
+using SanteDB.Core.Model.Query;
+using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
+using SanteDB.Core.Services;
+using SanteDB.Rest.Common;
+using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SanteDB.Core.Interop;
-using SanteDB.Rest.Common;
-using SanteDB.Core.Model.Query;
-using MARC.HI.EHRS.SVC.Auditing.Data;
-using SanteDB.Core.Services;
-using SanteDB.Rest.Common.Attributes;
-using SanteDB.Core.Security;
-using SanteDB.Core.Model;
-using MARC.HI.EHRS.SVC.Auditing.Services;
-using SanteDB.Core;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -71,7 +68,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Get the type this persists
         /// </summary>
-        public Type Type => typeof(AuditInfo);
+        public Type Type => typeof(AuditData);
 
         /// <summary>
         /// Create the audits in the audit data
@@ -87,12 +84,12 @@ namespace SanteDB.Rest.AMI.Resources
             var auditData = data as AuditSubmission;
             if (auditData == null) // may be a single audit
             {
-                var singleAudit = data as AuditInfo;
+                var singleAudit = data as AuditData;
                 if (singleAudit != null)
                 {
                     var retVal = this.m_repository.Insert(singleAudit);
-                    ApplicationServiceContext.Current.GetService<IAuditorService>()?.SendAudit(singleAudit);
-                    return new AuditInfo().CopyObjectData(retVal);
+                    ApplicationServiceContext.Current.GetService<IAuditDispatchService>()?.SendAudit(singleAudit);
+                    return new AuditData().CopyObjectData(retVal);
                 }
             }
             else
@@ -100,7 +97,7 @@ namespace SanteDB.Rest.AMI.Resources
                 auditData.Audit.ForEach(o =>
                 {
                     this.m_repository.Insert(o);
-                    ApplicationServiceContext.Current.GetService<IAuditorService>()?.SendAudit(o);
+                    ApplicationServiceContext.Current.GetService<IAuditDispatchService>()?.SendAudit(o);
                 });
                 // Send the audit to the audit repo
             }
@@ -119,7 +116,7 @@ namespace SanteDB.Rest.AMI.Resources
             if (this.m_repository == null)
                 throw new InvalidOperationException("No audit repository is configured");
 
-            var retVal = new AuditInfo();
+            var retVal = new AuditData();
             retVal.CopyObjectData(this.m_repository.Get(id));
 
             return retVal;

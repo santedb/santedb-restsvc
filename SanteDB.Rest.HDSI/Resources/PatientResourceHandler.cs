@@ -17,23 +17,19 @@
  * User: justin
  * Date: 2018-11-20
  */
-using SanteDB.Core.Model;
-using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Roles;
 using SanteDB.Core.Security;
 using SanteDB.Rest.Common.Attributes;
-using SanteDB.Core.Services;
 using System;
 using System.Collections.Generic;
-using System.Security.Permissions;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
-	/// <summary>
-	/// Resource handler for patients
-	/// </summary>
-	public class PatientResourceHandler : ResourceHandlerBase<Patient>
+    /// <summary>
+    /// Resource handler for patients
+    /// </summary>
+    public class PatientResourceHandler : ResourceHandlerBase<Patient>
 	{
         /// <summary>
         /// Create the specified patient

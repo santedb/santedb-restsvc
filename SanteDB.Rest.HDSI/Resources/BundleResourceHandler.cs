@@ -17,21 +17,15 @@
  * User: justin
  * Date: 2018-11-20
  */
-using SanteDB.Core.Model;
-using SanteDB.Core.Model.Collection;
-using SanteDB.Core.Model.Query;
-using SanteDB.Core.Services;
-using System;
-using System.Collections.Generic;
 using SanteDB.Core.Interop;
-using SanteDB.Rest.Common;
+using SanteDB.Core.Model.Collection;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
-	/// <summary>
-	/// Represents a resource handler which is for the persistence of bundles.
-	/// </summary>
-	public class BundleResourceHandler : ResourceHandlerBase<Bundle>
+    /// <summary>
+    /// Represents a resource handler which is for the persistence of bundles.
+    /// </summary>
+    public class BundleResourceHandler : ResourceHandlerBase<Bundle>
 	{
         /// <summary>
         /// Get capabilities

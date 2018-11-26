@@ -17,23 +17,19 @@
  * User: justin
  * Date: 2018-11-20
  */
-using SanteDB.Core.Model;
-using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Rest.Common.Attributes;
-using SanteDB.Core.Services;
 using System;
 using System.Collections.Generic;
-using System.Security.Permissions;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
-	/// <summary>
-	/// Represents a resource handler that can perform operations on materials
-	/// </summary>
-	public class MaterialResourceHandler : ResourceHandlerBase<Material>
+    /// <summary>
+    /// Represents a resource handler that can perform operations on materials
+    /// </summary>
+    public class MaterialResourceHandler : ResourceHandlerBase<Material>
 	{
         /// <summary>
         /// Create the specified material

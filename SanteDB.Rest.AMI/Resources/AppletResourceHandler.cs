@@ -17,24 +17,22 @@
  * User: justin
  * Date: 2018-11-20
  */
+using RestSrvr;
+using SanteDB.Core;
+using SanteDB.Core.Applets.Model;
+using SanteDB.Core.Applets.Services;
+using SanteDB.Core.Interop;
+using SanteDB.Core.Model.AMI.Applet;
+using SanteDB.Core.Model.AMI.Security;
+using SanteDB.Core.Model.Query;
+using SanteDB.Core.Security;
 using SanteDB.Rest.Common;
+using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SanteDB.Core.Interop;
-using SanteDB.Core.Model.Query;
-using SanteDB.Core.Model.AMI.Applet;
-using SanteDB.Core.Applets.Model;
 using System.IO;
-using SanteDB.Core.Applets.Services;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using SanteDB.Core.Model.AMI.Security;
-using SanteDB.Rest.Common.Attributes;
-using SanteDB.Core.Security;
-using SanteDB.Core;
-using RestSrvr;
 
 namespace SanteDB.Rest.AMI.Resources
 {

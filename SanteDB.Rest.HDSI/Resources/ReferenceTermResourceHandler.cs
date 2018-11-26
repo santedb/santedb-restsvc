@@ -17,29 +17,19 @@
  * User: justin
  * Date: 2018-11-20
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SanteDB.Core.Model;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Query;
-using SanteDB.Core.Services;
-using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Security;
-using System.Security.Permissions;
-using SanteDB.Core.Interop;
-using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
-using SanteDB.Core;
+using System;
+using System.Collections.Generic;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
-	/// <summary>
-	/// Represents a resource handler for concept reference terms.
-	/// </summary>
-	public class ReferenceTermResourceHandler : ResourceHandlerBase<ReferenceTerm>
+    /// <summary>
+    /// Represents a resource handler for concept reference terms.
+    /// </summary>
+    public class ReferenceTermResourceHandler : ResourceHandlerBase<ReferenceTerm>
 	{
         /// <summary>
         /// Gets the scope

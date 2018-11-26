@@ -19,6 +19,7 @@
  */
 using Newtonsoft.Json;
 using SanteDB.Core.Model.Security;
+using SanteDB.Core.Security;
 using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Auth
@@ -47,6 +48,23 @@ namespace SanteDB.Core.Model.AMI.Auth
             this.Oid = o.Oid;
             this.CanOverride = o.CanOverride;
             this.Policy = o;
+        }
+
+        /// <summary>
+        /// Constructs this policy information object from an IMS policy instane
+        /// </summary>
+        public SecurityPolicyInfo(IPolicyInstance o)
+        {
+            this.Name = o.Policy.Name;
+            this.Oid = o.Policy.Oid;
+            this.CanOverride = o.Policy.CanOverride;
+            this.Grant = o.Rule;
+            this.Policy = new SecurityPolicy()
+            {
+                Oid = o.Policy.Oid,
+                CanOverride = o.Policy.CanOverride,
+                Name = o.Policy.Name
+            };
         }
 
         /// <summary>

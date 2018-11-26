@@ -17,24 +17,19 @@
  * User: justin
  * Date: 2018-11-20
  */
-using SanteDB.Core.Model;
-using SanteDB.Core.Model.Collection;
+using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
-using SanteDB.Core.Model.Roles;
-using SanteDB.Core.Services;
+using SanteDB.Core.Security;
+using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
-using SanteDB.Core.Model.Entities;
-using SanteDB.Rest.Common.Attributes;
-using SanteDB.Core.Security;
-using System.Security.Permissions;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
-	/// <summary>
-	/// Represents a resource handler for persons.
-	/// </summary>
-	public class PersonResourceHandler : ResourceHandlerBase<Person>
+    /// <summary>
+    /// Represents a resource handler for persons.
+    /// </summary>
+    public class PersonResourceHandler : ResourceHandlerBase<Person>
 	{
         /// <summary>
         /// Create the specified person

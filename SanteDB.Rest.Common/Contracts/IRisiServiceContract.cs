@@ -23,10 +23,10 @@ using System.IO;
 
 namespace SanteDB.Rest.RISI
 {
-	/// <summary>
-	/// Provides operations for running and managing reports.
-	/// </summary>
-	[ServiceContractAttribute(Name = "RISI")]
+    /// <summary>
+    /// Provides operations for running and managing reports.
+    /// </summary>
+    [ServiceContractAttribute(Name = "RISI")]
     [ServiceKnownResource(typeof(ReportBundle))]
     [ServiceKnownResource(typeof(ReportFormat))]
     [ServiceKnownResource(typeof(ParameterType))]

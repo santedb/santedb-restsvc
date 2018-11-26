@@ -17,26 +17,19 @@
  * User: justin
  * Date: 2018-11-20
  */
+using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Model.Query;
+using SanteDB.Core.Security;
+using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SanteDB.Core.Model;
-using SanteDB.Core.Model.Query;
-using SanteDB.Core.Model.Entities;
-using SanteDB.Core.Services;
-using SanteDB.Core.Model.Collection;
-using SanteDB.Rest.Common.Attributes;
-using System.Security.Permissions;
-using SanteDB.Core.Security;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
-	/// <summary>
-	/// Represents a resource handler for entities.
-	/// </summary>
-	public class EntityResourceHandler : ResourceHandlerBase<Entity>
+    /// <summary>
+    /// Represents a resource handler for entities.
+    /// </summary>
+    public class EntityResourceHandler : ResourceHandlerBase<Entity>
 	{
 
         /// <summary>

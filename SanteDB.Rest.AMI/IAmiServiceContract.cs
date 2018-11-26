@@ -17,29 +17,22 @@
  * User: justin
  * Date: 2018-11-20
  */
-using SanteDB.Core.Interop;
-using SanteDB.Core.Model;
-using SanteDB.Core.Model.DataTypes;
-using SanteDB.Core.Model.Entities;
-using SanteDB.Core.Model.Patch;
-using SanteDB.Core.Model.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Schema;
-using SanteDB.Core.Mail;
-using SanteDB.Core.Model.Collection;
 using RestSrvr.Attributes;
+using SanteDB.Core.Applets.Model;
+using SanteDB.Core.Auditing;
+using SanteDB.Core.Interop;
+using SanteDB.Core.Mail;
+using SanteDB.Core.Model.AMI.Applet;
+using SanteDB.Core.Model.AMI.Auth;
+using SanteDB.Core.Model.AMI.Collections;
 using SanteDB.Core.Model.AMI.Diagnostics;
 using SanteDB.Core.Model.AMI.Logging;
-using SanteDB.Core.Model.AMI.Collections;
-using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.AMI.Security;
-using SanteDB.Core.Model.AMI.Applet;
-using SanteDB.Core.Applets.Model;
+using SanteDB.Core.Model.DataTypes;
+using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Model.Security;
+using System;
+using System.Xml.Schema;
 
 namespace SanteDB.Rest.AMI
 {
@@ -59,7 +52,7 @@ namespace SanteDB.Rest.AMI
     [ServiceKnownResource(typeof(SecurityProvenance))]
     [ServiceKnownResource(typeof(SecurityRoleInfo))]
     [ServiceKnownResource(typeof(AuditSubmission))]
-    [ServiceKnownResource(typeof(AuditInfo))]
+    [ServiceKnownResource(typeof(AuditData))]
     [ServiceKnownResource(typeof(AppletManifest))]
     [ServiceKnownResource(typeof(AppletManifestInfo))]
     [ServiceKnownResource(typeof(DeviceEntity))]

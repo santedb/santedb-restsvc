@@ -26,12 +26,9 @@ using SanteDB.Core.Model.Query;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace SanteDB.Rest.Common
@@ -239,7 +236,7 @@ namespace SanteDB.Rest.Common
                                     ExpandProperties(itm as IdentifiedData, qp, keyStack);
                     }
 
-                    //ApplicationContext.Current.GetService<IDataCachingService>()?.Add(returnValue);
+                    //ApplicationServiceContext.Current.GetService<IDataCachingService>()?.Add(returnValue);
                 }
                 else if (qp.ContainsKey("_expand"))
                 {
@@ -249,7 +246,7 @@ namespace SanteDB.Rest.Common
                         DoExpand(returnValue, nvs);
                     }
 
-                    //ApplicationContext.Current.GetService<IDataCachingService>()?.Add(returnValue);
+                    //ApplicationServiceContext.Current.GetService<IDataCachingService>()?.Add(returnValue);
                 }
             }
             finally

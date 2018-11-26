@@ -20,16 +20,15 @@
 using SanteDB.Core.Diagnostics;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
 namespace SanteDB.Rest.Common
 {
-	/// <summary>
-	/// Resource handler utility
-	/// </summary>
-	public class ResourceHandlerTool
+    /// <summary>
+    /// Resource handler utility
+    /// </summary>
+    public class ResourceHandlerTool
 	{
 		// Resource handler utility classes
 		private static object m_lockObject = new object();

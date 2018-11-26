@@ -17,21 +17,19 @@
  * User: justin
  * Date: 2018-11-20
  */
+using SanteDB.Core;
+using SanteDB.Core.Diagnostics;
+using SanteDB.Core.Interfaces;
+using SanteDB.Core.Interop;
+using SanteDB.Core.Model;
+using SanteDB.Core.Model.Collection;
+using SanteDB.Core.Model.Query;
+using SanteDB.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SanteDB.Core.Model;
-using SanteDB.Core.Model.Query;
-using System.Xml.Serialization;
 using System.Reflection;
-using SanteDB.Core.Services;
-using SanteDB.Core.Model.Collection;
-using SanteDB.Core.Interop;
-using SanteDB.Core.Interfaces;
-using SanteDB.Core;
-using SanteDB.Core.Diagnostics;
+using System.Xml.Serialization;
 
 namespace SanteDB.Rest.Common
 {

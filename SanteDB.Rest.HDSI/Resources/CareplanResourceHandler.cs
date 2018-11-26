@@ -17,23 +17,19 @@
  * User: justin
  * Date: 2018-11-20
  */
+using RestSrvr;
+using SanteDB.Core;
+using SanteDB.Core.Interop;
+using SanteDB.Core.Model.Acts;
+using SanteDB.Core.Model.Collection;
+using SanteDB.Core.Model.Query;
+using SanteDB.Core.Model.Roles;
+using SanteDB.Core.Services;
+using SanteDB.Rest.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SanteDB.Core.Model;
-using SanteDB.Core.Model.Query;
-using SanteDB.Core.Model.Collection;
-using SanteDB.Core.Model.Roles;
-using SanteDB.Core.Services;
-using SanteDB.Core.Model.Acts;
 using System.Linq.Expressions;
-using SanteDB.Core.Security;
-using SanteDB.Core.Interop;
-using SanteDB.Rest.Common;
-using SanteDB.Core;
-using RestSrvr;
 
 namespace SanteDB.Rest.HDSI.Resources
 {

@@ -18,12 +18,6 @@
  * Date: 2018-11-20
  */
 using SanteDB.Core.Mail;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SanteDB.Core.Interop;
 
 namespace SanteDB.Rest.AMI.Resources
 {

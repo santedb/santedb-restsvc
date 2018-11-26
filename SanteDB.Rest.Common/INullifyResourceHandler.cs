@@ -17,12 +17,6 @@
  * User: justin
  * Date: 2018-11-23
  */
-using SanteDB.Core.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SanteDB.Rest.Common
 {

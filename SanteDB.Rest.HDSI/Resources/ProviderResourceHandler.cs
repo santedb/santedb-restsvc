@@ -17,16 +17,12 @@
  * User: justin
  * Date: 2018-11-20
  */
-using SanteDB.Core.Model;
-using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Roles;
 using SanteDB.Core.Security;
-using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Security.Permissions;
 
 namespace SanteDB.Rest.HDSI.Resources
 {

@@ -17,26 +17,19 @@
  * User: justin
  * Date: 2018-11-23
  */
-using SanteDB.Core.Model;
-using SanteDB.Core.Model.Collection;
+using SanteDB.Core.Interop;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Rest.Common.Attributes;
-using SanteDB.Core.Services;
-using System;
 using System.Collections.Generic;
-using System.Security.Permissions;
-using SanteDB.Core.Interop;
-using SanteDB.Rest.Common;
-using SanteDB.Core;
 
 namespace SanteDB.Rest.AMI.Resources
 {
-	/// <summary>
-	/// Represents an identifier type resource handler.
-	/// </summary>
-	public class IdentifierTypeResourceHandler : ResourceHandlerBase<IdentifierType>
+    /// <summary>
+    /// Represents an identifier type resource handler.
+    /// </summary>
+    public class IdentifierTypeResourceHandler : ResourceHandlerBase<IdentifierType>
 	{
 
         /// <summary>

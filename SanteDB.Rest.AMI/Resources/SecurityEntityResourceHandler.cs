@@ -19,19 +19,17 @@
  */
 using SanteDB.Core;
 using SanteDB.Core.Interop;
-using SanteDB.Core.Model;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace SanteDB.Rest.AMI.Resources
@@ -107,7 +105,7 @@ namespace SanteDB.Rest.AMI.Resources
             var data = this.m_repository.Get((Guid)id, (Guid)versionId);
 
             var retVal = Activator.CreateInstance(this.Type, data) as ISecurityEntityInfo<TSecurityEntity>;
-            retVal.Policies = ApplicationServiceContext.Current.GetService<ISecurityInformationService>().GetActivePolicies(data).Select(o=>new SecurityPolicyInfo(o)).ToList();
+            retVal.Policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetActivePolicies(data).Select(o=>new SecurityPolicyInfo(o)).ToList();
             return retVal;
 
         }
@@ -139,7 +137,7 @@ namespace SanteDB.Rest.AMI.Resources
             return results.AsParallel().Select(o =>
             {
                 var r = Activator.CreateInstance(this.Type, o) as ISecurityEntityInfo<TSecurityEntity>;
-                r.Policies = ApplicationServiceContext.Current.GetService<ISecurityInformationService>().GetActivePolicies(o).Select(p=>new SecurityPolicyInfo(p)).ToList();
+                r.Policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetActivePolicies(o).Select(p=>new SecurityPolicyInfo(p)).ToList();
                 return r;
             }).OfType<Object>();
         }

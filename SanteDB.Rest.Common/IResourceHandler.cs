@@ -18,17 +18,16 @@
  * Date: 2018-11-20
  */
 using SanteDB.Core.Interop;
-using SanteDB.Core.Model;
 using SanteDB.Core.Model.Query;
 using System;
 using System.Collections.Generic;
 
 namespace SanteDB.Rest.Common
 {
-	/// <summary>
-	/// Represents a resource handler.
-	/// </summary>
-	public interface IResourceHandler
+    /// <summary>
+    /// Represents a resource handler.
+    /// </summary>
+    public interface IResourceHandler
 	{
 		/// <summary>
 		/// Gets the name of the resource which the resource handler supports.

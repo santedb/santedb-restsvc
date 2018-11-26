@@ -17,19 +17,17 @@
  * User: justin
  * Date: 2018-11-23
  */
-using SanteDB.Core.Model.Warehouse;
-using System;
-using System.ServiceModel;
-using RestSrvr;
 using RestSrvr.Attributes;
 using SanteDB.Core.Model.RISI;
+using SanteDB.Core.Model.Warehouse;
+using System;
 
 namespace SanteDB.Rest.RISI
 {
-	/// <summary>
-	/// RISI contract members for the data-warehouse
-	/// </summary>
-	public partial interface IRisiServiceContract
+    /// <summary>
+    /// RISI contract members for the data-warehouse
+    /// </summary>
+    public partial interface IRisiServiceContract
 	{
 		/// <summary>
 		/// Create a datamart

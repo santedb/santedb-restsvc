@@ -17,26 +17,23 @@
  * User: justin
  * Date: 2018-11-20
  */
-using SanteDB.Core.Model;
-using SanteDB.Core.Model.Collection;
+using SanteDB.Core;
 using SanteDB.Core.Model.Constants;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
-using SanteDB.Rest.Common.Attributes;
 using SanteDB.Core.Services;
+using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Permissions;
-using SanteDB.Core;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
-	/// <summary>
-	/// Represents a HDSI handler for manufactured materials
-	/// </summary>
-	public class ManufacturedMaterialHandler : ResourceHandlerBase<ManufacturedMaterial>
+    /// <summary>
+    /// Represents a HDSI handler for manufactured materials
+    /// </summary>
+    public class ManufacturedMaterialHandler : ResourceHandlerBase<ManufacturedMaterial>
 	{
 
         /// <summary>

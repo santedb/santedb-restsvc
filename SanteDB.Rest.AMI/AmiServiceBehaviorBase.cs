@@ -17,41 +17,28 @@
  * User: justin
  * Date: 2018-11-20
  */
+using RestSrvr;
+using RestSrvr.Attributes;
+using SanteDB.Core.Diagnostics;
+using SanteDB.Core.Interop;
+using SanteDB.Core.Model;
+using SanteDB.Core.Model.AMI;
+using SanteDB.Core.Model.AMI.Auth;
+using SanteDB.Core.Model.AMI.Collections;
+using SanteDB.Core.Model.AMI.Diagnostics;
+using SanteDB.Core.Model.AMI.Logging;
+using SanteDB.Core.Model.Interfaces;
+using SanteDB.Rest.AMI;
+using SanteDB.Rest.Common;
+using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Schema;
-using SanteDB.Core.Interop;
-using SanteDB.Core.Model.Patch;
-using System.Diagnostics;
-using SanteDB.Core.Diagnostics;
 using System.IO;
-using SanteDB.Core.Model.Interfaces;
+using System.Linq;
 using System.Net;
-using System.ServiceModel.Channels;
-using SanteDB.Rest.Common;
-using SanteDB.Core.Model;
-using SanteDB.Core.Model.AMI.Diagnostics;
-using SanteDB.Core.Security;
-using System.Security.Permissions;
-using SanteDB.Core.Model.AMI.Logging;
 using System.Reflection;
-using SanteDB.Core.Model.AMI.Security;
+using System.Xml.Schema;
 using System.Xml.Serialization;
-using SanteDB.Core.Model.AMI.Auth;
-using SanteDB.Core.Services;
-using SanteDB.Core.Model.Collection;
-using SanteDB.Core.Model.AMI.Collections;
-using SanteDB.Core.Model.AMI;
-using RestSrvr.Attributes;
-using RestSrvr;
-using SanteDB.Rest.AMI;
-using SanteDB.Core;
-using SanteDB.Rest.Common.Attributes;
 
 namespace SanteDB.Messaging.AMI.Wcf
 {

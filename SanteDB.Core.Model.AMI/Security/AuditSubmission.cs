@@ -17,8 +17,8 @@
  * User: justin
  * Date: 2018-11-20
  */
-using MARC.HI.EHRS.SVC.Auditing.Data;
 using Newtonsoft.Json;
+using SanteDB.Core.Auditing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
