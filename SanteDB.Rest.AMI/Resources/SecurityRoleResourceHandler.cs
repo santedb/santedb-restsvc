@@ -47,7 +47,7 @@ namespace SanteDB.Rest.AMI.Resources
             
             if(td.Users.Count > 0)
             {
-                ApplicationServiceContext.Current.GetService<IRoleProviderService>().AddUsersToRoles(td.Users.ToArray(), new string[] { td.Entity.Name } ,AuthenticationContext.Current.Principal);
+                ApplicationServiceContext.Current.GetService<IRoleProviderService>().AddUsersToRoles(td.Users.ToArray(), new string[] { td.Entity.Name } , AuthenticationContext.Current.Principal);
             }
             return new SecurityRoleInfo(retVal.Entity);
         }
