@@ -32,9 +32,13 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
     [XmlType(nameof(ServiceClass), Namespace = "http://santedb.org/ami/diagnostics")]
     public enum ServiceClass
     {
-        Daemon, 
+        [XmlEnum("daemon")]
+        Daemon,
+        [XmlEnum("data")]
         Data,
+        [XmlEnum("repo")]
         Repository,
+        [XmlEnum("other")]
         Passive
     }
 
