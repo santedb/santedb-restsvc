@@ -80,6 +80,62 @@ namespace SanteDB.Rest.AMI
         /// </summary>
         [Get("/?xsd={schemaId}")]
         XmlSchema GetSchema(int schemaId);
+        #region Diagnostic / Ad-Hoc interfaces
+
+        /// <summary>
+        /// Creates a diagnostic report.
+        /// </summary>
+        /// <param name="report">The diagnostic report to be created.</param>
+        /// <returns>Returns the created diagnostic report.</returns>
+        [Post("/Sherlock")]
+        DiagnosticReport CreateDiagnosticReport(DiagnosticReport report);
+
+        /// <summary>
+		/// Gets a specific log file.
+		/// </summary>
+		/// <param name="logId">The log identifier.</param>
+		/// <returns>Returns the log file information.</returns>
+		[Get("/Log/{logId}")]
+        LogFileInfo GetLog(string logId);
+
+        /// <summary>
+        /// Get log files on the server and their sizes.
+        /// </summary>
+        /// <returns>Returns a collection of log files.</returns>
+        [Get("/Log")]
+        AmiCollection GetLogs();
+
+        /// <summary>
+		/// Gets a server diagnostic report.
+		/// </summary>
+		/// <returns>Returns the created diagnostic report.</returns>
+		[Get("/Sherlock")]
+        DiagnosticReport GetServerDiagnosticReport();
+
+        /// <summary>
+		/// Ping the service to determine up/down
+		/// </summary>
+		[RestInvoke("PING", "/")]
+        void Ping();
+
+        #endregion
+
+        #region Two-Factor Authentication
+
+        /// <summary>
+		/// Creates a request that the server issue a reset code
+		/// </summary>
+		[Post("/Tfa")]
+        void SendTfaSecret(TfaRequestInfo resetInfo);
+
+        /// <summary>
+        /// Gets the list of TFA mechanisms.
+        /// </summary>
+        /// <returns>Returns a list of TFA mechanisms.</returns>
+        [Get("/Tfa")]
+        AmiCollection GetTfaMechanisms();
+
+        #endregion
 
         /// <summary>
         /// Creates the specified resource 
@@ -196,62 +252,6 @@ namespace SanteDB.Rest.AMI
         [RestInvoke("OPTIONS", "/{resourceType}")]
         ServiceResourceOptions ResourceOptions(String resourceType);
 
-        #region Diagnostic / Ad-Hoc interfaces
-
-        /// <summary>
-		/// Creates a diagnostic report.
-		/// </summary>
-		/// <param name="report">The diagnostic report to be created.</param>
-		/// <returns>Returns the created diagnostic report.</returns>
-		[Post("/Sherlock")]
-        DiagnosticReport CreateDiagnosticReport(DiagnosticReport report);
-
-        /// <summary>
-		/// Gets a specific log file.
-		/// </summary>
-		/// <param name="logId">The log identifier.</param>
-		/// <returns>Returns the log file information.</returns>
-		[Get("/Log/{logId}")]
-        LogFileInfo GetLog(string logId);
-
-        /// <summary>
-        /// Get log files on the server and their sizes.
-        /// </summary>
-        /// <returns>Returns a collection of log files.</returns>
-        [Get("/Log")]
-        AmiCollection GetLogs();
-
-        /// <summary>
-		/// Gets a server diagnostic report.
-		/// </summary>
-		/// <returns>Returns the created diagnostic report.</returns>
-		[Get("/Sherlock")]
-        DiagnosticReport GetServerDiagnosticReport();
-
-        /// <summary>
-		/// Ping the service to determine up/down
-		/// </summary>
-		[RestInvoke("PING", "/")]
-        void Ping();
-
-        #endregion
-
-        #region Two-Factor Authentication
-
-        /// <summary>
-		/// Creates a request that the server issue a reset code
-		/// </summary>
-		[Post("/Tfa")]
-        void SendTfaSecret(TfaRequestInfo resetInfo);
-
-        /// <summary>
-        /// Gets the list of TFA mechanisms.
-        /// </summary>
-        /// <returns>Returns a list of TFA mechanisms.</returns>
-        [Get("/Tfa")]
-        AmiCollection GetTfaMechanisms();
-
-        #endregion
-
+    
     }
 }

@@ -76,11 +76,7 @@ namespace SanteDB.Core.Model.AMI.Auth
         [XmlElement("policy"), JsonProperty("policy")]
         public List<SecurityPolicyInfo> Policies
         {
-            get
-            {
-                return this.Entity?.Policies.Select(o => new SecurityPolicyInfo(o)).ToList();
-            }
-            set {; }
+            get; set;
         }
 
         /// <summary>

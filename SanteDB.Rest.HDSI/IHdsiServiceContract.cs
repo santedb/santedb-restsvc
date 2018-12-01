@@ -71,6 +71,19 @@ namespace SanteDB.Rest.HDSI
     {
 
         /// <summary>
+        /// Get the current time
+        /// </summary>
+        /// <returns></returns>
+        [Get("/time")]
+        DateTime Time();
+
+        /// <summary>
+        /// Get the schema
+        /// </summary>
+        [Get("/?xsd={schemaId}")]
+        XmlSchema GetSchema(int schemaId);
+
+        /// <summary>
         /// Gets the operations that each resource in this IMS instance supports.
         /// </summary>
         [RestInvoke("OPTIONS", "/")]
@@ -161,17 +174,6 @@ namespace SanteDB.Rest.HDSI
         [Delete("/{resourceType}/{id}")]
         IdentifiedData Delete(string resourceType, string id);
 
-        /// <summary>
-        /// Get the current time
-        /// </summary>
-        /// <returns></returns>
-        [Get("/time")]
-        DateTime Time();
 
-        /// <summary>
-        /// Get the schema
-        /// </summary>
-        [Get("/?xsd={schemaId}")]
-        XmlSchema GetSchema(int schemaId);
     }
 }
