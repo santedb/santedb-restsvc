@@ -18,6 +18,7 @@
  * Date: 2018-11-20
  */
 using Newtonsoft.Json;
+using SanteDB.Core.BusinessRules;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Services;
 using System;

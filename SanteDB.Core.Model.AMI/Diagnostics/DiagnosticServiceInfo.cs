@@ -56,8 +56,10 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         /// </summary>
         public DiagnosticServiceInfo(object daemon)
         {
-            this.Description = daemon.GetType().GetTypeInfo().GetCustomAttribute<ServiceProviderAttribute>()?.Name;
-            this.IsRunning = (bool)daemon.GetType().GetRuntimeProperty("IsRunning")?.GetValue(daemon);
+            this.Description = daemon.GetType().GetTypeInfo().GetCustomAttribute<ServiceProviderAttribute>()?.Name ??
+                (daemon as IServiceImplementation)?.ServiceName ??
+                daemon.GetType().FullName;
+            this.IsRunning = (bool)(daemon.GetType().GetRuntimeProperty("IsRunning")?.GetValue(daemon) ?? false);
             this.Type = daemon.GetType().FullName;
             this.Class = daemon is IDaemonService ? ServiceClass.Daemon :
                 daemon is IDataPersistenceService ? ServiceClass.Data :
