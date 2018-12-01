@@ -83,14 +83,14 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <PackageReference Include="RestSrvr" Version="1.9.14" />
-        <PackageReference Include="SanteDB.Core.Applets" Version="1.9.14" />
+        <PackageReference Include="RestSrvr" Version="1.9.15" />
+        <PackageReference Include="SanteDB.Core.Applets" Version="1.9.15" />
         <ProjectReference Include="..\SanteDB.Core.Model.RISI\SanteDB.Core.Model.RISI.csproj">
           <Project>{f3d2fa84-c398-4390-9834-1272cc2d6f89}</Project>
           <Name>SanteDB.Core.Model.RISI</Name>
         </ProjectReference>
-        <PackageReference Include="SanteDB.Core.Api" Version="1.9.14" />
-        <PackageReference Include="SanteDB.Core.Model" Version="1.9.14" />
+        <PackageReference Include="SanteDB.Core.Api" Version="1.9.15" />
+        <PackageReference Include="SanteDB.Core.Model" Version="1.9.15" />
       </ItemGroup>
     </Otherwise>
   </Choose>
@@ -101,7 +101,9 @@
     <None Include="..\SanteDB.licenseheader">
       <Link>SanteDB.licenseheader</Link>
     </None>
-    <None Include="SanteDB.Rest.Common.nuspec" />
+    <None Include="SanteDB.Rest.Common.nuspec">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
