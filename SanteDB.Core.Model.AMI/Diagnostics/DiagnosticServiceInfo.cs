@@ -64,7 +64,7 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
             this.Description = daemonType.GetCustomAttribute<ServiceProviderAttribute>()?.Name ??
                 daemonType.FullName;
             this.IsRunning = false;
-            this.Type = daemonType.FullName;
+            this.Type = daemonType.AssemblyQualifiedName;
             this.Class = typeof(IDaemonService).GetTypeInfo().IsAssignableFrom(daemonType) ? ServiceClass.Daemon :
                 typeof(IDataPersistenceService).GetTypeInfo().IsAssignableFrom(daemonType) ? ServiceClass.Data :
                 daemonType.ImplementedInterfaces.Any(o => o.Name.Contains("IRepositoryService")) ? ServiceClass.Repository :
