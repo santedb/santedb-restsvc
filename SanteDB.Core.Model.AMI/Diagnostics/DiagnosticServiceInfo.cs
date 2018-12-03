@@ -19,6 +19,7 @@
  */
 using Newtonsoft.Json;
 using SanteDB.Core.Services;
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
@@ -33,13 +34,13 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
     public enum ServiceClass
     {
         [XmlEnum("daemon")]
-        Daemon,
+        Daemon = 1,
         [XmlEnum("data")]
-        Data,
+        Data = 2,
         [XmlEnum("repo")]
-        Repository,
+        Repository = 3,
         [XmlEnum("other")]
-        Passive
+        Passive = 4
     }
 
     /// <summary>
@@ -58,18 +59,31 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         /// <summary>
         /// Create the service info
         /// </summary>
-        public DiagnosticServiceInfo(object daemon)
+        public DiagnosticServiceInfo(TypeInfo daemonType)
         {
-            this.Description = daemon.GetType().GetTypeInfo().GetCustomAttribute<ServiceProviderAttribute>()?.Name ??
-                (daemon as IServiceImplementation)?.ServiceName ??
-                daemon.GetType().FullName;
-            this.IsRunning = (bool)(daemon.GetType().GetRuntimeProperty("IsRunning")?.GetValue(daemon) ?? false);
-            this.Type = daemon.GetType().FullName;
-            this.Class = daemon is IDaemonService ? ServiceClass.Daemon :
-                daemon is IDataPersistenceService ? ServiceClass.Data :
-                daemon.GetType().GetTypeInfo().ImplementedInterfaces.Any(o => o.Name.Contains("IRepositoryService")) ? ServiceClass.Repository :
+            this.Description = daemonType.GetCustomAttribute<ServiceProviderAttribute>()?.Name ??
+                daemonType.FullName;
+            this.IsRunning = false;
+            this.Type = daemonType.FullName;
+            this.Class = typeof(IDaemonService).GetTypeInfo().IsAssignableFrom(daemonType) ? ServiceClass.Daemon :
+                typeof(IDataPersistenceService).GetTypeInfo().IsAssignableFrom(daemonType) ? ServiceClass.Data :
+                daemonType.ImplementedInterfaces.Any(o => o.Name.Contains("IRepositoryService")) ? ServiceClass.Repository :
                 ServiceClass.Passive;
         }
+
+        /// <summary>
+        /// Create the service info
+        /// </summary>
+        public DiagnosticServiceInfo(object daemon) : this(daemon.GetType().GetTypeInfo())
+        {
+            this.IsRunning = (bool)(daemon.GetType().GetRuntimeProperty("IsRunning")?.GetValue(daemon) ?? false);
+        }
+
+        /// <summary>
+        /// Indicates whether the service is installed (active) or not
+        /// </summary>
+        [XmlElement("active"), JsonProperty("active")]
+        public bool Active { get; set; }
 
         /// <summary>
         /// Gets or sets the description
