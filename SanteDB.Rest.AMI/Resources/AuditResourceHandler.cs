@@ -36,7 +36,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents a resource handler which can persist and forward audits
     /// </summary>
-    public class AuditResourceHandler : IResourceHandler
+    public class AuditResourceHandler : IApiResourceHandler
     {
 
         // The audit repository

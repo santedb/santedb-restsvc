@@ -38,7 +38,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents a resource handler for applet solution files
     /// </summary>
-    public class AppletSolutionResourceHandler : IResourceHandler
+    public class AppletSolutionResourceHandler : IApiResourceHandler
     {
         /// <summary>
         /// Gets the capabilities of the resource handler

@@ -36,7 +36,7 @@ namespace SanteDB.Rest.Common
     /// <summary>
     /// Resource handler base
     /// </summary>
-    public abstract class ResourceHandlerBase<TResource> : IResourceHandler, IAuditEventSource where TResource : IdentifiedData
+    public abstract class ResourceHandlerBase<TResource> : IApiResourceHandler, IAuditEventSource where TResource : IdentifiedData
     {
 
         // Tracer

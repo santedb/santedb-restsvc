@@ -24,7 +24,7 @@ namespace SanteDB.Rest.Common
     /// <summary>
     /// Represents a resource handler that can lock or unlock objects
     /// </summary>
-    public interface ILockableResourceHandler : IResourceHandler
+    public interface ILockableResourceHandler : IApiResourceHandler
     {
         /// <summary>
         /// Locks a resource.

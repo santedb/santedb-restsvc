@@ -37,12 +37,12 @@ namespace SanteDB.Rest.Common
         private Tracer m_traceSource = Tracer.GetTracer(typeof(ResourceHandlerTool));
 
 		// Handlers
-		private Dictionary<String, IResourceHandler> m_handlers = new Dictionary<string, IResourceHandler>();
+		private Dictionary<String, IApiResourceHandler> m_handlers = new Dictionary<string, IApiResourceHandler>();
 
 		/// <summary>
 		/// Get the current handlers
 		/// </summary>
-		public IEnumerable<IResourceHandler> Handlers => this.m_handlers.Values;
+		public IEnumerable<IApiResourceHandler> Handlers => this.m_handlers.Values;
 
         /// <summary>
         /// Creates an single resource handler for a particular service
@@ -55,7 +55,7 @@ namespace SanteDB.Rest.Common
                 try
                 {
                     ConstructorInfo ci = t.GetConstructor(Type.EmptyTypes);
-                    IResourceHandler rh = ci.Invoke(null) as IResourceHandler;
+                    IApiResourceHandler rh = ci.Invoke(null) as IApiResourceHandler;
                     this.m_handlers.Add($"{rh.Scope.Name}/{rh.ResourceName}", rh);
                     this.m_traceSource.TraceInfo("Adding {0} to {1}", rh.ResourceName, rh.Scope);
                 }
@@ -69,9 +69,9 @@ namespace SanteDB.Rest.Common
 		/// <summary>
 		/// Get resource handler
 		/// </summary>
-		public IResourceHandler GetResourceHandler<TScope>(String resourceName)
+		public IApiResourceHandler GetResourceHandler<TScope>(String resourceName)
 		{
-			IResourceHandler retVal = null;
+			IApiResourceHandler retVal = null;
 			this.m_handlers.TryGetValue($"{typeof(TScope).Name}/{resourceName}", out retVal);
 			return retVal;
 		}

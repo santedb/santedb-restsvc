@@ -23,7 +23,7 @@ namespace SanteDB.Rest.Common
     /// <summary>
     /// Represents a resource handler that can nullify objects
     /// </summary>
-    public interface INullifyResourceHandler : IResourceHandler
+    public interface INullifyResourceHandler : IApiResourceHandler
     {
 
         /// <summary>

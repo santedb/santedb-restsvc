@@ -24,7 +24,7 @@ namespace SanteDB.Rest.Common
     /// <summary>
     /// Represents a resource handler that can cancel objects
     /// </summary>
-    public interface ICancelResourceHandler : IResourceHandler
+    public interface ICancelResourceHandler : IApiResourceHandler
     {
 
         /// <summary>

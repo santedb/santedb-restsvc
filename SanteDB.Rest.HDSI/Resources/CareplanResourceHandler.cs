@@ -36,7 +36,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Represents a care plan resource handler
     /// </summary>
-    public class CareplanResourceHandler : IResourceHandler
+    public class CareplanResourceHandler : IApiResourceHandler
     {
         /// <summary>
         /// Get capabilities statement

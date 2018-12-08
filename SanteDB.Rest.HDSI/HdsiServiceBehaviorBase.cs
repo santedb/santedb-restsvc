@@ -98,7 +98,7 @@ namespace SanteDB.Rest.HDSI
                 if (handler != null)
                 {
 
-                    this.AclCheck(handler, nameof(IResourceHandler.Create));
+                    this.AclCheck(handler, nameof(IApiResourceHandler.Create));
                     var retVal = handler.Create(body, false) as IdentifiedData;
 
                     var versioned = retVal as IVersionedEntity;
@@ -140,7 +140,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
-                    this.AclCheck(handler, nameof(IResourceHandler.Create));
+                    this.AclCheck(handler, nameof(IApiResourceHandler.Create));
                     var retVal = handler.Create(body, true) as IdentifiedData;
                     var versioned = retVal as IVersionedEntity;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
@@ -185,7 +185,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
-                    this.AclCheck(handler, nameof(IResourceHandler.Get));
+                    this.AclCheck(handler, nameof(IApiResourceHandler.Get));
                     var retVal = handler.Get(Guid.Parse(id), Guid.Empty) as IdentifiedData;
                     if (retVal == null)
                         throw new FileNotFoundException(id);
@@ -239,7 +239,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
-                    this.AclCheck(handler, nameof(IResourceHandler.Get));
+                    this.AclCheck(handler, nameof(IApiResourceHandler.Get));
                     var retVal = handler.Get(Guid.Parse(id), Guid.Parse(versionId)) as IdentifiedData;
                     if (retVal == null)
                         throw new FileNotFoundException(id);
@@ -320,7 +320,7 @@ namespace SanteDB.Rest.HDSI
                     Guid sinceGuid = since != null ? Guid.Parse(since) : Guid.Empty;
 
                     // Query 
-                    this.AclCheck(handler, nameof(IResourceHandler.Get));
+                    this.AclCheck(handler, nameof(IApiResourceHandler.Get));
                     var retVal = handler.Get(Guid.Parse(id), Guid.Empty) as IVersionedEntity;
                     List<IVersionedEntity> histItm = new List<IVersionedEntity>() { retVal };
                     while (retVal.PreviousVersionKey.HasValue)
@@ -380,7 +380,7 @@ namespace SanteDB.Rest.HDSI
                     bool parsedInclusive = false;
                     bool.TryParse(inclusive, out parsedInclusive);
 
-                    this.AclCheck(handler, nameof(IResourceHandler.Query));
+                    this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
                     var retVal = handler.Query(query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).OfType<IdentifiedData>().Select(o => o.GetLocked()).ToList();
                     RestOperationContext.Current.OutgoingResponse.SetLastModified((retVal.OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now));
@@ -452,7 +452,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
-                    this.AclCheck(handler, nameof(IResourceHandler.Update));
+                    this.AclCheck(handler, nameof(IApiResourceHandler.Update));
 
                     var retVal = handler.Update(body) as IdentifiedData;
 
@@ -519,7 +519,7 @@ namespace SanteDB.Rest.HDSI
                             else
                                 throw new NotSupportedException("X-Delete-Mode CANCEL is not supported on this resource");
                         case "obsolete":
-                            this.AclCheck(handler, nameof(IResourceHandler.Obsolete));
+                            this.AclCheck(handler, nameof(IApiResourceHandler.Obsolete));
                             retVal = handler.Obsolete(Guid.Parse(id)) as IdentifiedData;
                             break;
                         default:
@@ -599,7 +599,7 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
 
                 // Next we get the current version
-                this.AclCheck(handler, nameof(IResourceHandler.Get));
+                this.AclCheck(handler, nameof(IApiResourceHandler.Get));
 
                 var existing = handler.Get(Guid.Parse(id), Guid.Empty) as IdentifiedData;
                 var force = Convert.ToBoolean(RestOperationContext.Current.IncomingRequest.Headers["X-Patch-Force"] ?? "false");
@@ -619,7 +619,7 @@ namespace SanteDB.Rest.HDSI
                 {
                     // Force load all properties for existing
                     var applied = ApplicationServiceContext.Current.GetService<IPatchService>().Patch(body, existing, force);
-                    this.AclCheck(handler, nameof(IResourceHandler.Update));
+                    this.AclCheck(handler, nameof(IApiResourceHandler.Update));
                     var data = handler.Update(applied) as IdentifiedData;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 204;
                     RestOperationContext.Current.OutgoingResponse.SetETag(data.Tag);

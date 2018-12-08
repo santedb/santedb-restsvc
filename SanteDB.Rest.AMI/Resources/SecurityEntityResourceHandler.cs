@@ -38,7 +38,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// Represents a resource handler that wraps a security based entity
     /// </summary>
     /// <typeparam name="TSecurityEntity">The type of security entity being wrapped</typeparam>
-    public abstract class SecurityEntityResourceHandler<TSecurityEntity> : IResourceHandler
+    public abstract class SecurityEntityResourceHandler<TSecurityEntity> : IApiResourceHandler
         where TSecurityEntity : SecurityEntity
     {
 
