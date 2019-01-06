@@ -28,8 +28,10 @@ using SanteDB.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Xml.Serialization;
+using SanteDB.Core.Model.Query;
 
 namespace SanteDB.Rest.Common
 {
@@ -250,7 +252,19 @@ namespace SanteDB.Rest.Common
             {
 
                 var queryExpression = QueryExpressionParser.BuildLinqExpression<TResource>(queryParameters, null, false);
-                List<String> query = null, id = null;
+                List<String> query = null, id = null, orderBy = null;
+
+                // Order by
+                List<ModelSort<TResource>> sortParameters = new List<ModelSort<TResource>>();
+                if(queryParameters.TryGetValue("_orderBy", out orderBy))
+                    foreach(var itm in orderBy)
+                    {
+                        var sortData = itm.Split(':');
+                        sortParameters.Add(new ModelSort<TResource>(
+                            QueryExpressionParser.BuildPropertySelector<TResource>(sortData[0]),
+                            sortData.Length == 1 || sortData[1] == "asc" ? Core.Model.Map.SortOrderType.OrderBy : Core.Model.Map.SortOrderType.OrderByDescending
+                        ));
+                    }
 
                 IEnumerable<TResource> retVal = null;
                 if (queryParameters.TryGetValue("_id", out id)) {
@@ -268,7 +282,7 @@ namespace SanteDB.Rest.Common
                     if (queryParameters.TryGetValue("_lean", out lean) && lean[0] == "true" && this.GetRepository() is IFastQueryRepositoryService<TResource>)
                         retVal = (this.GetRepository() as IFastQueryRepositoryService<TResource>).FindFast(queryExpression, offset, count, out totalCount, queryId);
                     else
-                        retVal = (this.GetRepository() as IPersistableQueryRepositoryService<TResource>).Find(queryExpression, offset, count, out totalCount, queryId);
+                        retVal = (this.GetRepository() as IPersistableQueryRepositoryService<TResource>).Find(queryExpression, offset, count, out totalCount, queryId, sortParameters.ToArray());
                 }
                 else
                 {
@@ -276,7 +290,7 @@ namespace SanteDB.Rest.Common
                     if (queryParameters.TryGetValue("_lean", out lean) && lean[0] == "true" && this.GetRepository() is IFastQueryRepositoryService<TResource>)
                         retVal = (this.GetRepository() as IFastQueryRepositoryService<TResource>).FindFast(queryExpression, offset, count, out totalCount, Guid.Empty);
                     else
-                        retVal = this.GetRepository().Find(queryExpression, offset, count, out totalCount);
+                        retVal = this.GetRepository().Find(queryExpression, offset, count, out totalCount, sortParameters.ToArray());
                 }
 
                 this.DataDisclosed?.Invoke(this, new AuditDataDisclosureEventArgs(queryParameters.ToString(), retVal));

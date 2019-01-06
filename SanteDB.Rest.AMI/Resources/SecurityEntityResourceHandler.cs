@@ -29,6 +29,7 @@ using SanteDB.Rest.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Xml.Serialization;
 
@@ -133,13 +134,29 @@ namespace SanteDB.Rest.AMI.Resources
         public virtual IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
         {
             var query = QueryExpressionParser.BuildLinqExpression<TSecurityEntity>(queryParameters);
-            var results = this.m_repository.Find(query, offset, count, out totalCount);
-            return results.AsParallel().Select(o =>
+
+            List<String> orderBy = null;
+            // Order by
+            List<ModelSort<TSecurityEntity>> sortParameters = new List<ModelSort<TSecurityEntity>>();
+            if (queryParameters.TryGetValue("_orderBy", out orderBy))
+                foreach (var itm in orderBy)
+                {
+                    var sortData = itm.Split(':');
+                    sortParameters.Add(new ModelSort<TSecurityEntity>(
+                        QueryExpressionParser.BuildPropertySelector<TSecurityEntity>(sortData[0]),
+                        sortData.Length == 1 || sortData[1] == "asc" ? Core.Model.Map.SortOrderType.OrderBy : Core.Model.Map.SortOrderType.OrderByDescending
+                    ));
+                }
+
+            var results = this.m_repository.Find(query, offset, count, out totalCount, sortParameters.ToArray());
+
+            return results.AsParallel().AsOrdered().Select(o =>
             {
                 var r = Activator.CreateInstance(this.Type, o) as ISecurityEntityInfo<TSecurityEntity>;
                 r.Policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetActivePolicies(o).Select(p=>new SecurityPolicyInfo(p)).ToList();
                 return r;
             }).OfType<Object>();
+
         }
 
         /// <summary>
