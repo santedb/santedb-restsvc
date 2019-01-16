@@ -18,6 +18,7 @@
  * Date: 2018-11-19
  */
 using SanteDB.Core;
+using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Query;
@@ -45,7 +46,10 @@ namespace SanteDB.Rest.AMI.Resources
 
         // The repository for the entity
         private IRepositoryService<TSecurityEntity> m_repository;
-        
+
+        // Get the tracer
+        private Tracer m_tracer = Tracer.GetTracer(typeof(SecurityEntityResourceHandler<TSecurityEntity>));
+
         /// <summary>
         /// Create a new instance of the security entity resource handler
         /// </summary>
@@ -75,6 +79,24 @@ namespace SanteDB.Rest.AMI.Resources
         public ResourceCapability Capabilities => ResourceCapability.Create | ResourceCapability.CreateOrUpdate | ResourceCapability.Delete | ResourceCapability.Get | ResourceCapability.Search | ResourceCapability.Update;
 
         /// <summary>
+        /// Gets the repository
+        /// </summary>
+        protected IRepositoryService<TSecurityEntity> GetRepository()
+        {
+            if (this.m_repository == null)
+                this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<TSecurityEntity>>();
+            if (this.m_repository == null)
+            {
+                this.m_tracer.TraceWarning("IRepositoryService<{0}> was not found will generate a default one using IRepositoryServiceFactory", typeof(TSecurityEntity).FullName);
+                var factoryService = ApplicationServiceContext.Current.GetService<IRepositoryServiceFactory>();
+                if (factoryService == null)
+                    throw new KeyNotFoundException($"IRepositoryService<{typeof(TSecurityEntity).FullName}> not found and no repository is found");
+                this.m_repository = factoryService.CreateRepository<TSecurityEntity>();
+            }
+            return this.m_repository;
+        }
+
+        /// <summary>
         /// Creates the specified object in the underlying data store
         /// </summary>
         /// <param name="data">The data that is to be created</param>
@@ -90,9 +112,9 @@ namespace SanteDB.Rest.AMI.Resources
             td.Entity.Policies = td.Policies.Select(p => new SecurityPolicyInstance(p.Policy, p.Grant)).ToList();
 
             if(updateIfExists)
-                td.Entity = this.m_repository.Save(td.Entity);
+                td.Entity = this.GetRepository().Save(td.Entity);
             else
-                td.Entity = this.m_repository.Insert(td.Entity);
+                td.Entity = this.GetRepository().Insert(td.Entity);
 
             return td;
         }
@@ -103,7 +125,7 @@ namespace SanteDB.Rest.AMI.Resources
         public virtual object Get(object id, object versionId)
         {
             // Get the object
-            var data = this.m_repository.Get((Guid)id, (Guid)versionId);
+            var data = this.GetRepository().Get((Guid)id, (Guid)versionId);
 
             var retVal = Activator.CreateInstance(this.Type, data) as ISecurityEntityInfo<TSecurityEntity>;
             retVal.Policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetActivePolicies(data).Select(o=>new SecurityPolicyInfo(o)).ToList();
@@ -148,7 +170,7 @@ namespace SanteDB.Rest.AMI.Resources
                     ));
                 }
 
-            var results = this.m_repository.Find(query, offset, count, out totalCount, sortParameters.ToArray());
+            var results = this.GetRepository().Find(query, offset, count, out totalCount, sortParameters.ToArray());
 
             return results.AsParallel().AsOrdered().Select(o =>
             {
@@ -170,7 +192,7 @@ namespace SanteDB.Rest.AMI.Resources
 
             // Now for the fun part we want to map any policies over to the wrapped type
             td.Entity.Policies = td.Policies.Select(p => new SecurityPolicyInstance(p.Policy, p.Grant)).ToList();
-            td.Entity = this.m_repository.Save(td.Entity);
+            td.Entity = this.GetRepository().Save(td.Entity);
 
             return td;
         }

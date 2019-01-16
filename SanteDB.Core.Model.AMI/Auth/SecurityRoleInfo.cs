@@ -49,7 +49,7 @@ namespace SanteDB.Core.Model.AMI.Auth
         {
             this.Users = role.Users.Select(o => o.UserName).ToList();
             this.Entity = role;
-            this.Policies = role.Policies.Select(o => new SecurityPolicyInfo(o)).ToList();
+            this.Policies = role.Policies.Where(o=>o.Policy != null).Select(o => new SecurityPolicyInfo(o)).ToList();
         }
 
         /// <summary>
