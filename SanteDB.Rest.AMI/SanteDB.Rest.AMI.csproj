@@ -91,23 +91,12 @@
       </ItemGroup>
     </Otherwise>
   </Choose>
-  <Choose>
-    <When Condition="$(SolutionName.Contains('santedb-rest')) or $(SolutionName.Contains('-ext'))">
-      <ItemGroup>
-        <ProjectReference Include="..\SanteDB.Core.Model.AMI\SanteDB.Core.Model.AMI.csproj">
-          <Project>{65ef51c6-5cb8-43b8-ae65-4a68f0b44ad2}</Project>
-          <Name>SanteDB.Core.Model.AMI</Name>
-        </ProjectReference>
-      </ItemGroup>
-    </When>
-    <Otherwise>
-      <ItemGroup>
-        <Reference Include="SanteDB.Core.Model.AMI">
-          <HintPath>..\Solution Items\SanteDB.Core.Model.AMI.dll</HintPath>
-        </Reference>
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
+  <ItemGroup>
+    <ProjectReference Include="..\SanteDB.Core.Model.AMI\SanteDB.Core.Model.AMI.csproj">
+      <Project>{65ef51c6-5cb8-43b8-ae65-4a68f0b44ad2}</Project>
+      <Name>SanteDB.Core.Model.AMI</Name>
+    </ProjectReference> 
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SanteDB.Rest.Common\SanteDB.Rest.Common.csproj">
       <Project>{786bd0ee-1806-4158-ba45-80249ac6dfe7}</Project>
