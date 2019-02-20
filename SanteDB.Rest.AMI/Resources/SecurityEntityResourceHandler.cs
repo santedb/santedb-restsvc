@@ -138,7 +138,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public virtual object Obsolete(object key)
         {
-            return Activator.CreateInstance(this.Type, this.m_repository.Obsolete((Guid)key));
+            return Activator.CreateInstance(this.Type, this.GetRepository().Obsolete((Guid)key));
         }
 
         /// <summary>

@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Xml.Serialization;
+using System.Linq;
 
 namespace SanteDB.Rest.Common.Fault
 {
@@ -61,9 +62,18 @@ namespace SanteDB.Rest.Common.Fault
             this.Rules = (ex as DetectedIssueException)?.Issues;
             if(ex.InnerException != null)
                 this.CausedBy = new RestServiceFault(ex.InnerException);
+
+            if (ex.Data.Count > 0)
+                this.Data = ex.Data.Values.OfType<object>().ToList();
         }
 
-        
+
+        /// <summary>
+        /// Gets or sets any additional data
+        /// </summary>
+        [JsonProperty("data"), XmlIgnore]
+        public List<Object> Data { get; set; }
+
         /// <summary>
         /// Gets or sets the type of fault
         /// </summary>
@@ -105,5 +115,13 @@ namespace SanteDB.Rest.Common.Fault
         /// </summary>
         [XmlElement("rule"), JsonProperty("rules")]
         public List<DetectedIssue> Rules { get; set; }
+
+        /// <summary>
+        /// Rest service fault as string
+        /// </summary>
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }
