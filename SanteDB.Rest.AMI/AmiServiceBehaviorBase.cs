@@ -226,20 +226,22 @@ namespace SanteDB.Messaging.AMI.Wcf
                         (data as IAmiIdentified).Key = key;
 
                     this.AclCheck(handler, nameof(IApiResourceHandler.Create));
-                    var retVal = handler.Create(data, true) as IdentifiedData;
+                    var retVal = handler.Create(data, true);
                     var versioned = retVal as IVersionedEntity;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.Created;
-                    RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
+
+                    if(retVal is IdentifiedData)
+                        RestOperationContext.Current.OutgoingResponse.SetETag((retVal as IdentifiedData).Tag);
 
                     if (versioned != null)
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/history/{2}",
                             RestOperationContext.Current.IncomingRequest.Url,
-                            retVal.Key,
-                            versioned.Key));
+                            versioned.Key,
+                            versioned.VersionKey));
                     else
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}",
                             RestOperationContext.Current.IncomingRequest.Url,
-                            retVal.Key));
+                            (retVal as IAmiIdentified)?.Key ?? (retVal as IdentifiedData)?.Key.ToString()));
 
                     return retVal;
                 }
@@ -269,20 +271,24 @@ namespace SanteDB.Messaging.AMI.Wcf
                 {
 
                     this.AclCheck(handler, nameof(IApiResourceHandler.Obsolete));
-                    var retVal = handler.Obsolete(Guid.Parse(key)) as IdentifiedData;
+                    var retVal = handler.Obsolete(Guid.Parse(key));
 
                     var versioned = retVal as IVersionedEntity;
 
                     RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.Created;
+                    if (retVal is IdentifiedData)
+                        RestOperationContext.Current.OutgoingResponse.SetETag((retVal as IdentifiedData).Tag);
+
                     if (versioned != null)
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/history/{2}",
                             RestOperationContext.Current.IncomingRequest.Url,
-                            retVal.Key,
-                            versioned.Key));
+                            versioned.Key,
+                            versioned.VersionKey));
                     else
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}",
                             RestOperationContext.Current.IncomingRequest.Url,
-                            retVal.Key));
+                            (retVal as IAmiIdentified)?.Key ?? (retVal as IdentifiedData)?.Key.ToString()));
+
 
                     return retVal;
                 }
