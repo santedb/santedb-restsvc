@@ -17,6 +17,7 @@
  * User: justi
  * Date: 2019-1-12
  */
+using RestSrvr.Exceptions;
 using SanteDB.Core;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Security;
@@ -88,6 +89,11 @@ namespace SanteDB.Rest.AMI.Resources
             // Update the user
             if (td.PasswordOnly)
             {
+                // Validate that the user name matches the SID
+                var user = ApplicationServiceContext.Current.GetService<IRepositoryService<SecurityUser>>().Get(td.Entity.Key.Value);
+                if (user.UserName?.ToLowerInvariant() != td.Entity.UserName.ToLowerInvariant())
+                    throw new FaultException(403, "Username mismatch");
+
                 ApplicationServiceContext.Current.GetService<IIdentityProviderService>().ChangePassword(td.Entity.UserName, td.Entity.Password, AuthenticationContext.Current.Principal);
                 return null;
             }

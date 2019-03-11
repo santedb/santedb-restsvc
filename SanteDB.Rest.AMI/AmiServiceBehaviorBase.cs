@@ -19,6 +19,7 @@
  */
 using RestSrvr;
 using RestSrvr.Attributes;
+using RestSrvr.Exceptions;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
@@ -530,10 +531,21 @@ namespace SanteDB.Messaging.AMI.Wcf
                 var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null)
                 {
+                    // Get target of update and ensure
                     if (data is IdentifiedData)
-                        (data as IdentifiedData).Key = Guid.Parse(key);
+                    {
+                        var iddata = data as IdentifiedData;
+                        if (iddata.Key.HasValue && iddata.Key != Guid.Parse(key))
+                            throw new FaultException(400, "Key mismatch");
+                        iddata.Key = Guid.Parse(key);
+                    }
                     else if (data is IAmiIdentified)
-                        (data as IAmiIdentified).Key = key;
+                    {
+                        var iddata = data as IAmiIdentified;
+                        if (!String.IsNullOrEmpty(iddata.Key) && iddata.Key != key)
+                            throw new FaultException(400, "Key mismatch");
+                        iddata.Key = key;
+                    }
 
                     this.AclCheck(handler, nameof(IApiResourceHandler.Update));
                     var retVal = handler.Update(data);
@@ -564,7 +576,7 @@ namespace SanteDB.Messaging.AMI.Wcf
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
-                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString().Replace("{","{{").Replace("}","}}")));
                 throw;
 
             }
