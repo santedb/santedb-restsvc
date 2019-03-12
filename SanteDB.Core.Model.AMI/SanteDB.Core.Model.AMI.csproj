@@ -47,6 +47,7 @@
     <Compile Include="Auth\SecurityUserInfo.cs" />
     <Compile Include="Auth\TfaRequestInfo.cs" />
     <Compile Include="Auth\TfaMechanismInfo.cs" />
+    <Compile Include="Diagnostics\DiagnosticReportTag.cs" />
     <Compile Include="Diagnostics\DiagnosticApplicationInfo.cs" />
     <Compile Include="Diagnostics\DiagnosticEnvironmentInfo.cs" />
     <Compile Include="Diagnostics\DiagnosticAttachmentInfo.cs" />

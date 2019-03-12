@@ -19,6 +19,7 @@
  */
 using Newtonsoft.Json;
 using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Model.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
@@ -30,8 +31,19 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
     /// </summary>
     [JsonObject(nameof(DiagnosticReport)), XmlType(nameof(DiagnosticReport), Namespace = "http://santedb.org/ami/diagnostics")]
     [XmlRoot(nameof(DiagnosticReport), Namespace = "http://santedb.org/ami/diagnostics")]
-    public class DiagnosticReport : BaseEntityData
+    public class DiagnosticReport : BaseEntityData, ITaggable
     {
+
+        /// <summary>
+        /// Default ctor for serialization
+        /// </summary>
+        public DiagnosticReport()
+        {
+            this.Tags = new List<DiagnosticReportTag>();
+            this.Attachments = new List<DiagnosticAttachmentInfo>();
+            this.Threads = new List<DiagnosticThreadInfo>();
+        }
+
         /// <summary>
         /// Application configuration information
         /// </summary>
@@ -68,5 +80,26 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         /// </summary>
         [XmlElement("thread"), JsonProperty("thread")]
         public List<DiagnosticThreadInfo> Threads { get; set; }
+
+        /// <summary>
+        /// Gets the tags
+        /// </summary>
+        [JsonProperty("tag"), XmlElement("tag")]
+        public List<DiagnosticReportTag> Tags { get; set; }
+
+        /// <summary>
+        /// Gets the tags
+        /// </summary>
+        IEnumerable<ITag> ITaggable.Tags => this.Tags;
+
+        /// <summary>
+        /// Add a tag
+        /// </summary>
+        ITag ITaggable.AddTag(string tagKey, string tagValue)
+        {
+            var tag = new DiagnosticReportTag(tagKey, tagValue);
+            this.Tags.Add(tag);
+            return tag;
+        }
     }
 }
