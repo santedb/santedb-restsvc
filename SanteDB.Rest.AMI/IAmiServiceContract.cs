@@ -31,7 +31,9 @@ using SanteDB.Core.Model.AMI.Security;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Security;
+using SanteDB.Rest.Common.Attributes;
 using System;
+using System.IO;
 using System.Xml.Schema;
 
 namespace SanteDB.Rest.AMI
@@ -73,6 +75,22 @@ namespace SanteDB.Rest.AMI
     [ServiceKnownResource(typeof(CodeSystem))]
     [ServiceKnownResource(typeof(LogFileInfo))]
     [ServiceKnownResource(typeof(AmiCollection))]
+    [ServiceProduces("application/json")]
+    [ServiceProduces("application/xml")]
+    [ServiceProduces("application/json+sdb-viewModel")]
+    [ServiceConsumes("application/json")]
+    [ServiceConsumes("application/xml")]
+    [ServiceConsumes("application/json+sdb-viewModel")]
+    [RestServiceFault(400, "The provided resource was in an incorrect format")]
+    [RestServiceFault(401, "The principal is unauthorized and needs to either elevate or authenticate themselves")]
+    [RestServiceFault(403, "The principal is not permitted (cannot elevate) to perform the operation")]
+    [RestServiceFault(404, "The requested object does not exist")]
+    [RestServiceFault(410, "The specified object did exist however is no-longer present")]
+    [RestServiceFault(415, "The client is submitting an invalid object")]
+    [RestServiceFault(422, "There was a business rule violation executing the operation")]
+    [RestServiceFault(429, "The server rejected the request due to a throttling constraint")]
+    [RestServiceFault(500, "The server encountered an error processing the result")]
+    [RestServiceFault(503, "The service is not available (starting up or shutting down)")]
     public interface IAmiServiceContract
     {
         /// <summary>
@@ -164,6 +182,7 @@ namespace SanteDB.Rest.AMI
         /// <param name="data">The resource data to be updated</param>
         /// <returns>The updated resource</returns>
         [Put("/{resourceType}/{key}")]
+        [RestServiceFault(409, "The provided update has a conflict with the current state of the object in the server")]
         Object Update(String resourceType, String key, Object data);
 
         /// <summary>
@@ -173,6 +192,7 @@ namespace SanteDB.Rest.AMI
         /// <param name="key">The key of the resource being deleted</param>
         /// <returns>The last version of the deleted resource</returns>
         [Delete("/{resourceType}/{key}")]
+        [RestServiceFault(409, "The provided delete cannot occur due to a conflicted If- header")]
         Object Delete(String resourceType, String key);
 
         /// <summary>

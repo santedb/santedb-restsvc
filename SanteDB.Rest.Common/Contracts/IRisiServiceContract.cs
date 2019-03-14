@@ -38,6 +38,10 @@ namespace SanteDB.Rest.RISI
     [ServiceKnownResource(typeof(RisiCollection<ReportDefinition>))]
     [ServiceKnownResource(typeof(ListAutoCompleteSourceDefinition))]
     [ServiceKnownResource(typeof(QueryAutoCompleteSourceDefinition))]
+    [ServiceProduces("application/json")]
+    [ServiceProduces("application/xml")]
+    [ServiceConsumes("application/json")]
+    [ServiceConsumes("application/json")]
     public partial interface IRisiServiceContract
 	{
 		/// <summary>

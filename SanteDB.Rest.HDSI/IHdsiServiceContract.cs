@@ -27,6 +27,7 @@ using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Model.Roles;
 using SanteDB.Core.Model.Security;
+using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Xml.Schema;
 
@@ -67,6 +68,22 @@ namespace SanteDB.Rest.HDSI
     [ServiceKnownResource(typeof(Patch))]
     [ServiceKnownResource(typeof(ConceptSet))]
     [ServiceKnownResource(typeof(ConceptReferenceTerm))]
+    [ServiceProduces("application/json")]
+    [ServiceProduces("application/json+sdb-viewModel")]
+    [ServiceProduces("application/xml")]
+    [ServiceConsumes("application/json")]
+    [ServiceConsumes("application/xml")]
+    [ServiceConsumes("application/json+sdb-viewModel")]
+    [RestServiceFault(400, "The provided resource was in an incorrect format")]
+    [RestServiceFault(401, "The principal is unauthorized and needs to either elevate or authenticate themselves")]
+    [RestServiceFault(403, "The principal is not permitted (cannot elevate) to perform the operation")]
+    [RestServiceFault(404, "The requested object does not exist")]
+    [RestServiceFault(410, "The specified object did exist however is no-longer present")]
+    [RestServiceFault(415, "The client is submitting an invalid object")]
+    [RestServiceFault(422, "There was a business rule violation executing the operation")]
+    [RestServiceFault(429, "The server rejected the request due to a throttling constraint")]
+    [RestServiceFault(500, "The server encountered an error processing the result")]
+    [RestServiceFault(503, "The service is not available (starting up or shutting down)")]
     public interface IHdsiServiceContract 
     {
 
@@ -81,6 +98,7 @@ namespace SanteDB.Rest.HDSI
         /// Get the schema
         /// </summary>
         [Get("/?xsd={schemaId}")]
+        [ServiceProduces("text/xml")]
         XmlSchema GetSchema(int schemaId);
 
         /// <summary>
@@ -136,6 +154,7 @@ namespace SanteDB.Rest.HDSI
         /// </summary>
         /// <returns></returns>
         [RestInvoke("PATCH", "/{resourceType}/{id}")]
+        [RestServiceFault(409, "The patch submitted does not match the current version of the object being patched")]
         void Patch(string resourceType, string id , Patch body);
 
         /// <summary>
@@ -160,6 +179,7 @@ namespace SanteDB.Rest.HDSI
         /// Updates the specified resource. If the resource does not exist than a 404 is thrown
         /// </summary>
         [Put("/{resourceType}/{id}")]
+        [RestServiceFault(409, "There is a conflict in the update request (version mismatch)")]
         IdentifiedData Update(string resourceType, string id, IdentifiedData body);
 
         /// <summary>
@@ -172,6 +192,7 @@ namespace SanteDB.Rest.HDSI
         /// Deletes the specified resource from the IMS instance
         /// </summary>
         [Delete("/{resourceType}/{id}")]
+        [RestServiceFault(409, "There is a conflict in the update request (version mismatch)")]
         IdentifiedData Delete(string resourceType, string id);
 
 
