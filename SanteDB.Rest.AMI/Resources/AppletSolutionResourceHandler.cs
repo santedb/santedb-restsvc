@@ -43,11 +43,11 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Gets the capabilities of the resource handler
         /// </summary>
-        public ResourceCapability Capabilities
+        public ResourceCapabilityType Capabilities
         {
             get
             {
-                return ResourceCapability.Create | ResourceCapability.Update | ResourceCapability.Get | ResourceCapability.Search;
+                return ResourceCapabilityType.Create | ResourceCapabilityType.Update | ResourceCapabilityType.Get | ResourceCapabilityType.Search;
             }
         }
 

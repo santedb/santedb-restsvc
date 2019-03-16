@@ -33,7 +33,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Capabilities
         /// </summary>
-        public override ResourceCapability Capabilities => ResourceCapability.Get;
+        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Get;
 
         /// <summary>
         /// Get the specified object

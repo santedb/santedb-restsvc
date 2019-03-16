@@ -20,6 +20,7 @@
 using RestSrvr;
 using RestSrvr.Attributes;
 using RestSrvr.Exceptions;
+using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
@@ -29,6 +30,7 @@ using SanteDB.Core.Model.AMI.Collections;
 using SanteDB.Core.Model.AMI.Diagnostics;
 using SanteDB.Core.Model.AMI.Logging;
 using SanteDB.Core.Model.Interfaces;
+using SanteDB.Core.Services;
 using SanteDB.Rest.AMI;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
@@ -53,7 +55,7 @@ namespace SanteDB.Messaging.AMI.Wcf
         // The trace source for logging
         protected Tracer m_traceSource = Tracer.GetTracer(typeof(AmiServiceBehaviorBase));
 
-        private ResourceHandlerTool m_resourceHandler;
+        protected ResourceHandlerTool m_resourceHandler;
 
         /// <summary>
         /// Create the AMI service handler with the specified resource handler resolver
@@ -91,8 +93,16 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// </summary>
         private void AclCheck(Object handler, String action)
         {
-            foreach (var dmn in handler.GetType().GetMethods().Where(o => o.Name == action).SelectMany(method => method.GetCustomAttributes<DemandAttribute>()))
-                this.Demand(dmn.PolicyId);
+            foreach (var dmn in this.GetDemands(handler, action))
+                this.Demand(dmn);
+        }
+
+        /// <summary>
+        /// Get demands
+        /// </summary>
+        private String[] GetDemands(object handler, string action)
+        {
+            return handler.GetType().GetMethods().Where(o => o.Name == action).SelectMany(method => method.GetCustomAttributes<DemandAttribute>()).Select(o => o.PolicyId).ToArray();
         }
 
         /// <summary>
@@ -449,7 +459,7 @@ namespace SanteDB.Messaging.AMI.Wcf
         }
 
         /// <summary>
-        /// Get options / capabilities of a specific object
+        /// Options resource
         /// </summary>
         public virtual ServiceResourceOptions ResourceOptions(string resourceType)
         {
@@ -457,7 +467,32 @@ namespace SanteDB.Messaging.AMI.Wcf
             if (handler == null)
                 throw new FileNotFoundException(resourceType);
             else
-                return new ServiceResourceOptions(resourceType, handler.Capabilities);
+            {
+                // Get the resource capabilities
+                List<ServiceResourceCapability> caps = new List<ServiceResourceCapability>();
+                if (handler.Capabilities.HasFlag(ResourceCapabilityType.Create))
+                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Create, this.GetDemands(handler, nameof(IApiResourceHandler.Create))));
+                if (handler.Capabilities.HasFlag(ResourceCapabilityType.CreateOrUpdate))
+                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.CreateOrUpdate, this.GetDemands(handler, nameof(IApiResourceHandler.Create))));
+                if (handler.Capabilities.HasFlag(ResourceCapabilityType.Delete))
+                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Delete, this.GetDemands(handler, nameof(IApiResourceHandler.Obsolete))));
+                if (handler.Capabilities.HasFlag(ResourceCapabilityType.Get))
+                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Get, this.GetDemands(handler, nameof(IApiResourceHandler.Get))));
+                if (handler.Capabilities.HasFlag(ResourceCapabilityType.GetVersion))
+                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.GetVersion, this.GetDemands(handler, nameof(IApiResourceHandler.Get))));
+                if (handler.Capabilities.HasFlag(ResourceCapabilityType.History))
+                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.History, this.GetDemands(handler, nameof(IApiResourceHandler.Query))));
+                if (handler.Capabilities.HasFlag(ResourceCapabilityType.Search))
+                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Search, this.GetDemands(handler, nameof(IApiResourceHandler.Query))));
+                if (handler.Capabilities.HasFlag(ResourceCapabilityType.Update))
+                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Update, this.GetDemands(handler, nameof(IApiResourceHandler.Update))));
+
+                // Patching 
+                if (ApplicationServiceContext.Current.GetService<IPatchService>() != null)
+                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Patch, this.GetDemands(handler, nameof(IApiResourceHandler.Update))));
+
+                return new ServiceResourceOptions(resourceType, caps);
+            }
         }
 
         /// <summary>

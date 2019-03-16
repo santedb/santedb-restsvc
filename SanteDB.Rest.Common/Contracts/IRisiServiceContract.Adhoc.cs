@@ -25,7 +25,7 @@ using System;
 namespace SanteDB.Rest.RISI
 {
     /// <summary>
-    /// RISI contract members for the data-warehouse
+    /// Report Integration Services Interface (RISI)
     /// </summary>
     public partial interface IRisiServiceContract
 	{

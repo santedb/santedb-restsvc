@@ -34,8 +34,9 @@ using System.Xml.Schema;
 namespace SanteDB.Rest.HDSI
 {
     /// <summary>
-    /// The HDSI service interface
+    /// Health Data Services Interface (HDSI)
     /// </summary>
+    /// <remarks>This contract represents necessary REST functions to interact with the SanteDB CDR</remarks>
     [ServiceContractAttribute(Name = "HDSI")]
     [ServiceKnownResource(typeof(Concept))]
     [ServiceKnownResource(typeof(ConceptClass))]
@@ -65,7 +66,6 @@ namespace SanteDB.Rest.HDSI
     [ServiceKnownResource(typeof(ApplicationEntity))]
     [ServiceKnownResource(typeof(CarePlan))]
     [ServiceKnownResource(typeof(Bundle))]
-    [ServiceKnownResource(typeof(Patch))]
     [ServiceKnownResource(typeof(ConceptSet))]
     [ServiceKnownResource(typeof(ConceptReferenceTerm))]
     [ServiceProduces("application/json")]

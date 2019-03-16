@@ -27,9 +27,9 @@ using System.Xml.Serialization;
 namespace SanteDB.Core.Model.AMI.Security
 {
     /// <summary>
-    /// Audit information which wraps audit data from service core
+    /// A submission of one or more audits
     /// </summary>
-    [XmlRoot("audit", Namespace = "http://santedb.org/ami")]
+    [XmlRoot("AuditSubmission", Namespace = "http://santedb.org/ami")]
     [XmlType(nameof(AuditSubmission), Namespace = "http://santedb.org/ami")]
     [JsonObject(nameof(AuditSubmission))]
     public class AuditSubmission : IdentifiedData

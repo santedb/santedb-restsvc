@@ -104,18 +104,18 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Gets the capabilities of this resource handler
         /// </summary>
-        public virtual ResourceCapability Capabilities
+        public virtual ResourceCapabilityType Capabilities
         {
             get
             {
-                return ResourceCapability.Create |
-                    ResourceCapability.CreateOrUpdate |
-                    ResourceCapability.Delete |
-                    ResourceCapability.Get |
-                    ResourceCapability.GetVersion |
-                    ResourceCapability.History |
-                    ResourceCapability.Search |
-                    ResourceCapability.Update;
+                return ResourceCapabilityType.Create |
+                    ResourceCapabilityType.CreateOrUpdate |
+                    ResourceCapabilityType.Delete |
+                    ResourceCapabilityType.Get |
+                    ResourceCapabilityType.GetVersion |
+                    ResourceCapabilityType.History |
+                    ResourceCapabilityType.Search |
+                    ResourceCapabilityType.Update;
             }
         }
 
@@ -143,8 +143,8 @@ namespace SanteDB.Rest.Common
         {
             if (data == null)
                 throw new ArgumentNullException(nameof(data));
-            else if ((this.Capabilities & ResourceCapability.Create) == 0 &&
-                (this.Capabilities & ResourceCapability.CreateOrUpdate) == 0)
+            else if ((this.Capabilities & ResourceCapabilityType.Create) == 0 &&
+                (this.Capabilities & ResourceCapabilityType.CreateOrUpdate) == 0)
                 throw new NotSupportedException();
 
             var bundle = data as Bundle;
@@ -180,8 +180,8 @@ namespace SanteDB.Rest.Common
         /// </summary>
         public virtual Object Get(object id, object versionId)
         {
-            if ((this.Capabilities & ResourceCapability.Get) == 0 &&
-                (this.Capabilities & ResourceCapability.GetVersion) == 0)
+            if ((this.Capabilities & ResourceCapabilityType.Get) == 0 &&
+                (this.Capabilities & ResourceCapabilityType.GetVersion) == 0)
                 throw new NotSupportedException();
 
             try
@@ -202,7 +202,7 @@ namespace SanteDB.Rest.Common
         /// </summary>
         public virtual Object Obsolete(object key)
         {
-            if ((this.Capabilities & ResourceCapability.Delete) == 0)
+            if ((this.Capabilities & ResourceCapabilityType.Delete) == 0)
                 throw new NotSupportedException();
 
             try
@@ -223,7 +223,7 @@ namespace SanteDB.Rest.Common
         /// </summary>
         public virtual IEnumerable<Object> Query(NameValueCollection queryParameters)
         {
-            if ((this.Capabilities & ResourceCapability.Search) == 0)
+            if ((this.Capabilities & ResourceCapabilityType.Search) == 0)
                 throw new NotSupportedException();
 
             try
@@ -246,7 +246,7 @@ namespace SanteDB.Rest.Common
         /// </summary>
         public virtual IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
         {
-            if ((this.Capabilities & ResourceCapability.Search) == 0)
+            if ((this.Capabilities & ResourceCapabilityType.Search) == 0)
                 throw new NotSupportedException();
             try
             {
@@ -309,7 +309,7 @@ namespace SanteDB.Rest.Common
         public virtual Object Update(Object data)
         {
 
-            if ((this.Capabilities & ResourceCapability.Update) == 0)
+            if ((this.Capabilities & ResourceCapabilityType.Update) == 0)
                 throw new NotSupportedException();
 
             Bundle bundleData = data as Bundle;

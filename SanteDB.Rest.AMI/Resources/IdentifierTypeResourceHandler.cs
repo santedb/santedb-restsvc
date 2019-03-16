@@ -35,7 +35,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Get capabilities for this resource handler
         /// </summary>
-        public override ResourceCapability Capabilities => ResourceCapability.Create | ResourceCapability.CreateOrUpdate | ResourceCapability.Delete | ResourceCapability.Get | ResourceCapability.Search | ResourceCapability.Update;
+        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.CreateOrUpdate | ResourceCapabilityType.Delete | ResourceCapabilityType.Get | ResourceCapabilityType.Search | ResourceCapabilityType.Update;
 
         /// <summary>
         /// Create identifier type

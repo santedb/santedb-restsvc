@@ -39,8 +39,10 @@ using System.Xml.Schema;
 namespace SanteDB.Rest.AMI
 {
     /// <summary>
-    /// Represents a service contract for the AMI 
+    /// Administrative Management Interface (AMI)
     /// </summary>
+    /// <remarks>
+    /// This service contract represents the functionality required to administer the SanteDB server.</remarks>
     [ServiceContractAttribute(Name = "AMI")]
     [ServiceKnownResource(typeof(SecurityUserInfo))]
     [ServiceKnownResource(typeof(Entity))]
@@ -70,11 +72,9 @@ namespace SanteDB.Rest.AMI
     [ServiceKnownResource(typeof(SubmissionResult))]
     [ServiceKnownResource(typeof(ApplicationEntity))]
     [ServiceKnownResource(typeof(SubmissionRequest))]
-    [ServiceKnownResource(typeof(ServiceOptions))]
     [ServiceKnownResource(typeof(X509Certificate2Info))]
     [ServiceKnownResource(typeof(CodeSystem))]
     [ServiceKnownResource(typeof(LogFileInfo))]
-    [ServiceKnownResource(typeof(AmiCollection))]
     [ServiceProduces("application/json")]
     [ServiceProduces("application/xml")]
     [ServiceProduces("application/json+sdb-viewModel")]

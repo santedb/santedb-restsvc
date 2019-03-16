@@ -48,7 +48,7 @@ namespace SanteDB.Rest.Common
         /// Creates an single resource handler for a particular service
         /// </summary>
         /// <param name="resourceTypes">The type of resource handlers</param>
-        public ResourceHandlerTool(IEnumerable<Type> resourceHandlerTypes)
+        public ResourceHandlerTool(IEnumerable<Type> resourceHandlerTypes, Type scope)
         {
             foreach (var t in resourceHandlerTypes.Where(t=>!t.ContainsGenericParameters && !t.IsAbstract && !t.IsInterface))
             {
@@ -56,8 +56,11 @@ namespace SanteDB.Rest.Common
                 {
                     ConstructorInfo ci = t.GetConstructor(Type.EmptyTypes);
                     IApiResourceHandler rh = ci.Invoke(null) as IApiResourceHandler;
-                    this.m_handlers.Add($"{rh.Scope.Name}/{rh.ResourceName}", rh);
-                    this.m_traceSource.TraceInfo("Adding {0} to {1}", rh.ResourceName, rh.Scope);
+                    if (rh.Scope == scope)
+                    {
+                        this.m_handlers.Add($"{rh.Scope.Name}/{rh.ResourceName}", rh);
+                        this.m_traceSource.TraceInfo("Adding {0} to {1}", rh.ResourceName, rh.Scope);
+                    }
                 }
                 catch (Exception e)
                 {

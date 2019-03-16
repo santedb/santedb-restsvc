@@ -41,11 +41,11 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Get capabilities statement
         /// </summary>
-        public ResourceCapability Capabilities
+        public ResourceCapabilityType Capabilities
         {
             get
             {
-                return ResourceCapability.Get | ResourceCapability.Search;
+                return ResourceCapabilityType.Get | ResourceCapabilityType.Search;
             }
         }
         

@@ -38,11 +38,11 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Gets the resource capabilities for the object
         /// </summary>
-        public override ResourceCapability Capabilities
+        public override ResourceCapabilityType Capabilities
         {
             get
             {
-                return ResourceCapability.Create | ResourceCapability.Update | ResourceCapability.Get | ResourceCapability.Search;
+                return ResourceCapabilityType.Create | ResourceCapabilityType.Update | ResourceCapabilityType.Get | ResourceCapabilityType.Search;
             }
         }
 

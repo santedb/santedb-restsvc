@@ -50,7 +50,7 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Gets the capabilities of this service
         /// </summary>
-        ResourceCapability Capabilities { get;  }
+        ResourceCapabilityType Capabilities { get;  }
 
         /// <summary>
         /// Creates a resource.

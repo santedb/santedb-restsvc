@@ -24,7 +24,7 @@ using System.IO;
 namespace SanteDB.Rest.RISI
 {
     /// <summary>
-    /// Provides operations for running and managing reports.
+    /// Report Integration Services Interface (RISI)
     /// </summary>
     [ServiceContractAttribute(Name = "RISI")]
     [ServiceKnownResource(typeof(ReportBundle))]

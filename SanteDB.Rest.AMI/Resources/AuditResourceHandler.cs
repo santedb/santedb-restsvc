@@ -53,7 +53,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Get the capabilities of this handler
         /// </summary>
-        public ResourceCapability Capabilities => ResourceCapability.Create | ResourceCapability.Get | ResourceCapability.Search;
+        public ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.Get | ResourceCapabilityType.Search;
 
         /// <summary>
         /// The name of the resource

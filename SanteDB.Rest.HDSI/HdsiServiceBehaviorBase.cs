@@ -27,6 +27,7 @@ using SanteDB.Core.Model;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Patch;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
@@ -67,13 +68,22 @@ namespace SanteDB.Rest.HDSI
         /// </summary>
         protected abstract void Demand(String policyId);
 
+
         /// <summary>
         /// Perform an ACL check
         /// </summary>
         private void AclCheck(Object handler, String action)
         {
-            foreach (var dmn in handler.GetType().GetMethods().Where(o => o.Name == action).SelectMany(method => method.GetCustomAttributes<DemandAttribute>()))
-                this.Demand(dmn.PolicyId);
+            foreach (var dmn in this.GetDemands(handler, action))
+                this.Demand(dmn);
+        }
+
+        /// <summary>
+        /// Get demands
+        /// </summary>
+        private String[] GetDemands(object handler, string action)
+        {
+            return handler.GetType().GetMethods().Where(o => o.Name == action).SelectMany(method => method.GetCustomAttributes<DemandAttribute>()).Select(o=>o.PolicyId).ToArray();
         }
 
         /// <summary>
@@ -671,37 +681,21 @@ namespace SanteDB.Rest.HDSI
                 RestOperationContext.Current.OutgoingResponse.StatusCode = 200;
                 RestOperationContext.Current.OutgoingResponse.Headers.Add("Allow", $"GET, PUT, POST, OPTIONS, HEAD, DELETE{(ApplicationServiceContext.Current.GetService<IPatchService>() != null ? ", PATCH" : null)}");
                 if (ApplicationServiceContext.Current.GetService<IPatchService>() != null)
-                    RestOperationContext.Current.OutgoingResponse.Headers.Add("Accept-Patch", "application/xml+oiz-patch");
+                    RestOperationContext.Current.OutgoingResponse.Headers.Add("Accept-Patch", "application/xml+sdb-patch");
 
                 // Service options
                 var retVal = new ServiceOptions()
                 {
                     InterfaceVersion = "1.0.0.0",
-                    Services = new List<ServiceResourceOptions>()
-                    {
-                        new ServiceResourceOptions()
-                        {
-                            ResourceName = null
-                        },
-                        new ServiceResourceOptions()
-                        {
-                            ResourceName = "time",
-                            Capabilities = ResourceCapability.Get
-                        }
-                    }
+                    Resources = new List<ServiceResourceOptions>()
+                    
                 };
 
                 // Get the resources which are supported
                 foreach (var itm in this.m_resourceHandler.Handlers)
                 {
-                    var svc = new ServiceResourceOptions()
-                    {
-                        ResourceName = itm.ResourceName,
-                        Capabilities = itm.Capabilities
-                    };
-                    if (ApplicationServiceContext.Current.GetService<IPatchService>() != null)
-                        svc.Capabilities |= ResourceCapability.Patch;
-                    retVal.Services.Add(svc);
+                    var svc = this.ResourceOptions(itm.ResourceName);
+                    retVal.Resources.Add(svc);
                 }
 
                 return retVal;
@@ -725,12 +719,36 @@ namespace SanteDB.Rest.HDSI
         /// </summary>
         public virtual ServiceResourceOptions ResourceOptions(string resourceType)
         {
-
             var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
             if (handler == null)
                 throw new FileNotFoundException(resourceType);
             else
-                return new ServiceResourceOptions(resourceType, handler.Capabilities);
+            {
+                // Get the resource capabilities
+                List<ServiceResourceCapability> caps = new List<ServiceResourceCapability>();
+                if (handler.Capabilities.HasFlag(ResourceCapabilityType.Create))
+                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Create, this.GetDemands(handler, nameof(IApiResourceHandler.Create))));
+                if (handler.Capabilities.HasFlag(ResourceCapabilityType.CreateOrUpdate))
+                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.CreateOrUpdate, this.GetDemands(handler, nameof(IApiResourceHandler.Create))));
+                if (handler.Capabilities.HasFlag(ResourceCapabilityType.Delete))
+                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Delete, this.GetDemands(handler, nameof(IApiResourceHandler.Obsolete))));
+                if (handler.Capabilities.HasFlag(ResourceCapabilityType.Get))
+                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Get, this.GetDemands(handler, nameof(IApiResourceHandler.Get))));
+                if (handler.Capabilities.HasFlag(ResourceCapabilityType.GetVersion))
+                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.GetVersion, this.GetDemands(handler, nameof(IApiResourceHandler.Get))));
+                if (handler.Capabilities.HasFlag(ResourceCapabilityType.History))
+                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.History, this.GetDemands(handler, nameof(IApiResourceHandler.Query))));
+                if (handler.Capabilities.HasFlag(ResourceCapabilityType.Search))
+                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Search, this.GetDemands(handler, nameof(IApiResourceHandler.Query))));
+                if (handler.Capabilities.HasFlag(ResourceCapabilityType.Update))
+                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Update, this.GetDemands(handler, nameof(IApiResourceHandler.Update))));
+
+                // Patching 
+                if (ApplicationServiceContext.Current.GetService<IPatchService>() != null)
+                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Patch, this.GetDemands(handler, nameof(IApiResourceHandler.Update))));
+
+                return new ServiceResourceOptions(resourceType, caps);
+            }
         }
     }
 }
