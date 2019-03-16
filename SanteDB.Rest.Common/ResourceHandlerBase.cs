@@ -32,6 +32,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Xml.Serialization;
 using SanteDB.Core.Model.Query;
+using SanteDB.Rest.Common.Attributes;
+using SanteDB.Core.Security;
 
 namespace SanteDB.Rest.Common
 {
@@ -139,6 +141,7 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Create a resource
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual Object Create(Object data, bool updateIfExists)
         {
             if (data == null)
@@ -178,6 +181,7 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Read clinical data
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual Object Get(object id, object versionId)
         {
             if ((this.Capabilities & ResourceCapabilityType.Get) == 0 &&
@@ -200,6 +204,7 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Obsolete data
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual Object Obsolete(object key)
         {
             if ((this.Capabilities & ResourceCapabilityType.Delete) == 0)
@@ -221,6 +226,7 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Perform a query 
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual IEnumerable<Object> Query(NameValueCollection queryParameters)
         {
             if ((this.Capabilities & ResourceCapabilityType.Search) == 0)
@@ -244,6 +250,7 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Perform the actual query
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
         {
             if ((this.Capabilities & ResourceCapabilityType.Search) == 0)
@@ -306,6 +313,7 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Perform an update
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual Object Update(Object data)
         {
 
