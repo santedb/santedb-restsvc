@@ -56,6 +56,12 @@ namespace SanteDB.Rest.AMI
     [ServiceKnownResource(typeof(SecurityProvenance))]
     [ServiceKnownResource(typeof(SecurityRoleInfo))]
     [ServiceKnownResource(typeof(AuditSubmission))]
+    [ServiceKnownResource(typeof(SecurityUser))]
+    [ServiceKnownResource(typeof(SecurityPolicy))]
+    [ServiceKnownResource(typeof(SecurityRole))]
+    [ServiceKnownResource(typeof(SecurityApplication))]
+    [ServiceKnownResource(typeof(SecurityDevice))]
+
     [ServiceKnownResource(typeof(AuditData))]
     [ServiceKnownResource(typeof(AppletManifest))]
     [ServiceKnownResource(typeof(AppletManifestInfo))]

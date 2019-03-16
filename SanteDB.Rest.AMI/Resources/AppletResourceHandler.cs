@@ -108,6 +108,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <param name="appletId">The identifier of the applet to be loaded</param>
         /// <param name="versionId">The version of the applet</param>
         /// <returns></returns>
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
         public object Get(Object appletId, Object versionId)
         {
             var appletService = ApplicationServiceContext.Current.GetService<IAppletManagerService>();
@@ -140,6 +141,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         /// <param name="queryParameters">The filter to apply to the applet</param>
         /// <returns>The matching applet manifests</returns>
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
         public IEnumerable<object> Query(NameValueCollection queryParameters)
         {
             int tc = 0;
@@ -154,6 +156,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <param name="count">The count of objects</param>
         /// <param name="totalCount">The total matching results</param>
         /// <returns>The applet manifests</returns>
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
         public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
         {
             var query = QueryExpressionParser.BuildLinqExpression<AppletManifest>(queryParameters);

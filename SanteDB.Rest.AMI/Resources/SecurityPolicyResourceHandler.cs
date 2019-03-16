@@ -17,7 +17,11 @@
  * User: justi
  * Date: 2019-1-12
  */
+using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Security;
+using SanteDB.Core.Security;
+using SanteDB.Rest.Common.Attributes;
+using System;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -26,5 +30,38 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary>
     public class SecurityPolicyResourceHandler : ResourceHandlerBase<SecurityPolicy>
     {
+
+        /// <summary>
+        /// Get the capabilities of this resource
+        /// </summary>
+        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.Update | ResourceCapabilityType.Search | ResourceCapabilityType.Get | ResourceCapabilityType.GetVersion;
+
+        /// <summary>
+        /// Create the policy
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.AlterPolicy)]
+        public override object Create(object data, bool updateIfExists)
+        {
+            return base.Create(data, updateIfExists);
+        }
+
+        /// <summary>
+        /// Update the policy
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.AlterPolicy)]
+        public override object Update(object data)
+        {
+            return base.Update(data);
+        }
+
+        /// <summary>
+        /// Obsolete the policy
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public override object Obsolete(object key)
+        {
+            throw new NotSupportedException();
+        }
     }
 }

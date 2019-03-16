@@ -22,6 +22,7 @@ using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
+using SanteDB.Rest.Common.Attributes;
 using System;
 
 namespace SanteDB.Rest.AMI.Resources
@@ -40,6 +41,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Create the specified security role
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.CreateRoles)]
         public override object Create(object data, bool updateIfExists)
         {
             var retVal = base.Create(data, updateIfExists) as SecurityRoleInfo;
@@ -52,5 +54,24 @@ namespace SanteDB.Rest.AMI.Resources
             return new SecurityRoleInfo(retVal.Entity);
         }
 
+        /// <summary>
+        /// Obsolete roles
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.AlterRoles)]
+        public override object Obsolete(object key)
+        {
+            return base.Obsolete(key);
+        }
+
+        /// <summary>
+        /// Update roles
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [Demand(PermissionPolicyIdentifiers.AlterRoles)]
+        public override object Update(object data)
+        {
+            return base.Update(data);
+        }
     }
 }

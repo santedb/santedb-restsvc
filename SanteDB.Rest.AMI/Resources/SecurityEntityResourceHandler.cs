@@ -27,6 +27,7 @@ using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
+using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -102,6 +103,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <param name="data">The data that is to be created</param>
         /// <param name="updateIfExists">True if the data should be updated if it already exists</param>
         /// <returns>The created object</returns>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual object Create(object data, bool updateIfExists)
         {
 
@@ -123,6 +125,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Get the specified object
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual object Get(object id, object versionId)
         {
             // Get the object
@@ -137,6 +140,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Obsolete the specified object
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual object Obsolete(object key)
         {
             return Activator.CreateInstance(this.Type, this.GetRepository().Obsolete((Guid)key));
@@ -145,6 +149,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Query for the specified object
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual IEnumerable<object> Query(NameValueCollection queryParameters)
         {
             int tr = 0;
@@ -154,6 +159,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Query for specified objects
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
         {
             var query = QueryExpressionParser.BuildLinqExpression<TSecurityEntity>(queryParameters);
@@ -185,6 +191,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Update the specified object
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual object Update(object data)
         {
             // First, we want to copy over the roles

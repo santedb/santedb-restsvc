@@ -19,6 +19,8 @@
  */
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Security;
+using SanteDB.Core.Security;
+using SanteDB.Rest.Common.Attributes;
 using System;
 
 namespace SanteDB.Rest.AMI.Resources
@@ -32,5 +34,32 @@ namespace SanteDB.Rest.AMI.Resources
         /// Type of security device
         /// </summary>
         public override Type Type => typeof(SecurityDeviceInfo);
+
+        /// <summary>
+        /// Create device
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.CreateDevice)]
+        public override object Create(object data, bool updateIfExists)
+        {
+            return base.Create(data, updateIfExists);
+        }
+
+        /// <summary>
+        /// Update the device
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.CreateDevice)]
+        public override object Update(object data)
+        {
+            return base.Update(data);
+        }
+
+        /// <summary>
+        /// Obolete the device
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.CreateDevice)]
+        public override object Obsolete(object key)
+        {
+            return base.Obsolete(key);
+        }
     }
 }

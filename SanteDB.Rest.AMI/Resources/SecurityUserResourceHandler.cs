@@ -25,6 +25,7 @@ using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
+using SanteDB.Rest.Common.Attributes;
 using System;
 
 namespace SanteDB.Rest.AMI.Resources
@@ -44,6 +45,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Creates the specified user
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.CreateIdentity)]
         public override object Create(object data, bool updateIfExists)
         {
             var td = data as SecurityUserInfo;
@@ -64,6 +66,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Lock the specified user
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.AlterIdentity)]
         public object Lock(object key)
         {
             ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().LockUser((Guid)key);
@@ -73,6 +76,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Unlock user
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.AlterIdentity)]
         public object Unlock(object key)
         {
             ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().UnlockUser((Guid)key);
@@ -82,6 +86,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Override the update function
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.AlterIdentity)]
         public override object Update(object data)
         {
             var td = data as SecurityUserInfo;

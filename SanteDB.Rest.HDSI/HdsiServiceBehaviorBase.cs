@@ -744,10 +744,11 @@ namespace SanteDB.Rest.HDSI
                     caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Update, this.GetDemands(handler, nameof(IApiResourceHandler.Update))));
 
                 // Patching 
-                if (ApplicationServiceContext.Current.GetService<IPatchService>() != null)
+                if (ApplicationServiceContext.Current.GetService<IPatchService>() != null &&
+                    handler.Capabilities.HasFlag(ResourceCapabilityType.Update))
                     caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Patch, this.GetDemands(handler, nameof(IApiResourceHandler.Update))));
 
-                return new ServiceResourceOptions(resourceType, caps);
+                return new ServiceResourceOptions(resourceType, handler.Type, caps);
             }
         }
     }
