@@ -44,10 +44,10 @@ using System.Xml.Serialization;
 namespace SanteDB.Rest.HDSI
 {
     /// <summary>
-    /// Data implementation
+    /// Health Data Service Interface (HDSI)
     /// </summary>
+    /// <remarks>Represents generic implementation of the the Health Data Service Interface (HDSI) contract</remarks>
     [ServiceBehavior(Name = "HDSI", InstanceMode = ServiceInstanceMode.PerCall)]
-    [Description("Health Data Service Interface")]
     public abstract class HdsiServiceBehaviorBase : IHdsiServiceContract
     {
         // Trace source
