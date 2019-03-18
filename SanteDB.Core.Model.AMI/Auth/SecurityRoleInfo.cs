@@ -34,6 +34,13 @@ namespace SanteDB.Core.Model.AMI.Auth
     [XmlRoot(nameof(SecurityRoleInfo), Namespace = "http://santedb.org/ami")]
     public class SecurityRoleInfo : ISecurityEntityInfo<SecurityRole>
     {
+
+        /// <summary>
+        /// Gets the type
+        /// </summary>
+        [JsonProperty("$type"), XmlIgnore]
+        public String Type { get => "SecurityRoleInfo"; set { } }
+
         /// <summary>
         /// Create new security role info
         /// </summary>

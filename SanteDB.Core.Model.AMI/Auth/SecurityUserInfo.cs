@@ -36,6 +36,12 @@ namespace SanteDB.Core.Model.AMI.Auth
     {
 
         /// <summary>
+        /// Gets the type
+        /// </summary>
+        [JsonProperty("$type"), XmlIgnore]
+        public String Type { get => "SecurityUserInfo"; set { } }
+
+        /// <summary>
         /// Default ctor
         /// </summary>
         public SecurityUserInfo()
