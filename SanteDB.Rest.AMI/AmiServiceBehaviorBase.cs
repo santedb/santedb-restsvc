@@ -46,8 +46,9 @@ using System.Xml.Serialization;
 namespace SanteDB.Messaging.AMI.Wcf
 {
     /// <summary>
-    /// Implementation of the AMI service behavior
+    /// Administration Management Interface (AMI)
     /// </summary>
+    /// <remarks>Represents a generic implementation of the Administrative Management Interface (AMI) contract</remarks>
     [ServiceBehavior(Name = "AMI", InstanceMode = ServiceInstanceMode.PerCall)]
     public abstract class AmiServiceBehaviorBase : IAmiServiceContract
     {
