@@ -97,7 +97,7 @@ namespace SanteDB.Rest.AMI.Resources
                 // Validate that the user name matches the SID
                 var user = ApplicationServiceContext.Current.GetService<IRepositoryService<SecurityUser>>().Get(td.Entity.Key.Value);
                 if (user.UserName?.ToLowerInvariant() != td.Entity.UserName.ToLowerInvariant())
-                    throw new FaultException(403, "Username mismatch");
+                    throw new FaultException(403, $"Username mismatch expect {user.UserName.ToLowerInvariant()} but got {td.Entity.UserName.ToLowerInvariant()}");
 
                 ApplicationServiceContext.Current.GetService<IIdentityProviderService>().ChangePassword(td.Entity.UserName, td.Entity.Password, AuthenticationContext.Current.Principal);
                 return null;
