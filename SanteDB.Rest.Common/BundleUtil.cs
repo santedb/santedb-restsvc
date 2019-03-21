@@ -17,11 +17,13 @@
  * User: justi
  * Date: 2019-1-12
  */
+using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Collection;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Tracing;
 using System.Linq;
 
 namespace SanteDB.Rest.Common
@@ -32,14 +34,14 @@ namespace SanteDB.Rest.Common
     public static class BundleUtil
     {
         // Trace source
-        private static TraceSource m_traceSource = new TraceSource("SanteDB.Messaging.HDSI");
+        private static Tracer m_traceSource = new Tracer("SanteDB.Messaging.HDSI");
 
         /// <summary>
         /// Create a bundle
         /// </summary>
         public static Bundle CreateBundle(IEnumerable<IdentifiedData> resourceRoot, int totalResults, int offset, bool lean)
         {
-            m_traceSource.TraceEvent(TraceEventType.Verbose, 0, "Creating bundle for results {0}..{1} of {2}", offset, offset + resourceRoot.Count(), totalResults);
+            m_traceSource.TraceEvent(EventLevel.Verbose, "Creating bundle for results {0}..{1} of {2}", offset, offset + resourceRoot.Count(), totalResults);
             try
             {
                 Bundle retVal = new Bundle();
@@ -67,7 +69,7 @@ namespace SanteDB.Rest.Common
             }
             catch (Exception e)
             {
-                m_traceSource.TraceEvent(TraceEventType.Verbose, 0, "Error building bundle: {0}", e);
+                m_traceSource.TraceEvent(EventLevel.Verbose, "Error building bundle: {0}", e);
                 throw;
             }
         }
