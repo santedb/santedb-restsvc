@@ -306,6 +306,7 @@ namespace SanteDB.Rest.Common
             catch (Exception e)
             {
                 this.DataDisclosed?.Invoke(this, new AuditDataDisclosureEventArgs(queryParameters.ToString(), new object[] { e }) { Success = false });
+                this.m_tracer.TraceError("Error executing query: {0}", e);
                 throw e;
             }
         }
