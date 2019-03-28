@@ -83,7 +83,9 @@ namespace SanteDB.Rest.HDSI.Resources
             var retVal = base.Query(queryParameters, offset, count, out totalCount);
 
             var erPersistence = ApplicationServiceContext.Current.GetService<IRepositoryService<EntityRelationship>>() ;
+            var auth = AuthenticationContext.Current;
             retVal.OfType<ManufacturedMaterial>().AsParallel().ForAll(o => {
+                AuthenticationContext.Current = auth;
                 int tr = 0;
                 if(!o.Relationships.Any(r=>r.RelationshipTypeKey == EntityRelationshipTypeKeys.Instance))
                     o.Relationships.AddRange(erPersistence.Find(q => q.TargetEntityKey == o.Key && q.RelationshipTypeKey == EntityRelationshipTypeKeys.Instance, 0, 100, out tr));
