@@ -88,7 +88,7 @@ namespace SanteDB.Rest.Common
             if (!m_relatedLoadAssociations.TryGetValue(propertyType, out methodInfo))
             {
                 if (versionKey.HasValue && typeof(IVersionedAssociation).IsAssignableFrom(propertyType.StripGeneric()))
-                    methodInfo = typeof(ObjectExpander).GetRuntimeMethod(nameof(LoadCollection), new Type[] { typeof(Guid), typeof(decimal?) }).MakeGenericMethod(propertyType.StripGeneric());
+                    methodInfo = typeof(ObjectExpander).GetRuntimeMethod(nameof(LoadCollection), new Type[] { typeof(Guid), typeof(int?) }).MakeGenericMethod(propertyType.StripGeneric());
                 else
                     methodInfo = typeof(ObjectExpander).GetRuntimeMethod(nameof(LoadCollection), new Type[] { typeof(Guid) }).MakeGenericMethod(propertyType.StripGeneric());
 
@@ -120,7 +120,7 @@ namespace SanteDB.Rest.Common
 		/// <param name="sourceKey">The source key.</param>
 		/// <param name="sourceSequence">The source sequence.</param>
 		/// <returns>IEnumerable&lt;TAssociation&gt;.</returns>
-		public static IEnumerable<TAssociation> LoadCollection<TAssociation>(Guid sourceKey, Decimal? sourceSequence) where TAssociation : IdentifiedData, IVersionedAssociation, new()
+		public static IEnumerable<TAssociation> LoadCollection<TAssociation>(Guid sourceKey, int? sourceSequence) where TAssociation : IdentifiedData, IVersionedAssociation, new()
         {
             return EntitySource.Current.Provider.GetRelations<TAssociation>(sourceKey, sourceSequence);
         }
