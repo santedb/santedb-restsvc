@@ -22,6 +22,7 @@ using RestSrvr.Attributes;
 using RestSrvr.Exceptions;
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
+using SanteDB.Core.Exceptions;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.AMI;
@@ -30,6 +31,7 @@ using SanteDB.Core.Model.AMI.Collections;
 using SanteDB.Core.Model.AMI.Diagnostics;
 using SanteDB.Core.Model.AMI.Logging;
 using SanteDB.Core.Model.Interfaces;
+using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Services;
 using SanteDB.Rest.AMI;
 using SanteDB.Rest.Common;
@@ -160,7 +162,94 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// </summary>
         /// <returns>Returns options for the AMI service.</returns>
         public abstract ServiceOptions Options();
-        
+
+        /// <summary>
+        /// Perform a patch on the serviceo
+        /// </summary>
+        /// <param name="resourceType"></param>
+        /// <param name="id"></param>
+        /// <param name="body"></param>
+        public virtual void Patch(string resourceType, string id, Patch body)
+        {
+            this.ThrowIfNotReady();
+            try
+            {
+                // First we load
+                var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
+
+                if (handler == null)
+                    throw new FileNotFoundException(resourceType);
+
+                // Validate
+                var match = RestOperationContext.Current.IncomingRequest.Headers["If-Match"];
+                if (match == null)
+                    throw new InvalidOperationException("Missing If-Match header for versioned objects");
+
+                // Match bin
+                var versionId = match.Contains("-") ? Guid.Parse(match) : Guid.ParseExact(match, "N");
+
+
+                // Next we get the current version
+                this.AclCheck(handler, nameof(IApiResourceHandler.Get));
+
+                var rawExisting = handler.Get(Guid.Parse(id), Guid.Empty);
+                IdentifiedData existing = rawExisting as IdentifiedData;
+                if (rawExisting is ISecurityEntityInfo)
+                    existing = (rawExisting as ISecurityEntityInfo).ToIdentifiedData();
+
+                // Object cannot be patched
+                if (existing == null)
+                    throw new NotSupportedException();
+
+                var force = Convert.ToBoolean(RestOperationContext.Current.IncomingRequest.Headers["X-Patch-Force"] ?? "false");
+
+                if (existing == null)
+                    throw new FileNotFoundException($"/{resourceType}/{id}/history/{versionId}");
+                else if ((existing as IdentifiedData)?.Tag != match  && !force)
+                {
+                    this.m_traceSource.TraceError("Object {0} ETAG is {1} but If-Match specified {2}", existing.Key, existing.Tag, match);
+                    RestOperationContext.Current.OutgoingResponse.StatusCode = 409;
+                    RestOperationContext.Current.OutgoingResponse.StatusDescription = "Conflict";
+                    return;
+                }
+                else if (body == null)
+                    throw new ArgumentNullException(nameof(body));
+                else
+                {
+                    // Force load all properties for existing
+                    var applied = ApplicationServiceContext.Current.GetService<IPatchService>().Patch(body, existing, force);
+                    this.AclCheck(handler, nameof(IApiResourceHandler.Update));
+                    var data = handler.Update(applied) as IdentifiedData;
+                    RestOperationContext.Current.OutgoingResponse.StatusCode = 204;
+                    RestOperationContext.Current.OutgoingResponse.SetETag(data.Tag);
+                    RestOperationContext.Current.OutgoingResponse.SetLastModified(applied.ModifiedOn.DateTime);
+                    var versioned = (data as IVersionedEntity)?.VersionKey;
+                    if (versioned != null)
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/history/{2}",
+                                RestOperationContext.Current.IncomingRequest.Url,
+                                id,
+                                versioned));
+                    else
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}",
+                                RestOperationContext.Current.IncomingRequest.Url,
+                                id));
+                }
+            }
+            catch (PatchAssertionException e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceWarning(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+
+            }
+        }
+
         /// <summary>
         /// Perform a ping
         /// </summary>

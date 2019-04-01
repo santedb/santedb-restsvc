@@ -106,5 +106,11 @@ namespace SanteDB.Core.Model.AMI.Auth
         /// </summary>
         [JsonIgnore, XmlIgnore]
         public DateTimeOffset ModifiedOn => this.Entity?.ModifiedOn ?? DateTimeOffset.Now;
+
+        /// <summary>
+        /// Gets the object as identified data
+        /// </summary>
+        public IdentifiedData ToIdentifiedData() => this.Entity;
+
     }
 }

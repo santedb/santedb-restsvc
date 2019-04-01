@@ -30,6 +30,7 @@ using SanteDB.Core.Model.AMI.Logging;
 using SanteDB.Core.Model.AMI.Security;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Model.Security;
 using SanteDB.Rest.Common.Attributes;
 using System;
@@ -216,7 +217,7 @@ namespace SanteDB.Rest.AMI
         /// <param name="resourceType">The type of resource to be locked</param>
         /// <param name="key">The key of the resource</param>
         /// <returns>The locked resource</returns>
-        [RestInvoke("LOCK","/{resourceType}/{key}")]
+        [RestInvoke("LOCK", "/{resourceType}/{key}")]
         Object Lock(String resourceType, String key);
 
         /// <summary>
@@ -225,7 +226,7 @@ namespace SanteDB.Rest.AMI
         /// <param name="resourceType">The type of resource to be unlocked</param>
         /// <param name="key">The key of the resource</param>
         /// <returns>The unlocked resource</returns>
-        [RestInvoke("UNLOCK","/{resourceType}/{key}")]
+        [RestInvoke("UNLOCK", "/{resourceType}/{key}")]
         Object UnLock(String resourceType, String key);
 
         /// <summary>
@@ -272,12 +273,20 @@ namespace SanteDB.Rest.AMI
         ServiceOptions Options();
 
         /// <summary>
+        /// Updates the specified resource according to the instructions in the PATCH file
+        /// </summary>
+        /// <returns></returns>
+        [RestInvoke("PATCH", "/{resourceType}/{id}")]
+        [RestServiceFault(409, "The patch submitted does not match the current version of the object being patched")]
+        void Patch(string resourceType, string id, Patch body);
+
+        /// <summary>
         /// Get the specific options supported for the 
         /// </summary>
         /// <param name="resourceType">The type of resource to get service options</param>
         [RestInvoke("OPTIONS", "/{resourceType}")]
         ServiceResourceOptions ResourceOptions(String resourceType);
 
-    
+
     }
 }

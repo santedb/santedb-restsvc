@@ -22,10 +22,24 @@ using System.Collections.Generic;
 
 namespace SanteDB.Core.Model.AMI.Auth
 {
+
+    /// <summary>
+    /// Security entity information
+    /// </summary>
+    public interface ISecurityEntityInfo
+    {
+
+        /// <summary>
+        /// Gets the entity
+        /// </summary>
+        IdentifiedData ToIdentifiedData();
+
+    }
+
     /// <summary>
     /// Represents an object that provide a wrapper for a security info
     /// </summary>
-    public interface ISecurityEntityInfo<TSecurityObject> : IAmiIdentified
+    public interface ISecurityEntityInfo<TSecurityObject> : IAmiIdentified, ISecurityEntityInfo
         where TSecurityObject : SecurityEntity
     {
 
