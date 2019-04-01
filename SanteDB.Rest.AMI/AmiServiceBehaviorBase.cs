@@ -193,9 +193,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                 this.AclCheck(handler, nameof(IApiResourceHandler.Get));
 
                 var rawExisting = handler.Get(Guid.Parse(id), Guid.Empty);
-                IdentifiedData existing = rawExisting as IdentifiedData;
-                if (rawExisting is ISecurityEntityInfo)
-                    existing = (rawExisting as ISecurityEntityInfo).ToIdentifiedData();
+                IdentifiedData existing = (rawExisting as ISecurityEntityInfo)?.ToIdentifiedData() ?? rawExisting as IdentifiedData;
 
                 // Object cannot be patched
                 if (existing == null)
@@ -219,7 +217,8 @@ namespace SanteDB.Messaging.AMI.Wcf
                     // Force load all properties for existing
                     var applied = ApplicationServiceContext.Current.GetService<IPatchService>().Patch(body, existing, force);
                     this.AclCheck(handler, nameof(IApiResourceHandler.Update));
-                    var data = handler.Update(applied) as IdentifiedData;
+                    var updateResult = handler.Update(applied);
+                    var data = (updateResult as ISecurityEntityInfo)?.ToIdentifiedData() ?? updateResult as IdentifiedData;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 204;
                     RestOperationContext.Current.OutgoingResponse.SetETag(data.Tag);
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(applied.ModifiedOn.DateTime);

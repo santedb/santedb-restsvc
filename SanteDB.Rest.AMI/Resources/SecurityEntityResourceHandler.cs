@@ -164,7 +164,8 @@ namespace SanteDB.Rest.AMI.Resources
         {
             var query = QueryExpressionParser.BuildLinqExpression<TSecurityEntity>(queryParameters);
 
-            List<String> orderBy = null;
+            List<String> orderBy = null, queryId = null;
+            Guid? queryIdParsed = null;
             // Order by
             List<ModelSort<TSecurityEntity>> sortParameters = new List<ModelSort<TSecurityEntity>>();
             if (queryParameters.TryGetValue("_orderBy", out orderBy))
@@ -176,10 +177,17 @@ namespace SanteDB.Rest.AMI.Resources
                         sortData.Length == 1 || sortData[1] == "asc" ? Core.Model.Map.SortOrderType.OrderBy : Core.Model.Map.SortOrderType.OrderByDescending
                     ));
                 }
+            if (queryParameters.TryGetValue("_queryId", out queryId))
+                queryIdParsed = Guid.Parse(queryId.First());
 
-            var results = this.GetRepository().Find(query, offset, count, out totalCount, sortParameters.ToArray());
+            var repo = this.GetRepository();
+            IEnumerable<TSecurityEntity> results = null;
+            if(repo is IPersistableQueryRepositoryService<TSecurityEntity> && queryIdParsed.HasValue)
+                results = (repo as IPersistableQueryRepositoryService<TSecurityEntity>).Find(query, offset, count, out totalCount, queryIdParsed.Value, sortParameters.ToArray());
+            else
+                results = repo.Find(query, offset, count, out totalCount, sortParameters.ToArray());
 
-            return results.AsParallel().AsOrdered().Select(o =>
+            return results.Select(o =>
             {
                 var r = Activator.CreateInstance(this.Type, o) as ISecurityEntityInfo<TSecurityEntity>;
                 r.Policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetActivePolicies(o).Select(p=>new SecurityPolicyInfo(p)).ToList();
@@ -199,7 +207,8 @@ namespace SanteDB.Rest.AMI.Resources
             if (td is null) throw new ArgumentException("Invalid type", nameof(data));
 
             // Now for the fun part we want to map any policies over to the wrapped type
-            td.Entity.Policies = td.Policies.Select(p => new SecurityPolicyInstance(p.Policy, p.Grant)).ToList();
+            if(td.Policies != null)
+                td.Entity.Policies = td.Policies.Select(p => new SecurityPolicyInstance(p.Policy, p.Grant)).ToList();
             td.Entity = this.GetRepository().Save(td.Entity);
 
             return td;

@@ -44,6 +44,10 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.CreateRoles)]
         public override object Create(object data, bool updateIfExists)
         {
+            if (data is SecurityRole)
+                data = new SecurityRoleInfo(data as SecurityRole);
+
+
             var retVal = base.Create(data, updateIfExists) as SecurityRoleInfo;
             var td = data as SecurityRoleInfo;
             
@@ -71,6 +75,9 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.AlterRoles)]
         public override object Update(object data)
         {
+            if (data is SecurityRole)
+                data = new SecurityRoleInfo(data as SecurityRole);
+
             return base.Update(data);
         }
     }

@@ -48,6 +48,8 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.CreateIdentity)]
         public override object Create(object data, bool updateIfExists)
         {
+            if (data is SecurityUser)
+                data = new SecurityUserInfo(data as SecurityUser);
             var td = data as SecurityUserInfo;
 
             // Insert the user
@@ -55,7 +57,7 @@ namespace SanteDB.Rest.AMI.Resources
 
             // User information to roles
             if (td.Roles.Count > 0)
-                ApplicationServiceContext.Current.GetService<IRoleProviderService>().AddUsersToRoles(new string[] { retVal.Entity.UserName }, td.Roles.ToArray(),  AuthenticationContext.Current.Principal);
+                ApplicationServiceContext.Current.GetService<IRoleProviderService>().AddUsersToRoles(new string[] { retVal.Entity.UserName }, td.Roles.ToArray(), AuthenticationContext.Current.Principal);
 
             return new SecurityUserInfo(retVal.Entity)
             {
@@ -89,6 +91,9 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.AlterIdentity)]
         public override object Update(object data)
         {
+            if (data is SecurityUser)
+                data = new SecurityUserInfo(data as SecurityUser);
+
             var td = data as SecurityUserInfo;
 
             // Update the user
@@ -112,8 +117,8 @@ namespace SanteDB.Rest.AMI.Resources
                 {
                     var irps = ApplicationServiceContext.Current.GetService<IRoleProviderService>();
                     // Remove the user from all roles
-                    irps.RemoveUsersFromRoles(new string[] { retVal.Entity.UserName }, irps.GetAllRoles(), AuthenticationContext.Current.Principal);
-                    irps.AddUsersToRoles(new string[] { retVal.Entity.UserName }, td.Roles.ToArray(),  AuthenticationContext.Current.Principal);
+                    irps?.RemoveUsersFromRoles(new string[] { retVal.Entity.UserName }, irps.GetAllRoles(), AuthenticationContext.Current.Principal);
+                    irps?.AddUsersToRoles(new string[] { retVal.Entity.UserName }, td.Roles.ToArray(), AuthenticationContext.Current.Principal);
                 }
 
                 return new SecurityUserInfo(retVal.Entity)

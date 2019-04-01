@@ -51,6 +51,7 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.AlterPolicy)]
         public override object Update(object data)
         {
+           
             return base.Update(data);
         }
 

@@ -41,6 +41,10 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.CreateDevice)]
         public override object Create(object data, bool updateIfExists)
         {
+
+            if (data is SecurityDevice)
+                data = new SecurityDeviceInfo(data as SecurityDevice);
+
             return base.Create(data, updateIfExists);
         }
 
@@ -50,6 +54,8 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.CreateDevice)]
         public override object Update(object data)
         {
+            if (data is SecurityDevice)
+                data = new SecurityDeviceInfo(data as SecurityDevice);
             return base.Update(data);
         }
 
