@@ -72,8 +72,6 @@
     <Compile Include="Resources\ProviderResourceHandler.cs" />
     <Compile Include="Resources\ReferenceTermResourceHandler.cs" />
     <Compile Include="Resources\ResourceHandlerBase.cs" />
-    <Compile Include="Resources\SubscriptionDefinitionResourceHandler.cs" />
-    <Compile Include="Resources\SubscriptionResourceHandler.cs" />
     <Compile Include="Resources\SubstanceAdministrationResourceHandler.cs" />
     <Compile Include="Resources\TemplateDefinitionResourceHandler.cs" />
     <Compile Include="Resources\UserEntityResourceHandler.cs" />

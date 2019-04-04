@@ -236,7 +236,6 @@ namespace SanteDB.Rest.Common
             {
                 int tr = 0;
                 var retVal = this.Query(queryParameters, 0, 100, out tr);
-                this.DataDisclosed?.Invoke(this, new AuditDataDisclosureEventArgs(queryParameters.ToString(), retVal));
                 return retVal;
             }
             catch (Exception e)
@@ -285,8 +284,13 @@ namespace SanteDB.Rest.Common
                 else if (queryParameters.TryGetValue("_queryId", out query) && this.GetRepository() is IPersistableQueryRepositoryService<TResource>)
                 {
                     Guid queryId = Guid.Parse(query[0]);
-                    List<String> lean = null;
-                    if (queryParameters.TryGetValue("_lean", out lean) && lean[0] == "true" && this.GetRepository() is IFastQueryRepositoryService<TResource>)
+                    List<String> data = null;
+                    if (queryParameters.TryGetValue("_subscription", out data))
+                    { // subscription based query
+                        totalCount = 0;
+                        retVal = ApplicationServiceContext.Current.GetService<ISubscriptionExecutor>()?.Execute(Guid.Parse(data.First()), queryParameters, offset, count, out totalCount, queryId).OfType<TResource>();
+                    }
+                    else if (queryParameters.TryGetValue("_lean", out data) && data[0] == "true" && this.GetRepository() is IFastQueryRepositoryService<TResource>)
                         retVal = (this.GetRepository() as IFastQueryRepositoryService<TResource>).FindFast(queryExpression, offset, count, out totalCount, queryId);
                     else
                         retVal = (this.GetRepository() as IPersistableQueryRepositoryService<TResource>).Find(queryExpression, offset, count, out totalCount, queryId, sortParameters.ToArray());

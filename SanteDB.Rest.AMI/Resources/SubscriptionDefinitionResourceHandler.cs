@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SanteDB.Rest.HDSI.Resources
+namespace SanteDB.Rest.AMI.Resources
 {
     /// <summary>
     /// Represents the subscription definition resource handler
