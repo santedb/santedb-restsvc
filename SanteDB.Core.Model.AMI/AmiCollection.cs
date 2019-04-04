@@ -29,6 +29,7 @@ using SanteDB.Core.Model.AMI.Security;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Security;
+using SanteDB.Core.Model.Subscription;
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
@@ -75,6 +76,7 @@ namespace SanteDB.Core.Model.AMI.Collections
     [XmlInclude(typeof(ServiceOptions))]
     [XmlInclude(typeof(X509Certificate2Info))]
     [XmlInclude(typeof(CodeSystem))]
+    [XmlInclude(typeof(SubscriptionDefinition))]
     [XmlInclude(typeof(LogFileInfo))]
     public class AmiCollection
     {
