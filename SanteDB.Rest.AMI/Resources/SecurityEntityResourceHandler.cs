@@ -111,7 +111,7 @@ namespace SanteDB.Rest.AMI.Resources
             var td = data as ISecurityEntityInfo<TSecurityEntity>;
             if (td is null) throw new ArgumentException("Invalid type", nameof(data));
             // Now for the fun part we want to map any policies over to the wrapped type
-            if(td.Entity.Policies != null)
+            if(td.Entity.Policies != null && td.Policies != null)
                 td.Entity.Policies = td.Policies.Select(p => new SecurityPolicyInstance(p.Policy, p.Grant)).ToList();
 
             if(updateIfExists)
