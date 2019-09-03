@@ -27,6 +27,7 @@ using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
+using System.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -117,7 +118,7 @@ namespace SanteDB.Rest.AMI.Resources
                 {
                     var irps = ApplicationServiceContext.Current.GetService<IRoleProviderService>();
                     // Remove the user from all roles
-                    irps?.RemoveUsersFromRoles(new string[] { retVal.Entity.UserName }, irps.GetAllRoles(), AuthenticationContext.Current.Principal);
+                    irps?.RemoveUsersFromRoles(new string[] { retVal.Entity.UserName }, irps.GetAllRoles().Where(o=>!td.Roles.Contains(o)).ToArray(), AuthenticationContext.Current.Principal);
                     irps?.AddUsersToRoles(new string[] { retVal.Entity.UserName }, td.Roles.ToArray(), AuthenticationContext.Current.Principal);
                 }
 
