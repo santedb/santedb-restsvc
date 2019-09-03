@@ -182,11 +182,8 @@ namespace SanteDB.Messaging.AMI.Wcf
 
                 // Validate
                 var match = RestOperationContext.Current.IncomingRequest.Headers["If-Match"];
-                if (match == null)
+                if (match == null && typeof(IVersionedEntity).IsAssignableFrom(handler.Type))
                     throw new InvalidOperationException("Missing If-Match header for versioned objects");
-
-                // Match bin
-                var versionId = match.Contains("-") ? Guid.Parse(match) : Guid.ParseExact(match, "N");
 
 
                 // Next we get the current version
@@ -202,8 +199,8 @@ namespace SanteDB.Messaging.AMI.Wcf
                 var force = Convert.ToBoolean(RestOperationContext.Current.IncomingRequest.Headers["X-Patch-Force"] ?? "false");
 
                 if (existing == null)
-                    throw new FileNotFoundException($"/{resourceType}/{id}/history/{versionId}");
-                else if ((existing as IdentifiedData)?.Tag != match  && !force)
+                    throw new FileNotFoundException($"/{resourceType}/{id}");
+                else if (!String.IsNullOrEmpty(match) && (existing as IdentifiedData)?.Tag != match  && !force)
                 {
                     this.m_traceSource.TraceError("Object {0} ETAG is {1} but If-Match specified {2}", existing.Key, existing.Tag, match);
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 409;

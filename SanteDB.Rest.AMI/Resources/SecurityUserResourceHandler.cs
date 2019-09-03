@@ -111,13 +111,15 @@ namespace SanteDB.Rest.AMI.Resources
             else
             {
                 td.Entity.Password = null;
+                //td.Entity.Roles = td.Roles.Select(o => new SecurityRole() { Name = o }).ToList();
                 var retVal = base.Update(data) as SecurityUserInfo;
 
                 // Roles? We want to update
                 if (td.Roles.Count > 0)
                 {
                     var irps = ApplicationServiceContext.Current.GetService<IRoleProviderService>();
-                    // Remove the user from all roles
+                    // Remove the user from all roles that they aren't a member of according to the list
+                    
                     irps?.RemoveUsersFromRoles(new string[] { retVal.Entity.UserName }, irps.GetAllRoles().Where(o=>!td.Roles.Contains(o)).ToArray(), AuthenticationContext.Current.Principal);
                     irps?.AddUsersToRoles(new string[] { retVal.Entity.UserName }, td.Roles.ToArray(), AuthenticationContext.Current.Principal);
                 }
