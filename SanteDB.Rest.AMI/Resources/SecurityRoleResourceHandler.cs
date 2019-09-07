@@ -66,7 +66,7 @@ namespace SanteDB.Rest.AMI.Resources
 
                             var rd = scopedItem as SecurityPolicyInfo;
                             ApplicationServiceContext.Current.GetService<IPolicyInformationService>().AddPolicies(scope, rd.Grant, AuthenticationContext.Current.Principal, rd.Oid);
-                            base.FireSecurityAttributesChanged(scope, true);
+                            base.FireSecurityAttributesChanged(scope, true, $"{rd.Grant} policy={rd.Oid}");
 
                             return rd;
                         }
@@ -147,6 +147,11 @@ namespace SanteDB.Rest.AMI.Resources
 
             switch (propertyName)
             {
+                case "policy":
+                    var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetActivePolicies(scope).Select(o=>new SecurityPolicyInfo(o));
+                    totalCount = policies.Count();
+                    var filterExpression = QueryExpressionParser.BuildLinqExpression<SecurityPolicyInfo>(filter).Compile();
+                    return policies = policies.Where(filterExpression).Skip(offset).Take(count);
                 case "user":
                     filter.Add("roles.id", scopingEntityKey.ToString());
                     var expr = QueryExpressionParser.BuildLinqExpression<SecurityUser>(filter);
@@ -169,6 +174,24 @@ namespace SanteDB.Rest.AMI.Resources
 
             switch(propertyName)
             {
+                case "policy":
+
+                    var policy = scope.Policies.FirstOrDefault(o => o.Policy.Key == Guid.Parse(subItemKey.ToString()));
+                    if (policy == null)
+                        throw new KeyNotFoundException($"Policy {subItemKey} is not associated with this role");
+
+                    try
+                    {
+                        scope.Policies.Remove(policy);
+                        var retVal = this.Update(scope);
+                        this.FireSecurityAttributesChanged(scope, true, $"del policy={policy.Policy.Oid}");
+                        return retVal;
+                    }
+                    catch
+                    {
+                        this.FireSecurityAttributesChanged(scope, false, $"del policy={policy.Policy.Oid}");
+                        throw;
+                    }
                 case "user":
                     var user = ApplicationServiceContext.Current.GetService<IRepositoryService<SecurityUser>>().Get(Guid.Parse(subItemKey.ToString()));
                     if (user == null)
