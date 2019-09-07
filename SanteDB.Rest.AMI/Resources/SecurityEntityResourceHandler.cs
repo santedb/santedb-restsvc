@@ -19,6 +19,7 @@
  */
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
+using SanteDB.Core.Interfaces;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Query;
@@ -41,7 +42,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// Represents a resource handler that wraps a security based entity
     /// </summary>
     /// <typeparam name="TSecurityEntity">The type of security entity being wrapped</typeparam>
-    public abstract class SecurityEntityResourceHandler<TSecurityEntity> : IApiResourceHandler
+    public abstract class SecurityEntityResourceHandler<TSecurityEntity> : IApiResourceHandler, ISecurityAuditEventSource
         where TSecurityEntity : SecurityEntity
     {
 
@@ -51,12 +52,24 @@ namespace SanteDB.Rest.AMI.Resources
         // Get the tracer
         private Tracer m_tracer = Tracer.GetTracer(typeof(SecurityEntityResourceHandler<TSecurityEntity>));
 
+        public event EventHandler<SecurityAuditDataEventArgs> SecurityAttributesChanged;
+        public event EventHandler<SecurityAuditDataEventArgs> SecurityResourceCreated;
+        public event EventHandler<SecurityAuditDataEventArgs> SecurityResourceDeleted;
+
         /// <summary>
         /// Create a new instance of the security entity resource handler
         /// </summary>
         public SecurityEntityResourceHandler() 
         {
             ApplicationServiceContext.Current.AddStarted((o, e) => this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<TSecurityEntity>>());
+        }
+
+        /// <summary>
+        /// Raise the security attributes change event
+        /// </summary>
+        protected void FireSecurityAttributesChanged(object scope,bool success, params String[] changedProperties)
+        {
+            this.SecurityAttributesChanged?.Invoke(this, new SecurityAuditDataEventArgs(scope, changedProperties) { Success = success });
         }
 
         /// <summary>
@@ -110,16 +123,30 @@ namespace SanteDB.Rest.AMI.Resources
             // First, we want to copy over the roles
             var td = data as ISecurityEntityInfo<TSecurityEntity>;
             if (td is null) throw new ArgumentException("Invalid type", nameof(data));
-            // Now for the fun part we want to map any policies over to the wrapped type
-            if(td.Entity.Policies != null && td.Policies != null)
-                td.Entity.Policies = td.Policies.Select(p => new SecurityPolicyInstance(p.Policy, p.Grant)).ToList();
 
-            if(updateIfExists)
-                td.Entity = this.GetRepository().Save(td.Entity);
-            else
-                td.Entity = this.GetRepository().Insert(td.Entity);
+            try
+            {
+                // Now for the fun part we want to map any policies over to the wrapped type
+                if (td.Entity.Policies != null && td.Policies != null)
+                    td.Entity.Policies = td.Policies.Select(p => new SecurityPolicyInstance(p.Policy, p.Grant)).ToList();
 
-            return td;
+                if (updateIfExists)
+                {
+                    td.Entity = this.GetRepository().Save(td.Entity);
+                    this.SecurityAttributesChanged?.Invoke(this, new SecurityAuditDataEventArgs(td.Entity));
+                }
+                else
+                {
+                    td.Entity = this.GetRepository().Insert(td.Entity);
+                    this.SecurityResourceCreated?.Invoke(this, new SecurityAuditDataEventArgs(td.Entity));
+                }
+                return td;
+            }
+            catch
+            {
+                this.SecurityResourceCreated?.Invoke(this, new SecurityAuditDataEventArgs(td.Entity) { Success = false });
+                throw;
+            }
         }
 
         /// <summary>
@@ -143,7 +170,17 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual object Obsolete(object key)
         {
-            return Activator.CreateInstance(this.Type, this.GetRepository().Obsolete((Guid)key));
+            try
+            {
+                var retVal = Activator.CreateInstance(this.Type, this.GetRepository().Obsolete((Guid)key));
+                this.SecurityResourceDeleted?.Invoke(this, new SecurityAuditDataEventArgs(retVal));
+                return retVal;
+            }
+            catch
+            {
+                this.SecurityResourceDeleted?.Invoke(this, new SecurityAuditDataEventArgs(key) { Success = false });
+                throw;
+            }
         }
 
         /// <summary>
@@ -206,12 +243,21 @@ namespace SanteDB.Rest.AMI.Resources
             var td = data as ISecurityEntityInfo<TSecurityEntity>;
             if (td is null) throw new ArgumentException("Invalid type", nameof(data));
 
-            // Now for the fun part we want to map any policies over to the wrapped type
-            if(td.Policies != null)
-                td.Entity.Policies = td.Policies.Select(p => new SecurityPolicyInstance(p.Policy, p.Grant)).ToList();
-            td.Entity = this.GetRepository().Save(td.Entity);
+            try
+            {
+                // Now for the fun part we want to map any policies over to the wrapped type
+                if (td.Policies != null)
+                    td.Entity.Policies = td.Policies.Select(p => new SecurityPolicyInstance(p.Policy, p.Grant)).ToList();
+                td.Entity = this.GetRepository().Save(td.Entity);
+                this.SecurityAttributesChanged?.Invoke(this, new SecurityAuditDataEventArgs(td.Entity));
 
-            return td;
+                return td;
+            }
+            catch
+            {
+                this.SecurityAttributesChanged?.Invoke(this, new SecurityAuditDataEventArgs(td.Entity) { Success = false });
+                throw;
+            }
         }
     }
 }

@@ -213,6 +213,37 @@ namespace SanteDB.Rest.AMI
         Object Get(String resourceType, String key);
 
         /// <summary>
+        /// Performs a linked or chained search on a sub-property
+        /// </summary>
+        /// <param name="resourceType">The type of resource which should be searched</param>
+        /// <param name="key">The key of the hosting (container object)</param>
+        /// <param name="property">The property to search</param>
+        /// <returns>The search for the specified resource type limited to the specified object</returns>
+        [Get("/{resourceType}/{key}/{property}")]
+        AmiCollection AssociationSearch(String resourceType, String key, String property);
+
+        /// <summary>
+        /// Assigns the <paramref name="body"/> object with the resource at <paramref name="resourceType"/>/<paramref name="key"/>
+        /// </summary>
+        /// <param name="resourceType">The type of container resource</param>
+        /// <param name="key">The identiifer of the container</param>
+        /// <param name="property">The property which is the association to be added</param>
+        /// <param name="body">The object to be added to the collection</param>
+        [Post("/{resourceType}/{key}/{property}")]
+        object AssociationCreate(String resourceType, String key, String property, Object body);
+
+        /// <summary>
+        /// Removes an association 
+        /// </summary>
+        /// <param name="resourceType">The type of resource which is the container</param>
+        /// <param name="key">The key of the container</param>
+        /// <param name="property">The property on which the sub-key resides</param>
+        /// <param name="scopedEntityKey">The actual value of the sub-key</param>
+        /// <returns>The removed object</returns>
+        [Delete("/{resourceType}/{key}/{property}/{scopedEntityKey}")]
+        object AssociationRemove(String resourceType, String key, String property, String scopedEntityKey);
+
+        /// <summary>
         /// Locks the specified resource from the service
         /// </summary>
         /// <param name="resourceType">The type of resource to be locked</param>

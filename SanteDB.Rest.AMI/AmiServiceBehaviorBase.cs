@@ -802,6 +802,149 @@ namespace SanteDB.Messaging.AMI.Wcf
             }
         }
 
+        /// <summary>
+        /// Perform a search on the specified entity
+        /// </summary>
+        public AmiCollection AssociationSearch(string resourceType, string key, string property)
+        {
+            this.ThrowIfNotReady();
+            try
+            {
 
+                var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType) as IAssociativeResourceHandler;
+                if (handler != null )
+                {
+                    String offset = RestOperationContext.Current.IncomingRequest.QueryString["_offset"],
+                      count = RestOperationContext.Current.IncomingRequest.QueryString["_count"];
+
+                    this.AclCheck(handler, nameof(IAssociativeResourceHandler.QueryAssociatedEntities));
+
+                    var query = RestOperationContext.Current.IncomingRequest.QueryString.ToQuery();
+
+                    // Modified on?
+                    if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince().HasValue)
+                        query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince().Value.ToString("o"));
+
+                    // No obsoletion time?
+                    if (typeof(BaseEntityData).IsAssignableFrom(handler.Type) && !query.ContainsKey("obsoletionTime"))
+                        query.Add("obsoletionTime", "null");
+
+
+                    int totalResults = 0;
+
+                    // Lean mode
+                    var lean = RestOperationContext.Current.IncomingRequest.QueryString["_lean"];
+                    bool parsedLean = false;
+                    bool.TryParse(lean, out parsedLean);
+
+                    this.AclCheck(handler, nameof(IApiResourceHandler.Query));
+                    var retVal = handler.QueryAssociatedEntities(key, property, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).ToList();
+                    RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.OfType<IdentifiedData>().OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now);
+
+                    // Last modification time and not modified conditions
+                    if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince().HasValue ||
+                        RestOperationContext.Current.IncomingRequest.GetIfNoneMatch() != null) &&
+                        totalResults == 0)
+                    {
+                        RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.NotModified;
+                        return null;
+                    }
+                    else
+                    {
+                        return new AmiCollection(retVal, Int32.Parse(offset ?? "0"), totalResults);
+                    }
+
+                }
+                else 
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+
+            }
+        }
+
+        /// <summary>
+        /// Create an associated entity
+        /// </summary>
+        public object AssociationCreate(string resourceType, string key, string property, object body)
+        {
+            this.ThrowIfNotReady();
+
+            try
+            {
+
+                IAssociativeResourceHandler handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType) as IAssociativeResourceHandler;
+                if (handler != null)
+                {
+                    this.AclCheck(handler, nameof(IAssociativeResourceHandler.AddAssociatedEntity));
+                    var retVal = handler.AddAssociatedEntity(key, property, body);
+
+                    var versioned = retVal as IVersionedEntity;
+                    RestOperationContext.Current.OutgoingResponse.StatusCode = retVal == null ? (int)HttpStatusCode.NoContent : (int)System.Net.HttpStatusCode.Created;
+                    RestOperationContext.Current.OutgoingResponse.SetETag((retVal as IAmiIdentified)?.Tag ?? (retVal as IdentifiedData)?.Tag ?? Guid.NewGuid().ToString());
+                    RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}/{3}",
+                            RestOperationContext.Current.IncomingRequest.Url,
+                            resourceType,
+                            key,
+                            property,
+                            (retVal as IAmiIdentified)?.Key ?? (retVal as IdentifiedData)?.Key.ToString()));
+                    return retVal;
+
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+
+            }
+        }
+
+        /// <summary>
+        /// Removes an associated entity from the scoping property path
+        /// </summary>
+        public object AssociationRemove(string resourceType, string key, string property, string scopedEntityKey)
+        {
+            this.ThrowIfNotReady();
+
+            try
+            {
+
+                IAssociativeResourceHandler handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType) as IAssociativeResourceHandler;
+                if (handler != null)
+                {
+                    this.AclCheck(handler, nameof(IAssociativeResourceHandler.RemoveAssociatedEntity));
+                    var retVal = handler.RemoveAssociatedEntity(key, property, scopedEntityKey);
+
+                    var versioned = retVal as IVersionedEntity;
+                    RestOperationContext.Current.OutgoingResponse.StatusCode = (int)System.Net.HttpStatusCode.OK;
+                    RestOperationContext.Current.OutgoingResponse.SetETag((retVal as IAmiIdentified)?.Tag ?? (retVal as IdentifiedData)?.Tag ?? Guid.NewGuid().ToString());
+                    RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}/{3}",
+                            RestOperationContext.Current.IncomingRequest.Url,
+                            resourceType,
+                            key,
+                            property,
+                            (retVal as IAmiIdentified)?.Key ?? (retVal as IdentifiedData)?.Key.ToString()));
+                    return retVal;
+
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+
+            }
+        }
     }
 }
