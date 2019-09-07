@@ -61,6 +61,7 @@ namespace SanteDB.Core.Model.AMI.Auth
             this.Grant = o.Rule;
             this.Policy = new SecurityPolicy()
             {
+                Key = o.Policy.Key,
                 Oid = o.Policy.Oid,
                 CanOverride = o.Policy.CanOverride,
                 Name = o.Policy.Name
