@@ -77,8 +77,16 @@ namespace SanteDB.Rest.AMI.Resources
         {
             if (data is SecurityRole)
                 data = new SecurityRoleInfo(data as SecurityRole);
+            var td = data as SecurityRoleInfo;
 
-            return base.Update(data);
+            var retVal = base.Update(data) as SecurityRoleInfo;
+
+            if (td.Users.Count > 0)
+            {
+                ApplicationServiceContext.Current.GetService<IRoleProviderService>().AddUsersToRoles(td.Users.ToArray(), new string[] { td.Entity.Name }, AuthenticationContext.Current.Principal);
+            }
+
+            return new SecurityRoleInfo(td.Entity);
         }
     }
 }
