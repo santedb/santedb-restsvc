@@ -338,7 +338,7 @@ namespace SanteDB.Rest.Common
                     var entityData = processData as TResource;
                     
                     var retVal = this.GetRepository().Save(entityData);
-                    this?.DataUpdated(this, new AuditDataEventArgs(retVal));
+                    this?.DataUpdated?.Invoke(this, new AuditDataEventArgs(retVal));
                     return retVal;
                 }
                 else

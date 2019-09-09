@@ -18,10 +18,13 @@
  * Date: 2019-1-12
  */
 using SanteDB.Core.Interop;
+using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
 using SanteDB.Rest.Common.Attributes;
 using System;
+using System.Collections.Generic;
+using System.Security;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -34,7 +37,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Get the capabilities of this resource
         /// </summary>
-        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.Update | ResourceCapabilityType.Search | ResourceCapabilityType.Get | ResourceCapabilityType.GetVersion;
+        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.Update | ResourceCapabilityType.Search | ResourceCapabilityType.Get | ResourceCapabilityType.GetVersion | ResourceCapabilityType.Delete;
 
         /// <summary>
         /// Create the policy
@@ -51,8 +54,14 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.AlterPolicy)]
         public override object Update(object data)
         {
-           
-            return base.Update(data);
+            var key = (data as IIdentifiedEntity).Key.Value;
+            var policy = this.Get(key, Guid.Empty);
+            if (policy == null || (policy as SecurityPolicy).IsPublic)
+                return base.Update(data);
+            else if (policy == null)
+                throw new KeyNotFoundException($"Policy {key} not found");
+            else
+                throw new SecurityException($"Policy {(policy as SecurityPolicy).Oid} is a system policy and cannot be edited");
         }
 
         /// <summary>
@@ -62,7 +71,13 @@ namespace SanteDB.Rest.AMI.Resources
         /// <returns></returns>
         public override object Obsolete(object key)
         {
-            throw new NotSupportedException();
+            var policy = this.Get(key, Guid.Empty);
+            if (policy == null || (policy as SecurityPolicy).IsPublic)
+                return base.Obsolete(key);
+            else if (policy == null)
+                throw new KeyNotFoundException($"Policy {key} not found");
+            else
+                throw new SecurityException($"Policy {(policy as SecurityPolicy).Oid} is a system policy and cannot be disabled");
         }
     }
 }
