@@ -64,7 +64,7 @@ namespace SanteDB.Rest.AMI.Resources
                             if (scopedItem is SecurityPolicy)
                                 scopedItem = new SecurityPolicyInfo(scopedItem as SecurityPolicy);
 
-                            var rd = scopedItem as SecurityPolicyInfo;
+                            var rd = scopedItem as SecurityPolicyInfo;  
                             ApplicationServiceContext.Current.GetService<IPolicyInformationService>().AddPolicies(scope, rd.Grant, AuthenticationContext.Current.Principal, rd.Oid);
                             base.FireSecurityAttributesChanged(scope, true, $"{rd.Grant} policy={rd.Oid}");
 
@@ -82,7 +82,7 @@ namespace SanteDB.Rest.AMI.Resources
                             if (rd.Entity == null)
                                 throw new KeyNotFoundException($"Could not find specified user");
                             ApplicationServiceContext.Current.GetService<IRoleProviderService>().AddUsersToRoles(new string[] { rd.Entity.UserName }, new string[] { scope.Name }, AuthenticationContext.Current.Principal);
-                            base.FireSecurityAttributesChanged(rd.Entity, true);
+                            base.FireSecurityAttributesChanged(scope, true, $"add user={rd.Entity.UserName}");
 
                             return rd.Entity;
                         }
@@ -110,19 +110,7 @@ namespace SanteDB.Rest.AMI.Resources
             var retVal = base.Create(data, updateIfExists) as SecurityRoleInfo;
             var td = data as SecurityRoleInfo;
             
-            if(td.Users.Count > 0)
-            {
-                try
-                {
-                    ApplicationServiceContext.Current.GetService<IRoleProviderService>().AddUsersToRoles(td.Users.ToArray(), new string[] { td.Entity.Name }, AuthenticationContext.Current.Principal);
-                    this.FireSecurityAttributesChanged(td.Entity, true, td.Users.Select(o=>$"add user={o}").ToArray());
-                }
-                catch
-                {
-                    this.FireSecurityAttributesChanged(td.Entity, false, td.Users.Select(o => $"add user={o}").ToArray());
-                    throw;
-                }
-            }
+           
             return new SecurityRoleInfo(retVal.Entity);
         }
 
@@ -225,12 +213,7 @@ namespace SanteDB.Rest.AMI.Resources
             var td = data as SecurityRoleInfo;
 
             var retVal = base.Update(data) as SecurityRoleInfo;
-
-            if (td.Users.Count > 0)
-            {
-                ApplicationServiceContext.Current.GetService<IRoleProviderService>().AddUsersToRoles(td.Users.ToArray(), new string[] { td.Entity.Name }, AuthenticationContext.Current.Principal);
-            }
-
+            
             return new SecurityRoleInfo(td.Entity);
         }
     }
