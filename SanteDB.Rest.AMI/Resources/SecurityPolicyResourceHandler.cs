@@ -17,6 +17,7 @@
  * User: justi
  * Date: 2019-1-12
  */
+using SanteDB.Core.Interfaces;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Interfaces;
@@ -39,7 +40,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Get the capabilities of this resource
         /// </summary>
         public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.Update | ResourceCapabilityType.Search | ResourceCapabilityType.Get | ResourceCapabilityType.GetVersion | ResourceCapabilityType.Delete;
-
+        
         /// <summary>
         /// Create the policy
         /// </summary>

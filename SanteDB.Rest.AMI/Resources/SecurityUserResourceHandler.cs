@@ -73,7 +73,9 @@ namespace SanteDB.Rest.AMI.Resources
         public object Lock(object key)
         {
             ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().LockUser((Guid)key);
-            return this.Get(key, Guid.Empty);
+            var retVal = this.Get(key, Guid.Empty);
+            this.FireSecurityAttributesChanged(retVal, true, "Lockout = true");
+            return retVal;
         }
 
         /// <summary>
@@ -83,7 +85,9 @@ namespace SanteDB.Rest.AMI.Resources
         public object Unlock(object key)
         {
             ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().UnlockUser((Guid)key);
-            return this.Get(key, Guid.Empty);
+            var retVal = this.Get(key, Guid.Empty);
+            this.FireSecurityAttributesChanged(retVal, true, "Lockout = false");
+            return retVal;
         }
 
         /// <summary>
@@ -105,7 +109,8 @@ namespace SanteDB.Rest.AMI.Resources
                 if (user.UserName?.ToLowerInvariant() != td.Entity.UserName.ToLowerInvariant())
                     throw new FaultException(403, $"Username mismatch expect {user.UserName.ToLowerInvariant()} but got {td.Entity.UserName.ToLowerInvariant()}");
 
-                ApplicationServiceContext.Current.GetService<IIdentityProviderService>().ChangePassword(td.Entity.UserName, td.Entity.Password, AuthenticationContext.Current.Principal);
+                ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().ChangePassword(td.Entity.UserName, td.Entity.Password);
+                this.FireSecurityAttributesChanged(user, true, "Password");
                 return null;
             }
             else
@@ -117,11 +122,9 @@ namespace SanteDB.Rest.AMI.Resources
                 // Roles? We want to update
                 if (td.Roles.Count > 0)
                 {
-                    var irps = ApplicationServiceContext.Current.GetService<IRoleProviderService>();
-                    // Remove the user from all roles that they aren't a member of according to the list
-                    
-                    irps?.RemoveUsersFromRoles(new string[] { retVal.Entity.UserName }, irps.GetAllRoles().Where(o=>!td.Roles.Contains(o)).ToArray(), AuthenticationContext.Current.Principal);
-                    irps?.AddUsersToRoles(new string[] { retVal.Entity.UserName }, td.Roles.ToArray(), AuthenticationContext.Current.Principal);
+                    var securityService = ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>();
+                    securityService.SetUserRoles(retVal.Entity, td.Roles.ToArray());
+                    this.FireSecurityAttributesChanged(retVal.Entity, true, $"Roles = {String.Join(",", td.Roles)}");
                 }
 
                 return new SecurityUserInfo(retVal.Entity)

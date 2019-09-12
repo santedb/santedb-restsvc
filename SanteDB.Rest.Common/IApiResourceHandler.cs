@@ -18,6 +18,7 @@
  * Date: 2019-1-12
  */
 using RestSrvr;
+using SanteDB.Core.Interfaces;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
 using System;
@@ -29,7 +30,7 @@ namespace SanteDB.Rest.Common
     /// <summary>
     /// Represents a resource handler.
     /// </summary>
-    public interface IApiResourceHandler
+    public interface IApiResourceHandler 
 	{
 
 		/// <summary>

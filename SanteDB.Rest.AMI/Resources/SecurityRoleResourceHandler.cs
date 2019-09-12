@@ -170,6 +170,7 @@ namespace SanteDB.Rest.AMI.Resources
 
                     try
                     {
+                        ApplicationServiceContext.Current.GetService<IPolicyInformationService>().RemovePolicies(scope, AuthenticationContext.Current.Principal, policy.Policy.Oid);
                         scope.Policies.Remove(policy);
                         var retVal = this.Update(scope);
                         this.FireSecurityAttributesChanged(scope, true, $"del policy={policy.Policy.Oid}");
