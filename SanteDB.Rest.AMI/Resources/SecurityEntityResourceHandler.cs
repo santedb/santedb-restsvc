@@ -17,6 +17,7 @@
  * User: justi
  * Date: 2019-1-12
  */
+using RestSrvr;
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interfaces;
@@ -25,6 +26,7 @@ using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
@@ -42,7 +44,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// Represents a resource handler that wraps a security based entity
     /// </summary>
     /// <typeparam name="TSecurityEntity">The type of security entity being wrapped</typeparam>
-    public abstract class SecurityEntityResourceHandler<TSecurityEntity> : IApiResourceHandler, ISecurityAuditEventSource
+    public abstract class SecurityEntityResourceHandler<TSecurityEntity>
         where TSecurityEntity : SecurityEntity
     {
 
@@ -51,10 +53,6 @@ namespace SanteDB.Rest.AMI.Resources
 
         // Get the tracer
         private Tracer m_tracer = Tracer.GetTracer(typeof(SecurityEntityResourceHandler<TSecurityEntity>));
-
-        public event EventHandler<SecurityAuditDataEventArgs> SecurityAttributesChanged;
-        public event EventHandler<SecurityAuditDataEventArgs> SecurityResourceCreated;
-        public event EventHandler<SecurityAuditDataEventArgs> SecurityResourceDeleted;
 
         /// <summary>
         /// Create a new instance of the security entity resource handler
@@ -69,7 +67,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         protected void FireSecurityAttributesChanged(object scope,bool success, params String[] changedProperties)
         {
-            this.SecurityAttributesChanged?.Invoke(this, new SecurityAuditDataEventArgs(scope, changedProperties) { Success = success });
+            AuditUtil.AuditSecurityAttributeAction(new object[] { scope }, success, changedProperties, RestOperationContext.Current.IncomingRequest.RemoteEndPoint.ToString());
         }
 
         /// <summary>
@@ -133,18 +131,18 @@ namespace SanteDB.Rest.AMI.Resources
                 if (updateIfExists)
                 {
                     td.Entity = this.GetRepository().Save(td.Entity);
-                    this.SecurityAttributesChanged?.Invoke(this, new SecurityAuditDataEventArgs(td.Entity));
+                    AuditUtil.AuditDataAction(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Update, Core.Auditing.AuditableObjectLifecycle.Amendment, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.Success, null, RestOperationContext.Current.IncomingRequest.RemoteEndPoint.ToString(), td.Entity);
                 }
                 else
                 {
                     td.Entity = this.GetRepository().Insert(td.Entity);
-                    this.SecurityResourceCreated?.Invoke(this, new SecurityAuditDataEventArgs(td.Entity));
+                    AuditUtil.AuditDataAction(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Create, Core.Auditing.AuditableObjectLifecycle.Creation, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.Success, null, RestOperationContext.Current.IncomingRequest.RemoteEndPoint.ToString(), td.Entity);
                 }
                 return td;
             }
             catch
             {
-                this.SecurityResourceCreated?.Invoke(this, new SecurityAuditDataEventArgs(td.Entity) { Success = false });
+                AuditUtil.AuditDataAction<TSecurityEntity>(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Create, Core.Auditing.AuditableObjectLifecycle.Creation, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.MinorFail, null, RestOperationContext.Current.IncomingRequest.RemoteEndPoint.ToString(), td.Entity);
                 throw;
             }
         }
@@ -173,12 +171,12 @@ namespace SanteDB.Rest.AMI.Resources
             try
             {
                 var retVal = Activator.CreateInstance(this.Type, this.GetRepository().Obsolete((Guid)key));
-                this.SecurityResourceDeleted?.Invoke(this, new SecurityAuditDataEventArgs(retVal));
+                AuditUtil.AuditDataAction(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Delete, Core.Auditing.AuditableObjectLifecycle.LogicalDeletion, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.Success, key.ToString(), RestOperationContext.Current.IncomingRequest.RemoteEndPoint.ToString(), retVal);
                 return retVal;
             }
             catch
             {
-                this.SecurityResourceDeleted?.Invoke(this, new SecurityAuditDataEventArgs(key) { Success = false });
+                AuditUtil.AuditDataAction<TSecurityEntity>(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Delete, Core.Auditing.AuditableObjectLifecycle.LogicalDeletion, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.MinorFail, key.ToString(), RestOperationContext.Current.IncomingRequest.RemoteEndPoint.ToString());
                 throw;
             }
         }
@@ -249,13 +247,14 @@ namespace SanteDB.Rest.AMI.Resources
                 if (td.Policies != null)
                     td.Entity.Policies = td.Policies.Select(p => new SecurityPolicyInstance(p.Policy, p.Grant)).ToList();
                 td.Entity = this.GetRepository().Save(td.Entity);
-                this.SecurityAttributesChanged?.Invoke(this, new SecurityAuditDataEventArgs(td.Entity));
+
+                FireSecurityAttributesChanged(td.Entity, true);
 
                 return td;
             }
             catch
             {
-                this.SecurityAttributesChanged?.Invoke(this, new SecurityAuditDataEventArgs(td.Entity) { Success = false });
+                FireSecurityAttributesChanged(td.Entity, false);
                 throw;
             }
         }

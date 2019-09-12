@@ -29,7 +29,7 @@ namespace SanteDB.Rest.Common
     /// <summary>
     /// Resource handler utility
     /// </summary>
-    public class ResourceHandlerTool : IAuditEventSource, ISecurityAuditEventSource
+    public class ResourceHandlerTool 
 	{
 		// Resource handler utility classes
 		private static object m_lockObject = new object();
@@ -39,15 +39,7 @@ namespace SanteDB.Rest.Common
 
 		// Handlers
 		private Dictionary<String, IApiResourceHandler> m_handlers = new Dictionary<string, IApiResourceHandler>();
-
-        public event EventHandler<AuditDataEventArgs> DataCreated;
-        public event EventHandler<AuditDataEventArgs> DataUpdated;
-        public event EventHandler<AuditDataEventArgs> DataObsoleted;
-        public event EventHandler<AuditDataDisclosureEventArgs> DataDisclosed;
-        public event EventHandler<SecurityAuditDataEventArgs> SecurityAttributesChanged;
-        public event EventHandler<SecurityAuditDataEventArgs> SecurityResourceCreated;
-        public event EventHandler<SecurityAuditDataEventArgs> SecurityResourceDeleted;
-
+        
         /// <summary>
         /// Get the current handlers
         /// </summary>
@@ -70,22 +62,6 @@ namespace SanteDB.Rest.Common
                         this.m_handlers.Add($"{rh.Scope.Name}/{rh.ResourceName}", rh);
                         this.m_traceSource.TraceInfo("Adding {0} to {1}", rh.ResourceName, rh.Scope);
 
-                        // Pass through audit events
-                        if (rh is IAuditEventSource)
-                        {
-                            var raes = rh as IAuditEventSource;
-                            raes.DataCreated += (o, e) => this.DataCreated?.Invoke(o, e);
-                            raes.DataDisclosed += (o, e) => this.DataDisclosed?.Invoke(o, e);
-                            raes.DataObsoleted += (o, e) => this.DataObsoleted?.Invoke(o, e);
-                            raes.DataUpdated += (o, e) => this.DataUpdated?.Invoke(o, e);
-                        }
-                        if(rh is ISecurityAuditEventSource)
-                        {
-                            var isaes = rh as ISecurityAuditEventSource;
-                            isaes.SecurityAttributesChanged += (o, e) => this.SecurityAttributesChanged?.Invoke(o, e);
-                            isaes.SecurityResourceCreated += (o, e) => this.SecurityResourceCreated?.Invoke(o, e);
-                            isaes.SecurityResourceDeleted += (o, e) => this.SecurityResourceDeleted?.Invoke(o, e);
-                        }
                     }
                 }
                 catch (Exception e)

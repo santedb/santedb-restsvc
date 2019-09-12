@@ -34,13 +34,15 @@ using System.Xml.Serialization;
 using SanteDB.Core.Model.Query;
 using SanteDB.Rest.Common.Attributes;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Audit;
+using RestSrvr;
 
 namespace SanteDB.Rest.Common
 {
     /// <summary>
     /// Resource handler base
     /// </summary>
-    public abstract class ResourceHandlerBase<TResource> : IApiResourceHandler, IAuditEventSource where TResource : IdentifiedData
+    public abstract class ResourceHandlerBase<TResource> : IApiResourceHandler where TResource : IdentifiedData
     {
 
         // Tracer
@@ -121,22 +123,6 @@ namespace SanteDB.Rest.Common
             }
         }
 
-        /// <summary>
-        /// Fired when data is created
-        /// </summary>
-        public event EventHandler<AuditDataEventArgs> DataCreated;
-        /// <summary>
-        /// Fired when data is updated
-        /// </summary>
-        public event EventHandler<AuditDataEventArgs> DataUpdated;
-        /// <summary>
-        /// Fired when data is obsoleted
-        /// </summary>
-        public event EventHandler<AuditDataEventArgs> DataObsoleted;
-        /// <summary>
-        /// Fired when data is disclosed
-        /// </summary>
-        public event EventHandler<AuditDataDisclosureEventArgs> DataDisclosed;
 
         /// <summary>
         /// Create a resource
@@ -165,13 +151,14 @@ namespace SanteDB.Rest.Common
                     
                     var resourceData = processData as TResource;
                     resourceData = updateIfExists ? this.GetRepository().Save(resourceData) : this.GetRepository().Insert(resourceData);
-                    this.DataCreated?.Invoke(this, new AuditDataEventArgs(resourceData));
+
+                    AuditUtil.AuditCreate(Core.Auditing.OutcomeIndicator.Success, null, RestOperationContext.Current.IncomingRequest.RemoteEndPoint.ToString(), resourceData);
                     return resourceData;
                 }
             }
             catch(Exception e)
             {
-                this.DataCreated?.Invoke(this, new AuditDataEventArgs(data, e) { Success = false });
+                AuditUtil.AuditCreate(Core.Auditing.OutcomeIndicator.MinorFail, null, RestOperationContext.Current.IncomingRequest.RemoteEndPoint.ToString(), data);
                 throw e;
             }
 
@@ -191,12 +178,12 @@ namespace SanteDB.Rest.Common
             try
             {
                 var retVal = this.GetRepository().Get((Guid)id, (Guid)versionId);
-                this.DataDisclosed?.Invoke(this, new AuditDataDisclosureEventArgs(id.ToString(), new object[] { retVal }));
+                AuditUtil.AuditQuery(Core.Auditing.OutcomeIndicator.Success, id.ToString(), RestOperationContext.Current.IncomingRequest.RemoteEndPoint.ToString(), retVal);
                 return retVal;
             }
             catch(Exception e)
             {
-                this.DataDisclosed?.Invoke(this, new AuditDataDisclosureEventArgs(id.ToString(), new Object[] { e }) { Success = false });
+                AuditUtil.AuditQuery<TResource>(Core.Auditing.OutcomeIndicator.MinorFail, id.ToString(), RestOperationContext.Current.IncomingRequest.RemoteEndPoint.ToString());
                 throw e;
             }
         }
@@ -213,12 +200,12 @@ namespace SanteDB.Rest.Common
             try
             {
                 var retVal = this.GetRepository().Obsolete((Guid)key);
-                this.DataObsoleted?.Invoke(this, new AuditDataEventArgs(retVal));
+                AuditUtil.AuditDelete(Core.Auditing.OutcomeIndicator.Success, key.ToString(), RestOperationContext.Current.IncomingRequest.RemoteEndPoint.ToString(), retVal);
                 return retVal;
             }
             catch(Exception e)
             {
-                this.DataObsoleted?.Invoke(this, new AuditDataEventArgs(key) { Success = false });
+                AuditUtil.AuditDelete<TResource>(Core.Auditing.OutcomeIndicator.MinorFail, key.ToString(), RestOperationContext.Current.IncomingRequest.RemoteEndPoint.ToString());
                 throw e;
             }
         }
@@ -236,11 +223,11 @@ namespace SanteDB.Rest.Common
             {
                 int tr = 0;
                 var retVal = this.Query(queryParameters, 0, 100, out tr);
+
                 return retVal;
             }
             catch (Exception e)
             {
-                this.DataDisclosed?.Invoke(this, new AuditDataDisclosureEventArgs(queryParameters.ToString(), new object[] { e }) { Success = false });
                 throw e;
             }
 
@@ -304,12 +291,12 @@ namespace SanteDB.Rest.Common
                         retVal = this.GetRepository().Find(queryExpression, offset, count, out totalCount, sortParameters.ToArray());
                 }
 
-                this.DataDisclosed?.Invoke(this, new AuditDataDisclosureEventArgs(queryParameters.ToString(), retVal));
+                AuditUtil.AuditQuery(Core.Auditing.OutcomeIndicator.Success, queryParameters.ToString(), RestOperationContext.Current.IncomingRequest.RemoteEndPoint.ToString(), retVal.ToArray());
                 return retVal;
             }
             catch (Exception e)
             {
-                this.DataDisclosed?.Invoke(this, new AuditDataDisclosureEventArgs(queryParameters.ToString(), new object[] { e }) { Success = false });
+                AuditUtil.AuditQuery<TResource>(Core.Auditing.OutcomeIndicator.MinorFail, queryParameters.ToString(), RestOperationContext.Current.IncomingRequest.RemoteEndPoint.ToString());
                 this.m_tracer.TraceError("Error executing query: {0}", e);
                 throw e;
             }
@@ -338,7 +325,7 @@ namespace SanteDB.Rest.Common
                     var entityData = processData as TResource;
                     
                     var retVal = this.GetRepository().Save(entityData);
-                    this?.DataUpdated?.Invoke(this, new AuditDataEventArgs(retVal));
+                    AuditUtil.AuditUpdate(Core.Auditing.OutcomeIndicator.Success, null, RestOperationContext.Current.IncomingRequest.ToString(), retVal);
                     return retVal;
                 }
                 else
@@ -348,7 +335,7 @@ namespace SanteDB.Rest.Common
             }
             catch (Exception e)
             {
-                this.DataUpdated?.Invoke(this, new AuditDataEventArgs(data, e) { Success = false });
+                AuditUtil.AuditUpdate(Core.Auditing.OutcomeIndicator.MinorFail, null, RestOperationContext.Current.IncomingRequest.ToString(), data);
                 throw e;
             }
         }
