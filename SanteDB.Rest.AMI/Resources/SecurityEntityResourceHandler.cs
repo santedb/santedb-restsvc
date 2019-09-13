@@ -44,7 +44,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// Represents a resource handler that wraps a security based entity
     /// </summary>
     /// <typeparam name="TSecurityEntity">The type of security entity being wrapped</typeparam>
-    public abstract class SecurityEntityResourceHandler<TSecurityEntity>
+    public abstract class SecurityEntityResourceHandler<TSecurityEntity> : IApiResourceHandler
         where TSecurityEntity : SecurityEntity
     {
 
@@ -67,7 +67,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         protected void FireSecurityAttributesChanged(object scope,bool success, params String[] changedProperties)
         {
-            AuditUtil.AuditSecurityAttributeAction(new object[] { scope }, success, changedProperties, RestOperationContext.Current.IncomingRequest.RemoteEndPoint.ToString());
+            AuditUtil.AuditSecurityAttributeAction(new object[] { scope }, success, changedProperties);
         }
 
         /// <summary>
@@ -131,18 +131,18 @@ namespace SanteDB.Rest.AMI.Resources
                 if (updateIfExists)
                 {
                     td.Entity = this.GetRepository().Save(td.Entity);
-                    AuditUtil.AuditDataAction(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Update, Core.Auditing.AuditableObjectLifecycle.Amendment, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.Success, null, RestOperationContext.Current.IncomingRequest.RemoteEndPoint.ToString(), td.Entity);
+                    AuditUtil.AuditDataAction(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Update, Core.Auditing.AuditableObjectLifecycle.Amendment, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.Success, null, td.Entity);
                 }
                 else
                 {
                     td.Entity = this.GetRepository().Insert(td.Entity);
-                    AuditUtil.AuditDataAction(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Create, Core.Auditing.AuditableObjectLifecycle.Creation, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.Success, null, RestOperationContext.Current.IncomingRequest.RemoteEndPoint.ToString(), td.Entity);
+                    AuditUtil.AuditDataAction(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Create, Core.Auditing.AuditableObjectLifecycle.Creation, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.Success, null,  td.Entity);
                 }
                 return td;
             }
             catch
             {
-                AuditUtil.AuditDataAction<TSecurityEntity>(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Create, Core.Auditing.AuditableObjectLifecycle.Creation, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.MinorFail, null, RestOperationContext.Current.IncomingRequest.RemoteEndPoint.ToString(), td.Entity);
+                AuditUtil.AuditDataAction<TSecurityEntity>(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Create, Core.Auditing.AuditableObjectLifecycle.Creation, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.MinorFail, null, td.Entity);
                 throw;
             }
         }
@@ -171,12 +171,12 @@ namespace SanteDB.Rest.AMI.Resources
             try
             {
                 var retVal = Activator.CreateInstance(this.Type, this.GetRepository().Obsolete((Guid)key));
-                AuditUtil.AuditDataAction(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Delete, Core.Auditing.AuditableObjectLifecycle.LogicalDeletion, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.Success, key.ToString(), RestOperationContext.Current.IncomingRequest.RemoteEndPoint.ToString(), retVal);
+                AuditUtil.AuditDataAction(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Delete, Core.Auditing.AuditableObjectLifecycle.LogicalDeletion, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.Success, key.ToString(), retVal);
                 return retVal;
             }
             catch
             {
-                AuditUtil.AuditDataAction<TSecurityEntity>(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Delete, Core.Auditing.AuditableObjectLifecycle.LogicalDeletion, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.MinorFail, key.ToString(), RestOperationContext.Current.IncomingRequest.RemoteEndPoint.ToString());
+                AuditUtil.AuditDataAction<TSecurityEntity>(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Delete, Core.Auditing.AuditableObjectLifecycle.LogicalDeletion, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.MinorFail, key.ToString());
                 throw;
             }
         }
