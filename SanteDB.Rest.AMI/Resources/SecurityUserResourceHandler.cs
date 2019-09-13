@@ -109,7 +109,7 @@ namespace SanteDB.Rest.AMI.Resources
                 if (user.UserName?.ToLowerInvariant() != td.Entity.UserName.ToLowerInvariant())
                     throw new FaultException(403, $"Username mismatch expect {user.UserName.ToLowerInvariant()} but got {td.Entity.UserName.ToLowerInvariant()}");
 
-                ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().ChangePassword(td.Entity.UserName, td.Entity.Password);
+                ApplicationServiceContext.Current.GetService<IIdentityProviderService>().ChangePassword(td.Entity.UserName, td.Entity.Password, AuthenticationContext.Current.Principal);
                 this.FireSecurityAttributesChanged(user, true, "Password");
                 return null;
             }
@@ -122,8 +122,9 @@ namespace SanteDB.Rest.AMI.Resources
                 // Roles? We want to update
                 if (td.Roles.Count > 0)
                 {
-                    var securityService = ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>();
-                    securityService.SetUserRoles(retVal.Entity, td.Roles.ToArray());
+                    var irps= ApplicationServiceContext.Current.GetService<IRoleProviderService>();
+                    irps.RemoveUsersFromRoles(new String[] { td.Entity.UserName }, irps.GetAllRoles().Where(o => !td.Roles.Contains(o)).ToArray(), AuthenticationContext.Current.Principal);
+                    irps.AddUsersToRoles(new string[] { td.Entity.UserName }, td.Roles.ToArray(), AuthenticationContext.Current.Principal);
                     this.FireSecurityAttributesChanged(retVal.Entity, true, $"Roles = {String.Join(",", td.Roles)}");
                 }
 
