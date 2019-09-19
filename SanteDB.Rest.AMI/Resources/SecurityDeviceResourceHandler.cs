@@ -17,9 +17,12 @@
  * User: justi
  * Date: 2019-1-12
  */
+using SanteDB.Core;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
+using SanteDB.Core.Services;
+using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
 
@@ -28,7 +31,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents a resource handler that handles security device operations
     /// </summary>
-    public class SecurityDeviceResourceHandler : SecurityEntityResourceHandler<SecurityDevice>
+    public class SecurityDeviceResourceHandler : SecurityEntityResourceHandler<SecurityDevice>, ILockableResourceHandler
     {
         /// <summary>
         /// Type of security device
@@ -67,5 +70,30 @@ namespace SanteDB.Rest.AMI.Resources
         {
             return base.Obsolete(key);
         }
+
+        /// <summary>
+        /// Lock the specified user
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.CreateDevice)]
+        public object Lock(object key)
+        {
+            ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().LockDevice((Guid)key);
+            var retVal = this.Get(key, Guid.Empty);
+            this.FireSecurityAttributesChanged(retVal, true, "Lockout = true");
+            return retVal;
+        }
+
+        /// <summary>
+        /// Unlock user
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.CreateDevice)]
+        public object Unlock(object key)
+        {
+            ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().UnlockDevice((Guid)key);
+            var retVal = this.Get(key, Guid.Empty);
+            this.FireSecurityAttributesChanged(retVal, true, "Lockout = false");
+            return retVal;
+        }
+
     }
 }

@@ -17,9 +17,12 @@
  * User: justi
  * Date: 2019-1-12
  */
+using SanteDB.Core;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
+using SanteDB.Core.Services;
+using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
 
@@ -28,7 +31,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents a security application resource handler
     /// </summary>
-    public class SecurityApplicationResourceHandler : SecurityEntityResourceHandler<SecurityApplication>
+    public class SecurityApplicationResourceHandler : SecurityEntityResourceHandler<SecurityApplication>, ILockableResourceHandler
     {
 
         /// <summary>
@@ -65,6 +68,30 @@ namespace SanteDB.Rest.AMI.Resources
         public override object Obsolete(object key)
         {
             return base.Obsolete(key);
+        }
+
+        /// <summary>
+        /// Lock the specified application
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.CreateApplication)]
+        public object Lock(object key)
+        {
+            ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().LockApplication((Guid)key);
+            var retVal = this.Get(key, Guid.Empty);
+            this.FireSecurityAttributesChanged(retVal, true, "Lockout = true");
+            return retVal;
+        }
+
+        /// <summary>
+        /// Unlock user
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.CreateApplication)]
+        public object Unlock(object key)
+        {
+            ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().UnlockApplication((Guid)key);
+            var retVal = this.Get(key, Guid.Empty);
+            this.FireSecurityAttributesChanged(retVal, true, "Lockout = false");
+            return retVal;
         }
 
     }
