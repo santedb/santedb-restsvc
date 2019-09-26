@@ -20,6 +20,7 @@
 using Newtonsoft.Json;
 using SanteDB.Core.Applets.Model;
 using SanteDB.Core.Diagnostics;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Xml.Serialization;
@@ -47,6 +48,7 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         /// <param name="versionInfo"></param>
         public DiagnosticApplicationInfo(Assembly versionInfo) : base(versionInfo)
         {
+            this.Uptime = DateTime.Now - ApplicationServiceContext.Current.StartTime;
         }
 
         /// <summary>
@@ -76,7 +78,7 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         /// <summary>
         /// Open IZ information
         /// </summary>
-        [JsonProperty("SanteDB"), XmlElement("SanteDB")]
+        [JsonProperty("santedb"), XmlElement("santedb")]
         public DiagnosticVersionInfo SanteDB { get; set; }
 
         /// <summary>
@@ -90,5 +92,12 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         /// </summary>
         [JsonProperty("syncInfo"), XmlElement("syncInfo")]
         public List<DiagnosticSyncInfo> SyncInfo { get; set; }
+
+        /// <summary>
+        /// Gets the uptime information
+        /// </summary>
+        [JsonProperty("uptime"), XmlElement("uptime")]
+        public TimeSpan Uptime { get; set; }
+
     }
 }
