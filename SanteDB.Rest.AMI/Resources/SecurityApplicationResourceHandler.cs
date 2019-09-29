@@ -19,19 +19,23 @@
  */
 using SanteDB.Core;
 using SanteDB.Core.Model.AMI.Auth;
+using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
 {
     /// <summary>
     /// Represents a security application resource handler
     /// </summary>
-    public class SecurityApplicationResourceHandler : SecurityEntityResourceHandler<SecurityApplication>, ILockableResourceHandler
+    public class SecurityApplicationResourceHandler : SecurityEntityResourceHandler<SecurityApplication>, ILockableResourceHandler, IAssociativeResourceHandler
     {
 
         /// <summary>
@@ -94,5 +98,88 @@ namespace SanteDB.Rest.AMI.Resources
             return retVal;
         }
 
+        /// <summary>
+        /// Remove an associated entity
+        /// </summary>
+        public object RemoveAssociatedEntity(object scopingEntityKey, string propertyName, object subItemKey)
+        {
+
+            switch (propertyName)
+            {
+                case "policy":
+                    var scope = this.GetRepository().Get(Guid.Parse(scopingEntityKey.ToString()));
+                    if (scope == null)
+                        throw new KeyNotFoundException($"Could not find SecurityApplication with identifier {scopingEntityKey}");
+
+                    var policy = scope.Policies.FirstOrDefault(o => o.Policy.Key == Guid.Parse(subItemKey.ToString()));
+                    if (policy == null)
+                        throw new KeyNotFoundException($"Policy {subItemKey} is not associated with this device");
+
+                    try
+                    {
+                        ApplicationServiceContext.Current.GetService<IPolicyInformationService>().RemovePolicies(scope, AuthenticationContext.Current.Principal, policy.Policy.Oid);
+                        scope.Policies.Remove(policy);
+                        var retVal = this.Update(scope);
+                        this.FireSecurityAttributesChanged(scope, true, $"del policy={policy.Policy.Oid}");
+                        return retVal;
+                    }
+                    catch
+                    {
+                        this.FireSecurityAttributesChanged(scope, false, $"del policy={policy.Policy.Oid}");
+                        throw;
+                    }
+
+                default:
+                    throw new ArgumentException($"Property with {propertyName} not valid");
+            }
+        }
+
+        /// <summary>
+        /// Query for associated items
+        /// </summary>
+        public IEnumerable<object> QueryAssociatedEntities(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
+        {
+
+            switch (propertyName)
+            {
+                case "policy":
+                    var scope = this.GetRepository().Get(Guid.Parse(scopingEntityKey.ToString()));
+                    if (scope == null)
+                        throw new KeyNotFoundException($"Could not find SecurityApplication with identifier {scopingEntityKey}");
+
+                    var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetActivePolicies(scope).Select(o => new SecurityPolicyInfo(o));
+                    totalCount = policies.Count();
+                    var filterExpression = QueryExpressionParser.BuildLinqExpression<SecurityPolicyInfo>(filter).Compile();
+                    return policies = policies.Where(filterExpression).Skip(offset).Take(count);
+
+                default:
+                    throw new ArgumentException($"Property {propertyName} is not valid for this container");
+            }
+        }
+
+        /// <summary>
+        /// Add an associated entity
+        /// </summary>
+        public object AddAssociatedEntity(object scopingEntityKey, string propertyName, object scopedItem)
+        {
+            switch (propertyName)
+            {
+                case "policy":
+                    var scope = this.GetRepository()?.Get(Guid.Parse(scopingEntityKey.ToString()));
+                    if (scope == null)
+                        throw new KeyNotFoundException($"Application with key {scopingEntityKey} not found");
+                    // Get or create the scoped item
+                    if (scopedItem is SecurityPolicy)
+                        scopedItem = new SecurityPolicyInfo(scopedItem as SecurityPolicy);
+
+                    var rd = scopedItem as SecurityPolicyInfo;
+                    ApplicationServiceContext.Current.GetService<IPolicyInformationService>().AddPolicies(scope, rd.Grant, AuthenticationContext.Current.Principal, rd.Oid);
+                    base.FireSecurityAttributesChanged(scope, true, $"{rd.Grant} policy={rd.Oid}");
+
+                    return rd;
+                default:
+                    throw new KeyNotFoundException($"Property {propertyName} is not valid");
+            }
+        }
     }
 }
