@@ -18,6 +18,7 @@
  * Date: 2019-1-12
  */
 using SanteDB.Core;
+using SanteDB.Core.Api.Security;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Security;
@@ -147,10 +148,10 @@ namespace SanteDB.Rest.AMI.Resources
                     if (scope == null)
                         throw new KeyNotFoundException($"Could not find SecurityApplication with identifier {scopingEntityKey}");
 
-                    var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetActivePolicies(scope).Select(o => new SecurityPolicyInfo(o));
+                    var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetActivePolicies(scope).Select(o=>o.ToPolicyInstance());
                     totalCount = policies.Count();
-                    var filterExpression = QueryExpressionParser.BuildLinqExpression<SecurityPolicyInfo>(filter).Compile();
-                    return policies = policies.Where(filterExpression).Skip(offset).Take(count);
+                    var filterExpression = QueryExpressionParser.BuildLinqExpression<SecurityPolicyInstance>(filter).Compile();
+                    return policies.Where(filterExpression).Skip(offset).Take(count).Select(o => new SecurityPolicyInfo(o));
 
                 default:
                     throw new ArgumentException($"Property {propertyName} is not valid for this container");
