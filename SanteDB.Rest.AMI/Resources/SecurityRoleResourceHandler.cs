@@ -18,6 +18,7 @@
  * Date: 2019-1-12
  */
 using SanteDB.Core;
+using SanteDB.Core.Api.Security;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Security;
@@ -136,10 +137,10 @@ namespace SanteDB.Rest.AMI.Resources
             switch (propertyName)
             {
                 case "policy":
-                    var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetActivePolicies(scope).Select(o=>new SecurityPolicyInfo(o));
+                    var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetActivePolicies(scope).OrderBy(o => o.Policy.Oid).Select(o => o.ToPolicyInstance());
                     totalCount = policies.Count();
-                    var filterExpression = QueryExpressionParser.BuildLinqExpression<SecurityPolicyInfo>(filter).Compile();
-                    return policies = policies.Where(filterExpression).Skip(offset).Take(count);
+                    var filterExpression = QueryExpressionParser.BuildLinqExpression<SecurityPolicy>(filter).Compile();
+                    return policies.Where(o => filterExpression(o.Policy)).Skip(offset).Take(count).Select(o => new SecurityPolicyInfo(o));
                 case "user":
                     filter.Add("roles.id", scopingEntityKey.ToString());
                     var expr = QueryExpressionParser.BuildLinqExpression<SecurityUser>(filter);
