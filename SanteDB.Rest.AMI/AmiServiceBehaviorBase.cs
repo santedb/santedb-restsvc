@@ -81,6 +81,11 @@ namespace SanteDB.Messaging.AMI.Wcf
         public abstract LogFileInfo GetLog(string logId);
 
         /// <summary>
+        /// Get the log stream
+        /// </summary>
+        public abstract Stream DownloadLog(String logId);
+
+        /// <summary>
         /// Get log files on the server and their sizes.
         /// </summary>
         /// <returns>Returns a collection of log files.</returns>

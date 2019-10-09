@@ -132,6 +132,12 @@ namespace SanteDB.Rest.AMI
         AmiCollection GetLogs();
 
         /// <summary>
+        /// Download log
+        /// </summary>
+        [Get("/Log/Stream/{logId}")]
+        Stream DownloadLog(String logId);
+
+        /// <summary>
 		/// Gets a server diagnostic report.
 		/// </summary>
 		/// <returns>Returns the created diagnostic report.</returns>
