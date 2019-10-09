@@ -97,7 +97,22 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         /// Gets the uptime information
         /// </summary>
         [JsonProperty("uptime"), XmlElement("uptime")]
-        public TimeSpan Uptime { get; set; }
+        public String UptimeXml
+        {
+            get
+            {
+                return this.Uptime.ToString();
+            }
+            set
+            {
+                this.Uptime = TimeSpan.Parse(value);
+            }
+        }
 
+        /// <summary>
+        /// Gets or sets the uptime informations
+        /// </summary>
+        [JsonIgnore, XmlIgnore]
+        public TimeSpan Uptime { get; set; }
     }
 }
