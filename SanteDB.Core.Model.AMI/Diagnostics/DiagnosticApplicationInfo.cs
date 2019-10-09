@@ -49,6 +49,7 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         public DiagnosticApplicationInfo(Assembly versionInfo) : base(versionInfo)
         {
             this.Uptime = DateTime.Now - ApplicationServiceContext.Current.StartTime;
+            this.SanteDB = new DiagnosticVersionInfo(versionInfo);
         }
 
         /// <summary>
@@ -97,6 +98,21 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         /// Gets the uptime information
         /// </summary>
         [JsonProperty("uptime"), XmlElement("uptime")]
+        public String UptimeXml {
+            get
+            {
+                return this.Uptime.ToString();
+            }
+            set
+            {
+                this.Uptime = TimeSpan.Parse(value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the uptime informations
+        /// </summary>
+        [JsonIgnore, XmlIgnore]
         public TimeSpan Uptime { get; set; }
 
     }
