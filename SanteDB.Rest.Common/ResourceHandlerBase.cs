@@ -248,16 +248,9 @@ namespace SanteDB.Rest.Common
                 List<String> query = null, id = null, orderBy = null;
 
                 // Order by
-                List<ModelSort<TResource>> sortParameters = new List<ModelSort<TResource>>();
-                if(queryParameters.TryGetValue("_orderBy", out orderBy))
-                    foreach(var itm in orderBy)
-                    {
-                        var sortData = itm.Split(':');
-                        sortParameters.Add(new ModelSort<TResource>(
-                            QueryExpressionParser.BuildPropertySelector<TResource>(sortData[0]),
-                            sortData.Length == 1 || sortData[1] == "asc" ? Core.Model.Map.SortOrderType.OrderBy : Core.Model.Map.SortOrderType.OrderByDescending
-                        ));
-                    }
+                ModelSort<TResource>[] sortParameters = null;
+                if (queryParameters.TryGetValue("_orderBy", out orderBy))
+                    sortParameters = QueryExpressionParser.BuildSort<TResource>(orderBy);
 
                 IEnumerable<TResource> retVal = null;
                 if (queryParameters.TryGetValue("_id", out id)) {

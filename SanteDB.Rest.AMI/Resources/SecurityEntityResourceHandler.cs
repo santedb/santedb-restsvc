@@ -202,23 +202,16 @@ namespace SanteDB.Rest.AMI.Resources
             List<String> orderBy = null, queryId = null;
             Guid? queryIdParsed = null;
             // Order by
-            List<ModelSort<TSecurityEntity>> sortParameters = new List<ModelSort<TSecurityEntity>>();
+            ModelSort<TSecurityEntity>[] sortParameters = null;
             if (queryParameters.TryGetValue("_orderBy", out orderBy))
-                foreach (var itm in orderBy)
-                {
-                    var sortData = itm.Split(':');
-                    sortParameters.Add(new ModelSort<TSecurityEntity>(
-                        QueryExpressionParser.BuildPropertySelector<TSecurityEntity>(sortData[0]),
-                        sortData.Length == 1 || sortData[1] == "asc" ? Core.Model.Map.SortOrderType.OrderBy : Core.Model.Map.SortOrderType.OrderByDescending
-                    ));
-                }
+                sortParameters = QueryExpressionParser.BuildSort<TSecurityEntity>(orderBy);
             if (queryParameters.TryGetValue("_queryId", out queryId))
                 queryIdParsed = Guid.Parse(queryId.First());
 
             var repo = this.GetRepository();
             IEnumerable<TSecurityEntity> results = null;
             if(repo is IPersistableQueryRepositoryService<TSecurityEntity> && queryIdParsed.HasValue)
-                results = (repo as IPersistableQueryRepositoryService<TSecurityEntity>).Find(query, offset, count, out totalCount, queryIdParsed.Value, sortParameters.ToArray());
+                results = (repo as IPersistableQueryRepositoryService<TSecurityEntity>).Find(query, offset, count, out totalCount, queryIdParsed.Value, sortParameters);
             else
                 results = repo.Find(query, offset, count, out totalCount, sortParameters.ToArray());
 

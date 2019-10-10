@@ -19,9 +19,12 @@
  */
 using SanteDB.Core;
 using SanteDB.Core.Interop;
+using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Services;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -33,7 +36,28 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Capabilities
         /// </summary>
-        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Get;
+        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Get | ResourceCapabilityType.Search;
+
+        /// <summary>
+        /// Query for security provenance objects
+        /// </summary>
+        public override IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        {
+
+            var query = QueryExpressionParser.BuildLinqExpression<SecurityProvenance>(queryParameters);
+            Guid queryId = Guid.Empty;
+            List<String> qvalue = null;
+            if (queryParameters.TryGetValue("_queryId", out qvalue))
+                queryId = Guid.Parse(qvalue.First());
+
+            // Order by
+            ModelSort<SecurityProvenance>[] sortParameters = null;
+            if (queryParameters.TryGetValue("_orderBy", out qvalue))
+                sortParameters = QueryExpressionParser.BuildSort<SecurityProvenance>(qvalue);
+            return ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().FindProvenance(query, offset, count, out totalCount, queryId, sortParameters);
+
+            
+        }
 
         /// <summary>
         /// Get the specified object
