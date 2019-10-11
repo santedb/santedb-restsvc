@@ -33,8 +33,8 @@ namespace SanteDB.Core.Model.AMI.Security
         /// </summary>
         public SecuritySessionInfo(ISession session)
         {
-            this.NotAfter = session.NotAfter;
-            this.NotBefore = session.NotBefore;
+            this.NotAfter = session.NotAfter.DateTime;
+            this.NotBefore = session.NotBefore.DateTime;
             this.SessionId = session.Id;
             var identities = ApplicationServiceContext.Current.GetService<ISessionIdentityProviderService>().GetIdentities(session);
             this.Application = identities.OfType<IApplicationIdentity>().FirstOrDefault()?.Name;
@@ -46,13 +46,13 @@ namespace SanteDB.Core.Model.AMI.Security
         /// The session is not valid after time
         /// </summary>
         [XmlElement("exp"), JsonProperty("exp")]
-        public DateTimeOffset NotAfter { get; set; }
+        public DateTime NotAfter { get; set; }
 
         /// <summary>
         /// The session is not valid before the specified time
         /// </summary>
         [XmlElement("nbf") ,JsonProperty("nbf")]
-        public DateTimeOffset NotBefore { get; set; }
+        public DateTime NotBefore { get; set; }
 
         /// <summary>
         /// The session identifier
