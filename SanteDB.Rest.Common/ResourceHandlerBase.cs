@@ -273,7 +273,7 @@ namespace SanteDB.Rest.Common
                     else if (queryParameters.TryGetValue("_lean", out data) && data[0] == "true" && this.GetRepository() is IFastQueryRepositoryService<TResource>)
                         retVal = (this.GetRepository() as IFastQueryRepositoryService<TResource>).FindFast(queryExpression, offset, count, out totalCount, queryId);
                     else
-                        retVal = (this.GetRepository() as IPersistableQueryRepositoryService<TResource>).Find(queryExpression, offset, count, out totalCount, queryId, sortParameters.ToArray());
+                        retVal = (this.GetRepository() as IPersistableQueryRepositoryService<TResource>).Find(queryExpression, offset, count, out totalCount, queryId, sortParameters);
                 }
                 else
                 {
@@ -281,7 +281,7 @@ namespace SanteDB.Rest.Common
                     if (queryParameters.TryGetValue("_lean", out lean) && lean[0] == "true" && this.GetRepository() is IFastQueryRepositoryService<TResource>)
                         retVal = (this.GetRepository() as IFastQueryRepositoryService<TResource>).FindFast(queryExpression, offset, count, out totalCount, Guid.Empty);
                     else
-                        retVal = this.GetRepository().Find(queryExpression, offset, count, out totalCount, sortParameters.ToArray());
+                        retVal = this.GetRepository().Find(queryExpression, offset, count, out totalCount, sortParameters);
                 }
 
                 AuditUtil.AuditQuery(Core.Auditing.OutcomeIndicator.Success, queryParameters.ToString(), retVal.ToArray());

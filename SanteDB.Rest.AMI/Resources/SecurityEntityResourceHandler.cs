@@ -213,7 +213,7 @@ namespace SanteDB.Rest.AMI.Resources
             if(repo is IPersistableQueryRepositoryService<TSecurityEntity> && queryIdParsed.HasValue)
                 results = (repo as IPersistableQueryRepositoryService<TSecurityEntity>).Find(query, offset, count, out totalCount, queryIdParsed.Value, sortParameters);
             else
-                results = repo.Find(query, offset, count, out totalCount, sortParameters.ToArray());
+                results = repo.Find(query, offset, count, out totalCount, sortParameters);
 
             return results.Select(o =>
             {
