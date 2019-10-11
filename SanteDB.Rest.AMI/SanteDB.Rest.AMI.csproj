@@ -62,6 +62,7 @@
     <Compile Include="Resources\SecurityProvenanceHandler.cs" />
     <Compile Include="Resources\SecurityRoleResourceHandler.cs" />
     <Compile Include="Resources\SecurityUserResourceHandler.cs" />
+    <Compile Include="Resources\SessionInfoResourceHandler.cs" />
     <Compile Include="Resources\SubscriptionDefinitionResourceHandler.cs" />
   </ItemGroup>
   <Choose>

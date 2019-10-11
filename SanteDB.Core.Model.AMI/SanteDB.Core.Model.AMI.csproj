@@ -63,6 +63,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\AuditSubmission.cs" />
     <Compile Include="Security\RevokeReason.cs" />
+    <Compile Include="Security\SecuritySessionInfo.cs" />
     <Compile Include="Security\SubmissionInfo.cs" />
     <Compile Include="Security\SubmissionRequest.cs" />
     <Compile Include="Security\SubmissionResult.cs" />

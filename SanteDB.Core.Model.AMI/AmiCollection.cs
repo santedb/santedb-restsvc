@@ -76,6 +76,7 @@ namespace SanteDB.Core.Model.AMI.Collections
     [XmlInclude(typeof(ServiceOptions))]
     [XmlInclude(typeof(X509Certificate2Info))]
     [XmlInclude(typeof(CodeSystem))]
+    [XmlInclude(typeof(SecurityProvenance))]
     [XmlInclude(typeof(SubscriptionDefinition))]
     [XmlInclude(typeof(LogFileInfo))]
     public class AmiCollection
