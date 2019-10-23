@@ -290,7 +290,6 @@ namespace SanteDB.Rest.Common
             catch (Exception e)
             {
                 AuditUtil.AuditQuery<TResource>(Core.Auditing.OutcomeIndicator.MinorFail, queryParameters.ToString());
-                this.m_tracer.TraceError("Error executing query: {0}", e);
                 throw e;
             }
         }
