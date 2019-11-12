@@ -50,9 +50,13 @@ namespace SanteDB.Rest.HDSI
     [ServiceBehavior(Name = "HDSI", InstanceMode = ServiceInstanceMode.PerCall)]
     public abstract class HdsiServiceBehaviorBase : IHdsiServiceContract
     {
-        // Trace source
+        /// <summary>
+        /// The trace source for HDSI based implementations
+        /// </summary>
         protected Tracer m_traceSource = Tracer.GetTracer(typeof(HdsiServiceBehaviorBase));
-        // Resource Handler
+        /// <summary>
+        /// The resource handler tool for operations on the HDSI
+        /// </summary>
         protected ResourceHandlerTool m_resourceHandler;
 
         /// <summary>

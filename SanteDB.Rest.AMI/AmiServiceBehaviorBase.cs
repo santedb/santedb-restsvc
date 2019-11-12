@@ -55,9 +55,14 @@ namespace SanteDB.Messaging.AMI.Wcf
     public abstract class AmiServiceBehaviorBase : IAmiServiceContract
     {
 
-        // The trace source for logging
+        /// <summary>
+        /// Trace source for logging
+        /// </summary>
         protected Tracer m_traceSource = Tracer.GetTracer(typeof(AmiServiceBehaviorBase));
 
+        /// <summary>
+        /// The resource handler tool for executing operations
+        /// </summary>
         protected ResourceHandlerTool m_resourceHandler;
 
         /// <summary>
