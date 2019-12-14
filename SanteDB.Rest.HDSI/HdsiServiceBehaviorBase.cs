@@ -623,9 +623,7 @@ namespace SanteDB.Rest.HDSI
                 else if (existing.Tag != match && !force)
                 {
                     this.m_traceSource.TraceError("Object {0} ETAG is {1} but If-Match specified {2}", existing.Key, existing.Tag, match);
-                    RestOperationContext.Current.OutgoingResponse.StatusCode = 409;
-                    RestOperationContext.Current.OutgoingResponse.StatusDescription = "Conflict";
-                    return;
+                    throw new PatchAssertionException(match, existing.Tag, null);
                 }
                 else if (body == null)
                     throw new ArgumentNullException(nameof(body));
