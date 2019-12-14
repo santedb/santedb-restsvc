@@ -76,6 +76,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <param name="data">The audit data to send/insert</param>
         /// <param name="updateIfExists">Ignored for this provider</param>
         /// <returns>void</returns>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public object Create(object data, bool updateIfExists)
         {
             if (this.m_repository == null)
@@ -137,6 +138,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         /// <param name="queryParameters">The query to perform</param>
         /// <returns>The matching audits</returns>
+        [Demand(PermissionPolicyIdentifiers.AccessAuditLog)]
         public IEnumerable<object> Query(NameValueCollection queryParameters)
         {
             int tr = 0;

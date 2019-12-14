@@ -54,6 +54,7 @@
     <Compile Include="Resources\MailMessageResourceHandler.cs" />
     <Compile Include="Resources\MetadataResourceHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\DiagnosticsProbeResourceHandler.cs" />
     <Compile Include="Resources\ResourceHandlerBase.cs" />
     <Compile Include="Resources\SecurityApplicationResourceHandler.cs" />
     <Compile Include="Resources\SecurityDeviceResourceHandler.cs" />

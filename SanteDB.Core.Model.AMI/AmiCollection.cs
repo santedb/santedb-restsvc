@@ -78,6 +78,8 @@ namespace SanteDB.Core.Model.AMI.Collections
     [XmlInclude(typeof(CodeSystem))]
     [XmlInclude(typeof(SecurityProvenance))]
     [XmlInclude(typeof(SubscriptionDefinition))]
+    [XmlInclude(typeof(DiagnosticsProbe))]
+    [XmlInclude(typeof(DiagnosticsProbeReading))]
     [XmlInclude(typeof(LogFileInfo))]
     public class AmiCollection
     {
