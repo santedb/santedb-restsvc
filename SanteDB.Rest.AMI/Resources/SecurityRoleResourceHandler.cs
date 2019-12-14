@@ -51,7 +51,7 @@ namespace SanteDB.Rest.AMI.Resources
         public object AddAssociatedEntity(object scopingEntityKey, string propertyName, object scopedItem)
         {
 
-            var scope = this.GetRepository().Get(Guid.Parse(scopingEntityKey.ToString()));
+            var scope = this.GetRepository().Get((Guid)scopingEntityKey);
             if (scope == null)
                 throw new KeyNotFoundException($"Could not find SecurityRole with identifier {scopingEntityKey}");
 

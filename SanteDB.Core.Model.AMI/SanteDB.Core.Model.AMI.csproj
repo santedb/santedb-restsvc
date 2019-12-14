@@ -57,6 +57,8 @@
     <Compile Include="Diagnostics\DiagnosticSyncInfo.cs" />
     <Compile Include="Diagnostics\DiagnosticThreadInfo.cs" />
     <Compile Include="Diagnostics\DiagnosticVersionInfo.cs" />
+    <Compile Include="Diagnostics\DiagnosticsProbe.cs" />
+    <Compile Include="Diagnostics\DiagnosticsProbeReading.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="IAmiIdentified.cs" />
     <Compile Include="Logging\LogFileInfo.cs" />

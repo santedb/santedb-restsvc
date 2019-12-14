@@ -844,11 +844,14 @@ namespace SanteDB.Messaging.AMI.Wcf
 
                     // Lean mode
                     var lean = RestOperationContext.Current.IncomingRequest.QueryString["_lean"];
-                    bool parsedLean = false;
-                    bool.TryParse(lean, out parsedLean);
-
+                    bool.TryParse(lean, out bool parsedLean);
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));
-                    var retVal = handler.QueryAssociatedEntities(key, property, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).ToList();
+
+                    IEnumerable<Object> retVal = null;
+                    if (Guid.TryParse(key, out Guid keyValue))
+                        retVal = handler.QueryAssociatedEntities(keyValue, property, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).ToList();
+                    else
+                        retVal = handler.QueryAssociatedEntities(key, property, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).ToList();
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.OfType<IdentifiedData>().OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now);
 
                     // Last modification time and not modified conditions
