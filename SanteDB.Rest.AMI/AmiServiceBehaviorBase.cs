@@ -611,11 +611,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                     // Modified on?
                     if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince().HasValue)
                         query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince().Value.ToString("o"));
-
-                    // No obsoletion time?
-                    if (typeof(BaseEntityData).IsAssignableFrom(handler.Type) && !query.ContainsKey("obsoletionTime"))
-                        query.Add("obsoletionTime", "null");
-
+                    
                     int totalResults = 0;
 
                     // Lean mode

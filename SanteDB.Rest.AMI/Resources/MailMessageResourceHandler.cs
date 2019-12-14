@@ -17,7 +17,10 @@
  * User: justi
  * Date: 2019-1-12
  */
+using System.Collections.Generic;
 using SanteDB.Core.Mail;
+using SanteDB.Core.Model.Query;
+using SanteDB.Core.Security;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -27,5 +30,14 @@ namespace SanteDB.Rest.AMI.Resources
     public class MailMessageResourceHandler : ResourceHandlerBase<MailMessage>
     {
 
+        /// <summary>
+        /// Query for mail messages should default to my messages
+        /// </summary>
+        public override IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        {
+            if (!queryParameters.ContainsKey("to"))
+                queryParameters.Add("to", new List<string>() { "null", AuthenticationContext.Current.Principal.Identity.Name });
+            return base.Query(queryParameters, offset, count, out totalCount);
+        }
     }
 }
