@@ -116,6 +116,7 @@ namespace SanteDB.Rest.AMI.Resources
             else
             {
                 td.Entity.Password = null;
+
                 //td.Entity.Roles = td.Roles.Select(o => new SecurityRole() { Name = o }).ToList();
                 var retVal = base.Update(data) as SecurityUserInfo;
 
@@ -127,7 +128,7 @@ namespace SanteDB.Rest.AMI.Resources
                     irps.AddUsersToRoles(new string[] { td.Entity.UserName }, td.Roles.ToArray(), AuthenticationContext.Current.Principal);
                     this.FireSecurityAttributesChanged(retVal.Entity, true, $"Roles = {String.Join(",", td.Roles)}");
                 }
-
+                
                 return new SecurityUserInfo(retVal.Entity)
                 {
                     Roles = td.Roles

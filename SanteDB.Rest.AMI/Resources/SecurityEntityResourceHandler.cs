@@ -138,6 +138,9 @@ namespace SanteDB.Rest.AMI.Resources
                     td.Entity = this.GetRepository().Insert(td.Entity);
                     AuditUtil.AuditDataAction(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Create, Core.Auditing.AuditableObjectLifecycle.Creation, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.Success, null,  td.Entity);
                 }
+
+                // Special case for security entity wrappers, we want to load them from DB from fresh
+                ApplicationServiceContext.Current.GetService<IDataCachingService>()?.Remove(td.Entity.Key.Value);
                 return td;
             }
             catch
@@ -172,6 +175,10 @@ namespace SanteDB.Rest.AMI.Resources
             {
                 var retVal = Activator.CreateInstance(this.Type, this.GetRepository().Obsolete((Guid)key));
                 AuditUtil.AuditDataAction(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Delete, Core.Auditing.AuditableObjectLifecycle.LogicalDeletion, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.Success, key.ToString(), retVal);
+
+                // Special case for security entity wrappers, we want to load them from DB from fresh
+                ApplicationServiceContext.Current.GetService<IDataCachingService>()?.Remove((Guid)key);
+
                 return retVal;
             }
             catch
@@ -242,6 +249,9 @@ namespace SanteDB.Rest.AMI.Resources
                 td.Entity = this.GetRepository().Save(td.Entity);
 
                 FireSecurityAttributesChanged(td.Entity, true);
+
+                // Special case for security entity wrappers, we want to load them from DB from fresh
+                ApplicationServiceContext.Current.GetService<IDataCachingService>()?.Remove(td.Entity.Key.Value);
 
                 return td;
             }
