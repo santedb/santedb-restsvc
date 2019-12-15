@@ -48,7 +48,7 @@ namespace SanteDB.Core.Model.AMI.Auth
         public SecurityDeviceInfo(SecurityDevice device)
         {
             this.Entity = device;
-            this.Policies = device.Policies.Select(o => new SecurityPolicyInfo(o)).ToList();
+            this.Policies = device.Policies.Where(o => o.Policy != null).Select(o => new SecurityPolicyInfo(o)).ToList();
         }
 
         /// <summary>
