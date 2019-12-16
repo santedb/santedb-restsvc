@@ -890,7 +890,11 @@ namespace SanteDB.Messaging.AMI.Wcf
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(IAssociativeResourceHandler.AddAssociatedEntity));
-                    var retVal = handler.AddAssociatedEntity(key, property, body);
+                    object retVal = null;
+                    if (Guid.TryParse(key, out Guid uuid))
+                        retVal = handler.AddAssociatedEntity(uuid, property, body);
+                    else
+                        retVal = handler.AddAssociatedEntity(key, property, body);
 
                     var versioned = retVal as IVersionedEntity;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = retVal == null ? (int)HttpStatusCode.NoContent : (int)System.Net.HttpStatusCode.Created;
@@ -930,7 +934,12 @@ namespace SanteDB.Messaging.AMI.Wcf
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(IAssociativeResourceHandler.RemoveAssociatedEntity));
-                    var retVal = handler.RemoveAssociatedEntity(key, property, scopedEntityKey);
+
+                    object retVal = null;
+                    if (Guid.TryParse(key, out Guid uuid) && Guid.TryParse(scopedEntityKey, out Guid scopedUuid))
+                        retVal = handler.RemoveAssociatedEntity(uuid, property, scopedUuid);
+                    else
+                        retVal = handler.RemoveAssociatedEntity(key, property, scopedEntityKey);
 
                     var versioned = retVal as IVersionedEntity;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = (int)System.Net.HttpStatusCode.OK;

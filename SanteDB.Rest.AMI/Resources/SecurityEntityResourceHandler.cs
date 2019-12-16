@@ -59,7 +59,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public SecurityEntityResourceHandler() 
         {
-            ApplicationServiceContext.Current.AddStarted((o, e) => this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<TSecurityEntity>>());
+            ApplicationServiceContext.Current.Started += (o, e) => this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<TSecurityEntity>>();
         }
 
         /// <summary>

@@ -43,11 +43,25 @@ namespace SanteDB.Rest.AMI.Resources
         private IAuditRepositoryService m_repository = null;
 
         /// <summary>
+        /// Get the repository
+        /// </summary>
+        private IAuditRepositoryService GetRepository()
+        {
+
+            if (this.m_repository == null)
+                this.m_repository = ApplicationServiceContext.Current.GetService<IAuditRepositoryService>();
+            if(this.m_repository == null)
+                throw new InvalidOperationException("No audit repository is configured");
+
+            return this.m_repository;
+        }
+
+        /// <summary>
         /// Initializes the audit resource handler
         /// </summary>
         public AuditResourceHandler()
         {
-            ApplicationServiceContext.Current.AddStarted((o, e) => this.m_repository = ApplicationServiceContext.Current.GetService<IAuditRepositoryService>()); 
+            
         }
 
         /// <summary>
@@ -79,16 +93,14 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public object Create(object data, bool updateIfExists)
         {
-            if (this.m_repository == null)
-                throw new InvalidOperationException("No audit repository is configured");
-
+            
             var auditData = data as AuditSubmission;
             if (auditData == null) // may be a single audit
             {
                 var singleAudit = data as AuditData;
                 if (singleAudit != null)
                 {
-                    var retVal = this.m_repository.Insert(singleAudit);
+                    var retVal = this.GetRepository().Insert(singleAudit);
                     ApplicationServiceContext.Current.GetService<IAuditDispatchService>()?.SendAudit(singleAudit);
                     return new AuditData().CopyObjectData(retVal);
                 }
@@ -97,7 +109,7 @@ namespace SanteDB.Rest.AMI.Resources
             {
                 auditData.Audit.ForEach(o =>
                 {
-                    this.m_repository.Insert(o);
+                    this.GetRepository().Insert(o);
                     ApplicationServiceContext.Current.GetService<IAuditDispatchService>()?.SendAudit(o);
                 });
                 // Send the audit to the audit repo
@@ -114,11 +126,9 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.AccessAuditLog)]
         public object Get(object id, object versionId)
         {
-            if (this.m_repository == null)
-                throw new InvalidOperationException("No audit repository is configured");
-
+           
             var retVal = new AuditData();
-            retVal.CopyObjectData(this.m_repository.Get(id));
+            retVal.CopyObjectData(this.GetRepository().Get(id));
 
             return retVal;
         }
@@ -156,11 +166,9 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.AccessAuditLog)]
         public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
         {
-            if(this.m_repository == null)
-                throw new InvalidOperationException("No audit repository is configured");
-
+      
             var filter = QueryExpressionParser.BuildLinqExpression<AuditData>(queryParameters);
-            return this.m_repository.Find(filter, offset, count, out totalCount);
+            return this.GetRepository().Find(filter, offset, count, out totalCount);
         }
 
         /// <summary>

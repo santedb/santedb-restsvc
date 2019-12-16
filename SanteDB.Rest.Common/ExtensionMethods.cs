@@ -93,14 +93,6 @@ namespace SanteDB.Rest.Common
                     retVal.Add(new KeyValuePair<String, Object>(k, v));
             return retVal;
         }
-
-        /// <summary>
-        /// Adds a handler to the Started event
-        /// </summary>
-        public static void AddStarted(this IServiceProvider me, EventHandler handler)
-        {
-            var startEvent = me.GetType().GetRuntimeEvent("Started");
-            startEvent.AddEventHandler(me, handler);
-        }
+        
     }
 }
