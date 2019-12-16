@@ -168,7 +168,11 @@ namespace SanteDB.Rest.AMI.Resources
         {
       
             var filter = QueryExpressionParser.BuildLinqExpression<AuditData>(queryParameters);
-            return this.GetRepository().Find(filter, offset, count, out totalCount);
+
+            ModelSort<AuditData>[] sortParameters = null;
+            if (queryParameters.TryGetValue("_orderBy", out var orderBy))
+                sortParameters = QueryExpressionParser.BuildSort<AuditData>(orderBy);
+            return this.GetRepository().Find(filter, offset, count, out totalCount, sortParameters);
         }
 
         /// <summary>
