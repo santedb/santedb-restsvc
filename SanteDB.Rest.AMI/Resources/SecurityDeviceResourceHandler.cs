@@ -55,17 +55,12 @@ namespace SanteDB.Rest.AMI.Resources
 
             var sde = data as SecurityDeviceInfo;
             // If no policies then assign the ones from DEVICE
-            if(sde.Policies == null || sde.Policies.Count == 0 && sde.Entity?.Policies == null ||  sde.Entity.Policies.Count == 0)
+            if (sde.Policies == null || sde.Policies.Count == 0 && sde.Entity?.Policies == null || sde.Entity.Policies.Count == 0)
             {
                 var role = ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>()?.GetRole("DEVICE");
-                if(role != null && role.Policies != null)
-                    sde.Policies = role.Policies.Select(o => new SecurityPolicyInfo(o)).ToList();
-                else
-                {
-                    var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>()?.GetActivePolicies(role);
-                    if (policies != null)
-                        sde.Policies = policies.Select(o => new SecurityPolicyInfo(o)).ToList();
-                }
+                var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>()?.GetActivePolicies(role);
+                if (policies != null)
+                    sde.Policies = policies.Select(o => new SecurityPolicyInfo(o)).ToList();
             }
 
             return base.Create(data, updateIfExists);
@@ -120,7 +115,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public object RemoveAssociatedEntity(object scopingEntityKey, string propertyName, object subItemKey)
         {
-            
+
             switch (propertyName)
             {
                 case "policy":
@@ -145,7 +140,7 @@ namespace SanteDB.Rest.AMI.Resources
                         this.FireSecurityAttributesChanged(scope, false, $"del policy={policy.Policy.Oid}");
                         throw;
                     }
-                
+
                 default:
                     throw new ArgumentException($"Property with {propertyName} not valid");
             }
@@ -156,7 +151,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public IEnumerable<object> QueryAssociatedEntities(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
         {
-           
+
             switch (propertyName)
             {
                 case "policy":
