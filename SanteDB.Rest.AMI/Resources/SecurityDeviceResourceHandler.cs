@@ -53,6 +53,15 @@ namespace SanteDB.Rest.AMI.Resources
             if (data is SecurityDevice)
                 data = new SecurityDeviceInfo(data as SecurityDevice);
 
+            var sde = data as SecurityDeviceInfo;
+            // If no policies then assign the ones from DEVICE
+            if(sde.Policies.Count == 0 && sde.Entity.Policies.Count == 0)
+            {
+                var role = ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>()?.GetRole("DEVICE");
+                if(role != null)
+                    sde.Policies = role.Policies.Select(o => new SecurityPolicyInfo(o)).ToList();
+            }
+
             return base.Create(data, updateIfExists);
         }
 

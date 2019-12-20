@@ -52,6 +52,16 @@ namespace SanteDB.Rest.AMI.Resources
         {
             if (data is SecurityApplication)
                 data = new SecurityApplicationInfo(data as SecurityApplication);
+
+            var sde = data as SecurityApplicationInfo;
+            // If no policies then assign the ones from SYNCHRONIZERS
+            if (sde.Policies.Count == 0 && sde.Entity.Policies.Count == 0)
+            {
+                var role = ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>()?.GetRole("SYNCHRONIZERS");
+                if (role != null)
+                    sde.Policies = role.Policies.Select(o => new SecurityPolicyInfo(o)).ToList();
+            }
+
             return base.Create(data, updateIfExists);
         }
 
