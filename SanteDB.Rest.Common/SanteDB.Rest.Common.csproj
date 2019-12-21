@@ -45,7 +45,9 @@
   <ItemGroup>
     <Compile Include="Attributes\DemandAttribute.cs" />
     <Compile Include="Attributes\RestServiceFaultAttribute.cs" />
+    <Compile Include="Behavior\ContentSecurityPolicyBehavior.cs" />
     <Compile Include="BundleUtil.cs" />
+    <Compile Include="Configuration\BasicAuthorizationConfigurationSection.cs" />
     <Compile Include="Contracts\IRisiServiceContract.Adhoc.cs" />
     <Compile Include="Contracts\IRisiServiceContract.cs" />
     <Compile Include="ExtensionMethods.cs" />
@@ -59,6 +61,23 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceHandlerBase.cs" />
     <Compile Include="ResourceHandlerTool.cs" />
+    <Compile Include="Behavior\CorsEndpointBehavior.cs" />
+    <Compile Include="Behavior\MessageCompressionEndpointBehavior.cs" />
+    <Compile Include="Behavior\MessageDispatchFormatterBehavior.cs" />
+    <Compile Include="Behavior\MessageLoggingEndpointBehavior.cs" />
+    <Compile Include="Compression\BZip2CompressionScheme.cs" />
+    <Compile Include="Compression\CompressionUtil.cs" />
+    <Compile Include="Compression\DeflateCompressionScheme.cs" />
+    <Compile Include="Compression\GzipCompressionScheme.cs" />
+    <Compile Include="Compression\ICompressionScheme.cs" />
+    <Compile Include="Compression\LzmaCompressionScheme.cs" />
+    <Compile Include="SanteDBClaimsUtil.cs" />
+    <Compile Include="SanteDBRestConstants.cs" />
+    <Compile Include="Security\BasicAuthorizationAccessBehavior.cs" />
+    <Compile Include="Security\OperationDemandPolicyBehavior.cs" />
+    <Compile Include="Serialization\CorsMessageInspector.cs" />
+    <Compile Include="Serialization\RestCompressionMessageInspector.cs" />
+    <Compile Include="Serialization\RestMessageDispatchFormatter.cs" />
   </ItemGroup>
   <Choose>
     <When Condition="$(SolutionName.Contains('-ext'))">
@@ -87,14 +106,14 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <PackageReference Include="RestSrvr" Version="1.87.0.0" />
-        <PackageReference Include="SanteDB.Core.Applets" Version="1.87.0.0" />
+        <PackageReference Include="RestSrvr" Version="1.88.0.0" />
+        <PackageReference Include="SanteDB.Core.Applets" Version="1.88.0.0" />
         <ProjectReference Include="..\SanteDB.Core.Model.RISI\SanteDB.Core.Model.RISI.csproj">
           <Project>{f3d2fa84-c398-4390-9834-1272cc2d6f89}</Project>
           <Name>SanteDB.Core.Model.RISI</Name>
         </ProjectReference>
-        <PackageReference Include="SanteDB.Core.Api" Version="1.87.0.0" />
-        <PackageReference Include="SanteDB.Core.Model" Version="1.87.0.0" />
+        <PackageReference Include="SanteDB.Core.Api" Version="1.88.0.0" />
+        <PackageReference Include="SanteDB.Core.Model" Version="1.88.0.0" />
       </ItemGroup>
     </Otherwise>
   </Choose>
@@ -108,6 +127,15 @@
     <None Include="SanteDB.Rest.Common.nuspec">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SanteDB.Core.Model.ViewModelSerializers\SanteDB.Core.Model.ViewModelSerializers.csproj">
+      <Project>{ece9b280-9647-4092-babf-eb2e25084670}</Project>
+      <Name>SanteDB.Core.Model.ViewModelSerializers</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ViewModel.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

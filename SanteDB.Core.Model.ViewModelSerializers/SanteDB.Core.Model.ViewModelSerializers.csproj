@@ -5,11 +5,11 @@
     <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F3D2FA84-C398-4390-9834-1272CC2D6F89}</ProjectGuid>
+    <ProjectGuid>{ECE9B280-9647-4092-BABF-EB2E25084670}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SanteDB.Core.Model.RISI</RootNamespace>
-    <AssemblyName>SanteDB.Core.Model.RISI</AssemblyName>
+    <RootNamespace>SanteDB.Core.Model.ViewModelSerializers</RootNamespace>
+    <AssemblyName>SanteDB.Core.Model.ViewModelSerializers</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -24,7 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\bin\Debug\SanteDB.Core.Model.RISI.XML</DocumentationFile>
+    <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,55 +33,45 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\bin\Release\SanteDB.Core.Model.RISI.XML</DocumentationFile>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="AutoCompleteSourceDefinition.cs" />
-    <Compile Include="Constants\ParameterTypeKeys.cs" />
-    <Compile Include="Constants\ReportFormatKeys.cs" />
-    <Compile Include="Interfaces\IParameterValueProvider.cs" />
-    <Compile Include="ListAutoCompleteSourceDefinition.cs" />
-    <Compile Include="ReportBundle.cs" />
-    <Compile Include="ReportFormat.cs" />
-    <Compile Include="ReportParameter.cs" />
-    <Compile Include="ParameterType.cs" />
-    <Compile Include="QueryAutoCompleteSourceDefinition.cs" />
-    <Compile Include="ReportDefinition.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RisiCollection.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\SanteDB.licenseheader">
-      <Link>SanteDB.licenseheader</Link>
-    </None>
-    <None Include="SanteDB.Core.Model.RISI.nuspec" />
-  </ItemGroup>
   <Choose>
     <When Condition="$(SolutionName.Contains('-ext'))">
       <ItemGroup>
-        <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-        <ProjectReference Include="..\..\santedb-model\SanteDB.Core.Model\SanteDB.Core.Model.csproj">
-          <Project>{F1A82A4F-4A57-47D7-AE76-444C8A4FF54A}</Project>
-          <Name>SanteDB.Core.Model</Name>
-        </ProjectReference>
+        <!-- A reference to the entire .NET Framework is automatically included -->
         <ProjectReference Include="..\..\santedb-api\SanteDB.Core.Api\SanteDB.Core.Api.csproj">
-          <Project>{3A45F695-47A2-464C-ACE6-BDABBFA39FBC}</Project>
+          <Project>{3a45f695-47a2-464c-ace6-bdabbfa39fbc}</Project>
           <Name>SanteDB.Core.Api</Name>
+        </ProjectReference>
+        <ProjectReference Include="..\..\santedb-applets\SanteDB.Core.Applets\SanteDB.Core.Applets.csproj">
+          <Project>{39e61451-f4fe-493d-b754-5f06eb284aac}</Project>
+          <Name>SanteDB.Core.Applets</Name>
+        </ProjectReference>
+        <ProjectReference Include="..\..\santedb-model\SanteDB.Core.Model\SanteDB.Core.Model.csproj">
+          <Project>{f1a82a4f-4a57-47d7-ae76-444c8a4ff54a}</Project>
+          <Name>SanteDB.Core.Model</Name>
         </ProjectReference>
       </ItemGroup>
     </When>
     <Otherwise>
       <ItemGroup>
-        <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-        <PackageReference Include="SanteDB.Core.Api">
-          <Version>1.88.0.0</Version>
-        </PackageReference>
-        <PackageReference Include="SanteDB.Core.Model">
-          <Version>1.88.0.0</Version>
-        </PackageReference>
+        <PackageReference Include="SanteDB.Core.Api" Version="1.88.0.0" />
+        <PackageReference Include="SanteDB.Core.Applets" Version="1.88.0.0" />
+        <PackageReference Include="SanteDB.Core.Model" Version="1.88.0.0" />
       </ItemGroup>
     </Otherwise>
   </Choose>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModelSerializer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\SanteDB.licenseheader">
+      <Link>SanteDB.licenseheader</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

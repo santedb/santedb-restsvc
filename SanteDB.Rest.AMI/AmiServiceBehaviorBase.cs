@@ -32,6 +32,8 @@ using SanteDB.Core.Model.AMI.Diagnostics;
 using SanteDB.Core.Model.AMI.Logging;
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Patch;
+using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.AMI;
 using SanteDB.Rest.Common;
@@ -96,18 +98,14 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// <returns>Returns a collection of log files.</returns>
         public abstract AmiCollection GetLogs();
 
-        /// <summary>
-        /// Callers provide the demand method for access control
-        /// </summary>
-        protected abstract void Demand(String policyId);
-
+      
         /// <summary>
         /// Perform an ACL check
         /// </summary>
         private void AclCheck(Object handler, String action)
         {
             foreach (var dmn in this.GetDemands(handler, action))
-                this.Demand(dmn);
+                ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(dmn);
         }
 
         /// <summary>
