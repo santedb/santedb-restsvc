@@ -21,9 +21,21 @@
       <dependency id="RestSrvr" version="1.88.0.0"/>
       <dependency id="SanteDB.Core.Model.RISI" version="1.88.0.0"/>
     </dependencies>
+    <references>
+      <group targetFramework="net45">
+        <reference file="SanteDB.Rest.Common.dll"/>
+        <reference file="SanteDB.Core.Model.ViewModelSerializers.dll"/>
+      </group>
+      <group targetFramework="monoandroid">
+        <reference file="SanteDB.Rest.Common.dll"/>
+        <reference file="SanteDB.Core.Model.ViewModelSerializers.dll"/>
+      </group>
+    </references>
   </metadata>
   <files>
     <file src="bin\$configuration$\SanteDB.Rest.Common.dll" target="lib\net45"/>
+    <file src="bin\$configuration$\SanteDB.Core.Model.ViewModelSerializers.dll" target="lib\net45"/>
     <file src="bin\$configuration$\SanteDB.Rest.Common.dll" target="lib\monoandroid"/>
+    <file src="bin\$configuration$\SanteDB.Core.Model.ViewModelSerializers.dll" target="lib\monoandroid"/>
   </files>
 </package>
