@@ -51,7 +51,7 @@ namespace SanteDB.Rest.Common.Behaviors
         {
 
             //response.Headers.Add("Content-Security-Policy", $"script-src-elem 'nonce-{this.Nonce}'; script-src 'self'");
-            response.Headers.Add("Content-Security-Policy", $"script-src-elem 'self' 'nonce-{this.Nonce}'; script-src 'unsafe-inline'");
+            response.Headers.Add("Content-Security-Policy", $"script-src-elem 'self' 'nonce-{this.Nonce}' 'strict-dynamic'; script-src 'self'");
             response.Headers.Add("X-XSS-Protection", "1; mode=block");
             response.Headers.Add("X-Frame-Options", "deny");
             response.Headers.Add("Feature-Policy", "autoplay 'none'; camera 'none'; accelerometer 'none'; goelocation 'none'; payment 'none'");
