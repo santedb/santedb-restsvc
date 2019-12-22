@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace SanteDB.Rest.Common.Behaviors
 {
@@ -13,6 +14,22 @@ namespace SanteDB.Rest.Common.Behaviors
     /// </summary>
     public class SecurityPolicyHeadersBehavior : IEndpointBehavior, IMessageInspector
     {
+
+        // NONCE
+        private string m_nonce;
+
+        /// <summary>
+        /// Policy behavior configuration
+        /// </summary>
+        public SecurityPolicyHeadersBehavior(XElement config)
+        {
+            try
+            {
+                this.m_nonce = config.Value;
+            }
+            catch { }
+        }
+
         /// <summary>
         /// After receiving request (not applicable)
         /// </summary>
@@ -34,7 +51,11 @@ namespace SanteDB.Rest.Common.Behaviors
         /// </summary>
         public void BeforeSendResponse(RestResponseMessage response)
         {
-            response.Headers.Add("Content-Security-Policy", "script-src 'self' 'unsafe-eval'");
+
+            if(this.m_nonce != null)
+                response.Headers.Add("Content-Security-Policy", $"script-src 'self' 'nonce-{m_nonce}");
+            else
+                response.Headers.Add("Content-Security-Policy", "script-src 'self' 'unsafe-eval'");
             response.Headers.Add("X-XSS-Protection", "1; mode=block");
             response.Headers.Add("X-Frame-Options", "deny");
             response.Headers.Add("Feature-Policy", "autoplay 'none'; camera 'none'; accelerometer 'none'; goelocation 'none'; payment 'none'");
