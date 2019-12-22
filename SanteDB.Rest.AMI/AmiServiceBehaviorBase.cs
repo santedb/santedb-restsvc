@@ -962,5 +962,50 @@ namespace SanteDB.Messaging.AMI.Wcf
 
             }
         }
+
+        /// <summary>
+        /// Removes an associated entity from the scoping property path
+        /// </summary>
+        public object AssociationGet(string resourceType, string key, string property, string scopedEntityKey)
+        {
+            this.ThrowIfNotReady();
+
+            try
+            {
+
+                IAssociativeResourceHandler handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType) as IAssociativeResourceHandler;
+                if (handler != null)
+                {
+                    this.AclCheck(handler, nameof(IAssociativeResourceHandler.GetAssociatedEntity));
+
+                    object retVal = null;
+                    if (Guid.TryParse(key, out Guid uuid) && Guid.TryParse(scopedEntityKey, out Guid scopedUuid))
+                        retVal = handler.GetAssociatedEntity(uuid, property, scopedUuid);
+                    else
+                        retVal = handler.GetAssociatedEntity(key, property, scopedEntityKey);
+
+                    var versioned = retVal as IVersionedEntity;
+                    RestOperationContext.Current.OutgoingResponse.StatusCode = (int)System.Net.HttpStatusCode.OK;
+                    RestOperationContext.Current.OutgoingResponse.SetETag((retVal as IAmiIdentified)?.Tag ?? (retVal as IdentifiedData)?.Tag ?? Guid.NewGuid().ToString());
+                    RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}/{3}",
+                            RestOperationContext.Current.IncomingRequest.Url,
+                            resourceType,
+                            key,
+                            property,
+                            (retVal as IAmiIdentified)?.Key ?? (retVal as IdentifiedData)?.Key.ToString()));
+                    return retVal;
+
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+
+            }
+        }
     }
 }

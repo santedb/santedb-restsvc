@@ -60,5 +60,10 @@ namespace SanteDB.Rest.Common
         /// <param name="scopedItem">The sub-item to be added</param>
         /// <returns>The newly created associative entity</returns>
         Object AddAssociatedEntity(object scopingEntityKey, string propertyName, object scopedItem);
+
+        /// <summary>
+        /// Fetchs the scoped entity
+        /// </summary>
+        Object GetAssociatedEntity(object scopingEntity, string propertyName, object subItemKey);
     }
 }

@@ -116,6 +116,14 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <summary>
+        /// Get associated entity
+        /// </summary>
+        public object GetAssociatedEntity(object scopingEntityKey, string propertyName, object subItemKey)
+        {
+            throw new NotSupportedException("Use root resource getter for property by UUID");
+        }
+
+        /// <summary>
         /// Obsolete roles
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.AlterRoles)]
@@ -127,7 +135,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Query for permissions and policies within the scoped object
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.AlterRoles)]
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public IEnumerable<object> QueryAssociatedEntities(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
         {
             var scope = this.GetRepository().Get(Guid.Parse(scopingEntityKey.ToString()));

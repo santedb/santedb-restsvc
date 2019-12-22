@@ -17,6 +17,7 @@
  * User: Justin Fyfe
  * Date: 2019-8-8
  */
+using RestSrvr;
 using SanteDB.Core;
 using SanteDB.Core.Applets.Model;
 using SanteDB.Core.Applets.Services;
@@ -38,7 +39,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents a resource handler for applet solution files
     /// </summary>
-    public class AppletSolutionResourceHandler : IApiResourceHandler
+    public class AppletSolutionResourceHandler : IApiResourceHandler, IAssociativeResourceHandler
     {
         /// <summary>
         /// Gets the capabilities of the resource handler
@@ -71,6 +72,14 @@ namespace SanteDB.Rest.AMI.Resources
         /// Get the type of this
         /// </summary>
         public Type Type => typeof(Stream);
+
+        /// <summary>
+        /// Adding solution components not yet supported
+        /// </summary>
+        public object AddAssociatedEntity(object scopingEntityKey, string propertyName, object scopedItem)
+        {
+            throw new NotSupportedException();
+        }
 
         /// <summary>
         /// Create / install an applet on the server
@@ -123,6 +132,59 @@ namespace SanteDB.Rest.AMI.Resources
                 return new AppletSolutionInfo(appletData, null);
             }
         }
+        /// <summary>
+        /// Get the associated entity
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        public object GetAssociatedEntity(object scopingEntity, string propertyName, object subItemKey)
+        {
+            var appletService = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>();
+            var appletData = appletService.GetPackage(scopingEntity.ToString(), subItemKey.ToString());
+
+            if (appletData == null)
+                throw new FileNotFoundException(subItemKey.ToString());
+            else
+            {
+                var appletManifest = AppletPackage.Load(appletData);
+                this.SetAppletHeaders(appletManifest.Meta);
+                return new MemoryStream(appletData);
+            }
+        }
+
+
+        /// <summary>
+        /// Set applet headers
+        /// </summary>
+        private void SetAppletHeaders(AppletInfo package)
+        {
+            RestOperationContext.Current.OutgoingResponse.SetETag(package.Version);
+            RestOperationContext.Current.OutgoingResponse.Headers.Add("X-SanteDB-PakID", package.Id);
+            if (package.Hash != null)
+                RestOperationContext.Current.OutgoingResponse.AppendHeader("X-SanteDB-Hash", Convert.ToBase64String(package.Hash));
+            RestOperationContext.Current.OutgoingResponse.AppendHeader("Content-Type", "application/octet-stream");
+            RestOperationContext.Current.OutgoingResponse.ContentType = "application/octet-stream";
+            RestOperationContext.Current.OutgoingResponse.AppendHeader("Content-Disposition", $"attachment; filename=\"{package.Id}.pak.gz\"");
+            RestOperationContext.Current.OutgoingResponse.AppendHeader("Location", $"/ami/Applet/{package.Id}");
+        }
+
+        /// <summary>
+        /// Get associated entities
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        public IEnumerable<object> QueryAssociatedEntities(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
+        {
+            switch (propertyName)
+            {
+                case "applet":
+                    var query = QueryExpressionParser.BuildLinqExpression<AppletManifest>(filter);
+                    var applets = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().GetApplets(scopingEntityKey.ToString()).Where(query.Compile()).Select(o => new AppletManifestInfo(o.Info, null));
+                    totalCount = applets.Count();
+                    return applets.Skip(offset).Take(count).OfType<Object>();
+                default:
+                    throw new KeyNotFoundException($"Don't understand {propertyName}");
+            }
+        }
+
 
         /// <summary>
         /// Obsoletes the specified applet
@@ -164,6 +226,14 @@ namespace SanteDB.Rest.AMI.Resources
             totalCount = applets.Count();
             return applets.Skip(offset).Take(count).OfType<Object>();
 
+        }
+        
+        /// <summary>
+        /// Removing sub items not yet supported
+        /// </summary>
+        public object RemoveAssociatedEntity(object scopingEntityKey, string propertyName, object subItemKey)
+        {
+            throw new NotSupportedException();
         }
 
         /// <summary>
