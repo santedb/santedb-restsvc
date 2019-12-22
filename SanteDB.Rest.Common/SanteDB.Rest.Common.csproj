@@ -45,7 +45,7 @@
   <ItemGroup>
     <Compile Include="Attributes\DemandAttribute.cs" />
     <Compile Include="Attributes\RestServiceFaultAttribute.cs" />
-    <Compile Include="Behavior\ContentSecurityPolicyBehavior.cs" />
+    <Compile Include="Behavior\SecurityPolicyHeadersBehavior.cs" />
     <Compile Include="BundleUtil.cs" />
     <Compile Include="Configuration\BasicAuthorizationConfigurationSection.cs" />
     <Compile Include="Contracts\IRisiServiceContract.Adhoc.cs" />
