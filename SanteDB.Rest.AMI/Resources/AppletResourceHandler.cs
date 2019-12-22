@@ -124,6 +124,7 @@ namespace SanteDB.Rest.AMI.Resources
             }
         }
 
+       
         /// <summary>
         /// Obsoletes the specified applet
         /// </summary>
@@ -164,6 +165,14 @@ namespace SanteDB.Rest.AMI.Resources
             totalCount = applets.Count();
             return applets.Skip(offset).Take(count).OfType<Object>();
 
+        }
+
+        /// <summary>
+        /// Remove an associated entity
+        /// </summary>
+        public object RemoveAssociatedEntity(object scopingEntityKey, string propertyName, object subItemKey)
+        {
+            throw new NotSupportedException();
         }
 
         /// <summary>

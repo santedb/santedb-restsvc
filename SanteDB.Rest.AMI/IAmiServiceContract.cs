@@ -223,6 +223,17 @@ namespace SanteDB.Rest.AMI
         /// </summary>
         /// <param name="resourceType">The type of resource which should be searched</param>
         /// <param name="key">The key of the hosting (container object)</param>
+        /// <param name="scopedEntityKey">The key of the sub-item to fetch</param>
+        /// <param name="property">The property to search</param>
+        /// <returns>The search for the specified resource type limited to the specified object</returns>
+        [Get("/{resourceType}/{key}/{property}/{scopedEntityKey}")]
+        Object AssociationGet(String resourceType, String key, String property, String scopedEntityKey);
+
+        /// <summary>
+        /// Performs a linked or chained search on a sub-property
+        /// </summary>
+        /// <param name="resourceType">The type of resource which should be searched</param>
+        /// <param name="key">The key of the hosting (container object)</param>
         /// <param name="property">The property to search</param>
         /// <returns>The search for the specified resource type limited to the specified object</returns>
         [Get("/{resourceType}/{key}/{property}")]

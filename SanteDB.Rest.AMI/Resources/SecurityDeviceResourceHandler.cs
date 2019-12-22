@@ -111,8 +111,17 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <summary>
+        /// Get associated entity
+        /// </summary>
+        public object GetAssociatedEntity(object scopingEntityKey, string propertyName, object subItemKey)
+        {
+            throw new NotSupportedException("Use root resource getter for property by UUID");
+        }
+
+        /// <summary>
         /// Remove an associated entity
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.CreateDevice)]
         public object RemoveAssociatedEntity(object scopingEntityKey, string propertyName, object subItemKey)
         {
 
@@ -149,6 +158,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Query for associated items
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public IEnumerable<object> QueryAssociatedEntities(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
         {
 
@@ -171,6 +181,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Add an associated entity
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.CreateDevice)]
         public object AddAssociatedEntity(object scopingEntityKey, string propertyName, object scopedItem)
         {
             switch (propertyName)
