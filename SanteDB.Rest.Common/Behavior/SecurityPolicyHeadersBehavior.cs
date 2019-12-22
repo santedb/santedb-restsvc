@@ -15,19 +15,17 @@ namespace SanteDB.Rest.Common.Behaviors
     public class SecurityPolicyHeadersBehavior : IEndpointBehavior, IMessageInspector
     {
 
-        // NONCE
-        private string m_nonce;
+        /// <summary>
+        /// Gets the NONCE for this instance of the policy behavior
+        /// </summary>
+        public String Nonce { get; }
 
         /// <summary>
         /// Policy behavior configuration
         /// </summary>
-        public SecurityPolicyHeadersBehavior(XElement config)
+        public SecurityPolicyHeadersBehavior()
         {
-            try
-            {
-                this.m_nonce = config.Value;
-            }
-            catch { }
+            this.Nonce = BitConverter.ToString(Guid.NewGuid().ToByteArray()).Replace("-", "");
         }
 
         /// <summary>
@@ -52,10 +50,8 @@ namespace SanteDB.Rest.Common.Behaviors
         public void BeforeSendResponse(RestResponseMessage response)
         {
 
-            if(this.m_nonce != null)
-                response.Headers.Add("Content-Security-Policy", $"script-src 'self' 'nonce-{m_nonce}");
-            else
-                response.Headers.Add("Content-Security-Policy", "script-src 'self' 'unsafe-eval'");
+            //response.Headers.Add("Content-Security-Policy", $"script-src-elem 'nonce-{this.Nonce}'; script-src 'self'");
+            response.Headers.Add("Content-Security-Policy", $"script-src-elem 'self' 'nonce-{this.Nonce}'; script-src 'unsafe-inline'");
             response.Headers.Add("X-XSS-Protection", "1; mode=block");
             response.Headers.Add("X-Frame-Options", "deny");
             response.Headers.Add("Feature-Policy", "autoplay 'none'; camera 'none'; accelerometer 'none'; goelocation 'none'; payment 'none'");
