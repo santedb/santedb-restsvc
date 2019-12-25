@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Attributes\DemandAttribute.cs" />
     <Compile Include="Attributes\RestServiceFaultAttribute.cs" />
+    <Compile Include="Behavior\AcceptLanguageEndpointBehavior.cs" />
     <Compile Include="Behavior\SecurityPolicyHeadersBehavior.cs" />
     <Compile Include="BundleUtil.cs" />
     <Compile Include="Configuration\BasicAuthorizationConfigurationSection.cs" />

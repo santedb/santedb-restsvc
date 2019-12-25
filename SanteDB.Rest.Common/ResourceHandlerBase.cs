@@ -243,47 +243,58 @@ namespace SanteDB.Rest.Common
                 throw new NotSupportedException();
             try
             {
-
-                var queryExpression = QueryExpressionParser.BuildLinqExpression<TResource>(queryParameters, null, false);
-                List<String> query = null, id = null, orderBy = null;
-
-                // Order by
-                ModelSort<TResource>[] sortParameters = null;
-                if (queryParameters.TryGetValue("_orderBy", out orderBy))
-                    sortParameters = QueryExpressionParser.BuildSort<TResource>(orderBy);
-
                 IEnumerable<TResource> retVal = null;
-                if (queryParameters.TryGetValue("_id", out id)) {
-                    var obj = this.GetRepository().Get(Guid.Parse(id.First()));
-                    if (obj != null)
-                        retVal = new List<TResource>() { obj };
-                    else
-                        retVal = new List<TResource>();
-                    totalCount = retVal.Count();
-                }
-                else if (queryParameters.TryGetValue("_queryId", out query) && this.GetRepository() is IPersistableQueryRepositoryService<TResource>)
+
+                // IS this a freetext search? 
+                if (queryParameters.ContainsKey("_any"))
                 {
-                    Guid queryId = Guid.Parse(query[0]);
-                    List<String> data = null;
-                    if (queryParameters.TryGetValue("_subscription", out data))
-                    { // subscription based query
-                        totalCount = 0;
-                        retVal = ApplicationServiceContext.Current.GetService<ISubscriptionExecutor>()?.Execute(Guid.Parse(data.First()), queryParameters, offset, count, out totalCount, queryId).OfType<TResource>();
-                    }
-                    else if (queryParameters.TryGetValue("_lean", out data) && data[0] == "true" && this.GetRepository() is IFastQueryRepositoryService<TResource>)
-                        retVal = (this.GetRepository() as IFastQueryRepositoryService<TResource>).FindFast(queryExpression, offset, count, out totalCount, queryId);
-                    else
-                        retVal = (this.GetRepository() as IPersistableQueryRepositoryService<TResource>).Find(queryExpression, offset, count, out totalCount, queryId, sortParameters);
+                    var fts = ApplicationServiceContext.Current.GetService<IFreetextSearchService>();
+                    if (fts == null) throw new InvalidOperationException("Attempting to run a freetext search in a context which does not support freetext searches");
+
+                    retVal = fts.Search<TResource>(queryParameters["_any"].ToArray(), offset, count, out totalCount);
                 }
                 else
                 {
-                    List<String> lean = null;
-                    if (queryParameters.TryGetValue("_lean", out lean) && lean[0] == "true" && this.GetRepository() is IFastQueryRepositoryService<TResource>)
-                        retVal = (this.GetRepository() as IFastQueryRepositoryService<TResource>).FindFast(queryExpression, offset, count, out totalCount, Guid.Empty);
-                    else
-                        retVal = this.GetRepository().Find(queryExpression, offset, count, out totalCount, sortParameters);
-                }
+                    var queryExpression = QueryExpressionParser.BuildLinqExpression<TResource>(queryParameters, null, false);
+                    List<String> query = null, id = null, orderBy = null;
 
+                    // Order by
+                    ModelSort<TResource>[] sortParameters = null;
+                    if (queryParameters.TryGetValue("_orderBy", out orderBy))
+                        sortParameters = QueryExpressionParser.BuildSort<TResource>(orderBy);
+
+                    if (queryParameters.TryGetValue("_id", out id))
+                    {
+                        var obj = this.GetRepository().Get(Guid.Parse(id.First()));
+                        if (obj != null)
+                            retVal = new List<TResource>() { obj };
+                        else
+                            retVal = new List<TResource>();
+                        totalCount = retVal.Count();
+                    }
+                    else if (queryParameters.TryGetValue("_queryId", out query) && this.GetRepository() is IPersistableQueryRepositoryService<TResource>)
+                    {
+                        Guid queryId = Guid.Parse(query[0]);
+                        List<String> data = null;
+                        if (queryParameters.TryGetValue("_subscription", out data))
+                        { // subscription based query
+                            totalCount = 0;
+                            retVal = ApplicationServiceContext.Current.GetService<ISubscriptionExecutor>()?.Execute(Guid.Parse(data.First()), queryParameters, offset, count, out totalCount, queryId).OfType<TResource>();
+                        }
+                        else if (queryParameters.TryGetValue("_lean", out data) && data[0] == "true" && this.GetRepository() is IFastQueryRepositoryService<TResource>)
+                            retVal = (this.GetRepository() as IFastQueryRepositoryService<TResource>).FindFast(queryExpression, offset, count, out totalCount, queryId);
+                        else
+                            retVal = (this.GetRepository() as IPersistableQueryRepositoryService<TResource>).Find(queryExpression, offset, count, out totalCount, queryId, sortParameters);
+                    }
+                    else
+                    {
+                        List<String> lean = null;
+                        if (queryParameters.TryGetValue("_lean", out lean) && lean[0] == "true" && this.GetRepository() is IFastQueryRepositoryService<TResource>)
+                            retVal = (this.GetRepository() as IFastQueryRepositoryService<TResource>).FindFast(queryExpression, offset, count, out totalCount, Guid.Empty);
+                        else
+                            retVal = this.GetRepository().Find(queryExpression, offset, count, out totalCount, sortParameters);
+                    }
+                }
                 AuditUtil.AuditQuery(Core.Auditing.OutcomeIndicator.Success, queryParameters.ToString(), retVal.ToArray());
                 return retVal;
             }
