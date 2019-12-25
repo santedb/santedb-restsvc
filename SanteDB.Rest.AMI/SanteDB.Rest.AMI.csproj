@@ -52,6 +52,7 @@
     <Compile Include="IAmiServiceContract.cs" />
     <Compile Include="Resources\IdentifierTypeResourceHandler.cs" />
     <Compile Include="Resources\MailMessageResourceHandler.cs" />
+    <Compile Include="Resources\MatchConfigurationResourceHandler.cs" />
     <Compile Include="Resources\MetadataResourceHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\DiagnosticsProbeResourceHandler.cs" />

@@ -24,6 +24,7 @@ namespace SanteDB.Rest.Common.Attributes
     /// <summary>
     /// Indicates a demand for a policy in the local execution environment
     /// </summary>
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     public class DemandAttribute : Attribute
     {
 
