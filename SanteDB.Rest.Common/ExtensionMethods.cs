@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
+using System.Text;
 
 namespace SanteDB.Rest.Common
 {
@@ -30,6 +31,7 @@ namespace SanteDB.Rest.Common
     public static class ExtensionMethods
     {
 
+     
         /// <summary>
         /// Get if modified since
         /// </summary>
