@@ -36,6 +36,7 @@ using SanteDB.Rest.Common.Attributes;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Audit;
 using RestSrvr;
+using SanteDB.Core.Model.Interfaces;
 
 namespace SanteDB.Rest.Common
 {
@@ -178,7 +179,9 @@ namespace SanteDB.Rest.Common
             try
             {
                 var retVal = this.GetRepository().Get((Guid)id, (Guid)versionId);
-                AuditUtil.AuditQuery(Core.Auditing.OutcomeIndicator.Success, id.ToString(), retVal);
+
+                if(typeof(IVersionedEntity).IsAssignableFrom(typeof(TResource)))
+                    AuditUtil.AuditQuery(Core.Auditing.OutcomeIndicator.Success, id.ToString(), retVal);
                 return retVal;
             }
             catch(Exception e)
@@ -295,7 +298,8 @@ namespace SanteDB.Rest.Common
                             retVal = this.GetRepository().Find(queryExpression, offset, count, out totalCount, sortParameters);
                     }
                 }
-                AuditUtil.AuditQuery(Core.Auditing.OutcomeIndicator.Success, queryParameters.ToString(), retVal.ToArray());
+                if (typeof(IVersionedEntity).IsAssignableFrom(typeof(TResource)))
+                    AuditUtil.AuditQuery(Core.Auditing.OutcomeIndicator.Success, queryParameters.ToString(), retVal.ToArray());
                 return retVal;
             }
             catch (Exception e)
