@@ -254,7 +254,12 @@ namespace SanteDB.Rest.Common
                     var fts = ApplicationServiceContext.Current.GetService<IFreetextSearchService>();
                     if (fts == null) throw new InvalidOperationException("Attempting to run a freetext search in a context which does not support freetext searches");
 
-                    retVal = fts.Search<TResource>(queryParameters["_any"].ToArray(), offset, count, out totalCount);
+                    // Order by
+                    ModelSort<TResource>[] sortParameters = null;
+                    if (queryParameters.TryGetValue("_orderBy", out List<String> orderBy))
+                        sortParameters = QueryExpressionParser.BuildSort<TResource>(orderBy);
+
+                    retVal = fts.Search<TResource>(queryParameters["_any"].ToArray(), offset, count, out totalCount, sortParameters);
                 }
                 else
                 {
