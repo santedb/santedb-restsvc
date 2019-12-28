@@ -24,6 +24,7 @@ using SanteDB.Core.Mail;
 using SanteDB.Core.Model.AMI.Applet;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.AMI.Diagnostics;
+using SanteDB.Core.Model.AMI.Jobs;
 using SanteDB.Core.Model.AMI.Logging;
 using SanteDB.Core.Model.AMI.Security;
 using SanteDB.Core.Model.DataTypes;
@@ -53,6 +54,7 @@ namespace SanteDB.Core.Model.AMI.Collections
     [XmlInclude(typeof(SecurityRoleInfo))]
     [XmlInclude(typeof(SecurityUser))]
     [XmlInclude(typeof(SecurityRole))]
+    [XmlInclude(typeof(JobInfo))]
     [XmlInclude(typeof(SecurityDevice))]
     [XmlInclude(typeof(SecurityApplication))]
     [XmlInclude(typeof(SecurityUserInfo))]

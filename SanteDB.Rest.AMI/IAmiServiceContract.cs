@@ -26,6 +26,7 @@ using SanteDB.Core.Model.AMI.Applet;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.AMI.Collections;
 using SanteDB.Core.Model.AMI.Diagnostics;
+using SanteDB.Core.Model.AMI.Jobs;
 using SanteDB.Core.Model.AMI.Logging;
 using SanteDB.Core.Model.AMI.Security;
 using SanteDB.Core.Model.DataTypes;
@@ -66,6 +67,7 @@ namespace SanteDB.Rest.AMI
     [ServiceKnownResource(typeof(SubscriptionDefinition))]
     [ServiceKnownResource(typeof(AuditData))]
     [ServiceKnownResource(typeof(AppletManifest))]
+    [ServiceKnownResource(typeof(JobInfo))]
     [ServiceKnownResource(typeof(AppletManifestInfo))]
     [ServiceKnownResource(typeof(DeviceEntity))]
     [ServiceKnownResource(typeof(DiagnosticApplicationInfo))]

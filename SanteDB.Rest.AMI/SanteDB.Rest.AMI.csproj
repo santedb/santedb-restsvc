@@ -51,6 +51,7 @@
     <Compile Include="Resources\ExtensionTypeResourceHandler.cs" />
     <Compile Include="IAmiServiceContract.cs" />
     <Compile Include="Resources\IdentifierTypeResourceHandler.cs" />
+    <Compile Include="Resources\JobResourceHandler.cs" />
     <Compile Include="Resources\MailMessageResourceHandler.cs" />
     <Compile Include="Resources\MatchConfigurationResourceHandler.cs" />
     <Compile Include="Resources\MetadataResourceHandler.cs" />
