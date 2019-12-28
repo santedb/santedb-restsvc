@@ -376,7 +376,12 @@ namespace SanteDB.Messaging.AMI.Wcf
                 {
 
                     this.AclCheck(handler, nameof(IApiResourceHandler.Obsolete));
-                    var retVal = handler.Obsolete(Guid.Parse(key));
+
+                    object retVal = null;
+                    if(Guid.TryParse(key, out Guid uuid))
+                        retVal = handler.Obsolete(uuid);
+                    else
+                        retVal = handler.Obsolete(key);
 
                     var versioned = retVal as IVersionedEntity;
 

@@ -22,7 +22,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Gets the resource name
         /// </summary>
-        public string ResourceName => "Job";
+        public string ResourceName => "JobInfo";
 
         /// <summary>
         /// Gets the type of resource handler
