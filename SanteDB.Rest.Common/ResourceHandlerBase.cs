@@ -181,12 +181,12 @@ namespace SanteDB.Rest.Common
                 var retVal = this.GetRepository().Get((Guid)id, (Guid)versionId);
 
                 if(typeof(IVersionedEntity).IsAssignableFrom(typeof(TResource)))
-                    AuditUtil.AuditQuery(Core.Auditing.OutcomeIndicator.Success, id.ToString(), retVal);
+                    AuditUtil.AuditRead(Core.Auditing.OutcomeIndicator.Success, id.ToString(), retVal);
                 return retVal;
             }
             catch(Exception e)
             {
-                AuditUtil.AuditQuery<TResource>(Core.Auditing.OutcomeIndicator.MinorFail, id.ToString());
+                AuditUtil.AuditRead<TResource>(Core.Auditing.OutcomeIndicator.MinorFail, id.ToString());
                 throw e;
             }
         }

@@ -53,6 +53,7 @@ namespace SanteDB.Rest.AMI
     [ServiceKnownResource(typeof(MailMessage))]
     [ServiceKnownResource(typeof(SecurityApplication))]
     [ServiceKnownResource(typeof(TfaRequestInfo))]
+    [ServiceKnownResource(typeof(AssigningAuthority))]
     [ServiceKnownResource(typeof(SecurityDeviceInfo))]
     [ServiceKnownResource(typeof(SecurityApplicationInfo))]
     [ServiceKnownResource(typeof(SecurityPolicyInfo))]

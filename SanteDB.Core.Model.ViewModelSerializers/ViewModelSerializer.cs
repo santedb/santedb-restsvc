@@ -201,7 +201,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                     }
                                                     else {
                                                         if ("$type".Equals(r.Value)) {
-                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                             if ((_type != typeof(SanteDB.Core.Auditing.AuditData))) {
                                                                 SanteDB.Core.Auditing.AuditData _nretVal = ((SanteDB.Core.Auditing.AuditData)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                 _nretVal.CopyObjectData(_retVal);
@@ -446,7 +446,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                 }
                                                                 else {
                                                                     if ("$type".Equals(r.Value)) {
-                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                         if ((_type != typeof(SanteDB.Core.Model.NonVersionedEntityData))) {
                                                                             SanteDB.Core.Model.NonVersionedEntityData _nretVal = ((SanteDB.Core.Model.NonVersionedEntityData)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                             _nretVal.CopyObjectData(_retVal);
@@ -588,7 +588,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             }
                             else {
                                 if ("$type".Equals(r.Value)) {
-                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                     if ((_type != typeof(SanteDB.Core.Model.Subscription.SubscriptionDefinition))) {
                                         SanteDB.Core.Model.Subscription.SubscriptionDefinition _nretVal = ((SanteDB.Core.Model.Subscription.SubscriptionDefinition)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                         _nretVal.CopyObjectData(_retVal);
@@ -932,7 +932,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                             }
                                                                                             else {
                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Security.SecurityApplication))) {
                                                                                                         SanteDB.Core.Model.Security.SecurityApplication _nretVal = ((SanteDB.Core.Model.Security.SecurityApplication)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -1292,7 +1292,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                             }
                                                                                             else {
                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Security.SecurityDevice))) {
                                                                                                         SanteDB.Core.Model.Security.SecurityDevice _nretVal = ((SanteDB.Core.Model.Security.SecurityDevice)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -1547,7 +1547,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                 }
                                                                 else {
                                                                     if ("$type".Equals(r.Value)) {
-                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                         if ((_type != typeof(SanteDB.Core.Model.Security.SecurityEntity))) {
                                                                             SanteDB.Core.Model.Security.SecurityEntity _nretVal = ((SanteDB.Core.Model.Security.SecurityEntity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                             _nretVal.CopyObjectData(_retVal);
@@ -1832,7 +1832,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                         }
                                                                         else {
                                                                             if ("$type".Equals(r.Value)) {
-                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                 if ((_type != typeof(SanteDB.Core.Model.Security.SecurityPolicy))) {
                                                                                     SanteDB.Core.Model.Security.SecurityPolicy _nretVal = ((SanteDB.Core.Model.Security.SecurityPolicy)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -1938,7 +1938,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("policyModel")) {
                 if ((_strong.Policy == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("policyModel", _strong.Key.Value))) {
+                    if ((_strong.PolicyKey.HasValue && context.ShouldForceLoad("policyModel", _strong.Key))) {
                         SanteDB.Core.Model.Security.SecurityPolicy _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Security.SecurityPolicy>(_strong.PolicyKey);
                         if ((_delay != null)) {
@@ -1947,7 +1947,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policyModel", _strong.Policy, context);
                         }
                         else {
-                            context.RegisterMissTarget("policyModel", _strong.Key.Value);
+                            context.RegisterMissTarget("policyModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -2049,7 +2049,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                         }
                                         else {
                                             if ("$type".Equals(r.Value)) {
-                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                 if ((_type != typeof(SanteDB.Core.Model.Security.SecurityPolicyInstance))) {
                                                     SanteDB.Core.Model.Security.SecurityPolicyInstance _nretVal = ((SanteDB.Core.Model.Security.SecurityPolicyInstance)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                     _nretVal.CopyObjectData(_retVal);
@@ -2177,9 +2177,28 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "externClass", _strong.ExternalSecurityObjectRefType, context);
                 }
             }
+            if (context.ShouldSerialize("deviceModel")) {
+                if ((_strong.Device == null)) {
+                    if ((_strong.DeviceKey.HasValue && context.ShouldForceLoad("deviceModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityDevice _delay = null;
+                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Security.SecurityDevice>(_strong.DeviceKey);
+                        if ((_delay != null)) {
+                            _strong.Device = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "deviceModel", _strong.Device, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("deviceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "deviceModel", _strong.Device, context);
+                }
+            }
             if (context.ShouldSerialize("userModel")) {
                 if ((_strong.User == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("userModel", _strong.Key.Value))) {
+                    if ((_strong.UserKey.HasValue && context.ShouldForceLoad("userModel", _strong.Key))) {
                         SanteDB.Core.Model.Security.SecurityUser _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Security.SecurityUser>(_strong.UserKey);
                         if ((_delay != null)) {
@@ -2188,7 +2207,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "userModel", _strong.User, context);
                         }
                         else {
-                            context.RegisterMissTarget("userModel", _strong.Key.Value);
+                            context.RegisterMissTarget("userModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -2198,7 +2217,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("applicationModel")) {
                 if ((_strong.Application == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("applicationModel", _strong.Key.Value))) {
+                    if ((_strong.ApplicationKey.HasValue && context.ShouldForceLoad("applicationModel", _strong.Key))) {
                         SanteDB.Core.Model.Security.SecurityApplication _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Security.SecurityApplication>(_strong.ApplicationKey);
                         if ((_delay != null)) {
@@ -2207,7 +2226,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "applicationModel", _strong.Application, context);
                         }
                         else {
-                            context.RegisterMissTarget("applicationModel", _strong.Key.Value);
+                            context.RegisterMissTarget("applicationModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -2263,80 +2282,89 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                 }
                             }
                             else {
-                                if ("externClass".Equals(r.Value)) {
+                                if ("deviceModel".Equals(r.Value)) {
                                     r.Read();
-                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("externClass", context.JsonContext, _retVal, context));
+                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.Security.SecurityDevice), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("deviceModel", context.JsonContext, _retVal, context));
                                     if ((_instance != null)) {
-                                        _retVal.ExternalSecurityObjectRefType = ((string)(_instance));
+                                        _retVal.Device = ((SanteDB.Core.Model.Security.SecurityDevice)(_instance));
                                     }
                                 }
                                 else {
-                                    if ("extern".Equals(r.Value)) {
+                                    if ("externClass".Equals(r.Value)) {
                                         r.Read();
-                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("extern", context.JsonContext, _retVal, context));
+                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("externClass", context.JsonContext, _retVal, context));
                                         if ((_instance != null)) {
-                                            _retVal.ExternalSecurityObjectRefKey = ((System.Nullable<System.Guid>)(_instance));
+                                            _retVal.ExternalSecurityObjectRefType = ((string)(_instance));
                                         }
                                     }
                                     else {
-                                        if ("session".Equals(r.Value)) {
+                                        if ("extern".Equals(r.Value)) {
                                             r.Read();
-                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("session", context.JsonContext, _retVal, context));
+                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("extern", context.JsonContext, _retVal, context));
                                             if ((_instance != null)) {
-                                                _retVal.SessionKey = ((System.Nullable<System.Guid>)(_instance));
+                                                _retVal.ExternalSecurityObjectRefKey = ((System.Nullable<System.Guid>)(_instance));
                                             }
                                         }
                                         else {
-                                            if ("device".Equals(r.Value)) {
+                                            if ("session".Equals(r.Value)) {
                                                 r.Read();
-                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("device", context.JsonContext, _retVal, context));
+                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("session", context.JsonContext, _retVal, context));
                                                 if ((_instance != null)) {
-                                                    _retVal.DeviceKey = ((System.Nullable<System.Guid>)(_instance));
+                                                    _retVal.SessionKey = ((System.Nullable<System.Guid>)(_instance));
                                                 }
                                             }
                                             else {
-                                                if ("user".Equals(r.Value)) {
+                                                if ("device".Equals(r.Value)) {
                                                     r.Read();
-                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("user", context.JsonContext, _retVal, context));
+                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("device", context.JsonContext, _retVal, context));
                                                     if ((_instance != null)) {
-                                                        _retVal.UserKey = ((System.Nullable<System.Guid>)(_instance));
+                                                        _retVal.DeviceKey = ((System.Nullable<System.Guid>)(_instance));
                                                     }
                                                 }
                                                 else {
-                                                    if ("application".Equals(r.Value)) {
+                                                    if ("user".Equals(r.Value)) {
                                                         r.Read();
-                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("application", context.JsonContext, _retVal, context));
+                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("user", context.JsonContext, _retVal, context));
                                                         if ((_instance != null)) {
-                                                            _retVal.ApplicationKey = ((System.Nullable<System.Guid>)(_instance));
+                                                            _retVal.UserKey = ((System.Nullable<System.Guid>)(_instance));
                                                         }
                                                     }
                                                     else {
-                                                        if ("creationTime".Equals(r.Value)) {
+                                                        if ("application".Equals(r.Value)) {
                                                             r.Read();
-                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("creationTime", context.JsonContext, _retVal, context));
+                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("application", context.JsonContext, _retVal, context));
                                                             if ((_instance != null)) {
-                                                                _retVal.CreationTimeXml = ((string)(_instance));
+                                                                _retVal.ApplicationKey = ((System.Nullable<System.Guid>)(_instance));
                                                             }
                                                         }
                                                         else {
-                                                            if ("creationTimeModel".Equals(r.Value)) {
+                                                            if ("creationTime".Equals(r.Value)) {
                                                                 r.Read();
-                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.DateTimeOffset), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("creationTimeModel", context.JsonContext, _retVal, context));
+                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("creationTime", context.JsonContext, _retVal, context));
                                                                 if ((_instance != null)) {
-                                                                    _retVal.CreationTime = ((System.DateTimeOffset)(_instance));
+                                                                    _retVal.CreationTimeXml = ((string)(_instance));
                                                                 }
                                                             }
                                                             else {
-                                                                if ("$type".Equals(r.Value)) {
-                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
-                                                                    if ((_type != typeof(SanteDB.Core.Model.Security.SecurityProvenance))) {
-                                                                        SanteDB.Core.Model.Security.SecurityProvenance _nretVal = ((SanteDB.Core.Model.Security.SecurityProvenance)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
-                                                                        _nretVal.CopyObjectData(_retVal);
-                                                                        return _nretVal;
+                                                                if ("creationTimeModel".Equals(r.Value)) {
+                                                                    r.Read();
+                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.DateTimeOffset), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("creationTimeModel", context.JsonContext, _retVal, context));
+                                                                    if ((_instance != null)) {
+                                                                        _retVal.CreationTime = ((System.DateTimeOffset)(_instance));
                                                                     }
                                                                 }
                                                                 else {
-                                                                    r.Skip();
+                                                                    if ("$type".Equals(r.Value)) {
+                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                        if ((_type != typeof(SanteDB.Core.Model.Security.SecurityProvenance))) {
+                                                                            SanteDB.Core.Model.Security.SecurityProvenance _nretVal = ((SanteDB.Core.Model.Security.SecurityProvenance)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
+                                                                            _nretVal.CopyObjectData(_retVal);
+                                                                            return _nretVal;
+                                                                        }
+                                                                    }
+                                                                    else {
+                                                                        r.Skip();
+                                                                    }
                                                                 }
                                                             }
                                                         }
@@ -2605,7 +2633,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                         }
                                                                         else {
                                                                             if ("$type".Equals(r.Value)) {
-                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                 if ((_type != typeof(SanteDB.Core.Model.Security.SecurityRole))) {
                                                                                     SanteDB.Core.Model.Security.SecurityRole _nretVal = ((SanteDB.Core.Model.Security.SecurityRole)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -3080,7 +3108,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                             }
                                                                                                                             else {
                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Security.SecurityUser))) {
                                                                                                                                         SanteDB.Core.Model.Security.SecurityUser _nretVal = ((SanteDB.Core.Model.Security.SecurityUser)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -3196,7 +3224,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("genderConceptModel")) {
                 if ((_strong.GenderConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("genderConceptModel", _strong.Key.Value))) {
+                    if ((_strong.GenderConceptKey.HasValue && context.ShouldForceLoad("genderConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.GenderConceptKey);
                         if ((_delay != null)) {
@@ -3205,7 +3233,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "genderConceptModel", _strong.GenderConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("genderConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("genderConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3243,7 +3271,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("maritalStatusModel")) {
                 if ((_strong.MaritalStatus == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("maritalStatusModel", _strong.Key.Value))) {
+                    if ((_strong.MaritalStatusKey.HasValue && context.ShouldForceLoad("maritalStatusModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MaritalStatusKey);
                         if ((_delay != null)) {
@@ -3252,7 +3280,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "maritalStatusModel", _strong.MaritalStatus, context);
                         }
                         else {
-                            context.RegisterMissTarget("maritalStatusModel", _strong.Key.Value);
+                            context.RegisterMissTarget("maritalStatusModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3262,7 +3290,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("educationLevelModel")) {
                 if ((_strong.EducationLevel == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("educationLevelModel", _strong.Key.Value))) {
+                    if ((_strong.EducationLevelKey.HasValue && context.ShouldForceLoad("educationLevelModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.EducationLevelKey);
                         if ((_delay != null)) {
@@ -3271,7 +3299,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "educationLevelModel", _strong.EducationLevel, context);
                         }
                         else {
-                            context.RegisterMissTarget("educationLevelModel", _strong.Key.Value);
+                            context.RegisterMissTarget("educationLevelModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3281,7 +3309,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("livingArrangementModel")) {
                 if ((_strong.LivingArrangement == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("livingArrangementModel", _strong.Key.Value))) {
+                    if ((_strong.LivingArrangementKey.HasValue && context.ShouldForceLoad("livingArrangementModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.LivingArrangementKey);
                         if ((_delay != null)) {
@@ -3290,7 +3318,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "livingArrangementModel", _strong.LivingArrangement, context);
                         }
                         else {
-                            context.RegisterMissTarget("livingArrangementModel", _strong.Key.Value);
+                            context.RegisterMissTarget("livingArrangementModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3300,7 +3328,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("religionModel")) {
                 if ((_strong.ReligiousAffiliation == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("religionModel", _strong.Key.Value))) {
+                    if ((_strong.ReligiousAffiliationKey.HasValue && context.ShouldForceLoad("religionModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReligiousAffiliationKey);
                         if ((_delay != null)) {
@@ -3309,7 +3337,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "religionModel", _strong.ReligiousAffiliation, context);
                         }
                         else {
-                            context.RegisterMissTarget("religionModel", _strong.Key.Value);
+                            context.RegisterMissTarget("religionModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3326,7 +3354,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("ethnicityModel")) {
                 if ((_strong.EthnicGroup == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("ethnicityModel", _strong.Key.Value))) {
+                    if ((_strong.EthnicGroupCodeKey.HasValue && context.ShouldForceLoad("ethnicityModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.EthnicGroupCodeKey);
                         if ((_delay != null)) {
@@ -3335,7 +3363,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "ethnicityModel", _strong.EthnicGroup, context);
                         }
                         else {
-                            context.RegisterMissTarget("ethnicityModel", _strong.Key.Value);
+                            context.RegisterMissTarget("ethnicityModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3369,7 +3397,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "language", _strong.LanguageCommunication, context);
                         }
                         else {
-                            context.RegisterMissTarget("language", _strong.Key.Value);
+                            context.RegisterMissTarget("language", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3389,7 +3417,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "address", _strong.Addresses, context);
                         }
                         else {
-                            context.RegisterMissTarget("address", _strong.Key.Value);
+                            context.RegisterMissTarget("address", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3399,7 +3427,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -3408,7 +3436,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3425,7 +3453,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("creationActModel")) {
                 if ((_strong.CreationAct == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key.Value))) {
+                    if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
                         if ((_delay != null)) {
@@ -3434,7 +3462,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
                         }
                         else {
-                            context.RegisterMissTarget("creationActModel", _strong.Key.Value);
+                            context.RegisterMissTarget("creationActModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3451,7 +3479,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("determinerConceptModel")) {
                 if ((_strong.DeterminerConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key.Value))) {
+                    if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
                         if ((_delay != null)) {
@@ -3460,7 +3488,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "determinerConceptModel", _strong.DeterminerConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3487,7 +3515,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3507,7 +3535,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3527,7 +3555,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "name", _strong.Names, context);
                         }
                         else {
-                            context.RegisterMissTarget("name", _strong.Key.Value);
+                            context.RegisterMissTarget("name", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3547,7 +3575,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3567,7 +3595,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3587,7 +3615,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3597,7 +3625,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -3606,7 +3634,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3633,7 +3661,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3653,7 +3681,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "telecom", _strong.Telecoms, context);
                         }
                         else {
-                            context.RegisterMissTarget("telecom", _strong.Key.Value);
+                            context.RegisterMissTarget("telecom", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3670,7 +3698,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -3679,7 +3707,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3689,7 +3717,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -3698,7 +3726,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -3725,7 +3753,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -4238,7 +4266,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                                                 }
                                                                                                                                                                                                                                 else {
                                                                                                                                                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Roles.Patient))) {
                                                                                                                                                                                                                                             SanteDB.Core.Model.Roles.Patient _nretVal = ((SanteDB.Core.Model.Roles.Patient)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -4358,7 +4386,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("providerSpecialtyModel")) {
                 if ((_strong.ProviderSpecialty == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("providerSpecialtyModel", _strong.Key.Value))) {
+                    if ((_strong.ProviderSpecialtyKey.HasValue && context.ShouldForceLoad("providerSpecialtyModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ProviderSpecialtyKey);
                         if ((_delay != null)) {
@@ -4367,7 +4395,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "providerSpecialtyModel", _strong.ProviderSpecialty, context);
                         }
                         else {
-                            context.RegisterMissTarget("providerSpecialtyModel", _strong.Key.Value);
+                            context.RegisterMissTarget("providerSpecialtyModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -4401,7 +4429,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "language", _strong.LanguageCommunication, context);
                         }
                         else {
-                            context.RegisterMissTarget("language", _strong.Key.Value);
+                            context.RegisterMissTarget("language", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -4421,7 +4449,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "address", _strong.Addresses, context);
                         }
                         else {
-                            context.RegisterMissTarget("address", _strong.Key.Value);
+                            context.RegisterMissTarget("address", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -4431,7 +4459,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -4440,7 +4468,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -4457,7 +4485,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("creationActModel")) {
                 if ((_strong.CreationAct == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key.Value))) {
+                    if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
                         if ((_delay != null)) {
@@ -4466,7 +4494,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
                         }
                         else {
-                            context.RegisterMissTarget("creationActModel", _strong.Key.Value);
+                            context.RegisterMissTarget("creationActModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -4483,7 +4511,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("determinerConceptModel")) {
                 if ((_strong.DeterminerConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key.Value))) {
+                    if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
                         if ((_delay != null)) {
@@ -4492,7 +4520,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "determinerConceptModel", _strong.DeterminerConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -4519,7 +4547,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -4539,7 +4567,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -4559,7 +4587,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "name", _strong.Names, context);
                         }
                         else {
-                            context.RegisterMissTarget("name", _strong.Key.Value);
+                            context.RegisterMissTarget("name", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -4579,7 +4607,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -4599,7 +4627,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -4619,7 +4647,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -4629,7 +4657,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -4638,7 +4666,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -4665,7 +4693,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -4685,7 +4713,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "telecom", _strong.Telecoms, context);
                         }
                         else {
-                            context.RegisterMissTarget("telecom", _strong.Key.Value);
+                            context.RegisterMissTarget("telecom", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -4702,7 +4730,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -4711,7 +4739,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -4721,7 +4749,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -4730,7 +4758,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -4757,7 +4785,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -5166,7 +5194,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                             }
                                                                                                                                                                             else {
                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Roles.Provider))) {
                                                                                                                                                                                         SanteDB.Core.Model.Roles.Provider _nretVal = ((SanteDB.Core.Model.Roles.Provider)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -5449,7 +5477,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                 }
                                                                 else {
                                                                     if ("$type".Equals(r.Value)) {
-                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                         if ((_type != typeof(SanteDB.Core.Model.Patch.Patch))) {
                                                                             SanteDB.Core.Model.Patch.Patch _nretVal = ((SanteDB.Core.Model.Patch.Patch)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                             _nretVal.CopyObjectData(_retVal);
@@ -5543,7 +5571,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("capTypeConceptModel")) {
                 if ((_strong.CapTypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("capTypeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.CapTypeConceptKey.HasValue && context.ShouldForceLoad("capTypeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.CapTypeConceptKey);
                         if ((_delay != null)) {
@@ -5552,7 +5580,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "capTypeConceptModel", _strong.CapTypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("capTypeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("capTypeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -5583,7 +5611,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("separatorTypeConceptModel")) {
                 if ((_strong.SeparatorTypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("separatorTypeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.SeparatorTypeConceptKey.HasValue && context.ShouldForceLoad("separatorTypeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.SeparatorTypeConceptKey);
                         if ((_delay != null)) {
@@ -5592,7 +5620,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "separatorTypeConceptModel", _strong.SeparatorTypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("separatorTypeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("separatorTypeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -5623,7 +5651,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("formConceptModel")) {
                 if ((_strong.FormConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("formConceptModel", _strong.Key.Value))) {
+                    if ((_strong.FormConceptKey.HasValue && context.ShouldForceLoad("formConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.FormConceptKey);
                         if ((_delay != null)) {
@@ -5632,7 +5660,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "formConceptModel", _strong.FormConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("formConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("formConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -5663,7 +5691,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("quantityConceptModel")) {
                 if ((_strong.QuantityConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("quantityConceptModel", _strong.Key.Value))) {
+                    if ((_strong.QuantityConceptKey.HasValue && context.ShouldForceLoad("quantityConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.QuantityConceptKey);
                         if ((_delay != null)) {
@@ -5672,7 +5700,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "quantityConceptModel", _strong.QuantityConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("quantityConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("quantityConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -5699,7 +5727,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "address", _strong.Addresses, context);
                         }
                         else {
-                            context.RegisterMissTarget("address", _strong.Key.Value);
+                            context.RegisterMissTarget("address", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -5709,7 +5737,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -5718,7 +5746,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -5735,7 +5763,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("creationActModel")) {
                 if ((_strong.CreationAct == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key.Value))) {
+                    if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
                         if ((_delay != null)) {
@@ -5744,7 +5772,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
                         }
                         else {
-                            context.RegisterMissTarget("creationActModel", _strong.Key.Value);
+                            context.RegisterMissTarget("creationActModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -5761,7 +5789,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("determinerConceptModel")) {
                 if ((_strong.DeterminerConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key.Value))) {
+                    if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
                         if ((_delay != null)) {
@@ -5770,7 +5798,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "determinerConceptModel", _strong.DeterminerConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -5797,7 +5825,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -5817,7 +5845,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -5837,7 +5865,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "name", _strong.Names, context);
                         }
                         else {
-                            context.RegisterMissTarget("name", _strong.Key.Value);
+                            context.RegisterMissTarget("name", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -5857,7 +5885,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -5877,7 +5905,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -5897,7 +5925,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -5907,7 +5935,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -5916,7 +5944,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -5943,7 +5971,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -5963,7 +5991,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "telecom", _strong.Telecoms, context);
                         }
                         else {
-                            context.RegisterMissTarget("telecom", _strong.Key.Value);
+                            context.RegisterMissTarget("telecom", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -5980,7 +6008,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -5989,7 +6017,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -5999,7 +6027,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -6008,7 +6036,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -6035,7 +6063,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -6540,7 +6568,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                                             }
                                                                                                                                                                                                                             else {
                                                                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Entities.Container))) {
                                                                                                                                                                                                                                         SanteDB.Core.Model.Entities.Container _nretVal = ((SanteDB.Core.Model.Entities.Container)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -6683,7 +6711,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "language", _strong.LanguageCommunication, context);
                         }
                         else {
-                            context.RegisterMissTarget("language", _strong.Key.Value);
+                            context.RegisterMissTarget("language", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -6703,7 +6731,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "address", _strong.Addresses, context);
                         }
                         else {
-                            context.RegisterMissTarget("address", _strong.Key.Value);
+                            context.RegisterMissTarget("address", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -6713,7 +6741,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -6722,7 +6750,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -6739,7 +6767,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("creationActModel")) {
                 if ((_strong.CreationAct == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key.Value))) {
+                    if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
                         if ((_delay != null)) {
@@ -6748,7 +6776,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
                         }
                         else {
-                            context.RegisterMissTarget("creationActModel", _strong.Key.Value);
+                            context.RegisterMissTarget("creationActModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -6765,7 +6793,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("determinerConceptModel")) {
                 if ((_strong.DeterminerConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key.Value))) {
+                    if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
                         if ((_delay != null)) {
@@ -6774,7 +6802,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "determinerConceptModel", _strong.DeterminerConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -6801,7 +6829,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -6821,7 +6849,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -6841,7 +6869,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "name", _strong.Names, context);
                         }
                         else {
-                            context.RegisterMissTarget("name", _strong.Key.Value);
+                            context.RegisterMissTarget("name", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -6861,7 +6889,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -6881,7 +6909,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -6901,7 +6929,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -6911,7 +6939,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -6920,7 +6948,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -6947,7 +6975,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -6967,7 +6995,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "telecom", _strong.Telecoms, context);
                         }
                         else {
-                            context.RegisterMissTarget("telecom", _strong.Key.Value);
+                            context.RegisterMissTarget("telecom", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -6984,7 +7012,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -6993,7 +7021,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -7003,7 +7031,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -7012,7 +7040,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -7039,7 +7067,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -7448,7 +7476,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                             }
                                                                                                                                                                             else {
                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Entities.UserEntity))) {
                                                                                                                                                                                         SanteDB.Core.Model.Entities.UserEntity _nretVal = ((SanteDB.Core.Model.Entities.UserEntity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -7548,7 +7576,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("securityApplicationModel")) {
                 if ((_strong.SecurityApplication == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("securityApplicationModel", _strong.Key.Value))) {
+                    if ((_strong.SecurityApplicationKey.HasValue && context.ShouldForceLoad("securityApplicationModel", _strong.Key))) {
                         SanteDB.Core.Model.Security.SecurityApplication _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Security.SecurityApplication>(_strong.SecurityApplicationKey);
                         if ((_delay != null)) {
@@ -7557,7 +7585,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "securityApplicationModel", _strong.SecurityApplication, context);
                         }
                         else {
-                            context.RegisterMissTarget("securityApplicationModel", _strong.Key.Value);
+                            context.RegisterMissTarget("securityApplicationModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -7605,7 +7633,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "address", _strong.Addresses, context);
                         }
                         else {
-                            context.RegisterMissTarget("address", _strong.Key.Value);
+                            context.RegisterMissTarget("address", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -7615,7 +7643,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -7624,7 +7652,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -7641,7 +7669,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("creationActModel")) {
                 if ((_strong.CreationAct == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key.Value))) {
+                    if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
                         if ((_delay != null)) {
@@ -7650,7 +7678,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
                         }
                         else {
-                            context.RegisterMissTarget("creationActModel", _strong.Key.Value);
+                            context.RegisterMissTarget("creationActModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -7667,7 +7695,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("determinerConceptModel")) {
                 if ((_strong.DeterminerConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key.Value))) {
+                    if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
                         if ((_delay != null)) {
@@ -7676,7 +7704,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "determinerConceptModel", _strong.DeterminerConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -7703,7 +7731,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -7723,7 +7751,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -7743,7 +7771,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "name", _strong.Names, context);
                         }
                         else {
-                            context.RegisterMissTarget("name", _strong.Key.Value);
+                            context.RegisterMissTarget("name", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -7763,7 +7791,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -7783,7 +7811,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -7803,7 +7831,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -7813,7 +7841,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -7822,7 +7850,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -7849,7 +7877,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -7869,7 +7897,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "telecom", _strong.Telecoms, context);
                         }
                         else {
-                            context.RegisterMissTarget("telecom", _strong.Key.Value);
+                            context.RegisterMissTarget("telecom", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -7886,7 +7914,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -7895,7 +7923,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -7905,7 +7933,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -7914,7 +7942,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -7941,7 +7969,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -8350,7 +8378,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                             }
                                                                                                                                                                             else {
                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Entities.ApplicationEntity))) {
                                                                                                                                                                                         SanteDB.Core.Model.Entities.ApplicationEntity _nretVal = ((SanteDB.Core.Model.Entities.ApplicationEntity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -8464,7 +8492,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("securityDeviceModel")) {
                 if ((_strong.SecurityDevice == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("securityDeviceModel", _strong.Key.Value))) {
+                    if ((_strong.SecurityDeviceKey.HasValue && context.ShouldForceLoad("securityDeviceModel", _strong.Key))) {
                         SanteDB.Core.Model.Security.SecurityDevice _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Security.SecurityDevice>(_strong.SecurityDeviceKey);
                         if ((_delay != null)) {
@@ -8473,7 +8501,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "securityDeviceModel", _strong.SecurityDevice, context);
                         }
                         else {
-                            context.RegisterMissTarget("securityDeviceModel", _strong.Key.Value);
+                            context.RegisterMissTarget("securityDeviceModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -8507,7 +8535,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "address", _strong.Addresses, context);
                         }
                         else {
-                            context.RegisterMissTarget("address", _strong.Key.Value);
+                            context.RegisterMissTarget("address", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -8517,7 +8545,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -8526,7 +8554,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -8543,7 +8571,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("creationActModel")) {
                 if ((_strong.CreationAct == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key.Value))) {
+                    if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
                         if ((_delay != null)) {
@@ -8552,7 +8580,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
                         }
                         else {
-                            context.RegisterMissTarget("creationActModel", _strong.Key.Value);
+                            context.RegisterMissTarget("creationActModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -8569,7 +8597,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("determinerConceptModel")) {
                 if ((_strong.DeterminerConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key.Value))) {
+                    if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
                         if ((_delay != null)) {
@@ -8578,7 +8606,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "determinerConceptModel", _strong.DeterminerConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -8605,7 +8633,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -8625,7 +8653,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -8645,7 +8673,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "name", _strong.Names, context);
                         }
                         else {
-                            context.RegisterMissTarget("name", _strong.Key.Value);
+                            context.RegisterMissTarget("name", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -8665,7 +8693,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -8685,7 +8713,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -8705,7 +8733,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -8715,7 +8743,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -8724,7 +8752,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -8751,7 +8779,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -8771,7 +8799,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "telecom", _strong.Telecoms, context);
                         }
                         else {
-                            context.RegisterMissTarget("telecom", _strong.Key.Value);
+                            context.RegisterMissTarget("telecom", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -8788,7 +8816,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -8797,7 +8825,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -8807,7 +8835,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -8816,7 +8844,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -8843,7 +8871,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -9252,7 +9280,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                             }
                                                                                                                                                                             else {
                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Entities.DeviceEntity))) {
                                                                                                                                                                                         SanteDB.Core.Model.Entities.DeviceEntity _nretVal = ((SanteDB.Core.Model.Entities.DeviceEntity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -9362,7 +9390,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "address", _strong.Addresses, context);
                         }
                         else {
-                            context.RegisterMissTarget("address", _strong.Key.Value);
+                            context.RegisterMissTarget("address", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -9372,7 +9400,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -9381,7 +9409,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -9398,7 +9426,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("creationActModel")) {
                 if ((_strong.CreationAct == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key.Value))) {
+                    if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
                         if ((_delay != null)) {
@@ -9407,7 +9435,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
                         }
                         else {
-                            context.RegisterMissTarget("creationActModel", _strong.Key.Value);
+                            context.RegisterMissTarget("creationActModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -9424,7 +9452,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("determinerConceptModel")) {
                 if ((_strong.DeterminerConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key.Value))) {
+                    if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
                         if ((_delay != null)) {
@@ -9433,7 +9461,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "determinerConceptModel", _strong.DeterminerConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -9460,7 +9488,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -9480,7 +9508,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -9500,7 +9528,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "name", _strong.Names, context);
                         }
                         else {
-                            context.RegisterMissTarget("name", _strong.Key.Value);
+                            context.RegisterMissTarget("name", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -9520,7 +9548,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -9540,7 +9568,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -9560,7 +9588,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -9570,7 +9598,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -9579,7 +9607,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -9606,7 +9634,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -9626,7 +9654,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "telecom", _strong.Telecoms, context);
                         }
                         else {
-                            context.RegisterMissTarget("telecom", _strong.Key.Value);
+                            context.RegisterMissTarget("telecom", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -9643,7 +9671,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -9652,7 +9680,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -9662,7 +9690,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -9671,7 +9699,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -9698,7 +9726,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -9898,176 +9926,176 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                         }
                                                                     }
                                                                     else {
-                                                                        if ("typeConceptModel".Equals(r.Value)) {
+                                                                        if ("typeConcept".Equals(r.Value)) {
                                                                             r.Read();
-                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("typeConceptModel", context.JsonContext, _retVal, context));
+                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("typeConcept", context.JsonContext, _retVal, context));
                                                                             if ((_instance != null)) {
-                                                                                _retVal.TypeConcept = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                _retVal.TypeConceptKey = ((System.Nullable<System.Guid>)(_instance));
                                                                             }
                                                                         }
                                                                         else {
-                                                                            if ("templateModel".Equals(r.Value)) {
+                                                                            if ("typeConceptModel".Equals(r.Value)) {
                                                                                 r.Read();
-                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.TemplateDefinition), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("templateModel", context.JsonContext, _retVal, context));
+                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("typeConceptModel", context.JsonContext, _retVal, context));
                                                                                 if ((_instance != null)) {
-                                                                                    _retVal.Template = ((SanteDB.Core.Model.DataTypes.TemplateDefinition)(_instance));
+                                                                                    _retVal.TypeConcept = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                 }
                                                                             }
                                                                             else {
-                                                                                if ("telecom".Equals(r.Value)) {
+                                                                                if ("templateModel".Equals(r.Value)) {
                                                                                     r.Read();
-                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("telecom", context.JsonContext, _retVal, context));
+                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.TemplateDefinition), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("templateModel", context.JsonContext, _retVal, context));
                                                                                     if ((_instance != null)) {
-                                                                                        _retVal.Telecoms = ((System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress>)(_instance));
+                                                                                        _retVal.Template = ((SanteDB.Core.Model.DataTypes.TemplateDefinition)(_instance));
                                                                                     }
                                                                                 }
                                                                                 else {
-                                                                                    if ("tag".Equals(r.Value)) {
+                                                                                    if ("template".Equals(r.Value)) {
                                                                                         r.Read();
-                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("tag", context.JsonContext, _retVal, context));
+                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("template", context.JsonContext, _retVal, context));
                                                                                         if ((_instance != null)) {
-                                                                                            _retVal.Tags = ((System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag>)(_instance));
+                                                                                            _retVal.TemplateKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                         }
                                                                                     }
                                                                                     else {
-                                                                                        if ("statusConceptModel".Equals(r.Value)) {
+                                                                                        if ("telecom".Equals(r.Value)) {
                                                                                             r.Read();
-                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("statusConceptModel", context.JsonContext, _retVal, context));
+                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("telecom", context.JsonContext, _retVal, context));
                                                                                             if ((_instance != null)) {
-                                                                                                _retVal.StatusConcept = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                _retVal.Telecoms = ((System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress>)(_instance));
                                                                                             }
                                                                                         }
                                                                                         else {
-                                                                                            if ("relationship".Equals(r.Value)) {
+                                                                                            if ("tag".Equals(r.Value)) {
                                                                                                 r.Read();
-                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("relationship", context.JsonContext, _retVal, context));
+                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("tag", context.JsonContext, _retVal, context));
                                                                                                 if ((_instance != null)) {
-                                                                                                    _retVal.Relationships = ((System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship>)(_instance));
+                                                                                                    _retVal.Tags = ((System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag>)(_instance));
                                                                                                 }
                                                                                             }
                                                                                             else {
-                                                                                                if ("participation".Equals(r.Value)) {
+                                                                                                if ("statusConcept".Equals(r.Value)) {
                                                                                                     r.Read();
-                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("participation", context.JsonContext, _retVal, context));
+                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("statusConcept", context.JsonContext, _retVal, context));
                                                                                                     if ((_instance != null)) {
-                                                                                                        _retVal.Participations = ((System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>)(_instance));
+                                                                                                        _retVal.StatusConceptKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                     }
                                                                                                 }
                                                                                                 else {
-                                                                                                    if ("note".Equals(r.Value)) {
+                                                                                                    if ("statusConceptModel".Equals(r.Value)) {
                                                                                                         r.Read();
-                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("note", context.JsonContext, _retVal, context));
+                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("statusConceptModel", context.JsonContext, _retVal, context));
                                                                                                         if ((_instance != null)) {
-                                                                                                            _retVal.Notes = ((System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote>)(_instance));
+                                                                                                            _retVal.StatusConcept = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                         }
                                                                                                     }
                                                                                                     else {
-                                                                                                        if ("name".Equals(r.Value)) {
+                                                                                                        if ("relationship".Equals(r.Value)) {
                                                                                                             r.Read();
-                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("name", context.JsonContext, _retVal, context));
+                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("relationship", context.JsonContext, _retVal, context));
                                                                                                             if ((_instance != null)) {
-                                                                                                                _retVal.Names = ((System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName>)(_instance));
+                                                                                                                _retVal.Relationships = ((System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship>)(_instance));
                                                                                                             }
                                                                                                         }
                                                                                                         else {
-                                                                                                            if ("identifier".Equals(r.Value)) {
+                                                                                                            if ("participation".Equals(r.Value)) {
                                                                                                                 r.Read();
-                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("identifier", context.JsonContext, _retVal, context));
+                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("participation", context.JsonContext, _retVal, context));
                                                                                                                 if ((_instance != null)) {
-                                                                                                                    _retVal.Identifiers = ((System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier>)(_instance));
+                                                                                                                    _retVal.Participations = ((System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>)(_instance));
                                                                                                                 }
                                                                                                             }
                                                                                                             else {
-                                                                                                                if ("extension".Equals(r.Value)) {
+                                                                                                                if ("note".Equals(r.Value)) {
                                                                                                                     r.Read();
-                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("extension", context.JsonContext, _retVal, context));
+                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("note", context.JsonContext, _retVal, context));
                                                                                                                     if ((_instance != null)) {
-                                                                                                                        _retVal.Extensions = ((System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension>)(_instance));
+                                                                                                                        _retVal.Notes = ((System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote>)(_instance));
                                                                                                                     }
                                                                                                                 }
                                                                                                                 else {
-                                                                                                                    if ("determinerConceptModel".Equals(r.Value)) {
+                                                                                                                    if ("name".Equals(r.Value)) {
                                                                                                                         r.Read();
-                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("determinerConceptModel", context.JsonContext, _retVal, context));
+                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("name", context.JsonContext, _retVal, context));
                                                                                                                         if ((_instance != null)) {
-                                                                                                                            _retVal.DeterminerConcept = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                            _retVal.Names = ((System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName>)(_instance));
                                                                                                                         }
                                                                                                                     }
                                                                                                                     else {
-                                                                                                                        if ("creationActModel".Equals(r.Value)) {
+                                                                                                                        if ("identifier".Equals(r.Value)) {
                                                                                                                             r.Read();
-                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.Acts.Act), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("creationActModel", context.JsonContext, _retVal, context));
+                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("identifier", context.JsonContext, _retVal, context));
                                                                                                                             if ((_instance != null)) {
-                                                                                                                                _retVal.CreationAct = ((SanteDB.Core.Model.Acts.Act)(_instance));
+                                                                                                                                _retVal.Identifiers = ((System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier>)(_instance));
                                                                                                                             }
                                                                                                                         }
                                                                                                                         else {
-                                                                                                                            if ("classConceptModel".Equals(r.Value)) {
+                                                                                                                            if ("extension".Equals(r.Value)) {
                                                                                                                                 r.Read();
-                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("classConceptModel", context.JsonContext, _retVal, context));
+                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("extension", context.JsonContext, _retVal, context));
                                                                                                                                 if ((_instance != null)) {
-                                                                                                                                    _retVal.ClassConcept = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                                    _retVal.Extensions = ((System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension>)(_instance));
                                                                                                                                 }
                                                                                                                             }
                                                                                                                             else {
-                                                                                                                                if ("address".Equals(r.Value)) {
+                                                                                                                                if ("determinerConcept".Equals(r.Value)) {
                                                                                                                                     r.Read();
-                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("address", context.JsonContext, _retVal, context));
+                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("determinerConcept", context.JsonContext, _retVal, context));
                                                                                                                                     if ((_instance != null)) {
-                                                                                                                                        _retVal.Addresses = ((System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress>)(_instance));
+                                                                                                                                        _retVal.DeterminerConceptKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                     }
                                                                                                                                 }
                                                                                                                                 else {
-                                                                                                                                    if ("typeConcept".Equals(r.Value)) {
+                                                                                                                                    if ("determinerConceptModel".Equals(r.Value)) {
                                                                                                                                         r.Read();
-                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("typeConcept", context.JsonContext, _retVal, context));
+                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("determinerConceptModel", context.JsonContext, _retVal, context));
                                                                                                                                         if ((_instance != null)) {
-                                                                                                                                            _retVal.TypeConceptKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                            _retVal.DeterminerConcept = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                         }
                                                                                                                                     }
                                                                                                                                     else {
-                                                                                                                                        if ("template".Equals(r.Value)) {
+                                                                                                                                        if ("creationAct".Equals(r.Value)) {
                                                                                                                                             r.Read();
-                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("template", context.JsonContext, _retVal, context));
+                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("creationAct", context.JsonContext, _retVal, context));
                                                                                                                                             if ((_instance != null)) {
-                                                                                                                                                _retVal.TemplateKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                _retVal.CreationActKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                             }
                                                                                                                                         }
                                                                                                                                         else {
-                                                                                                                                            if ("statusConcept".Equals(r.Value)) {
+                                                                                                                                            if ("creationActModel".Equals(r.Value)) {
                                                                                                                                                 r.Read();
-                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("statusConcept", context.JsonContext, _retVal, context));
+                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.Acts.Act), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("creationActModel", context.JsonContext, _retVal, context));
                                                                                                                                                 if ((_instance != null)) {
-                                                                                                                                                    _retVal.StatusConceptKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                    _retVal.CreationAct = ((SanteDB.Core.Model.Acts.Act)(_instance));
                                                                                                                                                 }
                                                                                                                                             }
                                                                                                                                             else {
-                                                                                                                                                if ("determinerConcept".Equals(r.Value)) {
+                                                                                                                                                if ("classConcept".Equals(r.Value)) {
                                                                                                                                                     r.Read();
-                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("determinerConcept", context.JsonContext, _retVal, context));
+                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("classConcept", context.JsonContext, _retVal, context));
                                                                                                                                                     if ((_instance != null)) {
-                                                                                                                                                        _retVal.DeterminerConceptKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                        _retVal.ClassConceptKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                     }
                                                                                                                                                 }
                                                                                                                                                 else {
-                                                                                                                                                    if ("creationAct".Equals(r.Value)) {
+                                                                                                                                                    if ("classConceptModel".Equals(r.Value)) {
                                                                                                                                                         r.Read();
-                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("creationAct", context.JsonContext, _retVal, context));
+                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("classConceptModel", context.JsonContext, _retVal, context));
                                                                                                                                                         if ((_instance != null)) {
-                                                                                                                                                            _retVal.CreationActKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                            _retVal.ClassConcept = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                         }
                                                                                                                                                     }
                                                                                                                                                     else {
-                                                                                                                                                        if ("classConcept".Equals(r.Value)) {
+                                                                                                                                                        if ("address".Equals(r.Value)) {
                                                                                                                                                             r.Read();
-                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("classConcept", context.JsonContext, _retVal, context));
+                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("address", context.JsonContext, _retVal, context));
                                                                                                                                                             if ((_instance != null)) {
-                                                                                                                                                                _retVal.ClassConceptKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                _retVal.Addresses = ((System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress>)(_instance));
                                                                                                                                                             }
                                                                                                                                                         }
                                                                                                                                                         else {
                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Entities.Entity))) {
                                                                                                                                                                     SanteDB.Core.Model.Entities.Entity _nretVal = ((SanteDB.Core.Model.Entities.Entity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -10162,7 +10190,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("useModel")) {
                 if ((_strong.AddressUse == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("useModel", _strong.Key.Value))) {
+                    if ((_strong.AddressUseKey.HasValue && context.ShouldForceLoad("useModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.AddressUseKey);
                         if ((_delay != null)) {
@@ -10171,7 +10199,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "useModel", _strong.AddressUse, context);
                         }
                         else {
-                            context.RegisterMissTarget("useModel", _strong.Key.Value);
+                            context.RegisterMissTarget("useModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -10198,7 +10226,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "component", _strong.Component, context);
                         }
                         else {
-                            context.RegisterMissTarget("component", _strong.Key.Value);
+                            context.RegisterMissTarget("component", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -10323,7 +10351,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                 }
                                                 else {
                                                     if ("$type".Equals(r.Value)) {
-                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                         if ((_type != typeof(SanteDB.Core.Model.Entities.EntityAddress))) {
                                                             SanteDB.Core.Model.Entities.EntityAddress _nretVal = ((SanteDB.Core.Model.Entities.EntityAddress)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                             _nretVal.CopyObjectData(_retVal);
@@ -10399,7 +10427,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeModel")) {
                 if ((_strong.ComponentType == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeModel", _strong.Key.Value))) {
+                    if ((_strong.ComponentTypeKey.HasValue && context.ShouldForceLoad("typeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ComponentTypeKey);
                         if ((_delay != null)) {
@@ -10408,7 +10436,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeModel", _strong.ComponentType, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -10510,7 +10538,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                         }
                                         else {
                                             if ("$type".Equals(r.Value)) {
-                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                 if ((_type != typeof(SanteDB.Core.Model.Entities.EntityAddressComponent))) {
                                                     SanteDB.Core.Model.Entities.EntityAddressComponent _nretVal = ((SanteDB.Core.Model.Entities.EntityAddressComponent)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                     _nretVal.CopyObjectData(_retVal);
@@ -10611,7 +10639,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "component", _strong.Component, context);
                         }
                         else {
-                            context.RegisterMissTarget("component", _strong.Key.Value);
+                            context.RegisterMissTarget("component", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -10621,7 +10649,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("useModel")) {
                 if ((_strong.NameUse == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("useModel", _strong.Key.Value))) {
+                    if ((_strong.NameUseKey.HasValue && context.ShouldForceLoad("useModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.NameUseKey);
                         if ((_delay != null)) {
@@ -10630,7 +10658,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "useModel", _strong.NameUse, context);
                         }
                         else {
-                            context.RegisterMissTarget("useModel", _strong.Key.Value);
+                            context.RegisterMissTarget("useModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -10762,7 +10790,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                 }
                                                 else {
                                                     if ("$type".Equals(r.Value)) {
-                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                         if ((_type != typeof(SanteDB.Core.Model.Entities.EntityName))) {
                                                             SanteDB.Core.Model.Entities.EntityName _nretVal = ((SanteDB.Core.Model.Entities.EntityName)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                             _nretVal.CopyObjectData(_retVal);
@@ -10838,7 +10866,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("phoneticAlgorithmModel")) {
                 if ((_strong.PhoneticAlgorithm == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("phoneticAlgorithmModel", _strong.Key.Value))) {
+                    if ((_strong.PhoneticAlgorithmKey.HasValue && context.ShouldForceLoad("phoneticAlgorithmModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.PhoneticAlgorithm _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.PhoneticAlgorithm>(_strong.PhoneticAlgorithmKey);
                         if ((_delay != null)) {
@@ -10847,7 +10875,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "phoneticAlgorithmModel", _strong.PhoneticAlgorithm, context);
                         }
                         else {
-                            context.RegisterMissTarget("phoneticAlgorithmModel", _strong.Key.Value);
+                            context.RegisterMissTarget("phoneticAlgorithmModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -10871,7 +10899,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeModel")) {
                 if ((_strong.ComponentType == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeModel", _strong.Key.Value))) {
+                    if ((_strong.ComponentTypeKey.HasValue && context.ShouldForceLoad("typeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ComponentTypeKey);
                         if ((_delay != null)) {
@@ -10880,7 +10908,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeModel", _strong.ComponentType, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -11006,7 +11034,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                     }
                                                     else {
                                                         if ("$type".Equals(r.Value)) {
-                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                             if ((_type != typeof(SanteDB.Core.Model.Entities.EntityNameComponent))) {
                                                                 SanteDB.Core.Model.Entities.EntityNameComponent _nretVal = ((SanteDB.Core.Model.Entities.EntityNameComponent)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                 _nretVal.CopyObjectData(_retVal);
@@ -11121,7 +11149,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("relationshipTypeModel")) {
                 if ((_strong.RelationshipType == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("relationshipTypeModel", _strong.Key.Value))) {
+                    if ((_strong.RelationshipTypeKey.HasValue && context.ShouldForceLoad("relationshipTypeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.RelationshipTypeKey);
                         if ((_delay != null)) {
@@ -11130,7 +11158,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationshipTypeModel", _strong.RelationshipType, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationshipTypeModel", _strong.Key.Value);
+                            context.RegisterMissTarget("relationshipTypeModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -11147,7 +11175,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("targetModel")) {
                 if ((_strong.TargetEntity == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("targetModel", _strong.Key.Value))) {
+                    if ((_strong.TargetEntityKey.HasValue && context.ShouldForceLoad("targetModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Entities.Entity>(_strong.TargetEntityKey);
                         if ((_delay != null)) {
@@ -11156,7 +11184,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "targetModel", _strong.TargetEntity, context);
                         }
                         else {
-                            context.RegisterMissTarget("targetModel", _strong.Key.Value);
+                            context.RegisterMissTarget("targetModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -11328,7 +11356,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                     }
                                                                     else {
                                                                         if ("$type".Equals(r.Value)) {
-                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                             if ((_type != typeof(SanteDB.Core.Model.Entities.EntityRelationship))) {
                                                                                 SanteDB.Core.Model.Entities.EntityRelationship _nretVal = ((SanteDB.Core.Model.Entities.EntityRelationship)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -11402,7 +11430,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("useModel")) {
                 if ((_strong.AddressUse == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("useModel", _strong.Key.Value))) {
+                    if ((_strong.AddressUseKey.HasValue && context.ShouldForceLoad("useModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.AddressUseKey);
                         if ((_delay != null)) {
@@ -11411,7 +11439,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "useModel", _strong.AddressUse, context);
                         }
                         else {
-                            context.RegisterMissTarget("useModel", _strong.Key.Value);
+                            context.RegisterMissTarget("useModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -11424,6 +11452,32 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
                 else {
                     context.JsonContext.WritePropertyUtil(w, "use", _strong.AddressUseKey, context);
+                }
+            }
+            if (context.ShouldSerialize("typeModel")) {
+                if ((_strong.TypeConcept == null)) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeModel", _strong.Key))) {
+                        SanteDB.Core.Model.DataTypes.Concept _delay = null;
+                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        if ((_delay != null)) {
+                            _strong.TypeConcept = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "typeModel", _strong.TypeConcept, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("typeModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "typeModel", _strong.TypeConcept, context);
+                }
+            }
+            if (context.ShouldSerialize("type")) {
+                if ((_strong.TypeConceptKey == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "type", _strong.TypeConceptKey, context);
                 }
             }
             if (context.ShouldSerialize("value")) {
@@ -11533,32 +11587,50 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                             }
                                         }
                                         else {
-                                            if ("use".Equals(r.Value)) {
+                                            if ("type".Equals(r.Value)) {
                                                 r.Read();
-                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("use", context.JsonContext, _retVal, context));
+                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("type", context.JsonContext, _retVal, context));
                                                 if ((_instance != null)) {
-                                                    _retVal.AddressUseKey = ((System.Nullable<System.Guid>)(_instance));
+                                                    _retVal.TypeConceptKey = ((System.Nullable<System.Guid>)(_instance));
                                                 }
                                             }
                                             else {
-                                                if ("useModel".Equals(r.Value)) {
+                                                if ("typeModel".Equals(r.Value)) {
                                                     r.Read();
-                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("useModel", context.JsonContext, _retVal, context));
+                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("typeModel", context.JsonContext, _retVal, context));
                                                     if ((_instance != null)) {
-                                                        _retVal.AddressUse = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                        _retVal.TypeConcept = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                     }
                                                 }
                                                 else {
-                                                    if ("$type".Equals(r.Value)) {
-                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
-                                                        if ((_type != typeof(SanteDB.Core.Model.Entities.EntityTelecomAddress))) {
-                                                            SanteDB.Core.Model.Entities.EntityTelecomAddress _nretVal = ((SanteDB.Core.Model.Entities.EntityTelecomAddress)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
-                                                            _nretVal.CopyObjectData(_retVal);
-                                                            return _nretVal;
+                                                    if ("use".Equals(r.Value)) {
+                                                        r.Read();
+                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("use", context.JsonContext, _retVal, context));
+                                                        if ((_instance != null)) {
+                                                            _retVal.AddressUseKey = ((System.Nullable<System.Guid>)(_instance));
                                                         }
                                                     }
                                                     else {
-                                                        r.Skip();
+                                                        if ("useModel".Equals(r.Value)) {
+                                                            r.Read();
+                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("useModel", context.JsonContext, _retVal, context));
+                                                            if ((_instance != null)) {
+                                                                _retVal.AddressUse = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                            }
+                                                        }
+                                                        else {
+                                                            if ("$type".Equals(r.Value)) {
+                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                if ((_type != typeof(SanteDB.Core.Model.Entities.EntityTelecomAddress))) {
+                                                                    SanteDB.Core.Model.Entities.EntityTelecomAddress _nretVal = ((SanteDB.Core.Model.Entities.EntityTelecomAddress)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
+                                                                    _nretVal.CopyObjectData(_retVal);
+                                                                    return _nretVal;
+                                                                }
+                                                            }
+                                                            else {
+                                                                r.Skip();
+                                                            }
+                                                        }
                                                     }
                                                 }
                                             }
@@ -11633,7 +11705,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("formConceptModel")) {
                 if ((_strong.FormConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("formConceptModel", _strong.Key.Value))) {
+                    if ((_strong.FormConceptKey.HasValue && context.ShouldForceLoad("formConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.FormConceptKey);
                         if ((_delay != null)) {
@@ -11642,7 +11714,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "formConceptModel", _strong.FormConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("formConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("formConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -11673,7 +11745,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("quantityConceptModel")) {
                 if ((_strong.QuantityConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("quantityConceptModel", _strong.Key.Value))) {
+                    if ((_strong.QuantityConceptKey.HasValue && context.ShouldForceLoad("quantityConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.QuantityConceptKey);
                         if ((_delay != null)) {
@@ -11682,7 +11754,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "quantityConceptModel", _strong.QuantityConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("quantityConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("quantityConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -11709,7 +11781,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "address", _strong.Addresses, context);
                         }
                         else {
-                            context.RegisterMissTarget("address", _strong.Key.Value);
+                            context.RegisterMissTarget("address", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -11719,7 +11791,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -11728,7 +11800,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -11745,7 +11817,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("creationActModel")) {
                 if ((_strong.CreationAct == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key.Value))) {
+                    if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
                         if ((_delay != null)) {
@@ -11754,7 +11826,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
                         }
                         else {
-                            context.RegisterMissTarget("creationActModel", _strong.Key.Value);
+                            context.RegisterMissTarget("creationActModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -11771,7 +11843,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("determinerConceptModel")) {
                 if ((_strong.DeterminerConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key.Value))) {
+                    if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
                         if ((_delay != null)) {
@@ -11780,7 +11852,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "determinerConceptModel", _strong.DeterminerConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -11807,7 +11879,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -11827,7 +11899,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -11847,7 +11919,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "name", _strong.Names, context);
                         }
                         else {
-                            context.RegisterMissTarget("name", _strong.Key.Value);
+                            context.RegisterMissTarget("name", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -11867,7 +11939,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -11887,7 +11959,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -11907,7 +11979,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -11917,7 +11989,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -11926,7 +11998,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -11953,7 +12025,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -11973,7 +12045,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "telecom", _strong.Telecoms, context);
                         }
                         else {
-                            context.RegisterMissTarget("telecom", _strong.Key.Value);
+                            context.RegisterMissTarget("telecom", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -11990,7 +12062,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -11999,7 +12071,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -12009,7 +12081,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -12018,7 +12090,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -12045,7 +12117,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -12478,7 +12550,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                         }
                                                                                                                                                                                         else {
                                                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Entities.ManufacturedMaterial))) {
                                                                                                                                                                                                     SanteDB.Core.Model.Entities.ManufacturedMaterial _nretVal = ((SanteDB.Core.Model.Entities.ManufacturedMaterial)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -12588,7 +12660,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("formConceptModel")) {
                 if ((_strong.FormConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("formConceptModel", _strong.Key.Value))) {
+                    if ((_strong.FormConceptKey.HasValue && context.ShouldForceLoad("formConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.FormConceptKey);
                         if ((_delay != null)) {
@@ -12597,7 +12669,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "formConceptModel", _strong.FormConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("formConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("formConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -12628,7 +12700,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("quantityConceptModel")) {
                 if ((_strong.QuantityConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("quantityConceptModel", _strong.Key.Value))) {
+                    if ((_strong.QuantityConceptKey.HasValue && context.ShouldForceLoad("quantityConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.QuantityConceptKey);
                         if ((_delay != null)) {
@@ -12637,7 +12709,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "quantityConceptModel", _strong.QuantityConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("quantityConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("quantityConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -12664,7 +12736,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "address", _strong.Addresses, context);
                         }
                         else {
-                            context.RegisterMissTarget("address", _strong.Key.Value);
+                            context.RegisterMissTarget("address", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -12674,7 +12746,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -12683,7 +12755,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -12700,7 +12772,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("creationActModel")) {
                 if ((_strong.CreationAct == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key.Value))) {
+                    if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
                         if ((_delay != null)) {
@@ -12709,7 +12781,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
                         }
                         else {
-                            context.RegisterMissTarget("creationActModel", _strong.Key.Value);
+                            context.RegisterMissTarget("creationActModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -12726,7 +12798,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("determinerConceptModel")) {
                 if ((_strong.DeterminerConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key.Value))) {
+                    if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
                         if ((_delay != null)) {
@@ -12735,7 +12807,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "determinerConceptModel", _strong.DeterminerConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -12762,7 +12834,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -12782,7 +12854,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -12802,7 +12874,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "name", _strong.Names, context);
                         }
                         else {
-                            context.RegisterMissTarget("name", _strong.Key.Value);
+                            context.RegisterMissTarget("name", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -12822,7 +12894,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -12842,7 +12914,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -12862,7 +12934,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -12872,7 +12944,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -12881,7 +12953,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -12908,7 +12980,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -12928,7 +13000,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "telecom", _strong.Telecoms, context);
                         }
                         else {
-                            context.RegisterMissTarget("telecom", _strong.Key.Value);
+                            context.RegisterMissTarget("telecom", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -12945,7 +13017,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -12954,7 +13026,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -12964,7 +13036,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -12973,7 +13045,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -13000,7 +13072,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -13425,7 +13497,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                     }
                                                                                                                                                                                     else {
                                                                                                                                                                                         if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                             if ((_type != typeof(SanteDB.Core.Model.Entities.Material))) {
                                                                                                                                                                                                 SanteDB.Core.Model.Entities.Material _nretVal = ((SanteDB.Core.Model.Entities.Material)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -13527,7 +13599,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("industryConceptModel")) {
                 if ((_strong.IndustryConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("industryConceptModel", _strong.Key.Value))) {
+                    if ((_strong.IndustryConceptKey.HasValue && context.ShouldForceLoad("industryConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.IndustryConceptKey);
                         if ((_delay != null)) {
@@ -13536,7 +13608,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "industryConceptModel", _strong.IndustryConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("industryConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("industryConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -13563,7 +13635,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "address", _strong.Addresses, context);
                         }
                         else {
-                            context.RegisterMissTarget("address", _strong.Key.Value);
+                            context.RegisterMissTarget("address", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -13573,7 +13645,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -13582,7 +13654,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -13599,7 +13671,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("creationActModel")) {
                 if ((_strong.CreationAct == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key.Value))) {
+                    if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
                         if ((_delay != null)) {
@@ -13608,7 +13680,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
                         }
                         else {
-                            context.RegisterMissTarget("creationActModel", _strong.Key.Value);
+                            context.RegisterMissTarget("creationActModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -13625,7 +13697,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("determinerConceptModel")) {
                 if ((_strong.DeterminerConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key.Value))) {
+                    if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
                         if ((_delay != null)) {
@@ -13634,7 +13706,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "determinerConceptModel", _strong.DeterminerConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -13661,7 +13733,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -13681,7 +13753,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -13701,7 +13773,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "name", _strong.Names, context);
                         }
                         else {
-                            context.RegisterMissTarget("name", _strong.Key.Value);
+                            context.RegisterMissTarget("name", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -13721,7 +13793,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -13741,7 +13813,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -13761,7 +13833,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -13771,7 +13843,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -13780,7 +13852,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -13807,7 +13879,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -13827,7 +13899,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "telecom", _strong.Telecoms, context);
                         }
                         else {
-                            context.RegisterMissTarget("telecom", _strong.Key.Value);
+                            context.RegisterMissTarget("telecom", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -13844,7 +13916,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -13853,7 +13925,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -13863,7 +13935,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -13872,7 +13944,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -13899,7 +13971,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -14284,7 +14356,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                 }
                                                                                                                                                                 else {
                                                                                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Entities.Organization))) {
                                                                                                                                                                             SanteDB.Core.Model.Entities.Organization _nretVal = ((SanteDB.Core.Model.Entities.Organization)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -14405,7 +14477,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "language", _strong.LanguageCommunication, context);
                         }
                         else {
-                            context.RegisterMissTarget("language", _strong.Key.Value);
+                            context.RegisterMissTarget("language", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -14425,7 +14497,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "address", _strong.Addresses, context);
                         }
                         else {
-                            context.RegisterMissTarget("address", _strong.Key.Value);
+                            context.RegisterMissTarget("address", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -14435,7 +14507,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -14444,7 +14516,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -14461,7 +14533,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("creationActModel")) {
                 if ((_strong.CreationAct == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key.Value))) {
+                    if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
                         if ((_delay != null)) {
@@ -14470,7 +14542,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
                         }
                         else {
-                            context.RegisterMissTarget("creationActModel", _strong.Key.Value);
+                            context.RegisterMissTarget("creationActModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -14487,7 +14559,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("determinerConceptModel")) {
                 if ((_strong.DeterminerConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key.Value))) {
+                    if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
                         if ((_delay != null)) {
@@ -14496,7 +14568,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "determinerConceptModel", _strong.DeterminerConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -14523,7 +14595,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -14543,7 +14615,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -14563,7 +14635,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "name", _strong.Names, context);
                         }
                         else {
-                            context.RegisterMissTarget("name", _strong.Key.Value);
+                            context.RegisterMissTarget("name", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -14583,7 +14655,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -14603,7 +14675,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -14623,7 +14695,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -14633,7 +14705,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -14642,7 +14714,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -14669,7 +14741,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -14689,7 +14761,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "telecom", _strong.Telecoms, context);
                         }
                         else {
-                            context.RegisterMissTarget("telecom", _strong.Key.Value);
+                            context.RegisterMissTarget("telecom", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -14706,7 +14778,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -14715,7 +14787,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -14725,7 +14797,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -14734,7 +14806,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -14761,7 +14833,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -15154,7 +15226,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                     }
                                                                                                                                                                     else {
                                                                                                                                                                         if ("$type".Equals(r.Value)) {
-                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                             if ((_type != typeof(SanteDB.Core.Model.Entities.Person))) {
                                                                                                                                                                                 SanteDB.Core.Model.Entities.Person _nretVal = ((SanteDB.Core.Model.Entities.Person)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -15373,7 +15445,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                             }
                                             else {
                                                 if ("$type".Equals(r.Value)) {
-                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                     if ((_type != typeof(SanteDB.Core.Model.Entities.PersonLanguageCommunication))) {
                                                         SanteDB.Core.Model.Entities.PersonLanguageCommunication _nretVal = ((SanteDB.Core.Model.Entities.PersonLanguageCommunication)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                         _nretVal.CopyObjectData(_retVal);
@@ -15472,7 +15544,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "service", _strong.Services, context);
                         }
                         else {
-                            context.RegisterMissTarget("service", _strong.Key.Value);
+                            context.RegisterMissTarget("service", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -15492,7 +15564,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "address", _strong.Addresses, context);
                         }
                         else {
-                            context.RegisterMissTarget("address", _strong.Key.Value);
+                            context.RegisterMissTarget("address", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -15502,7 +15574,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -15511,7 +15583,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -15521,7 +15593,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("creationActModel")) {
                 if ((_strong.CreationAct == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key.Value))) {
+                    if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
                         if ((_delay != null)) {
@@ -15530,7 +15602,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
                         }
                         else {
-                            context.RegisterMissTarget("creationActModel", _strong.Key.Value);
+                            context.RegisterMissTarget("creationActModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -15547,7 +15619,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("determinerConceptModel")) {
                 if ((_strong.DeterminerConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key.Value))) {
+                    if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
                         if ((_delay != null)) {
@@ -15556,7 +15628,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "determinerConceptModel", _strong.DeterminerConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("determinerConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -15583,7 +15655,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -15603,7 +15675,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -15623,7 +15695,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "name", _strong.Names, context);
                         }
                         else {
-                            context.RegisterMissTarget("name", _strong.Key.Value);
+                            context.RegisterMissTarget("name", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -15643,7 +15715,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -15663,7 +15735,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -15683,7 +15755,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -15693,7 +15765,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -15702,7 +15774,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -15729,7 +15801,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -15749,7 +15821,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "telecom", _strong.Telecoms, context);
                         }
                         else {
-                            context.RegisterMissTarget("telecom", _strong.Key.Value);
+                            context.RegisterMissTarget("telecom", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -15766,7 +15838,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -15775,7 +15847,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -15785,7 +15857,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -15794,7 +15866,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -15821,7 +15893,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -16214,7 +16286,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                     }
                                                                                                                                                                     else {
                                                                                                                                                                         if ("$type".Equals(r.Value)) {
-                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                             if ((_type != typeof(SanteDB.Core.Model.Entities.Place))) {
                                                                                                                                                                                 SanteDB.Core.Model.Entities.Place _nretVal = ((SanteDB.Core.Model.Entities.Place)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -16312,7 +16384,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("serviceConceptModel")) {
                 if ((_strong.ServiceConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("serviceConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ServiceConceptKey.HasValue && context.ShouldForceLoad("serviceConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ServiceConceptKey);
                         if ((_delay != null)) {
@@ -16321,7 +16393,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "serviceConceptModel", _strong.ServiceConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("serviceConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("serviceConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -16460,7 +16532,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                 }
                                                 else {
                                                     if ("$type".Equals(r.Value)) {
-                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                         if ((_type != typeof(SanteDB.Core.Model.Entities.PlaceService))) {
                                                             SanteDB.Core.Model.Entities.PlaceService _nretVal = ((SanteDB.Core.Model.Entities.PlaceService)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                             _nretVal.CopyObjectData(_retVal);
@@ -16593,7 +16665,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("assigningApplicationModel")) {
                 if ((_strong.AssigningApplication == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("assigningApplicationModel", _strong.Key.Value))) {
+                    if ((_strong.AssigningApplicationKey.HasValue && context.ShouldForceLoad("assigningApplicationModel", _strong.Key))) {
                         SanteDB.Core.Model.Security.SecurityApplication _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Security.SecurityApplication>(_strong.AssigningApplicationKey);
                         if ((_delay != null)) {
@@ -16602,7 +16674,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "assigningApplicationModel", _strong.AssigningApplication, context);
                         }
                         else {
-                            context.RegisterMissTarget("assigningApplicationModel", _strong.Key.Value);
+                            context.RegisterMissTarget("assigningApplicationModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -16837,7 +16909,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                 }
                                                                                                 else {
                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                         if ((_type != typeof(SanteDB.Core.Model.DataTypes.AssigningAuthority))) {
                                                                                                             SanteDB.Core.Model.DataTypes.AssigningAuthority _nretVal = ((SanteDB.Core.Model.DataTypes.AssigningAuthority)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -17198,7 +17270,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                             }
                                                                                             else {
                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.CodeSystem))) {
                                                                                                         SanteDB.Core.Model.DataTypes.CodeSystem _nretVal = ((SanteDB.Core.Model.DataTypes.CodeSystem)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -17299,7 +17371,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -17308,7 +17380,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -17328,7 +17400,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationship, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -17345,7 +17417,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("conceptClassModel")) {
                 if ((_strong.Class == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("conceptClassModel", _strong.Key.Value))) {
+                    if ((_strong.ClassKey.HasValue && context.ShouldForceLoad("conceptClassModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.ConceptClass _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.ConceptClass>(_strong.ClassKey);
                         if ((_delay != null)) {
@@ -17354,7 +17426,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "conceptClassModel", _strong.Class, context);
                         }
                         else {
-                            context.RegisterMissTarget("conceptClassModel", _strong.Key.Value);
+                            context.RegisterMissTarget("conceptClassModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -17374,7 +17446,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "referenceTerm", _strong.ReferenceTerms, context);
                         }
                         else {
-                            context.RegisterMissTarget("referenceTerm", _strong.Key.Value);
+                            context.RegisterMissTarget("referenceTerm", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -17394,7 +17466,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "name", _strong.ConceptNames, context);
                         }
                         else {
-                            context.RegisterMissTarget("name", _strong.Key.Value);
+                            context.RegisterMissTarget("name", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -17683,7 +17755,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                             }
                                                                                                             else {
                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.Concept))) {
                                                                                                                         SanteDB.Core.Model.DataTypes.Concept _nretVal = ((SanteDB.Core.Model.DataTypes.Concept)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -17972,7 +18044,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                         }
                                                                         else {
                                                                             if ("$type".Equals(r.Value)) {
-                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                 if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptClass))) {
                                                                                     SanteDB.Core.Model.DataTypes.ConceptClass _nretVal = ((SanteDB.Core.Model.DataTypes.ConceptClass)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -18075,7 +18147,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("phoneticAlgorithmModel")) {
                 if ((_strong.PhoneticAlgorithm == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("phoneticAlgorithmModel", _strong.Key.Value))) {
+                    if ((_strong.PhoneticAlgorithmKey.HasValue && context.ShouldForceLoad("phoneticAlgorithmModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.PhoneticAlgorithm _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.PhoneticAlgorithm>(_strong.PhoneticAlgorithmKey);
                         if ((_delay != null)) {
@@ -18084,7 +18156,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "phoneticAlgorithmModel", _strong.PhoneticAlgorithm, context);
                         }
                         else {
-                            context.RegisterMissTarget("phoneticAlgorithmModel", _strong.Key.Value);
+                            context.RegisterMissTarget("phoneticAlgorithmModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -18225,7 +18297,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                         }
                                                         else {
                                                             if ("$type".Equals(r.Value)) {
-                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                 if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptName))) {
                                                                     SanteDB.Core.Model.DataTypes.ConceptName _nretVal = ((SanteDB.Core.Model.DataTypes.ConceptName)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                     _nretVal.CopyObjectData(_retVal);
@@ -18327,7 +18399,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("termModel")) {
                 if ((_strong.ReferenceTerm == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("termModel", _strong.Key.Value))) {
+                    if ((_strong.ReferenceTermKey.HasValue && context.ShouldForceLoad("termModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.ReferenceTerm _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.ReferenceTerm>(_strong.ReferenceTermKey);
                         if ((_delay != null)) {
@@ -18336,7 +18408,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "termModel", _strong.ReferenceTerm, context);
                         }
                         else {
-                            context.RegisterMissTarget("termModel", _strong.Key.Value);
+                            context.RegisterMissTarget("termModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -18353,7 +18425,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("relationshipTypeModel")) {
                 if ((_strong.RelationshipType == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("relationshipTypeModel", _strong.Key.Value))) {
+                    if ((_strong.RelationshipTypeKey.HasValue && context.ShouldForceLoad("relationshipTypeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.ConceptRelationshipType _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.ConceptRelationshipType>(_strong.RelationshipTypeKey);
                         if ((_delay != null)) {
@@ -18362,7 +18434,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationshipTypeModel", _strong.RelationshipType, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationshipTypeModel", _strong.Key.Value);
+                            context.RegisterMissTarget("relationshipTypeModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -18495,7 +18567,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                     }
                                                     else {
                                                         if ("$type".Equals(r.Value)) {
-                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                             if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptReferenceTerm))) {
                                                                 SanteDB.Core.Model.DataTypes.ConceptReferenceTerm _nretVal = ((SanteDB.Core.Model.DataTypes.ConceptReferenceTerm)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                 _nretVal.CopyObjectData(_retVal);
@@ -18572,7 +18644,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("targetConceptModel")) {
                 if ((_strong.TargetConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("targetConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TargetConceptKey.HasValue && context.ShouldForceLoad("targetConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TargetConceptKey);
                         if ((_delay != null)) {
@@ -18581,7 +18653,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "targetConceptModel", _strong.TargetConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("targetConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("targetConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -18598,7 +18670,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("relationshipTypeModel")) {
                 if ((_strong.RelationshipType == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("relationshipTypeModel", _strong.Key.Value))) {
+                    if ((_strong.RelationshipTypeKey.HasValue && context.ShouldForceLoad("relationshipTypeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.ConceptRelationshipType _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.ConceptRelationshipType>(_strong.RelationshipTypeKey);
                         if ((_delay != null)) {
@@ -18607,7 +18679,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationshipTypeModel", _strong.RelationshipType, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationshipTypeModel", _strong.Key.Value);
+                            context.RegisterMissTarget("relationshipTypeModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -18740,7 +18812,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                     }
                                                     else {
                                                         if ("$type".Equals(r.Value)) {
-                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                             if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptRelationship))) {
                                                                 SanteDB.Core.Model.DataTypes.ConceptRelationship _nretVal = ((SanteDB.Core.Model.DataTypes.ConceptRelationship)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                 _nretVal.CopyObjectData(_retVal);
@@ -19015,7 +19087,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                         }
                                                                         else {
                                                                             if ("$type".Equals(r.Value)) {
-                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                 if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptRelationshipType))) {
                                                                                     SanteDB.Core.Model.DataTypes.ConceptRelationshipType _nretVal = ((SanteDB.Core.Model.DataTypes.ConceptRelationshipType)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -19356,7 +19428,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                         }
                                                                                         else {
                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                 if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptSet))) {
                                                                                                     SanteDB.Core.Model.DataTypes.ConceptSet _nretVal = ((SanteDB.Core.Model.DataTypes.ConceptSet)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -19449,7 +19521,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("extensionTypeModel")) {
                 if ((_strong.ExtensionType == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("extensionTypeModel", _strong.Key.Value))) {
+                    if ((_strong.ExtensionTypeKey.HasValue && context.ShouldForceLoad("extensionTypeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.ExtensionType _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.ExtensionType>(_strong.ExtensionTypeKey);
                         if ((_delay != null)) {
@@ -19458,7 +19530,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extensionTypeModel", _strong.ExtensionType, context);
                         }
                         else {
-                            context.RegisterMissTarget("extensionTypeModel", _strong.Key.Value);
+                            context.RegisterMissTarget("extensionTypeModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -19598,7 +19670,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                     }
                                                     else {
                                                         if ("$type".Equals(r.Value)) {
-                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                             if ((_type != typeof(SanteDB.Core.Model.DataTypes.EntityExtension))) {
                                                                 SanteDB.Core.Model.DataTypes.EntityExtension _nretVal = ((SanteDB.Core.Model.DataTypes.EntityExtension)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                 _nretVal.CopyObjectData(_retVal);
@@ -19706,7 +19778,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("extensionTypeModel")) {
                 if ((_strong.ExtensionType == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("extensionTypeModel", _strong.Key.Value))) {
+                    if ((_strong.ExtensionTypeKey.HasValue && context.ShouldForceLoad("extensionTypeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.ExtensionType _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.ExtensionType>(_strong.ExtensionTypeKey);
                         if ((_delay != null)) {
@@ -19715,7 +19787,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extensionTypeModel", _strong.ExtensionType, context);
                         }
                         else {
-                            context.RegisterMissTarget("extensionTypeModel", _strong.Key.Value);
+                            context.RegisterMissTarget("extensionTypeModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -19855,7 +19927,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                     }
                                                     else {
                                                         if ("$type".Equals(r.Value)) {
-                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                             if ((_type != typeof(SanteDB.Core.Model.DataTypes.ActExtension))) {
                                                                 SanteDB.Core.Model.DataTypes.ActExtension _nretVal = ((SanteDB.Core.Model.DataTypes.ActExtension)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                 _nretVal.CopyObjectData(_retVal);
@@ -20154,7 +20226,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                         }
                                                                         else {
                                                                             if ("$type".Equals(r.Value)) {
-                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                 if ((_type != typeof(SanteDB.Core.Model.DataTypes.ExtensionType))) {
                                                                                     SanteDB.Core.Model.DataTypes.ExtensionType _nretVal = ((SanteDB.Core.Model.DataTypes.ExtensionType)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -20173,6 +20245,154 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                 }
                                             }
                                         }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else {
+                    if (((r.TokenType == Newtonsoft.Json.JsonToken.EndObject) 
+                                && (r.Depth == _depth))) {
+                        return _retVal;
+                    }
+                    else {
+                        throw new Newtonsoft.Json.JsonSerializationException("JSON in invalid state");
+                    }
+                }
+            }
+            return _retVal;
+        }
+        
+        public object FromSimpleValue(object o) {
+            return null;
+        }
+        
+        public object GetSimpleValue(object o) {
+            return null;
+        }
+    }
+    
+    public class GeoTagViewModelSerializer : SanteDB.Core.Applets.ViewModel.Json.IJsonViewModelTypeFormatter {
+        
+        private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
+        
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(GeoTagViewModelSerializer));
+        
+        public System.Type HandlesType {
+            get {
+                return typeof(SanteDB.Core.Model.DataTypes.GeoTag);
+            }
+        }
+        
+        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext context) {
+            if ((o == null)) {
+                throw new System.ArgumentNullException("o");
+            }
+            SanteDB.Core.Model.DataTypes.GeoTag _strong = null;
+            SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext _jsonContext = null;
+            bool _loaded = false;
+            try {
+                _strong = ((SanteDB.Core.Model.DataTypes.GeoTag)(o));
+            }
+            catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
+                throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.GeoTag)));
+            }
+            if (context.ShouldSerialize("modifiedOn")) {
+                if ((_strong.ModifiedOn == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "modifiedOn", _strong.ModifiedOn, context);
+                }
+            }
+            if (context.ShouldSerialize("lat")) {
+                if ((_strong.Lat == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "lat", _strong.Lat, context);
+                }
+            }
+            if (context.ShouldSerialize("lng")) {
+                if ((_strong.Lng == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "lng", _strong.Lng, context);
+                }
+            }
+            if (context.ShouldSerialize("precise")) {
+                if ((_strong.Precise == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "precise", _strong.Precise, context);
+                }
+            }
+            if (context.ShouldSerialize("id")) {
+                if ((_strong.Key == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "id", _strong.Key, context);
+                }
+            }
+            if ((_loaded 
+                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
+                        && _strong.Key.HasValue))) {
+                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
+            }
+        }
+        
+        public object Deserialize(Newtonsoft.Json.JsonReader r, System.Type asType, SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext context) {
+            SanteDB.Core.Model.DataTypes.GeoTag _retVal = new SanteDB.Core.Model.DataTypes.GeoTag();
+            int _depth = r.Depth;
+            if ((r.TokenType != Newtonsoft.Json.JsonToken.StartObject)) {
+                _depth = (_depth - 1);
+            }
+            for (
+            ; r.Read(); 
+            ) {
+                if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
+                    if ("id".Equals(r.Value)) {
+                        r.Read();
+                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("id", context.JsonContext, _retVal, context));
+                        if ((_instance != null)) {
+                            _retVal.Key = ((System.Nullable<System.Guid>)(_instance));
+                        }
+                    }
+                    else {
+                        if ("precise".Equals(r.Value)) {
+                            r.Read();
+                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<bool>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("precise", context.JsonContext, _retVal, context));
+                            if ((_instance != null)) {
+                                _retVal.Precise = ((System.Nullable<bool>)(_instance));
+                            }
+                        }
+                        else {
+                            if ("lng".Equals(r.Value)) {
+                                r.Read();
+                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(double), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("lng", context.JsonContext, _retVal, context));
+                                if ((_instance != null)) {
+                                    _retVal.Lng = ((double)(_instance));
+                                }
+                            }
+                            else {
+                                if ("lat".Equals(r.Value)) {
+                                    r.Read();
+                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(double), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("lat", context.JsonContext, _retVal, context));
+                                    if ((_instance != null)) {
+                                        _retVal.Lat = ((double)(_instance));
+                                    }
+                                }
+                                else {
+                                    if ("$type".Equals(r.Value)) {
+                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                        if ((_type != typeof(SanteDB.Core.Model.DataTypes.GeoTag))) {
+                                            SanteDB.Core.Model.DataTypes.GeoTag _nretVal = ((SanteDB.Core.Model.DataTypes.GeoTag)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
+                                            _nretVal.CopyObjectData(_retVal);
+                                            return _nretVal;
+                                        }
+                                    }
+                                    else {
+                                        r.Skip();
                                     }
                                 }
                             }
@@ -20236,7 +20456,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("type")) {
                 if ((_strong.IdentifierType == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("type", _strong.Key.Value))) {
+                    if ((_strong.IdentifierTypeKey.HasValue && context.ShouldForceLoad("type", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.IdentifierType _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.IdentifierType>(_strong.IdentifierTypeKey);
                         if ((_delay != null)) {
@@ -20245,7 +20465,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "type", _strong.IdentifierType, context);
                         }
                         else {
-                            context.RegisterMissTarget("type", _strong.Key.Value);
+                            context.RegisterMissTarget("type", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -20255,9 +20475,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("authority")) {
                 if ((_strong.AuthorityXml == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("authority", _strong.Key.Value))) {
-                        SanteDB.Core.Model.DataTypes.AssigningAuthority _delay = null;
-                    }
                 }
                 else {
                     context.JsonContext.WritePropertyUtil(w, "authority", _strong.AuthorityXml, context);
@@ -20380,7 +20597,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                 }
                                                 else {
                                                     if ("$type".Equals(r.Value)) {
-                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                         if ((_type != typeof(SanteDB.Core.Model.DataTypes.EntityIdentifier))) {
                                                             SanteDB.Core.Model.DataTypes.EntityIdentifier _nretVal = ((SanteDB.Core.Model.DataTypes.EntityIdentifier)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                             _nretVal.CopyObjectData(_retVal);
@@ -20456,7 +20673,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("type")) {
                 if ((_strong.IdentifierType == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("type", _strong.Key.Value))) {
+                    if ((_strong.IdentifierTypeKey.HasValue && context.ShouldForceLoad("type", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.IdentifierType _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.IdentifierType>(_strong.IdentifierTypeKey);
                         if ((_delay != null)) {
@@ -20465,7 +20682,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "type", _strong.IdentifierType, context);
                         }
                         else {
-                            context.RegisterMissTarget("type", _strong.Key.Value);
+                            context.RegisterMissTarget("type", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -20475,9 +20692,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("authority")) {
                 if ((_strong.AuthorityXml == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("authority", _strong.Key.Value))) {
-                        SanteDB.Core.Model.DataTypes.AssigningAuthority _delay = null;
-                    }
                 }
                 else {
                     context.JsonContext.WritePropertyUtil(w, "authority", _strong.AuthorityXml, context);
@@ -20600,7 +20814,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                 }
                                                 else {
                                                     if ("$type".Equals(r.Value)) {
-                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                         if ((_type != typeof(SanteDB.Core.Model.DataTypes.ActIdentifier))) {
                                                             SanteDB.Core.Model.DataTypes.ActIdentifier _nretVal = ((SanteDB.Core.Model.DataTypes.ActIdentifier)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                             _nretVal.CopyObjectData(_retVal);
@@ -20683,7 +20897,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -20692,7 +20906,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -20702,7 +20916,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("scopeConceptModel")) {
                 if ((_strong.ScopeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("scopeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ScopeConceptKey.HasValue && context.ShouldForceLoad("scopeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ScopeConceptKey);
                         if ((_delay != null)) {
@@ -20711,7 +20925,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "scopeConceptModel", _strong.ScopeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("scopeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("scopeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -20890,7 +21104,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                     }
                                                                     else {
                                                                         if ("$type".Equals(r.Value)) {
-                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                             if ((_type != typeof(SanteDB.Core.Model.DataTypes.IdentifierType))) {
                                                                                 SanteDB.Core.Model.DataTypes.IdentifierType _nretVal = ((SanteDB.Core.Model.DataTypes.IdentifierType)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -20978,7 +21192,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("authorModel")) {
                 if ((_strong.Author == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("authorModel", _strong.Key.Value))) {
+                    if ((_strong.AuthorKey.HasValue && context.ShouldForceLoad("authorModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Entities.Entity>(_strong.AuthorKey);
                         if ((_delay != null)) {
@@ -20987,7 +21201,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "authorModel", _strong.Author, context);
                         }
                         else {
-                            context.RegisterMissTarget("authorModel", _strong.Key.Value);
+                            context.RegisterMissTarget("authorModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -21112,7 +21326,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                 }
                                                 else {
                                                     if ("$type".Equals(r.Value)) {
-                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                         if ((_type != typeof(SanteDB.Core.Model.DataTypes.EntityNote))) {
                                                             SanteDB.Core.Model.DataTypes.EntityNote _nretVal = ((SanteDB.Core.Model.DataTypes.EntityNote)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                             _nretVal.CopyObjectData(_retVal);
@@ -21219,7 +21433,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("authorModel")) {
                 if ((_strong.Author == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("authorModel", _strong.Key.Value))) {
+                    if ((_strong.AuthorKey.HasValue && context.ShouldForceLoad("authorModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Entities.Entity>(_strong.AuthorKey);
                         if ((_delay != null)) {
@@ -21228,7 +21442,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "authorModel", _strong.Author, context);
                         }
                         else {
-                            context.RegisterMissTarget("authorModel", _strong.Key.Value);
+                            context.RegisterMissTarget("authorModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -21353,7 +21567,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                 }
                                                 else {
                                                     if ("$type".Equals(r.Value)) {
-                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                         if ((_type != typeof(SanteDB.Core.Model.DataTypes.ActNote))) {
                                                             SanteDB.Core.Model.DataTypes.ActNote _nretVal = ((SanteDB.Core.Model.DataTypes.ActNote)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                             _nretVal.CopyObjectData(_retVal);
@@ -21651,7 +21865,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                         }
                                                                         else {
                                                                             if ("$type".Equals(r.Value)) {
-                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                 if ((_type != typeof(SanteDB.Core.Model.DataTypes.PhoneticAlgorithm))) {
                                                                                     SanteDB.Core.Model.DataTypes.PhoneticAlgorithm _nretVal = ((SanteDB.Core.Model.DataTypes.PhoneticAlgorithm)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -21733,7 +21947,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("codeSystemModel")) {
                 if ((_strong.CodeSystem == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("codeSystemModel", _strong.Key.Value))) {
+                    if ((_strong.CodeSystemKey.HasValue && context.ShouldForceLoad("codeSystemModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.CodeSystem _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.CodeSystem>(_strong.CodeSystemKey);
                         if ((_delay != null)) {
@@ -21742,7 +21956,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "codeSystemModel", _strong.CodeSystem, context);
                         }
                         else {
-                            context.RegisterMissTarget("codeSystemModel", _strong.Key.Value);
+                            context.RegisterMissTarget("codeSystemModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -21769,7 +21983,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "name", _strong.DisplayNames, context);
                         }
                         else {
-                            context.RegisterMissTarget("name", _strong.Key.Value);
+                            context.RegisterMissTarget("name", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -21986,7 +22200,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                 }
                                                                                 else {
                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                         if ((_type != typeof(SanteDB.Core.Model.DataTypes.ReferenceTerm))) {
                                                                                             SanteDB.Core.Model.DataTypes.ReferenceTerm _nretVal = ((SanteDB.Core.Model.DataTypes.ReferenceTerm)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -22091,7 +22305,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("phoneticAlgorithmModel")) {
                 if ((_strong.PhoneticAlgorithm == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("phoneticAlgorithmModel", _strong.Key.Value))) {
+                    if ((_strong.PhoneticAlgorithmKey.HasValue && context.ShouldForceLoad("phoneticAlgorithmModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.PhoneticAlgorithm _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.PhoneticAlgorithm>(_strong.PhoneticAlgorithmKey);
                         if ((_delay != null)) {
@@ -22100,7 +22314,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "phoneticAlgorithmModel", _strong.PhoneticAlgorithm, context);
                         }
                         else {
-                            context.RegisterMissTarget("phoneticAlgorithmModel", _strong.Key.Value);
+                            context.RegisterMissTarget("phoneticAlgorithmModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -22302,7 +22516,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                             }
                                                                             else {
                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ReferenceTermName))) {
                                                                                         SanteDB.Core.Model.DataTypes.ReferenceTermName _nretVal = ((SanteDB.Core.Model.DataTypes.ReferenceTermName)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -22592,7 +22806,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                     }
                                                                     else {
                                                                         if ("$type".Equals(r.Value)) {
-                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                             if ((_type != typeof(SanteDB.Core.Model.DataTypes.EntityTag))) {
                                                                                 SanteDB.Core.Model.DataTypes.EntityTag _nretVal = ((SanteDB.Core.Model.DataTypes.EntityTag)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -22880,7 +23094,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                     }
                                                                     else {
                                                                         if ("$type".Equals(r.Value)) {
-                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                             if ((_type != typeof(SanteDB.Core.Model.DataTypes.ActTag))) {
                                                                                 SanteDB.Core.Model.DataTypes.ActTag _nretVal = ((SanteDB.Core.Model.DataTypes.ActTag)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -23213,7 +23427,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                 }
                                                                                 else {
                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                         if ((_type != typeof(SanteDB.Core.Model.DataTypes.TemplateDefinition))) {
                                                                                             SanteDB.Core.Model.DataTypes.TemplateDefinition _nretVal = ((SanteDB.Core.Model.DataTypes.TemplateDefinition)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -23423,7 +23637,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                             }
                                             else {
                                                 if ("$type".Equals(r.Value)) {
-                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                     if ((_type != typeof(SanteDB.Core.Model.Collection.Bundle))) {
                                                         SanteDB.Core.Model.Collection.Bundle _nretVal = ((SanteDB.Core.Model.Collection.Bundle)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                         _nretVal.CopyObjectData(_retVal);
@@ -23505,7 +23719,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("currencyModel")) {
                 if ((_strong.Currency == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("currencyModel", _strong.Key.Value))) {
+                    if ((_strong.CurrencyKey.HasValue && context.ShouldForceLoad("currencyModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.CurrencyKey);
                         if ((_delay != null)) {
@@ -23514,7 +23728,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "currencyModel", _strong.Currency, context);
                         }
                         else {
-                            context.RegisterMissTarget("currencyModel", _strong.Key.Value);
+                            context.RegisterMissTarget("currencyModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -23552,7 +23766,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -23561,7 +23775,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -23627,7 +23841,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -23636,7 +23850,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -23646,7 +23860,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("moodConceptModel")) {
                 if ((_strong.MoodConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key.Value))) {
+                    if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
                         if ((_delay != null)) {
@@ -23655,7 +23869,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "moodConceptModel", _strong.MoodConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("moodConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("moodConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -23665,7 +23879,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("reasonConceptModel")) {
                 if ((_strong.ReasonConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
                         if ((_delay != null)) {
@@ -23674,7 +23888,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "reasonConceptModel", _strong.ReasonConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -23684,7 +23898,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -23693,7 +23907,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -23703,7 +23917,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -23712,7 +23926,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -23732,7 +23946,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -23752,7 +23966,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -23772,7 +23986,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -23792,7 +24006,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -23812,7 +24026,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -23832,7 +24046,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -23852,7 +24066,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "protocol", _strong.Protocols, context);
                         }
                         else {
-                            context.RegisterMissTarget("protocol", _strong.Key.Value);
+                            context.RegisterMissTarget("protocol", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -23872,7 +24086,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -24312,7 +24526,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                         }
                                                                                                                                                                                         else {
                                                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Acts.Account))) {
                                                                                                                                                                                                     SanteDB.Core.Model.Acts.Account _nretVal = ((SanteDB.Core.Model.Acts.Account)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -24429,7 +24643,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -24438,7 +24652,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -24504,7 +24718,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -24513,7 +24727,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -24523,7 +24737,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("moodConceptModel")) {
                 if ((_strong.MoodConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key.Value))) {
+                    if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
                         if ((_delay != null)) {
@@ -24532,7 +24746,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "moodConceptModel", _strong.MoodConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("moodConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("moodConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -24542,7 +24756,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("reasonConceptModel")) {
                 if ((_strong.ReasonConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
                         if ((_delay != null)) {
@@ -24551,7 +24765,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "reasonConceptModel", _strong.ReasonConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -24561,7 +24775,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -24570,7 +24784,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -24580,7 +24794,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -24589,7 +24803,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -24609,7 +24823,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -24629,7 +24843,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -24649,7 +24863,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -24669,7 +24883,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -24689,7 +24903,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -24709,7 +24923,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -24729,7 +24943,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "protocol", _strong.Protocols, context);
                         }
                         else {
-                            context.RegisterMissTarget("protocol", _strong.Key.Value);
+                            context.RegisterMissTarget("protocol", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -24749,7 +24963,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -25149,7 +25363,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                     }
                                                                                                                                                                     else {
                                                                                                                                                                         if ("$type".Equals(r.Value)) {
-                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                             if ((_type != typeof(SanteDB.Core.Model.Acts.Act))) {
                                                                                                                                                                                 SanteDB.Core.Model.Acts.Act _nretVal = ((SanteDB.Core.Model.Acts.Act)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -25261,7 +25475,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("playerModel")) {
                 if ((_strong.PlayerEntity == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("playerModel", _strong.Key.Value))) {
+                    if ((_strong.PlayerEntityKey.HasValue && context.ShouldForceLoad("playerModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Entities.Entity>(_strong.PlayerEntityKey);
                         if ((_delay != null)) {
@@ -25270,7 +25484,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "playerModel", _strong.PlayerEntity, context);
                         }
                         else {
-                            context.RegisterMissTarget("playerModel", _strong.Key.Value);
+                            context.RegisterMissTarget("playerModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -25280,7 +25494,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("participationRoleModel")) {
                 if ((_strong.ParticipationRole == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("participationRoleModel", _strong.Key.Value))) {
+                    if ((_strong.ParticipationRoleKey.HasValue && context.ShouldForceLoad("participationRoleModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ParticipationRoleKey);
                         if ((_delay != null)) {
@@ -25289,7 +25503,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participationRoleModel", _strong.ParticipationRole, context);
                         }
                         else {
-                            context.RegisterMissTarget("participationRoleModel", _strong.Key.Value);
+                            context.RegisterMissTarget("participationRoleModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -25460,7 +25674,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                 }
                                                                 else {
                                                                     if ("$type".Equals(r.Value)) {
-                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                         if ((_type != typeof(SanteDB.Core.Model.Acts.ActParticipation))) {
                                                                             SanteDB.Core.Model.Acts.ActParticipation _nretVal = ((SanteDB.Core.Model.Acts.ActParticipation)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                             _nretVal.CopyObjectData(_retVal);
@@ -25540,7 +25754,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("protocolModel")) {
                 if ((_strong.Protocol == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("protocolModel", _strong.Key.Value))) {
+                    if ((_strong.ProtocolKey != System.Guid.Empty && context.ShouldForceLoad("protocolModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Protocol _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Protocol>(_strong.ProtocolKey);
                         if ((_delay != null)) {
@@ -25549,7 +25763,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "protocolModel", _strong.Protocol, context);
                         }
                         else {
-                            context.RegisterMissTarget("protocolModel", _strong.Key.Value);
+                            context.RegisterMissTarget("protocolModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -25666,7 +25880,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                             }
                                             else {
                                                 if ("$type".Equals(r.Value)) {
-                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                     if ((_type != typeof(SanteDB.Core.Model.Acts.ActProtocol))) {
                                                         SanteDB.Core.Model.Acts.ActProtocol _nretVal = ((SanteDB.Core.Model.Acts.ActProtocol)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                         _nretVal.CopyObjectData(_retVal);
@@ -25741,7 +25955,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("targetModel")) {
                 if ((_strong.TargetAct == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("targetModel", _strong.Key.Value))) {
+                    if ((_strong.TargetActKey.HasValue && context.ShouldForceLoad("targetModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.TargetActKey);
                         if ((_delay != null)) {
@@ -25750,7 +25964,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "targetModel", _strong.TargetAct, context);
                         }
                         else {
-                            context.RegisterMissTarget("targetModel", _strong.Key.Value);
+                            context.RegisterMissTarget("targetModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -25767,7 +25981,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("relationshipTypeModel")) {
                 if ((_strong.RelationshipType == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("relationshipTypeModel", _strong.Key.Value))) {
+                    if ((_strong.RelationshipTypeKey.HasValue && context.ShouldForceLoad("relationshipTypeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.RelationshipTypeKey);
                         if ((_delay != null)) {
@@ -25776,7 +25990,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationshipTypeModel", _strong.RelationshipType, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationshipTypeModel", _strong.Key.Value);
+                            context.RegisterMissTarget("relationshipTypeModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -25909,7 +26123,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                     }
                                                     else {
                                                         if ("$type".Equals(r.Value)) {
-                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                             if ((_type != typeof(SanteDB.Core.Model.Acts.ActRelationship))) {
                                                                 SanteDB.Core.Model.Acts.ActRelationship _nretVal = ((SanteDB.Core.Model.Acts.ActRelationship)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                 _nretVal.CopyObjectData(_retVal);
@@ -25979,9 +26193,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("target")) {
                 if ((_strong.Target == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("target", _strong.Key.Value))) {
-                        SanteDB.Core.Model.Roles.Patient _delay = null;
-                    }
                 }
                 else {
                     context.JsonContext.WritePropertyUtil(w, "target", _strong.Target, context);
@@ -26153,7 +26364,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                             }
                                                             else {
                                                                 if ("$type".Equals(r.Value)) {
-                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                     if ((_type != typeof(SanteDB.Core.Model.Acts.CarePlan))) {
                                                                         SanteDB.Core.Model.Acts.CarePlan _nretVal = ((SanteDB.Core.Model.Acts.CarePlan)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                         _nretVal.CopyObjectData(_retVal);
@@ -26239,7 +26450,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -26248,7 +26459,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -26314,7 +26525,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -26323,7 +26534,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -26333,7 +26544,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("moodConceptModel")) {
                 if ((_strong.MoodConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key.Value))) {
+                    if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
                         if ((_delay != null)) {
@@ -26342,7 +26553,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "moodConceptModel", _strong.MoodConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("moodConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("moodConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -26352,7 +26563,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("reasonConceptModel")) {
                 if ((_strong.ReasonConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
                         if ((_delay != null)) {
@@ -26361,7 +26572,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "reasonConceptModel", _strong.ReasonConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -26371,7 +26582,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -26380,7 +26591,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -26390,7 +26601,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -26399,7 +26610,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -26419,7 +26630,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -26439,7 +26650,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -26459,7 +26670,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -26479,7 +26690,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -26499,7 +26710,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -26519,7 +26730,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -26539,7 +26750,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "protocol", _strong.Protocols, context);
                         }
                         else {
-                            context.RegisterMissTarget("protocol", _strong.Key.Value);
+                            context.RegisterMissTarget("protocol", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -26559,7 +26770,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -26959,7 +27170,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                     }
                                                                                                                                                                     else {
                                                                                                                                                                         if ("$type".Equals(r.Value)) {
-                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                             if ((_type != typeof(SanteDB.Core.Model.Acts.ControlAct))) {
                                                                                                                                                                                 SanteDB.Core.Model.Acts.ControlAct _nretVal = ((SanteDB.Core.Model.Acts.ControlAct)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -27064,7 +27275,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("paymentTermsModel")) {
                 if ((_strong.PaymentTerms == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("paymentTermsModel", _strong.Key.Value))) {
+                    if ((_strong.PaymentTermsKey.HasValue && context.ShouldForceLoad("paymentTermsModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.PaymentTermsKey);
                         if ((_delay != null)) {
@@ -27073,7 +27284,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "paymentTermsModel", _strong.PaymentTerms, context);
                         }
                         else {
-                            context.RegisterMissTarget("paymentTermsModel", _strong.Key.Value);
+                            context.RegisterMissTarget("paymentTermsModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -27097,7 +27308,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -27106,7 +27317,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -27172,7 +27383,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -27181,7 +27392,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -27191,7 +27402,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("moodConceptModel")) {
                 if ((_strong.MoodConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key.Value))) {
+                    if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
                         if ((_delay != null)) {
@@ -27200,7 +27411,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "moodConceptModel", _strong.MoodConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("moodConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("moodConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -27210,7 +27421,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("reasonConceptModel")) {
                 if ((_strong.ReasonConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
                         if ((_delay != null)) {
@@ -27219,7 +27430,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "reasonConceptModel", _strong.ReasonConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -27229,7 +27440,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -27238,7 +27449,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -27248,7 +27459,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -27257,7 +27468,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -27277,7 +27488,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -27297,7 +27508,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -27317,7 +27528,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -27337,7 +27548,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -27357,7 +27568,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -27377,7 +27588,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -27397,7 +27608,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "protocol", _strong.Protocols, context);
                         }
                         else {
-                            context.RegisterMissTarget("protocol", _strong.Key.Value);
+                            context.RegisterMissTarget("protocol", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -27417,7 +27628,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -27833,7 +28044,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                             }
                                                                                                                                                                             else {
                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Acts.FinancialContract))) {
                                                                                                                                                                                         SanteDB.Core.Model.Acts.FinancialContract _nretVal = ((SanteDB.Core.Model.Acts.FinancialContract)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -27947,7 +28158,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("currencyModel")) {
                 if ((_strong.Currency == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("currencyModel", _strong.Key.Value))) {
+                    if ((_strong.CurrencyKey.HasValue && context.ShouldForceLoad("currencyModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.CurrencyKey);
                         if ((_delay != null)) {
@@ -27956,7 +28167,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "currencyModel", _strong.Currency, context);
                         }
                         else {
-                            context.RegisterMissTarget("currencyModel", _strong.Key.Value);
+                            context.RegisterMissTarget("currencyModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -27994,7 +28205,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -28003,7 +28214,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -28069,7 +28280,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -28078,7 +28289,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -28088,7 +28299,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("moodConceptModel")) {
                 if ((_strong.MoodConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key.Value))) {
+                    if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
                         if ((_delay != null)) {
@@ -28097,7 +28308,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "moodConceptModel", _strong.MoodConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("moodConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("moodConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -28107,7 +28318,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("reasonConceptModel")) {
                 if ((_strong.ReasonConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
                         if ((_delay != null)) {
@@ -28116,7 +28327,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "reasonConceptModel", _strong.ReasonConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -28126,7 +28337,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -28135,7 +28346,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -28145,7 +28356,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -28154,7 +28365,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -28174,7 +28385,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -28194,7 +28405,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -28214,7 +28425,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -28234,7 +28445,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -28254,7 +28465,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -28274,7 +28485,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -28294,7 +28505,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "protocol", _strong.Protocols, context);
                         }
                         else {
-                            context.RegisterMissTarget("protocol", _strong.Key.Value);
+                            context.RegisterMissTarget("protocol", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -28314,7 +28525,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -28754,7 +28965,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                         }
                                                                                                                                                                                         else {
                                                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Acts.FinancialTransaction))) {
                                                                                                                                                                                                     SanteDB.Core.Model.Acts.FinancialTransaction _nretVal = ((SanteDB.Core.Model.Acts.FinancialTransaction)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -28864,7 +29075,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("modifierModel")) {
                 if ((_strong.Modifier == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("modifierModel", _strong.Key.Value))) {
+                    if ((_strong.ModifierKey.HasValue && context.ShouldForceLoad("modifierModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ModifierKey);
                         if ((_delay != null)) {
@@ -28873,7 +29084,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "modifierModel", _strong.Modifier, context);
                         }
                         else {
-                            context.RegisterMissTarget("modifierModel", _strong.Key.Value);
+                            context.RegisterMissTarget("modifierModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -28911,7 +29122,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("currencyModel")) {
                 if ((_strong.Currency == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("currencyModel", _strong.Key.Value))) {
+                    if ((_strong.CurrencyKey.HasValue && context.ShouldForceLoad("currencyModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.CurrencyKey);
                         if ((_delay != null)) {
@@ -28920,7 +29131,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "currencyModel", _strong.Currency, context);
                         }
                         else {
-                            context.RegisterMissTarget("currencyModel", _strong.Key.Value);
+                            context.RegisterMissTarget("currencyModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -28951,7 +29162,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -28960,7 +29171,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -29026,7 +29237,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -29035,7 +29246,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -29045,7 +29256,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("moodConceptModel")) {
                 if ((_strong.MoodConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key.Value))) {
+                    if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
                         if ((_delay != null)) {
@@ -29054,7 +29265,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "moodConceptModel", _strong.MoodConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("moodConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("moodConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -29064,7 +29275,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("reasonConceptModel")) {
                 if ((_strong.ReasonConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
                         if ((_delay != null)) {
@@ -29073,7 +29284,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "reasonConceptModel", _strong.ReasonConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -29083,7 +29294,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -29092,7 +29303,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -29102,7 +29313,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -29111,7 +29322,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -29131,7 +29342,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -29151,7 +29362,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -29171,7 +29382,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -29191,7 +29402,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -29211,7 +29422,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -29231,7 +29442,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -29251,7 +29462,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "protocol", _strong.Protocols, context);
                         }
                         else {
-                            context.RegisterMissTarget("protocol", _strong.Key.Value);
+                            context.RegisterMissTarget("protocol", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -29271,7 +29482,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -29735,7 +29946,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                     }
                                                                                                                                                                                                     else {
                                                                                                                                                                                                         if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                             if ((_type != typeof(SanteDB.Core.Model.Acts.InvoiceElement))) {
                                                                                                                                                                                                                 SanteDB.Core.Model.Acts.InvoiceElement _nretVal = ((SanteDB.Core.Model.Acts.InvoiceElement)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -29855,7 +30066,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("interpretationConceptModel")) {
                 if ((_strong.InterpretationConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("interpretationConceptModel", _strong.Key.Value))) {
+                    if ((_strong.InterpretationConceptKey.HasValue && context.ShouldForceLoad("interpretationConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.InterpretationConceptKey);
                         if ((_delay != null)) {
@@ -29864,7 +30075,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "interpretationConceptModel", _strong.InterpretationConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("interpretationConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("interpretationConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -29888,7 +30099,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -29897,7 +30108,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -29963,7 +30174,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -29972,7 +30183,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -29982,7 +30193,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("moodConceptModel")) {
                 if ((_strong.MoodConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key.Value))) {
+                    if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
                         if ((_delay != null)) {
@@ -29991,7 +30202,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "moodConceptModel", _strong.MoodConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("moodConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("moodConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -30001,7 +30212,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("reasonConceptModel")) {
                 if ((_strong.ReasonConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
                         if ((_delay != null)) {
@@ -30010,7 +30221,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "reasonConceptModel", _strong.ReasonConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -30020,7 +30231,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -30029,7 +30240,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -30039,7 +30250,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -30048,7 +30259,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -30068,7 +30279,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -30088,7 +30299,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -30108,7 +30319,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -30128,7 +30339,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -30148,7 +30359,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -30168,7 +30379,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -30188,7 +30399,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "protocol", _strong.Protocols, context);
                         }
                         else {
-                            context.RegisterMissTarget("protocol", _strong.Key.Value);
+                            context.RegisterMissTarget("protocol", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -30208,7 +30419,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -30632,7 +30843,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                 }
                                                                                                                                                                                 else {
                                                                                                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Acts.Observation))) {
                                                                                                                                                                                             SanteDB.Core.Model.Acts.Observation _nretVal = ((SanteDB.Core.Model.Acts.Observation)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -30754,7 +30965,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("unitOfMeasureModel")) {
                 if ((_strong.UnitOfMeasure == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("unitOfMeasureModel", _strong.Key.Value))) {
+                    if ((_strong.UnitOfMeasureKey.HasValue && context.ShouldForceLoad("unitOfMeasureModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.UnitOfMeasureKey);
                         if ((_delay != null)) {
@@ -30763,7 +30974,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "unitOfMeasureModel", _strong.UnitOfMeasure, context);
                         }
                         else {
-                            context.RegisterMissTarget("unitOfMeasureModel", _strong.Key.Value);
+                            context.RegisterMissTarget("unitOfMeasureModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -30780,7 +30991,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("interpretationConceptModel")) {
                 if ((_strong.InterpretationConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("interpretationConceptModel", _strong.Key.Value))) {
+                    if ((_strong.InterpretationConceptKey.HasValue && context.ShouldForceLoad("interpretationConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.InterpretationConceptKey);
                         if ((_delay != null)) {
@@ -30789,7 +31000,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "interpretationConceptModel", _strong.InterpretationConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("interpretationConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("interpretationConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -30813,7 +31024,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -30822,7 +31033,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -30888,7 +31099,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -30897,7 +31108,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -30907,7 +31118,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("moodConceptModel")) {
                 if ((_strong.MoodConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key.Value))) {
+                    if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
                         if ((_delay != null)) {
@@ -30916,7 +31127,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "moodConceptModel", _strong.MoodConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("moodConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("moodConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -30926,7 +31137,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("reasonConceptModel")) {
                 if ((_strong.ReasonConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
                         if ((_delay != null)) {
@@ -30935,7 +31146,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "reasonConceptModel", _strong.ReasonConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -30945,7 +31156,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -30954,7 +31165,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -30964,7 +31175,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -30973,7 +31184,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -30993,7 +31204,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -31013,7 +31224,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -31033,7 +31244,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -31053,7 +31264,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -31073,7 +31284,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -31093,7 +31304,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -31113,7 +31324,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "protocol", _strong.Protocols, context);
                         }
                         else {
-                            context.RegisterMissTarget("protocol", _strong.Key.Value);
+                            context.RegisterMissTarget("protocol", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -31133,7 +31344,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -31581,7 +31792,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                             }
                                                                                                                                                                                             else {
                                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Acts.QuantityObservation))) {
                                                                                                                                                                                                         SanteDB.Core.Model.Acts.QuantityObservation _nretVal = ((SanteDB.Core.Model.Acts.QuantityObservation)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -31706,7 +31917,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("interpretationConceptModel")) {
                 if ((_strong.InterpretationConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("interpretationConceptModel", _strong.Key.Value))) {
+                    if ((_strong.InterpretationConceptKey.HasValue && context.ShouldForceLoad("interpretationConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.InterpretationConceptKey);
                         if ((_delay != null)) {
@@ -31715,7 +31926,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "interpretationConceptModel", _strong.InterpretationConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("interpretationConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("interpretationConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -31739,7 +31950,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -31748,7 +31959,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -31814,7 +32025,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -31823,7 +32034,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -31833,7 +32044,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("moodConceptModel")) {
                 if ((_strong.MoodConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key.Value))) {
+                    if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
                         if ((_delay != null)) {
@@ -31842,7 +32053,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "moodConceptModel", _strong.MoodConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("moodConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("moodConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -31852,7 +32063,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("reasonConceptModel")) {
                 if ((_strong.ReasonConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
                         if ((_delay != null)) {
@@ -31861,7 +32072,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "reasonConceptModel", _strong.ReasonConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -31871,7 +32082,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -31880,7 +32091,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -31890,7 +32101,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -31899,7 +32110,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -31919,7 +32130,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -31939,7 +32150,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -31959,7 +32170,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -31979,7 +32190,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -31999,7 +32210,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -32019,7 +32230,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -32039,7 +32250,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "protocol", _strong.Protocols, context);
                         }
                         else {
-                            context.RegisterMissTarget("protocol", _strong.Key.Value);
+                            context.RegisterMissTarget("protocol", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -32059,7 +32270,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -32491,7 +32702,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                     }
                                                                                                                                                                                     else {
                                                                                                                                                                                         if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                             if ((_type != typeof(SanteDB.Core.Model.Acts.TextObservation))) {
                                                                                                                                                                                                 SanteDB.Core.Model.Acts.TextObservation _nretVal = ((SanteDB.Core.Model.Acts.TextObservation)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -32607,7 +32818,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("valueModel")) {
                 if ((_strong.Value == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("valueModel", _strong.Key.Value))) {
+                    if ((_strong.ValueKey.HasValue && context.ShouldForceLoad("valueModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ValueKey);
                         if ((_delay != null)) {
@@ -32616,7 +32827,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "valueModel", _strong.Value, context);
                         }
                         else {
-                            context.RegisterMissTarget("valueModel", _strong.Key.Value);
+                            context.RegisterMissTarget("valueModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -32633,7 +32844,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("interpretationConceptModel")) {
                 if ((_strong.InterpretationConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("interpretationConceptModel", _strong.Key.Value))) {
+                    if ((_strong.InterpretationConceptKey.HasValue && context.ShouldForceLoad("interpretationConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.InterpretationConceptKey);
                         if ((_delay != null)) {
@@ -32642,7 +32853,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "interpretationConceptModel", _strong.InterpretationConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("interpretationConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("interpretationConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -32666,7 +32877,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -32675,7 +32886,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -32741,7 +32952,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -32750,7 +32961,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -32760,7 +32971,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("moodConceptModel")) {
                 if ((_strong.MoodConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key.Value))) {
+                    if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
                         if ((_delay != null)) {
@@ -32769,7 +32980,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "moodConceptModel", _strong.MoodConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("moodConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("moodConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -32779,7 +32990,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("reasonConceptModel")) {
                 if ((_strong.ReasonConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
                         if ((_delay != null)) {
@@ -32788,7 +32999,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "reasonConceptModel", _strong.ReasonConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -32798,7 +33009,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -32807,7 +33018,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -32817,7 +33028,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -32826,7 +33037,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -32846,7 +33057,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -32866,7 +33077,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -32886,7 +33097,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -32906,7 +33117,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -32926,7 +33137,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -32946,7 +33157,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -32966,7 +33177,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "protocol", _strong.Protocols, context);
                         }
                         else {
-                            context.RegisterMissTarget("protocol", _strong.Key.Value);
+                            context.RegisterMissTarget("protocol", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -32986,7 +33197,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -33426,7 +33637,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                         }
                                                                                                                                                                                         else {
                                                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Acts.CodedObservation))) {
                                                                                                                                                                                                     SanteDB.Core.Model.Acts.CodedObservation _nretVal = ((SanteDB.Core.Model.Acts.CodedObservation)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -33536,7 +33747,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("dischargeDispositionModel")) {
                 if ((_strong.DischargeDisposition == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("dischargeDispositionModel", _strong.Key.Value))) {
+                    if ((_strong.DischargeDispositionKey.HasValue && context.ShouldForceLoad("dischargeDispositionModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DischargeDispositionKey);
                         if ((_delay != null)) {
@@ -33545,7 +33756,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "dischargeDispositionModel", _strong.DischargeDisposition, context);
                         }
                         else {
-                            context.RegisterMissTarget("dischargeDispositionModel", _strong.Key.Value);
+                            context.RegisterMissTarget("dischargeDispositionModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -33569,7 +33780,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -33578,7 +33789,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -33644,7 +33855,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -33653,7 +33864,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -33663,7 +33874,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("moodConceptModel")) {
                 if ((_strong.MoodConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key.Value))) {
+                    if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
                         if ((_delay != null)) {
@@ -33672,7 +33883,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "moodConceptModel", _strong.MoodConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("moodConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("moodConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -33682,7 +33893,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("reasonConceptModel")) {
                 if ((_strong.ReasonConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
                         if ((_delay != null)) {
@@ -33691,7 +33902,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "reasonConceptModel", _strong.ReasonConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -33701,7 +33912,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -33710,7 +33921,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -33720,7 +33931,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -33729,7 +33940,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -33749,7 +33960,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -33769,7 +33980,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -33789,7 +34000,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -33809,7 +34020,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -33829,7 +34040,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -33849,7 +34060,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -33869,7 +34080,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "protocol", _strong.Protocols, context);
                         }
                         else {
-                            context.RegisterMissTarget("protocol", _strong.Key.Value);
+                            context.RegisterMissTarget("protocol", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -33889,7 +34100,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -34305,7 +34516,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                             }
                                                                                                                                                                             else {
                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Acts.PatientEncounter))) {
                                                                                                                                                                                         SanteDB.Core.Model.Acts.PatientEncounter _nretVal = ((SanteDB.Core.Model.Acts.PatientEncounter)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -34426,7 +34637,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("methodModel")) {
                 if ((_strong.Method == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("methodModel", _strong.Key.Value))) {
+                    if ((_strong.MethodKey.HasValue && context.ShouldForceLoad("methodModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MethodKey);
                         if ((_delay != null)) {
@@ -34435,7 +34646,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "methodModel", _strong.Method, context);
                         }
                         else {
-                            context.RegisterMissTarget("methodModel", _strong.Key.Value);
+                            context.RegisterMissTarget("methodModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -34445,7 +34656,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("approachSiteModel")) {
                 if ((_strong.ApproachSite == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("approachSiteModel", _strong.Key.Value))) {
+                    if ((_strong.ApproachSiteKey.HasValue && context.ShouldForceLoad("approachSiteModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ApproachSiteKey);
                         if ((_delay != null)) {
@@ -34454,7 +34665,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "approachSiteModel", _strong.ApproachSite, context);
                         }
                         else {
-                            context.RegisterMissTarget("approachSiteModel", _strong.Key.Value);
+                            context.RegisterMissTarget("approachSiteModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -34464,7 +34675,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("targetSiteModel")) {
                 if ((_strong.TargetSite == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("targetSiteModel", _strong.Key.Value))) {
+                    if ((_strong.TargetSiteKey.HasValue && context.ShouldForceLoad("targetSiteModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TargetSiteKey);
                         if ((_delay != null)) {
@@ -34473,7 +34684,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "targetSiteModel", _strong.TargetSite, context);
                         }
                         else {
-                            context.RegisterMissTarget("targetSiteModel", _strong.Key.Value);
+                            context.RegisterMissTarget("targetSiteModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -34497,7 +34708,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -34506,7 +34717,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -34572,7 +34783,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -34581,7 +34792,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -34591,7 +34802,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("moodConceptModel")) {
                 if ((_strong.MoodConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key.Value))) {
+                    if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
                         if ((_delay != null)) {
@@ -34600,7 +34811,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "moodConceptModel", _strong.MoodConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("moodConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("moodConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -34610,7 +34821,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("reasonConceptModel")) {
                 if ((_strong.ReasonConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
                         if ((_delay != null)) {
@@ -34619,7 +34830,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "reasonConceptModel", _strong.ReasonConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -34629,7 +34840,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -34638,7 +34849,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -34648,7 +34859,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -34657,7 +34868,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -34677,7 +34888,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -34697,7 +34908,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -34717,7 +34928,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -34737,7 +34948,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -34757,7 +34968,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -34777,7 +34988,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -34797,7 +35008,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "protocol", _strong.Protocols, context);
                         }
                         else {
-                            context.RegisterMissTarget("protocol", _strong.Key.Value);
+                            context.RegisterMissTarget("protocol", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -34817,7 +35028,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -35265,7 +35476,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                             }
                                                                                                                                                                                             else {
                                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Acts.Procedure))) {
                                                                                                                                                                                                         SanteDB.Core.Model.Acts.Procedure _nretVal = ((SanteDB.Core.Model.Acts.Procedure)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -35551,7 +35762,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                 }
                                                                 else {
                                                                     if ("$type".Equals(r.Value)) {
-                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                         if ((_type != typeof(SanteDB.Core.Model.Acts.Protocol))) {
                                                                             SanteDB.Core.Model.Acts.Protocol _nretVal = ((SanteDB.Core.Model.Acts.Protocol)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                             _nretVal.CopyObjectData(_retVal);
@@ -35638,7 +35849,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("routeModel")) {
                 if ((_strong.Route == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("routeModel", _strong.Key.Value))) {
+                    if ((_strong.RouteKey.HasValue && context.ShouldForceLoad("routeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.RouteKey);
                         if ((_delay != null)) {
@@ -35647,7 +35858,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "routeModel", _strong.Route, context);
                         }
                         else {
-                            context.RegisterMissTarget("routeModel", _strong.Key.Value);
+                            context.RegisterMissTarget("routeModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -35657,7 +35868,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("doseUnitModel")) {
                 if ((_strong.DoseUnit == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("doseUnitModel", _strong.Key.Value))) {
+                    if ((_strong.DoseUnitKey.HasValue && context.ShouldForceLoad("doseUnitModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DoseUnitKey);
                         if ((_delay != null)) {
@@ -35666,7 +35877,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "doseUnitModel", _strong.DoseUnit, context);
                         }
                         else {
-                            context.RegisterMissTarget("doseUnitModel", _strong.Key.Value);
+                            context.RegisterMissTarget("doseUnitModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -35697,7 +35908,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("siteModel")) {
                 if ((_strong.Site == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("siteModel", _strong.Key.Value))) {
+                    if ((_strong.SiteKey.HasValue && context.ShouldForceLoad("siteModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.SiteKey);
                         if ((_delay != null)) {
@@ -35706,7 +35917,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "siteModel", _strong.Site, context);
                         }
                         else {
-                            context.RegisterMissTarget("siteModel", _strong.Key.Value);
+                            context.RegisterMissTarget("siteModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -35730,7 +35941,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("templateModel")) {
                 if ((_strong.Template == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("templateModel", _strong.Key.Value))) {
+                    if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
                         if ((_delay != null)) {
@@ -35739,7 +35950,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "templateModel", _strong.Template, context);
                         }
                         else {
-                            context.RegisterMissTarget("templateModel", _strong.Key.Value);
+                            context.RegisterMissTarget("templateModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -35805,7 +36016,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("classConceptModel")) {
                 if ((_strong.ClassConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
                         if ((_delay != null)) {
@@ -35814,7 +36025,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "classConceptModel", _strong.ClassConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("classConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("classConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -35824,7 +36035,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("moodConceptModel")) {
                 if ((_strong.MoodConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key.Value))) {
+                    if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
                         if ((_delay != null)) {
@@ -35833,7 +36044,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "moodConceptModel", _strong.MoodConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("moodConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("moodConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -35843,7 +36054,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("reasonConceptModel")) {
                 if ((_strong.ReasonConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key.Value))) {
+                    if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
                         if ((_delay != null)) {
@@ -35852,7 +36063,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "reasonConceptModel", _strong.ReasonConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("reasonConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -35862,7 +36073,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("statusConceptModel")) {
                 if ((_strong.StatusConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key.Value))) {
+                    if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
                         if ((_delay != null)) {
@@ -35871,7 +36082,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "statusConceptModel", _strong.StatusConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("statusConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("statusConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -35881,7 +36092,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeConceptModel")) {
                 if ((_strong.TypeConcept == null)) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key.Value))) {
+                    if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
                         if ((_delay != null)) {
@@ -35890,7 +36101,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "typeConceptModel", _strong.TypeConcept, context);
                         }
                         else {
-                            context.RegisterMissTarget("typeConceptModel", _strong.Key.Value);
+                            context.RegisterMissTarget("typeConceptModel", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -35910,7 +36121,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "identifier", _strong.Identifiers, context);
                         }
                         else {
-                            context.RegisterMissTarget("identifier", _strong.Key.Value);
+                            context.RegisterMissTarget("identifier", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -35930,7 +36141,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
-                            context.RegisterMissTarget("relationship", _strong.Key.Value);
+                            context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -35950,7 +36161,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "policy", _strong.Policies, context);
                         }
                         else {
-                            context.RegisterMissTarget("policy", _strong.Key.Value);
+                            context.RegisterMissTarget("policy", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -35970,7 +36181,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "extension", _strong.Extensions, context);
                         }
                         else {
-                            context.RegisterMissTarget("extension", _strong.Key.Value);
+                            context.RegisterMissTarget("extension", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -35990,7 +36201,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "note", _strong.Notes, context);
                         }
                         else {
-                            context.RegisterMissTarget("note", _strong.Key.Value);
+                            context.RegisterMissTarget("note", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -36010,7 +36221,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "tag", _strong.Tags, context);
                         }
                         else {
-                            context.RegisterMissTarget("tag", _strong.Key.Value);
+                            context.RegisterMissTarget("tag", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -36030,7 +36241,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "protocol", _strong.Protocols, context);
                         }
                         else {
-                            context.RegisterMissTarget("protocol", _strong.Key.Value);
+                            context.RegisterMissTarget("protocol", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -36050,7 +36261,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             context.JsonContext.WritePropertyUtil(w, "participation", _strong.Participations, context);
                         }
                         else {
-                            context.RegisterMissTarget("participation", _strong.Key.Value);
+                            context.RegisterMissTarget("participation", _strong.Key.GetValueOrDefault());
                         }
                     }
                 }
@@ -36514,7 +36725,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                     }
                                                                                                                                                                                                     else {
                                                                                                                                                                                                         if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.38.0.29306, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=1.108.0.28324, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                             if ((_type != typeof(SanteDB.Core.Model.Acts.SubstanceAdministration))) {
                                                                                                                                                                                                                 SanteDB.Core.Model.Acts.SubstanceAdministration _nretVal = ((SanteDB.Core.Model.Acts.SubstanceAdministration)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                                 _nretVal.CopyObjectData(_retVal);
