@@ -27,6 +27,7 @@ using SanteDB.Core.Applets.Services;
 using SanteDB.Core.Applets.ViewModel.Description;
 using SanteDB.Core.Applets.ViewModel.Json;
 using SanteDB.Core.Diagnostics;
+using SanteDB.Core.Interfaces;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Json.Formatter;
@@ -108,29 +109,37 @@ namespace SanteDB.Rest.Common.Serialization
         // Static ctor
         static RestMessageDispatchFormatter()
         {
-            m_defaultViewModel = ViewModelDescription.Load(typeof(RestMessageDispatchFormatter<>).Assembly.GetManifestResourceStream("SanteDB.Rest.Common.Resources.ViewModel.xml"));
             var tracer = Tracer.GetTracer(typeof(RestMessageDispatchFormatter));
 
+            try
+            {
+                m_defaultViewModel = ViewModelDescription.Load(typeof(RestMessageDispatchFormatter<>).Assembly.GetManifestResourceStream("SanteDB.Rest.Common.Resources.ViewModel.xml"));
 
-            tracer.TraceInfo("Will generate serializer for {0}", typeof(TContract).FullName);
 
-            foreach (var s in s_knownTypes)
-                if (!s_serializers.ContainsKey(s))
-                {
-                    tracer.TraceVerbose("Generating serializer for {0}", s.Name);
-                    try
+                tracer.TraceInfo("Will generate serializer for {0}", typeof(TContract).FullName);
+
+                foreach (var s in s_knownTypes)
+                    if (!s_serializers.ContainsKey(s))
                     {
-                        if (typeof(Bundle).IsAssignableFrom(s))
-                            s_serializers.Add(s, new XmlSerializer(s, AppDomain.CurrentDomain.GetAssemblies().SelectMany(o => o.GetTypes()).Where(t => typeof(IdentifiedData).IsAssignableFrom(t) && !t.IsGenericTypeDefinition && !t.IsAbstract).ToArray()));
-                        else
-                            s_serializers.Add(s, new XmlSerializer(s, s.GetCustomAttributes<XmlIncludeAttribute>().Select(o => o.Type).ToArray()));
+                        tracer.TraceInfo("Generating serializer for {0} ({1} types)", s.Name, s_knownTypes.Length);
+                        try
+                        {
+                            if (typeof(Bundle).IsAssignableFrom(s))
+                                s_serializers.Add(s, new XmlSerializer(s, ApplicationServiceContext.Current.GetService<IServiceManager>().GetAllTypes().Where(t => typeof(IdentifiedData).IsAssignableFrom(t) && !t.IsGenericTypeDefinition && !t.IsAbstract).ToArray()));
+                            else
+                                s_serializers.Add(s, new XmlSerializer(s, s.GetCustomAttributes<XmlIncludeAttribute>().Select(o => o.Type).ToArray()));
+                        }
+                        catch (Exception e)
+                        {
+                            tracer.TraceError("Error generating for {0} : {1}", s.Name, e.ToString());
+                            //throw;
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        tracer.TraceError("Error generating for {0} : {1}", s.Name, e.ToString());
-                        //throw;
-                    }
-                }
+            }
+            catch(Exception e)
+            {
+                tracer.TraceError("Error generating REST message dispatch formatter: {0}", e);
+            }
 
         }
 
@@ -246,6 +255,10 @@ namespace SanteDB.Rest.Common.Serialization
                 string accepts = httpRequest.Headers["Accept"],
                     contentType = httpRequest.Headers["Content-Type"];
 
+#if DEBUG
+                this.m_traceSource.TraceVerbose("Serializing {0}", result);
+#endif
+
                 // Result is serializable
                 if(result == null)
                 {
@@ -259,11 +272,17 @@ namespace SanteDB.Rest.Common.Serialization
                     if (accepts?.StartsWith("application/json+sdb-viewmodel") == true &&
                         typeof(IdentifiedData).IsAssignableFrom(result?.GetType()))
                     {
+#if DEBUG
+                        this.m_traceSource.TraceVerbose("Serializing {0} as view model result", result);
+#endif
                         var viewModel = httpRequest.Headers["X-SanteDB-ViewModel"] ?? httpRequest.QueryString["_viewModel"];
 
                         // Create the view model serializer
                         var viewModelSerializer = new JsonViewModelSerializer();
 
+#if DEBUG
+                        this.m_traceSource.TraceVerbose("Will load serialization assembly {0}", typeof(ActExtensionViewModelSerializer).Assembly);
+#endif
                         viewModelSerializer.LoadSerializerAssembly(typeof(ActExtensionViewModelSerializer).Assembly);
 
                         if (!String.IsNullOrEmpty(viewModel))
@@ -276,6 +295,9 @@ namespace SanteDB.Rest.Common.Serialization
                             viewModelSerializer.ViewModel = m_defaultViewModel;
                         }
 
+#if DEBUG
+                        this.m_traceSource.TraceVerbose("Using view model {0}", viewModelSerializer.ViewModel?.Name);
+#endif
                         using (var tms = new MemoryStream())
                         using (StreamWriter sw = new StreamWriter(tms, Encoding.UTF8))
                         using (JsonWriter jsw = new JsonTextWriter(sw))
@@ -286,6 +308,9 @@ namespace SanteDB.Rest.Common.Serialization
                             response.Body = new MemoryStream(tms.ToArray());
                         }
 
+#if DEBUG
+                        this.m_traceSource.TraceVerbose("Serialized body of  {0}", result);
+#endif
                         contentType = "application/json+sdb-viewmodel";
                     }
                     else if (accepts?.StartsWith("application/json") == true ||
@@ -356,6 +381,9 @@ namespace SanteDB.Rest.Common.Serialization
                     response.Body = new MemoryStream(Encoding.UTF8.GetBytes(result.ToString()));
                 }
 
+#if DEBUG
+                this.m_traceSource.TraceVerbose("Setting response headers");
+#endif
                 RestOperationContext.Current.OutgoingResponse.ContentType = RestOperationContext.Current.OutgoingResponse.ContentType ?? contentType;
                 RestOperationContext.Current.OutgoingResponse.AppendHeader("X-PoweredBy", String.Format("SanteDB {0} ({1})", m_version, m_versionName));
                 RestOperationContext.Current.OutgoingResponse.AppendHeader("X-GeneratedOn", DateTime.Now.ToString("o"));
