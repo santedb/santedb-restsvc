@@ -102,26 +102,25 @@ namespace SanteDB.Rest.Common.Serialization
         // Known types
         private static Type[] s_knownTypes = typeof(TContract).GetCustomAttributes<ServiceKnownResourceAttribute>().Select(t => t.Type).ToArray();
         // Serializers
-        private static Dictionary<Type, XmlSerializer> s_serializers = new Dictionary<Type, XmlSerializer>();
+        private Dictionary<Type, XmlSerializer> s_serializers = new Dictionary<Type, XmlSerializer>();
         // Default view model
         private static ViewModelDescription m_defaultViewModel = null;
-
-        // Static ctor
-        static RestMessageDispatchFormatter()
+        /// <summary>
+        /// Create new dispatch message formatter
+        /// </summary>
+        public RestMessageDispatchFormatter()
         {
-            var tracer = Tracer.GetTracer(typeof(RestMessageDispatchFormatter));
-
             try
             {
                 m_defaultViewModel = ViewModelDescription.Load(typeof(RestMessageDispatchFormatter<>).Assembly.GetManifestResourceStream("SanteDB.Rest.Common.Resources.ViewModel.xml"));
 
 
-                tracer.TraceInfo("Will generate serializer for {0}", typeof(TContract).FullName);
+                this.m_traceSource.TraceInfo("Will generate serializer for {0} ({1} types)...", typeof(TContract).FullName, s_knownTypes.Length);
 
                 foreach (var s in s_knownTypes)
                     if (!s_serializers.ContainsKey(s))
                     {
-                        tracer.TraceInfo("Generating serializer for {0} ({1} types)", s.Name, s_knownTypes.Length);
+                        this.m_traceSource.TraceInfo("Generating serializer for {0}...", s.Name);
                         try
                         {
                             if (typeof(Bundle).IsAssignableFrom(s))
@@ -131,16 +130,16 @@ namespace SanteDB.Rest.Common.Serialization
                         }
                         catch (Exception e)
                         {
-                            tracer.TraceError("Error generating for {0} : {1}", s.Name, e.ToString());
+                            this.m_traceSource.TraceError("Error generating for {0} : {1}", s.Name, e.ToString());
                             //throw;
                         }
                     }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                tracer.TraceError("Error generating REST message dispatch formatter: {0}", e);
+                this.m_traceSource.TraceError("Error generating REST message dispatch formatter: {0}", e);
             }
-
+            this.m_traceSource.TraceError("Finished creating REST message formatter");
         }
 
         /// <summary>
@@ -250,14 +249,12 @@ namespace SanteDB.Rest.Common.Serialization
         {
             try
             {
+
+                this.m_traceSource.TraceInfo("Serializing {0}", result.GetType());
                 // Outbound control
                 var httpRequest = RestOperationContext.Current.IncomingRequest;
                 string accepts = httpRequest.Headers["Accept"],
                     contentType = httpRequest.Headers["Content-Type"];
-
-#if DEBUG
-                this.m_traceSource.TraceVerbose("Serializing {0}", result);
-#endif
 
                 // Result is serializable
                 if(result == null)
@@ -273,7 +270,7 @@ namespace SanteDB.Rest.Common.Serialization
                         typeof(IdentifiedData).IsAssignableFrom(result?.GetType()))
                     {
 #if DEBUG
-                        this.m_traceSource.TraceVerbose("Serializing {0} as view model result", result);
+                        this.m_traceSource.TraceInfo("Serializing {0} as view model result", result);
 #endif
                         var viewModel = httpRequest.Headers["X-SanteDB-ViewModel"] ?? httpRequest.QueryString["_viewModel"];
 
@@ -281,7 +278,7 @@ namespace SanteDB.Rest.Common.Serialization
                         var viewModelSerializer = new JsonViewModelSerializer();
 
 #if DEBUG
-                        this.m_traceSource.TraceVerbose("Will load serialization assembly {0}", typeof(ActExtensionViewModelSerializer).Assembly);
+                        this.m_traceSource.TraceInfo("Will load serialization assembly {0}", typeof(ActExtensionViewModelSerializer).Assembly);
 #endif
                         viewModelSerializer.LoadSerializerAssembly(typeof(ActExtensionViewModelSerializer).Assembly);
 
@@ -296,7 +293,7 @@ namespace SanteDB.Rest.Common.Serialization
                         }
 
 #if DEBUG
-                        this.m_traceSource.TraceVerbose("Using view model {0}", viewModelSerializer.ViewModel?.Name);
+                        this.m_traceSource.TraceInfo("Using view model {0}", viewModelSerializer.ViewModel?.Name);
 #endif
                         using (var tms = new MemoryStream())
                         using (StreamWriter sw = new StreamWriter(tms, Encoding.UTF8))
@@ -309,7 +306,7 @@ namespace SanteDB.Rest.Common.Serialization
                         }
 
 #if DEBUG
-                        this.m_traceSource.TraceVerbose("Serialized body of  {0}", result);
+                        this.m_traceSource.TraceInfo("Serialized body of  {0}", result);
 #endif
                         contentType = "application/json+sdb-viewmodel";
                     }
