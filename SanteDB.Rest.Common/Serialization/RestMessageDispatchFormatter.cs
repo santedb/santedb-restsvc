@@ -250,7 +250,7 @@ namespace SanteDB.Rest.Common.Serialization
             try
             {
 
-                this.m_traceSource.TraceInfo("Serializing {0}", result.GetType());
+                this.m_traceSource.TraceInfo("Serializing {0}", result?.GetType());
                 // Outbound control
                 var httpRequest = RestOperationContext.Current.IncomingRequest;
                 string accepts = httpRequest.Headers["Accept"],
