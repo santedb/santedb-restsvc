@@ -311,7 +311,7 @@ namespace SanteDB.Rest.Common
             catch (Exception e)
             {
                 AuditUtil.AuditQuery<TResource>(Core.Auditing.OutcomeIndicator.MinorFail, queryParameters.ToString());
-                throw e;
+                throw new Exception("Error querying underlying repository", e);
             }
         }
 

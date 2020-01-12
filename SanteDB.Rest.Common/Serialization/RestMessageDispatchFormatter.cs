@@ -139,7 +139,7 @@ namespace SanteDB.Rest.Common.Serialization
             {
                 this.m_traceSource.TraceError("Error generating REST message dispatch formatter: {0}", e);
             }
-            this.m_traceSource.TraceError("Finished creating REST message formatter");
+            this.m_traceSource.TraceInfo("Finished creating REST message formatter");
         }
 
         /// <summary>

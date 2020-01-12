@@ -27,6 +27,7 @@ using SanteDB.Core.Model;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Patch;
+using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
@@ -372,7 +373,7 @@ namespace SanteDB.Rest.HDSI
                     String offset = RestOperationContext.Current.IncomingRequest.QueryString["_offset"],
                         count = RestOperationContext.Current.IncomingRequest.QueryString["_count"];
 
-                    var query = RestOperationContext.Current.IncomingRequest.QueryString.ToQuery();
+                    var query = NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query); //RestOperationContext.Current.IncomingRequest.QueryString.ToQuery();
 
                     // Modified on?
                     if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null)
