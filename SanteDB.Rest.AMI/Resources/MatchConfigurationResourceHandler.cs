@@ -102,14 +102,14 @@ namespace SanteDB.Rest.AMI.Resources
                             throw new InvalidOperationException("Matcher is not configured on this service");
                         else
                         {
-                            IEnumerable<dynamic> retVal = null;
+                            object retVal = null;
                             switch (RestOperationContext.Current.IncomingRequest.QueryString["_mode"])
                             {
                                 case "block":
-                                    retVal = matcher.Block(target, scopingEntity.ToString());
+                                    retVal = BundleUtil.CreateBundle(matcher.Block(target, scopingEntity.ToString()), 0, 0, true);
                                     break;
                                 default:
-                                    retVal = matcher.Match(target, scopingEntity.ToString());
+                                    retVal = (matcher as IMatchReportFactory).CreateMatchReport(target, matcher.Match(target, scopingEntity.ToString()));
                                     break;
                             }
                             return retVal;
