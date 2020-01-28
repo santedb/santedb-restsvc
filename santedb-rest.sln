@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SanteDB.Core.Model.RISI", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SanteDB.Rest.HDSI", "SanteDB.Rest.HDSI\SanteDB.Rest.HDSI.csproj", "{903E2E75-7B62-4C42-A001-404DC0235A6B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SanteDB.Core.Model.ViewModelSerializers", "SanteDB.Core.Model.ViewModelSerializers\SanteDB.Core.Model.ViewModelSerializers.csproj", "{ECE9B280-9647-4092-BABF-EB2E25084670}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{903E2E75-7B62-4C42-A001-404DC0235A6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{903E2E75-7B62-4C42-A001-404DC0235A6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{903E2E75-7B62-4C42-A001-404DC0235A6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECE9B280-9647-4092-BABF-EB2E25084670}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECE9B280-9647-4092-BABF-EB2E25084670}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECE9B280-9647-4092-BABF-EB2E25084670}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECE9B280-9647-4092-BABF-EB2E25084670}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
