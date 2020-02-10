@@ -156,13 +156,14 @@ namespace SanteDB.Rest.Common
                     resourceData = updateIfExists ? this.GetRepository().Save(resourceData) : this.GetRepository().Insert(resourceData);
 
                     AuditUtil.AuditCreate(Core.Auditing.OutcomeIndicator.Success, null, resourceData);
+                  
                     return resourceData;
                 }
             }
             catch(Exception e)
             {
                 AuditUtil.AuditCreate(Core.Auditing.OutcomeIndicator.MinorFail, null, data);
-                throw e;
+                throw new Exception($"Error creating {data}", e);
             }
 
             throw new ArgumentException(nameof(data), "Invalid data type");

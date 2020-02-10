@@ -123,8 +123,14 @@ namespace SanteDB.Rest.Common.Serialization
                         this.m_traceSource.TraceInfo("Generating serializer for {0}...", s.Name);
                         try
                         {
-                            if (typeof(Bundle).IsAssignableFrom(s))
-                                s_serializers.Add(s, new XmlSerializer(s, ApplicationServiceContext.Current.GetService<IServiceManager>().GetAllTypes().Where(t => typeof(IdentifiedData).IsAssignableFrom(t) && !t.IsGenericTypeDefinition && !t.IsAbstract).ToArray()));
+                            if (typeof(Bundle).IsAssignableFrom(s)) {
+                                var types = ApplicationServiceContext.Current.GetService<IServiceManager>()
+                                    .GetAllTypes()
+                                    .Union(ModelSerializationBinder.GetRegisteredTypes())
+                                    .Where(t => typeof(IdentifiedData).IsAssignableFrom(t) && !t.IsGenericTypeDefinition && !t.IsAbstract)
+                                    .ToArray();
+                                s_serializers.Add(s, new XmlSerializer(s, types));
+                            }
                             else
                                 s_serializers.Add(s, new XmlSerializer(s, s.GetCustomAttributes<XmlIncludeAttribute>().Select(o => o.Type).ToArray()));
                         }
@@ -341,6 +347,8 @@ namespace SanteDB.Rest.Common.Serialization
                     else
                     {
                         XmlSerializer xsz = null;
+
+                        // Is this a bundle? Does it contain any data we cannot serialize as XML
                         if (!s_serializers.TryGetValue(result.GetType(), out xsz))
                         {
                             // Build a serializer
@@ -352,7 +360,7 @@ namespace SanteDB.Rest.Common.Serialization
                                     s_serializers.Add(result.GetType(), xsz);
                             }
                         }
-
+                        
                         MemoryStream ms = new MemoryStream();
                         xsz.Serialize(ms, result);
                         contentType = "application/xml";
