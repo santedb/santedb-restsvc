@@ -55,12 +55,12 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Set the e-tag
         /// </summary>
-        /// <param name="me"></param>
-        /// <param name="etag"></param>
-        public static void SetETag(this HttpListenerResponse me, String etag)
+        /// <param name="isWeak">True if the e-tag is a weak reference</param>
+        /// <param name="etag">The value of the e-tag</param>
+        public static void SetETag(this HttpListenerResponse me, String etag, bool isWeak = false)
         {
             if (!String.IsNullOrEmpty(etag))
-                me.AppendHeader("ETag", etag);
+                me.AppendHeader("ETag", isWeak ? $"W/{etag}" : etag);
         }
 
         /// <summary>

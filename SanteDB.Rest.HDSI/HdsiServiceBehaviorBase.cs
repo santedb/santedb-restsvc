@@ -56,6 +56,7 @@ namespace SanteDB.Rest.HDSI
         /// The trace source for HDSI based implementations
         /// </summary>
         protected Tracer m_traceSource = Tracer.GetTracer(typeof(HdsiServiceBehaviorBase));
+
         /// <summary>
         /// The resource handler tool for operations on the HDSI
         /// </summary>
@@ -191,7 +192,6 @@ namespace SanteDB.Rest.HDSI
             try
             {
 
-
                 var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
@@ -259,7 +259,6 @@ namespace SanteDB.Rest.HDSI
                     else
                     {
                         RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
-
                         return retVal;
                     }
                 }
@@ -288,7 +287,6 @@ namespace SanteDB.Rest.HDSI
 
                 XmlReflectionImporter importer = new XmlReflectionImporter("http://santedb.org/model");
                 XmlSchemaExporter exporter = new XmlSchemaExporter(schemaCollection);
-
 
                 foreach (var cls in this.m_resourceHandler.Handlers.Where(o => o.Scope == typeof(IHdsiServiceContract)).Select(o => o.Type))
                     exporter.ExportTypeMapping(importer.ImportTypeMapping(cls, "http://santedb.org/model"));
@@ -440,7 +438,6 @@ namespace SanteDB.Rest.HDSI
             }
         }
 
-
         /// <summary>
         /// Get the server's current time
         /// </summary>
@@ -493,7 +490,6 @@ namespace SanteDB.Rest.HDSI
 
             }
         }
-
 
         /// <summary>
         /// Obsolete the specified data
@@ -704,7 +700,6 @@ namespace SanteDB.Rest.HDSI
                 throw;
             }
         }
-
 
         /// <summary>
         /// Throw if the service is not ready
