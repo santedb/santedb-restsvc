@@ -189,7 +189,8 @@ namespace SanteDB.Rest.Common
             catch(Exception e)
             {
                 AuditUtil.AuditRead<TResource>(Core.Auditing.OutcomeIndicator.MinorFail, id.ToString());
-                throw e;
+                throw new Exception($"Error getting resource {id}", e);
+
             }
         }
 
@@ -211,7 +212,8 @@ namespace SanteDB.Rest.Common
             catch(Exception e)
             {
                 AuditUtil.AuditDelete<TResource>(Core.Auditing.OutcomeIndicator.MinorFail, key.ToString());
-                throw e;
+                throw new Exception($"Error obsoleting resource {key}", e);
+
             }
         }
 
@@ -233,7 +235,8 @@ namespace SanteDB.Rest.Common
             }
             catch (Exception e)
             {
-                throw e;
+                throw new Exception("Error querying datasource", e);
+
             }
 
         }
@@ -350,7 +353,7 @@ namespace SanteDB.Rest.Common
             catch (Exception e)
             {
                 AuditUtil.AuditUpdate(Core.Auditing.OutcomeIndicator.MinorFail, null, data);
-                throw e;
+                throw new Exception("Error updating resource", e);
             }
         }
     }
