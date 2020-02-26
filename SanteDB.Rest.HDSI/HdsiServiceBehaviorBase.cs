@@ -136,7 +136,7 @@ namespace SanteDB.Rest.HDSI
 
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
-                throw;
+                throw new Exception($"Error creating {body}", e);
             }
         }
 
@@ -177,8 +177,7 @@ namespace SanteDB.Rest.HDSI
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
-                throw;
-
+                throw new Exception($"Error creating/updating {body}", e);
             }
         }
 
@@ -233,8 +232,7 @@ namespace SanteDB.Rest.HDSI
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
-                throw;
-
+                throw new Exception($"Error getting {resourceType}/{id}", e);
             }
         }
 
@@ -270,8 +268,7 @@ namespace SanteDB.Rest.HDSI
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
-                throw;
-
+                throw new Exception($"Error getting version {resourceType}/{id}/history/{versionId}", e);
             }
         }
 
@@ -352,7 +349,7 @@ namespace SanteDB.Rest.HDSI
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
-                throw;
+                throw new Exception($"Error getting history for {resourceType}/{id}");
 
             }
         }
@@ -433,7 +430,7 @@ namespace SanteDB.Rest.HDSI
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
-                throw;
+                throw new Exception($"Error searching {resourceType}", e);
 
             }
         }
@@ -486,7 +483,7 @@ namespace SanteDB.Rest.HDSI
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
-                throw;
+                throw new Exception($"Error updating {resourceType}/{id}", e);
 
             }
         }
@@ -554,7 +551,7 @@ namespace SanteDB.Rest.HDSI
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
-                throw;
+                throw new Exception($"Error deleting {resourceType}/{id}", e);
 
             }
         }
@@ -643,13 +640,13 @@ namespace SanteDB.Rest.HDSI
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceWarning(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
-                throw;
+                throw new Exception($"Assertion failed while patching {resourceType}/{id}", e);
             }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
-                throw;
+                throw new Exception($"Error patching {resourceType}/{id}", e);
 
             }
         }
@@ -697,7 +694,7 @@ namespace SanteDB.Rest.HDSI
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
-                throw;
+                throw new Exception("Error gathering service options", e);
             }
         }
 

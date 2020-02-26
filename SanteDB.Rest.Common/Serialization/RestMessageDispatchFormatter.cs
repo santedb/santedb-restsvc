@@ -120,17 +120,8 @@ namespace SanteDB.Rest.Common.Serialization
                     this.m_traceSource.TraceInfo("Generating serializer for {0}...", s.Name);
                     try
                     {
-                        if (typeof(Bundle).IsAssignableFrom(s))
-                        {
-                            var types = ApplicationServiceContext.Current.GetService<IServiceManager>()
-                                .GetAllTypes()
-                                .Union(ModelSerializationBinder.GetRegisteredTypes())
-                                .Where(t => typeof(IdentifiedData).IsAssignableFrom(t) && !t.IsGenericTypeDefinition && !t.IsAbstract)
-                                .ToArray();
-                            XmlModelSerializerFactory.Current.CreateSerializer(s, types);
-                        }
-                        else
-                            XmlModelSerializerFactory.Current.CreateSerializer(s, s.GetCustomAttributes<XmlIncludeAttribute>().Select(o => o.Type).ToArray());
+                        // Force creation of .NET Serializer
+                        XmlModelSerializerFactory.Current.CreateSerializer(s);
                     }
                     catch (Exception e)
                     {
