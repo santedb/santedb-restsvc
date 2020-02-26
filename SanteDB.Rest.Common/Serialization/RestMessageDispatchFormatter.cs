@@ -63,9 +63,9 @@ namespace SanteDB.Rest.Common.Serialization
         public static RestMessageDispatchFormatter CreateFormatter(Type contractType)
         {
             RestMessageDispatchFormatter retVal = null;
-            if(!m_formatters.TryGetValue(contractType, out retVal))
+            if (!m_formatters.TryGetValue(contractType, out retVal))
             {
-                lock(m_formatters)
+                lock (m_formatters)
                 {
                     if (!m_formatters.ContainsKey(contractType))
                     {
@@ -101,8 +101,6 @@ namespace SanteDB.Rest.Common.Serialization
         private Tracer m_traceSource = Tracer.GetTracer(typeof(RestMessageDispatchFormatter));
         // Known types
         private static Type[] s_knownTypes = typeof(TContract).GetCustomAttributes<ServiceKnownResourceAttribute>().Select(t => t.Type).ToArray();
-        // Serializers
-        private Dictionary<Type, XmlSerializer> s_serializers = new Dictionary<Type, XmlSerializer>();
         // Default view model
         private static ViewModelDescription m_defaultViewModel = null;
         /// <summary>
@@ -118,28 +116,28 @@ namespace SanteDB.Rest.Common.Serialization
                 this.m_traceSource.TraceInfo("Will generate serializer for {0} ({1} types)...", typeof(TContract).FullName, s_knownTypes.Length);
 
                 foreach (var s in s_knownTypes)
-                    if (!s_serializers.ContainsKey(s))
+                {
+                    this.m_traceSource.TraceInfo("Generating serializer for {0}...", s.Name);
+                    try
                     {
-                        this.m_traceSource.TraceInfo("Generating serializer for {0}...", s.Name);
-                        try
+                        if (typeof(Bundle).IsAssignableFrom(s))
                         {
-                            if (typeof(Bundle).IsAssignableFrom(s)) {
-                                var types = ApplicationServiceContext.Current.GetService<IServiceManager>()
-                                    .GetAllTypes()
-                                    .Union(ModelSerializationBinder.GetRegisteredTypes())
-                                    .Where(t => typeof(IdentifiedData).IsAssignableFrom(t) && !t.IsGenericTypeDefinition && !t.IsAbstract)
-                                    .ToArray();
-                                s_serializers.Add(s, new XmlSerializer(s, types));
-                            }
-                            else
-                                s_serializers.Add(s, new XmlSerializer(s, s.GetCustomAttributes<XmlIncludeAttribute>().Select(o => o.Type).ToArray()));
+                            var types = ApplicationServiceContext.Current.GetService<IServiceManager>()
+                                .GetAllTypes()
+                                .Union(ModelSerializationBinder.GetRegisteredTypes())
+                                .Where(t => typeof(IdentifiedData).IsAssignableFrom(t) && !t.IsGenericTypeDefinition && !t.IsAbstract)
+                                .ToArray();
+                            XmlModelSerializerFactory.Current.CreateSerializer(s, types);
                         }
-                        catch (Exception e)
-                        {
-                            this.m_traceSource.TraceError("Error generating for {0} : {1}", s.Name, e.ToString());
-                            //throw;
-                        }
+                        else
+                            XmlModelSerializerFactory.Current.CreateSerializer(s, s.GetCustomAttributes<XmlIncludeAttribute>().Select(o => o.Type).ToArray());
                     }
+                    catch (Exception e)
+                    {
+                        this.m_traceSource.TraceError("Error generating for {0} : {1}", s.Name, e.ToString());
+                        //throw;
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -157,7 +155,7 @@ namespace SanteDB.Rest.Common.Serialization
             try
             {
 #if DEBUG
-                this.m_traceSource.TraceEvent(EventLevel.Informational,  "Received request from: {0}", RestOperationContext.Current.IncomingRequest.RemoteEndPoint);
+                this.m_traceSource.TraceEvent(EventLevel.Informational, "Received request from: {0}", RestOperationContext.Current.IncomingRequest.RemoteEndPoint);
 #endif
 
                 var httpRequest = RestOperationContext.Current.IncomingRequest;
@@ -184,14 +182,9 @@ namespace SanteDB.Rest.Common.Serialization
                             Type eType = s_knownTypes.FirstOrDefault(o => o.GetCustomAttribute<XmlRootAttribute>()?.ElementName == bodyReader.LocalName &&
                                 o.GetCustomAttribute<XmlRootAttribute>()?.Namespace == bodyReader.NamespaceURI);
                             if (eType == null)
-                                eType = new ModelSerializationBinder().BindToType(null, bodyReader.LocalName); // Try to find by rooot element
-                            if (!s_serializers.TryGetValue(eType, out serializer))
-                            {
-                                serializer = new XmlSerializer(eType);
-                                lock (s_serializers)
-                                    if (!s_serializers.ContainsKey(eType))
-                                        s_serializers.Add(eType, serializer);
-                            }
+                                eType = new ModelSerializationBinder().BindToType(null, bodyReader.LocalName); // Try to find by root element
+
+                            serializer = XmlModelSerializerFactory.Current.CreateSerializer(eType);
                             parameters[pNumber] = serializer.Deserialize(bodyReader);
                         }
 
@@ -242,7 +235,7 @@ namespace SanteDB.Rest.Common.Serialization
             }
             catch (Exception e)
             {
-                this.m_traceSource.TraceEvent(EventLevel.Error,  e.ToString());
+                this.m_traceSource.TraceEvent(EventLevel.Error, e.ToString());
                 throw;
             }
 
@@ -263,7 +256,7 @@ namespace SanteDB.Rest.Common.Serialization
                     contentType = httpRequest.Headers["Content-Type"];
 
                 // Result is serializable
-                if(result == null)
+                if (result == null)
                 {
                     if (response.StatusCode == 200)
                         response.StatusCode = 204;
@@ -346,21 +339,7 @@ namespace SanteDB.Rest.Common.Serialization
                     // The request was in XML and/or the accept is JSON
                     else
                     {
-                        XmlSerializer xsz = null;
-
-                        // Is this a bundle? Does it contain any data we cannot serialize as XML
-                        if (!s_serializers.TryGetValue(result.GetType(), out xsz))
-                        {
-                            // Build a serializer
-                            this.m_traceSource.TraceWarning("Could not find pre-created serializer for {0}, will generate one...", result.GetType().FullName);
-                            xsz = new XmlSerializer(result.GetType());
-                            lock (s_serializers)
-                            {
-                                if (!s_serializers.ContainsKey(result.GetType()))
-                                    s_serializers.Add(result.GetType(), xsz);
-                            }
-                        }
-                        
+                        XmlSerializer xsz = XmlModelSerializerFactory.Current.CreateSerializer(result.GetType());
                         MemoryStream ms = new MemoryStream();
                         xsz.Serialize(ms, result);
                         contentType = "application/xml";
@@ -381,7 +360,8 @@ namespace SanteDB.Rest.Common.Serialization
                     contentType = "application/octet-stream";
                     response.Body = result as Stream;
                 }
-                else {
+                else
+                {
                     contentType = "text/plain";
                     response.Body = new MemoryStream(Encoding.UTF8.GetBytes(result.ToString()));
                 }
@@ -396,7 +376,7 @@ namespace SanteDB.Rest.Common.Serialization
             }
             catch (Exception e)
             {
-                this.m_traceSource.TraceEvent(EventLevel.Error,  e.ToString());
+                this.m_traceSource.TraceEvent(EventLevel.Error, e.ToString());
                 throw new Exception("Error serializing response for operation", e);
             }
         }
