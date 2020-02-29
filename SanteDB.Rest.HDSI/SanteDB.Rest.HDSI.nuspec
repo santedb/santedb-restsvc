@@ -23,7 +23,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\bin\$configuration$\SanteDB.Rest.HDSI.dll" target="lib\net45"/>
-    <file src="..\bin\$configuration$\SanteDB.Rest.HDSI.dll" target="lib\monoandroid"/>
+    <file src="bin\$configuration$\SanteDB.Rest.HDSI.dll" target="lib\net45"/>
+    <file src="bin\$configuration$\SanteDB.Rest.HDSI.dll" target="lib\monoandroid"/>
   </files>
 </package>
