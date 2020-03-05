@@ -30,9 +30,18 @@ namespace SanteDB.Core.Model.AMI.Jobs
         /// </summary>
         public JobInfo(IJob job)
         {
-            this.Key = job.GetType().FullName;
-            this.Tag = job.GetType().GetTypeInfo().Assembly.GetName().Version.ToString();
-            this.ModifiedOn = ApplicationServiceContext.Current.StartTime;
+            if(job is IAmiIdentified ident)
+            {
+                this.Key = ident.Key;
+                this.Tag = ident.Tag;
+                this.ModifiedOn = ident.ModifiedOn;
+            }
+            else
+            {
+                this.Key = job.GetType().FullName;
+                this.Tag = job.GetType().GetTypeInfo().Assembly.GetName().Version.ToString();
+                this.ModifiedOn = ApplicationServiceContext.Current.StartTime;
+            }
             this.Name = job.Name;
             this.CanCancel = job.CanCancel;
             this.State = job.CurrentState;
