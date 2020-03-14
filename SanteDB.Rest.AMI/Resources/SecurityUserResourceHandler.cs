@@ -20,6 +20,7 @@
 using RestSrvr.Exceptions;
 using SanteDB.Core;
 using SanteDB.Core.Model.AMI.Auth;
+using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
@@ -27,6 +28,7 @@ using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
@@ -42,7 +44,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public override Type Type => typeof(SecurityUserInfo);
 
-
+       
         /// <summary>
         /// Creates the specified user
         /// </summary>
@@ -93,7 +95,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Override the update function
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.AlterIdentity)]
+        [Demand(PermissionPolicyIdentifiers.LoginPasswordOnly, true)]
         public override object Update(object data)
         {
             if (data is SecurityUser)
@@ -115,6 +117,8 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
+                // We're doing a general update, so we have to demand access 
+                ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(PermissionPolicyIdentifiers.LoginAsService);
                 td.Entity.Password = null;
 
                 //td.Entity.Roles = td.Roles.Select(o => new SecurityRole() { Name = o }).ToList();
@@ -123,12 +127,12 @@ namespace SanteDB.Rest.AMI.Resources
                 // Roles? We want to update
                 if (td.Roles.Count > 0)
                 {
-                    var irps= ApplicationServiceContext.Current.GetService<IRoleProviderService>();
+                    var irps = ApplicationServiceContext.Current.GetService<IRoleProviderService>();
                     irps.RemoveUsersFromRoles(new String[] { td.Entity.UserName }, irps.GetAllRoles().Where(o => !td.Roles.Contains(o)).ToArray(), AuthenticationContext.Current.Principal);
                     irps.AddUsersToRoles(new string[] { td.Entity.UserName }, td.Roles.ToArray(), AuthenticationContext.Current.Principal);
                     this.FireSecurityAttributesChanged(retVal.Entity, true, $"Roles = {String.Join(",", td.Roles)}");
                 }
-                
+
                 return new SecurityUserInfo(retVal.Entity)
                 {
                     Roles = td.Roles

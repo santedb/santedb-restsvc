@@ -84,7 +84,11 @@ namespace SanteDB.Rest.HDSI
         /// </summary>
         private String[] GetDemands(object handler, string action)
         {
-            return handler.GetType().GetMethods().Where(o => o.Name == action).SelectMany(method => method.GetCustomAttributes<DemandAttribute>()).Select(o=>o.PolicyId).ToArray();
+            var demands = handler.GetType().GetMethods().Where(o => o.Name == action).SelectMany(method => method.GetCustomAttributes<DemandAttribute>());
+            if (demands.Any(o => o.Override))
+                return demands.Where(o => o.Override).Select(o => o.PolicyId).ToArray();
+            else
+                return demands.Select(o => o.PolicyId).ToArray();
         }
 
         /// <summary>

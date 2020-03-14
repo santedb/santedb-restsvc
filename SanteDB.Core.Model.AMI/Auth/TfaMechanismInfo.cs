@@ -41,8 +41,8 @@ namespace SanteDB.Core.Model.AMI.Auth
         /// <summary>
         /// Gets or sets the challenge text
         /// </summary>
-        [XmlElement("challengeText"), JsonProperty("challengeText")]
-        public String ChallengeText { get; set; }
+        [XmlElement("description"), JsonProperty("description")]
+        public String Description { get; set; }
 
         /// <summary>
         /// Gets or sets the identifier

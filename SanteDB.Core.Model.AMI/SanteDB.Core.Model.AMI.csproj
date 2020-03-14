@@ -45,7 +45,6 @@
     <Compile Include="Auth\SecurityPolicyInfo.cs" />
     <Compile Include="Auth\SecurityRoleInfo.cs" />
     <Compile Include="Auth\SecurityUserInfo.cs" />
-    <Compile Include="Auth\TfaRequestInfo.cs" />
     <Compile Include="Auth\TfaMechanismInfo.cs" />
     <Compile Include="Diagnostics\DiagnosticReportTag.cs" />
     <Compile Include="Diagnostics\DiagnosticApplicationInfo.cs" />

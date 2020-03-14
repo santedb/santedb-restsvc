@@ -52,7 +52,6 @@ namespace SanteDB.Rest.AMI
     [ServiceKnownResource(typeof(ExtensionType))]
     [ServiceKnownResource(typeof(MailMessage))]
     [ServiceKnownResource(typeof(SecurityApplication))]
-    [ServiceKnownResource(typeof(TfaRequestInfo))]
     [ServiceKnownResource(typeof(AssigningAuthority))]
     [ServiceKnownResource(typeof(SecurityDeviceInfo))]
     [ServiceKnownResource(typeof(SecurityApplicationInfo))]
@@ -109,6 +108,14 @@ namespace SanteDB.Rest.AMI
         /// </summary>
         [Get("/?xsd={schemaId}")]
         XmlSchema GetSchema(int schemaId);
+
+        /// <summary>
+        /// Gets the TFA mechanisms which can be set for the specified ID
+        /// </summary>
+        /// <returns></returns>
+        [Get("/Tfa")]
+        AmiCollection GetTfaMechanisms();
+        
         #region Diagnostic / Ad-Hoc interfaces
 
         /// <summary>
@@ -152,23 +159,6 @@ namespace SanteDB.Rest.AMI
 		/// </summary>
 		[RestInvoke("PING", "/")]
         void Ping();
-
-        #endregion
-
-        #region Two-Factor Authentication
-
-        /// <summary>
-		/// Creates a request that the server issue a reset code
-		/// </summary>
-		[Post("/Tfa")]
-        void SendTfaSecret(TfaRequestInfo resetInfo);
-
-        /// <summary>
-        /// Gets the list of TFA mechanisms.
-        /// </summary>
-        /// <returns>Returns a list of TFA mechanisms.</returns>
-        [Get("/Tfa")]
-        AmiCollection GetTfaMechanisms();
 
         #endregion
 

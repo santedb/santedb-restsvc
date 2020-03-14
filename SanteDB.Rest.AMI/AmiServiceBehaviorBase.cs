@@ -88,6 +88,12 @@ namespace SanteDB.Messaging.AMI.Wcf
         public abstract LogFileInfo GetLog(string logId);
 
         /// <summary>
+        /// Get TFA mechanisms in this service
+        /// </summary>
+        /// <returns></returns>
+        public abstract AmiCollection GetTfaMechanisms();
+
+        /// <summary>
         /// Get the log stream
         /// </summary>
         public abstract Stream DownloadLog(String logId);
@@ -113,7 +119,12 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// </summary>
         private String[] GetDemands(object handler, string action)
         {
-            return handler.GetType().GetMethods().Where(o => o.Name == action).SelectMany(method => method.GetCustomAttributes<DemandAttribute>()).Select(o => o.PolicyId).ToArray();
+            var demands = handler.GetType().GetMethods().Where(o => o.Name == action).SelectMany(method => method.GetCustomAttributes<DemandAttribute>());
+            if (demands.Any(o => o.Override))
+                return demands.Where(o => o.Override).Select(o => o.PolicyId).ToArray();
+            else
+                return demands.Select(o => o.PolicyId).ToArray();
+
         }
 
         /// <summary>
@@ -159,12 +170,7 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// <returns>Returns the created diagnostic report.</returns>
         public abstract DiagnosticReport GetServerDiagnosticReport();
 
-        /// <summary>
-        /// Get a list of TFA mechanisms
-        /// </summary>
-        /// <returns>Returns a list of TFA mechanisms.</returns>
-        public abstract AmiCollection GetTfaMechanisms();
-
+     
         /// <summary>
         /// Gets options for the AMI service.
         /// </summary>
@@ -261,11 +267,6 @@ namespace SanteDB.Messaging.AMI.Wcf
         {
             RestOperationContext.Current.OutgoingResponse.StatusCode = (int)System.Net.HttpStatusCode.NoContent;
         }
-
-        /// <summary>
-        /// Creates security reset information
-        /// </summary>
-        public abstract void SendTfaSecret(TfaRequestInfo resetInfo);
         
         /// <summary>
         /// Creates the specified resource for the AMI service 

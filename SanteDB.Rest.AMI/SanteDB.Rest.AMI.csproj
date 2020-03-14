@@ -59,6 +59,7 @@
     <Compile Include="Resources\DiagnosticsProbeResourceHandler.cs" />
     <Compile Include="Resources\ResourceHandlerBase.cs" />
     <Compile Include="Resources\SecurityApplicationResourceHandler.cs" />
+    <Compile Include="Resources\SecurityChallengeResourceHandler.cs" />
     <Compile Include="Resources\SecurityDeviceResourceHandler.cs" />
     <Compile Include="Resources\SecurityEntityResourceHandler.cs" />
     <Compile Include="Resources\SecurityPolicyResourceHandler.cs" />

@@ -19,6 +19,7 @@
  */
 using RestSrvr.Attributes;
 using SanteDB.Core.Model.RISI;
+using System;
 using System.IO;
 
 namespace SanteDB.Rest.RISI
@@ -42,6 +43,7 @@ namespace SanteDB.Rest.RISI
     [ServiceProduces("application/xml")]
     [ServiceConsumes("application/json")]
     [ServiceConsumes("application/json")]
+    [Obsolete]
     public partial interface IRisiServiceContract
 	{
 		/// <summary>

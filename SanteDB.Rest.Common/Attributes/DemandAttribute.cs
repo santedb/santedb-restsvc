@@ -31,10 +31,16 @@ namespace SanteDB.Rest.Common.Attributes
         /// <summary>
         /// Creates a new demand attribute
         /// </summary>
-        public DemandAttribute(String policyId)
+        public DemandAttribute(String policyId, bool overrideBase = false)
         {
             this.PolicyId = policyId;
+            this.Override = overrideBase;
         }
+
+        /// <summary>
+        /// Override all other policy identifiers
+        /// </summary>
+        public bool Override { get; set; }
 
         /// <summary>
         /// Gets or sets the policy id
