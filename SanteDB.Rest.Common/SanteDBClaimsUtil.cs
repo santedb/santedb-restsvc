@@ -75,7 +75,7 @@ namespace SanteDB.Rest.Common
             if (claimsHeaders == null)
                 return new List<IClaim>();
             else
-                return claimsHeaders.Split(',').Select(o => Encoding.UTF8.GetString(Convert.FromBase64String(o)).Split('=')).Select(c => new SanteDBClaim(c[0], c[1])).OfType<IClaim>().ToList();
+                return Encoding.UTF8.GetString(Convert.FromBase64String(claimsHeaders)).Split(';').Select(o => o.Split('=')).Select(c => new SanteDBClaim(c[0], c[1])).OfType<IClaim>().ToList();
         } 
     }
 }

@@ -122,6 +122,7 @@ namespace SanteDB.Rest.Common.Serialization
                     {
                         // Force creation of .NET Serializer
                         XmlModelSerializerFactory.Current.CreateSerializer(s);
+                        ModelSerializationBinder.RegisterModelType(s);
                     }
                     catch (Exception e)
                     {
