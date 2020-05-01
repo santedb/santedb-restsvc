@@ -1,21 +1,47 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<!-- <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003"> -->
+  <!-- <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" /> -->
+  <!-- <PropertyGroup> -->
+    <!-- <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion> -->
+    <!-- <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration> -->
+    <!-- <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform> -->
+    <!-- <ProjectGuid>{65EF51C6-5CB8-43B8-AE65-4A68F0B44AD2}</ProjectGuid> -->
+    <!-- <OutputType>Library</OutputType> -->
+    <!-- <AppDesignerFolder>Properties</AppDesignerFolder> -->
+    <!-- <RootNamespace>SanteDB.Core.Model.AMI</RootNamespace> -->
+    <!-- <AssemblyName>SanteDB.Core.Model.AMI</AssemblyName> -->
+    <!-- <DefaultLanguage>en-US</DefaultLanguage> -->
+    <!-- <FileAlignment>512</FileAlignment> -->
+    <!-- <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids> -->
+    <!-- <TargetFrameworkProfile>Profile7</TargetFrameworkProfile> -->
+    <!-- <TargetFrameworkVersion>v4.7</TargetFrameworkVersion> -->
+  <!-- </PropertyGroup> -->
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{65EF51C6-5CB8-43B8-AE65-4A68F0B44AD2}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SanteDB.Core.Model.AMI</RootNamespace>
-    <AssemblyName>SanteDB.Core.Model.AMI</AssemblyName>
-    <DefaultLanguage>en-US</DefaultLanguage>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
   </PropertyGroup>
+    
+  <PropertyGroup>
+    <PackageId>SanteDB.Core.Model.AMI</PackageId>
+    <Title>SanteDB.Core.Model.AMI</Title>
+    <Version>2.0.0</Version>
+    <Description>SanteDB REST MODELS Support for AMI</Description>
+    <Authors>SanteSuite Contributors</Authors>
+    <PackageTags>SanteDB</PackageTags>
+    <RepositoryUrl>https://github.com/santedb/santedb-restsvc</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <IncludeSymbols>true</IncludeSymbols>
+    <PackageLicenseFile>..\LICENSE</PackageLicenseFile>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+	    <Product>SanteDB</Product>
+    <Copyright>Copyright (C) 2015-2020 SanteSuite Contributors (See: NOTICES)</Copyright>
+    <Company>SanteSuite Contributors</Company>
+  </PropertyGroup>  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+  </ItemGroup>        
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -35,45 +61,45 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\bin\Release\SanteDB.Core.Model.AMI.XML</DocumentationFile>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="AmiCollection.cs" />
-    <Compile Include="Applet\AppletManifestInfo.cs" />
-    <Compile Include="Applet\AppletSolutionInfo.cs" />
-    <Compile Include="Auth\ISecurityEntityInfo.cs" />
-    <Compile Include="Auth\SecurityApplicationInfo.cs" />
-    <Compile Include="Auth\SecurityDeviceInfo.cs" />
-    <Compile Include="Auth\SecurityPolicyInfo.cs" />
-    <Compile Include="Auth\SecurityRoleInfo.cs" />
-    <Compile Include="Auth\SecurityUserChallenge.cs" />
-    <Compile Include="Auth\SecurityUserInfo.cs" />
-    <Compile Include="Auth\TfaMechanismInfo.cs" />
-    <Compile Include="Diagnostics\DiagnosticReportTag.cs" />
-    <Compile Include="Diagnostics\DiagnosticApplicationInfo.cs" />
-    <Compile Include="Diagnostics\DiagnosticEnvironmentInfo.cs" />
-    <Compile Include="Diagnostics\DiagnosticAttachmentInfo.cs" />
-    <Compile Include="Diagnostics\DiagnosticAttachments.cs" />
-    <Compile Include="Diagnostics\DiagnosticReport.cs" />
-    <Compile Include="Diagnostics\DiagnosticServiceInfo.cs" />
-    <Compile Include="Diagnostics\DiagnosticSyncInfo.cs" />
-    <Compile Include="Diagnostics\DiagnosticThreadInfo.cs" />
-    <Compile Include="Diagnostics\DiagnosticVersionInfo.cs" />
-    <Compile Include="Diagnostics\DiagnosticsProbe.cs" />
-    <Compile Include="Diagnostics\DiagnosticsProbeReading.cs" />
-    <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="IAmiIdentified.cs" />
-    <Compile Include="Jobs\JobInfo.cs" />
-    <Compile Include="Jobs\JobParameter.cs" />
-    <Compile Include="Logging\LogFileInfo.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Security\AuditSubmission.cs" />
-    <Compile Include="Security\RevokeReason.cs" />
-    <Compile Include="Security\SecuritySessionInfo.cs" />
-    <Compile Include="Security\SubmissionInfo.cs" />
-    <Compile Include="Security\SubmissionRequest.cs" />
-    <Compile Include="Security\SubmissionResult.cs" />
-    <Compile Include="Security\SubmissionStatus.cs" />
-    <Compile Include="Security\X509Certificate2Info.cs" />
-  </ItemGroup>
+  <!-- <ItemGroup> -->
+    <!-- <Compile Include="AmiCollection.cs" /> -->
+    <!-- <Compile Include="Applet\AppletManifestInfo.cs" /> -->
+    <!-- <Compile Include="Applet\AppletSolutionInfo.cs" /> -->
+    <!-- <Compile Include="Auth\ISecurityEntityInfo.cs" /> -->
+    <!-- <Compile Include="Auth\SecurityApplicationInfo.cs" /> -->
+    <!-- <Compile Include="Auth\SecurityDeviceInfo.cs" /> -->
+    <!-- <Compile Include="Auth\SecurityPolicyInfo.cs" /> -->
+    <!-- <Compile Include="Auth\SecurityRoleInfo.cs" /> -->
+    <!-- <Compile Include="Auth\SecurityUserChallenge.cs" /> -->
+    <!-- <Compile Include="Auth\SecurityUserInfo.cs" /> -->
+    <!-- <Compile Include="Auth\TfaMechanismInfo.cs" /> -->
+    <!-- <Compile Include="Diagnostics\DiagnosticReportTag.cs" /> -->
+    <!-- <Compile Include="Diagnostics\DiagnosticApplicationInfo.cs" /> -->
+    <!-- <Compile Include="Diagnostics\DiagnosticEnvironmentInfo.cs" /> -->
+    <!-- <Compile Include="Diagnostics\DiagnosticAttachmentInfo.cs" /> -->
+    <!-- <Compile Include="Diagnostics\DiagnosticAttachments.cs" /> -->
+    <!-- <Compile Include="Diagnostics\DiagnosticReport.cs" /> -->
+    <!-- <Compile Include="Diagnostics\DiagnosticServiceInfo.cs" /> -->
+    <!-- <Compile Include="Diagnostics\DiagnosticSyncInfo.cs" /> -->
+    <!-- <Compile Include="Diagnostics\DiagnosticThreadInfo.cs" /> -->
+    <!-- <Compile Include="Diagnostics\DiagnosticVersionInfo.cs" /> -->
+    <!-- <Compile Include="Diagnostics\DiagnosticsProbe.cs" /> -->
+    <!-- <Compile Include="Diagnostics\DiagnosticsProbeReading.cs" /> -->
+    <!-- <Compile Include="ExtensionMethods.cs" /> -->
+    <!-- <Compile Include="IAmiIdentified.cs" /> -->
+    <!-- <Compile Include="Jobs\JobInfo.cs" /> -->
+    <!-- <Compile Include="Jobs\JobParameter.cs" /> -->
+    <!-- <Compile Include="Logging\LogFileInfo.cs" /> -->
+    <!-- <Compile Include="Properties\AssemblyInfo.cs" /> -->
+    <!-- <Compile Include="Security\AuditSubmission.cs" /> -->
+    <!-- <Compile Include="Security\RevokeReason.cs" /> -->
+    <!-- <Compile Include="Security\SecuritySessionInfo.cs" /> -->
+    <!-- <Compile Include="Security\SubmissionInfo.cs" /> -->
+    <!-- <Compile Include="Security\SubmissionRequest.cs" /> -->
+    <!-- <Compile Include="Security\SubmissionResult.cs" /> -->
+    <!-- <Compile Include="Security\SubmissionStatus.cs" /> -->
+    <!-- <Compile Include="Security\X509Certificate2Info.cs" /> -->
+  <!-- </ItemGroup> -->
   <ItemGroup>
     <None Include="..\SanteDB.licenseheader">
       <Link>SanteDB.licenseheader</Link>
@@ -103,18 +129,18 @@
       <ItemGroup>
         <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
         <PackageReference Include="SanteDB.Core.Api">
-          <Version>1.129.0.0</Version>
+          <Version>2.0.0.0</Version>
         </PackageReference>
         <PackageReference Include="SanteDB.Core.Applets">
-          <Version>1.129.0.0</Version>
+          <Version>2.0.0.0</Version>
         </PackageReference>
         <PackageReference Include="SanteDB.Core.Model">
-          <Version>1.129.0.0</Version>
+          <Version>2.0.0.0</Version>
         </PackageReference>
       </ItemGroup>
     </Otherwise>
   </Choose>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <!-- <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" /> -->
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

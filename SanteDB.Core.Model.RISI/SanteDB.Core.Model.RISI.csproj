@@ -1,21 +1,47 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<!-- <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003"> -->
+  <!-- <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" /> -->
+  <!-- <PropertyGroup> -->
+    <!-- <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion> -->
+    <!-- <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration> -->
+    <!-- <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform> -->
+    <!-- <ProjectGuid>{F3D2FA84-C398-4390-9834-1272CC2D6F89}</ProjectGuid> -->
+    <!-- <OutputType>Library</OutputType> -->
+    <!-- <AppDesignerFolder>Properties</AppDesignerFolder> -->
+    <!-- <RootNamespace>SanteDB.Core.Model.RISI</RootNamespace> -->
+    <!-- <AssemblyName>SanteDB.Core.Model.RISI</AssemblyName> -->
+    <!-- <DefaultLanguage>en-US</DefaultLanguage> -->
+    <!-- <FileAlignment>512</FileAlignment> -->
+    <!-- <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids> -->
+    <!-- <TargetFrameworkProfile>Profile7</TargetFrameworkProfile> -->
+    <!-- <TargetFrameworkVersion>v4.7</TargetFrameworkVersion> -->
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F3D2FA84-C398-4390-9834-1272CC2D6F89}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SanteDB.Core.Model.RISI</RootNamespace>
-    <AssemblyName>SanteDB.Core.Model.RISI</AssemblyName>
-    <DefaultLanguage>en-US</DefaultLanguage>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
   </PropertyGroup>
+    
+  <PropertyGroup>
+    <PackageId>SanteDB.Core.Model.RISI</PackageId>
+    <Title>SanteDB.Core.Model.RISI</Title>
+    <Version>2.0.0</Version>
+    <Description>SanteDB REST MODELS Support for RISI (Deprecated)</Description>
+    <Authors>SanteSuite Contributors</Authors>
+    <PackageTags>SanteDB</PackageTags>
+    <RepositoryUrl>https://github.com/santedb/santedb-restsvc</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <IncludeSymbols>true</IncludeSymbols>
+    <PackageLicenseFile>..\LICENSE</PackageLicenseFile>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+	    <Product>SanteDB</Product>
+    <Copyright>Copyright (C) 2015-2020 SanteSuite Contributors (See: NOTICES)</Copyright>
+    <Company>SanteSuite Contributors</Company>
+  </PropertyGroup>  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+  </ItemGroup>   	
+  <!-- </PropertyGroup> -->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -35,21 +61,21 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\bin\Release\SanteDB.Core.Model.RISI.XML</DocumentationFile>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="AutoCompleteSourceDefinition.cs" />
-    <Compile Include="Constants\ParameterTypeKeys.cs" />
-    <Compile Include="Constants\ReportFormatKeys.cs" />
-    <Compile Include="Interfaces\IParameterValueProvider.cs" />
-    <Compile Include="ListAutoCompleteSourceDefinition.cs" />
-    <Compile Include="ReportBundle.cs" />
-    <Compile Include="ReportFormat.cs" />
-    <Compile Include="ReportParameter.cs" />
-    <Compile Include="ParameterType.cs" />
-    <Compile Include="QueryAutoCompleteSourceDefinition.cs" />
-    <Compile Include="ReportDefinition.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RisiCollection.cs" />
-  </ItemGroup>
+  <!-- <ItemGroup> -->
+    <!-- <Compile Include="AutoCompleteSourceDefinition.cs" /> -->
+    <!-- <Compile Include="Constants\ParameterTypeKeys.cs" /> -->
+    <!-- <Compile Include="Constants\ReportFormatKeys.cs" /> -->
+    <!-- <Compile Include="Interfaces\IParameterValueProvider.cs" /> -->
+    <!-- <Compile Include="ListAutoCompleteSourceDefinition.cs" /> -->
+    <!-- <Compile Include="ReportBundle.cs" /> -->
+    <!-- <Compile Include="ReportFormat.cs" /> -->
+    <!-- <Compile Include="ReportParameter.cs" /> -->
+    <!-- <Compile Include="ParameterType.cs" /> -->
+    <!-- <Compile Include="QueryAutoCompleteSourceDefinition.cs" /> -->
+    <!-- <Compile Include="ReportDefinition.cs" /> -->
+    <!-- <Compile Include="Properties\AssemblyInfo.cs" /> -->
+    <!-- <Compile Include="RisiCollection.cs" /> -->
+  <!-- </ItemGroup> -->
   <ItemGroup>
     <None Include="..\SanteDB.licenseheader">
       <Link>SanteDB.licenseheader</Link>
@@ -74,15 +100,15 @@
       <ItemGroup>
         <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
         <PackageReference Include="SanteDB.Core.Api">
-          <Version>1.129.0.0</Version>
+          <Version>2.0.0.0</Version>
         </PackageReference>
         <PackageReference Include="SanteDB.Core.Model">
-          <Version>1.129.0.0</Version>
+          <Version>2.0.0.0</Version>
         </PackageReference>
       </ItemGroup>
     </Otherwise>
   </Choose>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <!-- <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" /> -->
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
