@@ -141,7 +141,6 @@
     <None Include="..\..\SanteDB.licenseheader">
       <Link>SanteDB.licenseheader</Link>
     </None>
-    <None Include="SanteDB.Rest.AMI.nuspec" />
   </ItemGroup>
   <!-- <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" /> -->
 </Project>

@@ -80,7 +80,6 @@
     <None Include="..\SanteDB.licenseheader">
       <Link>SanteDB.licenseheader</Link>
     </None>
-    <None Include="SanteDB.Core.Model.RISI.nuspec" />
   </ItemGroup>
   <Choose>
     <When Condition="$(SolutionName.Contains('-ext'))">

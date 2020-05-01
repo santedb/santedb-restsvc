@@ -23594,15 +23594,15 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "modifiedOn", _strong.ModifiedOn, context);
                 }
             }
-            if (context.ShouldSerialize("item")) {
+            if (context.ShouldSerialize("resource")) {
                 if (((_strong.Item == null) 
                             || (_strong.Item.Count == 0))) {
-                    if ((_strong.Key.HasValue && context.ShouldForceLoad("item", _strong.Key.Value))) {
+                    if ((_strong.Key.HasValue && context.ShouldForceLoad("resource", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.IdentifiedData> _delay = null;
                     }
                 }
                 else {
-                    context.JsonContext.WritePropertyUtil(w, "item", _strong.Item, context);
+                    context.JsonContext.WritePropertyUtil(w, "resource", _strong.Item, context);
                 }
             }
             if (context.ShouldSerialize("entry")) {
@@ -23713,9 +23713,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                             }
                                         }
                                         else {
-                                            if ("item".Equals(r.Value)) {
+                                            if ("resource".Equals(r.Value)) {
                                                 r.Read();
-                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.IdentifiedData>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("item", context.JsonContext, _retVal, context));
+                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.IdentifiedData>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("resource", context.JsonContext, _retVal, context));
                                                 if ((_instance != null)) {
                                                     _retVal.Item = ((System.Collections.Generic.List<SanteDB.Core.Model.IdentifiedData>)(_instance));
                                                 }

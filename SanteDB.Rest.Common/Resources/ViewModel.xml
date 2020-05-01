@@ -54,7 +54,7 @@
     <property name="effectiveVersionSequence" behavior="never"/>
   </type>
   <type type="Bundle" all="true">
-    <property name="item" all="true"/>
+    <property name="resource" all="true"/>
   </type>
 
   <!-- Concepts -->

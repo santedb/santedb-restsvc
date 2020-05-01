@@ -62,7 +62,7 @@ namespace SanteDB.Core.Model.RISI
         /// <summary>
         /// Gets or sets the list of items in the <see cref="RisiCollection{T}"/>.
         /// </summary>
-        [XmlElement("item"), JsonProperty("item")]
+        [XmlElement("resource"), JsonProperty("resource")]
         public List<T> Items { get; set; }
 
         /// <summary>

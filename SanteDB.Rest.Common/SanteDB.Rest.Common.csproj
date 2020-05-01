@@ -151,9 +151,6 @@
     <None Include="..\SanteDB.licenseheader">
       <Link>SanteDB.licenseheader</Link>
     </None>
-    <None Include="SanteDB.Rest.Common.nuspec">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SanteDB.Core.Model.ViewModelSerializers\SanteDB.Core.Model.ViewModelSerializers.csproj">

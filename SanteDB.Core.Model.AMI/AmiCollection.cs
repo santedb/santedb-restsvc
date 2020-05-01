@@ -115,7 +115,7 @@ namespace SanteDB.Core.Model.AMI.Collections
         /// <summary>
         /// Gets or sets a list of collection items.
         /// </summary>
-        [XmlElement("item"), JsonProperty("item")]
+        [XmlElement("resource"), JsonProperty("resource")]
         public List<Object> CollectionItem { get; set; }
 
         /// <summary>
