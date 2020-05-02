@@ -22,7 +22,7 @@
     <PackageId>SanteDB.Rest.HDSI</PackageId>
     <Title>SanteDB.Rest.HDSI</Title>
     <Version>2.0.0</Version>
-    <Description>SanteDB Core HDSI Logic</Description>
+    <Description>Health Data Services Interface (HDSI) REST interface implementation, used by various SanteDB execution environment to provide access to health related data.</Description>
     <Authors>SanteSuite Contributors</Authors>
     <PackageTags>SanteDB</PackageTags>
     <RepositoryUrl>https://github.com/santedb/santedb-restsvc</RepositoryUrl>
@@ -35,6 +35,8 @@
 	    <Product>SanteDB</Product>
     <Copyright>Copyright (C) 2015-2020 SanteSuite Contributors (See: NOTICES)</Copyright>
     <Company>SanteSuite Contributors</Company>
+    <PackageIconUrl>http://santesuite.org/assets/img/logo.png</PackageIconUrl>
+    <PackageProjectUrl>http://santesuite.org</PackageProjectUrl>
   </PropertyGroup>  
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
