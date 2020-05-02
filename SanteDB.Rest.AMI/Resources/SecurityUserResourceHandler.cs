@@ -125,6 +125,7 @@ namespace SanteDB.Rest.AMI.Resources
                         if (retVal == null)
                             throw new KeyNotFoundException($"Cannot find challenge {subItemKey}");
                         else return retVal;
+                    
                     default:
                         throw new KeyNotFoundException($"Sub-property {propertyName} not found");
                 }

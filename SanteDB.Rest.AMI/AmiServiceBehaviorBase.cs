@@ -876,7 +876,6 @@ namespace SanteDB.Messaging.AMI.Wcf
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
-
             }
         }
 
