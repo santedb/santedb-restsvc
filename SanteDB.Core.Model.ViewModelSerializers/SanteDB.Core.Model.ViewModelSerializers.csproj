@@ -25,7 +25,7 @@
     <PackageId>SanteDB.Core.Model.ViewModelSerializers</PackageId>
     <Title>SanteDB.Core.Model.ViewModelSerializers</Title>
     <Version>2.0.0</Version>
-    <Description>SanteDB Pre-Compiled JSON Model Serializers</Description>
+    <Description>The SanteDB ViewModel serializer allows for rapid serialization of deep JSON objects exposed by SanteDB REST's interface. This can be more useful for user interfaces rather than the core synchronization interfaces. This assembly contains pre-compiled view model serializers which increase performance over the reflection based serializers.</Description>
     <Authors>SanteSuite Contributors</Authors>
     <PackageTags>SanteDB</PackageTags>
     <RepositoryUrl>https://github.com/santedb/santedb-restsvc</RepositoryUrl>
@@ -38,6 +38,8 @@
 	    <Product>SanteDB</Product>
     <Copyright>Copyright (C) 2015-2020 SanteSuite Contributors (See: NOTICES)</Copyright>
     <Company>SanteSuite Contributors</Company>
+    <PackageIconUrl>http://santesuite.org/assets/img/logo.png</PackageIconUrl>
+    <PackageProjectUrl>http://santesuite.org</PackageProjectUrl>
   </PropertyGroup>  
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
