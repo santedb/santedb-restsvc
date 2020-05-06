@@ -95,12 +95,15 @@ namespace SanteDB.Rest.Common.Serialization
     public class RestMessageDispatchFormatter<TContract> : RestMessageDispatchFormatter
     {
 
-        private String m_version = Assembly.GetEntryAssembly().GetName().Version.ToString();
-        private String m_versionName = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "Unnamed";
+        private String m_version = Assembly.GetEntryAssembly()?.GetName().Version.ToString();
+        private String m_versionName = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "Unnamed";
+
         // Trace source
         private Tracer m_traceSource = Tracer.GetTracer(typeof(RestMessageDispatchFormatter));
+
         // Known types
-        private static Type[] s_knownTypes = typeof(TContract).GetCustomAttributes<ServiceKnownResourceAttribute>().Select(t => t.Type).ToArray();
+        private static Type[] s_knownTypes;
+
         // Default view model
         private static ViewModelDescription m_defaultViewModel = null;
         /// <summary>
@@ -112,6 +115,15 @@ namespace SanteDB.Rest.Common.Serialization
             {
                 m_defaultViewModel = ViewModelDescription.Load(typeof(RestMessageDispatchFormatter<>).Assembly.GetManifestResourceStream("SanteDB.Rest.Common.Resources.ViewModel.xml"));
 
+                try
+                {
+                    s_knownTypes = typeof(TContract).GetCustomAttributes<ServiceKnownResourceAttribute>().Select(t => t.Type).ToArray();
+                }
+                catch(Exception e)
+                {
+                    this.m_traceSource.TraceError("Error scanning for known types on contract {0} - {1}", typeof(TContract), e);
+                    throw;
+                }
 
                 this.m_traceSource.TraceInfo("Will generate serializer for {0} ({1} types)...", typeof(TContract).FullName, s_knownTypes.Length);
 
