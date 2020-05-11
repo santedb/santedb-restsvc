@@ -482,7 +482,7 @@ namespace SanteDB.Rest.HDSI
                 else
                     throw new FileNotFoundException(resourceType);
 
-            }
+            } 
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
