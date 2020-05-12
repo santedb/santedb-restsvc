@@ -45,6 +45,12 @@ namespace SanteDB.Rest.Common.Behavior
             var langPrincipal = (AuthenticationContext.Current.Principal as IClaimsPrincipal)?.FindFirst(SanteDBClaimTypes.Language);
             if(langPrincipal != null)
                 Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(langPrincipal.Value);
+            else if(RestOperationContext.Current.Data.TryGetValue("Session", out object dataSession) && dataSession is ISession session &&
+                session.Claims.Any(o=>o.Type == SanteDBClaimTypes.Language))
+            {
+                langPrincipal = session.Claims.First(o=>o.Type == SanteDBClaimTypes.Language);
+                Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(langPrincipal.Value);
+            }
             else if(request.Cookies["lang"] != null)
                 Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(request.Cookies["lang"].Value);
             else if (request.Headers["Accept-Language"] != null)

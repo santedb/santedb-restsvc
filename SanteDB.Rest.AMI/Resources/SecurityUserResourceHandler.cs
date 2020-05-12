@@ -265,7 +265,7 @@ namespace SanteDB.Rest.AMI.Resources
                 var retVal = base.Update(data) as SecurityUserInfo;
 
                 // Roles? We want to update
-                if (td.Roles.Count > 0)
+                if (td.Roles != null && td.Roles.Count > 0)
                 {
                     var irps = ApplicationServiceContext.Current.GetService<IRoleProviderService>();
                     irps.RemoveUsersFromRoles(new String[] { td.Entity.UserName }, irps.GetAllRoles().Where(o => !td.Roles.Contains(o)).ToArray(), AuthenticationContext.Current.Principal);
