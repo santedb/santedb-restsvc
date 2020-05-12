@@ -71,6 +71,7 @@ namespace SanteDB.Core.Model.AMI.Collections
     [XmlInclude(typeof(DiagnosticSyncInfo))]
     [XmlInclude(typeof(DiagnosticVersionInfo))]
     [XmlInclude(typeof(SubmissionInfo))]
+    [XmlInclude(typeof(TfaMechanismInfo))]
     [XmlInclude(typeof(SubmissionResult))]
     [XmlInclude(typeof(ApplicationEntity))]
     [XmlInclude(typeof(SubmissionRequest))]

@@ -66,6 +66,7 @@ namespace SanteDB.Rest.AMI
     [ServiceKnownResource(typeof(SecurityApplication))]
     [ServiceKnownResource(typeof(SecurityDevice))]
     [ServiceKnownResource(typeof(SubscriptionDefinition))]
+    [ServiceKnownResource(typeof(TfaMechanismInfo))]
     [ServiceKnownResource(typeof(AuditData))]
     [ServiceKnownResource(typeof(AppletManifest))]
     [ServiceKnownResource(typeof(JobInfo))]

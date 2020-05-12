@@ -88,6 +88,8 @@ namespace SanteDB.Rest.AMI.Resources
                 data = new SecurityUserInfo(data as SecurityUser);
             var td = data as SecurityUserInfo;
 
+            // Don't allow callers to overwrite expiration
+            td.Entity.PasswordExpiration = null;
             // Insert the user
             var retVal = base.Create(data, updateIfExists) as SecurityUserInfo;
 
@@ -238,6 +240,8 @@ namespace SanteDB.Rest.AMI.Resources
                 data = new SecurityUserInfo(data as SecurityUser);
 
             var td = data as SecurityUserInfo;
+            // Don't allow callers to overwrite expiration
+            td.Entity.PasswordExpiration = null;
 
             // Update the user
             if (td.PasswordOnly)
