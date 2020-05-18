@@ -35,8 +35,10 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public override IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
         {
-            if (!queryParameters.ContainsKey("to"))
-                queryParameters.Add("to", new List<string>() { "null", AuthenticationContext.Current.Principal.Identity.Name });
+            if (!queryParameters.ContainsKey("rcpt.userName") && !queryParameters.ContainsKey("from"))
+            {
+                queryParameters.Add("rcpt.userName", new List<string>() { "SYSTEM", AuthenticationContext.Current.Principal.Identity.Name });
+            }
             return base.Query(queryParameters, offset, count, out totalCount);
         }
     }
