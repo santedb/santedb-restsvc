@@ -289,7 +289,7 @@ namespace SanteDB.Rest.AMI
         /// <param name="key">The key of the resource</param>
         /// <param name="versionKey">The version key to retrieve</param>
         /// <returns>The object as it existed at that version</returns>
-        [Get("/{resourceType}/{key}/history/{versionKey}")]
+        [Get("/{resourceType}/{key}/_history/{versionKey}")]
         Object GetVersion(String resourceType, String key, String versionKey);
 
         /// <summary>
@@ -298,7 +298,7 @@ namespace SanteDB.Rest.AMI
         /// <param name="resourceType">The type of resource</param>
         /// <param name="key">The key of the object to retrieve the history for</param>
         /// <returns>The history</returns>
-        [Get("/{resourceType}/{key}/history")]
+        [Get("/{resourceType}/{key}/_history")]
         AmiCollection History(String resourceType, String key);
 
         /// <summary>

@@ -146,7 +146,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Gets a complete history of all changes made to the specified resource
         /// </summary>
-        [Get("/{resourceType}/{id}/history")]
+        [Get("/{resourceType}/{id}/_history")]
         IdentifiedData History(string resourceType, string id);
 
         /// <summary>
@@ -160,14 +160,15 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Returns a list of patches for the specified resource 
         /// </summary>
-        [Get("/{resourceType}/{id}/patch")]
+        [Get("/{resourceType}/{id}/_patch")]
         Patch GetPatch(string resourceType, string id);
 
         /// <summary>
         /// Retrieves a specific version of the specified resource
         /// </summary>
-        [Get("/{resourceType}/{id}/history/{versionId}")]
+        [Get("/{resourceType}/{id}/_history/{versionId}")]
         IdentifiedData GetVersion(string resourceType, string id, string versionId);
+
 
         /// <summary>
         /// Creates the resource. If the resource already exists, then a 409 is thrown
@@ -195,6 +196,48 @@ namespace SanteDB.Rest.HDSI
         [RestServiceFault(409, "There is a conflict in the update request (version mismatch)")]
         IdentifiedData Delete(string resourceType, string id);
 
+
+        /// <summary>
+        /// Performs a linked or chained search on a sub-property
+        /// </summary>
+        /// <param name="resourceType">The type of resource which should be searched</param>
+        /// <param name="key">The key of the hosting (container object)</param>
+        /// <param name="scopedEntityKey">The key of the sub-item to fetch</param>
+        /// <param name="property">The property to search</param>
+        /// <returns>The search for the specified resource type limited to the specified object</returns>
+        [Get("/{resourceType}/{key}/{property}/{scopedEntityKey}")]
+        Object AssociationGet(String resourceType, String key, String property, String scopedEntityKey);
+
+        /// <summary>
+        /// Performs a linked or chained search on a sub-property
+        /// </summary>
+        /// <param name="resourceType">The type of resource which should be searched</param>
+        /// <param name="key">The key of the hosting (container object)</param>
+        /// <param name="property">The property to search</param>
+        /// <returns>The search for the specified resource type limited to the specified object</returns>
+        [Get("/{resourceType}/{key}/{property}")]
+        Object AssociationSearch(String resourceType, String key, String property);
+
+        /// <summary>
+        /// Assigns the <paramref name="body"/> object with the resource at <paramref name="resourceType"/>/<paramref name="key"/>
+        /// </summary>
+        /// <param name="resourceType">The type of container resource</param>
+        /// <param name="key">The identiifer of the container</param>
+        /// <param name="property">The property which is the association to be added</param>
+        /// <param name="body">The object to be added to the collection</param>
+        [Post("/{resourceType}/{key}/{property}")]
+        object AssociationCreate(String resourceType, String key, String property, Object body);
+
+        /// <summary>
+        /// Removes an association 
+        /// </summary>
+        /// <param name="resourceType">The type of resource which is the container</param>
+        /// <param name="key">The key of the container</param>
+        /// <param name="property">The property on which the sub-key resides</param>
+        /// <param name="scopedEntityKey">The actual value of the sub-key</param>
+        /// <returns>The removed object</returns>
+        [Delete("/{resourceType}/{key}/{property}/{scopedEntityKey}")]
+        object AssociationRemove(String resourceType, String key, String property, String scopedEntityKey);
 
     }
 }

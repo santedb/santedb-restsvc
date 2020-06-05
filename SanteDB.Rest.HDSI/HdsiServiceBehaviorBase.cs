@@ -40,6 +40,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Text;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
@@ -68,6 +69,21 @@ namespace SanteDB.Rest.HDSI
         public HdsiServiceBehaviorBase(ResourceHandlerTool handler)
         {
             this.m_resourceHandler = handler;
+        }
+
+        /// <summary>
+        /// Create content location
+        /// </summary>
+        private String CreateContentLocation(params Object[] parts)
+        {
+            var requestUri = RestOperationContext.Current.IncomingRequest.Url;
+            UriBuilder uriBuilder = new UriBuilder();
+            uriBuilder.Scheme = requestUri.Scheme;
+            uriBuilder.Host = requestUri.Host;
+            uriBuilder.Port = requestUri.Port;
+            uriBuilder.Path = RestOperationContext.Current.ServiceEndpoint.Description.ListenUri.AbsolutePath;
+            uriBuilder.Path += String.Join("/", parts);
+            return uriBuilder.ToString();
         }
 
         /// <summary>
@@ -120,14 +136,9 @@ namespace SanteDB.Rest.HDSI
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
                     RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
                     if (versioned != null)
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/history/{2}",
-                            RestOperationContext.Current.IncomingRequest.Url,
-                            retVal.Key,
-                            versioned.Key));
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, retVal.Key, "_history", versioned.VersionKey));
                     else
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}",
-                            RestOperationContext.Current.IncomingRequest.Url,
-                            retVal.Key));
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, retVal.Key));
 
                     return retVal;
                 }
@@ -162,14 +173,9 @@ namespace SanteDB.Rest.HDSI
                     RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
 
                     if (versioned != null)
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/history/{2}",
-                            RestOperationContext.Current.IncomingRequest.Url,
-                            retVal.Key,
-                            versioned.Key));
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id, "_history", versioned.VersionKey));
                     else
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}",
-                            RestOperationContext.Current.IncomingRequest.Url,
-                            retVal.Key));
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id));
 
                     return retVal;
                 }
@@ -468,14 +474,9 @@ namespace SanteDB.Rest.HDSI
                     RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
 
                     if (versioned != null)
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/history/{2}",
-                            RestOperationContext.Current.IncomingRequest.Url,
-                            retVal.Key,
-                            versioned.Key));
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id, "_history", versioned.VersionKey));
                     else
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}",
-                            RestOperationContext.Current.IncomingRequest.Url,
-                            retVal.Key));
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id));
 
                     return retVal;
                 }
@@ -536,14 +537,10 @@ namespace SanteDB.Rest.HDSI
 
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
                     if (versioned != null)
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/history/{2}",
-                            RestOperationContext.Current.IncomingRequest.Url,
-                            retVal.Key,
-                            versioned.Key));
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id, "_history", versioned.VersionKey));
                     else
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}",
-                            RestOperationContext.Current.IncomingRequest.Url,
-                            retVal.Key));
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id));
+
 
                     return retVal;
                 }
@@ -630,14 +627,10 @@ namespace SanteDB.Rest.HDSI
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(applied.ModifiedOn.DateTime);
                     var versioned = (data as IVersionedEntity)?.VersionKey;
                     if (versioned != null)
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/history/{2}",
-                                RestOperationContext.Current.IncomingRequest.Url,
-                                id,
-                                versioned));
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id, "_history", versioned));
                     else
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}",
-                                RestOperationContext.Current.IncomingRequest.Url,
-                                id));
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id));
+
                 }
             }
             catch (PatchAssertionException e)
@@ -742,6 +735,213 @@ namespace SanteDB.Rest.HDSI
                     caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Patch, this.GetDemands(handler, nameof(IApiResourceHandler.Update))));
 
                 return new ServiceResourceOptions(resourceType, handler.Type, caps);
+            }
+        }
+
+        /// <summary>
+        /// Perform a search on the specified entity
+        /// </summary>
+        public virtual Object AssociationSearch(string resourceType, string key, string property)
+        {
+            this.ThrowIfNotReady();
+            try
+            {
+
+                var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType) as IAssociativeResourceHandler;
+                if (handler != null)
+                {
+                    String offset = RestOperationContext.Current.IncomingRequest.QueryString["_offset"],
+                      count = RestOperationContext.Current.IncomingRequest.QueryString["_count"];
+
+                    this.AclCheck(handler, nameof(IAssociativeResourceHandler.QueryAssociatedEntities));
+
+                    var query = RestOperationContext.Current.IncomingRequest.QueryString.ToQuery();
+
+                    // Modified on?
+                    if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince().HasValue)
+                        query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince().Value.ToString("o"));
+
+                    // No obsoletion time?
+                    if (typeof(BaseEntityData).IsAssignableFrom(handler.Type) && !query.ContainsKey("obsoletionTime"))
+                        query.Add("obsoletionTime", "null");
+
+
+                    int totalResults = 0;
+
+                    // Lean mode
+                    var lean = RestOperationContext.Current.IncomingRequest.QueryString["_lean"];
+                    bool.TryParse(lean, out bool parsedLean);
+                    this.AclCheck(handler, nameof(IApiResourceHandler.Query));
+
+                    IEnumerable<IdentifiedData> retVal = handler.QueryAssociatedEntities(Guid.Parse(key), property, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).OfType<IdentifiedData>();
+                    
+                    RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.OfType<IdentifiedData>().OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now);
+                    // Last modification time and not modified conditions
+                    if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||
+                        RestOperationContext.Current.IncomingRequest.GetIfNoneMatch() != null) &&
+                        totalResults == 0)
+                    {
+                        RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
+                        return null;
+                    }
+                    else
+                    {
+                        if (query.ContainsKey("_all") || query.ContainsKey("_expand") || query.ContainsKey("_exclude"))
+                        {
+                            var wtp = ApplicationServiceContext.Current.GetService<IThreadPoolService>();
+                            retVal.AsParallel().Select((itm) =>
+                            {
+                                try
+                                {
+                                    var i = itm as IdentifiedData;
+                                    ObjectExpander.ExpandProperties(i, query);
+                                    ObjectExpander.ExcludeProperties(i, query);
+                                    return true;
+                                }
+                                catch (Exception e)
+                                {
+                                    this.m_traceSource.TraceError("Error setting properties: {0}", e);
+                                    return false;
+                                }
+                            }).ToList();
+                        }
+
+                        return BundleUtil.CreateBundle(retVal, totalResults, Int32.Parse(offset ?? "0"), parsedLean);
+                    }
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Create an associated entity
+        /// </summary>
+        public virtual object AssociationCreate(string resourceType, string key, string property, object body)
+        {
+            this.ThrowIfNotReady();
+
+            try
+            {
+
+                IAssociativeResourceHandler handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType) as IAssociativeResourceHandler;
+                if (handler != null)
+                {
+                    this.AclCheck(handler, nameof(IAssociativeResourceHandler.AddAssociatedEntity));
+                    var retVal = handler.AddAssociatedEntity(Guid.Parse(key), property, body) as IdentifiedData;
+
+                    RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
+                    RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
+                    RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, key, property, retVal.Key));
+
+
+                    return retVal;
+
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+
+            }
+        }
+
+        /// <summary>
+        /// Removes an associated entity from the scoping property path
+        /// </summary>
+        public virtual object AssociationRemove(string resourceType, string key, string property, string scopedEntityKey)
+        {
+            this.ThrowIfNotReady();
+
+            try
+            {
+
+                IAssociativeResourceHandler handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType) as IAssociativeResourceHandler;
+                if (handler != null)
+                {
+                    this.AclCheck(handler, nameof(IAssociativeResourceHandler.RemoveAssociatedEntity));
+
+                    var retVal = handler.RemoveAssociatedEntity(Guid.Parse(key), property, Guid.Parse(scopedEntityKey)) as IdentifiedData;
+
+                    RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
+                    RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, key, property, retVal.Key));
+                    return retVal;
+
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+
+            }
+        }
+
+        /// <summary>
+        /// Removes an associated entity from the scoping property path
+        /// </summary>
+        public virtual object AssociationGet(string resourceType, string key, string property, string scopedEntityKey)
+        {
+            this.ThrowIfNotReady();
+
+            try
+            {
+
+                IAssociativeResourceHandler handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType) as IAssociativeResourceHandler;
+                if (handler != null)
+                {
+                    this.AclCheck(handler, nameof(IAssociativeResourceHandler.GetAssociatedEntity));
+
+                    var retVal = handler.GetAssociatedEntity(Guid.Parse(key), property, Guid.Parse(scopedEntityKey)) as IdentifiedData;
+
+                    RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
+                    RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.ModifiedOn.DateTime);
+
+                    // HTTP IF headers?
+                    if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null &&
+                        retVal.ModifiedOn <= RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() ||
+                        RestOperationContext.Current.IncomingRequest.GetIfNoneMatch()?.Any(o => retVal.Tag == o) == true)
+                    {
+                        RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
+                        return null;
+                    }
+
+                    else if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true" ||
+                        RestOperationContext.Current.IncomingRequest.QueryString["_all"] == "true")
+                    {
+                        retVal = retVal.GetLocked();
+                        ObjectExpander.ExpandProperties(retVal, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
+                        ObjectExpander.ExcludeProperties(retVal, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
+                        return Bundle.CreateBundle(retVal);
+                    }
+                    else
+                    {
+                        return retVal;
+                    }
+
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+
             }
         }
     }
