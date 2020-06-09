@@ -20,11 +20,14 @@
 using RestSrvr;
 using RestSrvr.Attributes;
 using SanteDB.Core;
+using SanteDB.Core.Api.Services;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
+using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Collection;
+using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Model.Query;
@@ -50,7 +53,7 @@ namespace SanteDB.Rest.HDSI
     /// Health Data Service Interface (HDSI)
     /// </summary>
     /// <remarks>Represents generic implementation of the the Health Data Service Interface (HDSI) contract</remarks>
-    [ServiceBehavior(Name = "HDSI", InstanceMode = ServiceInstanceMode.PerCall)]
+    [ServiceBehavior(Name = "HDSI", InstanceMode = ServiceInstanceMode.Singleton)]
     public abstract class HdsiServiceBehaviorBase : IHdsiServiceContract
     {
         /// <summary>
@@ -942,6 +945,44 @@ namespace SanteDB.Rest.HDSI
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
 
+            }
+        }
+
+        /// <summary>
+        /// Generate the barcode for the specified object with specified authority
+        /// </summary>
+        public Stream GetBarcode(string resourceType, string id, string authority)
+        {
+            try
+            {
+                var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
+                if (handler != null)
+                {
+                    var bcService = ApplicationServiceContext.Current.GetService<IBarcodeGeneratorService>();
+                    if (bcService == null)
+                        throw new InvalidOperationException("Cannot find barcode generator service");
+
+                    Guid objectId = Guid.Parse(id), authorityId = Guid.Parse(authority);
+                    var data = handler.Get(objectId, Guid.Empty) as IdentifiedData;
+                    if (data == null)
+                        throw new KeyNotFoundException($"{resourceType} {id}");
+                    else {
+                        RestOperationContext.Current.OutgoingResponse.ContentType = "image/png";
+                        if (data is Entity entity)
+                            return bcService.Generate(entity.Identifiers.Where(o => o.AuthorityKey == authorityId));
+                        else if (data is Act act)
+                            return bcService.Generate(act.Identifiers.Where(o => o.AuthorityKey == authorityId));
+                        else
+                            return null;
+                    }
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                this.m_traceSource.TraceError("Error generating barcode for {0} - {1}", resourceType, e);
+                throw new Exception($"Could not generate visual code for {resourceType}/{id}", e);
             }
         }
     }

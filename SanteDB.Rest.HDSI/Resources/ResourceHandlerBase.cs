@@ -22,6 +22,8 @@ using SanteDB.Core.Api.Services;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Collection;
+using SanteDB.Core.Model.DataTypes;
+using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
@@ -182,6 +184,7 @@ namespace SanteDB.Rest.HDSI.Resources
                     var results = mergeService.GetDuplicates(objectKey).Where(query);
                     totalCount = results.Count();
                     return results.Skip(offset).Take(count);
+
                 default:
                     throw new KeyNotFoundException($"Cannot find {propertyName}");
             }

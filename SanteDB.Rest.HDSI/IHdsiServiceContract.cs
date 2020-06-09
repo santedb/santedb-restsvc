@@ -29,6 +29,7 @@ using SanteDB.Core.Model.Roles;
 using SanteDB.Core.Model.Security;
 using SanteDB.Rest.Common.Attributes;
 using System;
+using System.IO;
 using System.Xml.Schema;
 
 namespace SanteDB.Rest.HDSI
@@ -182,6 +183,12 @@ namespace SanteDB.Rest.HDSI
         [Put("/{resourceType}/{id}")]
         [RestServiceFault(409, "There is a conflict in the update request (version mismatch)")]
         IdentifiedData Update(string resourceType, string id, IdentifiedData body);
+
+        /// <summary>
+        /// Gets the specified barcode for the user
+        /// </summary>
+        [Get("/{resourceType}/{id}/_code/{authority}")]
+        Stream GetBarcode(String resourceType, String id, String authority);
 
         /// <summary>
         /// Creates or updates a resource. That is, creates the resource if it does not exist, or updates it if it does

@@ -53,7 +53,7 @@ namespace SanteDB.Messaging.AMI.Wcf
     /// Administration Management Interface (AMI)
     /// </summary>
     /// <remarks>Represents a generic implementation of the Administrative Management Interface (AMI) contract</remarks>
-    [ServiceBehavior(Name = "AMI", InstanceMode = ServiceInstanceMode.PerCall)]
+    [ServiceBehavior(Name = "AMI", InstanceMode = ServiceInstanceMode.Singleton)]
     public abstract class AmiServiceBehaviorBase : IAmiServiceContract
     {
 
