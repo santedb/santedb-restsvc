@@ -19,6 +19,7 @@
  */
 using RestSrvr;
 using RestSrvr.Message;
+using SanteDB.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,7 +74,12 @@ namespace SanteDB.Rest.Common.Behaviors
             response.Headers.Add("Content-Security-Policy", $"script-src-elem 'self' 'nonce-{this.Nonce}' 'strict-dynamic'; script-src 'self' 'nonce-{this.Nonce}'");
             response.Headers.Add("X-XSS-Protection", "1; mode=block");
             response.Headers.Add("X-Frame-Options", "deny");
-            response.Headers.Add("Feature-Policy", "autoplay 'none'; camera 'none'; accelerometer 'none'; goelocation 'none'; payment 'none'");
+
+            if(ApplicationServiceContext.Current.HostType == SanteDBHostType.Client)
+                response.Headers.Add("Feature-Policy", "autoplay 'none'; camera 'none'; accelerometer 'none'; goelocation 'none'; payment 'none'");
+            else
+                response.Headers.Add("Feature-Policy", "autoplay 'none'; camera 'self'; accelerometer 'none'; goelocation 'none'; payment 'none'");
+
             response.Headers.Add("X-Content-Type-Options", "nosniff");
             
         }
