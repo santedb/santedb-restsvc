@@ -23,6 +23,7 @@ using SanteDB.Core.Jobs;
 using SanteDB.Core.Model.AMI.Jobs;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
@@ -73,9 +74,9 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Get the specified job
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.UnrestrictedAdministration)]
         public object Get(object id, object versionId)
         {
+            ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
             var manager = ApplicationServiceContext.Current.GetService<IJobManagerService>();
             var job = manager.GetJobInstance(id.ToString());
             if (job == null)
@@ -86,9 +87,10 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Cancels a job
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.UnrestrictedAdministration)]
         public object Obsolete(object key)
         {
+
+            ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
             var manager = ApplicationServiceContext.Current.GetService<IJobManagerService>();
             var job = manager.GetJobInstance(key.ToString());
             if (job == null)
@@ -106,7 +108,6 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Query for all jobs
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.UnrestrictedAdministration)]
         public IEnumerable<object> Query(NameValueCollection queryParameters)
         {
             throw new NotSupportedException();
@@ -115,9 +116,10 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Query for jobs
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.UnrestrictedAdministration)]
         public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
         {
+            ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
+
             var manager = ApplicationServiceContext.Current.GetService<IJobManagerService>();
             var jobs = manager.Jobs;
             if (queryParameters.TryGetValue("name", out List<string> data))
@@ -129,12 +131,14 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Update a job
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.UnrestrictedAdministration)]
         public object Update(object data)
         {
             // First try to cast dat as JobInfo
             if (data is JobInfo)
             {
+                ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
+                    
+
                 var jobInfo = data as JobInfo;
                 var jobManager = ApplicationServiceContext.Current.GetService<IJobManagerService>();
                 if (jobManager == null)
