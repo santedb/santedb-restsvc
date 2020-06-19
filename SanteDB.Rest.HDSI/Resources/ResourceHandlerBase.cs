@@ -69,12 +69,14 @@ namespace SanteDB.Rest.HDSI.Resources
         {
             try
             {
-                this.Lock((Guid)data);
+                if(data is IdentifiedData id)
+                    this.Lock((Guid)id.Key);
                 return base.Update(data);
             }
             finally
             {
-                this.Unlock((Guid)data);
+                if (data is IdentifiedData id)
+                    this.Unlock((Guid)id.Key);
             }
         }
 
@@ -147,9 +149,7 @@ namespace SanteDB.Rest.HDSI.Resources
         public object Lock(object key)
         {
             var adHocCache = ApplicationServiceContext.Current.GetService<IResourceEditLockService>();
-            if (adHocCache == null)
-                throw new InvalidOperationException("Cannot find resource lock service");
-            adHocCache.Lock<TData>((Guid)key);
+            adHocCache?.Lock<TData>((Guid)key);
             return null;
         }
 
@@ -226,9 +226,7 @@ namespace SanteDB.Rest.HDSI.Resources
         public object Unlock(object key)
         {
             var adHocCache = ApplicationServiceContext.Current.GetService<IResourceEditLockService>();
-            if (adHocCache == null)
-                throw new InvalidOperationException("Cannot find resource lock service");
-            adHocCache.Unlock<TData>((Guid)key);
+            adHocCache?.Unlock<TData>((Guid)key);
             return null;
         }
     }

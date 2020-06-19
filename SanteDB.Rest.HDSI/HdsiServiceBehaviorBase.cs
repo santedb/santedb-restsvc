@@ -62,16 +62,15 @@ namespace SanteDB.Rest.HDSI
         protected Tracer m_traceSource = Tracer.GetTracer(typeof(HdsiServiceBehaviorBase));
 
         /// <summary>
-        /// The resource handler tool for operations on the HDSI
+        /// Get resource handler
         /// </summary>
-        protected ResourceHandlerTool m_resourceHandler;
+        protected abstract ResourceHandlerTool GetResourceHandler();
 
         /// <summary>
         /// HDSI Service Behavior
         /// </summary>
-        public HdsiServiceBehaviorBase(ResourceHandlerTool handler)
+        public HdsiServiceBehaviorBase()
         {
-            this.m_resourceHandler = handler;
         }
 
         /// <summary>
@@ -128,7 +127,7 @@ namespace SanteDB.Rest.HDSI
 
             try
             {
-                var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
 
@@ -166,7 +165,7 @@ namespace SanteDB.Rest.HDSI
             this.ThrowIfNotReady();
             try
             {
-                var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(IApiResourceHandler.Create));
@@ -204,7 +203,7 @@ namespace SanteDB.Rest.HDSI
             try
             {
 
-                var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(IApiResourceHandler.Get));
@@ -257,7 +256,7 @@ namespace SanteDB.Rest.HDSI
             this.ThrowIfNotReady();
             try
             {
-                var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(IApiResourceHandler.Get));
@@ -298,7 +297,7 @@ namespace SanteDB.Rest.HDSI
                 XmlReflectionImporter importer = new XmlReflectionImporter("http://santedb.org/model");
                 XmlSchemaExporter exporter = new XmlSchemaExporter(schemaCollection);
 
-                foreach (var cls in this.m_resourceHandler.Handlers.Where(o => o.Scope == typeof(IHdsiServiceContract)).Select(o => o.Type))
+                foreach (var cls in this.GetResourceHandler().Handlers.Where(o => o.Scope == typeof(IHdsiServiceContract)).Select(o => o.Type))
                     exporter.ExportTypeMapping(importer.ImportTypeMapping(cls, "http://santedb.org/model"));
 
                 if (schemaId > schemaCollection.Count)
@@ -330,7 +329,7 @@ namespace SanteDB.Rest.HDSI
             this.ThrowIfNotReady();
             try
             {
-                var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
 
                 if (handler != null)
                 {
@@ -375,7 +374,7 @@ namespace SanteDB.Rest.HDSI
             this.ThrowIfNotReady();
             try
             {
-                var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
                     String offset = RestOperationContext.Current.IncomingRequest.QueryString["_offset"],
@@ -465,7 +464,7 @@ namespace SanteDB.Rest.HDSI
             this.ThrowIfNotReady();
             try
             {
-                var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(IApiResourceHandler.Update));
@@ -504,7 +503,7 @@ namespace SanteDB.Rest.HDSI
             this.ThrowIfNotReady();
             try
             {
-                var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
                     IdentifiedData retVal = null;
@@ -599,7 +598,7 @@ namespace SanteDB.Rest.HDSI
                 var versionId = Guid.ParseExact(match, "N");
 
                 // First we load
-                var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
 
                 if (handler == null)
                     throw new FileNotFoundException(resourceType);
@@ -682,7 +681,7 @@ namespace SanteDB.Rest.HDSI
                 };
 
                 // Get the resources which are supported
-                foreach (var itm in this.m_resourceHandler.Handlers)
+                foreach (var itm in this.GetResourceHandler().Handlers)
                 {
                     var svc = this.ResourceOptions(itm.ResourceName);
                     retVal.Resources.Add(svc);
@@ -708,7 +707,7 @@ namespace SanteDB.Rest.HDSI
         /// </summary>
         public virtual ServiceResourceOptions ResourceOptions(string resourceType)
         {
-            var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
+            var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
             if (handler == null)
                 throw new FileNotFoundException(resourceType);
             else
@@ -750,7 +749,7 @@ namespace SanteDB.Rest.HDSI
             try
             {
 
-                var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType) as IAssociativeResourceHandler;
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IAssociativeResourceHandler;
                 if (handler != null)
                 {
                     String offset = RestOperationContext.Current.IncomingRequest.QueryString["_offset"],
@@ -833,7 +832,7 @@ namespace SanteDB.Rest.HDSI
             try
             {
 
-                IAssociativeResourceHandler handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType) as IAssociativeResourceHandler;
+                IAssociativeResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IAssociativeResourceHandler;
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(IAssociativeResourceHandler.AddAssociatedEntity));
@@ -869,7 +868,7 @@ namespace SanteDB.Rest.HDSI
             try
             {
 
-                IAssociativeResourceHandler handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType) as IAssociativeResourceHandler;
+                IAssociativeResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IAssociativeResourceHandler;
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(IAssociativeResourceHandler.RemoveAssociatedEntity));
@@ -903,7 +902,7 @@ namespace SanteDB.Rest.HDSI
             try
             {
 
-                IAssociativeResourceHandler handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType) as IAssociativeResourceHandler;
+                IAssociativeResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IAssociativeResourceHandler;
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(IAssociativeResourceHandler.GetAssociatedEntity));
@@ -955,7 +954,7 @@ namespace SanteDB.Rest.HDSI
         {
             try
             {
-                var handler = this.m_resourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceType);
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
                     var bcService = ApplicationServiceContext.Current.GetService<IBarcodeGeneratorService>();
