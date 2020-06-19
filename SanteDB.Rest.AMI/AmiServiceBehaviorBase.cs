@@ -65,15 +65,7 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// <summary>
         /// The resource handler tool for executing operations
         /// </summary>
-        protected ResourceHandlerTool m_resourceHandler;
-
-        /// <summary>
-        /// Create the AMI service handler with the specified resource handler resolver
-        /// </summary>
-        public AmiServiceBehaviorBase(ResourceHandlerTool resourceHandler)
-        {
-            this.m_resourceHandler = resourceHandler;
-        }
+        protected abstract ResourceHandlerTool GetResourceHandler();
 
         /// <summary>
         /// Create a diagnostic report
@@ -141,7 +133,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                 XmlReflectionImporter importer = new XmlReflectionImporter("http://santedb.org/ami");
                 XmlSchemaExporter exporter = new XmlSchemaExporter(schemaCollection);
 
-                foreach (var cls in this.m_resourceHandler.Handlers.Select(o => o.Type))
+                foreach (var cls in this.GetResourceHandler().Handlers.Select(o => o.Type))
                     exporter.ExportTypeMapping(importer.ImportTypeMapping(cls, "http://santedb.org/ami"));
 
                 if (schemaId > schemaCollection.Count)
@@ -189,7 +181,7 @@ namespace SanteDB.Messaging.AMI.Wcf
             try
             {
                 // First we load
-                var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
+                var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType);
 
                 if (handler == null)
                     throw new FileNotFoundException(resourceType);
@@ -281,7 +273,7 @@ namespace SanteDB.Messaging.AMI.Wcf
             try
             {
 
-                IApiResourceHandler handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
+                IApiResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(IApiResourceHandler.Create));
@@ -310,7 +302,7 @@ namespace SanteDB.Messaging.AMI.Wcf
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
-                throw;
+                throw new Exception($"Error creating resource {resourceType}", e);
 
             }
         }
@@ -323,7 +315,7 @@ namespace SanteDB.Messaging.AMI.Wcf
             this.ThrowIfNotReady();
             try
             {
-                var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
+                var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null)
                 {
                     if (data is IdentifiedData)
@@ -372,7 +364,7 @@ namespace SanteDB.Messaging.AMI.Wcf
             this.ThrowIfNotReady();
             try
             {
-                var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
+                var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null)
                 {
 
@@ -426,7 +418,7 @@ namespace SanteDB.Messaging.AMI.Wcf
             {
 
 
-                var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
+                var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null)
                 {
                     object strongKey = key;
@@ -481,7 +473,7 @@ namespace SanteDB.Messaging.AMI.Wcf
             this.ThrowIfNotReady();
             try
             {
-                var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
+                var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null)
                 {
                     object strongKey = key, strongVersionKey = versionKey;
@@ -521,7 +513,7 @@ namespace SanteDB.Messaging.AMI.Wcf
             this.ThrowIfNotReady();
             try
             {
-                var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
+                var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType);
 
                 if (handler != null)
                 {
@@ -563,7 +555,7 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// </summary>
         public virtual ServiceResourceOptions ResourceOptions(string resourceType)
         {
-            var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
+            var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType);
             if (handler == null)
                 throw new FileNotFoundException(resourceType);
             else
@@ -604,7 +596,7 @@ namespace SanteDB.Messaging.AMI.Wcf
             this.ThrowIfNotReady();
             try
             {
-                var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
+                var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null)
                 {
                     String offset = RestOperationContext.Current.IncomingRequest.QueryString["_offset"],
@@ -647,7 +639,7 @@ namespace SanteDB.Messaging.AMI.Wcf
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
-                throw;
+                throw new Exception($"Error searching resource type {resourceType}", e);
 
             }
         }
@@ -660,7 +652,7 @@ namespace SanteDB.Messaging.AMI.Wcf
             this.ThrowIfNotReady();
             try
             {
-                var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
+                var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null)
                 {
                     // Get target of update and ensure
@@ -739,7 +731,7 @@ namespace SanteDB.Messaging.AMI.Wcf
             try
             {
 
-                var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
+                var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null && handler is ILockableResourceHandler)
                 {
                     this.AclCheck(handler, nameof(ILockableResourceHandler.Lock));
@@ -780,7 +772,7 @@ namespace SanteDB.Messaging.AMI.Wcf
             try
             {
 
-                var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
+                var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null && handler is ILockableResourceHandler)
                 {
                     this.AclCheck(handler, nameof(ILockableResourceHandler.Unlock));
@@ -821,7 +813,7 @@ namespace SanteDB.Messaging.AMI.Wcf
             try
             {
 
-                var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType) as IAssociativeResourceHandler;
+                var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as IAssociativeResourceHandler;
                 if (handler != null )
                 {
                     String offset = RestOperationContext.Current.IncomingRequest.QueryString["_offset"],
@@ -889,7 +881,7 @@ namespace SanteDB.Messaging.AMI.Wcf
             try
             {
 
-                IAssociativeResourceHandler handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType) as IAssociativeResourceHandler;
+                IAssociativeResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as IAssociativeResourceHandler;
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(IAssociativeResourceHandler.AddAssociatedEntity));
@@ -933,7 +925,7 @@ namespace SanteDB.Messaging.AMI.Wcf
             try
             {
 
-                IAssociativeResourceHandler handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType) as IAssociativeResourceHandler;
+                IAssociativeResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as IAssociativeResourceHandler;
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(IAssociativeResourceHandler.RemoveAssociatedEntity));
@@ -978,7 +970,7 @@ namespace SanteDB.Messaging.AMI.Wcf
             try
             {
 
-                IAssociativeResourceHandler handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType) as IAssociativeResourceHandler;
+                IAssociativeResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as IAssociativeResourceHandler;
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(IAssociativeResourceHandler.GetAssociatedEntity));
