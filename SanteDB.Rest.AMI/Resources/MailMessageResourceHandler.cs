@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using SanteDB.Core.Mail;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Principal;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -29,6 +30,20 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary>
     public class MailMessageResourceHandler : ResourceHandlerBase<MailMessage>
     {
+
+        /// <summary>
+        /// Create the mail
+        /// </summary>
+        public override object Create(object data, bool updateIfExists)
+        {
+            if (data is MailMessage message)
+            {
+                if(!(AuthenticationContext.Current.Principal.Identity is IDeviceIdentity ||
+                    AuthenticationContext.Current.Principal.Identity is IApplicationIdentity))
+                    message.From = AuthenticationContext.Current.Principal.Identity.Name;
+            }
+            return base.Create(data, updateIfExists);
+        }
 
         /// <summary>
         /// Query for mail messages should default to my messages
