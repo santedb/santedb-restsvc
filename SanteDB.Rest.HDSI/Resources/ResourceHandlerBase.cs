@@ -17,10 +17,17 @@
  * User: fyfej
  * Date: 2019-11-27
  */
+using SanteDB.Core;
+using SanteDB.Core.Api.Services;
+using SanteDB.Core.Exceptions;
 using SanteDB.Core.Model;
+using SanteDB.Core.Model.Collection;
+using SanteDB.Core.Model.Query;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
@@ -28,7 +35,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a resource handler base type that is always bound to HDSI
     /// </summary>
     /// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
-    public abstract class ResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData>, INullifyResourceHandler, ICancelResourceHandler
+    public abstract class ResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData>, INullifyResourceHandler, ICancelResourceHandler, IAssociativeResourceHandler, ILockableResourceHandler
         where TData : IdentifiedData
     {
 
@@ -38,14 +45,110 @@ namespace SanteDB.Rest.HDSI.Resources
         override public Type Scope => typeof(IHdsiServiceContract);
 
         /// <summary>
+        /// OBsoletion wrapper with locking
+        /// </summary>
+        public override object Obsolete(object key)
+        {
+            try
+            {
+                this.Lock((Guid)key);
+                return base.Obsolete(key);
+            }
+            finally
+            {
+                this.Unlock((Guid)key);
+            }
+        }
+
+        /// <summary>
+        /// Update with lock
+        /// </summary>
+        public override object Update(object data)
+        {
+            try
+            {
+                this.Lock((Guid)data);
+                return base.Update(data);
+            }
+            finally
+            {
+                this.Unlock((Guid)data);
+            }
+        }
+
+        /// <summary>
+        /// Add an associated entity
+        /// </summary>
+        public virtual object AddAssociatedEntity(object scopingEntityKey, string propertyName, object scopedItem)
+        {
+            Guid objectKey = (Guid)scopingEntityKey;
+
+            try
+            {
+                this.Lock(objectKey);
+                switch (propertyName)
+                {
+                    // Merge a duplicate
+                    case "_merge":
+
+                        if (scopedItem is Bundle bundle)
+                        {
+                            var mergeService = ApplicationServiceContext.Current.GetService<IRecordMergingService<TData>>();
+                            if (mergeService == null)
+                                throw new ConfigurationException($"Missing merge service registration for {typeof(TData)}");
+
+                            // Get scoped entity
+                            return mergeService.Merge(objectKey, bundle.Item.Select(o => o.Key.Value));
+                        }
+                        else
+                            throw new ArgumentException($"Merge body must be a Bundle of items to be merged into {objectKey}");
+                    default:
+                        throw new KeyNotFoundException($"Cannot find {propertyName}");
+                }
+            }
+            finally
+            {
+                this.Unlock(objectKey);
+            }
+        }
+
+        /// <summary>
         /// Cancel the specified object
         /// </summary>
         public object Cancel(object key)
         {
-            if (this.GetRepository() is ICancelRepositoryService<TData>)
-                return (this.GetRepository() as ICancelRepositoryService<TData>).Cancel((Guid)key);
-            else
-                throw new NotSupportedException($"Repository for {this.ResourceName} does not support Cancel");
+            try
+            {
+                this.Lock(key);
+                if (this.GetRepository() is ICancelRepositoryService<TData>)
+                    return (this.GetRepository() as ICancelRepositoryService<TData>).Cancel((Guid)key);
+                else
+                    throw new NotSupportedException($"Repository for {this.ResourceName} does not support Cancel");
+            }
+            finally
+            {
+                this.Unlock(key);
+            }
+        }
+
+        /// <summary>
+        /// Get associated entity
+        /// </summary>
+        public virtual object GetAssociatedEntity(object scopingEntity, string propertyName, object subItemKey)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Attempt to get a lock on the specified object
+        /// </summary>
+        public object Lock(object key)
+        {
+            var adHocCache = ApplicationServiceContext.Current.GetService<IResourceEditLockService>();
+            if (adHocCache == null)
+                throw new InvalidOperationException("Cannot find resource lock service");
+            adHocCache.Lock<TData>((Guid)key);
+            return null;
         }
 
         /// <summary>
@@ -57,6 +160,73 @@ namespace SanteDB.Rest.HDSI.Resources
                 return (this.GetRepository() as INullifyRepositoryService<TData>).Nullify((Guid)key);
             else
                 throw new NotSupportedException($"Repository for {this.ResourceName} does not support Nullify");
+        }
+
+        /// <summary>
+        /// Query for associated entities
+        /// </summary>
+        public virtual IEnumerable<object> QueryAssociatedEntities(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
+        {
+            Guid objectKey = (Guid)scopingEntityKey;
+            switch (propertyName)
+            {
+                case "_duplicate":
+
+                    var mergeService = ApplicationServiceContext.Current.GetService<IRecordMergingService<TData>>();
+                    if (mergeService == null)
+                        throw new ConfigurationException($"Missing merge service registration for {typeof(TData)}");
+
+                    // Get scoped entity
+                    var query = QueryExpressionParser.BuildLinqExpression<TData>(filter).Compile();
+
+                    var results = mergeService.GetDuplicates(objectKey).Where(query);
+                    totalCount = results.Count();
+                    return results.Skip(offset).Take(count);
+                default:
+                    throw new KeyNotFoundException($"Cannot find {propertyName}");
+            }
+        }
+
+        /// <summary>
+        /// Remove an associated entity
+        /// </summary>
+        public virtual object RemoveAssociatedEntity(object scopingEntityKey, string propertyName, object subItemKey)
+        {
+            Guid objectKey = (Guid)scopingEntityKey;
+
+            try
+            {
+                this.Lock(objectKey);
+                switch (propertyName)
+                {
+                    case "_duplicate":
+
+                        var mergeService = ApplicationServiceContext.Current.GetService<IRecordMergingService<TData>>();
+                        if (mergeService == null)
+                            throw new ConfigurationException($"Missing merge service registration for {typeof(TData)}");
+
+                        // Get scoped entity
+                        return mergeService.Ignore(objectKey, new Guid[] { (Guid)subItemKey });
+                    default:
+                        throw new KeyNotFoundException($"Cannot find {propertyName}");
+                }
+            }
+            finally
+            {
+                this.Unlock(objectKey);
+            }
+        }
+
+        /// <summary>
+        /// Release the specified lock
+        /// </summary>
+        public object Unlock(object key)
+        {
+            var adHocCache = ApplicationServiceContext.Current.GetService<IResourceEditLockService>();
+            if (adHocCache == null)
+                throw new InvalidOperationException("Cannot find resource lock service");
+            adHocCache.Unlock<TData>((Guid)key);
+            return null;
         }
     }
 }

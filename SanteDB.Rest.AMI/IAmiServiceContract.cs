@@ -1,6 +1,6 @@
 ﻿/*
- * Based on OpenIZ, Copyright (C) 2015 - 2019 Mohawk College of Applied Arts and Technology
- * Copyright (C) 2019 - 2020, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE.md)
+ * Based on OpenIZ - Based on OpenIZ, Copyright (C) 2015 - 2019 Mohawk College of Applied Arts and Technology
+ * Portions Copyright 2019-2020, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you 
  * may not use this file except in compliance with the License. You may 
@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations under 
  * the License.
  * 
- * User: fyfej
+ * User: fyfej (Justin Fyfe)
  * Date: 2019-11-27
  */
 using RestSrvr.Attributes;
@@ -289,7 +289,7 @@ namespace SanteDB.Rest.AMI
         /// <param name="key">The key of the resource</param>
         /// <param name="versionKey">The version key to retrieve</param>
         /// <returns>The object as it existed at that version</returns>
-        [Get("/{resourceType}/{key}/history/{versionKey}")]
+        [Get("/{resourceType}/{key}/_history/{versionKey}")]
         Object GetVersion(String resourceType, String key, String versionKey);
 
         /// <summary>
@@ -298,7 +298,7 @@ namespace SanteDB.Rest.AMI
         /// <param name="resourceType">The type of resource</param>
         /// <param name="key">The key of the object to retrieve the history for</param>
         /// <returns>The history</returns>
-        [Get("/{resourceType}/{key}/history")]
+        [Get("/{resourceType}/{key}/_history")]
         AmiCollection History(String resourceType, String key);
 
         /// <summary>

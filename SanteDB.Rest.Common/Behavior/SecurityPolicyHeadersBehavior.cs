@@ -1,5 +1,5 @@
 ﻿/*
- * Based on OpenIZ, Copyright (C) 2015 - 2019 Mohawk College of Applied Arts and Technology
+ * Based on OpenIZ, Copyright (C) 2015 - 2020 Mohawk College of Applied Arts and Technology
  * Copyright (C) 2019 - 2020, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE.md)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you 
@@ -74,7 +74,8 @@ namespace SanteDB.Rest.Common.Behaviors
             response.Headers.Add("X-XSS-Protection", "1; mode=block");
             response.Headers.Add("X-Frame-Options", "deny");
             response.Headers.Add("Feature-Policy", "autoplay 'none'; camera 'none'; accelerometer 'none'; goelocation 'none'; payment 'none'");
-
+            response.Headers.Add("X-Content-Type-Options", "nosniff");
+            
         }
     }
 }
