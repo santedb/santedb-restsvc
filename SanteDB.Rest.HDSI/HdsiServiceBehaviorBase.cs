@@ -472,7 +472,7 @@ namespace SanteDB.Rest.HDSI
                     var retVal = handler.Update(body) as IdentifiedData;
 
                     var versioned = retVal as IVersionedEntity;
-                    RestOperationContext.Current.OutgoingResponse.StatusCode = 200;
+                    RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
                     RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
 
                     if (versioned != null)
@@ -982,6 +982,45 @@ namespace SanteDB.Rest.HDSI
             {
                 this.m_traceSource.TraceError("Error generating barcode for {0} - {1}", resourceType, e);
                 throw new Exception($"Could not generate visual code for {resourceType}/{id}", e);
+            }
+        }
+
+        /// <summary>
+        /// Touches the specified data object
+        /// </summary>
+        public IdentifiedData Touch(string resourceType, string id)
+        {
+            this.ThrowIfNotReady();
+            try
+            {
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
+                if (handler is IApiResourceHandlerEx exResourceHandler)
+                {
+                    this.AclCheck(handler, nameof(IApiResourceHandler.Update));
+
+                    var retVal = exResourceHandler.Touch(Guid.Parse(id)) as IdentifiedData;
+
+                    var versioned = retVal as IVersionedEntity;
+                    RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
+                    RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
+
+                    if (versioned != null)
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id, "_history", versioned.VersionKey));
+                    else
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id));
+
+                    return retVal;
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw new Exception($"Error updating {resourceType}/{id}", e);
+
             }
         }
     }

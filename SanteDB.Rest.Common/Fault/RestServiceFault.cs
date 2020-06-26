@@ -35,7 +35,7 @@ namespace SanteDB.Rest.Common.Fault
     /// </summary>
     [XmlType(nameof(RestServiceFault), Namespace = "http://santedb.org/fault")]
     [XmlRoot(nameof(RestServiceFault), Namespace = "http://santedb.org/fault")]
-    [JsonObject]
+    [JsonObject(nameof(RestServiceFault))]
     public class RestServiceFault
     {
         private DetectedIssue itm;

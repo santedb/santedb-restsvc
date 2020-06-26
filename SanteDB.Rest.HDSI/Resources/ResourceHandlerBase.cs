@@ -37,7 +37,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a resource handler base type that is always bound to HDSI
     /// </summary>
     /// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
-    public abstract class ResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData>, INullifyResourceHandler, ICancelResourceHandler, IAssociativeResourceHandler, ILockableResourceHandler
+    public abstract class ResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData>, INullifyResourceHandler, ICancelResourceHandler, IAssociativeResourceHandler, ILockableResourceHandler, IApiResourceHandlerEx
         where TData : IdentifiedData
     {
 
@@ -158,8 +158,8 @@ namespace SanteDB.Rest.HDSI.Resources
         /// </summary>
         public object Nullify(object key)
         {
-            if (this.GetRepository() is INullifyRepositoryService<TData>)
-                return (this.GetRepository() as INullifyRepositoryService<TData>).Nullify((Guid)key);
+            if (this.GetRepository() is IRepositoryServiceEx<TData> exRepo)
+                return exRepo.Nullify((Guid)key);
             else
                 throw new NotSupportedException($"Repository for {this.ResourceName} does not support Nullify");
         }
@@ -228,6 +228,24 @@ namespace SanteDB.Rest.HDSI.Resources
             var adHocCache = ApplicationServiceContext.Current.GetService<IResourceEditLockService>();
             adHocCache?.Unlock<TData>((Guid)key);
             return null;
+        }
+
+        /// <summary>
+        /// Touch the specified object
+        /// </summary>
+        public object Touch(object key)
+        {
+            if (this.GetRepository() is IRepositoryServiceEx<TData> exRepo)
+            {
+                var objectKey = (Guid)key;
+                exRepo.Touch(objectKey);
+                ApplicationServiceContext.Current.GetService<IDataCachingService>().Remove(objectKey);
+                return this.Get(key, Guid.Empty);
+
+            }
+            else
+                throw new InvalidOperationException("Repository service does not support TOUCH");
+
         }
     }
 }

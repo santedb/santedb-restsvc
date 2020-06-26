@@ -197,6 +197,12 @@ namespace SanteDB.Rest.HDSI
         IdentifiedData CreateUpdate(string resourceType, string id, IdentifiedData body);
 
         /// <summary>
+        /// Touch the resource (update its timestamp) without modifying the resource itself
+        /// </summary>
+        [RestInvoke("TOUCH", "/{resourceType}/{id}")]
+        IdentifiedData Touch(string resourceType, string id);
+
+        /// <summary>
         /// Deletes the specified resource from the IMS instance
         /// </summary>
         [Delete("/{resourceType}/{id}")]
