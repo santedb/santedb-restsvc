@@ -839,9 +839,11 @@ namespace SanteDB.Rest.HDSI
                     var retVal = handler.AddAssociatedEntity(Guid.Parse(key), property, body) as IdentifiedData;
 
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
-                    RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
-                    RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, key, property, retVal.Key));
-
+                    if (retVal != null)
+                    {
+                        RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
+                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, key, property, retVal.Key));
+                    }
 
                     return retVal;
 

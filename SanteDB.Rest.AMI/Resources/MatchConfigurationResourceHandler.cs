@@ -98,8 +98,7 @@ namespace SanteDB.Rest.AMI.Resources
         {
             switch(propertyName)
             {
-                case "Act":
-                case "Entity":
+                case "_test":
                     // Sub-item key is the object we want to test the match against
                     var targetKey = Guid.Parse(subItemKey.ToString());
 
@@ -107,7 +106,9 @@ namespace SanteDB.Rest.AMI.Resources
                     {
                         // Get the target object 
                         dynamic target = null;
-                        if (propertyName == "Act")
+                        var config = ApplicationServiceContext.Current.GetService<IRecordMatchingConfigurationService>().GetConfiguration(scopingEntity.ToString());
+
+                        if (config.AppliesTo.All(o=>typeof(Act).IsAssignableFrom(o)))
                             target = ApplicationServiceContext.Current.GetService<IRepositoryService<Act>>().Get(targetKey);
                         else
                             target = ApplicationServiceContext.Current.GetService<IRepositoryService<Entity>>().Get(targetKey);

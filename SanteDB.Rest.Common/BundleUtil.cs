@@ -56,7 +56,7 @@ namespace SanteDB.Rest.Common
                 {
                     if (itm == null)
                         continue;
-                    if ((lean && !retVal.HasTag(itm.Tag)) && itm.Key.HasValue)
+                    if (!retVal.HasTag(itm.Tag) && itm.Key.HasValue)
                     {
                         retVal.Add(itm);
                         if(!lean)

@@ -106,6 +106,20 @@ namespace SanteDB.Rest.HDSI.Resources
                         }
                         else
                             throw new ArgumentException($"Merge body must be a Bundle of items to be merged into {objectKey}");
+                    case "_flag":
+                        {
+                            var mergeService = ApplicationServiceContext.Current.GetService<IRecordMergingService<TData>>();
+                            if (mergeService == null)
+                                throw new ConfigurationException($"Missing merge service registration for {typeof(TData)}");
+                            // Get scoped entity
+                            if (objectKey == Guid.Empty)
+                            {
+                                mergeService.FlagDuplicates();
+                                return null;
+                            }
+                            else
+                                return mergeService.FlagDuplicates(objectKey);
+                        }
                     default:
                         throw new KeyNotFoundException($"Cannot find {propertyName}");
                 }
@@ -138,9 +152,23 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Get associated entity
         /// </summary>
-        public virtual object GetAssociatedEntity(object scopingEntity, string propertyName, object subItemKey)
+        public virtual object GetAssociatedEntity(object scopingEntity, string propertyName, object subItem)
         {
-            throw new NotImplementedException();
+            Guid objectKey = (Guid)scopingEntity, subItemKey = (Guid)subItem;
+            switch (propertyName)
+            {
+                case "_duplicate":
+                    {
+                        var mergeService = ApplicationServiceContext.Current.GetService<IRecordMergingService<TData>>();
+                        if (mergeService == null)
+                            throw new ConfigurationException($"Missing merge service registration for {typeof(TData)}");
+
+                        // Get scoped entity
+                        return mergeService.Diff(objectKey, subItemKey);
+                    }
+                default:
+                    throw new KeyNotFoundException($"Cannot find {propertyName}");
+            }
         }
 
         /// <summary>
@@ -173,18 +201,31 @@ namespace SanteDB.Rest.HDSI.Resources
             switch (propertyName)
             {
                 case "_duplicate":
+                    {
+                        var mergeService = ApplicationServiceContext.Current.GetService<IRecordMergingService<TData>>();
+                        if (mergeService == null)
+                            throw new ConfigurationException($"Missing merge service registration for {typeof(TData)}");
 
-                    var mergeService = ApplicationServiceContext.Current.GetService<IRecordMergingService<TData>>();
-                    if (mergeService == null)
-                        throw new ConfigurationException($"Missing merge service registration for {typeof(TData)}");
+                        // Get scoped entity
+                        var query = QueryExpressionParser.BuildLinqExpression<TData>(filter).Compile();
 
-                    // Get scoped entity
-                    var query = QueryExpressionParser.BuildLinqExpression<TData>(filter).Compile();
+                        var results = mergeService.GetDuplicates(objectKey).Where(query);
+                        totalCount = results.Count();
+                        return results.Skip(offset).Take(count);
+                    }
+                case "_ignore":
+                    {
+                        var mergeService = ApplicationServiceContext.Current.GetService<IRecordMergingService<TData>>();
+                        if (mergeService == null)
+                            throw new ConfigurationException($"Missing merge service registration for {typeof(TData)}");
 
-                    var results = mergeService.GetDuplicates(objectKey).Where(query);
-                    totalCount = results.Count();
-                    return results.Skip(offset).Take(count);
+                        // Get scoped entity
+                        var query = QueryExpressionParser.BuildLinqExpression<TData>(filter).Compile();
 
+                        var results = mergeService.GetIgnored(objectKey).Where(query);
+                        totalCount = results.Count();
+                        return results.Skip(offset).Take(count);
+                    }
                 default:
                     throw new KeyNotFoundException($"Cannot find {propertyName}");
             }
@@ -203,13 +244,23 @@ namespace SanteDB.Rest.HDSI.Resources
                 switch (propertyName)
                 {
                     case "_duplicate":
+                        {
+                            var mergeService = ApplicationServiceContext.Current.GetService<IRecordMergingService<TData>>();
+                            if (mergeService == null)
+                                throw new ConfigurationException($"Missing merge service registration for {typeof(TData)}");
 
-                        var mergeService = ApplicationServiceContext.Current.GetService<IRecordMergingService<TData>>();
-                        if (mergeService == null)
-                            throw new ConfigurationException($"Missing merge service registration for {typeof(TData)}");
+                            // Get scoped entity
+                            return mergeService.Ignore(objectKey, new Guid[] { (Guid)subItemKey });
+                        }
+                    case "_ignore":
+                        {
+                            var mergeService = ApplicationServiceContext.Current.GetService<IRecordMergingService<TData>>();
+                            if (mergeService == null)
+                                throw new ConfigurationException($"Missing merge service registration for {typeof(TData)}");
 
-                        // Get scoped entity
-                        return mergeService.Ignore(objectKey, new Guid[] { (Guid)subItemKey });
+                            // Get scoped entity
+                            return mergeService.UnIgnore(objectKey, new Guid[] { (Guid)subItemKey });
+                        }
                     default:
                         throw new KeyNotFoundException($"Cannot find {propertyName}");
                 }
