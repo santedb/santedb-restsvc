@@ -261,6 +261,15 @@ namespace SanteDB.Rest.HDSI.Resources
                             // Get scoped entity
                             return mergeService.UnIgnore(objectKey, new Guid[] { (Guid)subItemKey });
                         }
+                    case "_merge": // unmerge
+                        {
+                            var mergeService = ApplicationServiceContext.Current.GetService<IRecordMergingService<TData>>();
+                            if (mergeService == null)
+                                throw new ConfigurationException($"Missing merge service registration for {typeof(TData)}");
+
+                            // Get scoped entity
+                            return mergeService.Unmerge(objectKey, (Guid)subItemKey);
+                        }
                     default:
                         throw new KeyNotFoundException($"Cannot find {propertyName}");
                 }
