@@ -23,6 +23,9 @@ using SanteDB.Core.Security;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
+using SanteDB.Core;
+using SanteDB.Core.Model.Security;
+using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
@@ -37,7 +40,20 @@ namespace SanteDB.Rest.HDSI.Resources
         /// </summary>
         public override Object Create(Object data, bool updateIfExists)
         {
-            return base.Create(data, updateIfExists);
+            // Check the claimed user exists
+            if (data is UserEntity userEntity)
+            {
+                var securityService = ApplicationServiceContext.Current.GetService<IRepositoryService<SecurityUser>>();
+                if (securityService.Get(userEntity.SecurityUserKey.GetValueOrDefault()) != null)
+                    return base.Create(data, updateIfExists);
+                else
+                {
+                    this.m_tracer.TraceWarning("Security user {0} doesn't exist here, ignoring update", userEntity.SecurityUserKey);
+                    return null;
+                }
+            }
+            else 
+                throw new ArgumentOutOfRangeException("Can only handle UserEntity");
         }
 
         /// <summary>
@@ -81,7 +97,17 @@ namespace SanteDB.Rest.HDSI.Resources
         /// </summary>
         public override Object Update(Object data)
         {
-            return base.Update(data);
+            // Check the claimed user exists
+            if (data is UserEntity userEntity)
+            {
+                var securityService = ApplicationServiceContext.Current.GetService<IRepositoryService<SecurityUser>>();
+                if (securityService.Get(userEntity.SecurityUserKey.GetValueOrDefault()) != null)
+                    return base.Update(data);
+                else
+                    return null;
+            }
+            else
+                throw new ArgumentOutOfRangeException("Can only handle UserEntity");
         }
     }
 }

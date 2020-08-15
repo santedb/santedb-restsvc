@@ -49,7 +49,7 @@ namespace SanteDB.Rest.Common
     {
 
         // Tracer
-        private Tracer m_tracer = Tracer.GetTracer(typeof(ResourceHandlerBase<TResource>));
+        protected Tracer m_tracer = Tracer.GetTracer(typeof(ResourceHandlerBase<TResource>));
 
         /// <summary>
         /// IRepository service

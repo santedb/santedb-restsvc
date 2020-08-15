@@ -133,16 +133,21 @@ namespace SanteDB.Rest.HDSI
 
                     this.AclCheck(handler, nameof(IApiResourceHandler.Create));
                     var retVal = handler.Create(body, false) as IdentifiedData;
-
                     var versioned = retVal as IVersionedEntity;
-                    RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
-                    RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
-                    if (versioned != null)
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, retVal.Key, "_history", versioned.VersionKey));
-                    else
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, retVal.Key));
 
-                    return retVal;
+                    if (retVal == null)
+                        return null;
+                    else
+                    {
+                        RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
+                        RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
+                        if (versioned != null)
+                            RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, retVal.Key, "_history", versioned.VersionKey));
+                        else
+                            RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, retVal.Key));
+
+                        return retVal;
+                    }
                 }
                 else
                     throw new FileNotFoundException(resourceType);
@@ -171,15 +176,20 @@ namespace SanteDB.Rest.HDSI
                     this.AclCheck(handler, nameof(IApiResourceHandler.Create));
                     var retVal = handler.Create(body, true) as IdentifiedData;
                     var versioned = retVal as IVersionedEntity;
-                    RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
-                    RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
 
-                    if (versioned != null)
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id, "_history", versioned.VersionKey));
-                    else
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id));
+                    if (retVal == null)
+                        return null;
+                    else { 
+                        RestOperationContext.Current.OutgoingResponse.StatusCode = 201;                        
+                        RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
 
-                    return retVal;
+                        if (versioned != null)
+                            RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id, "_history", versioned.VersionKey));
+                        else
+                            RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id));
+
+                        return retVal;
+                    }
                 }
                 else
                     throw new FileNotFoundException(resourceType);
@@ -470,17 +480,22 @@ namespace SanteDB.Rest.HDSI
                     this.AclCheck(handler, nameof(IApiResourceHandler.Update));
 
                     var retVal = handler.Update(body) as IdentifiedData;
-
                     var versioned = retVal as IVersionedEntity;
-                    RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
-                    RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
 
-                    if (versioned != null)
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id, "_history", versioned.VersionKey));
+                    if (retVal == null)
+                        return null;
                     else
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id));
+                    {
+                        RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
+                        RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
 
-                    return retVal;
+                        if (versioned != null)
+                            RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id, "_history", versioned.VersionKey));
+                        else
+                            RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id));
+
+                        return retVal;
+                    }
                 }
                 else
                     throw new FileNotFoundException(resourceType);
