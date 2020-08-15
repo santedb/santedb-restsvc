@@ -99,7 +99,7 @@ namespace SanteDB.Rest.HDSI.Resources
                         {
                             var mergeService = ApplicationServiceContext.Current.GetService<IRecordMergingService<TData>>();
                             if (mergeService == null)
-                                throw new ConfigurationException($"Missing merge service registration for {typeof(TData)}");
+                                throw new InvalidOperationException($"Missing merge service registration for {typeof(TData)}");
 
                             // Get scoped entity
                             return mergeService.Merge(objectKey, bundle.Item.Select(o => o.Key.Value));
@@ -110,7 +110,7 @@ namespace SanteDB.Rest.HDSI.Resources
                         {
                             var mergeService = ApplicationServiceContext.Current.GetService<IRecordMergingService<TData>>();
                             if (mergeService == null)
-                                throw new ConfigurationException($"Missing merge service registration for {typeof(TData)}");
+                                throw new InvalidOperationException($"Missing merge service registration for {typeof(TData)}");
                             // Get scoped entity
                             if (objectKey == Guid.Empty)
                             {
@@ -161,7 +161,7 @@ namespace SanteDB.Rest.HDSI.Resources
                     {
                         var mergeService = ApplicationServiceContext.Current.GetService<IRecordMergingService<TData>>();
                         if (mergeService == null)
-                            throw new ConfigurationException($"Missing merge service registration for {typeof(TData)}");
+                            throw new InvalidOperationException($"Missing merge service registration for {typeof(TData)}");
 
                         // Get scoped entity
                         return mergeService.Diff(objectKey, subItemKey);
@@ -204,7 +204,7 @@ namespace SanteDB.Rest.HDSI.Resources
                     {
                         var mergeService = ApplicationServiceContext.Current.GetService<IRecordMergingService<TData>>();
                         if (mergeService == null)
-                            throw new ConfigurationException($"Missing merge service registration for {typeof(TData)}");
+                            throw new InvalidOperationException($"Missing merge service registration for {typeof(TData)}");
 
                         // Get scoped entity
                         var query = QueryExpressionParser.BuildLinqExpression<TData>(filter).Compile();
@@ -217,7 +217,7 @@ namespace SanteDB.Rest.HDSI.Resources
                     {
                         var mergeService = ApplicationServiceContext.Current.GetService<IRecordMergingService<TData>>();
                         if (mergeService == null)
-                            throw new ConfigurationException($"Missing merge service registration for {typeof(TData)}");
+                            throw new InvalidOperationException($"Missing merge service registration for {typeof(TData)}");
 
                         // Get scoped entity
                         var query = QueryExpressionParser.BuildLinqExpression<TData>(filter).Compile();
@@ -247,7 +247,7 @@ namespace SanteDB.Rest.HDSI.Resources
                         {
                             var mergeService = ApplicationServiceContext.Current.GetService<IRecordMergingService<TData>>();
                             if (mergeService == null)
-                                throw new ConfigurationException($"Missing merge service registration for {typeof(TData)}");
+                                throw new InvalidOperationException($"Missing merge service registration for {typeof(TData)}");
 
                             // Get scoped entity
                             return mergeService.Ignore(objectKey, new Guid[] { (Guid)subItemKey });
@@ -256,7 +256,7 @@ namespace SanteDB.Rest.HDSI.Resources
                         {
                             var mergeService = ApplicationServiceContext.Current.GetService<IRecordMergingService<TData>>();
                             if (mergeService == null)
-                                throw new ConfigurationException($"Missing merge service registration for {typeof(TData)}");
+                                throw new InvalidOperationException($"Missing merge service registration for {typeof(TData)}");
 
                             // Get scoped entity
                             return mergeService.UnIgnore(objectKey, new Guid[] { (Guid)subItemKey });
@@ -265,7 +265,7 @@ namespace SanteDB.Rest.HDSI.Resources
                         {
                             var mergeService = ApplicationServiceContext.Current.GetService<IRecordMergingService<TData>>();
                             if (mergeService == null)
-                                throw new ConfigurationException($"Missing merge service registration for {typeof(TData)}");
+                                throw new InvalidOperationException($"Missing merge service registration for {typeof(TData)}");
 
                             // Get scoped entity
                             return mergeService.Unmerge(objectKey, (Guid)subItemKey);
