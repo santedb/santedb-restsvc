@@ -43,7 +43,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Handler for observations (handles permissions)
     /// </summary>
-    public abstract class ObservationResourceHandler<TObservation> : ResourceHandlerBase<TObservation> where TObservation : Observation
+    public abstract class ObservationResourceHandler<TObservation> : ResourceHandlerBase<TObservation> where TObservation : Observation, new()
     {
         [Demand(PermissionPolicyIdentifiers.WriteClinicalData)]
         public override Object Create(Object data, bool updateIfExists)
