@@ -45,7 +45,7 @@ namespace SanteDB.Rest.Common
     /// <summary>
     /// Resource handler base
     /// </summary>
-    public abstract class ResourceHandlerBase<TResource> : IApiResourceHandler where TResource : IdentifiedData
+    public abstract class ResourceHandlerBase<TResource> : IApiResourceHandler where TResource : IdentifiedData, new()
     {
 
         // Tracer
@@ -264,7 +264,11 @@ namespace SanteDB.Rest.Common
                     if (queryParameters.TryGetValue("_orderBy", out List<String> orderBy))
                         sortParameters = QueryExpressionParser.BuildSort<TResource>(orderBy);
 
-                    retVal = fts.Search<TResource>(queryParameters["_any"].ToArray(), offset, count, out totalCount, sortParameters);
+                    Guid queryId = Guid.Empty;
+                    if (queryParameters.TryGetValue("_queryId", out List<String> query))
+                        queryId = Guid.Parse(query.First());
+
+                    retVal = fts.Search<TResource>(queryParameters["_any"].ToArray(), queryId, offset, count, out totalCount, sortParameters);
                 }
                 else
                 {

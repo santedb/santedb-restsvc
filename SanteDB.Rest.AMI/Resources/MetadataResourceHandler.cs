@@ -29,7 +29,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// Represents a resource handler base class which has appropriate permissions for metadata
     /// </summary>
     public class MetadataResourceHandler<TMetadata> : ResourceHandlerBase<TMetadata> 
-        where TMetadata : IdentifiedData
+        where TMetadata : IdentifiedData, new()
     {
 
         /// <summary>

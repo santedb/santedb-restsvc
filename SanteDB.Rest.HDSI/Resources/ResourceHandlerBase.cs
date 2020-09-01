@@ -38,7 +38,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// </summary>
     /// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
     public abstract class ResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData>, INullifyResourceHandler, ICancelResourceHandler, IAssociativeResourceHandler, ILockableResourceHandler, IApiResourceHandlerEx
-        where TData : IdentifiedData
+        where TData : IdentifiedData, new()
     {
 
         /// <summary>

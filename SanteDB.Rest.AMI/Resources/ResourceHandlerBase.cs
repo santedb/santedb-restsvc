@@ -27,7 +27,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// Represents a resource handler base type that is always bound to HDSI
     /// </summary>
     /// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
-    public class ResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData> where TData : IdentifiedData
+    public class ResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData> where TData : IdentifiedData, new()
     {
 
         /// <summary>
