@@ -29,6 +29,7 @@ using SanteDB.Core.Model.Roles;
 using SanteDB.Core.Model.Security;
 using SanteDB.Rest.Common.Attributes;
 using System;
+using System.Collections.Specialized;
 using System.IO;
 using System.Xml.Schema;
 
@@ -189,6 +190,13 @@ namespace SanteDB.Rest.HDSI
         /// </summary>
         [Get("/{resourceType}/{id}/_code/{authority}")]
         Stream GetBarcode(String resourceType, String id, String authority);
+
+        /// <summary>
+        /// Resolve a code to a resource by posting
+        /// </summary>
+        /// <remarks>This operation results in a 302 redirect to the resource that the code represents</remarks>
+        [RestInvoke("SEARCH", "/_code")]
+        void ResolveCode(NameValueCollection body);
 
         /// <summary>
         /// Creates or updates a resource. That is, creates the resource if it does not exist, or updates it if it does

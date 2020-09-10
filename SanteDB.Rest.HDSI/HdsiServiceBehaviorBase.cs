@@ -84,6 +84,8 @@ namespace SanteDB.Rest.HDSI
             uriBuilder.Host = requestUri.Host;
             uriBuilder.Port = requestUri.Port;
             uriBuilder.Path = RestOperationContext.Current.ServiceEndpoint.Description.ListenUri.AbsolutePath;
+            if (!uriBuilder.Path.EndsWith("/"))
+                uriBuilder.Path += "/";
             uriBuilder.Path += String.Join("/", parts);
             return uriBuilder.ToString();
         }
@@ -115,7 +117,7 @@ namespace SanteDB.Rest.HDSI
         public void Ping()
         {
             this.ThrowIfNotReady();
-            RestOperationContext.Current.OutgoingResponse.StatusCode = 204;
+            RestOperationContext.Current.OutgoingResponse.StatusCode = (int)System.Net.HttpStatusCode.Continue;
         }
 
         /// <summary>
@@ -179,8 +181,9 @@ namespace SanteDB.Rest.HDSI
 
                     if (retVal == null)
                         return null;
-                    else { 
-                        RestOperationContext.Current.OutgoingResponse.StatusCode = 201;                        
+                    else
+                    {
+                        RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
                         RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
 
                         if (versioned != null)
@@ -500,7 +503,7 @@ namespace SanteDB.Rest.HDSI
                 else
                     throw new FileNotFoundException(resourceType);
 
-            } 
+            }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
@@ -522,7 +525,7 @@ namespace SanteDB.Rest.HDSI
                 if (handler != null)
                 {
                     IdentifiedData retVal = null;
-                    switch(RestOperationContext.Current.IncomingRequest.Headers["X-Delete-Mode"]?.ToLower() ?? "obsolete")
+                    switch (RestOperationContext.Current.IncomingRequest.Headers["X-Delete-Mode"]?.ToLower() ?? "obsolete")
                     {
                         case "nullify":
                             if (handler is INullifyResourceHandler)
@@ -692,7 +695,7 @@ namespace SanteDB.Rest.HDSI
                 {
                     InterfaceVersion = "1.0.0.0",
                     Resources = new List<ServiceResourceOptions>()
-                    
+
                 };
 
                 // Get the resources which are supported
@@ -791,7 +794,7 @@ namespace SanteDB.Rest.HDSI
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
                     IEnumerable<IdentifiedData> retVal = handler.QueryAssociatedEntities(Guid.Parse(key), property, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).OfType<IdentifiedData>();
-                    
+
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.OfType<IdentifiedData>().OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now);
                     // Last modification time and not modified conditions
                     if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||
@@ -974,7 +977,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
-                    var bcService = ApplicationServiceContext.Current.GetService<IBarcodeGeneratorService>();
+                    var bcService = ApplicationServiceContext.Current.GetService<IBarcodeProviderService>();
                     if (bcService == null)
                         throw new InvalidOperationException("Cannot find barcode generator service");
 
@@ -982,7 +985,8 @@ namespace SanteDB.Rest.HDSI
                     var data = handler.Get(objectId, Guid.Empty) as IdentifiedData;
                     if (data == null)
                         throw new KeyNotFoundException($"{resourceType} {id}");
-                    else {
+                    else
+                    {
                         RestOperationContext.Current.OutgoingResponse.ContentType = "image/png";
                         if (data is Entity entity)
                             return bcService.Generate(entity.Identifiers.Where(o => o.AuthorityKey == authorityId));
@@ -1038,6 +1042,44 @@ namespace SanteDB.Rest.HDSI
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw new Exception($"Error updating {resourceType}/{id}", e);
 
+            }
+        }
+
+        /// <summary>
+        /// Resolve a code
+        /// </summary>
+        /// <param name="body">The content of the barcode/image obtained from the user interface</param>
+        public void ResolveCode(System.Collections.Specialized.NameValueCollection parms)
+        {
+            try
+            {
+                var bcService = ApplicationServiceContext.Current.GetService<IBarcodeProviderService>();
+                if (bcService == null)
+                    throw new InvalidOperationException("Cannot find barcode service");
+
+                if(String.IsNullOrEmpty(parms["code"]))
+                    throw new ArgumentException("SEARCH have url-form encoded payload with parameter code");
+
+                var result = bcService.ResolveResource(parms["code"]);
+
+                // Create a 302 redirect
+                if (result != null)
+                {
+                    RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.Found;
+                    if (result is IVersionedEntity versioned)
+                        RestOperationContext.Current.OutgoingResponse.AddHeader("Location", this.CreateContentLocation(result.GetType().GetSerializationName(), versioned.Key.Value, "_history", versioned.VersionKey.Value));
+                    else
+                        RestOperationContext.Current.OutgoingResponse.AddHeader("Location", this.CreateContentLocation(result.GetType().GetSerializationName(), result.Key.Value));
+                }
+                else
+                    throw new KeyNotFoundException();
+
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw new Exception($"Error searching by code", e);
             }
         }
     }
