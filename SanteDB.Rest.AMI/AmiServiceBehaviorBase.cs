@@ -257,7 +257,7 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// </summary>
         public void Ping()
         {
-            RestOperationContext.Current.OutgoingResponse.StatusCode = (int)System.Net.HttpStatusCode.Continue;
+            RestOperationContext.Current.OutgoingResponse.StatusCode = (int)System.Net.HttpStatusCode.NoContent;
         }
         
         /// <summary>

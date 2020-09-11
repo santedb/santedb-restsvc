@@ -117,7 +117,7 @@ namespace SanteDB.Rest.HDSI
         public void Ping()
         {
             this.ThrowIfNotReady();
-            RestOperationContext.Current.OutgoingResponse.StatusCode = (int)System.Net.HttpStatusCode.Continue;
+            RestOperationContext.Current.OutgoingResponse.StatusCode = (int)System.Net.HttpStatusCode.NoContent;
         }
 
         /// <summary>
