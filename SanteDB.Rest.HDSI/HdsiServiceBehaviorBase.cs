@@ -1057,15 +1057,18 @@ namespace SanteDB.Rest.HDSI
                 if (bcService == null)
                     throw new InvalidOperationException("Cannot find barcode service");
 
-                if(String.IsNullOrEmpty(parms["code"]))
+                bool validate = true;
+                if (String.IsNullOrEmpty(parms["code"]))
                     throw new ArgumentException("SEARCH have url-form encoded payload with parameter code");
+                else if (!String.IsNullOrEmpty(parms["validate"]))
+                    Boolean.TryParse(parms["validate"], out validate);
 
-                var result = bcService.ResolveResource(parms["code"]);
+                var result = bcService.ResolveResource(parms["code"], validate);
 
-                // Create a 302 redirect
+                // Create a 303 see other
                 if (result != null)
                 {
-                    RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.Found;
+                    RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.SeeOther;
                     if (result is IVersionedEntity versioned)
                         RestOperationContext.Current.OutgoingResponse.AddHeader("Location", this.CreateContentLocation(result.GetType().GetSerializationName(), versioned.Key.Value, "_history", versioned.VersionKey.Value));
                     else
