@@ -1106,7 +1106,7 @@ namespace SanteDB.Rest.HDSI
                         throw new KeyNotFoundException($"{resourceType} {id}");
                     else
                     {
-                        RestOperationContext.Current.OutgoingResponse.ContentType = "application/json+jws";
+                        RestOperationContext.Current.OutgoingResponse.ContentType = "application/jose";
                         if (data is Entity entity)
                             return new MemoryStream(Encoding.UTF8.GetBytes(ptrService.GeneratePointer(entity.Identifiers)));
                         else if (data is Act act)
