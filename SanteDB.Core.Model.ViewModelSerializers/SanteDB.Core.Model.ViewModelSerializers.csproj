@@ -24,7 +24,7 @@
   <PropertyGroup>
     <PackageId>SanteDB.Core.Model.ViewModelSerializers</PackageId>
     <Title>SanteDB.Core.Model.ViewModelSerializers</Title>
-    <Version>2.0.38</Version>
+    <Version>2.0.39</Version>
     <Description>The SanteDB ViewModel serializer allows for rapid serialization of deep JSON objects exposed by SanteDB REST's interface. This can be more useful for user interfaces rather than the core synchronization interfaces. This assembly contains pre-compiled view model serializers which increase performance over the reflection based serializers.</Description>
     <Authors>SanteSuite Contributors</Authors>
     <PackageTags>SanteDB</PackageTags>
@@ -82,9 +82,9 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <PackageReference Include="SanteDB.Core.Api" Version="2.0.38.0" />
-        <PackageReference Include="SanteDB.Core.Applets" Version="2.0.38.0" />
-        <PackageReference Include="SanteDB.Core.Model" Version="2.0.38.0" />
+        <PackageReference Include="SanteDB.Core.Api" Version="2.0.39.0" />
+        <PackageReference Include="SanteDB.Core.Applets" Version="2.0.39.0" />
+        <PackageReference Include="SanteDB.Core.Model" Version="2.0.39.0" />
       </ItemGroup>
     </Otherwise>
   </Choose>
