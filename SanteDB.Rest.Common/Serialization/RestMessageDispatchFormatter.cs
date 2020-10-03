@@ -35,10 +35,12 @@ using SanteDB.Core.Model.Serialization;
 using SanteDB.Core.Security;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Diagnostics.Tracing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Xml;
@@ -232,6 +234,22 @@ namespace SanteDB.Rest.Common.Serialization
                     else if (contentType == "application/octet-stream")
                     {
                         parameters[pNumber] = request.Body;
+                    }
+                    else if (contentType == "application/x-www-form-urlencoded")
+                    {
+                        NameValueCollection nvc = new NameValueCollection();
+                        using (var sr = new StreamReader(request.Body))
+                        {
+                            var ptext = sr.ReadToEnd();
+                            var parms = ptext.Split('&');
+                            foreach (var p in parms)
+                            {
+                                var parmData = p.Split('=');
+                                parmData[1] += new string('=', parmData.Length - 2);
+                                nvc.Add(WebUtility.UrlDecode(parmData[0]), WebUtility.UrlDecode(parmData[1]));
+                            }
+                        }
+                        parameters[pNumber] = nvc;
                     }
                     else if (contentType != null)// TODO: Binaries
                         throw new InvalidOperationException("Invalid request format");

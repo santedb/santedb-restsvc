@@ -76,7 +76,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Create content location
         /// </summary>
-        private String CreateContentLocation(params Object[] parts)
+        protected String CreateContentLocation(params Object[] parts)
         {
             var requestUri = RestOperationContext.Current.IncomingRequest.Url;
             UriBuilder uriBuilder = new UriBuilder();
@@ -1049,37 +1049,79 @@ namespace SanteDB.Rest.HDSI
         /// Resolve a code
         /// </summary>
         /// <param name="body">The content of the barcode/image obtained from the user interface</param>
-        public void ResolveCode(System.Collections.Specialized.NameValueCollection parms)
+        public virtual void ResolveCode(System.Collections.Specialized.NameValueCollection parms)
         {
             try
             {
-                var bcService = ApplicationServiceContext.Current.GetService<IBarcodeProviderService>();
+                var bcService = ApplicationServiceContext.Current.GetService<IResourcePointerService>();
                 if (bcService == null)
-                    throw new InvalidOperationException("Cannot find barcode service");
+                    throw new InvalidOperationException("Cannot find pointer service");
 
-                if(String.IsNullOrEmpty(parms["code"]))
+                bool validate = true;
+                if (String.IsNullOrEmpty(parms["code"]))
                     throw new ArgumentException("SEARCH have url-form encoded payload with parameter code");
+                else if (!String.IsNullOrEmpty(parms["validate"]))
+                    Boolean.TryParse(parms["validate"], out validate);
 
-                var result = bcService.ResolveResource(parms["code"]);
+                var result = bcService.ResolveResource(parms["code"], validate);
 
-                // Create a 302 redirect
+                // Create a 303 see other
                 if (result != null)
                 {
-                    RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.Found;
+                    RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.SeeOther;
                     if (result is IVersionedEntity versioned)
                         RestOperationContext.Current.OutgoingResponse.AddHeader("Location", this.CreateContentLocation(result.GetType().GetSerializationName(), versioned.Key.Value, "_history", versioned.VersionKey.Value));
                     else
                         RestOperationContext.Current.OutgoingResponse.AddHeader("Location", this.CreateContentLocation(result.GetType().GetSerializationName(), result.Key.Value));
                 }
                 else
-                    throw new KeyNotFoundException();
+                    throw new KeyNotFoundException($"Object not found");
 
             }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
-                throw new Exception($"Error searching by code", e);
+                throw new Exception($"Error searching by pointer", e);
+            }
+        }
+
+        /// <summary>
+        /// Get pointer to the specified resource
+        /// </summary>
+        public Stream GetPointer(string resourceType, string id)
+        {
+            try
+            {
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
+                if (handler != null)
+                {
+                    var ptrService = ApplicationServiceContext.Current.GetService<IResourcePointerService>();
+                    if (ptrService == null)
+                        throw new InvalidOperationException("Cannot find resource pointer service");
+
+                    Guid objectId = Guid.Parse(id);
+                    var data = handler.Get(objectId, Guid.Empty) as IdentifiedData;
+                    if (data == null)
+                        throw new KeyNotFoundException($"{resourceType} {id}");
+                    else
+                    {
+                        RestOperationContext.Current.OutgoingResponse.ContentType = "application/jose";
+                        if (data is Entity entity)
+                            return new MemoryStream(Encoding.UTF8.GetBytes(ptrService.GeneratePointer(entity.Identifiers)));
+                        else if (data is Act act)
+                            return new MemoryStream(Encoding.UTF8.GetBytes(ptrService.GeneratePointer(act.Identifiers)));
+                        else
+                            return null;
+                    }
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                this.m_traceSource.TraceError("Error fetching pointer for {0} - {1}", resourceType, e);
+                throw new Exception($"Could fetching pointer code for {resourceType}/{id}", e);
             }
         }
     }

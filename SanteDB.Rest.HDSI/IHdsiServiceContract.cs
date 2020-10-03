@@ -192,10 +192,16 @@ namespace SanteDB.Rest.HDSI
         Stream GetBarcode(String resourceType, String id, String authority);
 
         /// <summary>
+        /// Gets the specified barcode for the user
+        /// </summary>
+        [Get("/{resourceType}/{id}/_ptr")]
+        Stream GetPointer(String resourceType, String id);
+
+        /// <summary>
         /// Resolve a code to a resource by posting
         /// </summary>
         /// <remarks>This operation results in a 302 redirect to the resource that the code represents</remarks>
-        [RestInvoke("SEARCH", "/_code")]
+        [RestInvoke("SEARCH", "/_ptr")]
         void ResolveCode(NameValueCollection body);
 
         /// <summary>
