@@ -17,16 +17,14 @@
  * User: fyfej
  * Date: 2019-11-27
  */
+
+using System;
+using System.Linq;
+using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Principal;
 using SanteDB.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Security
 {
@@ -38,8 +36,7 @@ namespace SanteDB.Core.Model.AMI.Security
     [JsonObject(nameof(SecuritySessionInfo))]
     public class SecuritySessionInfo
     {
-
-        /// <summary>
+	    /// <summary>
         /// Default ctor for serialization
         /// </summary>
         public SecuritySessionInfo()
@@ -47,7 +44,7 @@ namespace SanteDB.Core.Model.AMI.Security
 
         }
 
-        /// <summary>
+	    /// <summary>
         /// Create a new session info object from the specified session instance
         /// </summary>
         public SecuritySessionInfo(ISession session)
@@ -61,40 +58,42 @@ namespace SanteDB.Core.Model.AMI.Security
             this.User = identities.FirstOrDefault(o => !(o is IDeviceIdentity || o is IApplicationIdentity))?.Name;
         }
 
-        /// <summary>
-        /// The session is not valid after time
-        /// </summary>
-        [XmlElement("exp"), JsonProperty("exp")]
-        public DateTime NotAfter { get; set; }
-
-        /// <summary>
+	    /// <summary>
         /// The session is not valid before the specified time
         /// </summary>
-        [XmlElement("nbf") ,JsonProperty("nbf")]
+        [XmlElement("nbf")][JsonProperty("nbf")]
         public DateTime NotBefore { get; set; }
 
-        /// <summary>
+	    /// <summary>
         /// The session identifier
         /// </summary>
-        [XmlElement("ssessionId"), JsonProperty("sessionId")]
+        [XmlElement("ssessionId")][JsonProperty("sessionId")]
         public byte[] SessionId { get; set; }
 
-        /// <summary>
+	    /// <summary>
         /// Gets the device name
         /// </summary>
-        [XmlElement("deviceIdentity"), JsonProperty("deviceIdentity")]
-        public String Device { get; set; }
+        [XmlElement("deviceIdentity")][JsonProperty("deviceIdentity")]
+        public string Device { get; set; }
 
-        /// <summary>
+	    /// <summary>
         /// Gets the application name
         /// </summary>
-        [XmlElement("applicationIdentity"), JsonProperty("applicationIdentity")]
-        public String Application { get; set; }
+        [XmlElement("applicationIdentity")][JsonProperty("applicationIdentity")]
+        public string Application { get; set; }
 
-        /// <summary>
+
+	    /// <summary>
+        /// The session is not valid after time
+        /// </summary>
+        [XmlElement("exp")][JsonProperty("exp")]
+        public DateTime NotAfter { get; set; }
+
+
+	    /// <summary>
         /// Gets the user identity
         /// </summary>
-        [XmlElement("userIdentity"), JsonProperty("userIdentity")]
-        public String User { get; set; }
+        [XmlElement("userIdentity")][JsonProperty("userIdentity")]
+        public string User { get; set; }
     }
 }

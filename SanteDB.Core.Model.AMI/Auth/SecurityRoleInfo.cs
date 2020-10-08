@@ -17,12 +17,13 @@
  * User: fyfej
  * Date: 2019-11-27
  */
-using Newtonsoft.Json;
-using SanteDB.Core.Model.Security;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
+using SanteDB.Core.Model.Security;
 
 namespace SanteDB.Core.Model.AMI.Auth
 {
@@ -34,14 +35,7 @@ namespace SanteDB.Core.Model.AMI.Auth
     [XmlRoot(nameof(SecurityRoleInfo), Namespace = "http://santedb.org/ami")]
     public class SecurityRoleInfo : ISecurityEntityInfo<SecurityRole>
     {
-
-        /// <summary>
-        /// Gets the type
-        /// </summary>
-        [JsonProperty("$type"), XmlIgnore]
-        public String Type { get => "SecurityRoleInfo"; set { } }
-
-        /// <summary>
+	    /// <summary>
         /// Create new security role info
         /// </summary>
         public SecurityRoleInfo()
@@ -49,7 +43,7 @@ namespace SanteDB.Core.Model.AMI.Auth
 
         }
 
-        /// <summary>
+	    /// <summary>
         /// Create new security role information from the specified role
         /// </summary>
         public SecurityRoleInfo(SecurityRole role)
@@ -59,51 +53,61 @@ namespace SanteDB.Core.Model.AMI.Auth
             this.Policies = role.Policies.Where(o=>o.Policy != null).Select(o => new SecurityPolicyInfo(o)).ToList();
         }
 
-        /// <summary>
+	    /// <summary>
+        /// Gets the type
+        /// </summary>
+        [JsonProperty("$type")][XmlIgnore]
+        public string Type { get => "SecurityRoleInfo"; set { } }
+
+	    /// <summary>
         /// Gets or sets the entity that is wrapped by this wrapper
         /// </summary>
-        [XmlElement("entity"), JsonProperty("entity")]
+        [XmlElement("entity")][JsonProperty("entity")]
         public SecurityRole Entity { get; set; }
 
-        /// <summary>
+	    /// <summary>
         /// Gets or sets the policies that are to be applied are already applied to the entity
         /// </summary>
-        [XmlElement("policy"), JsonProperty("policy")]
+        [XmlElement("policy")][JsonProperty("policy")]
         public List<SecurityPolicyInfo> Policies { get; set; }
 
-        /// <summary>
+	    /// <summary>
         /// Gets the users in the specified role
         /// </summary>
-        [XmlElement("user"), JsonProperty("user")]
-        public List<String> Users { get; set; }
+        [XmlElement("user")][JsonProperty("user")]
+        public List<string> Users { get; set; }
 
-        /// <summary>
+
+	    /// <summary>
         /// Get the key for the object
         /// </summary>
-        [JsonIgnore, XmlIgnore]
+        [JsonIgnore][XmlIgnore]
         public string Key
         {
             get => this.Entity?.Key?.ToString();
             set => this.Entity.Key = Guid.Parse(value);
         }
 
-        /// <summary>
-        /// Get the tag
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public string Tag => this.Entity?.Tag;
 
-
-        /// <summary>
+	    /// <summary>
         /// Get the modified on
         /// </summary>
-        [JsonIgnore, XmlIgnore]
+        [JsonIgnore][XmlIgnore]
         public DateTimeOffset ModifiedOn => this.Entity?.ModifiedOn ?? DateTimeOffset.Now;
 
-        /// <summary>
+
+	    /// <summary>
+        /// Get the tag
+        /// </summary>
+        [JsonIgnore][XmlIgnore]
+        public string Tag => this.Entity?.Tag;
+
+	    /// <summary>
         /// Gets the object as identified data
         /// </summary>
-        public IdentifiedData ToIdentifiedData() => this.Entity;
-
+        public IdentifiedData ToIdentifiedData()
+	    {
+		    return this.Entity;
+	    }
     }
 }
