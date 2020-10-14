@@ -1049,7 +1049,7 @@ namespace SanteDB.Rest.HDSI
         /// Resolve a code
         /// </summary>
         /// <param name="body">The content of the barcode/image obtained from the user interface</param>
-        public virtual void ResolveCode(System.Collections.Specialized.NameValueCollection parms)
+        public virtual void ResolvePointer(System.Collections.Specialized.NameValueCollection parms)
         {
             try
             {

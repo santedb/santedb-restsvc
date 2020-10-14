@@ -202,7 +202,7 @@ namespace SanteDB.Rest.HDSI
         /// </summary>
         /// <remarks>This operation results in a 302 redirect to the resource that the code represents</remarks>
         [RestInvoke("SEARCH", "/_ptr")]
-        void ResolveCode(NameValueCollection body);
+        void ResolvePointer(NameValueCollection body);
 
         /// <summary>
         /// Creates or updates a resource. That is, creates the resource if it does not exist, or updates it if it does
