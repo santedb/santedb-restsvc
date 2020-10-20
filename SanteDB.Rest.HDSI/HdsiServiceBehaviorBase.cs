@@ -65,7 +65,7 @@ namespace SanteDB.Rest.HDSI
         /// Get resource handler
         /// </summary>
         protected abstract ResourceHandlerTool GetResourceHandler();
-
+       
         /// <summary>
         /// HDSI Service Behavior
         /// </summary>
@@ -1049,7 +1049,7 @@ namespace SanteDB.Rest.HDSI
         /// Resolve a code
         /// </summary>
         /// <param name="body">The content of the barcode/image obtained from the user interface</param>
-        public virtual void ResolveCode(System.Collections.Specialized.NameValueCollection parms)
+        public virtual void ResolvePointer(System.Collections.Specialized.NameValueCollection parms)
         {
             try
             {
@@ -1124,5 +1124,10 @@ namespace SanteDB.Rest.HDSI
                 throw new Exception($"Could fetching pointer code for {resourceType}/{id}", e);
             }
         }
+
+        /// <summary>
+        /// Copy (download) a remote object to this instance
+        /// </summary>
+        public abstract IdentifiedData Copy(String reosurceType, String id);
     }
 }

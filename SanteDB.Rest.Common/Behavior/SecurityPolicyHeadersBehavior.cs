@@ -75,10 +75,7 @@ namespace SanteDB.Rest.Common.Behaviors
             response.Headers.Add("X-XSS-Protection", "1; mode=block");
             response.Headers.Add("X-Frame-Options", "deny");
 
-            if(ApplicationServiceContext.Current.HostType == SanteDBHostType.Client)
-                response.Headers.Add("Feature-Policy", "autoplay 'none'; camera 'none'; accelerometer 'none'; geolocation 'none'; payment 'none'");
-            else
-                response.Headers.Add("Feature-Policy", "autoplay 'none'; camera 'self'; accelerometer 'none'; geolocation 'none'; payment 'none'");
+            response.Headers.Add("Feature-Policy", "autoplay 'none'; camera 'self'; accelerometer 'none'; geolocation 'none'; payment 'none'");
 
             response.Headers.Add("X-Content-Type-Options", "nosniff");
             
