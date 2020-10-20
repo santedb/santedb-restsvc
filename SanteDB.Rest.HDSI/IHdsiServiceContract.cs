@@ -134,6 +134,12 @@ namespace SanteDB.Rest.HDSI
         void HeadSearch(string resourceType);
 
         /// <summary>
+        /// Downloads the specified resource from a remote instance (only supported on dCDR)
+        /// </summary>
+        [RestInvoke("COPY", "/{resourceType}/{id}")]
+        IdentifiedData Copy(string resourceType, string id);
+
+        /// <summary>
         /// Retrieves the current version of the specified resource from the IMS.
         /// </summary>
         [Get("/{resourceType}/{id}")]

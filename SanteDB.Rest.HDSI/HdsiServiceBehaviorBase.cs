@@ -65,7 +65,7 @@ namespace SanteDB.Rest.HDSI
         /// Get resource handler
         /// </summary>
         protected abstract ResourceHandlerTool GetResourceHandler();
-
+       
         /// <summary>
         /// HDSI Service Behavior
         /// </summary>
@@ -1124,5 +1124,10 @@ namespace SanteDB.Rest.HDSI
                 throw new Exception($"Could fetching pointer code for {resourceType}/{id}", e);
             }
         }
+
+        /// <summary>
+        /// Copy (download) a remote object to this instance
+        /// </summary>
+        public abstract IdentifiedData Copy(String reosurceType, String id);
     }
 }
