@@ -17,9 +17,10 @@
  * User: fyfej
  * Date: 2019-11-27
  */
-using Newtonsoft.Json;
+
 using System;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace SanteDB.Core.Model.AMI.Auth
 {
@@ -31,29 +32,22 @@ namespace SanteDB.Core.Model.AMI.Auth
     [JsonObject(nameof(TfaMechanismInfo))]
     public class TfaMechanismInfo
     {
-        /// <summary>
-        /// Default serialization ctor
-        /// </summary>
-        public TfaMechanismInfo()
-        {
-        }
-
-        /// <summary>
+	    /// <summary>
         /// Gets or sets the challenge text
         /// </summary>
-        [XmlElement("description"), JsonProperty("description")]
-        public String Description { get; set; }
+        [XmlElement("description")][JsonProperty("description")]
+        public string Description { get; set; }
 
-        /// <summary>
+	    /// <summary>
         /// Gets or sets the identifier
         /// </summary>
-        [XmlElement("id"), JsonProperty("id")]
+        [XmlElement("id")][JsonProperty("id")]
         public Guid Id { get; set; }
 
-        /// <summary>
+	    /// <summary>
         /// Gets or sets the name
         /// </summary>
-        [XmlElement("name"), JsonProperty("name")]
-        public String Name { get; set; }
+        [XmlElement("name")][JsonProperty("name")]
+        public string Name { get; set; }
     }
 }

@@ -17,11 +17,12 @@
  * User: fyfej
  * Date: 2019-11-27
  */
-using Newtonsoft.Json;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace SanteDB.Core.Model.AMI.Security
 {
@@ -33,14 +34,14 @@ namespace SanteDB.Core.Model.AMI.Security
     [JsonObject(nameof(X509Certificate2Info))]
     public class X509Certificate2Info
     {
-        /// <summary>
+	    /// <summary>
         /// Creates a new X509 certificate information class
         /// </summary>
 		public X509Certificate2Info()
         {
         }
 
-        /// <summary>
+	    /// <summary>
         /// Constructs a certificate info
         /// </summary>
         /// <param name="issuer">The issuer of th ecert</param>
@@ -48,7 +49,7 @@ namespace SanteDB.Core.Model.AMI.Security
         /// <param name="nbf">The date when the certificate was issued</param>
         /// <param name="ser">The serial number of the certificate</param>
         /// <param name="sub">The subject of the certificate</param>
-        public X509Certificate2Info(String issuer, DateTime? nbf, DateTime? naf, String sub, String ser)
+        public X509Certificate2Info(string issuer, DateTime? nbf, DateTime? naf, string sub, string ser)
         {
             this.Issuer = issuer;
             this.NotBefore = nbf;
@@ -57,13 +58,13 @@ namespace SanteDB.Core.Model.AMI.Security
             this.Thumbprint = ser;
         }
 
-        /// <summary>
+	    /// <summary>
         /// Create from a CA attribute set
         /// </summary>
         /// <param name="attributes"></param>
-        public X509Certificate2Info(List<KeyValuePair<String, String>> attributes)
+        public X509Certificate2Info(List<KeyValuePair<string, string>> attributes)
         {
-            this.Id = Int32.Parse(attributes.First(o => o.Key == "RequestID").Value);
+            this.Id = int.Parse(attributes.First(o => o.Key == "RequestID").Value);
             this.Thumbprint = attributes.First(o => o.Key == "SerialNumber").Value;
             this.Subject = attributes.First(o => o.Key == "DistinguishedName").Value;
             this.NotAfter = DateTime.Parse(attributes.First(o => o.Key == "NotAfter").Value);
@@ -71,46 +72,53 @@ namespace SanteDB.Core.Model.AMI.Security
             this.Issuer = attributes.First(o => o.Key == "ccm").Value;
         }
 
-        /// <summary>
+	    /// <summary>
         /// The identifier of the certificate
         /// </summary>
-        [XmlAttribute("id"), JsonProperty("id")]
+        [XmlAttribute("id")][JsonProperty("id")]
         public int Id { get; set; }
 
-        /// <summary>
+	    /// <summary>
         /// Gets or sets the issuers
         /// </summary>
-        [XmlElement("iss"), JsonProperty("iss")]
-        public String Issuer { get; set; }
+        [XmlElement("iss")][JsonProperty("iss")]
+        public string Issuer { get; set; }
 
-        /// <summary>
+	    /// <summary>
         /// Gets or sets the expiry date
         /// </summary>
-        [XmlElement("exp"), JsonProperty("exp")]
+        [XmlElement("exp")][JsonProperty("exp")]
         public DateTime? NotAfter { get; set; }
 
-        /// <summary>
+	    /// <summary>
         /// Gets or sets the issue date
         /// </summary>
-        [XmlElement("nbf"), JsonProperty("nbf")]
+        [XmlElement("nbf")][JsonProperty("nbf")]
         public DateTime? NotBefore { get; set; }
 
-        /// <summary>
+	    /// <summary>
         /// Distinguished name
         /// </summary>
-        [XmlElement("sub"), JsonProperty("sub")]
-        public String Subject { get; set; }
+        [XmlElement("sub")][JsonProperty("sub")]
+        public string Subject { get; set; }
 
-        /// <summary>
+	    /// <summary>
         /// Gets or sets the thumbprint
         /// </summary>
-        [XmlElement("thumbprint"), JsonProperty("thumbprint")]
-        public String Thumbprint { get; set; }
+        [XmlElement("thumbprint")][JsonProperty("thumbprint")]
+        public string Thumbprint { get; set; }
 
 
 #pragma warning disable CS1591
-        public bool ShouldSerializeNotAfter() => this.NotAfter.HasValue;
-        public bool ShouldSerializeNotBefore() => this.NotBefore.HasValue;
+	    public bool ShouldSerializeNotAfter()
+	    {
+		    return this.NotAfter.HasValue;
+	    }
+
+	    public bool ShouldSerializeNotBefore()
+	    {
+		    return this.NotBefore.HasValue;
+	    }
 #pragma warning restore CS1591
     }
 }

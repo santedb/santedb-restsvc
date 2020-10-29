@@ -27,6 +27,7 @@ using SanteDB.Core.Model.AMI.Diagnostics;
 using SanteDB.Core.Model.AMI.Jobs;
 using SanteDB.Core.Model.AMI.Logging;
 using SanteDB.Core.Model.AMI.Security;
+using SanteDB.Core.Model.Attributes;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Security;
@@ -42,6 +43,7 @@ namespace SanteDB.Core.Model.AMI.Collections
     /// <summary>
     /// Represents an administrative collection item.
     /// </summary>
+    [ResourceCollection]
     [XmlType(nameof(AmiCollection), Namespace = "http://santedb.org/ami")]
     [JsonObject(nameof(AmiCollection))]
     [XmlInclude(typeof(Entity))]

@@ -17,12 +17,13 @@
  * User: fyfej
  * Date: 2019-11-27
  */
-using Newtonsoft.Json;
-using SanteDB.Core.Auditing;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
+using SanteDB.Core.Auditing;
 
 namespace SanteDB.Core.Model.AMI.Security
 {
@@ -34,7 +35,7 @@ namespace SanteDB.Core.Model.AMI.Security
     [JsonObject(nameof(AuditSubmission))]
     public class AuditSubmission : IdentifiedData
     {
-        /// <summary>
+	    /// <summary>
         /// Creates a new instance of audit information
         /// </summary>
         public AuditSubmission()
@@ -42,22 +43,22 @@ namespace SanteDB.Core.Model.AMI.Security
             this.Audit = new List<AuditData>();
         }
 
-        /// <summary>
+	    /// <summary>
         ///  Audit info with data
         /// </summary>
         /// <param name="data"></param>
         public AuditSubmission(AuditData data)
         {
-            this.Audit = new List<AuditData>() { data };
+            this.Audit = new List<AuditData> { data };
         }
 
-        /// <summary>
+	    /// <summary>
         /// Gets or sets the audit
         /// </summary>
-        [XmlElement("audit"), JsonProperty("audit")]
+        [XmlElement("audit")][JsonProperty("audit")]
         public List<AuditData> Audit { get; set; }
 
-        /// <summary>
+	    /// <summary>
         /// When was the audit modified
         /// </summary>
         public override DateTimeOffset ModifiedOn
@@ -68,13 +69,13 @@ namespace SanteDB.Core.Model.AMI.Security
             }
         }
 
-        /// <summary>
+	    /// <summary>
         /// Gets the process identifier of the mobile application
         /// </summary>
         [XmlElement("pid")]
         public int ProcessId { get; set; }
 
-        /// <summary>
+	    /// <summary>
         /// Gets or sets the device identifier which sent the audit
         /// </summary>
         [XmlElement("deviceId")]

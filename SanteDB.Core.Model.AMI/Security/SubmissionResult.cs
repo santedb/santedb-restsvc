@@ -17,8 +17,9 @@
  * User: fyfej
  * Date: 2019-11-27
  */
-using Newtonsoft.Json;
+
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace SanteDB.Core.Model.AMI.Security
 {
@@ -30,14 +31,14 @@ namespace SanteDB.Core.Model.AMI.Security
     [JsonObject(nameof(SubmissionResult))]
     public class SubmissionResult
     {
-        /// <summary>
+	    /// <summary>
         /// Creates a new submossion result
         /// </summary>
 		public SubmissionResult()
         {
         }
 
-        /// <summary>
+	    /// <summary>
         /// Creates a new client certificate request result based on the internal request response
         /// </summary>
         /// <param name="cert">The certificate</param>
@@ -52,28 +53,28 @@ namespace SanteDB.Core.Model.AMI.Security
             this.Certificate = cert;
         }
 
-        /// <summary>
+	    /// <summary>
         /// Gets or sets the certificate content
         /// </summary>
-        [XmlElement("pkcs"), JsonProperty("pkcs")]
+        [XmlElement("pkcs")][JsonProperty("pkcs")]
         public string Certificate { get; set; }
 
-        /// <summary>
+	    /// <summary>
         /// Gets or sets the message from the server
         /// </summary>
-        [XmlElement("message"), JsonProperty("message")]
+        [XmlElement("message")][JsonProperty("message")]
         public string Message { get; set; }
 
-        /// <summary>
+	    /// <summary>
         /// Gets or sets the request id
         /// </summary>
-        [XmlAttribute("id"), JsonProperty("id")]
+        [XmlAttribute("id")][JsonProperty("id")]
         public int RequestId { get; set; }
 
-        /// <summary>
+	    /// <summary>
         /// Gets or sets the status
         /// </summary>
-        [XmlAttribute("status"), JsonProperty("status")]
+        [XmlAttribute("status")][JsonProperty("status")]
         public SubmissionStatus Status { get; set; }
     }
 }

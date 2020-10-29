@@ -17,12 +17,13 @@
  * User: fyfej
  * Date: 2019-11-27
  */
-using Newtonsoft.Json;
-using SanteDB.Core.Model.Security;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
+using SanteDB.Core.Model.Security;
 
 namespace SanteDB.Core.Model.AMI.Auth
 {
@@ -34,7 +35,7 @@ namespace SanteDB.Core.Model.AMI.Auth
     [JsonObject(nameof(SecurityDeviceInfo))]
     public class SecurityDeviceInfo : ISecurityEntityInfo<SecurityDevice>
     {
-        /// <summary>
+	    /// <summary>
         /// Default CTOR
         /// </summary>
         public SecurityDeviceInfo()
@@ -42,7 +43,7 @@ namespace SanteDB.Core.Model.AMI.Auth
 
         }
 
-        /// <summary>
+	    /// <summary>
         /// Creates a new device info from the specified object
         /// </summary>
         public SecurityDeviceInfo(SecurityDevice device)
@@ -51,44 +52,46 @@ namespace SanteDB.Core.Model.AMI.Auth
             this.Policies = device.Policies.Where(o => o.Policy != null).Select(o => new SecurityPolicyInfo(o)).ToList();
         }
 
-        /// <summary>
+	    /// <summary>
         /// Gets or sets the entity that is wrapped by this wrapper
         /// </summary>
-        [XmlElement("entity"), JsonProperty("entity")]
+        [XmlElement("entity")][JsonProperty("entity")]
         public SecurityDevice Entity { get; set; }
 
-        /// <summary>
-        /// Gets or sets the policies that are to be applied are already applied to the entity
-        /// </summary>
-        [XmlElement("policy"), JsonProperty("policy")]
-        public List<SecurityPolicyInfo> Policies { get; set; }
-
-        /// <summary>
+	    /// <summary>
         /// Get the key for the object
         /// </summary>
-        [JsonIgnore, XmlIgnore]
+        [JsonIgnore][XmlIgnore]
         public string Key
         {
             get => this.Entity?.Key?.ToString();
             set => this.Entity.Key = Guid.Parse(value);
         }
 
-        /// <summary>
-        /// Get the tag
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public string Tag => this.Entity?.Tag;
-
-        /// <summary>
+	    /// <summary>
         /// Get the modified on
         /// </summary>
-        [JsonIgnore, XmlIgnore]
+        [JsonIgnore][XmlIgnore]
         public DateTimeOffset ModifiedOn => this.Entity?.ModifiedOn ?? DateTimeOffset.Now;
 
-        /// <summary>
+	    /// <summary>
+        /// Gets or sets the policies that are to be applied are already applied to the entity
+        /// </summary>
+        [XmlElement("policy")][JsonProperty("policy")]
+        public List<SecurityPolicyInfo> Policies { get; set; }
+
+	    /// <summary>
+        /// Get the tag
+        /// </summary>
+        [JsonIgnore][XmlIgnore]
+        public string Tag => this.Entity?.Tag;
+
+	    /// <summary>
         /// Gets the object as identified data
         /// </summary>
-        public IdentifiedData ToIdentifiedData() => this.Entity;
-
+        public IdentifiedData ToIdentifiedData()
+	    {
+		    return this.Entity;
+	    }
     }
 }

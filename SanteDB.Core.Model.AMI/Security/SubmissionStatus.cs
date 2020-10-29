@@ -17,6 +17,7 @@
  * User: fyfej
  * Date: 2019-11-27
  */
+
 using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Security
