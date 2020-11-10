@@ -58,5 +58,11 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         /// </summary>
         [JsonProperty("lastWrite"), XmlAttribute("lastWrite")]
         public DateTime LastWriteDate { get; set; }
+
+        /// <summary>
+        /// The type of attachments
+        /// </summary>
+        [JsonProperty("contentType"), XmlAttribute("contentType")]
+        public String ContentType { get; set; }
     }
 }
