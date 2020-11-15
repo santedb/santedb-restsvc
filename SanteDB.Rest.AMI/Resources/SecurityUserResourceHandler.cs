@@ -171,7 +171,7 @@ namespace SanteDB.Rest.AMI.Resources
 
                         // Add the challenge
                         var subKey = (Guid)scopingEntityKey;
-                        var retVal = challengeSvc.Get(securityUser.UserName, AuthenticationContext.Current.Principal);
+                        var retVal = challengeSvc.Get(subKey, AuthenticationContext.Current.Principal);
                         totalCount = retVal.Count();
                         return retVal.Skip(offset).Take(count);
                     default:
