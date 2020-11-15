@@ -123,7 +123,7 @@ namespace SanteDB.Rest.AMI.Resources
 
                         // Add the challenge
                         var subKey = (Guid)subItemKey;
-                        var retVal = challengeSvc.Get(securityUser.UserName, AuthenticationContext.Current.Principal).FirstOrDefault(o => o.Key.Value == subKey);
+                        var retVal = challengeSvc.Get(subKey, AuthenticationContext.Current.Principal).FirstOrDefault(o => o.Key.Value == subKey);
                         if (retVal == null)
                             throw new KeyNotFoundException($"Cannot find challenge {subItemKey}");
                         else return retVal;
