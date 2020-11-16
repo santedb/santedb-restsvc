@@ -110,10 +110,6 @@ namespace SanteDB.Rest.AMI.Resources
         {
             try
             {
-                var securityUser = this.GetRepository().Get((Guid)scopingEntity);
-                if (securityUser == null)
-                    throw new KeyNotFoundException($"User with key {scopingEntity} not found");
-
                 switch (propertyName)
                 {
                     case "challenge":
@@ -158,10 +154,7 @@ namespace SanteDB.Rest.AMI.Resources
         {
             try
             {
-                var securityUser = this.GetRepository().Get((Guid)scopingEntityKey);
-                if (securityUser == null)
-                    throw new KeyNotFoundException($"User with key {scopingEntityKey} not found");
-
+              
                 switch (propertyName)
                 {
                     case "challenge":
@@ -248,11 +241,16 @@ namespace SanteDB.Rest.AMI.Resources
             {
                 // Validate that the user name matches the SID
                 var user = ApplicationServiceContext.Current.GetService<IRepositoryService<SecurityUser>>().Get(td.Entity.Key.Value);
-                if (user.UserName?.ToLowerInvariant() != td.Entity.UserName.ToLowerInvariant())
+                // Check upstream?
+                if (user != null && user.UserName?.ToLowerInvariant() != td.Entity.UserName.ToLowerInvariant())
                     throw new FaultException(403, $"Username mismatch expect {user.UserName.ToLowerInvariant()} but got {td.Entity.UserName.ToLowerInvariant()}");
 
                 ApplicationServiceContext.Current.GetService<IIdentityProviderService>().ChangePassword(td.Entity.UserName, td.Entity.Password, AuthenticationContext.Current.Principal);
-                this.FireSecurityAttributesChanged(user, true, "Password");
+
+                if (user != null)
+                    this.FireSecurityAttributesChanged(user, true, "Password");
+                else
+                    this.FireSecurityAttributesChanged(td.Entity, true, "Password");
                 return null;
             }
             else
