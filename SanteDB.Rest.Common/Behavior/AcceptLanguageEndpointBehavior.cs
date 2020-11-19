@@ -36,20 +36,22 @@ namespace SanteDB.Rest.Common.Behavior
     /// </summary>
     public class AcceptLanguageEndpointBehavior : IEndpointBehavior, IMessageInspector
     {
+
         /// <summary>
         /// After receive a request look for the language
         /// </summary>
         /// <param name="request"></param>
         public void AfterReceiveRequest(RestRequestMessage request)
         {
-            var langPrincipal = (AuthenticationContext.Current.Principal as IClaimsPrincipal)?.FindFirst(SanteDBClaimTypes.Language);
+            RestOperationContext.Current.Data.Add("originalLanguage", Thread.CurrentThread.CurrentUICulture.Name);
+            var langPrincipal = AuthenticationContext.Current.Principal.GetClaimValue(SanteDBClaimTypes.Language);
             if(langPrincipal != null)
-                Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(langPrincipal.Value);
+                Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(langPrincipal);
             else if(RestOperationContext.Current.Data.TryGetValue("Session", out object dataSession) && dataSession is ISession session &&
                 session.Claims.Any(o=>o.Type == SanteDBClaimTypes.Language))
             {
-                langPrincipal = session.Claims.First(o=>o.Type == SanteDBClaimTypes.Language);
-                Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(langPrincipal.Value);
+                langPrincipal = session.Claims.First(o=>o.Type == SanteDBClaimTypes.Language)?.Value;
+                Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(langPrincipal);
             }
             else if(request.Cookies["lang"] != null)
                 Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(request.Cookies["lang"].Value);
@@ -73,7 +75,10 @@ namespace SanteDB.Rest.Common.Behavior
         /// </summary>
         public void BeforeSendResponse(RestResponseMessage response)
         {
-           
+            response.Headers.Add("Content-Language", Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName);
+            if(RestOperationContext.Current.Data.TryGetValue("originalLanguage", out Object name))
+                Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(name.ToString());
+
         }
     }
 }
