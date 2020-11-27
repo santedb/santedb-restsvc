@@ -163,5 +163,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\ViewModel.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
+  </ItemGroup>
   <!-- <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" /> -->
 </Project>
