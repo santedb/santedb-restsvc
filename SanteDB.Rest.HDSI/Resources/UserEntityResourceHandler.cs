@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using SanteDB.Core;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Services;
+using SanteDB.Core.Model;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
@@ -48,7 +49,8 @@ namespace SanteDB.Rest.HDSI.Resources
                 else
                 {
                     this.m_tracer.TraceWarning("Security user {0} doesn't exist here, ignoring update", userEntity.SecurityUserKey);
-                    return null;
+                    userEntity.SecurityUserKey = null;
+                    return base.Create(userEntity, updateIfExists);
                 }
             }
             else 
@@ -103,7 +105,12 @@ namespace SanteDB.Rest.HDSI.Resources
                 if (securityService.Get(userEntity.SecurityUserKey.GetValueOrDefault()) != null)
                     return base.Update(data);
                 else
-                    return null;
+                {
+                    this.m_tracer.TraceWarning("Security user {0} doesn't exist here, ignoring update", userEntity.SecurityUserKey);
+                    userEntity.SecurityUserKey = null;
+                    return base.Update(userEntity);
+                }
+                    
             }
             else
                 throw new ArgumentOutOfRangeException("Can only handle UserEntity");

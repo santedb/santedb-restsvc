@@ -80,7 +80,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Creates the specified user
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.CreateIdentity)]
+        [Demand(PermissionPolicyIdentifiers.CreateLocalIdentity)]
         public override object Create(object data, bool updateIfExists)
         {
             if (data is SecurityUser)
@@ -137,7 +137,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Lock the specified user
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.AlterIdentity)]
+        [Demand(PermissionPolicyIdentifiers.AlterLocalIdentity)]
         public object Lock(object key)
         {
             ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().LockUser((Guid)key);
@@ -213,7 +213,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Unlock user
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.AlterIdentity)]
+        [Demand(PermissionPolicyIdentifiers.AlterLocalIdentity)]
         public object Unlock(object key)
         {
             ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().UnlockUser((Guid)key);
