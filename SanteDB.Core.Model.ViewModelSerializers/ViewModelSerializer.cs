@@ -43270,7 +43270,7 @@ namespace SanteDB.Core.Model.Json.Formatter
             {
                 if ((_strong.Value == null))
                 {
-                    if ((_strong.ValueKey.HasValue && context.ShouldForceLoad("valueModel", _strong.Key)))
+                    if ((context.ShouldForceLoad("valueModel", _strong.Key)))
                     {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ValueKey);
@@ -44363,7 +44363,7 @@ namespace SanteDB.Core.Model.Json.Formatter
                                                                                                                                                                                         object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("value", context.JsonContext, _retVal, context));
                                                                                                                                                                                         if ((_instance != null))
                                                                                                                                                                                         {
-                                                                                                                                                                                            _retVal.ValueKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                            _retVal.ValueKey = (System.Guid)(_instance);
                                                                                                                                                                                         }
                                                                                                                                                                                     }
                                                                                                                                                                                     else
