@@ -199,8 +199,8 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Gets the specified barcode for the user
         /// </summary>
-        [Get("/{resourceType}/{id}/_ptr")]
-        Stream GetPointer(String resourceType, String id);
+        [Get("/{resourceType}/{id}/_ptr/{authorityId}")]
+        Stream GetPointer(String resourceType, String id, String authorityId);
 
         /// <summary>
         /// Resolve a code to a resource by posting
