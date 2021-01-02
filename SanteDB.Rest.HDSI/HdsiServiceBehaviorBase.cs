@@ -1088,7 +1088,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Get pointer to the specified resource
         /// </summary>
-        public Stream GetPointer(string resourceType, string id)
+        public Stream GetPointer(string resourceType, string id, string authority)
         {
             try
             {
@@ -1100,16 +1100,22 @@ namespace SanteDB.Rest.HDSI
                         throw new InvalidOperationException("Cannot find resource pointer service");
 
                     Guid objectId = Guid.Parse(id);
+                    Guid authorityId = Guid.Parse(authority);
                     var data = handler.Get(objectId, Guid.Empty) as IdentifiedData;
                     if (data == null)
                         throw new KeyNotFoundException($"{resourceType} {id}");
                     else
                     {
+                        
                         RestOperationContext.Current.OutgoingResponse.ContentType = "application/jose";
                         if (data is Entity entity)
-                            return new MemoryStream(Encoding.UTF8.GetBytes(ptrService.GeneratePointer(entity.Identifiers)));
+                        {
+                            return new MemoryStream(Encoding.UTF8.GetBytes(ptrService.GeneratePointer(entity.Identifiers.Where(o => o.AuthorityKey == authorityId))));
+                        }
                         else if (data is Act act)
-                            return new MemoryStream(Encoding.UTF8.GetBytes(ptrService.GeneratePointer(act.Identifiers)));
+                        {
+                            return new MemoryStream(Encoding.UTF8.GetBytes(ptrService.GeneratePointer(act.Identifiers.Where(o => o.AuthorityKey == authorityId))));
+                        }
                         else
                             return null;
                     }
