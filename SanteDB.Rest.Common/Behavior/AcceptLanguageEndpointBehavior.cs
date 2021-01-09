@@ -18,6 +18,7 @@
  */
 using RestSrvr;
 using RestSrvr.Message;
+using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
 using System;
@@ -35,6 +36,8 @@ namespace SanteDB.Rest.Common.Behavior
     /// </summary>
     public class AcceptLanguageEndpointBehavior : IEndpointBehavior, IMessageInspector
     {
+        // Trace
+        private Tracer m_tracer = Tracer.GetTracer(typeof(AcceptLanguageEndpointBehavior));
 
         /// <summary>
         /// After receive a request look for the language
@@ -42,22 +45,29 @@ namespace SanteDB.Rest.Common.Behavior
         /// <param name="request"></param>
         public void AfterReceiveRequest(RestRequestMessage request)
         {
-            RestOperationContext.Current.Data.Add("originalLanguage", Thread.CurrentThread.CurrentUICulture.Name);
-            var langPrincipal = AuthenticationContext.Current.Principal.GetClaimValue(SanteDBClaimTypes.Language);
-            if(langPrincipal != null)
-                Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(langPrincipal);
-            else if(RestOperationContext.Current.Data.TryGetValue("Session", out object dataSession) && dataSession is ISession session &&
-                session.Claims.Any(o=>o.Type == SanteDBClaimTypes.Language))
+            try
             {
-                langPrincipal = session.Claims.First(o=>o.Type == SanteDBClaimTypes.Language)?.Value;
-                Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(langPrincipal);
+                RestOperationContext.Current.Data.Add("originalLanguage", Thread.CurrentThread.CurrentUICulture.Name);
+                var langPrincipal = AuthenticationContext.Current.Principal.GetClaimValue(SanteDBClaimTypes.Language);
+                if (langPrincipal != null)
+                    Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(langPrincipal);
+                else if (RestOperationContext.Current.Data.TryGetValue("Session", out object dataSession) && dataSession is ISession session &&
+                    session.Claims.Any(o => o.Type == SanteDBClaimTypes.Language))
+                {
+                    langPrincipal = session.Claims.First(o => o.Type == SanteDBClaimTypes.Language)?.Value;
+                    Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(langPrincipal);
+                }
+                else if (request.Cookies["lang"] != null)
+                    Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(request.Cookies["lang"].Value);
+                else if (request.Headers["Accept-Language"] != null)
+                {
+                    var language = request.Headers["Accept-Language"].Split(',');
+                    Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(language[0]);
+                }
             }
-            else if(request.Cookies["lang"] != null)
-                Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(request.Cookies["lang"].Value);
-            else if (request.Headers["Accept-Language"] != null)
+            catch(Exception e)
             {
-                var language = request.Headers["Accept-Language"].Split(',');
-                Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(language[0]);
+                this.m_tracer.TraceWarning("Error setting encoding: {0}", e.Message);
             }
         }
 
