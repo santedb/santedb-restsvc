@@ -84,10 +84,16 @@ namespace SanteDB.Rest.Common.Behavior
         /// </summary>
         public void BeforeSendResponse(RestResponseMessage response)
         {
-            response.Headers.Add("Content-Language", Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName);
-            if(RestOperationContext.Current.Data.TryGetValue("originalLanguage", out Object name))
-                Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(name.ToString());
-
+            try
+            {
+                response.Headers.Add("Content-Language", Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName);
+                if (RestOperationContext.Current.Data.TryGetValue("originalLanguage", out Object name))
+                    Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(name.ToString());
+            }
+            catch(Exception e)
+            {
+                this.m_tracer.TraceWarning("Error setting culture - {0}", e);
+            }
         }
     }
 }
