@@ -57,11 +57,15 @@ namespace SanteDB.Rest.Common.Behavior
                     langPrincipal = session.Claims.First(o => o.Type == SanteDBClaimTypes.Language)?.Value;
                     Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(langPrincipal);
                 }
-                else if (request.Cookies["lang"] != null)
-                    Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(request.Cookies["lang"].Value);
                 else if (request.Headers["Accept-Language"] != null)
                 {
                     var language = request.Headers["Accept-Language"].Split(',');
+                    Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(language[0]);
+                }
+
+                if (request.Headers["X-SdbLanguage"]  != null) // Language override
+                {
+                    var language = request.Headers["X-SdbLanguage"].Split(',');
                     Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(language[0]);
                 }
             }
