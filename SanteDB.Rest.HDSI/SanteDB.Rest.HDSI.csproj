@@ -21,7 +21,7 @@
   <PropertyGroup>
     <PackageId>SanteDB.Rest.HDSI</PackageId>
     <Title>SanteDB.Rest.HDSI</Title>
-    <Version>2.0.62</Version>
+    <Version>2.0.64</Version>
     <Description>Health Data Services Interface (HDSI) REST interface implementation, used by various SanteDB execution environment to provide access to health related data.</Description>
     <Authors>SanteSuite Contributors</Authors>
     <PackageTags>SanteDB</PackageTags>
@@ -127,10 +127,10 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <PackageReference Include="RestSrvr" Version="2.0.62.0" />
-        <PackageReference Include="SanteDB.Core.Applets" Version="2.0.62.0" />
-        <PackageReference Include="SanteDB.Core.Api" Version="2.0.62.0" />
-        <PackageReference Include="SanteDB.Core.Model" Version="2.0.62.0" />
+        <PackageReference Include="RestSrvr" Version="2.0.64.0" />
+        <PackageReference Include="SanteDB.Core.Applets" Version="2.0.64.0" />
+        <PackageReference Include="SanteDB.Core.Api" Version="2.0.64.0" />
+        <PackageReference Include="SanteDB.Core.Model" Version="2.0.64.0" />
       </ItemGroup>
     </Otherwise>
   </Choose>
