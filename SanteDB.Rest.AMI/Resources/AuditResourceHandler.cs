@@ -39,16 +39,16 @@ namespace SanteDB.Rest.AMI.Resources
     {
 
         // The audit repository
-        private IAuditRepositoryService m_repository = null;
+        private IRepositoryService<AuditData> m_repository = null;
 
         /// <summary>
         /// Get the repository
         /// </summary>
-        private IAuditRepositoryService GetRepository()
+        private IRepositoryService<AuditData> GetRepository()
         {
 
             if (this.m_repository == null)
-                this.m_repository = ApplicationServiceContext.Current.GetService<IAuditRepositoryService>();
+                this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<AuditData>>();
             if(this.m_repository == null)
                 throw new InvalidOperationException("No audit repository is configured");
 
@@ -127,8 +127,8 @@ namespace SanteDB.Rest.AMI.Resources
         {
            
             var retVal = new AuditData();
-            retVal.CopyObjectData(this.GetRepository().Get(id));
-
+            if(Guid.TryParse(id.ToString(), out Guid gid))
+                retVal.CopyObjectData(this.GetRepository().Get(gid));
             return retVal;
         }
 
