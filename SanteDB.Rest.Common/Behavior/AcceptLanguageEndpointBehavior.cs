@@ -49,13 +49,14 @@ namespace SanteDB.Rest.Common.Behavior
             {
                 RestOperationContext.Current.Data.Add("originalLanguage", Thread.CurrentThread.CurrentUICulture.Name);
                 var langPrincipal = AuthenticationContext.Current.Principal.GetClaimValue(SanteDBClaimTypes.Language);
-                if (langPrincipal != null)
+                if (langPrincipal != null) 
                     Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(langPrincipal);
                 else if (RestOperationContext.Current.Data.TryGetValue("Session", out object dataSession) && dataSession is ISession session &&
                     session.Claims.Any(o => o.Type == SanteDBClaimTypes.Language))
                 {
                     langPrincipal = session.Claims.First(o => o.Type == SanteDBClaimTypes.Language)?.Value;
                     Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(langPrincipal);
+
                 }
                 else if (request.Headers["Accept-Language"] != null)
                 {
@@ -67,9 +68,12 @@ namespace SanteDB.Rest.Common.Behavior
                 {
                     var language = request.Headers["X-SdbLanguage"].Split(',');
                     Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(language[0]);
+
                 }
+                RestOperationContext.Current.Data.Add("lang", Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName);
+
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 this.m_tracer.TraceWarning("Error setting encoding: {0}", e.Message);
             }
