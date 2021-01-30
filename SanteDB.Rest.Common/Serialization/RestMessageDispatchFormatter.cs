@@ -168,13 +168,14 @@ namespace SanteDB.Rest.Common.Serialization
 
                 for (int pNumber = 0; pNumber < parameters.Length; pNumber++)
                 {
-                    var parm = operation.Description.InvokeMethod.GetParameters()[pNumber];
 
+                    var parm = operation.Description.InvokeMethod.GetParameters()[pNumber];
                     // Simple parameter
                     if (parameters[pNumber] != null)
                     {
                         continue; // dispatcher already populated
                     }
+
                     // Use XML Serializer
                     else if (contentType?.StartsWith("application/xml") == true)
                     {

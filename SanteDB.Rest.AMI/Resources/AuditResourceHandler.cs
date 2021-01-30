@@ -18,6 +18,7 @@
  */
 using SanteDB.Core;
 using SanteDB.Core.Auditing;
+using SanteDB.Core.Configuration;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.AMI.Security;
@@ -29,6 +30,7 @@ using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -37,6 +39,9 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary>
     public class AuditResourceHandler : IApiResourceHandler
     {
+
+        // Configuration
+        private AuditAccountabilityConfigurationSection m_configuration= ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<AuditAccountabilityConfigurationSection>();
 
         // The audit repository
         private IRepositoryService<AuditData> m_repository = null;
@@ -67,6 +72,9 @@ namespace SanteDB.Rest.AMI.Resources
         /// Get the capabilities of this handler
         /// </summary>
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.Get | ResourceCapabilityType.Search;
+
+        // Dispatcher 
+        private IAuditDispatchService m_dispatcher = ApplicationServiceContext.Current.GetService<IAuditDispatchService>();
 
         /// <summary>
         /// The name of the resource
@@ -101,7 +109,7 @@ namespace SanteDB.Rest.AMI.Resources
                 {
                     var retVal = this.GetRepository().Insert(singleAudit);
                     ApplicationServiceContext.Current.GetService<IAuditDispatchService>()?.SendAudit(singleAudit);
-                    return new AuditData().CopyObjectData(retVal);
+                    return null;
                 }
             }
             else
@@ -114,6 +122,25 @@ namespace SanteDB.Rest.AMI.Resources
                 // Send the audit to the audit repo
             }
             return null;
+        }
+
+        /// <summary>
+        /// Handle audit persistence or shipping
+        /// </summary>
+        private void HandleAudit(AuditData audit)
+        {
+            var filters = this.m_configuration?.AuditFilters.Where(f =>
+                                (!f.OutcomeSpecified ^ f.Outcome.HasFlag(audit.Outcome)) &&
+                                    (!f.ActionSpecified ^ f.Action.HasFlag(audit.ActionCode)) &&
+                                    (!f.EventSpecified ^ f.Event.HasFlag(audit.EventIdentifier)));
+
+            if (AuthenticationContext.Current.Principal == AuthenticationContext.AnonymousPrincipal)
+                AuthenticationContext.Current = new AuthenticationContext(AuthenticationContext.SystemPrincipal);
+            if (filters == null || filters.Count() == 0 || filters.Any(f => f.InsertLocal))
+                this.m_repository.Insert(audit); // insert into local AR 
+            if (filters == null || filters.Count() == 0 || filters.Any(f => f.SendRemote))
+                this.m_dispatcher?.SendAudit(audit);
+
         }
 
         /// <summary>
