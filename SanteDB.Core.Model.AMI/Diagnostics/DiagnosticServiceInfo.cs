@@ -60,11 +60,11 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         /// </summary>
         public DiagnosticServiceInfo(Type type)
         {
-            var daemonType = type.GetTypeInfo();
+            var daemonType = type;
             this.Type = daemonType.AssemblyQualifiedName;
-            this.Class = typeof(IDaemonService).GetTypeInfo().IsAssignableFrom(daemonType) ? ServiceClass.Daemon :
-                typeof(IDataPersistenceService).GetTypeInfo().IsAssignableFrom(daemonType) ? ServiceClass.Data :
-                daemonType.ImplementedInterfaces.Any(o => o.Name.Contains("IRepositoryService")) ? ServiceClass.Repository :
+            this.Class = typeof(IDaemonService).IsAssignableFrom(daemonType) ? ServiceClass.Daemon :
+                typeof(IDataPersistenceService).IsAssignableFrom(daemonType) ? ServiceClass.Data :
+                daemonType.GetInterfaces().Any(o => o.Name.Contains("IRepositoryService")) ? ServiceClass.Repository :
                 ServiceClass.Passive;
 
             var instance = ApplicationServiceContext.Current.GetService(type);

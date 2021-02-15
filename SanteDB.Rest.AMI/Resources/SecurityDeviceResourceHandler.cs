@@ -57,7 +57,7 @@ namespace SanteDB.Rest.AMI.Resources
             if (sde.Policies == null || sde.Policies.Count == 0 && sde.Entity?.Policies == null || sde.Entity.Policies.Count == 0)
             {
                 var role = ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>()?.GetRole("DEVICE");
-                var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>()?.GetActivePolicies(role);
+                var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>()?.GetPolicies(role);
                 if (policies != null)
                     sde.Policies = policies.Select(o => new SecurityPolicyInfo(o)).ToList();
             }
@@ -168,7 +168,7 @@ namespace SanteDB.Rest.AMI.Resources
                     if (scope == null)
                         throw new KeyNotFoundException($"Could not find SecurityRole with identifier {scopingEntityKey}");
 
-                    var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetActivePolicies(scope).OrderBy(o => o.Policy.Oid).Select(o => o.ToPolicyInstance());
+                    var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetPolicies(scope).OrderBy(o => o.Policy.Oid).Select(o => o.ToPolicyInstance());
                     totalCount = policies.Count();
                     var filterExpression = QueryExpressionParser.BuildLinqExpression<SecurityPolicy>(filter).Compile();
                     return policies.Where(o => filterExpression(o.Policy)).Skip(offset).Take(count).Select(o => new SecurityPolicyInfo(o));

@@ -63,6 +63,7 @@ namespace SanteDB.Rest.Common.Security
                 var roleService = ApplicationServiceContext.Current.GetService<IRoleProviderService>();
                 var identityService = ApplicationServiceContext.Current.GetService<IIdentityProviderService>();
                 var pipService = ApplicationServiceContext.Current.GetService<IPolicyInformationService>();
+                var pdpService = ApplicationServiceContext.Current.GetService<IPolicyDecisionService>();
 
                 var httpRequest = RestOperationContext.Current.IncomingRequest;
 
@@ -102,7 +103,7 @@ namespace SanteDB.Rest.Common.Security
 
                 // Claim headers built in
                 if (pipService != null)
-                    claims.AddRange(pipService.GetActivePolicies(principal).Where(o => o.Rule == PolicyGrantType.Grant).Select(o => new SanteDBClaim(SanteDBClaimTypes.SanteDBGrantedPolicyClaim, o.Policy.Oid)));
+                    claims.AddRange(pdpService.GetEffectivePolicySet(principal).Where(o => o.Rule == PolicyGrantType.Grant).Select(o => new SanteDBClaim(SanteDBClaimTypes.SanteDBGrantedPolicyClaim, o.Policy.Oid)));
 
                 // Finally validate the client 
                 var claimsPrincipal = new SanteDBClaimsPrincipal(new SanteDBClaimsIdentity(principal.Identity, claims));

@@ -144,7 +144,7 @@ namespace SanteDB.Rest.AMI.Resources
             switch (propertyName)
             {
                 case "policy":
-                    var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetActivePolicies(scope).OrderBy(o => o.Policy.Oid).Select(o => o.ToPolicyInstance());
+                    var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetPolicies(scope).OrderBy(o => o.Policy.Oid).Select(o => o.ToPolicyInstance());
                     totalCount = policies.Count();
                     var filterExpression = QueryExpressionParser.BuildLinqExpression<SecurityPolicy>(filter).Compile();
                     return policies.Where(o => filterExpression(o.Policy)).Skip(offset).Take(count).Select(o => new SecurityPolicyInfo(o));

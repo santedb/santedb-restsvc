@@ -159,7 +159,7 @@ namespace SanteDB.Rest.AMI.Resources
             var data = this.GetRepository().Get((Guid)id, (Guid)versionId);
 
             var retVal = Activator.CreateInstance(this.Type, data) as ISecurityEntityInfo<TSecurityEntity>;
-            retVal.Policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetActivePolicies(data).Select(o=>new SecurityPolicyInfo(o)).ToList();
+            retVal.Policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetPolicies(data).Select(o=>new SecurityPolicyInfo(o)).ToList();
             return retVal;
 
         }
@@ -224,7 +224,7 @@ namespace SanteDB.Rest.AMI.Resources
             return results.Select(o =>
             {
                 var r = Activator.CreateInstance(this.Type, o) as ISecurityEntityInfo<TSecurityEntity>;
-                r.Policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetActivePolicies(o).Select(p=>new SecurityPolicyInfo(p)).ToList();
+                r.Policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetPolicies(o).Select(p=>new SecurityPolicyInfo(p)).ToList();
                 return r;
             }).OfType<Object>();
 

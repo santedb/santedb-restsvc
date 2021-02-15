@@ -57,7 +57,7 @@ namespace SanteDB.Core.Model.AMI.Jobs
             else
             {
                 this.Key = job.GetType().FullName;
-                this.Tag = job.GetType().GetTypeInfo().Assembly.GetName().Version.ToString();
+                this.Tag = job.GetType().Assembly.GetName().Version.ToString();
                 this.ModifiedOn = ApplicationServiceContext.Current.StartTime;
             }
             this.Name = job.Name;

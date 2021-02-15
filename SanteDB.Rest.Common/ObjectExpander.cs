@@ -102,7 +102,7 @@ namespace SanteDB.Rest.Common
                 listValue = methodInfo.Invoke(null, new object[] { key, versionKey }) as IList;
             else
                 listValue = methodInfo.Invoke(null, new object[] { key }) as IList;
-            if (propertyType.GetTypeInfo().IsAssignableFrom(listValue.GetType().GetTypeInfo()))
+            if (propertyType.IsAssignableFrom(listValue.GetType()))
                 return listValue;
             else
             {
