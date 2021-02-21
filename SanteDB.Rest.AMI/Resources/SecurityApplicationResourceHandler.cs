@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2019 - 2020, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE.md)
+ * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE.md)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you 
  * may not use this file except in compliance with the License. You may 
@@ -14,7 +14,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2019-11-27
+ * Date: 2021-2-9
  */
 using SanteDB.Core;
 using SanteDB.Core.Api.Security;
@@ -58,7 +58,7 @@ namespace SanteDB.Rest.AMI.Resources
 
             {
                 var role = ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>()?.GetRole("SYNCHRONIZERS");
-                var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>()?.GetActivePolicies(role);
+                var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>()?.GetPolicies(role);
                 if (policies != null)
                     sde.Policies = policies.Select(o => new SecurityPolicyInfo(o)).ToList();
             }
@@ -170,7 +170,7 @@ namespace SanteDB.Rest.AMI.Resources
                     if (scope == null)
                         throw new KeyNotFoundException($"Could not find SecurityApplication with identifier {scopingEntityKey}");
 
-                    var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetActivePolicies(scope).OrderBy(o=>o.Policy.Oid).Select(o=>o.ToPolicyInstance());
+                    var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetPolicies(scope).OrderBy(o=>o.Policy.Oid).Select(o=>o.ToPolicyInstance());
                     totalCount = policies.Count();
                     var filterExpression = QueryExpressionParser.BuildLinqExpression<SecurityPolicy>(filter).Compile();
                     return policies.Where(o=>filterExpression(o.Policy)).Skip(offset).Take(count).Select(o => new SecurityPolicyInfo(o));

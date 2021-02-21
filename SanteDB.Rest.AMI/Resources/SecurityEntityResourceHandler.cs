@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2019 - 2020, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE.md)
+ * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE.md)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you 
  * may not use this file except in compliance with the License. You may 
@@ -14,7 +14,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2019-11-27
+ * Date: 2021-2-9
  */
 using RestSrvr;
 using SanteDB.Core;
@@ -159,7 +159,7 @@ namespace SanteDB.Rest.AMI.Resources
             var data = this.GetRepository().Get((Guid)id, (Guid)versionId);
 
             var retVal = Activator.CreateInstance(this.Type, data) as ISecurityEntityInfo<TSecurityEntity>;
-            retVal.Policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetActivePolicies(data).Select(o=>new SecurityPolicyInfo(o)).ToList();
+            retVal.Policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetPolicies(data).Select(o=>new SecurityPolicyInfo(o)).ToList();
             return retVal;
 
         }
@@ -224,7 +224,7 @@ namespace SanteDB.Rest.AMI.Resources
             return results.Select(o =>
             {
                 var r = Activator.CreateInstance(this.Type, o) as ISecurityEntityInfo<TSecurityEntity>;
-                r.Policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetActivePolicies(o).Select(p=>new SecurityPolicyInfo(p)).ToList();
+                r.Policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetPolicies(o).Select(p=>new SecurityPolicyInfo(p)).ToList();
                 return r;
             }).OfType<Object>();
 

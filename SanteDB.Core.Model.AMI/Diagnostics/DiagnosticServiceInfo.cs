@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2019 - 2020, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE.md)
+ * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE.md)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you 
  * may not use this file except in compliance with the License. You may 
@@ -14,7 +14,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2019-11-27
+ * Date: 2021-2-9
  */
 using Newtonsoft.Json;
 using SanteDB.Core.Services;
@@ -60,11 +60,11 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         /// </summary>
         public DiagnosticServiceInfo(Type type)
         {
-            var daemonType = type.GetTypeInfo();
+            var daemonType = type;
             this.Type = daemonType.AssemblyQualifiedName;
-            this.Class = typeof(IDaemonService).GetTypeInfo().IsAssignableFrom(daemonType) ? ServiceClass.Daemon :
-                typeof(IDataPersistenceService).GetTypeInfo().IsAssignableFrom(daemonType) ? ServiceClass.Data :
-                daemonType.ImplementedInterfaces.Any(o => o.Name.Contains("IRepositoryService")) ? ServiceClass.Repository :
+            this.Class = typeof(IDaemonService).IsAssignableFrom(daemonType) ? ServiceClass.Daemon :
+                typeof(IDataPersistenceService).IsAssignableFrom(daemonType) ? ServiceClass.Data :
+                daemonType.GetInterfaces().Any(o => o.Name.Contains("IRepositoryService")) ? ServiceClass.Repository :
                 ServiceClass.Passive;
 
             var instance = ApplicationServiceContext.Current.GetService(type);
