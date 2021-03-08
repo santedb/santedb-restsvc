@@ -17,7 +17,7 @@
  * Date: 2021-2-9
  */
 using SanteDB.Core;
-using SanteDB.Core.Api.Security;
+using SanteDB.Core.Security;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Security;
