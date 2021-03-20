@@ -16,6 +16,7 @@
  * User: fyfej
  * Date: 2021-2-9
  */
+using System;
 using System.Collections.Generic;
 using SanteDB.Core.Model.Security;
 
@@ -39,7 +40,9 @@ namespace SanteDB.Core.Model.AMI.Auth
     public interface ISecurityEntityInfo<TSecurityObject> : IAmiIdentified, ISecurityEntityInfo
         where TSecurityObject : SecurityEntity
     {
-	    /// <summary>
+
+       
+        /// <summary>
         /// Gets or sets the security object entity
         /// </summary>
         TSecurityObject Entity { get; set; }
