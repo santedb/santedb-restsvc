@@ -90,6 +90,21 @@ namespace SanteDB.Rest.Common.Configuration
     public class RestServiceBehaviorConfiguration : RestBehaviorConfiguration {
 
         /// <summary>
+        /// Default ctor
+        /// </summary>
+        public RestServiceBehaviorConfiguration()
+        {
+
+        }
+
+        /// <summary>
+        /// Create a new behavior configuration with specified type
+        /// </summary>
+        public RestServiceBehaviorConfiguration(Type behaviorType) : base(behaviorType)
+        {
+
+        }
+        /// <summary>
         /// Gets the type
         /// </summary>
         [Editor("SanteDB.Configuration.Editors.TypeSelectorEditor", "System.Drawing.Design.UITypeEditor"), 
