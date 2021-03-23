@@ -140,6 +140,7 @@ namespace SanteDB.Rest.AMI.Resources
                 catch (Exception e)
                 {
                     this.m_tracer.TraceError("Error updating channel definition", e);
+                    throw new Exception($"Error updating channel {definition.Key}", e);
                 }
             }
             else
