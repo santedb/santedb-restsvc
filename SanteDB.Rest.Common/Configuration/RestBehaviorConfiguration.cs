@@ -107,7 +107,7 @@ namespace SanteDB.Rest.Common.Configuration
         /// <summary>
         /// Gets the type
         /// </summary>
-        [Editor("SanteDB.Configuration.Editors.TypeSelectorEditor", "System.Drawing.Design.UITypeEditor"), 
+        [XmlIgnore, JsonIgnore, Editor("SanteDB.Configuration.Editors.TypeSelectorEditor", "System.Drawing.Design.UITypeEditor"), 
             TypeConverter("SanteDB.Configuration.Converters.TypeDisplayConverter"), BindingAttribute(typeof(IServiceBehavior))]
         public override Type Type { get => base.Type; set => base.Type = value; }
     }
@@ -137,7 +137,7 @@ namespace SanteDB.Rest.Common.Configuration
         /// <summary>
         /// Gets the type
         /// </summary>
-        [Editor("SanteDB.Configuration.Editors.TypeSelectorEditor", "System.Drawing.Design.UITypeEditor"),
+        [XmlIgnore, JsonIgnore, Editor("SanteDB.Configuration.Editors.TypeSelectorEditor", "System.Drawing.Design.UITypeEditor"),
              TypeConverter("SanteDB.Configuration.Converters.TypeDisplayConverter"), BindingAttribute(typeof(IEndpointBehavior))]
         public override Type Type { get => base.Type; set => base.Type = value; }
     }
