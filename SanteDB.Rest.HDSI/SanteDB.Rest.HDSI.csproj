@@ -17,11 +17,13 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
   </PropertyGroup>
-    
+  <PropertyGroup Condition="'$(VersionNumber)' == ''">
+    <VersionNumber>2.1.0-debug</VersionNumber>
+  </PropertyGroup>
   <PropertyGroup>
     <PackageId>SanteDB.Rest.HDSI</PackageId>
     <Title>SanteDB.Rest.HDSI</Title>
-    <Version>2.1.2</Version>
+    <Version>$(VersionNumber)</Version>
     <Description>Health Data Services Interface (HDSI) REST interface implementation, used by various SanteDB execution environment to provide access to health related data.</Description>
     <Authors>SanteSuite Contributors</Authors>
     <PackageTags>SanteDB</PackageTags>
@@ -123,14 +125,18 @@
           <Project>{16EF1840-0361-439D-806C-92D0411122EB}</Project>
           <Name>RestSrvr</Name>
         </ProjectReference>
+        <ProjectReference Include="..\..\santedb-docker\SanteDB.Docker.Core\SanteDB.Docker.Core.csproj" />
+
       </ItemGroup>
     </When>
     <Otherwise>
       <ItemGroup>
-        <PackageReference Include="RestSrvr" Version="2.1.2.0" />
-        <PackageReference Include="SanteDB.Core.Applets" Version="2.1.2.0" />
-        <PackageReference Include="SanteDB.Core.Api" Version="2.1.2.0" />
-        <PackageReference Include="SanteDB.Core.Model" Version="2.1.2.0" />
+        <PackageReference Include="RestSrvr" Version="$(VersionNumber)" />
+        <PackageReference Include="SanteDB.Core.Applets" Version="$(VersionNumber)" />
+        <PackageReference Include="SanteDB.Core.Api" Version="$(VersionNumber)" />
+        <PackageReference Include="SanteDB.Core.Model" Version="$(VersionNumber)" />
+        <PackageReference Include="SanteDB.Docker.Core" Version="$(VersionNumber)" />
+
       </ItemGroup>
     </Otherwise>
   </Choose>

@@ -16,6 +16,7 @@
  * User: fyfej
  * Date: 2021-2-9
  */
+using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interfaces;
 using System;
@@ -50,12 +51,14 @@ namespace SanteDB.Rest.Common
         /// <param name="resourceTypes">The type of resource handlers</param>
         public ResourceHandlerTool(IEnumerable<Type> resourceHandlerTypes, Type scope)
         {
+            var serviceManager = ApplicationServiceContext.Current.GetService<IServiceManager>();
             foreach (var t in resourceHandlerTypes.Where(t=>!t.ContainsGenericParameters && !t.IsAbstract && !t.IsInterface))
             {
                 try
                 {
-                    ConstructorInfo ci = t.GetConstructor(Type.EmptyTypes);
-                    IApiResourceHandler rh = ci.Invoke(null) as IApiResourceHandler;
+
+                    
+                    IApiResourceHandler rh = serviceManager.CreateInjected(t) as IApiResourceHandler;
                     if (rh.Scope == scope)
                     {
                         this.m_handlers.Add($"{rh.Scope.Name}/{rh.ResourceName}", rh);

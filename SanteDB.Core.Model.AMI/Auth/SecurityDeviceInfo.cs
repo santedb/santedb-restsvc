@@ -56,10 +56,10 @@ namespace SanteDB.Core.Model.AMI.Auth
         [XmlElement("entity")][JsonProperty("entity")]
         public SecurityDevice Entity { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Get the key for the object
         /// </summary>
-        [JsonIgnore][XmlIgnore]
+        [JsonProperty("id"), XmlElement("id")]
         public string Key
         {
             get => this.Entity?.Key?.ToString();

@@ -55,6 +55,15 @@ namespace SanteDB.Rest.Common.Behavior
         }
 
         /// <summary>
+        /// Default ctor
+        /// </summary>
+        public CorsEndpointBehavior()
+        {
+            this.m_settings = new CorsEndpointBehaviorConfiguration();
+            this.m_settings.Resource.Add(new CorsResourceSetting("*", "*", new String[] { "GET", "POST", "HEAD", "PUT", "PATCH", "OPTIONS" }, new String[] { "Content-Type", "Accept-Encoding", "Content-Encoding" }));
+        }
+
+        /// <summary>
         /// Apply endpoint behavior
         /// </summary>
         public void ApplyEndpointBehavior(ServiceEndpoint endpoint, EndpointDispatcher dispatcher)
