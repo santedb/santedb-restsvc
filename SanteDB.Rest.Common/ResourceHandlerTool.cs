@@ -59,6 +59,9 @@ namespace SanteDB.Rest.Common
 
                     
                     IApiResourceHandler rh = serviceManager.CreateInjected(t) as IApiResourceHandler;
+                    if (rh == null)
+                        continue; // TODO: Emit a warning
+
                     if (rh.Scope == scope)
                     {
                         this.m_handlers.Add($"{rh.Scope.Name}/{rh.ResourceName}", rh);
