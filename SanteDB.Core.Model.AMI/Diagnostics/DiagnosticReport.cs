@@ -100,5 +100,10 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
             this.Tags.Add(tag);
             return tag;
         }
+
+        /// <summary>
+        /// Get the specified tag
+        /// </summary>
+        public string GetTag(string tagKey) => this.Tags.Find(o => o.TagKey == tagKey)?.Value;
     }
 }
