@@ -21239,10 +21239,10 @@ namespace SanteDB.Core.Model.Json.Formatter
                                         if ("serviceSchedule".Equals(r.Value))
                                         {
                                             r.Read();
-                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(object), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("serviceSchedule", context.JsonContext, _retVal, context));
+                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("serviceSchedule", context.JsonContext, _retVal, context));
                                             if ((_instance != null))
                                             {
-                                                _retVal.ServiceSchedule = ((object)(_instance));
+                                                _retVal.ServiceSchedule = ((string)(_instance));
                                             }
                                         }
                                         else
