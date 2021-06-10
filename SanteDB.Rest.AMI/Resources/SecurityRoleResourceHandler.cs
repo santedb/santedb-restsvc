@@ -98,6 +98,13 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <summary>
+        /// Not supported
+        /// </summary>
+        public void AddPropertyHandler(IRestAssociatedPropertyProvider property)
+        {
+        }
+
+        /// <summary>
         /// Create the specified security role
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.CreateRoles)]

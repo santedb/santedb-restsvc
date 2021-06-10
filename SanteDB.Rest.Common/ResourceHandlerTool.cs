@@ -20,6 +20,7 @@ using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interfaces;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -29,17 +30,15 @@ namespace SanteDB.Rest.Common
     /// <summary>
     /// Resource handler utility
     /// </summary>
-    public class ResourceHandlerTool 
-	{
-		// Resource handler utility classes
-		private static object m_lockObject = new object();
+    public class ResourceHandlerTool
+    {
 
         // Common trace
         private Tracer m_traceSource = Tracer.GetTracer(typeof(ResourceHandlerTool));
 
-		// Handlers
-		private Dictionary<String, IApiResourceHandler> m_handlers = new Dictionary<string, IApiResourceHandler>();
-        
+        // Handlers
+        private ConcurrentDictionary<String, IApiResourceHandler> m_handlers = new ConcurrentDictionary<string, IApiResourceHandler>();
+
         /// <summary>
         /// Get the current handlers
         /// </summary>
@@ -52,21 +51,28 @@ namespace SanteDB.Rest.Common
         public ResourceHandlerTool(IEnumerable<Type> resourceHandlerTypes, Type scope)
         {
             var serviceManager = ApplicationServiceContext.Current.GetService<IServiceManager>();
-            foreach (var t in resourceHandlerTypes.Where(t=>!t.ContainsGenericParameters && !t.IsAbstract && !t.IsInterface))
+            var tPropertyProviders = serviceManager.CreateInjectedOfAll<IRestAssociatedPropertyProvider>();
+
+            foreach (var t in resourceHandlerTypes.Where(t => !t.ContainsGenericParameters && !t.IsAbstract && !t.IsInterface))
             {
                 try
                 {
 
-                    
                     IApiResourceHandler rh = serviceManager.CreateInjected(t) as IApiResourceHandler;
                     if (rh == null)
                         continue; // TODO: Emit a warning
 
+
                     if (rh.Scope == scope)
                     {
-                        this.m_handlers.Add($"{rh.Scope.Name}/{rh.ResourceName}", rh);
+                        this.m_handlers.TryAdd($"{rh.Scope.Name}/{rh.ResourceName}", rh);
                         this.m_traceSource.TraceInfo("Adding {0} to {1}", rh.ResourceName, rh.Scope);
 
+                        // Associated prop handler
+                        if (rh is IAssociativeResourceHandler assoc)
+                        {
+                            tPropertyProviders.Where(p => p.Types.Contains(rh.Type)).ToList().ForEach(p => assoc.AddPropertyHandler(p));
+                        }
                     }
                 }
                 catch (Exception e)
@@ -74,16 +80,27 @@ namespace SanteDB.Rest.Common
                     this.m_traceSource.TraceError("Error binding: {0} due to {1}", t.FullName, e);
                 }
             }
+
+
         }
 
-		/// <summary>
-		/// Get resource handler
-		/// </summary>
-		public IApiResourceHandler GetResourceHandler<TScope>(String resourceName)
-		{
-			IApiResourceHandler retVal = null;
-			this.m_handlers.TryGetValue($"{typeof(TScope).Name}/{resourceName}", out retVal);
-			return retVal;
-		}
-	}
+        /// <summary>
+        /// Get resource handler
+        /// </summary>
+        public IApiResourceHandler GetResourceHandler<TScope>(String resourceName)
+        {
+            IApiResourceHandler retVal = null;
+            this.m_handlers.TryGetValue($"{typeof(TScope).Name}/{resourceName}", out retVal);
+            return retVal;
+        }
+
+        /// <summary>
+        /// Get resource handler
+        /// </summary>
+        public IEnumerable<IApiResourceHandler> GetResourceHandler(Type resourceType)
+        {
+            return this.m_handlers.Values.Where(o=>o.Type == resourceType);
+        }
+
+    }
 }

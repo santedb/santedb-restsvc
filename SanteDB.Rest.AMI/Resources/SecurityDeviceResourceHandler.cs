@@ -42,6 +42,14 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public override Type Type => typeof(SecurityDeviceInfo);
 
+
+        /// <summary>
+        /// Not supported
+        /// </summary>
+        public void AddPropertyHandler(IRestAssociatedPropertyProvider property)
+        {
+        }
+
         /// <summary>
         /// Create device
         /// </summary>

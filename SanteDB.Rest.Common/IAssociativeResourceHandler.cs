@@ -32,6 +32,11 @@ namespace SanteDB.Rest.Common
     {
 
         /// <summary>
+        /// Add a property handler
+        /// </summary>
+        void AddPropertyHandler(IRestAssociatedPropertyProvider property);
+
+        /// <summary>
         /// Removes the specified associated entity form the specified property name collection
         /// </summary>
         /// <param name="scopingEntityKey">The instance of the parent entity from which the object should be removed</param>
