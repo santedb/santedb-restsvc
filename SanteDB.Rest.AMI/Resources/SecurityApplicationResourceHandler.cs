@@ -35,7 +35,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents a security application resource handler
     /// </summary>
-    public class SecurityApplicationResourceHandler : SecurityEntityResourceHandler<SecurityApplication>, ILockableResourceHandler, IAssociativeResourceHandler
+    public class SecurityApplicationResourceHandler : SecurityEntityResourceHandler<SecurityApplication>, ILockableResourceHandler
     {
 
         /// <summary>
@@ -110,108 +110,5 @@ namespace SanteDB.Rest.AMI.Resources
             return retVal;
         }
 
-        /// <summary>
-        /// Remove an associated entity
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.CreateApplication)]
-        public object RemoveAssociatedEntity(object scopingEntityKey, string propertyName, object subItemKey)
-        {
-
-            switch (propertyName)
-            {
-                case "policy":
-                    var scope = this.GetRepository().Get(Guid.Parse(scopingEntityKey.ToString()));
-                    if (scope == null)
-                        throw new KeyNotFoundException($"Could not find SecurityApplication with identifier {scopingEntityKey}");
-
-                    var policy = scope.Policies.FirstOrDefault(o => o.Policy.Key == Guid.Parse(subItemKey.ToString()));
-                    if (policy == null)
-                        throw new KeyNotFoundException($"Policy {subItemKey} is not associated with this device");
-
-                    try
-                    {
-                        ApplicationServiceContext.Current.GetService<IPolicyInformationService>().RemovePolicies(scope, AuthenticationContext.Current.Principal, policy.Policy.Oid);
-                        scope.Policies.Remove(policy);
-                        var retVal = this.Update(scope);
-                        this.FireSecurityAttributesChanged(scope, true, $"del policy={policy.Policy.Oid}");
-                        return retVal;
-                    }
-                    catch
-                    {
-                        this.FireSecurityAttributesChanged(scope, false, $"del policy={policy.Policy.Oid}");
-                        throw;
-                    }
-
-                default:
-                    throw new ArgumentException($"Property with {propertyName} not valid");
-            }
-        }
-
-        /// <summary>
-        /// Get associated entity
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public object GetAssociatedEntity(object scopingEntityKey, string propertyName, object subItemKey)
-        {
-            throw new NotSupportedException("Use root resource getter for property by UUID");
-        }
-
-        /// <summary>
-        /// Query for associated items
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public IEnumerable<object> QueryAssociatedEntities(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
-        {
-
-            switch (propertyName)
-            {
-                case "policy":
-                    var scope = this.GetRepository().Get(Guid.Parse(scopingEntityKey.ToString()));
-                    if (scope == null)
-                        throw new KeyNotFoundException($"Could not find SecurityApplication with identifier {scopingEntityKey}");
-
-                    var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetPolicies(scope).OrderBy(o=>o.Policy.Oid).Select(o=>o.ToPolicyInstance());
-                    totalCount = policies.Count();
-                    var filterExpression = QueryExpressionParser.BuildLinqExpression<SecurityPolicy>(filter).Compile();
-                    return policies.Where(o=>filterExpression(o.Policy)).Skip(offset).Take(count).Select(o => new SecurityPolicyInfo(o));
-
-                default:
-                    throw new ArgumentException($"Property {propertyName} is not valid for this container");
-            }
-        }
-
-        /// <summary>
-        /// Add an associated entity
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.CreateApplication)]
-        public object AddAssociatedEntity(object scopingEntityKey, string propertyName, object scopedItem)
-        {
-            switch (propertyName)
-            {
-                case "policy":
-                    var scope = this.GetRepository()?.Get(Guid.Parse(scopingEntityKey.ToString()));
-                    if (scope == null)
-                        throw new KeyNotFoundException($"Application with key {scopingEntityKey} not found");
-                    // Get or create the scoped item
-                    if (scopedItem is SecurityPolicy)
-                        scopedItem = new SecurityPolicyInfo(scopedItem as SecurityPolicy);
-
-                    var rd = scopedItem as SecurityPolicyInfo;
-                    ApplicationServiceContext.Current.GetService<IPolicyInformationService>().AddPolicies(scope, rd.Grant, AuthenticationContext.Current.Principal, rd.Oid);
-                    base.FireSecurityAttributesChanged(scope, true, $"{rd.Grant} policy={rd.Oid}");
-
-                    return rd;
-                default:
-                    throw new KeyNotFoundException($"Property {propertyName} is not valid");
-            }
-        }
-
-        /// <summary>
-        /// Adding property handlers not supported
-        /// </summary>
-        public void AddPropertyHandler(IRestAssociatedPropertyProvider property)
-        {
-            
-        }
     }
 }

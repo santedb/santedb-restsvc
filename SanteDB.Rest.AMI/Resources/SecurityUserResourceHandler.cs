@@ -35,54 +35,13 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents a resource handler that can handle security users
     /// </summary>
-    public class SecurityUserResourceHandler : SecurityEntityResourceHandler<SecurityUser>, ILockableResourceHandler, IAssociativeResourceHandler
+    public class SecurityUserResourceHandler : SecurityEntityResourceHandler<SecurityUser>, ILockableResourceHandler
     {
 
         /// <summary>
         /// Gets the type of object that is expected
         /// </summary>
         public override Type Type => typeof(SecurityUserInfo);
-
-        /// <summary>
-        /// Add an associated entity to this 
-        /// </summary>
-        public object AddAssociatedEntity(object scopingEntityKey, string propertyName, object scopedItem)
-        {
-            try
-            {
-                var securityUser = this.GetRepository().Get((Guid)scopingEntityKey);
-                if (securityUser == null)
-                    throw new KeyNotFoundException($"User with key {scopingEntityKey} not found");
-
-                switch(propertyName)
-                {
-                    case "challenge":
-                        var challengeSvc = ApplicationServiceContext.Current.GetService<ISecurityChallengeService>();
-                        if (challengeSvc == null)
-                            throw new InvalidOperationException("Canont find challenge service");
-
-                        // Add the challenge
-                        var strongType = (SecurityUserChallengeInfo)scopedItem;
-                        challengeSvc.Set(securityUser.UserName, strongType.ChallengeKey, strongType.ChallengeResponse, AuthenticationContext.Current.Principal);
-                        return null;
-                    default:
-                        throw new KeyNotFoundException($"Sub-property {propertyName} not found");
-                }
-            }
-            catch (Exception e)
-            {
-
-                throw new Exception($"Error adding associated {propertyName} to {scopingEntityKey}", e);
-            }
-        }
-
-        /// <summary>
-        /// Adding property handlers not supported
-        /// </summary>
-        public void AddPropertyHandler(IRestAssociatedPropertyProvider property)
-        {
-        }
-
 
         /// <summary>
         /// Creates the specified user
@@ -110,38 +69,6 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <summary>
-        /// Get a specific associated entity
-        /// </summary>
-        public object GetAssociatedEntity(object scopingEntity, string propertyName, object subItemKey)
-        {
-            try
-            {
-                switch (propertyName)
-                {
-                    case "challenge":
-                        var challengeSvc = ApplicationServiceContext.Current.GetService<ISecurityChallengeService>();
-                        if (challengeSvc == null)
-                            throw new InvalidOperationException("Canont find challenge service");
-
-                        // Add the challenge
-                        var subKey = (Guid)subItemKey;
-                        var retVal = challengeSvc.Get(subKey, AuthenticationContext.Current.Principal).FirstOrDefault(o => o.Key.Value == subKey);
-                        if (retVal == null)
-                            throw new KeyNotFoundException($"Cannot find challenge {subItemKey}");
-                        else return retVal;
-                    
-                    default:
-                        throw new KeyNotFoundException($"Sub-property {propertyName} not found");
-                }
-            }
-            catch (Exception e)
-            {
-
-                throw new Exception($"Error getting associated {propertyName} to {scopingEntity}", e);
-            }
-        }
-
-        /// <summary>
         /// Lock the specified user
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.AlterLocalIdentity)]
@@ -153,69 +80,6 @@ namespace SanteDB.Rest.AMI.Resources
             return retVal;
         }
 
-        /// <summary>
-        /// Query for associated entities
-        /// </summary>
-        public IEnumerable<object> QueryAssociatedEntities(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
-        {
-            try
-            {
-              
-                switch (propertyName)
-                {
-                    case "challenge":
-                        var challengeSvc = ApplicationServiceContext.Current.GetService<ISecurityChallengeService>();
-                        if (challengeSvc == null)
-                            throw new InvalidOperationException("Canont find challenge service");
-
-                        // Add the challenge
-                        var subKey = (Guid)scopingEntityKey;
-                        var retVal = challengeSvc.Get(subKey, AuthenticationContext.Current.Principal);
-                        totalCount = retVal.Count();
-                        return retVal.Skip(offset).Take(count);
-                    default:
-                        throw new KeyNotFoundException($"Sub-property {propertyName} not found");
-                }
-            }
-            catch (Exception e)
-            {
-
-                throw new Exception($"Error getting associated {propertyName} to {scopingEntityKey}", e);
-            }
-        }
-
-        /// <summary>
-        /// Removes an associated entity 
-        /// </summary>
-        public object RemoveAssociatedEntity(object scopingEntityKey, string propertyName, object subItemKey)
-        {
-            try
-            {
-                var securityUser = this.GetRepository().Get((Guid)scopingEntityKey);
-                if (securityUser == null)
-                    throw new KeyNotFoundException($"User with key {scopingEntityKey} not found");
-
-                switch (propertyName)
-                {
-                    case "challenge":
-                        var challengeSvc = ApplicationServiceContext.Current.GetService<ISecurityChallengeService>();
-                        if (challengeSvc == null)
-                            throw new InvalidOperationException("Canont find challenge service");
-
-                        // Add the challenge
-                        var subKey = (Guid)subItemKey;
-                        challengeSvc.Remove(securityUser.UserName, subKey, AuthenticationContext.Current.Principal);
-                        return null;
-                    default:
-                        throw new KeyNotFoundException($"Sub-property {propertyName} not found");
-                }
-            }
-            catch (Exception e)
-            {
-
-                throw new Exception($"Error removing associated {propertyName} to {scopingEntityKey}", e);
-            }
-        }
 
         /// <summary>
         /// Unlock user

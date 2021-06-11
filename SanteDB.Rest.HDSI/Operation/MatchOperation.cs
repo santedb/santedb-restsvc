@@ -1,4 +1,5 @@
 ﻿using SanteDB.Core;
+using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Serialization;
 using SanteDB.Core.Services;
@@ -13,7 +14,7 @@ namespace SanteDB.Rest.HDSI.Operation
     /// <summary>
     /// Represents a match operation 
     /// </summary>
-    public class MatchOperation : IRestAssociatedPropertyProvider
+    public class MatchOperation : IApiChildResourceHandler
     {
 
         // Matching service
@@ -30,12 +31,22 @@ namespace SanteDB.Rest.HDSI.Operation
         /// <summary>
         /// Gets all the types that this is exposed on
         /// </summary>
-        public Type[] Types => ModelSerializationBinder.GetRegisteredTypes().ToArray();
+        public Type[] ParentTypes => ModelSerializationBinder.GetRegisteredTypes().ToArray();
 
         /// <summary>
         /// Property name
         /// </summary>
-        public string PropertyName => "$match";
+        public string ResourceName => "$match";
+
+        /// <summary>
+        /// Get the type of operation
+        /// </summary>
+        public Type PropertyType => typeof(object);
+
+        /// <summary>
+        /// Gets the capabilities
+        /// </summary>
+        public ResourceCapabilityType Capabilities => ResourceCapabilityType.Get;
 
         /// <summary>
         /// POST to match which is a call to matcher
@@ -64,8 +75,7 @@ namespace SanteDB.Rest.HDSI.Operation
                 {
                     throw new KeyNotFoundException($"{uuid} not found");
                 }
-
-                this.m_matchingService.Match(source, key?.ToString(), null);
+                return reportFactory.CreateMatchReport(scopingType, source, this.m_matchingService.Match(source, key?.ToString(), null));
             }
 
             return null;

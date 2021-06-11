@@ -1,5 +1,6 @@
 ﻿using RestSrvr;
 using SanteDB.Core;
+using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
@@ -15,26 +16,41 @@ namespace SanteDB.Rest.HDSI.Operation
     /// <summary>
     /// Test the match configuration REST operation
     /// </summary>
-    public class TestMatchConfigurationOperation : IRestAssociatedPropertyProvider
+    public class TestMatchConfigurationOperation : IApiChildResourceHandler
     {
 
         // Config service
         private IRecordMatchingConfigurationService m_configService;
 
+        /// <summary>
+        /// Create a new match configuration operation
+        /// </summary>
         public TestMatchConfigurationOperation(IRecordMatchingConfigurationService configService)
         {
             this.m_configService = configService;
 
         }
+
+
         /// <summary>
         /// Gets the type to bind to
         /// </summary>
-        public Type[] Types => new Type[] { typeof(IRecordMatchingConfiguration) };
+        public Type[] ParentTypes => new Type[] { typeof(IRecordMatchingConfiguration) };
 
         /// <summary>
         /// Gets the property name
         /// </summary>
-        public string PropertyName => "$test";
+        public string ResourceName => "$test";
+
+        /// <summary>
+        /// Gets the type that this object interacts with
+        /// </summary>
+        public Type PropertyType => typeof(object);
+
+        /// <summary>
+        /// Gets the capabilities of this property
+        /// </summary>
+        public ResourceCapabilityType Capabilities => ResourceCapabilityType.Get | ResourceCapabilityType.Search;
 
         /// <summary>
         /// Add a test? Not supported

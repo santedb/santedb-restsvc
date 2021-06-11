@@ -51,7 +51,7 @@ namespace SanteDB.Rest.Common
         public ResourceHandlerTool(IEnumerable<Type> resourceHandlerTypes, Type scope)
         {
             var serviceManager = ApplicationServiceContext.Current.GetService<IServiceManager>();
-            var tPropertyProviders = serviceManager.CreateInjectedOfAll<IRestAssociatedPropertyProvider>();
+            var tPropertyProviders = serviceManager.CreateInjectedOfAll<IApiChildResourceHandler>();
 
             foreach (var t in resourceHandlerTypes.Where(t => !t.ContainsGenericParameters && !t.IsAbstract && !t.IsInterface))
             {
@@ -69,9 +69,9 @@ namespace SanteDB.Rest.Common
                         this.m_traceSource.TraceInfo("Adding {0} to {1}", rh.ResourceName, rh.Scope);
 
                         // Associated prop handler
-                        if (rh is IAssociativeResourceHandler assoc)
+                        if (rh is IChainedApiResourceHandler assoc)
                         {
-                            tPropertyProviders.Where(p => p.Types.Contains(rh.Type)).ToList().ForEach(p => assoc.AddPropertyHandler(p));
+                            tPropertyProviders.Where(p => p.ParentTypes.Contains(rh.Type)).ToList().ForEach(p => assoc.AddChildResource(p));
                         }
                     }
                 }
