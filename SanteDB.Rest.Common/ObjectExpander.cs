@@ -121,7 +121,7 @@ namespace SanteDB.Rest.Common
 		/// <returns>IEnumerable&lt;TAssociation&gt;.</returns>
 		public static IEnumerable<TAssociation> LoadCollection<TAssociation>(Guid sourceKey, int? sourceSequence) where TAssociation : IdentifiedData, IVersionedAssociation, new()
         {
-            return EntitySource.Current.Provider.GetRelations<TAssociation>(sourceKey, sourceSequence);
+            return EntitySource.Current.Provider.GetRelations<TAssociation>(sourceKey);
         }
 
 		/// <summary>

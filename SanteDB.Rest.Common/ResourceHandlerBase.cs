@@ -297,18 +297,12 @@ namespace SanteDB.Rest.Common
                             totalCount = 0;
                             retVal = ApplicationServiceContext.Current.GetService<ISubscriptionExecutor>()?.Execute(Guid.Parse(data.First()), queryParameters, offset, count, out totalCount, queryId).OfType<TResource>();
                         }
-                        else if (queryParameters.TryGetValue("_lean", out data) && data[0] == "true" && this.GetRepository() is IFastQueryRepositoryService<TResource>)
-                            retVal = (this.GetRepository() as IFastQueryRepositoryService<TResource>).FindFast(queryExpression, offset, count, out totalCount, queryId);
                         else
                             retVal = (this.GetRepository() as IPersistableQueryRepositoryService<TResource>).Find(queryExpression, offset, count, out totalCount, queryId, sortParameters);
                     }
                     else
                     {
-                        List<String> lean = null;
-                        if (queryParameters.TryGetValue("_lean", out lean) && lean[0] == "true" && this.GetRepository() is IFastQueryRepositoryService<TResource>)
-                            retVal = (this.GetRepository() as IFastQueryRepositoryService<TResource>).FindFast(queryExpression, offset, count, out totalCount, Guid.Empty);
-                        else
-                            retVal = this.GetRepository().Find(queryExpression, offset, count, out totalCount, sortParameters);
+                        retVal = this.GetRepository().Find(queryExpression, offset, count, out totalCount, sortParameters);
                     }
                 }
                 if (typeof(Act).IsAssignableFrom(typeof(TResource)) || typeof(Entity).IsAssignableFrom(typeof(TResource)))

@@ -22,6 +22,7 @@ using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Principal;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 
 namespace SanteDB.Core.Model.AMI.Security
