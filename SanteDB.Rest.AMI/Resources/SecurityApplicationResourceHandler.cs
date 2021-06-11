@@ -205,5 +205,13 @@ namespace SanteDB.Rest.AMI.Resources
                     throw new KeyNotFoundException($"Property {propertyName} is not valid");
             }
         }
+
+        /// <summary>
+        /// Adding property handlers not supported
+        /// </summary>
+        public void AddPropertyHandler(IRestAssociatedPropertyProvider property)
+        {
+            
+        }
     }
 }

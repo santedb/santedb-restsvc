@@ -40,6 +40,15 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary>
     public class AppletSolutionResourceHandler : IApiResourceHandler, IAssociativeResourceHandler
     {
+
+
+        /// <summary>
+        /// Not supported
+        /// </summary>
+        public void AddPropertyHandler(IRestAssociatedPropertyProvider property)
+        {
+        }
+
         /// <summary>
         /// Gets the capabilities of the resource handler
         /// </summary>

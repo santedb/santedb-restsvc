@@ -45,6 +45,7 @@ using System.Reflection;
 using System.Text;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using System.Net.Http;
 
 namespace SanteDB.Rest.HDSI
 {

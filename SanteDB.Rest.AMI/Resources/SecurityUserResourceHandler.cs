@@ -76,6 +76,13 @@ namespace SanteDB.Rest.AMI.Resources
             }
         }
 
+        /// <summary>
+        /// Adding property handlers not supported
+        /// </summary>
+        public void AddPropertyHandler(IRestAssociatedPropertyProvider property)
+        {
+        }
+
 
         /// <summary>
         /// Creates the specified user

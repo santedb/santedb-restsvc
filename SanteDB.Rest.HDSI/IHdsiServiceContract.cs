@@ -228,7 +228,6 @@ namespace SanteDB.Rest.HDSI
         [RestServiceFault(409, "There is a conflict in the update request (version mismatch)")]
         IdentifiedData Delete(string resourceType, string id);
 
-
         /// <summary>
         /// Performs a linked or chained search on a sub-property
         /// </summary>
