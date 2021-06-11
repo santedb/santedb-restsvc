@@ -28,6 +28,7 @@ using SanteDB.Core.Security;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -38,17 +39,12 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents a resource handler for applet solution files
     /// </summary>
-    public class AppletSolutionResourceHandler : IApiResourceHandler, IAssociativeResourceHandler
+    public class AppletSolutionResourceHandler : IApiResourceHandler, IChainedApiResourceHandler
     {
 
-
-        /// <summary>
-        /// Not supported
-        /// </summary>
-        public void AddPropertyHandler(IRestAssociatedPropertyProvider property)
-        {
-        }
-
+        // Property providers
+        private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
+       
         /// <summary>
         /// Gets the capabilities of the resource handler
         /// </summary>
@@ -79,15 +75,12 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Get the type of this
         /// </summary>
-        public Type Type => typeof(Stream);
+        public Type Type => typeof(AppletSolution);
 
         /// <summary>
-        /// Adding solution components not yet supported
+        /// Child resources
         /// </summary>
-        public object AddAssociatedEntity(object scopingEntityKey, string propertyName, object scopedItem)
-        {
-            throw new NotSupportedException();
-        }
+        public IEnumerable<IApiChildResourceHandler> ChildResources => this.m_propertyProviders.Values;
 
         /// <summary>
         /// Create / install an applet on the server
@@ -140,26 +133,8 @@ namespace SanteDB.Rest.AMI.Resources
                 return new AppletSolutionInfo(appletData, null);
             }
         }
-        /// <summary>
-        /// Get the associated entity
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public object GetAssociatedEntity(object scopingEntity, string propertyName, object subItemKey)
-        {
-            var appletService = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>();
-            var appletData = appletService.GetPackage(scopingEntity.ToString(), subItemKey.ToString());
-
-            if (appletData == null)
-                throw new FileNotFoundException(subItemKey.ToString());
-            else
-            {
-                var appletManifest = AppletPackage.Load(appletData);
-                this.SetAppletHeaders(appletManifest.Meta);
-                return new MemoryStream(appletData);
-            }
-        }
-
-
+        
+        
         /// <summary>
         /// Set applet headers
         /// </summary>
@@ -173,24 +148,6 @@ namespace SanteDB.Rest.AMI.Resources
             RestOperationContext.Current.OutgoingResponse.ContentType = "application/octet-stream";
             RestOperationContext.Current.OutgoingResponse.AppendHeader("Content-Disposition", $"attachment; filename=\"{package.Id}.pak.gz\"");
             RestOperationContext.Current.OutgoingResponse.AppendHeader("Location", $"/ami/Applet/{package.Id}");
-        }
-
-        /// <summary>
-        /// Get associated entities
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public IEnumerable<object> QueryAssociatedEntities(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
-        {
-            switch (propertyName)
-            {
-                case "applet":
-                    var query = QueryExpressionParser.BuildLinqExpression<AppletManifest>(filter);
-                    var applets = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().GetApplets(scopingEntityKey.ToString()).Where(query.Compile()).Select(o => new AppletManifestInfo(o.Info, null));
-                    totalCount = applets.Count();
-                    return applets.Skip(offset).Take(count).OfType<Object>();
-                default:
-                    throw new KeyNotFoundException($"Don't understand {propertyName}");
-            }
         }
 
 
@@ -235,15 +192,7 @@ namespace SanteDB.Rest.AMI.Resources
             return applets.Skip(offset).Take(count).OfType<Object>();
 
         }
-        
-        /// <summary>
-        /// Removing sub items not yet supported
-        /// </summary>
-        public object RemoveAssociatedEntity(object scopingEntityKey, string propertyName, object subItemKey)
-        {
-            throw new NotSupportedException();
-        }
-
+      
         /// <summary>
         /// Update the specified applet
         /// </summary>
@@ -278,6 +227,85 @@ namespace SanteDB.Rest.AMI.Resources
                 }
             }
             return new AppletSolutionInfo(pkg, new X509Certificate2Info(cert?.Issuer, cert?.NotBefore, cert?.NotAfter, cert?.Subject, cert?.Thumbprint));
+        }
+
+
+
+        /// <summary>
+        /// Add a child resource
+        /// </summary>
+        public void AddChildResource(IApiChildResourceHandler property)
+        {
+            this.m_propertyProviders.TryAdd(property.ResourceName, property);
+        }
+
+        /// <summary>
+        /// Remove a child object
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.AdministerApplet)]
+        public object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
+        {
+            Guid objectKey = (Guid)scopingEntityKey;
+
+            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
+            {
+                return propertyProvider.Remove(typeof(AppletSolution), objectKey, subItemKey);
+            }
+            else
+            {
+                throw new KeyNotFoundException($"{propertyName} not found");
+            }
+        }
+
+        /// <summary>
+        /// Query child objects
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        public IEnumerable<object> QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
+        {
+            Guid objectKey = (Guid)scopingEntityKey;
+            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
+            {
+                return propertyProvider.Query(typeof(AppletSolution), objectKey, filter, offset, count, out totalCount);
+            }
+            else
+            {
+                throw new KeyNotFoundException($"{propertyName} not found");
+            }
+        }
+
+        /// <summary>
+        /// Add a child object instance
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.AdministerApplet)]
+        public object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
+        {
+            Guid objectKey = (Guid)scopingEntityKey;
+            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
+            {
+                return propertyProvider.Add(typeof(AppletSolution), scopingEntityKey, scopedItem);
+            }
+            else
+            {
+                throw new KeyNotFoundException($"{propertyName} not found");
+            }
+        }
+
+        /// <summary>
+        /// Get a child object
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        public object GetChildObject(object scopingEntity, string propertyName, object subItemKey)
+        {
+            Guid objectKey = (Guid)scopingEntity;
+            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
+            {
+                return propertyProvider.Get(typeof(AppletSolution), objectKey, subItemKey);
+            }
+            else
+            {
+                throw new KeyNotFoundException($"{propertyName} not found");
+            }
         }
 
     }

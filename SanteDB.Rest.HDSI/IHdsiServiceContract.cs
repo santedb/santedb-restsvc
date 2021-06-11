@@ -233,42 +233,42 @@ namespace SanteDB.Rest.HDSI
         /// </summary>
         /// <param name="resourceType">The type of resource which should be searched</param>
         /// <param name="key">The key of the hosting (container object)</param>
-        /// <param name="scopedEntityKey">The key of the sub-item to fetch</param>
-        /// <param name="property">The property to search</param>
+        /// <param name="childResourceKey">The key of the sub-item to fetch</param>
+        /// <param name="childResourceType">The property to search</param>
         /// <returns>The search for the specified resource type limited to the specified object</returns>
-        [Get("/{resourceType}/{key}/{property}/{scopedEntityKey}")]
-        Object AssociationGet(String resourceType, String key, String property, String scopedEntityKey);
+        [Get("/{resourceType}/{key}/{childResourceType}/{childResourceKey}")]
+        Object AssociationGet(String resourceType, String key, String childResourceType, String childResourceKey);
 
         /// <summary>
         /// Performs a linked or chained search on a sub-property
         /// </summary>
         /// <param name="resourceType">The type of resource which should be searched</param>
         /// <param name="key">The key of the hosting (container object)</param>
-        /// <param name="property">The property to search</param>
+        /// <param name="childResourceType">The property to search</param>
         /// <returns>The search for the specified resource type limited to the specified object</returns>
-        [Get("/{resourceType}/{key}/{property}")]
-        Object AssociationSearch(String resourceType, String key, String property);
+        [Get("/{resourceType}/{key}/{childResourceType}")]
+        Object AssociationSearch(String resourceType, String key, String childResourceType);
 
         /// <summary>
         /// Assigns the <paramref name="body"/> object with the resource at <paramref name="resourceType"/>/<paramref name="key"/>
         /// </summary>
         /// <param name="resourceType">The type of container resource</param>
         /// <param name="key">The identiifer of the container</param>
-        /// <param name="property">The property which is the association to be added</param>
+        /// <param name="childResourceType">The property which is the association to be added</param>
         /// <param name="body">The object to be added to the collection</param>
-        [Post("/{resourceType}/{key}/{property}")]
-        object AssociationCreate(String resourceType, String key, String property, Object body);
+        [Post("/{resourceType}/{key}/{childResourceType}")]
+        object AssociationCreate(String resourceType, String key, String childResourceType, Object body);
 
         /// <summary>
         /// Removes an association 
         /// </summary>
         /// <param name="resourceType">The type of resource which is the container</param>
         /// <param name="key">The key of the container</param>
-        /// <param name="property">The property on which the sub-key resides</param>
-        /// <param name="scopedEntityKey">The actual value of the sub-key</param>
+        /// <param name="childResourceType">The property on which the sub-key resides</param>
+        /// <param name="childResourceKey">The actual value of the sub-key</param>
         /// <returns>The removed object</returns>
-        [Delete("/{resourceType}/{key}/{property}/{scopedEntityKey}")]
-        object AssociationRemove(String resourceType, String key, String property, String scopedEntityKey);
+        [Delete("/{resourceType}/{key}/{childResourceType}/{childResourceKey}")]
+        object AssociationRemove(String resourceType, String key, String childResourceType, String childResourceKey);
 
     }
 }

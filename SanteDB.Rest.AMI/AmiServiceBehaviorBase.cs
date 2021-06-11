@@ -559,31 +559,44 @@ namespace SanteDB.Messaging.AMI.Wcf
                 throw new FileNotFoundException(resourceType);
             else
             {
+                Func<ResourceCapabilityType, String[]> getCaps = (o) =>
+                {
+                    switch (o)
+                    {
+                        case ResourceCapabilityType.Create:
+                        case ResourceCapabilityType.CreateOrUpdate:
+                            return this.GetDemands(handler, nameof(IApiResourceHandler.Create));
+                        case ResourceCapabilityType.Delete:
+                            return this.GetDemands(handler, nameof(IApiResourceHandler.Create));
+                        case ResourceCapabilityType.Get:
+                        case ResourceCapabilityType.GetVersion:
+                            return this.GetDemands(handler, nameof(IApiResourceHandler.Get));
+                        case ResourceCapabilityType.History:
+                        case ResourceCapabilityType.Search:
+                            return this.GetDemands(handler, nameof(IApiResourceHandler.Query));
+                        case ResourceCapabilityType.Update:
+                            return this.GetDemands(handler, nameof(IApiResourceHandler.Update));
+                        default:
+                            return new string[] { PermissionPolicyIdentifiers.Login };
+                    }
+                };
+
                 // Get the resource capabilities
-                List<ServiceResourceCapability> caps = new List<ServiceResourceCapability>();
-                if (handler.Capabilities.HasFlag(ResourceCapabilityType.Create))
-                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Create, this.GetDemands(handler, nameof(IApiResourceHandler.Create))));
-                if (handler.Capabilities.HasFlag(ResourceCapabilityType.CreateOrUpdate))
-                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.CreateOrUpdate, this.GetDemands(handler, nameof(IApiResourceHandler.Create))));
-                if (handler.Capabilities.HasFlag(ResourceCapabilityType.Delete))
-                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Delete, this.GetDemands(handler, nameof(IApiResourceHandler.Obsolete))));
-                if (handler.Capabilities.HasFlag(ResourceCapabilityType.Get))
-                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Get, this.GetDemands(handler, nameof(IApiResourceHandler.Get))));
-                if (handler.Capabilities.HasFlag(ResourceCapabilityType.GetVersion))
-                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.GetVersion, this.GetDemands(handler, nameof(IApiResourceHandler.Get))));
-                if (handler.Capabilities.HasFlag(ResourceCapabilityType.History))
-                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.History, this.GetDemands(handler, nameof(IApiResourceHandler.Query))));
-                if (handler.Capabilities.HasFlag(ResourceCapabilityType.Search))
-                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Search, this.GetDemands(handler, nameof(IApiResourceHandler.Query))));
-                if (handler.Capabilities.HasFlag(ResourceCapabilityType.Update))
-                    caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Update, this.GetDemands(handler, nameof(IApiResourceHandler.Update))));
+                List<ServiceResourceCapability> caps = handler.Capabilities.ToResourceCapabilityStatement(getCaps).ToList();
 
                 // Patching 
                 if (ApplicationServiceContext.Current.GetService<IPatchService>() != null &&
                     handler.Capabilities.HasFlag(ResourceCapabilityType.Update))
                     caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Patch, this.GetDemands(handler, nameof(IApiResourceHandler.Update))));
 
-                return new ServiceResourceOptions(resourceType, handler.Type, caps);
+                // To expose associated objects
+                var childResources = new List<ServiceResourceOptions>();
+                if (handler is IChainedApiResourceHandler associative)
+                {
+                    childResources = associative.ChildResources.Select(r => new ServiceResourceOptions(r.ResourceName, r.PropertyType, r.Capabilities.ToResourceCapabilityStatement(getCaps).ToList(), null)).ToList();
+                }
+                // Associateive
+                return new ServiceResourceOptions(resourceType, handler.Type, caps, childResources);
             }
         }
 
@@ -806,19 +819,19 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// <summary>
         /// Perform a search on the specified entity
         /// </summary>
-        public AmiCollection AssociationSearch(string resourceType, string key, string property)
+        public AmiCollection AssociationSearch(string resourceType, string key, string childResourceType)
         {
             this.ThrowIfNotReady();
             try
             {
 
-                var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as IAssociativeResourceHandler;
+                var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null )
                 {
                     String offset = RestOperationContext.Current.IncomingRequest.QueryString["_offset"],
                       count = RestOperationContext.Current.IncomingRequest.QueryString["_count"];
 
-                    this.AclCheck(handler, nameof(IAssociativeResourceHandler.QueryAssociatedEntities));
+                    this.AclCheck(handler, nameof(IChainedApiResourceHandler.QueryChildObjects));
 
                     var query = RestOperationContext.Current.IncomingRequest.QueryString.ToQuery();
 
@@ -840,9 +853,9 @@ namespace SanteDB.Messaging.AMI.Wcf
 
                     IEnumerable<Object> retVal = null;
                     if (Guid.TryParse(key, out Guid keyValue))
-                        retVal = handler.QueryAssociatedEntities(keyValue, property, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).ToList();
+                        retVal = handler.QueryChildObjects(keyValue, childResourceType, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).ToList();
                     else
-                        retVal = handler.QueryAssociatedEntities(key, property, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).ToList();
+                        retVal = handler.QueryChildObjects(key, childResourceType, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).ToList();
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.OfType<IdentifiedData>().OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now);
 
                     // Last modification time and not modified conditions
@@ -873,22 +886,22 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// <summary>
         /// Create an associated entity
         /// </summary>
-        public object AssociationCreate(string resourceType, string key, string property, object body)
+        public object AssociationCreate(string resourceType, string key, string childResourceType, object body)
         {
             this.ThrowIfNotReady();
 
             try
             {
 
-                IAssociativeResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as IAssociativeResourceHandler;
+                IChainedApiResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
-                    this.AclCheck(handler, nameof(IAssociativeResourceHandler.AddAssociatedEntity));
+                    this.AclCheck(handler, nameof(IChainedApiResourceHandler.AddChildObject));
                     object retVal = null;
                     if (Guid.TryParse(key, out Guid uuid))
-                        retVal = handler.AddAssociatedEntity(uuid, property, body);
+                        retVal = handler.AddChildObject(uuid, childResourceType, body);
                     else
-                        retVal = handler.AddAssociatedEntity(key, property, body);
+                        retVal = handler.AddChildObject(key, childResourceType, body);
 
                     var versioned = retVal as IVersionedEntity;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = retVal == null ? (int)HttpStatusCode.NoContent : (int)System.Net.HttpStatusCode.Created;
@@ -897,7 +910,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                             RestOperationContext.Current.IncomingRequest.Url,
                             resourceType,
                             key,
-                            property,
+                            childResourceType,
                             (retVal as IAmiIdentified)?.Key ?? (retVal as IdentifiedData)?.Key.ToString()));
                     return retVal;
 
@@ -917,23 +930,23 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// <summary>
         /// Removes an associated entity from the scoping property path
         /// </summary>
-        public object AssociationRemove(string resourceType, string key, string property, string scopedEntityKey)
+        public object AssociationRemove(string resourceType, string key, string childResourceType, string scopedEntityKey)
         {
             this.ThrowIfNotReady();
 
             try
             {
 
-                IAssociativeResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as IAssociativeResourceHandler;
+                IChainedApiResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
-                    this.AclCheck(handler, nameof(IAssociativeResourceHandler.RemoveAssociatedEntity));
+                    this.AclCheck(handler, nameof(IChainedApiResourceHandler.RemoveChildObject));
 
                     object retVal = null;
                     if (Guid.TryParse(key, out Guid uuid) && Guid.TryParse(scopedEntityKey, out Guid scopedUuid))
-                        retVal = handler.RemoveAssociatedEntity(uuid, property, scopedUuid);
+                        retVal = handler.RemoveChildObject(uuid, childResourceType, scopedUuid);
                     else
-                        retVal = handler.RemoveAssociatedEntity(key, property, scopedEntityKey);
+                        retVal = handler.RemoveChildObject(key, childResourceType, scopedEntityKey);
 
                     var versioned = retVal as IVersionedEntity;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = (int)System.Net.HttpStatusCode.OK;
@@ -942,7 +955,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                             RestOperationContext.Current.IncomingRequest.Url,
                             resourceType,
                             key,
-                            property,
+                            childResourceType,
                             (retVal as IAmiIdentified)?.Key ?? (retVal as IdentifiedData)?.Key.ToString()));
                     return retVal;
 
@@ -962,23 +975,23 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// <summary>
         /// Removes an associated entity from the scoping property path
         /// </summary>
-        public object AssociationGet(string resourceType, string key, string property, string scopedEntityKey)
+        public object AssociationGet(string resourceType, string key, string childResourceType, string scopedEntityKey)
         {
             this.ThrowIfNotReady();
 
             try
             {
 
-                IAssociativeResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as IAssociativeResourceHandler;
+                IChainedApiResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
-                    this.AclCheck(handler, nameof(IAssociativeResourceHandler.GetAssociatedEntity));
+                    this.AclCheck(handler, nameof(IChainedApiResourceHandler.GetChildObject));
 
                     object retVal = null;
                     if (Guid.TryParse(key, out Guid uuid) && Guid.TryParse(scopedEntityKey, out Guid scopedUuid))
-                        retVal = handler.GetAssociatedEntity(uuid, property, scopedUuid);
+                        retVal = handler.GetChildObject(uuid, childResourceType, scopedUuid);
                     else
-                        retVal = handler.GetAssociatedEntity(key, property, scopedEntityKey);
+                        retVal = handler.GetChildObject(key, childResourceType, scopedEntityKey);
 
                     var versioned = retVal as IVersionedEntity;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = (int)System.Net.HttpStatusCode.OK;
@@ -987,7 +1000,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                             RestOperationContext.Current.IncomingRequest.Url,
                             resourceType,
                             key,
-                            property,
+                            childResourceType,
                             (retVal as IAmiIdentified)?.Key ?? (retVal as IdentifiedData)?.Key.ToString()));
                     return retVal;
 

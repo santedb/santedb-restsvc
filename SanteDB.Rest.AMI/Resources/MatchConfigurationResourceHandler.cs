@@ -40,11 +40,11 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents a resource handler which serves out match metadata
     /// </summary>
-    public class MatchConfigurationResourceHandler : IApiResourceHandler, IAssociativeResourceHandler
+    public class MatchConfigurationResourceHandler : IApiResourceHandler, IChainedApiResourceHandler
     {
 
         // Property providers
-        private ConcurrentDictionary<String, IRestAssociatedPropertyProvider> m_propertyProviders = new ConcurrentDictionary<string, IRestAssociatedPropertyProvider>();
+        private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
 
         /// <summary>
         /// Gets the resource name
@@ -67,11 +67,16 @@ namespace SanteDB.Rest.AMI.Resources
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Search | ResourceCapabilityType.Get;
 
         /// <summary>
+        /// Child resources
+        /// </summary>
+        public IEnumerable<IApiChildResourceHandler> ChildResources => this.m_propertyProviders.Values;
+
+        /// <summary>
         /// Add an associative entity
         /// </summary>
-        public object AddAssociatedEntity(object scopingEntityKey, string propertyName, object scopedItem)
+        public object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
         {
-            if (this.m_propertyProviders.TryGetValue(propertyName, out IRestAssociatedPropertyProvider propertyProvider))
+            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
             {
                 return propertyProvider.Add(this.Type, scopingEntityKey, scopedItem);
             }
@@ -105,9 +110,9 @@ namespace SanteDB.Rest.AMI.Resources
         /// Get an associated entity
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata), Demand(PermissionPolicyIdentifiers.ReadClinicalData)]
-        public object GetAssociatedEntity(object scopingEntity, string propertyName, object subItemKey)
+        public object GetChildObject(object scopingEntity, string propertyName, object subItemKey)
         {
-            if (this.m_propertyProviders.TryGetValue(propertyName, out IRestAssociatedPropertyProvider propertyProvider))
+            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
             {
                 return propertyProvider.Get(this.Type, scopingEntity, subItemKey);
             }
@@ -161,9 +166,9 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Query for associated entities on a particular sub-path
         /// </summary>
-        public IEnumerable<object> QueryAssociatedEntities(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
+        public IEnumerable<object> QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
         {
-            if (this.m_propertyProviders.TryGetValue(propertyName, out IRestAssociatedPropertyProvider propertyProvider))
+            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
             {
                 return propertyProvider.Query(this.Type, scopingEntityKey, filter, offset, count, out totalCount);
             }
@@ -176,9 +181,9 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Remove an associated entity
         /// </summary>
-        public object RemoveAssociatedEntity(object scopingEntityKey, string propertyName, object subItemKey)
+        public object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
         {
-            if (this.m_propertyProviders.TryGetValue(propertyName, out IRestAssociatedPropertyProvider propertyProvider))
+            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
             {
                 return propertyProvider.Remove(this.Type,scopingEntityKey, subItemKey);
             }
@@ -200,9 +205,9 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Add the property handler to this handler
         /// </summary>
-        public void AddPropertyHandler(IRestAssociatedPropertyProvider property)
+        public void AddChildResource(IApiChildResourceHandler property)
         {
-            this.m_propertyProviders.TryAdd(property.PropertyName, property);
+            this.m_propertyProviders.TryAdd(property.ResourceName, property);
         }
     }
 }

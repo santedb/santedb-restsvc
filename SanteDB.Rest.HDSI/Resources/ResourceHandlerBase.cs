@@ -30,6 +30,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections.Concurrent;
+using SanteDB.Rest.Common.Attributes;
+using SanteDB.Core.Security;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
@@ -37,17 +39,22 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a resource handler base type that is always bound to HDSI
     /// </summary>
     /// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
-    public abstract class ResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData>, INullifyResourceHandler, ICancelResourceHandler, IAssociativeResourceHandler, ILockableResourceHandler, IApiResourceHandlerEx
+    public abstract class ResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData>, INullifyResourceHandler, ICancelResourceHandler, IChainedApiResourceHandler, ICheckoutResourceHandler, IApiResourceHandlerEx
         where TData : IdentifiedData, new()
     {
 
         // Property providers
-        private ConcurrentDictionary<String, IRestAssociatedPropertyProvider> m_propertyProviders = new ConcurrentDictionary<string, IRestAssociatedPropertyProvider>();
+        private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
 
         /// <summary>
         /// Gets the scope
         /// </summary>
         override public Type Scope => typeof(IHdsiServiceContract);
+
+        /// <summary>
+        /// Get all child resources
+        /// </summary>
+        public IEnumerable<IApiChildResourceHandler> ChildResources => this.m_propertyProviders.Values;
 
         /// <summary>
         /// OBsoletion wrapper with locking
@@ -56,12 +63,12 @@ namespace SanteDB.Rest.HDSI.Resources
         {
             try
             {
-                this.Lock((Guid)key);
+                this.Checkout((Guid)key);
                 return base.Obsolete(key);
             }
             finally
             {
-                this.Unlock((Guid)key);
+                this.Checkin((Guid)key);
             }
         }
 
@@ -73,27 +80,28 @@ namespace SanteDB.Rest.HDSI.Resources
             try
             {
                 if(data is IdentifiedData id)
-                    this.Lock((Guid)id.Key);
+                    this.Checkout((Guid)id.Key);
                 return base.Update(data);
             }
             finally
             {
                 if (data is IdentifiedData id)
-                    this.Unlock((Guid)id.Key);
+                    this.Checkin((Guid)id.Key);
             }
         }
 
         /// <summary>
         /// Add an associated entity
         /// </summary>
-        public virtual object AddAssociatedEntity(object scopingEntityKey, string propertyName, object scopedItem)
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
+        public virtual object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
         {
             Guid objectKey = (Guid)scopingEntityKey;
 
             try
             {
-                this.Lock(objectKey);
-                if(this.m_propertyProviders.TryGetValue(propertyName, out IRestAssociatedPropertyProvider propertyProvider))
+                this.Checkout(objectKey);
+                if(this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
                 {
                     return propertyProvider.Add(typeof(TData), scopingEntityKey, scopedItem);
                 }
@@ -104,7 +112,7 @@ namespace SanteDB.Rest.HDSI.Resources
             }
             finally
             {
-                this.Unlock(objectKey);
+                this.Checkin(objectKey);
             }
         }
 
@@ -115,7 +123,7 @@ namespace SanteDB.Rest.HDSI.Resources
         {
             try
             {
-                this.Lock(key);
+                this.Checkout(key);
                 if (this.GetRepository() is ICancelRepositoryService<TData>)
                     return (this.GetRepository() as ICancelRepositoryService<TData>).Cancel((Guid)key);
                 else
@@ -123,17 +131,18 @@ namespace SanteDB.Rest.HDSI.Resources
             }
             finally
             {
-                this.Unlock(key);
+                this.Checkin(key);
             }
         }
 
         /// <summary>
         /// Get associated entity
         /// </summary>
-        public virtual object GetAssociatedEntity(object scopingEntity, string propertyName, object subItem)
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
+        public virtual object GetChildObject(object scopingEntity, string propertyName, object subItem)
         {
             Guid objectKey = (Guid)scopingEntity, subItemKey = (Guid)subItem;
-            if (this.m_propertyProviders.TryGetValue(propertyName, out IRestAssociatedPropertyProvider propertyProvider))
+            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
             {
                 return propertyProvider.Get(typeof(TData), objectKey, subItemKey);
             }
@@ -146,16 +155,18 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Attempt to get a lock on the specified object
         /// </summary>
-        public object Lock(object key)
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
+        public object Checkout(object key)
         {
-            var adHocCache = ApplicationServiceContext.Current.GetService<IResourceEditLockService>();
-            adHocCache?.Lock<TData>((Guid)key);
+            var adHocCache = ApplicationServiceContext.Current.GetService<IResourceCheckoutService>();
+            adHocCache?.Checkout<TData>((Guid)key);
             return null;
         }
 
         /// <summary>
         /// Nullify the specified object
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public object Nullify(object key)
         {
             if (this.GetRepository() is IRepositoryServiceEx<TData> exRepo)
@@ -167,10 +178,11 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Query for associated entities
         /// </summary>
-        public virtual IEnumerable<object> QueryAssociatedEntities(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
+        public virtual IEnumerable<object> QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
         {
             Guid objectKey = (Guid)scopingEntityKey;
-            if (this.m_propertyProviders.TryGetValue(propertyName, out IRestAssociatedPropertyProvider propertyProvider))
+            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
             {
                 return propertyProvider.Query(typeof(TData), objectKey, filter, offset, count, out totalCount);
             }
@@ -183,14 +195,15 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Remove an associated entity
         /// </summary>
-        public virtual object RemoveAssociatedEntity(object scopingEntityKey, string propertyName, object subItemKey)
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
+        public virtual object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
         {
             Guid objectKey = (Guid)scopingEntityKey;
 
             try
             {
-                this.Lock(objectKey);
-                if (this.m_propertyProviders.TryGetValue(propertyName, out IRestAssociatedPropertyProvider propertyProvider))
+                this.Checkout(objectKey);
+                if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
                 {
                     return propertyProvider.Remove(typeof(TData), objectKey, subItemKey);
                 }
@@ -201,23 +214,25 @@ namespace SanteDB.Rest.HDSI.Resources
             }
             finally
             {
-                this.Unlock(objectKey);
+                this.Checkin(objectKey);
             }
         }
 
         /// <summary>
         /// Release the specified lock
         /// </summary>
-        public object Unlock(object key)
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
+        public object Checkin(object key)
         {
-            var adHocCache = ApplicationServiceContext.Current.GetService<IResourceEditLockService>();
-            adHocCache?.Unlock<TData>((Guid)key);
+            var adHocCache = ApplicationServiceContext.Current.GetService<IResourceCheckoutService>();
+            adHocCache?.Checkin<TData>((Guid)key);
             return null;
         }
 
         /// <summary>
         /// Touch the specified object
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public object Touch(object key)
         {
             if (this.GetRepository() is IRepositoryServiceEx<TData> exRepo)
@@ -236,9 +251,9 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Add the property handler to this handler
         /// </summary>
-        public void AddPropertyHandler(IRestAssociatedPropertyProvider property)
+        public void AddChildResource(IApiChildResourceHandler property)
         {
-            this.m_propertyProviders.TryAdd(property.PropertyName, property);
+            this.m_propertyProviders.TryAdd(property.ResourceName, property);
         }
     }
 }
