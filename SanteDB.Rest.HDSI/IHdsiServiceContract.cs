@@ -89,27 +89,33 @@ namespace SanteDB.Rest.HDSI
     {
 
         /// <summary>
-        /// Get the current time
+        /// Gets the current server time from the API allowing for time synchronization 
         /// </summary>
-        /// <returns></returns>
         [Get("/time")]
         DateTime Time();
 
         /// <summary>
-        /// Get the schema
+        /// Get the schema of the HDSI API for use in code generation frameworks
         /// </summary>
+        /// <remarks>
+        /// This method can be used to retrieve individual numbered schemas from the service
+        /// </remarks>
         [Get("/?xsd={schemaId}")]
         [ServiceProduces("text/xml")]
         XmlSchema GetSchema(int schemaId);
 
         /// <summary>
-        /// Gets the operations that each resource in this IMS instance supports.
+        /// Returns a service capability statement of the HDSI
         /// </summary>
+        /// <remarks>
+        /// This service options statement contains a complete list of all operations supported, their 
+        /// capabilities (get, set, etc.) and the authentication mechanism required.
+        /// </remarks>
         [RestInvoke("OPTIONS", "/")]
         ServiceOptions Options();
 
         /// <summary>
-        /// Options for resource
+        /// Returns specific options for a single resource
         /// </summary>
         [RestInvoke("OPTIONS", "/{resourceType}")]
         ServiceResourceOptions ResourceOptions(string resourceType);
@@ -117,49 +123,63 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Performs a minimal PING request to test service uptime
         /// </summary>
+        /// <remarks>The PING operation is used by the mobile (or other applications)
+        /// to ensure that not only is the network available (like a network ping) but that the 
+        /// API is available on this endpoint. PING returns the current service time and should
+        /// be used in lieu of the /time operation</remarks>
         [RestInvoke("PING", "/")]
         void Ping();
 
         /// <summary>
-        /// Performs a search for the specified resource, returning only current version items.
+        /// Perform a search (query) for <paramref name="resourceType"/> matching the HTTP query parameters provided
         /// </summary>
+        /// <remarks>The search operation calls the database and loads results either from cache or data store. Care should be taken in the number of results retrieved by this operation.</remarks>
         [Get("/{resourceType}")]
         IdentifiedData Search(string resourceType);
 
         /// <summary>
-        /// Searches for the specified resource and returns only the HEADer metadata
+        /// Perform a search (query) and return only the headers
         /// </summary>
+        /// <remarks>The HEAD operation is useful if you wish to determine if the header information for a specific result set has resulted in a change</remarks>
         [RestInvoke("HEAD", "/{resourceType}")]
         void HeadSearch(string resourceType);
 
         /// <summary>
-        /// Downloads the specified resource from a remote instance (only supported on dCDR)
+        /// Downloads a copy of the specified resource and all dependent objects for the dCDR
         /// </summary>
         [RestInvoke("COPY", "/{resourceType}/{id}")]
         IdentifiedData Copy(string resourceType, string id);
 
         /// <summary>
-        /// Retrieves the current version of the specified resource from the IMS.
+        /// Retrieves the current version of the specified resource
         /// </summary>
+        /// <remarks>This method will first use cache to locate the most recent copy before searching the database. It is recommended to use this method rather than a query to Resource?id={id}</remarks>
         [Get("/{resourceType}/{id}")]
         IdentifiedData Get(string resourceType, string id);
 
         /// <summary>
         /// Retrieves only the metadata of the specified resource
         /// </summary>
+        /// <remarks>The metadata for the most recent version of this resource includes the last modified time, the e-tag, etc.</remarks>
         [RestInvoke("HEAD", "/{resourceType}/{id}")]
         void Head(string resourceType, string id);
 
         /// <summary>
         /// Gets a complete history of all changes made to the specified resource
         /// </summary>
+        /// <remarks>The result of the history operation is a Bundle which contains a complete list of all previous versions associated with the specified object</remarks>
         [Get("/{resourceType}/{id}/_history")]
         IdentifiedData History(string resourceType, string id);
 
         /// <summary>
         /// Updates the specified resource according to the instructions in the PATCH file
         /// </summary>
-        /// <returns></returns>
+        /// <remarks>The PATCH operation allows for partial updating of a resource. 
+        /// 
+        /// This method must be used in conjunction with an If-Match header indicating the version that you would like apply the patch against.
+        /// 
+        /// The server will load the most recent version and compre the version code with If-Match, if the match is successful the instructions in the PATCH are applied to the loaded version.
+        /// </remarks>
         [RestInvoke("PATCH", "/{resourceType}/{id}")]
         [RestServiceFault(409, "The patch submitted does not match the current version of the object being patched")]
         void Patch(string resourceType, string id , Patch body);
@@ -168,11 +188,13 @@ namespace SanteDB.Rest.HDSI
         /// Returns a list of patches for the specified resource 
         /// </summary>
         [Get("/{resourceType}/{id}/_patch")]
+        [Obsolete]
         Patch GetPatch(string resourceType, string id);
 
         /// <summary>
         /// Retrieves a specific version of the specified resource
         /// </summary>
+        /// <remarks>This method allows the caller to retrieve a specific version of the identified object, which is useful for loading a previous copy of a resource for reference.</remarks>
         [Get("/{resourceType}/{id}/_history/{versionId}")]
         IdentifiedData GetVersion(string resourceType, string id, string versionId);
 
@@ -180,96 +202,121 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Creates the resource. If the resource already exists, then a 409 is thrown
         /// </summary>
+        /// <remarks>This operation is a CREATE ONLY operation, and will throw an error if the operation results in a duplicate. If you are looking for a CREATE OR UPDATE method use the POST with identifier operation</remarks>
+        [RestServiceFault(409, "There is a conflict in the update request (version mismatch)")]
         [Post("/{resourceType}")]
         IdentifiedData Create(string resourceType, IdentifiedData body);
 
         /// <summary>
-        /// Updates the specified resource. If the resource does not exist than a 404 is thrown
+        /// Updates the specified resource. If the resource does not exist than a 404 is thrown, if there is a conflict (such a mismatch of data) a 409 is thrown
         /// </summary>
+        /// <remarks>This operation will update an existing resource on the server such that the data in the database exactly matches the data passed via the API.
+        /// 
+        /// Note: If you post an incomplete object (such as one missing identifiers, or addresses) then the current resource will have those attributes removed. For partial updates, use the PATCH operation instead.</remarks>
         [Put("/{resourceType}/{id}")]
         [RestServiceFault(409, "There is a conflict in the update request (version mismatch)")]
         IdentifiedData Update(string resourceType, string id, IdentifiedData body);
 
         /// <summary>
-        /// Gets the specified barcode for the user
+        /// Gets the specified barcode for the resource
         /// </summary>
+        /// <remarks>This method returns a barcode which explicitly points at the specified resource in the specified authority. 
+        /// 
+        /// The barcode is generated using the server's configuration, and is signed by the server's signing key. 
+        /// 
+        /// For complete specification see: https://help.santesuite.org/santedb/extending-santedb/service-apis/health-data-service-interface-hdsi/digitally-signed-visual-code-api</remarks>
         [Get("/{resourceType}/{id}/_code/{authority}")]
         Stream GetBarcode(String resourceType, String id, String authority);
 
         /// <summary>
-        /// Gets the specified barcode for the user
+        /// Gets the digitally signed pointer (in JWS format) for the resource
         /// </summary>
+        /// <remarks>
+        /// This operation (like the _code operation) generates a digitally signed pointer for an object. Rather than rendering that pointer as a visual code, the API will return
+        /// the structured contents of that code so the client can best determine how to represent the data.
+        /// 
+        /// For complete specification see: https://help.santesuite.org/santedb/extending-santedb/service-apis/health-data-service-interface-hdsi/digitally-signed-visual-code-api
+        /// </remarks>
         [Get("/{resourceType}/{id}/_ptr/{authorityId}")]
         Stream GetPointer(String resourceType, String id, String authorityId);
 
         /// <summary>
-        /// Resolve a code to a resource by posting
+        /// Resolve a code to a resource by posting a form-encoded search to the API
         /// </summary>
-        /// <remarks>This operation results in a 302 redirect to the resource that the code represents</remarks>
+        /// <remarks>
+        /// This operation will decode and validate the pointer passed in the <code>code</code> parameter of the form submission and will return a 303 (method redirect) to the object that matches the code.
+        /// </remarks>
         [RestInvoke("SEARCH", "/_ptr")]
         void ResolvePointer(NameValueCollection body);
 
         /// <summary>
         /// Creates or updates a resource. That is, creates the resource if it does not exist, or updates it if it does
         /// </summary>
+        /// <remarks>This method will attempt to update the resource if it exists (a-la PUT style) however, if a PUT fails the operation will create (a-la POST)</remarks>
         [Post("/{resourceType}/{id}")]
         IdentifiedData CreateUpdate(string resourceType, string id, IdentifiedData body);
 
         /// <summary>
         /// Touch the resource (update its timestamp) without modifying the resource itself
         /// </summary>
+        /// <remarks>The touch operation is useful for updating the modified time (forcing a re-download) without creating a new version of the resource.</remarks>
         [RestInvoke("TOUCH", "/{resourceType}/{id}")]
         IdentifiedData Touch(string resourceType, string id);
 
         /// <summary>
-        /// Deletes the specified resource from the IMS instance
+        /// Deletes the specified resource from the server
         /// </summary>
+        /// <remarks>This operation logically deletes the identified resource so that it no longer appears in general searches, however the data is retained.</remarks>
         [Delete("/{resourceType}/{id}")]
         [RestServiceFault(409, "There is a conflict in the update request (version mismatch)")]
         IdentifiedData Delete(string resourceType, string id);
 
+        /// <summary>
+        /// Performs a linked or chained search on a sub-property
+        /// </summary>
+        /// <param name="resourceType">The type of resource which should be searched</param>
+        /// <param name="key">The key of the hosting (container object)</param>
+        /// <param name="childResourceKey">The key of the sub-item to fetch</param>
+        /// <param name="childResourceType">The property to search</param>
+        /// <returns>The search for the specified resource type limited to the specified object</returns>
+        /// <remarks>This operation will execute a GET operation on a child (or linked) resource. Typically if the child resource represents some sort of operation against 
+        /// the container resource it will start with a $ (such as $match or $link)</remarks>
+        [Get("/{resourceType}/{key}/{childResourceType}/{childResourceKey}")]
+        Object AssociationGet(String resourceType, String key, String childResourceType, String childResourceKey);
 
         /// <summary>
         /// Performs a linked or chained search on a sub-property
         /// </summary>
         /// <param name="resourceType">The type of resource which should be searched</param>
         /// <param name="key">The key of the hosting (container object)</param>
-        /// <param name="scopedEntityKey">The key of the sub-item to fetch</param>
-        /// <param name="property">The property to search</param>
+        /// <param name="childResourceType">The property to search</param>
         /// <returns>The search for the specified resource type limited to the specified object</returns>
-        [Get("/{resourceType}/{key}/{property}/{scopedEntityKey}")]
-        Object AssociationGet(String resourceType, String key, String property, String scopedEntityKey);
+        /// <remarks>This method performs a general search on the child resource type, however scoped to the container of the parent (so users within role container)</remarks>
+        [Get("/{resourceType}/{key}/{childResourceType}")]
+        Object AssociationSearch(String resourceType, String key, String childResourceType);
 
         /// <summary>
-        /// Performs a linked or chained search on a sub-property
-        /// </summary>
-        /// <param name="resourceType">The type of resource which should be searched</param>
-        /// <param name="key">The key of the hosting (container object)</param>
-        /// <param name="property">The property to search</param>
-        /// <returns>The search for the specified resource type limited to the specified object</returns>
-        [Get("/{resourceType}/{key}/{property}")]
-        Object AssociationSearch(String resourceType, String key, String property);
-
-        /// <summary>
-        /// Assigns the <paramref name="body"/> object with the resource at <paramref name="resourceType"/>/<paramref name="key"/>
+        /// Assigns the child object as a child (or link) of the parent
         /// </summary>
         /// <param name="resourceType">The type of container resource</param>
         /// <param name="key">The identiifer of the container</param>
-        /// <param name="property">The property which is the association to be added</param>
+        /// <param name="childResourceType">The property which is the association to be added</param>
         /// <param name="body">The object to be added to the collection</param>
-        [Post("/{resourceType}/{key}/{property}")]
-        object AssociationCreate(String resourceType, String key, String property, Object body);
+        /// <remarks>This method adds a new child resource instance to the container and performs the necessary linking</remarks>
+        [Post("/{resourceType}/{key}/{childResourceType}")]
+        object AssociationCreate(String resourceType, String key, String childResourceType, Object body);
 
         /// <summary>
-        /// Removes an association 
+        /// Removes a child resource instance from the parent container
         /// </summary>
         /// <param name="resourceType">The type of resource which is the container</param>
         /// <param name="key">The key of the container</param>
-        /// <param name="property">The property on which the sub-key resides</param>
-        /// <param name="scopedEntityKey">The actual value of the sub-key</param>
+        /// <param name="childResourceType">The property on which the sub-key resides</param>
+        /// <param name="childResourceKey">The actual value of the sub-key</param>
         /// <returns>The removed object</returns>
-        [Delete("/{resourceType}/{key}/{property}/{scopedEntityKey}")]
-        object AssociationRemove(String resourceType, String key, String property, String scopedEntityKey);
+        /// <remarks>This method will unlink, or delete (depending on behavior of the provider) the child resource from the container.</remarks>
+        [Delete("/{resourceType}/{key}/{childResourceType}/{childResourceKey}")]
+        object AssociationRemove(String resourceType, String key, String childResourceType, String childResourceKey);
 
     }
 }

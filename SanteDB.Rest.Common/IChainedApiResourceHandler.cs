@@ -28,8 +28,18 @@ namespace SanteDB.Rest.Common
     /// <summary>
     /// Represnets a resource handler which can link sub-objects (or certain sub-objects) with a parent object
     /// </summary>
-    public interface IAssociativeResourceHandler : IApiResourceHandler
+    public interface IChainedApiResourceHandler : IApiResourceHandler
     {
+
+        /// <summary>
+        /// Gets the associated resources
+        /// </summary>
+        IEnumerable<IApiChildResourceHandler> ChildResources { get; }
+
+        /// <summary>
+        /// Add a property handler
+        /// </summary>
+        void AddChildResource(IApiChildResourceHandler property);
 
         /// <summary>
         /// Removes the specified associated entity form the specified property name collection
@@ -37,7 +47,7 @@ namespace SanteDB.Rest.Common
         /// <param name="scopingEntityKey">The instance of the parent entity from which the object should be removed</param>
         /// <param name="propertyName">The name of the relationship which the entity should be removed from</param>
         /// <param name="subItemKey">The sub-item key that should be removed</param>
-        Object RemoveAssociatedEntity(object scopingEntityKey, string propertyName, object subItemKey);
+        Object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey);
 
         /// <summary>
         /// Queries the associated entities which are contained within the specified scoping entity
@@ -49,7 +59,7 @@ namespace SanteDB.Rest.Common
         /// <param name="count">The number of objects which should be returned from the query</param>
         /// <param name="totalCount">The total matching results</param>
         /// <returns>The matching results</returns>
-        IEnumerable<Object> QueryAssociatedEntities(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out Int32 totalCount);
+        IEnumerable<Object> QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out Int32 totalCount);
 
         /// <summary>
         /// Adds the specified object with sub item key 
@@ -58,11 +68,11 @@ namespace SanteDB.Rest.Common
         /// <param name="propertyName">The property name</param>
         /// <param name="scopedItem">The sub-item to be added</param>
         /// <returns>The newly created associative entity</returns>
-        Object AddAssociatedEntity(object scopingEntityKey, string propertyName, object scopedItem);
+        Object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem);
 
         /// <summary>
         /// Fetchs the scoped entity
         /// </summary>
-        Object GetAssociatedEntity(object scopingEntity, string propertyName, object subItemKey);
+        Object GetChildObject(object scopingEntity, string propertyName, object subItemKey);
     }
 }

@@ -21,20 +21,22 @@ using System;
 namespace SanteDB.Rest.Common
 {
     /// <summary>
-    /// Represents a resource handler that supports checkout and checkin
+    /// Represents a resource handler that can lock or unlock objects
     /// </summary>
-    public interface ICheckoutResourceHandler : IApiResourceHandler
+    public interface ILockableResourceHandler : IApiResourceHandler
     {
         /// <summary>
-        /// Obtain (checkout) a resource
+        /// Locks a resource.
         /// </summary>
-        Object Checkout(Object key);
+        /// <param name="key">The key of the resource to Locks.</param>
+        /// <returns>Returns the locked object</returns>
+        Object Lock(Object key);
 
         /// <summary>
-        /// Releas a checkout
+        /// Obsoletes a unlock.
         /// </summary>
-        /// <param name="key">The key of the resource to chekin.</param>
+        /// <param name="key">The key of the resource to unlock.</param>
         /// <returns>Returns the unlock object.</returns>
-        Object Checkin(Object key);
+        Object Unlock(Object key);
     }
 }

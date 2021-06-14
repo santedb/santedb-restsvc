@@ -31,6 +31,7 @@ using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -43,9 +44,13 @@ namespace SanteDB.Rest.AMI.Resources
     /// Represents a resource handler that wraps a security based entity
     /// </summary>
     /// <typeparam name="TSecurityEntity">The type of security entity being wrapped</typeparam>
-    public abstract class SecurityEntityResourceHandler<TSecurityEntity> : IApiResourceHandler
+    public abstract class SecurityEntityResourceHandler<TSecurityEntity> : IApiResourceHandler, IChainedApiResourceHandler
         where TSecurityEntity : SecurityEntity
     {
+
+
+        // Property providers
+        private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
 
         // The repository for the entity
         private IRepositoryService<TSecurityEntity> m_repository;
@@ -56,7 +61,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Create a new instance of the security entity resource handler
         /// </summary>
-        public SecurityEntityResourceHandler() 
+        public SecurityEntityResourceHandler()
         {
             ApplicationServiceContext.Current.Started += (o, e) => this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<TSecurityEntity>>();
         }
@@ -64,7 +69,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Raise the security attributes change event
         /// </summary>
-        protected void FireSecurityAttributesChanged(object scope,bool success, params String[] changedProperties)
+        protected void FireSecurityAttributesChanged(object scope, bool success, params String[] changedProperties)
         {
             AuditUtil.AuditSecurityAttributeAction(new object[] { scope }, success, changedProperties);
         }
@@ -88,6 +93,11 @@ namespace SanteDB.Rest.AMI.Resources
         /// Gets the capabilities of the resource
         /// </summary>
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.CreateOrUpdate | ResourceCapabilityType.Delete | ResourceCapabilityType.Get | ResourceCapabilityType.Search | ResourceCapabilityType.Update;
+
+        /// <summary>
+        /// Get the child resources
+        /// </summary>
+        public IEnumerable<IApiChildResourceHandler> ChildResources => this.m_propertyProviders.Values;
 
         /// <summary>
         /// Gets the repository
@@ -135,7 +145,7 @@ namespace SanteDB.Rest.AMI.Resources
                 else
                 {
                     td.Entity = this.GetRepository().Insert(td.Entity);
-                    AuditUtil.AuditDataAction(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Create, Core.Auditing.AuditableObjectLifecycle.Creation, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.Success, null,  td.Entity);
+                    AuditUtil.AuditDataAction(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Create, Core.Auditing.AuditableObjectLifecycle.Creation, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.Success, null, td.Entity);
                 }
 
                 // Special case for security entity wrappers, we want to load them from DB from fresh
@@ -159,7 +169,7 @@ namespace SanteDB.Rest.AMI.Resources
             var data = this.GetRepository().Get((Guid)id, (Guid)versionId);
 
             var retVal = Activator.CreateInstance(this.Type, data) as ISecurityEntityInfo<TSecurityEntity>;
-            retVal.Policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetPolicies(data).Select(o=>new SecurityPolicyInfo(o)).ToList();
+            retVal.Policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetPolicies(data).Select(o => new SecurityPolicyInfo(o)).ToList();
             return retVal;
 
         }
@@ -216,7 +226,7 @@ namespace SanteDB.Rest.AMI.Resources
 
             var repo = this.GetRepository();
             IEnumerable<TSecurityEntity> results = null;
-            if(repo is IPersistableQueryRepositoryService<TSecurityEntity> && queryIdParsed.HasValue)
+            if (repo is IPersistableQueryRepositoryService<TSecurityEntity> && queryIdParsed.HasValue)
                 results = (repo as IPersistableQueryRepositoryService<TSecurityEntity>).Find(query, offset, count, out totalCount, queryIdParsed.Value, sortParameters);
             else
                 results = repo.Find(query, offset, count, out totalCount, sortParameters);
@@ -224,7 +234,7 @@ namespace SanteDB.Rest.AMI.Resources
             return results.Select(o =>
             {
                 var r = Activator.CreateInstance(this.Type, o) as ISecurityEntityInfo<TSecurityEntity>;
-                r.Policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetPolicies(o).Select(p=>new SecurityPolicyInfo(p)).ToList();
+                r.Policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetPolicies(o).Select(p => new SecurityPolicyInfo(p)).ToList();
                 return r;
             }).OfType<Object>();
 
@@ -258,6 +268,83 @@ namespace SanteDB.Rest.AMI.Resources
             {
                 FireSecurityAttributesChanged(td.Entity, false);
                 throw;
+            }
+        }
+
+        /// <summary>
+        /// Add a child resource
+        /// </summary>
+        public void AddChildResource(IApiChildResourceHandler property)
+        {
+            this.m_propertyProviders.TryAdd(property.ResourceName, property);
+        }
+
+        /// <summary>
+        /// Remove a child object
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
+        public object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
+        {
+            Guid objectKey = (Guid)scopingEntityKey;
+
+            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
+            {
+                return propertyProvider.Remove(typeof(TSecurityEntity), objectKey, subItemKey);
+            }
+            else
+            {
+                throw new KeyNotFoundException($"{propertyName} not found");
+            }
+        }
+
+        /// <summary>
+        /// Query child objects
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
+        public IEnumerable<object> QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
+        {
+            Guid objectKey = (Guid)scopingEntityKey;
+            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
+            {
+                return propertyProvider.Query(typeof(TSecurityEntity), objectKey, filter, offset, count, out totalCount);
+            }
+            else
+            {
+                throw new KeyNotFoundException($"{propertyName} not found");
+            }
+        }
+
+        /// <summary>
+        /// Add a child object instance
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
+        public object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
+        {
+            Guid objectKey = (Guid)scopingEntityKey;
+            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
+            {
+                return propertyProvider.Add(typeof(TSecurityEntity), scopingEntityKey, scopedItem);
+            }
+            else
+            {
+                throw new KeyNotFoundException($"{propertyName} not found");
+            }
+        }
+
+        /// <summary>
+        /// Get a child object
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
+        public object GetChildObject(object scopingEntity, string propertyName, object subItemKey)
+        {
+            Guid objectKey = (Guid)scopingEntity;
+            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
+            {
+                return propertyProvider.Get(typeof(TSecurityEntity), objectKey, subItemKey);
+            }
+            else
+            {
+                throw new KeyNotFoundException($"{propertyName} not found");
             }
         }
     }
