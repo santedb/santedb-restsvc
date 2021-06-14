@@ -1,6 +1,8 @@
 ﻿using SanteDB.Core;
 using SanteDB.Core.Interop;
+using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
+using SanteDB.Core.Model.Roles;
 using SanteDB.Core.Model.Serialization;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
@@ -31,7 +33,16 @@ namespace SanteDB.Rest.HDSI.Operation
         /// <summary>
         /// Gets all the types that this is exposed on
         /// </summary>
-        public Type[] ParentTypes => ModelSerializationBinder.GetRegisteredTypes().ToArray();
+        public Type[] ParentTypes => new Type[]
+        {
+            typeof(Patient),
+            typeof(Entity),
+            typeof(Provider),
+            typeof(Place),
+            typeof(Organization),
+            typeof(Material),
+            typeof(ManufacturedMaterial)
+        };
 
         /// <summary>
         /// Property name
@@ -46,7 +57,7 @@ namespace SanteDB.Rest.HDSI.Operation
         /// <summary>
         /// Gets the capabilities
         /// </summary>
-        public ResourceCapabilityType Capabilities => ResourceCapabilityType.Get;
+        public ResourceCapabilityType Capabilities => ResourceCapabilityType.Get | ResourceCapabilityType.Search;
 
         /// <summary>
         /// POST to match which is a call to matcher
