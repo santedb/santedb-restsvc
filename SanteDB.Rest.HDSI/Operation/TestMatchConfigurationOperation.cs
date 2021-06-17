@@ -40,7 +40,7 @@ namespace SanteDB.Rest.HDSI.Operation
         /// <summary>
         /// Gets the property name
         /// </summary>
-        public string ResourceName => "$test";
+        public string Name => "$test";
 
         /// <summary>
         /// Gets the type that this object interacts with
@@ -95,10 +95,10 @@ namespace SanteDB.Rest.HDSI.Operation
                     switch (RestOperationContext.Current.IncomingRequest.QueryString["_mode"])
                     {
                         case "block":
-                            retVal = BundleUtil.CreateBundle(matcher.Block(target, config.Name, merger.GetIgnoreList(targetKey)), 0, 0, true);
+                            retVal = BundleUtil.CreateBundle(matcher.Block(target, config.Name, merger.GetIgnoredKeys(targetKey)), 0, 0, true);
                             break;
                         default:
-                            retVal = (matcher as IMatchReportFactory).CreateMatchReport(target, matcher.Match(target, config.Name, merger.GetIgnoreList(targetKey)));
+                            retVal = (matcher as IMatchReportFactory).CreateMatchReport(target, matcher.Match(target, config.Name, merger.GetIgnoredKeys(targetKey)));
                             break;
                     }
                     return retVal;
@@ -141,7 +141,7 @@ namespace SanteDB.Rest.HDSI.Operation
                 else
                 {
                     var merger = ApplicationServiceContext.Current.GetService(typeof(IRecordMergingService<>).MakeGenericType(config.AppliesTo.First())) as IRecordMergingService;
-                    return targets.Select(o => matcher.Match(o, config.Name, merger.GetIgnoreList(o)));
+                    return targets.Select(o => matcher.Match(o, config.Name, merger.GetIgnoredKeys(o)));
                 }
             }
             catch (Exception e)

@@ -9,23 +9,14 @@ namespace SanteDB.Rest.Common
     /// <summary>
     /// Allows a programmatic way of providing associated properties on other objects
     /// </summary>
-    public interface IApiChildResourceHandler
+    public interface IApiChildResourceHandler : IApiChildObject
     {
-
-        /// <summary>
-        /// Gets the resource name that this applies to
-        /// </summary>
-        Type[] ParentTypes { get; }
-
-        /// <summary>
-        /// Gets the name of the associated property
-        /// </summary>
-        string ResourceName { get; }
-
+       
         /// <summary>
         /// Gets the type of data this associative property is expecting
         /// </summary>
         Type PropertyType { get; }
+
 
         /// <summary>
         /// The capabilities of the sub-resource

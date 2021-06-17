@@ -16,7 +16,7 @@ namespace SanteDB.Rest.HDSI.Operation
     /// <summary>
     /// Represents a match operation 
     /// </summary>
-    public class MatchOperation : IApiChildResourceHandler
+    public class MatchOperation : IApiChildOperation
     {
 
         // Matching service
@@ -47,30 +47,13 @@ namespace SanteDB.Rest.HDSI.Operation
         /// <summary>
         /// Property name
         /// </summary>
-        public string ResourceName => "$match";
+        public string Name => "match";
 
-        /// <summary>
-        /// Get the type of operation
-        /// </summary>
-        public Type PropertyType => typeof(object);
-
-        /// <summary>
-        /// Gets the capabilities
-        /// </summary>
-        public ResourceCapabilityType Capabilities => ResourceCapabilityType.Get | ResourceCapabilityType.Search;
-
-        /// <summary>
-        /// POST to match which is a call to matcher
-        /// </summary>
-        public object Add(Type sopingType, object scopingKey, object item)
-        {
-            throw new NotSupportedException();
-        }
 
         /// <summary>
         /// Get the match report for the specified object
         /// </summary>
-        public object Get(Type scopingType, object scopingKey, object key)
+        public object Invoke(Type scopingType, object scopingKey, ApiOperationParameterCollection parameters)
         {
             if (!(scopingKey is Guid uuid) && !Guid.TryParse(scopingKey.ToString(), out uuid))
             {
@@ -86,20 +69,17 @@ namespace SanteDB.Rest.HDSI.Operation
                 {
                     throw new KeyNotFoundException($"{uuid} not found");
                 }
-                return reportFactory.CreateMatchReport(scopingType, source, this.m_matchingService.Match(source, key?.ToString(), null));
+
+                // key of match configuration
+                if(!parameters.TryGet<String>("configuration", out String configuration))
+                {
+                    throw new InvalidOperationException("Rqeuired parameter 'configuration' missing");
+                }
+                return reportFactory.CreateMatchReport(scopingType, source, this.m_matchingService.Match(source, configuration, null));
             }
 
             return null;
         }
 
-        public IEnumerable<object> Query(Type sopingType, object scopingKey, NameValueCollection filter, int offset, int count, out int totalCount)
-        {
-            throw new NotImplementedException();
-        }
-
-        public object Remove(Type sopingType, object scopingKey, object key)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -55,7 +55,7 @@ namespace SanteDB.Rest.AMI.ChildResources
         /// <summary>
         /// The name of the property
         /// </summary>
-        public string ResourceName => "policy";
+        public string Name => "policy";
 
         /// <summary>
         /// Gets the type of resource

@@ -593,7 +593,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                 var childResources = new List<ServiceResourceOptions>();
                 if (handler is IChainedApiResourceHandler associative)
                 {
-                    childResources = associative.ChildResources.Select(r => new ServiceResourceOptions(r.ResourceName, r.PropertyType, r.Capabilities.ToResourceCapabilityStatement(getCaps).ToList(), null)).ToList();
+                    childResources = associative.ChildResources.Select(r => new ServiceResourceOptions(r.Name, r.PropertyType, r.Capabilities.ToResourceCapabilityStatement(getCaps).ToList(), null)).ToList();
                 }
                 // Associateive
                 return new ServiceResourceOptions(resourceType, handler.Type, caps, childResources);
