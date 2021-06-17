@@ -28,13 +28,13 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Obtain (checkout) a resource
         /// </summary>
-        Object Checkout(Object key);
+        Object CheckOut(Object key);
 
         /// <summary>
         /// Releas a checkout
         /// </summary>
         /// <param name="key">The key of the resource to chekin.</param>
         /// <returns>Returns the unlock object.</returns>
-        Object Checkin(Object key);
+        Object CheckIn(Object key);
     }
 }

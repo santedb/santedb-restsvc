@@ -26,6 +26,7 @@ using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Model.Roles;
 using SanteDB.Core.Model.Security;
+using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Specialized;
@@ -69,6 +70,7 @@ namespace SanteDB.Rest.HDSI
     [ServiceKnownResource(typeof(Bundle))]
     [ServiceKnownResource(typeof(ConceptSet))]
     [ServiceKnownResource(typeof(ConceptReferenceTerm))]
+    [ServiceKnownResource(typeof(ApiOperationParameter))]
     [ServiceProduces("application/json")]
     [ServiceProduces("application/json+sdb-viewmodel")]
     [ServiceProduces("application/xml")]
@@ -170,6 +172,28 @@ namespace SanteDB.Rest.HDSI
         /// <remarks>The result of the history operation is a Bundle which contains a complete list of all previous versions associated with the specified object</remarks>
         [Get("/{resourceType}/{id}/_history")]
         IdentifiedData History(string resourceType, string id);
+
+        /// <summary>
+        /// Invokes the specified operation
+        /// </summary>
+        /// <param name="resourceType">The type of operation being invoked</param>
+        /// <param name="id">The ID of the operation</param>
+        /// <param name="operationName">The name of the operation</param>
+        /// <returns>The result of the operation invokation</returns>
+        [RestInvoke("POST", "/{resourceType}/{id}/${operationName}")]
+        object InvokeMethod(String resourceType, String id, String operationName, ApiOperationParameterCollection body);
+
+        /// <summary>
+        /// Releases an edit lock on the specified object
+        /// </summary>
+        [RestInvoke("CHECKIN", "/{resourceType}/{id}")]
+        object CheckIn(String resourceType, String id);
+
+        /// <summary>
+        /// Acquires an edit lock on the specified object
+        /// </summary>
+        [RestInvoke("CHECKOUT", "/{resourceType}/{id}")]
+        object CheckOut(String resourceType, String id);
 
         /// <summary>
         /// Updates the specified resource according to the instructions in the PATCH file

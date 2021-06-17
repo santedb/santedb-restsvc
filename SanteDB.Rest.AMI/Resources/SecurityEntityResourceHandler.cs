@@ -276,7 +276,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public void AddChildResource(IApiChildResourceHandler property)
         {
-            this.m_propertyProviders.TryAdd(property.ResourceName, property);
+            this.m_propertyProviders.TryAdd(property.Name, property);
         }
 
         /// <summary>

@@ -26,7 +26,7 @@ namespace SanteDB.Rest.AMI.ChildResources
         /// <summary>
         /// Gets the resource name
         /// </summary>
-        public string ResourceName => "user";
+        public string Name => "user";
 
         /// <summary>
         /// Property type

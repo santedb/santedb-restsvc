@@ -65,7 +65,7 @@ namespace SanteDB.Rest.HDSI
         /// Get resource handler
         /// </summary>
         protected abstract ResourceHandlerTool GetResourceHandler();
-       
+
         /// <summary>
         /// HDSI Service Behavior
         /// </summary>
@@ -754,7 +754,7 @@ namespace SanteDB.Rest.HDSI
 
                 // Get the resource capabilities
                 List<ServiceResourceCapability> caps = handler.Capabilities.ToResourceCapabilityStatement(getCaps).ToList();
-               
+
                 // Patching 
                 if (ApplicationServiceContext.Current.GetService<IPatchService>() != null &&
                     handler.Capabilities.HasFlag(ResourceCapabilityType.Update))
@@ -762,9 +762,13 @@ namespace SanteDB.Rest.HDSI
 
                 // To expose associated objects
                 var childResources = new List<ServiceResourceOptions>();
-                if(handler is IChainedApiResourceHandler associative)
+                if (handler is IChainedApiResourceHandler associative)
                 {
-                    childResources = associative.ChildResources.Select(r => new ServiceResourceOptions(r.ResourceName, r.PropertyType, r.Capabilities.ToResourceCapabilityStatement(getCaps).ToList(), null)).ToList();
+                    childResources.AddRange(associative.ChildResources.Select(r => new ServiceResourceOptions(r.Name, r.PropertyType, r.Capabilities.ToResourceCapabilityStatement(getCaps).ToList(), null)));
+                }
+                if (handler is IOperationalApiResourceHandler operational)
+                {
+                    childResources.AddRange(operational.Operations.Select(o => new ServiceResourceOptions(o.Name, typeof(Object), ResourceCapabilityType.Create.ToResourceCapabilityStatement(getCaps).ToList(), null)));
                 }
                 // Associateive
                 return new ServiceResourceOptions(resourceType, handler.Type, caps, childResources);
@@ -1120,7 +1124,7 @@ namespace SanteDB.Rest.HDSI
                         throw new KeyNotFoundException($"{resourceType} {id}");
                     else
                     {
-                        
+
                         RestOperationContext.Current.OutgoingResponse.ContentType = "application/jose";
                         if (data is Entity entity)
                         {
@@ -1148,5 +1152,109 @@ namespace SanteDB.Rest.HDSI
         /// Copy (download) a remote object to this instance
         /// </summary>
         public abstract IdentifiedData Copy(String reosurceType, String id);
+
+        /// <summary>
+        /// Invoke the specified method on the API
+        /// </summary>
+        public object InvokeMethod(string resourceType, string key, string operationName, ApiOperationParameterCollection body)
+        {
+            this.ThrowIfNotReady();
+
+            try
+            {
+
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IOperationalApiResourceHandler;
+                if (handler != null)
+                {
+                    this.AclCheck(handler, nameof(IOperationalApiResourceHandler.InvokeOperation));
+
+                    var retValRaw = handler.InvokeOperation(Guid.Parse(key), operationName, body);
+
+                    if (retValRaw is IdentifiedData retVal)
+                    {
+                        RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
+                        RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.ModifiedOn.DateTime);
+
+                        // HTTP IF headers?
+                        if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null &&
+                            retVal.ModifiedOn <= RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() ||
+                            RestOperationContext.Current.IncomingRequest.GetIfNoneMatch()?.Any(o => retVal.Tag == o) == true)
+                        {
+                            RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
+                            return null;
+                        }
+                    }
+                    return retValRaw;
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+
+            }
+        }
+        /// <summary>
+        /// Check-in the specified object
+        /// </summary>
+        public object CheckIn(string resourceType, string key)
+        {
+            this.ThrowIfNotReady();
+
+            try
+            {
+
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as ICheckoutResourceHandler;
+                if (handler != null)
+                {
+                    this.AclCheck(handler, nameof(ICheckoutResourceHandler.CheckIn));
+
+                    return handler.CheckIn(Guid.Parse(key));
+
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+
+            }
+        }
+
+        /// <summary>
+        /// Check-out the specified object
+        /// </summary>
+        public object CheckOut(string resourceType, string key)
+        {
+            this.ThrowIfNotReady();
+
+            try
+            {
+
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as ICheckoutResourceHandler;
+                if (handler != null)
+                {
+                    this.AclCheck(handler, nameof(ICheckoutResourceHandler.CheckIn));
+
+                    return handler.CheckOut(Guid.Parse(key));
+
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+
+            }
+        }
     }
 }
