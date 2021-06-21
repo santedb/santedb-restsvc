@@ -209,6 +209,8 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Get the specified object
         /// </summary>
+        [UrlParameter("_bundle", typeof(bool), "Return dependent objects in a bundle")]
+        [UrlParameter("_all", typeof(bool), "Return all dependent properties (force load them from DB)")]
         public virtual IdentifiedData Get(string resourceType, string id)
         {
             this.ThrowIfNotReady();
@@ -264,6 +266,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Gets a specific version of a resource
         /// </summary>
+        [UrlParameter("_bundle", typeof(bool), "Return dependent objects in a bundle")]
         public virtual IdentifiedData GetVersion(string resourceType, string id, string versionId)
         {
             this.ThrowIfNotReady();
@@ -337,6 +340,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Gets the recent history an object
         /// </summary>
+        [UrlParameter("_since", typeof(Guid), "The last version of the object that should be returned")]
         public virtual IdentifiedData History(string resourceType, string id)
         {
             this.ThrowIfNotReady();
@@ -382,6 +386,14 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Perform a search on the specified resource type
         /// </summary>
+        [UrlParameter("_offset", typeof(int), "The offet of the first result to return")]
+        [UrlParameter("_count", typeof(int), "The count of items to return in this result set")]
+        [UrlParameter("_orderBy", typeof(string), "Instructs the result set to be ordered")]
+        [UrlParameter("_includeRefs", typeof(bool), "True if all referenced objects should be loaded")]
+        [UrlParameter("_lean", typeof(bool), "True if the result bundle should only contains primary results")]
+        [UrlParameter("_all", typeof(bool), "True if all properties should be expanded")]
+        [UrlParameter("_expand", typeof(string), "The names of the properties which should be forced loaded", Multiple = true)]
+        [UrlParameter("_exclude", typeof(string), "The names of the properties which should removed from the bundle", Multiple = true)]
         public virtual IdentifiedData Search(string resourceType)
         {
             this.ThrowIfNotReady();
@@ -778,6 +790,12 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Perform a search on the specified entity
         /// </summary>
+        [UrlParameter("_offset", typeof(int), "The offet of the first result to return")]
+        [UrlParameter("_count", typeof(int), "The count of items to return in this result set")]
+        [UrlParameter("_lean", typeof(bool), "True if the result bundle should only contains primary results")]
+        [UrlParameter("_all", typeof(bool), "True if all properties should be expanded")]
+        [UrlParameter("_expand", typeof(string), "The names of the properties which should be forced loaded", Multiple = true)]
+        [UrlParameter("_exclude", typeof(string), "The names of the properties which should removed from the bundle", Multiple = true)]
         public virtual Object AssociationSearch(string resourceType, string key, string childResourceType)
         {
             this.ThrowIfNotReady();
@@ -1156,7 +1174,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Invoke the specified method on the API
         /// </summary>
-        public object InvokeMethod(string resourceType, string key, string operationName, ApiOperationParameterCollection body)
+        public object InvokeMethod(string resourceType, string id, string operationName, ApiOperationParameterCollection body)
         {
             this.ThrowIfNotReady();
 
@@ -1168,7 +1186,7 @@ namespace SanteDB.Rest.HDSI
                 {
                     this.AclCheck(handler, nameof(IOperationalApiResourceHandler.InvokeOperation));
 
-                    var retValRaw = handler.InvokeOperation(Guid.Parse(key), operationName, body);
+                    var retValRaw = handler.InvokeOperation(Guid.Parse(id), operationName, body);
 
                     if (retValRaw is IdentifiedData retVal)
                     {
