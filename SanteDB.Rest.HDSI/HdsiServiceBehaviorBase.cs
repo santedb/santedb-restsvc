@@ -65,7 +65,7 @@ namespace SanteDB.Rest.HDSI
         /// Get resource handler
         /// </summary>
         protected abstract ResourceHandlerTool GetResourceHandler();
-       
+
         /// <summary>
         /// HDSI Service Behavior
         /// </summary>
@@ -209,6 +209,8 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Get the specified object
         /// </summary>
+        [UrlParameter("_bundle", typeof(bool), "Return dependent objects in a bundle")]
+        [UrlParameter("_all", typeof(bool), "Return all dependent properties (force load them from DB)")]
         public virtual IdentifiedData Get(string resourceType, string id)
         {
             this.ThrowIfNotReady();
@@ -264,6 +266,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Gets a specific version of a resource
         /// </summary>
+        [UrlParameter("_bundle", typeof(bool), "Return dependent objects in a bundle")]
         public virtual IdentifiedData GetVersion(string resourceType, string id, string versionId)
         {
             this.ThrowIfNotReady();
@@ -337,6 +340,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Gets the recent history an object
         /// </summary>
+        [UrlParameter("_since", typeof(Guid), "The last version of the object that should be returned")]
         public virtual IdentifiedData History(string resourceType, string id)
         {
             this.ThrowIfNotReady();
@@ -382,6 +386,14 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Perform a search on the specified resource type
         /// </summary>
+        [UrlParameter("_offset", typeof(int), "The offet of the first result to return")]
+        [UrlParameter("_count", typeof(int), "The count of items to return in this result set")]
+        [UrlParameter("_orderBy", typeof(string), "Instructs the result set to be ordered")]
+        [UrlParameter("_includeRefs", typeof(bool), "True if all referenced objects should be loaded")]
+        [UrlParameter("_lean", typeof(bool), "True if the result bundle should only contains primary results")]
+        [UrlParameter("_all", typeof(bool), "True if all properties should be expanded")]
+        [UrlParameter("_expand", typeof(string), "The names of the properties which should be forced loaded", Multiple = true)]
+        [UrlParameter("_exclude", typeof(string), "The names of the properties which should removed from the bundle", Multiple = true)]
         public virtual IdentifiedData Search(string resourceType)
         {
             this.ThrowIfNotReady();
@@ -754,7 +766,7 @@ namespace SanteDB.Rest.HDSI
 
                 // Get the resource capabilities
                 List<ServiceResourceCapability> caps = handler.Capabilities.ToResourceCapabilityStatement(getCaps).ToList();
-               
+
                 // Patching 
                 if (ApplicationServiceContext.Current.GetService<IPatchService>() != null &&
                     handler.Capabilities.HasFlag(ResourceCapabilityType.Update))
@@ -762,9 +774,13 @@ namespace SanteDB.Rest.HDSI
 
                 // To expose associated objects
                 var childResources = new List<ServiceResourceOptions>();
-                if(handler is IChainedApiResourceHandler associative)
+                if (handler is IChainedApiResourceHandler associative)
                 {
-                    childResources = associative.ChildResources.Select(r => new ServiceResourceOptions(r.ResourceName, r.PropertyType, r.Capabilities.ToResourceCapabilityStatement(getCaps).ToList(), null)).ToList();
+                    childResources.AddRange(associative.ChildResources.Select(r => new ServiceResourceOptions(r.Name, r.PropertyType, r.Capabilities.ToResourceCapabilityStatement(getCaps).ToList(), null)));
+                }
+                if (handler is IOperationalApiResourceHandler operational)
+                {
+                    childResources.AddRange(operational.Operations.Select(o => new ServiceResourceOptions(o.Name, typeof(Object), ResourceCapabilityType.Create.ToResourceCapabilityStatement(getCaps).ToList(), null)));
                 }
                 // Associateive
                 return new ServiceResourceOptions(resourceType, handler.Type, caps, childResources);
@@ -774,6 +790,12 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Perform a search on the specified entity
         /// </summary>
+        [UrlParameter("_offset", typeof(int), "The offet of the first result to return")]
+        [UrlParameter("_count", typeof(int), "The count of items to return in this result set")]
+        [UrlParameter("_lean", typeof(bool), "True if the result bundle should only contains primary results")]
+        [UrlParameter("_all", typeof(bool), "True if all properties should be expanded")]
+        [UrlParameter("_expand", typeof(string), "The names of the properties which should be forced loaded", Multiple = true)]
+        [UrlParameter("_exclude", typeof(string), "The names of the properties which should removed from the bundle", Multiple = true)]
         public virtual Object AssociationSearch(string resourceType, string key, string childResourceType)
         {
             this.ThrowIfNotReady();
@@ -1120,7 +1142,7 @@ namespace SanteDB.Rest.HDSI
                         throw new KeyNotFoundException($"{resourceType} {id}");
                     else
                     {
-                        
+
                         RestOperationContext.Current.OutgoingResponse.ContentType = "application/jose";
                         if (data is Entity entity)
                         {
@@ -1148,5 +1170,109 @@ namespace SanteDB.Rest.HDSI
         /// Copy (download) a remote object to this instance
         /// </summary>
         public abstract IdentifiedData Copy(String reosurceType, String id);
+
+        /// <summary>
+        /// Invoke the specified method on the API
+        /// </summary>
+        public object InvokeMethod(string resourceType, string id, string operationName, ApiOperationParameterCollection body)
+        {
+            this.ThrowIfNotReady();
+
+            try
+            {
+
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IOperationalApiResourceHandler;
+                if (handler != null)
+                {
+                    this.AclCheck(handler, nameof(IOperationalApiResourceHandler.InvokeOperation));
+
+                    var retValRaw = handler.InvokeOperation(Guid.Parse(id), operationName, body);
+
+                    if (retValRaw is IdentifiedData retVal)
+                    {
+                        RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
+                        RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.ModifiedOn.DateTime);
+
+                        // HTTP IF headers?
+                        if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null &&
+                            retVal.ModifiedOn <= RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() ||
+                            RestOperationContext.Current.IncomingRequest.GetIfNoneMatch()?.Any(o => retVal.Tag == o) == true)
+                        {
+                            RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
+                            return null;
+                        }
+                    }
+                    return retValRaw;
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+
+            }
+        }
+        /// <summary>
+        /// Check-in the specified object
+        /// </summary>
+        public object CheckIn(string resourceType, string key)
+        {
+            this.ThrowIfNotReady();
+
+            try
+            {
+
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as ICheckoutResourceHandler;
+                if (handler != null)
+                {
+                    this.AclCheck(handler, nameof(ICheckoutResourceHandler.CheckIn));
+
+                    return handler.CheckIn(Guid.Parse(key));
+
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+
+            }
+        }
+
+        /// <summary>
+        /// Check-out the specified object
+        /// </summary>
+        public object CheckOut(string resourceType, string key)
+        {
+            this.ThrowIfNotReady();
+
+            try
+            {
+
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as ICheckoutResourceHandler;
+                if (handler != null)
+                {
+                    this.AclCheck(handler, nameof(ICheckoutResourceHandler.CheckIn));
+
+                    return handler.CheckOut(Guid.Parse(key));
+
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+
+            }
+        }
     }
 }

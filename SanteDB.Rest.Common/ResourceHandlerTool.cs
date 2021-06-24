@@ -52,6 +52,7 @@ namespace SanteDB.Rest.Common
         {
             var serviceManager = ApplicationServiceContext.Current.GetService<IServiceManager>();
             var tPropertyProviders = serviceManager.CreateInjectedOfAll<IApiChildResourceHandler>();
+            var tOperationProviders = serviceManager.CreateInjectedOfAll<IApiChildOperation>();
 
             foreach (var t in resourceHandlerTypes.Where(t => !t.ContainsGenericParameters && !t.IsAbstract && !t.IsInterface))
             {
@@ -72,6 +73,10 @@ namespace SanteDB.Rest.Common
                         if (rh is IChainedApiResourceHandler assoc)
                         {
                             tPropertyProviders.Where(p => p.ParentTypes.Contains(rh.Type)).ToList().ForEach(p => assoc.AddChildResource(p));
+                        }
+                        if(rh is IOperationalApiResourceHandler oper)
+                        {
+                            tOperationProviders.Where(p => p.ParentTypes.Contains(rh.Type)).ToList().ForEach(p => oper.AddOperation(p));
                         }
                     }
                 }

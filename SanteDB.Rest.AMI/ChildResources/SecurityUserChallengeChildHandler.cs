@@ -41,7 +41,7 @@ namespace SanteDB.Rest.AMI.ChildResources
         /// <summary>
         /// The name of the property
         /// </summary>
-        public string ResourceName => "challenge";
+        public string Name => "challenge";
 
         /// <summary>
         /// Gets the type of resource

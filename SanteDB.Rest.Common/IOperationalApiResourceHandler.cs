@@ -16,25 +16,34 @@
  * User: fyfej
  * Date: 2021-2-9
  */
+using SanteDB.Core.Model.Query;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SanteDB.Rest.Common
 {
     /// <summary>
-    /// Represents a resource handler that supports checkout and checkin
+    /// Represnets a resource handler which can link sub-objects (or certain sub-objects) with a parent object
     /// </summary>
-    public interface ICheckoutResourceHandler : IApiResourceHandler
+    public interface IOperationalApiResourceHandler : IApiResourceHandler
     {
-        /// <summary>
-        /// Obtain (checkout) a resource
-        /// </summary>
-        Object CheckOut(Object key);
 
         /// <summary>
-        /// Releas a checkout
+        /// Gets the associated resources
         /// </summary>
-        /// <param name="key">The key of the resource to chekin.</param>
-        /// <returns>Returns the unlock object.</returns>
-        Object CheckIn(Object key);
+        IEnumerable<IApiChildOperation> Operations { get; }
+
+        /// <summary>
+        /// Add a property handler
+        /// </summary>
+        void AddOperation(IApiChildOperation property);
+
+        /// <summary>
+        /// Fetchs the scoped entity
+        /// </summary>
+        Object InvokeOperation(object scopingEntityKey, string operationName, ApiOperationParameterCollection parameters);
     }
 }

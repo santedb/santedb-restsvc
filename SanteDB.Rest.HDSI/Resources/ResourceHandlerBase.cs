@@ -39,12 +39,21 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a resource handler base type that is always bound to HDSI
     /// </summary>
     /// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
-    public abstract class ResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData>, INullifyResourceHandler, ICancelResourceHandler, IChainedApiResourceHandler, ICheckoutResourceHandler, IApiResourceHandlerEx
+    public abstract class ResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData>, 
+        INullifyResourceHandler, 
+        ICancelResourceHandler, 
+        IChainedApiResourceHandler, 
+        ICheckoutResourceHandler, 
+        IApiResourceHandlerEx,
+        IOperationalApiResourceHandler
+
         where TData : IdentifiedData, new()
     {
 
         // Property providers
         private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
+        // Property providers
+        private ConcurrentDictionary<String, IApiChildOperation> m_operationProviders = new ConcurrentDictionary<string, IApiChildOperation>();
 
         /// <summary>
         /// Gets the scope
@@ -57,18 +66,24 @@ namespace SanteDB.Rest.HDSI.Resources
         public IEnumerable<IApiChildResourceHandler> ChildResources => this.m_propertyProviders.Values;
 
         /// <summary>
+        /// Get all child resources
+        /// </summary>
+        public IEnumerable<IApiChildOperation> Operations => this.m_operationProviders.Values;
+
+
+        /// <summary>
         /// OBsoletion wrapper with locking
         /// </summary>
         public override object Obsolete(object key)
         {
             try
             {
-                this.Checkout((Guid)key);
+                this.CheckOut((Guid)key);
                 return base.Obsolete(key);
             }
             finally
             {
-                this.Checkin((Guid)key);
+                this.CheckIn((Guid)key);
             }
         }
 
@@ -80,13 +95,13 @@ namespace SanteDB.Rest.HDSI.Resources
             try
             {
                 if(data is IdentifiedData id)
-                    this.Checkout((Guid)id.Key);
+                    this.CheckOut((Guid)id.Key);
                 return base.Update(data);
             }
             finally
             {
                 if (data is IdentifiedData id)
-                    this.Checkin((Guid)id.Key);
+                    this.CheckIn((Guid)id.Key);
             }
         }
 
@@ -100,7 +115,7 @@ namespace SanteDB.Rest.HDSI.Resources
 
             try
             {
-                this.Checkout(objectKey);
+                this.CheckOut(objectKey);
                 if(this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
                 {
                     return propertyProvider.Add(typeof(TData), scopingEntityKey, scopedItem);
@@ -112,7 +127,7 @@ namespace SanteDB.Rest.HDSI.Resources
             }
             finally
             {
-                this.Checkin(objectKey);
+                this.CheckIn(objectKey);
             }
         }
 
@@ -123,7 +138,7 @@ namespace SanteDB.Rest.HDSI.Resources
         {
             try
             {
-                this.Checkout(key);
+                this.CheckOut(key);
                 if (this.GetRepository() is ICancelRepositoryService<TData>)
                     return (this.GetRepository() as ICancelRepositoryService<TData>).Cancel((Guid)key);
                 else
@@ -131,7 +146,7 @@ namespace SanteDB.Rest.HDSI.Resources
             }
             finally
             {
-                this.Checkin(key);
+                this.CheckIn(key);
             }
         }
 
@@ -156,7 +171,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Attempt to get a lock on the specified object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public object Checkout(object key)
+        public object CheckOut(object key)
         {
             var adHocCache = ApplicationServiceContext.Current.GetService<IResourceCheckoutService>();
             adHocCache?.Checkout<TData>((Guid)key);
@@ -202,7 +217,7 @@ namespace SanteDB.Rest.HDSI.Resources
 
             try
             {
-                this.Checkout(objectKey);
+                this.CheckOut(objectKey);
                 if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
                 {
                     return propertyProvider.Remove(typeof(TData), objectKey, subItemKey);
@@ -214,7 +229,7 @@ namespace SanteDB.Rest.HDSI.Resources
             }
             finally
             {
-                this.Checkin(objectKey);
+                this.CheckIn(objectKey);
             }
         }
 
@@ -222,7 +237,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Release the specified lock
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public object Checkin(object key)
+        public object CheckIn(object key)
         {
             var adHocCache = ApplicationServiceContext.Current.GetService<IResourceCheckoutService>();
             adHocCache?.Checkin<TData>((Guid)key);
@@ -253,7 +268,30 @@ namespace SanteDB.Rest.HDSI.Resources
         /// </summary>
         public void AddChildResource(IApiChildResourceHandler property)
         {
-            this.m_propertyProviders.TryAdd(property.ResourceName, property);
+            this.m_propertyProviders.TryAdd(property.Name, property);
+        }
+
+        /// <summary>
+        /// Add the child operation
+        /// </summary>
+        public void AddOperation(IApiChildOperation operation)
+        {
+            this.m_operationProviders.TryAdd(operation.Name, operation);
+        }
+
+        /// <summary>
+        /// Invoke the specified operation
+        /// </summary>
+        public object InvokeOperation(object scopingEntityKey, string operationName, ApiOperationParameterCollection parameters)
+        {
+            if(this.m_operationProviders.TryGetValue(operationName, out IApiChildOperation handler))
+            {
+                return handler.Invoke(typeof(TData), scopingEntityKey, parameters);
+            }
+            else
+            {
+                throw new NotSupportedException($"Operation {operationName} not supported");
+            }
         }
     }
 }
