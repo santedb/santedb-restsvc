@@ -43,6 +43,9 @@ namespace SanteDB.Rest.AMI.Resources
     public class MatchConfigurationResourceHandler : IApiResourceHandler, IChainedApiResourceHandler
     {
 
+        // Configuration service
+        private IRecordMatchingConfigurationService m_configurationService;
+
         // Property providers
         private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
 
@@ -72,6 +75,14 @@ namespace SanteDB.Rest.AMI.Resources
         public IEnumerable<IApiChildResourceHandler> ChildResources => this.m_propertyProviders.Values;
 
         /// <summary>
+        /// Match configuration resource handler
+        /// </summary>
+        public MatchConfigurationResourceHandler(IRecordMatchingConfigurationService configurationService)
+        {
+            this.m_configurationService = configurationService;
+        }
+
+        /// <summary>
         /// Add an associative entity
         /// </summary>
         public object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
@@ -91,7 +102,10 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public object Create(object data, bool updateIfExists)
         {
-            throw new NotSupportedException("Currently not supported");
+            if (data is IRecordMatchingConfiguration configMatch)
+                return this.m_configurationService.SaveConfiguration(configMatch);
+            else
+                throw new ArgumentException("Incorrect match configuration type");
         }
 
         /// <summary>
@@ -100,10 +114,7 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.UnrestrictedMetadata)]
         public object Get(object id, object versionId)
         {
-            var service = ApplicationServiceContext.Current.GetService<IRecordMatchingConfigurationService>();
-            if (service == null)
-                throw new InvalidOperationException("Matching configuration manager is not enabled");
-            return service.GetConfiguration(id.ToString());
+            return this.m_configurationService.GetConfiguration(id.ToString());
         }
 
         /// <summary>
@@ -127,7 +138,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public object Obsolete(object key)
         {
-            throw new NotSupportedException("Not supported yet");
+            return this.m_configurationService.DeleteConfiguration(key.ToString());
         }
 
         /// <summary>
@@ -143,23 +154,19 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
         {
-            var service = ApplicationServiceContext.Current.GetService<IRecordMatchingConfigurationService>();
-            if (service == null)
-                throw new InvalidOperationException("Matching configuration service is not enabled");
-
-            totalCount = service.Configurations.Count();
+            totalCount = this.m_configurationService.Configurations.Count();
             if (queryParameters.TryGetValue("name", out List<String> values))
-                return service.Configurations
+                return this.m_configurationService.Configurations
                     .Where(o => o == values.First())
                     .Skip(offset)
                     .Take(count)
-                    .Select(o => service.GetConfiguration(o))
+                    .Select(o => this.m_configurationService.GetConfiguration(o))
                     .OfType<Object>();
             else
-                return service.Configurations
+                return this.m_configurationService.Configurations
                     .Skip(offset)
                     .Take(count)
-                    .Select(o => service.GetConfiguration(o))
+                    .Select(o => this.m_configurationService.GetConfiguration(o))
                     .OfType<Object>();
         }
 
@@ -198,7 +205,10 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public object Update(object data)
         {
-            throw new NotSupportedException("Not currently supported");
+            if (data is IRecordMatchingConfiguration configMatch)
+                return this.m_configurationService.SaveConfiguration(configMatch);
+            else
+                throw new ArgumentException("Incorrect match configuration type");
         }
 
 
