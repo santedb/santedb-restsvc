@@ -67,7 +67,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Gets the capabilities of this service
         /// </summary>
-        public ResourceCapabilityType Capabilities => ResourceCapabilityType.Search | ResourceCapabilityType.Get;
+        public ResourceCapabilityType Capabilities => ResourceCapabilityType.Search | ResourceCapabilityType.Get | ResourceCapabilityType.Create | ResourceCapabilityType.Update | ResourceCapabilityType.Delete;
 
         /// <summary>
         /// Child resources
