@@ -105,5 +105,10 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         /// Get the specified tag
         /// </summary>
         public string GetTag(string tagKey) => this.Tags.Find(o => o.TagKey == tagKey)?.Value;
+
+        /// <summary>
+        /// Remove the specified tag
+        /// </summary>
+        public void RemoveTag(string tagKey) => this.Tags.RemoveAll(o => o.TagKey == tagKey);
     }
 }
