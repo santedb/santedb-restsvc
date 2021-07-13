@@ -245,11 +245,9 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.AdministerApplet)]
         public object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
         {
-            Guid objectKey = (Guid)scopingEntityKey;
-
             if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
             {
-                return propertyProvider.Remove(typeof(AppletSolution), objectKey, subItemKey);
+                return propertyProvider.Remove(typeof(AppletSolution), scopingEntityKey, subItemKey);
             }
             else
             {
@@ -263,10 +261,9 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
         public IEnumerable<object> QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
         {
-            Guid objectKey = (Guid)scopingEntityKey;
             if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
             {
-                return propertyProvider.Query(typeof(AppletSolution), objectKey, filter, offset, count, out totalCount);
+                return propertyProvider.Query(typeof(AppletSolution), scopingEntityKey, filter, offset, count, out totalCount);
             }
             else
             {
@@ -280,7 +277,6 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.AdministerApplet)]
         public object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
         {
-            Guid objectKey = (Guid)scopingEntityKey;
             if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
             {
                 return propertyProvider.Add(typeof(AppletSolution), scopingEntityKey, scopedItem);
@@ -297,10 +293,9 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
         public object GetChildObject(object scopingEntity, string propertyName, object subItemKey)
         {
-            Guid objectKey = (Guid)scopingEntity;
             if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
             {
-                return propertyProvider.Get(typeof(AppletSolution), objectKey, subItemKey);
+                return propertyProvider.Get(typeof(AppletSolution), scopingEntity, subItemKey);
             }
             else
             {
