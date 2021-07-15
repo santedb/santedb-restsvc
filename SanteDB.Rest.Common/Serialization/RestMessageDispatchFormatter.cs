@@ -283,7 +283,7 @@ namespace SanteDB.Rest.Common.Serialization
                 {
                     accepts = "application/xml";
                 }
-                var contentTypeMime = new ContentType(accepts ?? contentType);
+                var contentTypeMime = (accepts ?? contentType).Split(',').Select(o=>new ContentType(o)).First();
 
                 // Result is serializable
                 if (result == null)
