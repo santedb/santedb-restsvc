@@ -40,6 +40,7 @@ using System.Diagnostics.Tracing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Mime;
 using System.Reflection;
 using System.Text;
 using System.Xml;
@@ -164,7 +165,9 @@ namespace SanteDB.Rest.Common.Serialization
 #endif
 
                 var httpRequest = RestOperationContext.Current.IncomingRequest;
-                string contentType = httpRequest.Headers["Content-Type"];
+                ContentType contentType = null;
+                if (!String.IsNullOrEmpty(httpRequest.Headers["Content-Type"]))
+                    contentType = new ContentType(httpRequest.Headers["Content-Type"]);
 
                 for (int pNumber = 0; pNumber < parameters.Length; pNumber++)
                 {
@@ -175,84 +178,83 @@ namespace SanteDB.Rest.Common.Serialization
                     {
                         continue; // dispatcher already populated
                     }
-
-                    // Use XML Serializer
-                    else if (contentType?.StartsWith("application/xml") == true)
+                    else
                     {
-                        XmlSerializer serializer = null;
-                        using (XmlReader bodyReader = XmlReader.Create(request.Body))
-                        {
-                            while (bodyReader.NodeType != XmlNodeType.Element)
-                                bodyReader.Read();
+                        switch(contentType.MediaType) {
+                            case "application/xml":
+                                XmlSerializer serializer = null;
+                                using (XmlReader bodyReader = XmlReader.Create(request.Body))
+                                {
+                                    while (bodyReader.NodeType != XmlNodeType.Element)
+                                        bodyReader.Read();
 
-                            Type eType = s_knownTypes.FirstOrDefault(o => o.GetCustomAttribute<XmlRootAttribute>()?.ElementName == bodyReader.LocalName &&
-                                o.GetCustomAttribute<XmlRootAttribute>()?.Namespace == bodyReader.NamespaceURI);
-                            if (eType == null)
-                                eType = new ModelSerializationBinder().BindToType(null, bodyReader.LocalName); // Try to find by root element
+                                    Type eType = s_knownTypes.FirstOrDefault(o => o.GetCustomAttribute<XmlRootAttribute>()?.ElementName == bodyReader.LocalName &&
+                                        o.GetCustomAttribute<XmlRootAttribute>()?.Namespace == bodyReader.NamespaceURI);
+                                    if (eType == null)
+                                        eType = new ModelSerializationBinder().BindToType(null, bodyReader.LocalName); // Try to find by root element
 
-                            serializer = XmlModelSerializerFactory.Current.CreateSerializer(eType);
-                            parameters[pNumber] = serializer.Deserialize(bodyReader);
+                                    serializer = XmlModelSerializerFactory.Current.CreateSerializer(eType);
+                                    parameters[pNumber] = serializer.Deserialize(bodyReader);
+                                }
+                                break;
+                            case "application/json+sdb-viewmodel":
+                                var viewModel = httpRequest.Headers["X-SanteDB-ViewModel"] ?? httpRequest.QueryString["_viewModel"];
+
+                                // Create the view model serializer
+                                var viewModelSerializer = new JsonViewModelSerializer();
+                                viewModelSerializer.LoadSerializerAssembly(typeof(ActExtensionViewModelSerializer).Assembly);
+
+                                if (!String.IsNullOrEmpty(viewModel))
+                                {
+                                    var viewModelDescription = ApplicationServiceContext.Current.GetService<IAppletManagerService>()?.Applets.GetViewModelDescription(viewModel);
+                                    viewModelSerializer.ViewModel = viewModelDescription;
+                                }
+                                else
+                                {
+                                    viewModelSerializer.ViewModel = m_defaultViewModel;
+                                }
+
+                                using (var sr = new StreamReader(request.Body))
+                                    parameters[pNumber] = viewModelSerializer.DeSerialize(sr, parm.ParameterType);
+                                break;
+                            case "application/json":
+                                using (var sr = new StreamReader(request.Body))
+                                {
+                                    JsonSerializer jsz = new JsonSerializer()
+                                    {
+                                        SerializationBinder = new ModelSerializationBinder(),
+                                        TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
+                                        TypeNameHandling = TypeNameHandling.All
+                                    };
+                                    jsz.Converters.Add(new StringEnumConverter());
+                                    var dserType = parm.ParameterType;
+                                    parameters[pNumber] = jsz.Deserialize(sr, dserType);
+                                }
+                                break;
+                            case "application/octet-stream":
+                                parameters[pNumber] = request.Body;
+                                break;
+                            case "application/x-www-form-urlencoded":
+                                NameValueCollection nvc = new NameValueCollection();
+                                using (var sr = new StreamReader(request.Body))
+                                {
+                                    var ptext = sr.ReadToEnd();
+                                    var parms = ptext.Split('&');
+                                    foreach (var p in parms)
+                                    {
+                                        var parmData = p.Split('=');
+                                        parmData[1] += new string('=', parmData.Length - 2);
+                                        nvc.Add(WebUtility.UrlDecode(parmData[0]), WebUtility.UrlDecode(parmData[1]));
+                                    }
+                                }
+                                parameters[pNumber] = nvc;
+                                break;
+                            default:
+                                throw new InvalidOperationException("Invalid request format");
                         }
-
                     }
-                    else if (contentType?.StartsWith("application/json+sdb-viewmodel") == true && typeof(IdentifiedData).IsAssignableFrom(parm.ParameterType))
-                    {
-                        var viewModel = httpRequest.Headers["X-SanteDB-ViewModel"] ?? httpRequest.QueryString["_viewModel"];
-
-                        // Create the view model serializer
-                        var viewModelSerializer = new JsonViewModelSerializer();
-                        viewModelSerializer.LoadSerializerAssembly(typeof(ActExtensionViewModelSerializer).Assembly);
-
-                        if (!String.IsNullOrEmpty(viewModel))
-                        {
-                            var viewModelDescription = ApplicationServiceContext.Current.GetService<IAppletManagerService>()?.Applets.GetViewModelDescription(viewModel);
-                            viewModelSerializer.ViewModel = viewModelDescription;
-                        }
-                        else
-                        {
-                            viewModelSerializer.ViewModel = m_defaultViewModel;
-                        }
-
-                        using (var sr = new StreamReader(request.Body))
-                            parameters[pNumber] = viewModelSerializer.DeSerialize(sr, parm.ParameterType);
-                    }
-                    else if (contentType?.StartsWith("application/json") == true)
-                    {
-                        using (var sr = new StreamReader(request.Body))
-                        {
-                            JsonSerializer jsz = new JsonSerializer()
-                            {
-                                SerializationBinder = new ModelSerializationBinder(),
-                                TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
-                                TypeNameHandling = TypeNameHandling.All
-                            };
-                            jsz.Converters.Add(new StringEnumConverter());
-                            var dserType = parm.ParameterType;
-                            parameters[pNumber] = jsz.Deserialize(sr, dserType);
-                        }
-                    }
-                    else if (contentType == "application/octet-stream")
-                    {
-                        parameters[pNumber] = request.Body;
-                    }
-                    else if (contentType == "application/x-www-form-urlencoded")
-                    {
-                        NameValueCollection nvc = new NameValueCollection();
-                        using (var sr = new StreamReader(request.Body))
-                        {
-                            var ptext = sr.ReadToEnd();
-                            var parms = ptext.Split('&');
-                            foreach (var p in parms)
-                            {
-                                var parmData = p.Split('=');
-                                parmData[1] += new string('=', parmData.Length - 2);
-                                nvc.Add(WebUtility.UrlDecode(parmData[0]), WebUtility.UrlDecode(parmData[1]));
-                            }
-                        }
-                        parameters[pNumber] = nvc;
-                    }
-                    else if (contentType != null)// TODO: Binaries
-                        throw new InvalidOperationException("Invalid request format");
+                    
+                        
                 }
             }
             catch (Exception e)
@@ -277,6 +279,12 @@ namespace SanteDB.Rest.Common.Serialization
                 string accepts = httpRequest.Headers["Accept"],
                     contentType = httpRequest.Headers["Content-Type"];
 
+                if(String.IsNullOrEmpty(accepts) && String.IsNullOrEmpty(contentType))
+                {
+                    accepts = "application/xml";
+                }
+                var contentTypeMime = (accepts ?? contentType).Split(',').Select(o=>new ContentType(o)).First();
+
                 // Result is serializable
                 if (result == null)
                 {
@@ -286,102 +294,103 @@ namespace SanteDB.Rest.Common.Serialization
                 else if (result?.GetType().GetCustomAttribute<XmlTypeAttribute>() != null ||
                     result?.GetType().GetCustomAttribute<JsonObjectAttribute>() != null)
                 {
-                    // The request was in JSON or the accept is JSON
-                    if (accepts?.StartsWith("application/json+sdb-viewmodel") == true &&
-                        typeof(IdentifiedData).IsAssignableFrom(result?.GetType()))
+                    switch(contentTypeMime.MediaType)
                     {
-#if DEBUG
-                        this.m_traceSource.TraceInfo("Serializing {0} as view model result", result);
-#endif
-                        var viewModel = httpRequest.Headers["X-SanteDB-ViewModel"] ?? httpRequest.QueryString["_viewModel"];
-
-                        // Create the view model serializer
-                        var viewModelSerializer = new JsonViewModelSerializer();
+                        case "application/json+sdb-viewmodel":
 
 #if DEBUG
-                        this.m_traceSource.TraceInfo("Will load serialization assembly {0}", typeof(ActExtensionViewModelSerializer).Assembly);
+                            this.m_traceSource.TraceInfo("Serializing {0} as view model result", result);
 #endif
-                        viewModelSerializer.LoadSerializerAssembly(typeof(ActExtensionViewModelSerializer).Assembly);
+                            var viewModel = httpRequest.Headers["X-SanteDB-ViewModel"] ?? httpRequest.QueryString["_viewModel"];
 
-                        if (!String.IsNullOrEmpty(viewModel))
-                        {
-                            var viewModelDescription = ApplicationServiceContext.Current.GetService<IAppletManagerService>()?.Applets.GetViewModelDescription(viewModel);
-                            viewModelSerializer.ViewModel = viewModelDescription;
-                        }
-                        else
-                        {
-                            viewModelSerializer.ViewModel = m_defaultViewModel;
-                        }
+                            // Create the view model serializer
+                            var viewModelSerializer = new JsonViewModelSerializer();
 
 #if DEBUG
-                        this.m_traceSource.TraceInfo("Using view model {0}", viewModelSerializer.ViewModel?.Name);
+                            this.m_traceSource.TraceInfo("Will load serialization assembly {0}", typeof(ActExtensionViewModelSerializer).Assembly);
 #endif
-                        using (var tms = new MemoryStream())
-                        using (StreamWriter sw = new StreamWriter(tms, Encoding.UTF8))
-                        using (JsonWriter jsw = new JsonTextWriter(sw))
-                        {
-                            viewModelSerializer.Serialize(jsw, result as IdentifiedData);
-                            jsw.Flush();
-                            sw.Flush();
-                            response.Body = new MemoryStream(tms.ToArray());
-                        }
+                            viewModelSerializer.LoadSerializerAssembly(typeof(ActExtensionViewModelSerializer).Assembly);
+
+                            if (!String.IsNullOrEmpty(viewModel))
+                            {
+                                var viewModelDescription = ApplicationServiceContext.Current.GetService<IAppletManagerService>()?.Applets.GetViewModelDescription(viewModel);
+                                viewModelSerializer.ViewModel = viewModelDescription;
+                            }
+                            else
+                            {
+                                viewModelSerializer.ViewModel = m_defaultViewModel;
+                            }
 
 #if DEBUG
-                        this.m_traceSource.TraceInfo("Serialized body of  {0}", result);
+                            this.m_traceSource.TraceInfo("Using view model {0}", viewModelSerializer.ViewModel?.Name);
 #endif
-                        contentType = "application/json+sdb-viewmodel";
-                    }
-                    else if (accepts?.StartsWith("application/json") == true ||
-                        contentType?.StartsWith("application/json") == true)
-                    {
-                        // Prepare the serializer
-                        JsonSerializer jsz = new JsonSerializer();
-                        jsz.Converters.Add(new StringEnumConverter());
+                            using (var tms = new MemoryStream())
+                            using (StreamWriter sw = new StreamWriter(tms, new UTF8Encoding(false)))
+                            using (JsonWriter jsw = new JsonTextWriter(sw))
+                            {
+                                viewModelSerializer.Serialize(jsw, result as IdentifiedData);
+                                jsw.Flush();
+                                sw.Flush();
+                                response.Body = new MemoryStream(tms.ToArray());
+                            }
 
-                        // Write json data
-                        using (MemoryStream ms = new MemoryStream())
-                        using (StreamWriter sw = new StreamWriter(ms, Encoding.UTF8))
-                        using (JsonWriter jsw = new JsonTextWriter(sw))
-                        {
-                            jsz.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-                            jsz.NullValueHandling = NullValueHandling.Ignore;
-                            jsz.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                            jsz.TypeNameHandling = TypeNameHandling.Auto;
-                            jsz.Converters.Add(new StringEnumConverter());
-                            jsz.Serialize(jsw, result);
-                            jsw.Flush();
-                            sw.Flush();
-                            response.Body = new MemoryStream(ms.ToArray());
+#if DEBUG
+                            this.m_traceSource.TraceInfo("Serialized body of  {0}", result);
+#endif
+                            contentType = "application/json+sdb-viewmodel";
+                            break;
+                        case "application/json":
+                            {
+                                // Prepare the serializer
+                                JsonSerializer jsz = new JsonSerializer();
+                                jsz.Converters.Add(new StringEnumConverter());
 
-                        }
+                                // Write json data
+                                using (MemoryStream ms = new MemoryStream())
+                                using (StreamWriter sw = new StreamWriter(ms, new UTF8Encoding(false)))
+                                using (JsonWriter jsw = new JsonTextWriter(sw))
+                                {
+                                    jsz.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+                                    jsz.NullValueHandling = NullValueHandling.Ignore;
+                                    jsz.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                                    jsz.TypeNameHandling = TypeNameHandling.Auto;
+                                    jsz.Converters.Add(new StringEnumConverter());
+                                    jsz.Serialize(jsw, result);
+                                    jsw.Flush();
+                                    sw.Flush();
+                                    response.Body = new MemoryStream(ms.ToArray());
 
-                        // Prepare reply for the WCF pipeline
-                        contentType = "application/json";
-                    }
-                    // The request was in XML and/or the accept is JSON
-                    else
-                    {
-                        XmlSerializer xsz = XmlModelSerializerFactory.Current.CreateSerializer(result.GetType());
-                        MemoryStream ms = new MemoryStream();
-                        try
-                        {
-                            xsz.Serialize(ms, result);
-                        }
-                        catch(InvalidOperationException e) when (e.Message.Contains("XML document") && result is Bundle bundle) {
-                            this.m_traceSource.TraceWarning("Will create a new serializer because of XML error {0}", e.Message);
-                            xsz = XmlModelSerializerFactory.Current.CreateSerializer(typeof(Bundle), bundle.Item?.Select(o => o.GetType()).Distinct().ToArray());
-                            ms.Seek(0, SeekOrigin.Begin);
-                            xsz.Serialize(ms, result);
-                        }
-                        catch(Exception e)
-                        {
-                            this.m_traceSource.TraceError("Error serializing response: {0}", e);
-                            throw new Exception($"Could not serialize response message {result}", e);
-                        }
-                        contentType = "application/xml";
-                        ms.Seek(0, SeekOrigin.Begin);
-                        response.Body = ms;
+                                }
 
+                                // Prepare reply for the WCF pipeline
+                                contentType = "application/json";
+                                break;
+                            }
+                        default:
+                            {
+                                XmlSerializer xsz = XmlModelSerializerFactory.Current.CreateSerializer(result.GetType());
+                                MemoryStream ms = new MemoryStream();
+                                try
+                                {
+                                    xsz.Serialize(ms, result);
+                                }
+                                catch (InvalidOperationException e) when (e.Message.Contains("XML document") && result is Bundle bundle)
+                                {
+                                    this.m_traceSource.TraceWarning("Will create a new serializer because of XML error {0}", e.Message);
+                                    xsz = XmlModelSerializerFactory.Current.CreateSerializer(typeof(Bundle), bundle.Item?.Select(o => o.GetType()).Distinct().ToArray());
+                                    ms.Seek(0, SeekOrigin.Begin);
+                                    xsz.Serialize(ms, result);
+                                }
+                                catch (Exception e)
+                                {
+                                    this.m_traceSource.TraceError("Error serializing response: {0}", e);
+                                    throw new Exception($"Could not serialize response message {result}", e);
+                                }
+                                contentType = "application/xml";
+                                ms.Seek(0, SeekOrigin.Begin);
+                                response.Body = ms;
+                                break;
+                            }
                     }
                 }
                 else if (result is XmlSchema)
