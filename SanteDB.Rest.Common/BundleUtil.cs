@@ -59,7 +59,7 @@ namespace SanteDB.Rest.Common
                     {
                         retVal.Add(itm);
                         if(!lean)
-                            Bundle.ProcessModel(itm.GetLocked(), retVal, !lean);
+                            Bundle.ProcessModel(itm.Clone(), retVal, !lean);
                     }
                 }
 

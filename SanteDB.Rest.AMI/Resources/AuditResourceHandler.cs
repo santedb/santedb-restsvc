@@ -17,7 +17,7 @@
  * Date: 2021-2-9
  */
 using SanteDB.Core;
-using SanteDB.Core.Auditing;
+using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
@@ -44,16 +44,16 @@ namespace SanteDB.Rest.AMI.Resources
         private AuditAccountabilityConfigurationSection m_configuration= ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<AuditAccountabilityConfigurationSection>();
 
         // The audit repository
-        private IRepositoryService<AuditData> m_repository = null;
+        private IRepositoryService<AuditEventData> m_repository = null;
 
         /// <summary>
         /// Get the repository
         /// </summary>
-        private IRepositoryService<AuditData> GetRepository()
+        private IRepositoryService<AuditEventData> GetRepository()
         {
 
             if (this.m_repository == null)
-                this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<AuditData>>();
+                this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<AuditEventData>>();
             if(this.m_repository == null)
                 throw new InvalidOperationException("No audit repository is configured");
 
@@ -89,7 +89,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Get the type this persists
         /// </summary>
-        public Type Type => typeof(AuditData);
+        public Type Type => typeof(AuditEventData);
 
         /// <summary>
         /// Create the audits in the audit data
@@ -104,7 +104,7 @@ namespace SanteDB.Rest.AMI.Resources
             var auditData = data as AuditSubmission;
             if (auditData == null) // may be a single audit
             {
-                var singleAudit = data as AuditData;
+                var singleAudit = data as AuditEventData;
                 if (singleAudit != null)
                 {
                     var retVal = this.GetRepository().Insert(singleAudit);
@@ -127,7 +127,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Handle audit persistence or shipping
         /// </summary>
-        private void HandleAudit(AuditData audit)
+        private void HandleAudit(AuditEventData audit)
         {
             var filters = this.m_configuration?.AuditFilters.Where(f =>
                                 (!f.OutcomeSpecified ^ f.Outcome.HasFlag(audit.Outcome)) &&
@@ -153,7 +153,7 @@ namespace SanteDB.Rest.AMI.Resources
         public object Get(object id, object versionId)
         {
            
-            var retVal = new AuditData();
+            var retVal = new AuditEventData();
             if(Guid.TryParse(id.ToString(), out Guid gid))
                 retVal.CopyObjectData(this.GetRepository().Get(gid));
             return retVal;
@@ -193,11 +193,11 @@ namespace SanteDB.Rest.AMI.Resources
         public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
         {
       
-            var filter = QueryExpressionParser.BuildLinqExpression<AuditData>(queryParameters);
+            var filter = QueryExpressionParser.BuildLinqExpression<AuditEventData>(queryParameters);
 
-            ModelSort<AuditData>[] sortParameters = null;
+            ModelSort<AuditEventData>[] sortParameters = null;
             if (queryParameters.TryGetValue("_orderBy", out var orderBy))
-                sortParameters = QueryExpressionParser.BuildSort<AuditData>(orderBy);
+                sortParameters = QueryExpressionParser.BuildSort<AuditEventData>(orderBy);
             return this.GetRepository().Find(filter, offset, count, out totalCount, sortParameters);
         }
 

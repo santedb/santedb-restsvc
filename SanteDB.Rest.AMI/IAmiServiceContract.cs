@@ -18,7 +18,7 @@
  */
 using RestSrvr.Attributes;
 using SanteDB.Core.Applets.Model;
-using SanteDB.Core.Auditing;
+using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Mail;
 using SanteDB.Core.Model.AMI.Applet;
@@ -66,7 +66,7 @@ namespace SanteDB.Rest.AMI
     [ServiceKnownResource(typeof(SecurityDevice))]
     [ServiceKnownResource(typeof(SubscriptionDefinition))]
     [ServiceKnownResource(typeof(TfaMechanismInfo))]
-    [ServiceKnownResource(typeof(AuditData))]
+    [ServiceKnownResource(typeof(AuditEventData))]
     [ServiceKnownResource(typeof(AppletManifest))]
     [ServiceKnownResource(typeof(JobInfo))]
     [ServiceKnownResource(typeof(AppletManifestInfo))]

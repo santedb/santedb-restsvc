@@ -142,7 +142,7 @@ namespace SanteDB.Rest.Common
 
             bundle?.Reconstitute();
 
-            var processData = bundle?.Entry ?? data;
+            var processData = bundle?.GetFocalObject() ?? data;
             
             try
             {
@@ -154,14 +154,14 @@ namespace SanteDB.Rest.Common
                     var resourceData = processData as TResource;
                     resourceData = updateIfExists ? this.GetRepository().Save(resourceData) : this.GetRepository().Insert(resourceData);
 
-                    AuditUtil.AuditCreate(Core.Auditing.OutcomeIndicator.Success, null, resourceData);
+                    AuditUtil.AuditCreate(Core.Model.Audit.OutcomeIndicator.Success, null, resourceData);
                   
                     return resourceData;
                 }
             }
             catch(Exception e)
             {
-                AuditUtil.AuditCreate(Core.Auditing.OutcomeIndicator.MinorFail, null, data);
+                AuditUtil.AuditCreate(Core.Model.Audit.OutcomeIndicator.MinorFail, null, data);
                 throw new Exception($"Error creating {data}", e);
             }
 
@@ -182,12 +182,12 @@ namespace SanteDB.Rest.Common
             {
                 var retVal = this.GetRepository().Get((Guid)id, (Guid)versionId);
                 if(retVal is Entity || retVal is Act)
-                    AuditUtil.AuditRead(Core.Auditing.OutcomeIndicator.Success, id.ToString(), retVal);
+                    AuditUtil.AuditRead(Core.Model.Audit.OutcomeIndicator.Success, id.ToString(), retVal);
                 return retVal;
             }
             catch(Exception e)
             {
-                AuditUtil.AuditRead<TResource>(Core.Auditing.OutcomeIndicator.MinorFail, id.ToString());
+                AuditUtil.AuditRead<TResource>(Core.Model.Audit.OutcomeIndicator.MinorFail, id.ToString());
                 throw new Exception($"Error getting resource {id}", e);
 
             }
@@ -205,12 +205,12 @@ namespace SanteDB.Rest.Common
             try
             {
                 var retVal = this.GetRepository().Obsolete((Guid)key);
-                AuditUtil.AuditDelete(Core.Auditing.OutcomeIndicator.Success, key.ToString(), retVal);
+                AuditUtil.AuditDelete(Core.Model.Audit.OutcomeIndicator.Success, key.ToString(), retVal);
                 return retVal;
             }
             catch(Exception e)
             {
-                AuditUtil.AuditDelete<TResource>(Core.Auditing.OutcomeIndicator.MinorFail, key.ToString());
+                AuditUtil.AuditDelete<TResource>(Core.Model.Audit.OutcomeIndicator.MinorFail, key.ToString());
                 throw new Exception($"Error obsoleting resource {key}", e);
 
             }
@@ -306,12 +306,12 @@ namespace SanteDB.Rest.Common
                     }
                 }
                 if (typeof(Act).IsAssignableFrom(typeof(TResource)) || typeof(Entity).IsAssignableFrom(typeof(TResource)))
-                    AuditUtil.AuditQuery(Core.Auditing.OutcomeIndicator.Success, queryParameters.ToString(), retVal.ToArray());
+                    AuditUtil.AuditQuery(Core.Model.Audit.OutcomeIndicator.Success, queryParameters.ToString(), retVal.ToArray());
                 return retVal;
             }
             catch (Exception e)
             {
-                AuditUtil.AuditQuery<TResource>(Core.Auditing.OutcomeIndicator.MinorFail, queryParameters.ToString());
+                AuditUtil.AuditQuery<TResource>(Core.Model.Audit.OutcomeIndicator.MinorFail, queryParameters.ToString());
                 throw new Exception("Error querying underlying repository", e);
             }
         }
@@ -328,7 +328,7 @@ namespace SanteDB.Rest.Common
 
             Bundle bundleData = data as Bundle;
             bundleData?.Reconstitute();
-            var processData = bundleData?.Entry ?? data;
+            var processData = bundleData?.GetFocalObject() ?? data;
 
             try
             {
@@ -339,7 +339,7 @@ namespace SanteDB.Rest.Common
                     var entityData = processData as TResource;
                     
                     var retVal = this.GetRepository().Save(entityData);
-                    AuditUtil.AuditUpdate(Core.Auditing.OutcomeIndicator.Success, null, retVal);
+                    AuditUtil.AuditUpdate(Core.Model.Audit.OutcomeIndicator.Success, null, retVal);
                     return retVal;
                 }
                 else
@@ -349,7 +349,7 @@ namespace SanteDB.Rest.Common
             }
             catch (Exception e)
             {
-                AuditUtil.AuditUpdate(Core.Auditing.OutcomeIndicator.MinorFail, null, data);
+                AuditUtil.AuditUpdate(Core.Model.Audit.OutcomeIndicator.MinorFail, null, data);
                 throw new Exception("Error updating resource", e);
             }
         }

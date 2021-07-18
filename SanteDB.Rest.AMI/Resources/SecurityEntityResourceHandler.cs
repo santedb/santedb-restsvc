@@ -140,12 +140,12 @@ namespace SanteDB.Rest.AMI.Resources
                 if (updateIfExists)
                 {
                     td.Entity = this.GetRepository().Save(td.Entity);
-                    AuditUtil.AuditDataAction(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Update, Core.Auditing.AuditableObjectLifecycle.Amendment, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.Success, null, td.Entity);
+                    AuditUtil.AuditEventDataAction(EventTypeCodes.SecurityObjectChanged, Core.Model.Audit.ActionType.Update, Core.Model.Audit.AuditableObjectLifecycle.Amendment, Core.Model.Audit.EventIdentifierType.SecurityAlert, Core.Model.Audit.OutcomeIndicator.Success, null, td.Entity);
                 }
                 else
                 {
                     td.Entity = this.GetRepository().Insert(td.Entity);
-                    AuditUtil.AuditDataAction(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Create, Core.Auditing.AuditableObjectLifecycle.Creation, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.Success, null, td.Entity);
+                    AuditUtil.AuditEventDataAction(EventTypeCodes.SecurityObjectChanged, Core.Model.Audit.ActionType.Create, Core.Model.Audit.AuditableObjectLifecycle.Creation, Core.Model.Audit.EventIdentifierType.SecurityAlert, Core.Model.Audit.OutcomeIndicator.Success, null, td.Entity);
                 }
 
                 // Special case for security entity wrappers, we want to load them from DB from fresh
@@ -154,7 +154,7 @@ namespace SanteDB.Rest.AMI.Resources
             }
             catch
             {
-                AuditUtil.AuditDataAction<TSecurityEntity>(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Create, Core.Auditing.AuditableObjectLifecycle.Creation, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.MinorFail, null, td.Entity);
+                AuditUtil.AuditEventDataAction<TSecurityEntity>(EventTypeCodes.SecurityObjectChanged, Core.Model.Audit.ActionType.Create, Core.Model.Audit.AuditableObjectLifecycle.Creation, Core.Model.Audit.EventIdentifierType.SecurityAlert, Core.Model.Audit.OutcomeIndicator.MinorFail, null, td.Entity);
                 throw;
             }
         }
@@ -183,7 +183,7 @@ namespace SanteDB.Rest.AMI.Resources
             try
             {
                 var retVal = Activator.CreateInstance(this.Type, this.GetRepository().Obsolete((Guid)key));
-                AuditUtil.AuditDataAction(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Delete, Core.Auditing.AuditableObjectLifecycle.LogicalDeletion, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.Success, key.ToString(), retVal);
+                AuditUtil.AuditEventDataAction(EventTypeCodes.SecurityObjectChanged, Core.Model.Audit.ActionType.Delete, Core.Model.Audit.AuditableObjectLifecycle.LogicalDeletion, Core.Model.Audit.EventIdentifierType.SecurityAlert, Core.Model.Audit.OutcomeIndicator.Success, key.ToString(), retVal);
 
                 // Special case for security entity wrappers, we want to load them from DB from fresh
                 ApplicationServiceContext.Current.GetService<IDataCachingService>()?.Remove((Guid)key);
@@ -192,7 +192,7 @@ namespace SanteDB.Rest.AMI.Resources
             }
             catch
             {
-                AuditUtil.AuditDataAction<TSecurityEntity>(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Delete, Core.Auditing.AuditableObjectLifecycle.LogicalDeletion, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.MinorFail, key.ToString());
+                AuditUtil.AuditEventDataAction<TSecurityEntity>(EventTypeCodes.SecurityObjectChanged, Core.Model.Audit.ActionType.Delete, Core.Model.Audit.AuditableObjectLifecycle.LogicalDeletion, Core.Model.Audit.EventIdentifierType.SecurityAlert, Core.Model.Audit.OutcomeIndicator.MinorFail, key.ToString());
                 throw;
             }
         }

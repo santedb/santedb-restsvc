@@ -187,7 +187,7 @@ namespace SanteDB.Rest.Common
                     if (keyStack.Count > 3) return;
 
                     foreach (var pi in returnValue.GetType().GetRuntimeProperties().Where(o => (o.GetCustomAttribute<SerializationReferenceAttribute>() != null || o.GetCustomAttributes<XmlElementAttribute>().Count() > 0) &&
-                    o.GetCustomAttribute<DataIgnoreAttribute>() == null))
+                    o.GetCustomAttribute<SerializationMetadataAttribute>() == null))
                     {
 
                         // Get current value

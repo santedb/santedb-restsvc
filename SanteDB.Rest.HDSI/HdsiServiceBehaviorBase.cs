@@ -241,7 +241,6 @@ namespace SanteDB.Rest.HDSI
                     else if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true" ||
                         RestOperationContext.Current.IncomingRequest.QueryString["_all"] == "true")
                     {
-                        retVal = retVal.GetLocked();
                         ObjectExpander.ExpandProperties(retVal, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
                         ObjectExpander.ExcludeProperties(retVal, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
                         return Bundle.CreateBundle(retVal);
@@ -423,9 +422,8 @@ namespace SanteDB.Rest.HDSI
 
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
-                    var retVal = handler.Query(query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).OfType<IdentifiedData>().Select(o => o.GetLocked()).ToList();
+                    var retVal = handler.Query(query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).OfType<IdentifiedData>();
                     RestOperationContext.Current.OutgoingResponse.SetLastModified((retVal.OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now));
-
 
                     // Last modification time and not modified conditions
                     if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||
@@ -979,7 +977,6 @@ namespace SanteDB.Rest.HDSI
                     else if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true" ||
                         RestOperationContext.Current.IncomingRequest.QueryString["_all"] == "true")
                     {
-                        retVal = retVal.GetLocked();
                         ObjectExpander.ExpandProperties(retVal, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
                         ObjectExpander.ExcludeProperties(retVal, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
                         return Bundle.CreateBundle(retVal);
