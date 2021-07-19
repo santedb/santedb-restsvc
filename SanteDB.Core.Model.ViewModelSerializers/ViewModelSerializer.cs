@@ -31564,16 +31564,7 @@ namespace SanteDB.Core.Model.Json.Formatter
                     context.JsonContext.WritePropertyUtil(w, "resource", _strong.Item, context);
                 }
             }
-            if (context.ShouldSerialize("entry"))
-            {
-                if ((_strong.EntryKey == null))
-                {
-                }
-                else
-                {
-                    context.JsonContext.WritePropertyUtil(w, "entry", _strong.EntryKey, context);
-                }
-            }
+           
             if (context.ShouldSerialize("offset"))
             {
                 if ((_strong.Offset == null))
@@ -31604,15 +31595,15 @@ namespace SanteDB.Core.Model.Json.Formatter
                     context.JsonContext.WritePropertyUtil(w, "totalResults", _strong.TotalResults, context);
                 }
             }
-            if (context.ShouldSerialize("ref"))
+            if (context.ShouldSerialize("focal"))
             {
-                if (((_strong.ExpansionKeys == null)
-                            || (_strong.ExpansionKeys.Count == 0)))
+                if (((_strong.FocalObjects == null)
+                            || (_strong.FocalObjects.Count == 0)))
                 {
                 }
                 else
                 {
-                    context.JsonContext.WritePropertyUtil(w, "ref", _strong.ExpansionKeys, context);
+                    context.JsonContext.WritePropertyUtil(w, "focal", _strong.FocalObjects, context);
                 }
             }
             if (context.ShouldSerialize("id"))
@@ -31658,13 +31649,13 @@ namespace SanteDB.Core.Model.Json.Formatter
                     }
                     else
                     {
-                        if ("ref".Equals(r.Value))
+                        if ("focal".Equals(r.Value))
                         {
                             r.Read();
                             object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("ref", context.JsonContext, _retVal, context));
                             if ((_instance != null))
                             {
-                                _retVal.ExpansionKeys = ((System.Collections.Generic.List<System.Guid>)(_instance));
+                                _retVal.FocalObjects = ((System.Collections.Generic.List<System.Guid>)(_instance));
                             }
                         }
                         else
@@ -31708,7 +31699,7 @@ namespace SanteDB.Core.Model.Json.Formatter
                                             object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("entry", context.JsonContext, _retVal, context));
                                             if ((_instance != null))
                                             {
-                                                _retVal.EntryKey = ((System.Nullable<System.Guid>)(_instance));
+                                                //_retVal.EntryKey = ((System.Nullable<System.Guid>)(_instance));
                                             }
                                         }
                                         else

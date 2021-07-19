@@ -142,8 +142,8 @@ namespace SanteDB.Rest.Common
 
             bundle?.Reconstitute();
 
-            var processData = bundle?.Entry ?? data;
-            
+            var processData = bundle?.GetFocalObject() ?? data;
+
             try
             {
                 if (!(processData is TResource))
@@ -334,7 +334,7 @@ namespace SanteDB.Rest.Common
 
             Bundle bundleData = data as Bundle;
             bundleData?.Reconstitute();
-            var processData = bundleData?.Entry ?? data;
+            var processData = bundleData?.GetFocalObject() ?? data;
 
             try
             {
