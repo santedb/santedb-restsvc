@@ -55,6 +55,7 @@ namespace SanteDB.Rest.Common.Security
         /// </summary>
         public void Apply(RestRequestMessage request)
         {
+            IDisposable context = null;
             try
             {
                 this.m_traceSource.TraceInfo("Entering BasicAuthorizationAccessPolicy");
@@ -123,7 +124,7 @@ namespace SanteDB.Rest.Common.Security
                     }
                 }
 
-                AuthenticationContext.Current = new AuthenticationContext(principal); // Set Authentication context
+                context = AuthenticationContext.EnterContext(principal);
             }
             catch (Exception e)
             {
@@ -132,7 +133,7 @@ namespace SanteDB.Rest.Common.Security
             finally
             {
                 // Disposed context so reset the auth
-                RestOperationContext.Current.Disposed += (o, e) => SanteDB.Core.Security.AuthenticationContext.Current = new SanteDB.Core.Security.AuthenticationContext(SanteDB.Core.Security.AuthenticationContext.AnonymousPrincipal);
+                RestOperationContext.Current.Disposed += (o, e) => context?.Dispose();
             }
 
         }
