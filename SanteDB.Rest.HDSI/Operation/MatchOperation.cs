@@ -71,11 +71,11 @@ namespace SanteDB.Rest.HDSI.Operation
                 }
 
                 // key of match configuration
-                //if(!parameters.TryGet<String>("configuration", out String configuration))
-                //{
-                //    throw new InvalidOperationException("Rqeuired parameter 'configuration' missing");
-                //}
-                return reportFactory.CreateMatchReport(scopingType, source, this.m_matchingService.Match(source, "org.santedb.matcher.example", null));
+                if(!parameters.TryGet<String>("configuration", out String configuration))
+                {
+                    throw new InvalidOperationException("Rqeuired parameter 'configuration' missing");
+                }
+                return reportFactory.CreateMatchReport(scopingType, source, this.m_matchingService.Match(source, configuration, null));
             }
 
             return null;
