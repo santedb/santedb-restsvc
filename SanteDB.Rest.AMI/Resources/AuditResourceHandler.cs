@@ -124,24 +124,6 @@ namespace SanteDB.Rest.AMI.Resources
             return null;
         }
 
-        /// <summary>
-        /// Handle audit persistence or shipping
-        /// </summary>
-        private void HandleAudit(AuditEventData audit)
-        {
-            var filters = this.m_configuration?.AuditFilters.Where(f =>
-                                (!f.OutcomeSpecified ^ f.Outcome.HasFlag(audit.Outcome)) &&
-                                    (!f.ActionSpecified ^ f.Action.HasFlag(audit.ActionCode)) &&
-                                    (!f.EventSpecified ^ f.Event.HasFlag(audit.EventIdentifier)));
-
-            if (AuthenticationContext.Current.Principal == AuthenticationContext.AnonymousPrincipal)
-                AuthenticationContext.Current = new AuthenticationContext(AuthenticationContext.SystemPrincipal);
-            if (filters == null || filters.Count() == 0 || filters.Any(f => f.InsertLocal))
-                this.m_repository.Insert(audit); // insert into local AR 
-            if (filters == null || filters.Count() == 0 || filters.Any(f => f.SendRemote))
-                this.m_dispatcher?.SendAudit(audit);
-
-        }
 
         /// <summary>
         /// Get the specified audit identifier from the database

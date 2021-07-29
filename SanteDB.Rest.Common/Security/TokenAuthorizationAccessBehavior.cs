@@ -31,7 +31,7 @@ namespace SanteDB.Rest.Common.Security
         /// Checks bearer access token
         /// </summary>
         /// <returns>True if authorization is successful</returns>
-        private void CheckBearerAccess(string authorizationToken)
+        private IDisposable CheckBearerAccess(string authorizationToken)
         {
             var session = ApplicationServiceContext.Current.GetService<ISessionProviderService>().Get(
                 Enumerable.Range(0, authorizationToken.Length)
@@ -45,9 +45,9 @@ namespace SanteDB.Rest.Common.Security
                 throw new SecuritySessionException(SessionExceptionType.Other, "Invalid bearer token", null);
 
             RestOperationContext.Current.Data.Add(RestPropertyNameSession, session);
-            SanteDB.Core.Security.AuthenticationContext.Current = new SanteDB.Core.Security.AuthenticationContext(principal);
 
             this.m_traceSource.TraceInfo("User {0} authenticated via SESSION BEARER", principal.Identity.Name);
+            return AuthenticationContext.EnterContext(principal);
         }
 
         /// <summary>
@@ -62,13 +62,13 @@ namespace SanteDB.Rest.Common.Security
                 // Http message inbound
                 var httpMessage = RestOperationContext.Current.IncomingRequest;
 
+
                 // Get the authorize header
                 String authorization = httpMessage.Headers["Authorization"];
                 if (authorization == null)
                 {
                     if (httpMessage.HttpMethod == "OPTIONS" || httpMessage.HttpMethod == "PING")
                     {
-                        SanteDB.Core.Security.AuthenticationContext.Current = new SanteDB.Core.Security.AuthenticationContext(SanteDB.Core.Security.AuthenticationContext.AnonymousPrincipal);
                         return;
                     }
                     else
@@ -80,7 +80,8 @@ namespace SanteDB.Rest.Common.Security
                 switch (auth[0].ToLowerInvariant())
                 {
                     case "bearer":
-                        this.CheckBearerAccess(auth[1]);
+                        var contextToken = this.CheckBearerAccess(auth[1]);
+                        RestOperationContext.Current.Disposed += (o,e) => contextToken.Dispose();
                         break;
                     default:
                         throw new SecuritySessionException(SessionExceptionType.TokenType, "Invalid authentication scheme", null);
@@ -102,11 +103,6 @@ namespace SanteDB.Rest.Common.Security
                 this.m_traceSource.TraceError("Token Error (From: {0}) : {1}", RestOperationContext.Current.IncomingRequest.RemoteEndPoint, e);
                 throw new SecuritySessionException(SessionExceptionType.Other, e.Message, e);
 
-            }
-            finally
-            {
-                // Disposed context so reset the auth
-                RestOperationContext.Current.Disposed += (o, e) => SanteDB.Core.Security.AuthenticationContext.Current = new SanteDB.Core.Security.AuthenticationContext(SanteDB.Core.Security.AuthenticationContext.AnonymousPrincipal);
             }
         }
         /// <summary>
