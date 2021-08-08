@@ -105,5 +105,6 @@ namespace SanteDB.Rest.Common.Configuration
                 s_serializer = XmlModelSerializerFactory.Current.CreateSerializer(typeof(RestServiceConfiguration));
             return s_serializer.Deserialize(stream) as RestServiceConfiguration;
         }
+
     }
 }
