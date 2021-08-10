@@ -97,5 +97,9 @@ namespace SanteDB.Rest.Common.Configuration
         [DisplayName("Certificate Binding"), Description("The certificate information to bind to the HTTP endpoint")]
         public X509ConfigurationElement CertificateBinding { get; set; }
 
+        /// <summary>
+        /// Endpoint configuration
+        /// </summary>
+        public override string ToString() => this.Address;
     }
 }

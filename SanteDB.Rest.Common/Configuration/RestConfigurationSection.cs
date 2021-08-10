@@ -44,12 +44,14 @@ namespace SanteDB.Rest.Common.Configuration
         /// Gets the base address
         /// </summary>
         [XmlElement("baseAddress"), JsonProperty("baseAddress")]
+        [DisplayName("Base Address"), Description("When running SanteDB behind a reverse proxy (like NGINX or OpenHIM), this setting controls the external base address of all REST endpoints")]
         public string ExternalHostPort { get; set; }
 
         /// <summary>
         /// Gets or sets the service configuration
         /// </summary>
-        [XmlElement("service"), JsonProperty("service"), Browsable(false)]
+        [XmlElement("service"), JsonProperty("service")]
+        [DisplayName("REST Services"), Description("A complete list of REST based services which are exposed within the host context on this server")]
         public List<RestServiceConfiguration> Services { get; set; }
     }
 }

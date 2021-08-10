@@ -23,6 +23,7 @@ using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -34,6 +35,7 @@ namespace SanteDB.Rest.Common.Behavior
     /// <summary>
     /// A service behavior that changes the current UI culture
     /// </summary>
+    [DisplayName("Accept-Language Header Support")]
     public class AcceptLanguageEndpointBehavior : IEndpointBehavior, IMessageInspector
     {
         // Trace

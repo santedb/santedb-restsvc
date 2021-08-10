@@ -18,12 +18,14 @@
  */
 using RestSrvr;
 using SanteDB.Rest.Common.Serialization;
+using System.ComponentModel;
 
 namespace SanteDB.Rest.Common.Behavior
 {
     /// <summary>
     /// Dispatch formatter behavior
     /// </summary>
+    [DisplayName("RIM Object Serialization")]
     public class MessageDispatchFormatterBehavior : IEndpointBehavior, IOperationBehavior
     {
         /// <summary>

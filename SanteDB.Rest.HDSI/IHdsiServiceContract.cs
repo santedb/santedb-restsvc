@@ -87,7 +87,7 @@ namespace SanteDB.Rest.HDSI
     [RestServiceFault(429, "The server rejected the request due to a throttling constraint")]
     [RestServiceFault(500, "The server encountered an error processing the result")]
     [RestServiceFault(503, "The service is not available (starting up or shutting down)")]
-    public interface IHdsiServiceContract 
+    public interface IHdsiServiceContract  : IRestApiContractImplementation
     {
 
         /// <summary>
