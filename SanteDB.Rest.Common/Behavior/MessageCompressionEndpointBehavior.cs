@@ -18,12 +18,14 @@
  */
 using RestSrvr;
 using SanteDB.Rest.Common.Serialization;
+using System.ComponentModel;
 
 namespace SanteDB.Rest.Common.Behavior
 {
     /// <summary>
     /// Adds message compression insepectors
     /// </summary>
+    [DisplayName("Accept-Encoding Compression Support")]
     public class MessageCompressionEndpointBehavior : IEndpointBehavior
     {
         /// <summary>

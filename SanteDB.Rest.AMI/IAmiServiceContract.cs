@@ -33,6 +33,7 @@ using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Model.Subscription;
+using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.IO;
@@ -103,7 +104,7 @@ namespace SanteDB.Rest.AMI
     [RestServiceFault(429, "The server rejected the request due to a throttling constraint")]
     [RestServiceFault(500, "The server encountered an error processing the result")]
     [RestServiceFault(503, "The service is not available (starting up or shutting down)")]
-    public interface IAmiServiceContract
+    public interface IAmiServiceContract : IRestApiContractImplementation
     {
         /// <summary>
         /// Get the schema for this service

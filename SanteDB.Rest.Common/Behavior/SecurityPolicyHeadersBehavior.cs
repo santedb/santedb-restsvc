@@ -21,6 +21,7 @@ using RestSrvr.Message;
 using SanteDB.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,6 +32,7 @@ namespace SanteDB.Rest.Common.Behaviors
     /// <summary>
     /// Implements the Content-Security-Policy header
     /// </summary>
+    [DisplayName("Content-Security-Policy Header Support")]
     public class SecurityPolicyHeadersBehavior : IEndpointBehavior, IMessageInspector
     {
 

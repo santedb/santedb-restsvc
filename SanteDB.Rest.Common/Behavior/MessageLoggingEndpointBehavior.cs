@@ -21,6 +21,7 @@ using RestSrvr.Message;
 using SanteDB.Core.Diagnostics;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.Tracing;
 
@@ -29,6 +30,7 @@ namespace SanteDB.Rest.Common.Behavior
     /// <summary>
     /// Represents an endpoint behavior that logs messages
     /// </summary>
+    [DisplayName("Inbound/Outbound Message Logging Support")]
     public class MessageLoggingEndpointBehavior : IEndpointBehavior, IMessageInspector
     {
 

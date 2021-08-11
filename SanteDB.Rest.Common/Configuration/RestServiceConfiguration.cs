@@ -68,7 +68,7 @@ namespace SanteDB.Rest.Common.Configuration
         /// <summary>
         /// Gets or sets the behavior
         /// </summary>
-        [XmlAttribute("serviceBehavior"), JsonProperty("serviceBehavior")]
+        [XmlAttribute("implementationType"), JsonProperty("implementationType")]
         [Browsable(false)]
         public String ServiceTypeXml { get; set; }
 
@@ -105,5 +105,11 @@ namespace SanteDB.Rest.Common.Configuration
                 s_serializer = XmlModelSerializerFactory.Current.CreateSerializer(typeof(RestServiceConfiguration));
             return s_serializer.Deserialize(stream) as RestServiceConfiguration;
         }
+
+        /// <summary>
+        /// Gets the string representation of this 
+        /// </summary>
+        public override string ToString() => $"REST Service: {this.Name}";
+
     }
 }

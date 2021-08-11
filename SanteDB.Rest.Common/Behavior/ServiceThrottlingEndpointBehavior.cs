@@ -23,6 +23,7 @@ using SanteDB.Core.Exceptions;
 using SanteDB.Core.Model.Serialization;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -53,6 +54,7 @@ namespace SanteDB.Rest.Common.Behavior
     /// requests on a particular endpoint.
     /// </summary>
     [Guid("B54FAA80-AA62-4069-B4A6-9AE970E3B222")]
+    [DisplayName("Endpoint Throttling")]
     public class ServiceThrottlingEndpointBehavior : IEndpointBehavior, IMessageInspector, IDiagnosticsProbe
     {
         // Current request count
