@@ -37,6 +37,19 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary>
     public class SecurityDeviceResourceHandler : SecurityEntityResourceHandler<SecurityDevice>, ILockableResourceHandler
     {
+
+
+        // Security repository
+        private ISecurityRepositoryService m_securityRepository;
+
+        /// <summary>
+        /// Create security repository
+        /// </summary>
+        public SecurityDeviceResourceHandler(ISecurityRepositoryService securityRepository, IPolicyInformationService policyInformationService, IRepositoryServiceFactory repositoryFactory, IDataCachingService cachingService = null, IRepositoryService<SecurityDevice> repository = null) : base(policyInformationService, repositoryFactory, cachingService, repository)
+        {
+            this.m_securityRepository = securityRepository;
+        }
+
         /// <summary>
         /// Type of security device
         /// </summary>
@@ -57,8 +70,8 @@ namespace SanteDB.Rest.AMI.Resources
             // If no policies then assign the ones from DEVICE
             if (sde.Policies == null || sde.Policies.Count == 0 && sde.Entity?.Policies == null || sde.Entity.Policies.Count == 0)
             {
-                var role = ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>()?.GetRole("DEVICE");
-                var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>()?.GetPolicies(role);
+                var role = this.m_securityRepository?.GetRole("DEVICE");
+                var policies = this.m_policyInformationService?.GetPolicies(role);
                 if (policies != null)
                     sde.Policies = policies.Select(o => new SecurityPolicyInfo(o)).ToList();
             }
@@ -92,7 +105,7 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.CreateDevice)]
         public object Lock(object key)
         {
-            ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().LockDevice((Guid)key);
+            this.m_securityRepository.LockDevice((Guid)key);
             var retVal = this.Get(key, Guid.Empty);
             this.FireSecurityAttributesChanged(retVal, true, "Lockout = true");
             return retVal;
@@ -104,7 +117,7 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.CreateDevice)]
         public object Unlock(object key)
         {
-            ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().UnlockDevice((Guid)key);
+            this.m_securityRepository.UnlockDevice((Guid)key);
             var retVal = this.Get(key, Guid.Empty);
             this.FireSecurityAttributesChanged(retVal, true, "Lockout = false");
             return retVal;

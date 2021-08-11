@@ -38,6 +38,27 @@ namespace SanteDB.Rest.AMI.Resources
     public class SecurityUserResourceHandler : SecurityEntityResourceHandler<SecurityUser>, ILockableResourceHandler
     {
 
+
+        // Security repository
+        private ISecurityRepositoryService m_securityRepository;
+
+        // Role provider
+        private IRoleProviderService m_roleProvider;
+
+        // Identity provider
+        private IIdentityProviderService m_identityProvider;
+
+        /// <summary>
+        /// Create security repository
+        /// </summary>
+        public SecurityUserResourceHandler(IIdentityProviderService identityProvider, IRoleProviderService roleProvider, ISecurityRepositoryService securityRepository, IPolicyInformationService policyInformationService, IRepositoryServiceFactory repositoryFactory, IDataCachingService cachingService = null, IRepositoryService<SecurityUser> repository = null) : base(policyInformationService, repositoryFactory, cachingService, repository)
+        {
+            this.m_securityRepository = securityRepository;
+            this.m_roleProvider = roleProvider;
+            this.m_identityProvider = identityProvider;
+        }
+
+
         /// <summary>
         /// Gets the type of object that is expected
         /// </summary>
@@ -60,7 +81,9 @@ namespace SanteDB.Rest.AMI.Resources
 
             // User information to roles
             if (td.Roles.Count > 0)
-                ApplicationServiceContext.Current.GetService<IRoleProviderService>().AddUsersToRoles(new string[] { retVal.Entity.UserName }, td.Roles.ToArray(), AuthenticationContext.Current.Principal);
+            {
+                this.m_roleProvider.AddUsersToRoles(new string[] { retVal.Entity.UserName }, td.Roles.ToArray(), AuthenticationContext.Current.Principal);
+            }
 
             return new SecurityUserInfo(retVal.Entity)
             {
@@ -74,7 +97,7 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.AlterLocalIdentity)]
         public object Lock(object key)
         {
-            ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().LockUser((Guid)key);
+            this.m_securityRepository.LockUser((Guid)key);
             var retVal = this.Get(key, Guid.Empty);
             this.FireSecurityAttributesChanged(retVal, true, "Lockout = true");
             return retVal;
@@ -87,7 +110,7 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.AlterLocalIdentity)]
         public object Unlock(object key)
         {
-            ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().UnlockUser((Guid)key);
+            this.m_securityRepository.UnlockUser((Guid)key);
             var retVal = this.Get(key, Guid.Empty);
             this.FireSecurityAttributesChanged(retVal, true, "Lockout = false");
             return retVal;
@@ -110,12 +133,12 @@ namespace SanteDB.Rest.AMI.Resources
             if (td.PasswordOnly)
             {
                 // Validate that the user name matches the SID
-                var user = ApplicationServiceContext.Current.GetService<IRepositoryService<SecurityUser>>().Get(td.Entity.Key.Value);
+                var user = this.GetRepository().Get(td.Entity.Key.Value);
                 // Check upstream?
                 if (user != null && user.UserName?.ToLowerInvariant() != td.Entity.UserName.ToLowerInvariant())
                     throw new FaultException(403, $"Username mismatch expect {user.UserName.ToLowerInvariant()} but got {td.Entity.UserName.ToLowerInvariant()}");
 
-                ApplicationServiceContext.Current.GetService<IIdentityProviderService>().ChangePassword(td.Entity.UserName, td.Entity.Password, AuthenticationContext.Current.Principal);
+                this.m_identityProvider.ChangePassword(td.Entity.UserName, td.Entity.Password, AuthenticationContext.Current.Principal);
 
                 if (user != null)
                     this.FireSecurityAttributesChanged(user, true, "Password");
@@ -135,9 +158,8 @@ namespace SanteDB.Rest.AMI.Resources
                 // Roles? We want to update
                 if (td.Roles != null && td.Roles.Count > 0)
                 {
-                    var irps = ApplicationServiceContext.Current.GetService<IRoleProviderService>();
-                    irps.RemoveUsersFromRoles(new String[] { td.Entity.UserName }, irps.GetAllRoles().Where(o => !td.Roles.Contains(o)).ToArray(), AuthenticationContext.Current.Principal);
-                    irps.AddUsersToRoles(new string[] { td.Entity.UserName }, td.Roles.ToArray(), AuthenticationContext.Current.Principal);
+                    this.m_roleProvider.RemoveUsersFromRoles(new String[] { td.Entity.UserName }, this.m_roleProvider.GetAllRoles().Where(o => !td.Roles.Contains(o)).ToArray(), AuthenticationContext.Current.Principal);
+                    this.m_roleProvider.AddUsersToRoles(new string[] { td.Entity.UserName }, td.Roles.ToArray(), AuthenticationContext.Current.Principal);
                     this.FireSecurityAttributesChanged(retVal.Entity, true, $"Roles = {String.Join(",", td.Roles)}");
                 }
 

@@ -38,6 +38,18 @@ namespace SanteDB.Rest.AMI.Resources
     public class SecurityRoleResourceHandler : SecurityEntityResourceHandler<SecurityRole>
     {
 
+
+        // Security repository
+        private IRoleProviderService m_roleProvider;
+
+        /// <summary>
+        /// Create security repository
+        /// </summary>
+        public SecurityRoleResourceHandler(IRoleProviderService roleProvider, IPolicyInformationService policyInformationService, IRepositoryServiceFactory repositoryFactory, IDataCachingService cachingService = null, IRepositoryService<SecurityRole> repository = null) : base(policyInformationService, repositoryFactory, cachingService, repository)
+        {
+            this.m_roleProvider = roleProvider;
+        }
+
         /// <summary>
         /// Get the type
         /// </summary>
@@ -92,7 +104,7 @@ namespace SanteDB.Rest.AMI.Resources
                         throw new KeyNotFoundException($"User {subItemKey} not found");
                     try
                     {
-                        ApplicationServiceContext.Current.GetService<IRoleProviderService>().RemoveUsersFromRoles(new string[] { user.UserName }, new string[] { scope.Name }, AuthenticationContext.Current.Principal);
+                        this.m_roleProvider.RemoveUsersFromRoles(new string[] { user.UserName }, new string[] { scope.Name }, AuthenticationContext.Current.Principal);
                         this.FireSecurityAttributesChanged(scope, true, $"del user={user.UserName}");
                         return user;
                     }

@@ -38,6 +38,17 @@ namespace SanteDB.Rest.AMI.Resources
     public class SecurityApplicationResourceHandler : SecurityEntityResourceHandler<SecurityApplication>, ILockableResourceHandler
     {
 
+        // Security repository
+        private ISecurityRepositoryService m_securityRepository;
+
+        /// <summary>
+        /// Create security repository
+        /// </summary>
+        public SecurityApplicationResourceHandler(ISecurityRepositoryService securityRepository, IPolicyInformationService policyInformationService, IRepositoryServiceFactory repositoryFactory, IDataCachingService cachingService = null, IRepositoryService<SecurityApplication> repository = null) : base(policyInformationService, repositoryFactory, cachingService, repository)
+        {
+            this.m_securityRepository = securityRepository;
+        }
+
         /// <summary>
         /// Get the type of results
         /// </summary>
@@ -57,8 +68,8 @@ namespace SanteDB.Rest.AMI.Resources
             if (sde.Policies == null || sde.Policies.Count == 0 && sde.Entity?.Policies == null || sde.Entity.Policies.Count == 0)
 
             {
-                var role = ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>()?.GetRole("SYNCHRONIZERS");
-                var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>()?.GetPolicies(role);
+                var role = this.m_securityRepository.GetRole("SYNCHRONIZERS");
+                var policies = this.m_policyInformationService?.GetPolicies(role);
                 if (policies != null)
                     sde.Policies = policies.Select(o => new SecurityPolicyInfo(o)).ToList();
             }
@@ -92,7 +103,7 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.CreateApplication)]
         public object Lock(object key)
         {
-            ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().LockApplication((Guid)key);
+            this.m_securityRepository.LockApplication((Guid)key);
             var retVal = this.Get(key, Guid.Empty);
             this.FireSecurityAttributesChanged(retVal, true, "Lockout = true");
             return retVal;
@@ -104,7 +115,7 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.CreateApplication)]
         public object Unlock(object key)
         {
-            ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().UnlockApplication((Guid)key);
+            this.m_securityRepository.UnlockApplication((Guid)key);
             var retVal = this.Get(key, Guid.Empty);
             this.FireSecurityAttributesChanged(retVal, true, "Lockout = false");
             return retVal;

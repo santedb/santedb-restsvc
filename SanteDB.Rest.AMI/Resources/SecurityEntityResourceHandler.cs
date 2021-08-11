@@ -55,16 +55,29 @@ namespace SanteDB.Rest.AMI.Resources
         // The repository for the entity
         private IRepositoryService<TSecurityEntity> m_repository;
 
+        // CAche Service
+        private IDataCachingService m_cacheService;
+
         // Get the tracer
         private Tracer m_tracer = Tracer.GetTracer(typeof(SecurityEntityResourceHandler<TSecurityEntity>));
 
+        // Repository factory
+        private IRepositoryServiceFactory m_repositoryFactory;
+
+        // Policy information service
+        protected IPolicyInformationService m_policyInformationService;
+
         /// <summary>
-        /// Create a new instance of the security entity resource handler
+        /// Create a new instance of the respository handler
         /// </summary>
-        public SecurityEntityResourceHandler()
+        public SecurityEntityResourceHandler(IPolicyInformationService policyInformationService, IRepositoryServiceFactory repositoryFactory, IDataCachingService cachingService = null, IRepositoryService<TSecurityEntity> repository = null)
         {
-            ApplicationServiceContext.Current.Started += (o, e) => this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<TSecurityEntity>>();
+            this.m_cacheService = cachingService;
+            this.m_repository = repository;
+            this.m_repositoryFactory = repositoryFactory;
+            this.m_policyInformationService = policyInformationService;
         }
+
 
         /// <summary>
         /// Raise the security attributes change event
@@ -109,10 +122,7 @@ namespace SanteDB.Rest.AMI.Resources
             if (this.m_repository == null)
             {
                 this.m_tracer.TraceWarning("IRepositoryService<{0}> was not found will generate a default one using IRepositoryServiceFactory", typeof(TSecurityEntity).FullName);
-                var factoryService = ApplicationServiceContext.Current.GetService<IRepositoryServiceFactory>();
-                if (factoryService == null)
-                    throw new KeyNotFoundException($"IRepositoryService<{typeof(TSecurityEntity).FullName}> not found and no repository is found");
-                this.m_repository = factoryService.CreateRepository<TSecurityEntity>();
+                this.m_repository = this.m_repositoryFactory.CreateRepository<TSecurityEntity>();
             }
             return this.m_repository;
         }
@@ -149,7 +159,7 @@ namespace SanteDB.Rest.AMI.Resources
                 }
 
                 // Special case for security entity wrappers, we want to load them from DB from fresh
-                ApplicationServiceContext.Current.GetService<IDataCachingService>()?.Remove(td.Entity.Key.Value);
+                this.m_cacheService?.Remove(td.Entity.Key.Value);
                 return td;
             }
             catch
@@ -169,7 +179,7 @@ namespace SanteDB.Rest.AMI.Resources
             var data = this.GetRepository().Get((Guid)id, (Guid)versionId);
 
             var retVal = Activator.CreateInstance(this.Type, data) as ISecurityEntityInfo<TSecurityEntity>;
-            retVal.Policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetPolicies(data).Select(o => new SecurityPolicyInfo(o)).ToList();
+            retVal.Policies = this.m_policyInformationService.GetPolicies(data).Select(o => new SecurityPolicyInfo(o)).ToList();
             return retVal;
 
         }
@@ -186,7 +196,7 @@ namespace SanteDB.Rest.AMI.Resources
                 AuditUtil.AuditEventDataAction(EventTypeCodes.SecurityObjectChanged, Core.Model.Audit.ActionType.Delete, Core.Model.Audit.AuditableObjectLifecycle.LogicalDeletion, Core.Model.Audit.EventIdentifierType.SecurityAlert, Core.Model.Audit.OutcomeIndicator.Success, key.ToString(), retVal);
 
                 // Special case for security entity wrappers, we want to load them from DB from fresh
-                ApplicationServiceContext.Current.GetService<IDataCachingService>()?.Remove((Guid)key);
+                this.m_cacheService?.Remove((Guid)key);
 
                 return retVal;
             }
@@ -234,7 +244,7 @@ namespace SanteDB.Rest.AMI.Resources
             return results.Select(o =>
             {
                 var r = Activator.CreateInstance(this.Type, o) as ISecurityEntityInfo<TSecurityEntity>;
-                r.Policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetPolicies(o).Select(p => new SecurityPolicyInfo(p)).ToList();
+                r.Policies = this.m_policyInformationService.GetPolicies(o).Select(p => new SecurityPolicyInfo(p)).ToList();
                 return r;
             }).OfType<Object>();
 
@@ -260,7 +270,7 @@ namespace SanteDB.Rest.AMI.Resources
                 FireSecurityAttributesChanged(td.Entity, true);
 
                 // Special case for security entity wrappers, we want to load them from DB from fresh
-                ApplicationServiceContext.Current.GetService<IDataCachingService>()?.Remove(td.Entity.Key.Value);
+                this.m_cacheService?.Remove(td.Entity.Key.Value);
 
                 return td;
             }
