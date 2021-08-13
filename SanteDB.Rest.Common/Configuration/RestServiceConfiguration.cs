@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
 
@@ -47,6 +48,23 @@ namespace SanteDB.Rest.Common.Configuration
         {
             this.Behaviors = new List<RestServiceBehaviorConfiguration>();
             this.Endpoints = new List<RestEndpointConfiguration>();
+        }
+
+        /// <summary>
+        /// AGS Service configuration copy ctor
+        /// </summary>
+        public RestServiceConfiguration(RestServiceConfiguration configuration)
+        {
+            if (configuration.Behaviors != null)
+            {
+                this.Behaviors = new List<RestServiceBehaviorConfiguration>(configuration.Behaviors.Select(o => new RestServiceBehaviorConfiguration(o)));
+            }
+            if (configuration.Endpoints != null)
+            {
+                this.Endpoints = new List<RestEndpointConfiguration>(configuration.Endpoints?.Select(o => new RestEndpointConfiguration(o)));
+            }
+            this.Name = configuration.Name;
+            this.ServiceType = configuration.ServiceType;
         }
 
         /// <summary>

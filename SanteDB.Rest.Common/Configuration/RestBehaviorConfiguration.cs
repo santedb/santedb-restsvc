@@ -121,7 +121,7 @@ namespace SanteDB.Rest.Common.Configuration
         public RestServiceBehaviorConfiguration()
         {
 
-        }
+        }   
 
         /// <summary>
         /// Create a new behavior configuration with specified type
@@ -130,6 +130,16 @@ namespace SanteDB.Rest.Common.Configuration
         {
 
         }
+
+        /// <summary>
+        /// Configuration copy constructor
+        /// </summary>
+        public RestServiceBehaviorConfiguration(RestServiceBehaviorConfiguration configuration)
+        {
+            this.Configuration = configuration.Configuration;
+            this.Type = configuration.Type;
+        }
+
         /// <summary>
         /// Gets the type
         /// </summary>
@@ -153,6 +163,15 @@ namespace SanteDB.Rest.Common.Configuration
         public RestEndpointBehaviorConfiguration()
         {
 
+        }
+
+        /// <summary>
+        /// REST endpoint configuration
+        /// </summary>
+        public RestEndpointBehaviorConfiguration(RestEndpointBehaviorConfiguration configuration)
+        {
+            this.Configuration = configuration.Configuration;
+            this.Type = configuration.Type;
         }
 
         /// <summary>
