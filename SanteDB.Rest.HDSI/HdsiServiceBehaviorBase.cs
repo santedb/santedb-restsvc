@@ -221,6 +221,12 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
+
+                    if (handler is IChainedApiResourceHandler chainedHandler && chainedHandler.TryGetChainedResource(id, ChildObjectScopeBinding.Class, out IApiChildResourceHandler childHandler))
+                    {
+                        return this.AssociationSearch(resourceType, id) as IdentifiedData;
+                    }
+
                     this.AclCheck(handler, nameof(IApiResourceHandler.Get));
                     var retVal = handler.Get(Guid.Parse(id), Guid.Empty) as IdentifiedData;
                     if (retVal == null)
@@ -773,14 +779,14 @@ namespace SanteDB.Rest.HDSI
                     caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Patch, this.GetDemands(handler, nameof(IApiResourceHandler.Update))));
 
                 // To expose associated objects
-                var childResources = new List<ServiceResourceOptions>();
+                var childResources = new List<ChildServiceResourceOptions>();
                 if (handler is IChainedApiResourceHandler associative)
                 {
-                    childResources.AddRange(associative.ChildResources.Select(r => new ServiceResourceOptions(r.Name, r.PropertyType, r.Capabilities.ToResourceCapabilityStatement(getCaps).ToList(), null)));
+                    childResources.AddRange(associative.ChildResources.Select(r => new ChildServiceResourceOptions(r.Name, r.PropertyType, r.Capabilities.ToResourceCapabilityStatement(getCaps).ToList(), r.ScopeBinding, ChildObjectClassification.Resource)));
                 }
                 if (handler is IOperationalApiResourceHandler operational)
                 {
-                    childResources.AddRange(operational.Operations.Select(o => new ServiceResourceOptions(o.Name, typeof(Object), ResourceCapabilityType.Create.ToResourceCapabilityStatement(getCaps).ToList(), null)));
+                    childResources.AddRange(operational.Operations.Select(o => new ChildServiceResourceOptions(o.Name, typeof(Object), ResourceCapabilityType.Create.ToResourceCapabilityStatement(getCaps).ToList(), o.ScopeBinding, ChildObjectClassification.RpcOperation)));
                 }
                 // Associateive
                 return new ServiceResourceOptions(resourceType, handler.Type, caps, childResources);
@@ -1005,7 +1011,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Generate the barcode for the specified object with specified authority
         /// </summary>
-        public Stream GetBarcode(string resourceType, string id, string authority)
+        public virtual Stream GetBarcode(string resourceType, string id, string authority)
         {
             try
             {
@@ -1044,7 +1050,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Touches the specified data object
         /// </summary>
-        public IdentifiedData Touch(string resourceType, string id)
+        public virtual IdentifiedData Touch(string resourceType, string id)
         {
             this.ThrowIfNotReady();
             try
@@ -1124,7 +1130,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Get pointer to the specified resource
         /// </summary>
-        public Stream GetPointer(string resourceType, string id, string authority)
+        public virtual Stream GetPointer(string resourceType, string id, string authority)
         {
             try
             {
@@ -1174,7 +1180,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Invoke the specified method on the API
         /// </summary>
-        public object InvokeMethod(string resourceType, string id, string operationName, ApiOperationParameterCollection body)
+        public virtual object InvokeMethod(string resourceType, string id, string operationName, ApiOperationParameterCollection body)
         {
             this.ThrowIfNotReady();
 
@@ -1218,19 +1224,141 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Check-in the specified object
         /// </summary>
-        public object CheckIn(string resourceType, string key)
+        public virtual object CheckIn(string resourceType, string key)
+        {
+            this.ThrowIfNotReady();
+
+            try
+            {
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as ICheckoutResourceHandler;
+                if (handler != null)
+                {
+                    this.AclCheck(handler, nameof(ICheckoutResourceHandler.CheckIn));
+                    return handler.CheckIn(Guid.Parse(key));
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Check-out the specified object
+        /// </summary>
+        public virtual object CheckOut(string resourceType, string key)
+        {
+            this.ThrowIfNotReady();
+
+            try
+            {
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as ICheckoutResourceHandler;
+                if (handler != null)
+                {
+                    this.AclCheck(handler, nameof(ICheckoutResourceHandler.CheckIn));
+                    return handler.CheckOut(Guid.Parse(key));
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+
+            }
+        }
+
+        /// <summary>
+        /// Invoke a method which is not tied to a classifier object
+        /// </summary>
+        public virtual object InvokeMethod(string resourceType, string operationName, ApiOperationParameterCollection body)
+        {
+            this.ThrowIfNotReady();
+
+            try
+            {
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IOperationalApiResourceHandler;
+                if (handler != null)
+                {
+                    this.AclCheck(handler, nameof(IOperationalApiResourceHandler.InvokeOperation));
+
+                    var retValRaw = handler.InvokeOperation(null, operationName, body);
+
+                    if (retValRaw is IdentifiedData retVal)
+                    {
+                        RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
+                        RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.ModifiedOn.DateTime);
+
+                        // HTTP IF headers?
+                        if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null &&
+                            retVal.ModifiedOn <= RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() ||
+                            RestOperationContext.Current.IncomingRequest.GetIfNoneMatch()?.Any(o => retVal.Tag == o) == true)
+                        {
+                            RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
+                            return null;
+                        }
+                    }
+                    return retValRaw;
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+
+            }
+        }
+
+        /// <summary>
+        /// Perform a sub-get on a child resource and key without parent instance (exmaple: GET /Patient/extendedProperty/UUID)
+        /// </summary>
+        public virtual object AssociationGet(string resourceType, string childResourceType, string childResourceKey)
         {
             this.ThrowIfNotReady();
 
             try
             {
 
-                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as ICheckoutResourceHandler;
+                IChainedApiResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
-                    this.AclCheck(handler, nameof(ICheckoutResourceHandler.CheckIn));
+                    this.AclCheck(handler, nameof(IChainedApiResourceHandler.GetChildObject));
 
-                    return handler.CheckIn(Guid.Parse(key));
+                    var retVal = handler.GetChildObject(null, childResourceType, Guid.Parse(childResourceKey)) as IdentifiedData;
+
+                    RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
+                    RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.ModifiedOn.DateTime);
+
+                    // HTTP IF headers?
+                    if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null &&
+                        retVal.ModifiedOn <= RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() ||
+                        RestOperationContext.Current.IncomingRequest.GetIfNoneMatch()?.Any(o => retVal.Tag == o) == true)
+                    {
+                        RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
+                        return null;
+                    }
+
+                    else if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true" ||
+                        RestOperationContext.Current.IncomingRequest.QueryString["_all"] == "true")
+                    {
+                        retVal = retVal.GetLocked();
+                        ObjectExpander.ExpandProperties(retVal, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
+                        ObjectExpander.ExcludeProperties(retVal, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
+                        return Bundle.CreateBundle(retVal);
+                    }
+                    else
+                    {
+                        return retVal;
+                    }
 
                 }
                 else
@@ -1246,21 +1374,25 @@ namespace SanteDB.Rest.HDSI
         }
 
         /// <summary>
-        /// Check-out the specified object
+        /// Operates a DELETE on the instance 
         /// </summary>
-        public object CheckOut(string resourceType, string key)
+        public virtual object AssociationRemove(string resourceType, string childResourceType, string childResourceKey)
         {
             this.ThrowIfNotReady();
 
             try
             {
 
-                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as ICheckoutResourceHandler;
+                IChainedApiResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
-                    this.AclCheck(handler, nameof(ICheckoutResourceHandler.CheckIn));
+                    this.AclCheck(handler, nameof(IChainedApiResourceHandler.RemoveChildObject));
 
-                    return handler.CheckOut(Guid.Parse(key));
+                    var retVal = handler.RemoveChildObject(null, childResourceType, Guid.Parse(childResourceKey)) as IdentifiedData;
+
+                    RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
+                    RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, childResourceType, retVal.Key));
+                    return retVal;
 
                 }
                 else
@@ -1272,6 +1404,94 @@ namespace SanteDB.Rest.HDSI
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
 
+            }
+        }
+
+        /// <summary>
+        /// Perform a search on the specified entity
+        /// </summary>
+        [UrlParameter("_offset", typeof(int), "The offet of the first result to return")]
+        [UrlParameter("_count", typeof(int), "The count of items to return in this result set")]
+        [UrlParameter("_lean", typeof(bool), "True if the result bundle should only contains primary results")]
+        [UrlParameter("_all", typeof(bool), "True if all properties should be expanded")]
+        [UrlParameter("_expand", typeof(string), "The names of the properties which should be forced loaded", Multiple = true)]
+        [UrlParameter("_exclude", typeof(string), "The names of the properties which should removed from the bundle", Multiple = true)]
+        public virtual Object AssociationSearch(string resourceType, string childResourceType)
+        {
+            this.ThrowIfNotReady();
+            try
+            {
+
+                var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IChainedApiResourceHandler;
+                if (handler != null)
+                {
+                    String offset = RestOperationContext.Current.IncomingRequest.QueryString["_offset"],
+                      count = RestOperationContext.Current.IncomingRequest.QueryString["_count"];
+
+                    this.AclCheck(handler, nameof(IChainedApiResourceHandler.QueryChildObjects));
+
+                    var query = RestOperationContext.Current.IncomingRequest.QueryString.ToQuery();
+
+                    // Modified on?
+                    if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince().HasValue)
+                        query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince().Value.ToString("o"));
+
+                    // No obsoletion time?
+                    if (typeof(BaseEntityData).IsAssignableFrom(handler.Type) && !query.ContainsKey("obsoletionTime"))
+                        query.Add("obsoletionTime", "null");
+
+
+                    int totalResults = 0;
+
+                    // Lean mode
+                    var lean = RestOperationContext.Current.IncomingRequest.QueryString["_lean"];
+                    bool.TryParse(lean, out bool parsedLean);
+                    this.AclCheck(handler, nameof(IApiResourceHandler.Query));
+
+                    IEnumerable<IdentifiedData> retVal = handler.QueryChildObjects(null, childResourceType, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).OfType<IdentifiedData>();
+
+                    RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.OfType<IdentifiedData>().OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now);
+                    // Last modification time and not modified conditions
+                    if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||
+                        RestOperationContext.Current.IncomingRequest.GetIfNoneMatch() != null) &&
+                        totalResults == 0)
+                    {
+                        RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
+                        return null;
+                    }
+                    else
+                    {
+                        if (query.ContainsKey("_all") || query.ContainsKey("_expand") || query.ContainsKey("_exclude"))
+                        {
+                            var wtp = ApplicationServiceContext.Current.GetService<IThreadPoolService>();
+                            retVal.AsParallel().Select((itm) =>
+                            {
+                                try
+                                {
+                                    var i = itm as IdentifiedData;
+                                    ObjectExpander.ExpandProperties(i, query);
+                                    ObjectExpander.ExcludeProperties(i, query);
+                                    return true;
+                                }
+                                catch (Exception e)
+                                {
+                                    this.m_traceSource.TraceError("Error setting properties: {0}", e);
+                                    return false;
+                                }
+                            }).ToList();
+                        }
+
+                        return BundleUtil.CreateBundle(retVal, totalResults, Int32.Parse(offset ?? "0"), parsedLean);
+                    }
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
             }
         }
     }

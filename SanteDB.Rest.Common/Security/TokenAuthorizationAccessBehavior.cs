@@ -6,6 +6,7 @@ using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
@@ -15,6 +16,7 @@ namespace SanteDB.Rest.Common.Security
     /// <summary>
     /// Token authorization access behavior
     /// </summary>
+    [DisplayName("BEARER Token Authorization")]
     public class TokenAuthorizationAccessBehavior : IServicePolicy, IServiceBehavior
     {
 

@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
 
@@ -50,6 +51,23 @@ namespace SanteDB.Rest.Common.Configuration
         }
 
         /// <summary>
+        /// AGS Service configuration copy ctor
+        /// </summary>
+        public RestServiceConfiguration(RestServiceConfiguration configuration)
+        {
+            if (configuration.Behaviors != null)
+            {
+                this.Behaviors = new List<RestServiceBehaviorConfiguration>(configuration.Behaviors.Select(o => new RestServiceBehaviorConfiguration(o)));
+            }
+            if (configuration.Endpoints != null)
+            {
+                this.Endpoints = new List<RestEndpointConfiguration>(configuration.Endpoints?.Select(o => new RestEndpointConfiguration(o)));
+            }
+            this.Name = configuration.Name;
+            this.ServiceType = configuration.ServiceType;
+        }
+
+        /// <summary>
         /// Creates a service configuration from the specified type
         /// </summary>
         internal RestServiceConfiguration(Type type) : this()
@@ -68,7 +86,7 @@ namespace SanteDB.Rest.Common.Configuration
         /// <summary>
         /// Gets or sets the behavior
         /// </summary>
-        [XmlAttribute("serviceBehavior"), JsonProperty("serviceBehavior")]
+        [XmlAttribute("implementationType"), JsonProperty("implementationType")]
         [Browsable(false)]
         public String ServiceTypeXml { get; set; }
 
@@ -105,5 +123,11 @@ namespace SanteDB.Rest.Common.Configuration
                 s_serializer = XmlModelSerializerFactory.Current.CreateSerializer(typeof(RestServiceConfiguration));
             return s_serializer.Deserialize(stream) as RestServiceConfiguration;
         }
+
+        /// <summary>
+        /// Gets the string representation of this 
+        /// </summary>
+        public override string ToString() => $"REST Service: {this.Name}";
+
     }
 }

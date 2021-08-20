@@ -21,6 +21,7 @@ using RestSrvr;
 using SanteDB.Core.Model.Attributes;
 using System;
 using System.ComponentModel;
+using System.Reflection;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
@@ -78,8 +79,33 @@ namespace SanteDB.Rest.Common.Configuration
         /// Gets or sets the special configuration for the binding
         /// </summary>
         [XmlElement("configuration"), JsonProperty("configuration")]
-        [DisplayName("Behavior Configuration"), Description("XML Configuration for the Behavior")]
+        [Browsable(false)]
         public XElement Configuration { get; set; }
+
+        /// <summary>
+        /// Configuration string
+        /// </summary>
+        [DisplayName("Behavior Configuration"), Description("XML Configuration for the Behavior")]
+        [XmlIgnore, JsonIgnore]
+        [Editor("System.ComponentModel.Design.MultilineStringEditor, System.Design", "System.Drawing.Design.UITypeEditor, System.Drawing")]
+        //[Editor("System.Web.UI.Design.XmlFileEditor, System.Design", "System.Drawing.Design.UITypeEditor, System.Drawing")]
+        public String ConfigurationString
+        {
+            get => this.Configuration?.ToString();
+            set {
+                if (!String.IsNullOrEmpty(value))
+                    this.Configuration = XElement.Parse(value);
+                else
+                    this.Configuration = null;
+            }
+        }
+
+        /// <summary>
+        /// Get the name of the behavior
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() => this.Type?.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? this.Type?.Name;
+
     }
 
     /// <summary>
@@ -95,7 +121,7 @@ namespace SanteDB.Rest.Common.Configuration
         public RestServiceBehaviorConfiguration()
         {
 
-        }
+        }   
 
         /// <summary>
         /// Create a new behavior configuration with specified type
@@ -104,12 +130,24 @@ namespace SanteDB.Rest.Common.Configuration
         {
 
         }
+
+        /// <summary>
+        /// Configuration copy constructor
+        /// </summary>
+        public RestServiceBehaviorConfiguration(RestServiceBehaviorConfiguration configuration)
+        {
+            this.Configuration = configuration.Configuration;
+            this.Type = configuration.Type;
+        }
+
         /// <summary>
         /// Gets the type
         /// </summary>
-        [XmlIgnore, JsonIgnore, Editor("SanteDB.Configuration.Editors.TypeSelectorEditor", "System.Drawing.Design.UITypeEditor"), 
-            TypeConverter("SanteDB.Configuration.Converters.TypeDisplayConverter"), BindingAttribute(typeof(IServiceBehavior))]
+        [XmlIgnore, JsonIgnore, Editor("SanteDB.Configuration.Editors.TypeSelectorEditor, SanteDB.Configuration", "System.Drawing.Design.UITypeEditor, System.Drawing"), 
+            TypeConverter("SanteDB.Configuration.Converters.TypeDisplayConverter, SanteDB.Configuration"), BindingAttribute(typeof(IServiceBehavior))]
         public override Type Type { get => base.Type; set => base.Type = value; }
+
+       
     }
 
     /// <summary>
@@ -128,6 +166,15 @@ namespace SanteDB.Rest.Common.Configuration
         }
 
         /// <summary>
+        /// REST endpoint configuration
+        /// </summary>
+        public RestEndpointBehaviorConfiguration(RestEndpointBehaviorConfiguration configuration)
+        {
+            this.Configuration = configuration.Configuration;
+            this.Type = configuration.Type;
+        }
+
+        /// <summary>
         /// Create a new endpoint behavior
         /// </summary>
         public RestEndpointBehaviorConfiguration(Type type) : base(type)
@@ -137,8 +184,8 @@ namespace SanteDB.Rest.Common.Configuration
         /// <summary>
         /// Gets the type
         /// </summary>
-        [XmlIgnore, JsonIgnore, Editor("SanteDB.Configuration.Editors.TypeSelectorEditor", "System.Drawing.Design.UITypeEditor"),
-             TypeConverter("SanteDB.Configuration.Converters.TypeDisplayConverter"), BindingAttribute(typeof(IEndpointBehavior))]
+        [XmlIgnore, JsonIgnore, Editor("SanteDB.Configuration.Editors.TypeSelectorEditor, SanteDB.Configuration", "System.Drawing.Design.UITypeEditor, System.Drawing"),
+            TypeConverter("SanteDB.Configuration.Converters.TypeDisplayConverter, SanteDB.Configuration"), BindingAttribute(typeof(IEndpointBehavior))]
         public override Type Type { get => base.Type; set => base.Type = value; }
     }
 }

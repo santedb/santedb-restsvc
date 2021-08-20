@@ -590,10 +590,14 @@ namespace SanteDB.Messaging.AMI.Wcf
                     caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Patch, this.GetDemands(handler, nameof(IApiResourceHandler.Update))));
 
                 // To expose associated objects
-                var childResources = new List<ServiceResourceOptions>();
+                var childResources = new List<ChildServiceResourceOptions>();
                 if (handler is IChainedApiResourceHandler associative)
                 {
-                    childResources = associative.ChildResources.Select(r => new ServiceResourceOptions(r.Name, r.PropertyType, r.Capabilities.ToResourceCapabilityStatement(getCaps).ToList(), null)).ToList();
+                    childResources = associative.ChildResources.Select(r => new ChildServiceResourceOptions(r.Name, r.PropertyType, r.Capabilities.ToResourceCapabilityStatement(getCaps).ToList(), r.ScopeBinding, ChildObjectClassification.Resource)).ToList();
+                }
+                if (handler is IOperationalApiResourceHandler operation)
+                {
+                    childResources = operation.Operations.Select(o => new ChildServiceResourceOptions(o.Name, typeof(Object), ResourceCapabilityType.Create.ToResourceCapabilityStatement(getCaps).ToList(), o.ScopeBinding, ChildObjectClassification.RpcOperation)).ToList();
                 }
                 // Associateive
                 return new ServiceResourceOptions(resourceType, handler.Type, caps, childResources);

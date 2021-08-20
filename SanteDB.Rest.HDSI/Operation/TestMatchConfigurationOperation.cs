@@ -53,6 +53,11 @@ namespace SanteDB.Rest.HDSI.Operation
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Get | ResourceCapabilityType.Search;
 
         /// <summary>
+        /// Test the match configuration is an instance method
+        /// </summary>
+        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Instance;
+
+        /// <summary>
         /// Add a test? Not supported
         /// </summary>
         public object Add(Type scopingType, object scopingKey, object item)

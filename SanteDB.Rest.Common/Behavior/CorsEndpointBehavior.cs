@@ -21,6 +21,7 @@ using SanteDB.Core.Exceptions;
 using SanteDB.Core.Model.Serialization;
 using SanteDB.Rest.Common.Serialization;
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -30,6 +31,7 @@ namespace SanteDB.Rest.Common.Behavior
     /// <summary>
     /// Adds message CORS insepectors
     /// </summary>
+    [DisplayName("Cross-Origin-Scripting (CORS) Support")]
     public class CorsEndpointBehavior : IEndpointBehavior
     {
 

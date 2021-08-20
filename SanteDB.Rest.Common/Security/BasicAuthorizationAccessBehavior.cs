@@ -28,6 +28,7 @@ using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.Tracing;
 using System.Linq;
@@ -41,6 +42,7 @@ namespace SanteDB.Rest.Common.Security
     /// <summary>
     /// Basic authorization policy
     /// </summary>
+    [DisplayName("HTTP BASIC Authentication")]
     public class BasicAuthorizationAccessBehavior : IServicePolicy, IServiceBehavior
     {
 

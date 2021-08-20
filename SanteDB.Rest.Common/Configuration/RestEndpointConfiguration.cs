@@ -17,9 +17,11 @@
  * Date: 2019-11-27
  */
 using Newtonsoft.Json;
+using SanteDB.Core.Security.Configuration;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace SanteDB.Rest.Common.Configuration
@@ -32,12 +34,38 @@ namespace SanteDB.Rest.Common.Configuration
     public class RestEndpointConfiguration
     {
 
+        // Address
+        private string m_address;
+
         /// <summary>
         /// AGS Endpoint CTOR
         /// </summary>
         public RestEndpointConfiguration()
         {
             this.Behaviors = new List<RestEndpointBehaviorConfiguration>();
+            this.CertificateBinding = new X509ConfigurationElement();
+        }
+
+        /// <summary>
+        /// Rest endpoint configuration copy constructor
+        /// </summary>
+        public RestEndpointConfiguration(RestEndpointConfiguration configuration) : this()
+        {
+            this.Behaviors = new List<RestEndpointBehaviorConfiguration>(configuration.Behaviors.Select(o => new RestEndpointBehaviorConfiguration(o)));
+            if (configuration.CertificateBinding != null) {
+                this.CertificateBinding = new X509ConfigurationElement()
+                {
+                    FindType = configuration.CertificateBinding.FindType,
+                    StoreLocation = configuration.CertificateBinding.StoreLocation,
+                    FindTypeSpecified = configuration.CertificateBinding.FindTypeSpecified,
+                    StoreLocationSpecified = configuration.CertificateBinding.StoreLocationSpecified,
+                    StoreName = configuration.CertificateBinding.StoreName,
+                    StoreNameSpecified = configuration.CertificateBinding.StoreNameSpecified,
+                    FindValue = configuration.CertificateBinding.FindValue
+                };
+            }
+            this.Address = configuration.Address;
+            this.Contract = configuration.Contract;
         }
 
         /// <summary>
@@ -63,7 +91,18 @@ namespace SanteDB.Rest.Common.Configuration
         /// </summary>
         [XmlAttribute("address"), JsonProperty("address")]
         [DisplayName("Address"), Description("The address where the endpoint should accept messages")]
-        public String Address { get; set; }
+        public String Address
+        {
+            get => this.m_address;
+            set
+            {
+                this.m_address = value;
+                if(Uri.TryCreate(value, UriKind.Absolute, out Uri uri) && uri.Scheme == "https" && this.CertificateBinding == null)
+                {
+                    this.CertificateBinding = new X509ConfigurationElement();
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the bindings 
@@ -72,5 +111,18 @@ namespace SanteDB.Rest.Common.Configuration
         [DisplayName("Endpoint Behaviors"), Description("The behaviors to attach to the endpoint")]
         public List<RestEndpointBehaviorConfiguration> Behaviors { get; set; }
 
+        /// <summary>
+        /// Gets or sets the certificate binding
+        /// </summary>
+        [XmlElement("certificate"), JsonProperty("certificate")]
+        //[Editor("SanteDB.Configuration.Editors.X509Certificate2Editor, SanteDB.Configuration", "System.Drawing.Design.UITypeEditor, System.Windows.Forms")]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [DisplayName("Certificate Binding"), Description("The certificate information to bind to the HTTP endpoint")]
+        public X509ConfigurationElement CertificateBinding { get; set; }
+
+        /// <summary>
+        /// Endpoint configuration
+        /// </summary>
+        public override string ToString() => this.Address;
     }
 }

@@ -66,7 +66,9 @@ namespace SanteDB.Core.Model.AMI.Jobs
             this.Parameters = job.Parameters?.Select(o=>new JobParameter() { Key = o.Key, Type = o.Value.Name }).ToList();
             this.LastStart = job.LastStarted;
             this.LastFinish = job.LastFinished;
+            this.JobType = job.GetType().AssemblyQualifiedName;
         }
+
         /// <summary>
         /// Gets or sets the key for the object
         /// </summary>
@@ -96,11 +98,13 @@ namespace SanteDB.Core.Model.AMI.Jobs
         /// </summary>
         [XmlElement("canCancel"), JsonProperty("canCancel")]
         public bool CanCancel { get; set; }
+
         /// <summary>
         /// Gets the current state of the job
         /// </summary>
         [XmlElement("state"), JsonProperty("state")]
         public JobStateType State { get; set;  }
+
         /// <summary>
         /// Gets the parameters for this job execution
         /// </summary>
@@ -118,5 +122,12 @@ namespace SanteDB.Core.Model.AMI.Jobs
         /// </summary>
         [XmlElement("lastFinish"), JsonProperty("lastFinish")]
         public DateTime? LastFinish { get; set; }
+
+        /// <summary>
+        /// Get or sets the job type
+        /// </summary>
+        [XmlElement("jobType"), JsonProperty("jobType")]
+        public string JobType { get; set; }
+
     }
 }

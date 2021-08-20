@@ -16,6 +16,7 @@
  * User: fyfej
  * Date: 2021-2-9
  */
+using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
 using System;
 using System.Collections.Generic;
@@ -64,7 +65,7 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Adds the specified object with sub item key 
         /// </summary>
-        /// <param name="scopingEntityKey">The scoping entity key</param>
+        /// <param name="scopingEntityKey">The scoping entity key or null if global execution</param>
         /// <param name="propertyName">The property name</param>
         /// <param name="scopedItem">The sub-item to be added</param>
         /// <returns>The newly created associative entity</returns>
@@ -74,5 +75,13 @@ namespace SanteDB.Rest.Common
         /// Fetchs the scoped entity
         /// </summary>
         Object GetChildObject(object scopingEntity, string propertyName, object subItemKey);
+
+        /// <summary>
+        /// Try to get chianed resource
+        /// </summary>
+        /// <param name="bindingType">The type of binding</param>
+        /// <param name="childHandler">The child handler</param>
+        /// <param name="propertyName">The property name to obtain</param>
+        bool TryGetChainedResource(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildResourceHandler childHandler);
     }
 }

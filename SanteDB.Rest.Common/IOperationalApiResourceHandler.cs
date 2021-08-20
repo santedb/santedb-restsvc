@@ -16,6 +16,7 @@
  * User: fyfej
  * Date: 2021-2-9
  */
+using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,17 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Fetchs the scoped entity
         /// </summary>
+        /// <param name="operationName">The operation to be invoked</param>
+        /// <param name="parameters">The parameter to pass to the operation</param>
+        /// <param name="scopingEntityKey">The scoped entity key or null if operating on the type rather than an instance</param>
         Object InvokeOperation(object scopingEntityKey, string operationName, ApiOperationParameterCollection parameters);
+
+        /// <summary>
+        /// Try to get chianed resource
+        /// </summary>
+        /// <param name="bindingType">The type of binding</param>
+        /// <param name="propertyName">The property name to obtain</param>
+        /// <param name="operationHandler">The operation handler</param>
+        bool TryGetOperation(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildOperation operationHandler);
     }
 }

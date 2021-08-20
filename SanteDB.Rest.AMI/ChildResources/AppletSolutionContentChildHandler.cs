@@ -51,6 +51,11 @@ namespace SanteDB.Rest.AMI.ChildResources
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Get | ResourceCapabilityType.Search;
 
         /// <summary>
+        /// Binding
+        /// </summary>
+        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Instance;
+
+        /// <summary>
         /// Adding applets is not yet supported
         /// </summary>
         public object Add(Type scopingType, object scopingKey, object item)

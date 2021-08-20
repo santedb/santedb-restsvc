@@ -87,7 +87,7 @@ namespace SanteDB.Rest.HDSI
     [RestServiceFault(429, "The server rejected the request due to a throttling constraint")]
     [RestServiceFault(500, "The server encountered an error processing the result")]
     [RestServiceFault(503, "The service is not available (starting up or shutting down)")]
-    public interface IHdsiServiceContract 
+    public interface IHdsiServiceContract  : IRestApiContractImplementation
     {
 
         /// <summary>
@@ -222,7 +222,6 @@ namespace SanteDB.Rest.HDSI
         [Get("/{resourceType}/{id}/_history/{versionId}")]
         IdentifiedData GetVersion(string resourceType, string id, string versionId);
 
-
         /// <summary>
         /// Creates the resource. If the resource already exists, then a 409 is thrown
         /// </summary>
@@ -303,10 +302,8 @@ namespace SanteDB.Rest.HDSI
         /// <param name="childResourceKey">The key of the sub-item to fetch</param>
         /// <param name="childResourceType">The property to search</param>
         /// <returns>The search for the specified resource type limited to the specified object</returns>
-        /// <remarks>This operation will execute a GET operation on a child (or linked) resource. Typically if the child resource represents some sort of operation against 
-        /// the container resource it will start with a $ (such as $match or $link)</remarks>
-        [Get("/{resourceType}/{key}/{childResourceType}/{childResourceKey}")]
-        Object AssociationGet(String resourceType, String key, String childResourceType, String childResourceKey);
+        [Get("/{resourceType}/{id}/{childResourceType}/{childResourceKey}")]
+        Object AssociationGet(String resourceType, String id, String childResourceType, String childResourceKey);
 
         /// <summary>
         /// Performs a linked or chained search on a sub-property
@@ -316,8 +313,8 @@ namespace SanteDB.Rest.HDSI
         /// <param name="childResourceType">The property to search</param>
         /// <returns>The search for the specified resource type limited to the specified object</returns>
         /// <remarks>This method performs a general search on the child resource type, however scoped to the container of the parent (so users within role container)</remarks>
-        [Get("/{resourceType}/{key}/{childResourceType}")]
-        Object AssociationSearch(String resourceType, String key, String childResourceType);
+        [Get("/{resourceType}/{id}/{childResourceType}")]
+        Object AssociationSearch(String resourceType, String id, String childResourceType);
 
         /// <summary>
         /// Assigns the child object as a child (or link) of the parent
@@ -327,8 +324,8 @@ namespace SanteDB.Rest.HDSI
         /// <param name="childResourceType">The property which is the association to be added</param>
         /// <param name="body">The object to be added to the collection</param>
         /// <remarks>This method adds a new child resource instance to the container and performs the necessary linking</remarks>
-        [Post("/{resourceType}/{key}/{childResourceType}")]
-        object AssociationCreate(String resourceType, String key, String childResourceType, Object body);
+        [Post("/{resourceType}/{id}/{childResourceType}")]
+        object AssociationCreate(String resourceType, String id, String childResourceType, Object body);
 
         /// <summary>
         /// Removes a child resource instance from the parent container
@@ -339,8 +336,49 @@ namespace SanteDB.Rest.HDSI
         /// <param name="childResourceKey">The actual value of the sub-key</param>
         /// <returns>The removed object</returns>
         /// <remarks>This method will unlink, or delete (depending on behavior of the provider) the child resource from the container.</remarks>
-        [Delete("/{resourceType}/{key}/{childResourceType}/{childResourceKey}")]
-        object AssociationRemove(String resourceType, String key, String childResourceType, String childResourceKey);
+        [Delete("/{resourceType}/{id}/{childResourceType}/{childResourceKey}")]
+        object AssociationRemove(String resourceType, String id, String childResourceType, String childResourceKey);
+
+        /// <summary>
+        /// Invokes the specified operation
+        /// </summary>
+        /// <param name="resourceType">The type of operation being invoked</param>
+        /// <param name="id">The ID of the operation</param>
+        /// <param name="operationName">The name of the operation</param>
+        /// <returns>The result of the operation invokation</returns>
+        [RestInvoke("POST", "/{resourceType}/${operationName}")]
+        object InvokeMethod(String resourceType, String operationName, ApiOperationParameterCollection body);
+
+        /// <summary>
+        /// Performs a linked or chained search on a sub-property
+        /// </summary>
+        /// <param name="resourceType">The type of resource which should be searched</param>
+        /// <param name="childResourceType">The property to search</param>
+        /// <returns>The search for the specified resource type limited to the specified object</returns>
+        [Get("/{resourceType}/{childResourceType}")]
+        Object AssociationSearch(String resourceType, String childResourceType);
+
+        /// <summary>
+        /// Performs a linked or chained search on a sub-property
+        /// </summary>
+        /// <param name="resourceType">The type of resource which should be searched</param>
+        /// <param name="childResourceKey">The key of the sub-item to fetch</param>
+        /// <param name="childResourceType">The property to search</param>
+        /// <returns>The search for the specified resource type limited to the specified object</returns>
+        [Get("/{resourceType}/{childResourceType}/{childResourceKey}")]
+        Object AssociationGet(String resourceType, String childResourceType, String childResourceKey);
+
+        /// <summary>
+        /// Removes a child resource instance from the parent container
+        /// </summary>
+        /// <param name="resourceType">The type of resource which is the container</param>
+        /// <param name="childResourceType">The property on which the sub-key resides</param>
+        /// <param name="childResourceKey">The actual value of the sub-key</param>
+        /// <returns>The removed object</returns>
+        /// <remarks>This method will unlink, or delete (depending on behavior of the provider) the child resource from the container.</remarks>
+        [Delete("/{resourceType}/{childResourceType}/{childResourceKey}")]
+        object AssociationRemove(String resourceType, String childResourceType, String childResourceKey);
+
 
     }
 }

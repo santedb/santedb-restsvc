@@ -23,6 +23,7 @@ using SanteDB.Core.Security.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -33,6 +34,7 @@ namespace SanteDB.Rest.Common.Security
     /// <summary>
     /// Represents a policy behavior for demanding permission
     /// </summary>
+    [DisplayName("API Policy Based Access Control")]
     public class OperationDemandPolicyBehavior : IOperationPolicy, IOperationBehavior, IEndpointBehavior
     {
 
