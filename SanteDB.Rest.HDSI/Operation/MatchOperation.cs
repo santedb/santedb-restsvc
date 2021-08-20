@@ -49,6 +49,11 @@ namespace SanteDB.Rest.HDSI.Operation
         /// </summary>
         public string Name => "match";
 
+        /// <summary>
+        /// Binding for this operation
+        /// </summary>
+        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Instance;
+
 
         /// <summary>
         /// Get the match report for the specified object
@@ -73,7 +78,7 @@ namespace SanteDB.Rest.HDSI.Operation
                 // key of match configuration
                 if(!parameters.TryGet<String>("configuration", out String configuration))
                 {
-                    throw new InvalidOperationException("Rqeuired parameter 'configuration' missing");
+                    throw new InvalidOperationException("Required parameter 'configuration' missing");
                 }
                 return reportFactory.CreateMatchReport(scopingType, source, this.m_matchingService.Match(source, configuration, null));
             }

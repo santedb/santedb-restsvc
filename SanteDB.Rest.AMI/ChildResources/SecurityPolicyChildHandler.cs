@@ -36,6 +36,11 @@ namespace SanteDB.Rest.AMI.ChildResources
         private IRepositoryService<SecurityApplication> m_applicationRepository;
 
         /// <summary>
+        /// Binding for this operation
+        /// </summary>
+        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Instance;
+
+        /// <summary>
         /// Security challenge child handler
         /// </summary>
         public SecurityPolicyChildHandler(IRepositoryService<SecurityDevice> deviceRepository, IRepositoryService<SecurityApplication> applicationRepository, IRepositoryService<SecurityRole> roleRepository, IPolicyEnforcementService pepService, IPolicyInformationService pipService)

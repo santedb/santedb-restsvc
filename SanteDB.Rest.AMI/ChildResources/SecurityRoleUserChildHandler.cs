@@ -34,6 +34,11 @@ namespace SanteDB.Rest.AMI.ChildResources
         public Type PropertyType => typeof(SecurityUser);
 
         /// <summary>
+        /// Binding for this operation
+        /// </summary>
+        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Instance;
+
+        /// <summary>
         /// Get capabilities
         /// </summary>
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.Delete | ResourceCapabilityType.Search;

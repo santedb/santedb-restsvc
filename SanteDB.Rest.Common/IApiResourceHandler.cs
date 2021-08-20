@@ -98,7 +98,8 @@ namespace SanteDB.Rest.Common
         /// <param name="data">The resource data to be updated.</param>
         /// <returns>Returns the updated resource.</returns>
         Object Update(Object data);
-	}
+
+    }
 
    
 }

@@ -54,6 +54,11 @@ namespace SanteDB.Rest.AMI.ChildResources
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.Get | ResourceCapabilityType.Search | ResourceCapabilityType.Delete;
 
         /// <summary>
+        /// Binding for this operation
+        /// </summary>
+        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Instance;
+
+        /// <summary>
         /// Add the security challenge
         /// </summary>
         public object Add(Type scopingType, object scopingKey, object item)

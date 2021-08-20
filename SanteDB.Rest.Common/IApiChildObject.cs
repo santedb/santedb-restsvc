@@ -5,12 +5,18 @@ using System.Text;
 
 namespace SanteDB.Rest.Common
 {
+
     /// <summary>
     /// API Child object
     /// </summary>
     public interface IApiChildObject 
     {
 
+        /// <summary>
+        /// Gets the binding type
+        /// </summary>
+        ChildObjectScopeBinding ScopeBinding { get; }
+        
         /// <summary>
         /// Gets the resource name that this applies to
         /// </summary>
