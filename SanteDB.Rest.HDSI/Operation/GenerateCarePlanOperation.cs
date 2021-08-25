@@ -1,4 +1,5 @@
 ﻿using SanteDB.Core.i18n;
+using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Constants;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using SanteDB.Core.Model;
 
 namespace SanteDB.Rest.HDSI.Operation
 {
@@ -41,6 +43,11 @@ namespace SanteDB.Rest.HDSI.Operation
         /// The name of the operation
         /// </summary>
         public string Name => "cdss";
+
+        /// <summary>
+        /// The binding of the scope
+        /// </summary>
+        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Class;
 
         /// <summary>
         /// Invoke the care plan operation
