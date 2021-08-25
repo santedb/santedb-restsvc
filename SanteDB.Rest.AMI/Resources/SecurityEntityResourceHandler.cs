@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE.md)
+ * Portions Copyright 2019-2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you 
  * may not use this file except in compliance with the License. You may 
@@ -13,8 +13,8 @@
  * License for the specific language governing permissions and limitations under 
  * the License.
  * 
- * User: fyfej
- * Date: 2021-2-9
+ * User: fyfej (Justin Fyfe)
+ * Date: 2021-8-5
  */
 using RestSrvr;
 using SanteDB.Core;
@@ -297,7 +297,7 @@ namespace SanteDB.Rest.AMI.Resources
         {
             Guid objectKey = (Guid)scopingEntityKey;
 
-            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
+            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
             {
                 return propertyProvider.Remove(typeof(TSecurityEntity), objectKey, subItemKey);
             }
@@ -314,7 +314,7 @@ namespace SanteDB.Rest.AMI.Resources
         public IEnumerable<object> QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
         {
             Guid objectKey = (Guid)scopingEntityKey;
-            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
+            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
             {
                 return propertyProvider.Query(typeof(TSecurityEntity), objectKey, filter, offset, count, out totalCount);
             }
@@ -331,7 +331,7 @@ namespace SanteDB.Rest.AMI.Resources
         public object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
         {
             Guid objectKey = (Guid)scopingEntityKey;
-            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
+            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
             {
                 return propertyProvider.Add(typeof(TSecurityEntity), scopingEntityKey, scopedItem);
             }
@@ -348,7 +348,7 @@ namespace SanteDB.Rest.AMI.Resources
         public object GetChildObject(object scopingEntity, string propertyName, object subItemKey)
         {
             Guid objectKey = (Guid)scopingEntity;
-            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
+            if (this.TryGetChainedResource(propertyName, scopingEntity == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
             {
                 return propertyProvider.Get(typeof(TSecurityEntity), objectKey, subItemKey);
             }
@@ -356,6 +356,20 @@ namespace SanteDB.Rest.AMI.Resources
             {
                 throw new KeyNotFoundException($"{propertyName} not found");
             }
+        }
+
+        /// <summary>
+        /// Try to get a chained resource
+        /// </summary>
+        public bool TryGetChainedResource(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildResourceHandler childHandler)
+        {
+            var retVal = this.m_propertyProviders.TryGetValue(propertyName, out childHandler) &&
+                childHandler.ScopeBinding.HasFlag(bindingType);
+            if (!retVal)
+            {
+                childHandler = null;//clear in case of lazy programmers like me
+            }
+            return retVal;
         }
     }
 }

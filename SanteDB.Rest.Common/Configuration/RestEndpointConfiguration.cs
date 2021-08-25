@@ -1,5 +1,7 @@
 ﻿/*
- * Portions Copyright 2019-2020, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE)
+ * Copyright (C) 2021 - 2021, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
+ * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you 
  * may not use this file except in compliance with the License. You may 
@@ -13,14 +15,15 @@
  * License for the specific language governing permissions and limitations under 
  * the License.
  * 
- * User: fyfej (Justin Fyfe)
- * Date: 2019-11-27
+ * User: fyfej
+ * Date: 2021-8-5
  */
 using Newtonsoft.Json;
 using SanteDB.Core.Security.Configuration;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace SanteDB.Rest.Common.Configuration
@@ -43,6 +46,28 @@ namespace SanteDB.Rest.Common.Configuration
         {
             this.Behaviors = new List<RestEndpointBehaviorConfiguration>();
             this.CertificateBinding = new X509ConfigurationElement();
+        }
+
+        /// <summary>
+        /// Rest endpoint configuration copy constructor
+        /// </summary>
+        public RestEndpointConfiguration(RestEndpointConfiguration configuration) : this()
+        {
+            this.Behaviors = new List<RestEndpointBehaviorConfiguration>(configuration.Behaviors.Select(o => new RestEndpointBehaviorConfiguration(o)));
+            if (configuration.CertificateBinding != null) {
+                this.CertificateBinding = new X509ConfigurationElement()
+                {
+                    FindType = configuration.CertificateBinding.FindType,
+                    StoreLocation = configuration.CertificateBinding.StoreLocation,
+                    FindTypeSpecified = configuration.CertificateBinding.FindTypeSpecified,
+                    StoreLocationSpecified = configuration.CertificateBinding.StoreLocationSpecified,
+                    StoreName = configuration.CertificateBinding.StoreName,
+                    StoreNameSpecified = configuration.CertificateBinding.StoreNameSpecified,
+                    FindValue = configuration.CertificateBinding.FindValue
+                };
+            }
+            this.Address = configuration.Address;
+            this.Contract = configuration.Contract;
         }
 
         /// <summary>

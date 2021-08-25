@@ -1,5 +1,7 @@
 ﻿/*
- * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE.md)
+ * Copyright (C) 2021 - 2021, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
+ * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you 
  * may not use this file except in compliance with the License. You may 
@@ -14,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-2-9
+ * Date: 2021-8-5
  */
 using SanteDB.Core;
 using SanteDB.Core.Services;
@@ -32,6 +34,7 @@ using System.Linq;
 using System.Collections.Concurrent;
 using SanteDB.Rest.Common.Attributes;
 using SanteDB.Core.Security;
+using SanteDB.Core.Interop;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
@@ -39,11 +42,11 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a resource handler base type that is always bound to HDSI
     /// </summary>
     /// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
-    public abstract class ResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData>, 
-        INullifyResourceHandler, 
-        ICancelResourceHandler, 
-        IChainedApiResourceHandler, 
-        ICheckoutResourceHandler, 
+    public abstract class ResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData>,
+        INullifyResourceHandler,
+        ICancelResourceHandler,
+        IChainedApiResourceHandler,
+        ICheckoutResourceHandler,
         IApiResourceHandlerEx,
         IOperationalApiResourceHandler
 
@@ -94,7 +97,7 @@ namespace SanteDB.Rest.HDSI.Resources
         {
             try
             {
-                if(data is IdentifiedData id)
+                if (data is IdentifiedData id)
                     this.CheckOut((Guid)id.Key);
                 return base.Update(data);
             }
@@ -111,12 +114,13 @@ namespace SanteDB.Rest.HDSI.Resources
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
         {
-            Guid objectKey = (Guid)scopingEntityKey;
-
             try
             {
-                this.CheckOut(objectKey);
-                if(this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
+                if (scopingEntityKey is Guid objectKey)
+                {
+                    this.CheckOut(objectKey);
+                }
+                if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
                 {
                     return propertyProvider.Add(typeof(TData), scopingEntityKey, scopedItem);
                 }
@@ -127,7 +131,10 @@ namespace SanteDB.Rest.HDSI.Resources
             }
             finally
             {
-                this.CheckIn(objectKey);
+                if (scopingEntityKey is Guid objectKey)
+                {
+                    this.CheckIn(objectKey);
+                }
             }
         }
 
@@ -157,7 +164,7 @@ namespace SanteDB.Rest.HDSI.Resources
         public virtual object GetChildObject(object scopingEntity, string propertyName, object subItem)
         {
             Guid objectKey = (Guid)scopingEntity, subItemKey = (Guid)subItem;
-            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
+            if (this.TryGetChainedResource(propertyName, scopingEntity == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
             {
                 return propertyProvider.Get(typeof(TData), objectKey, subItemKey);
             }
@@ -196,10 +203,9 @@ namespace SanteDB.Rest.HDSI.Resources
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual IEnumerable<object> QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
         {
-            Guid objectKey = (Guid)scopingEntityKey;
-            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
+            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
             {
-                return propertyProvider.Query(typeof(TData), objectKey, filter, offset, count, out totalCount);
+                return propertyProvider.Query(typeof(TData), scopingEntityKey, filter, offset, count, out totalCount);
             }
             else
             {
@@ -213,14 +219,15 @@ namespace SanteDB.Rest.HDSI.Resources
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
         {
-            Guid objectKey = (Guid)scopingEntityKey;
-
             try
             {
-                this.CheckOut(objectKey);
-                if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
+                if (scopingEntityKey is Guid objectKey)
                 {
-                    return propertyProvider.Remove(typeof(TData), objectKey, subItemKey);
+                    this.CheckOut(objectKey);
+                }
+                if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
+                {
+                    return propertyProvider.Remove(typeof(TData), scopingEntityKey, subItemKey);
                 }
                 else
                 {
@@ -229,7 +236,10 @@ namespace SanteDB.Rest.HDSI.Resources
             }
             finally
             {
-                this.CheckIn(objectKey);
+                if (scopingEntityKey is Guid objectKey)
+                {
+                    this.CheckIn(objectKey);
+                }
             }
         }
 
@@ -284,7 +294,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// </summary>
         public object InvokeOperation(object scopingEntityKey, string operationName, ApiOperationParameterCollection parameters)
         {
-            if(this.m_operationProviders.TryGetValue(operationName, out IApiChildOperation handler))
+            if (this.TryGetOperation(operationName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildOperation handler))
             {
                 return handler.Invoke(typeof(TData), scopingEntityKey, parameters);
             }
@@ -292,6 +302,34 @@ namespace SanteDB.Rest.HDSI.Resources
             {
                 throw new NotSupportedException($"Operation {operationName} not supported");
             }
+        }
+
+        /// <summary>
+        /// Try to get a chained resource
+        /// </summary>
+        public bool TryGetChainedResource(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildResourceHandler childHandler)
+        {
+            var retVal = this.m_propertyProviders.TryGetValue(propertyName, out childHandler) &&
+                childHandler.ScopeBinding.HasFlag(bindingType);
+            if (!retVal)
+            {
+                childHandler = null;//clear in case of lazy programmers like me
+            }
+            return retVal;
+        }
+
+        /// <summary>
+        /// Try to get operation
+        /// </summary>
+        public bool TryGetOperation(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildOperation operationHandler)
+        {
+            var retVal = this.m_operationProviders.TryGetValue(propertyName, out operationHandler) &&
+                operationHandler.ScopeBinding.HasFlag(bindingType);
+            if (!retVal)
+            {
+                operationHandler = null;//clear in case of lazy programmers like me
+            }
+            return retVal;
         }
     }
 }

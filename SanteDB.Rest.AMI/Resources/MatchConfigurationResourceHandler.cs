@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE.md)
+ * Portions Copyright 2019-2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you 
  * may not use this file except in compliance with the License. You may 
@@ -13,8 +13,8 @@
  * License for the specific language governing permissions and limitations under 
  * the License.
  * 
- * User: fyfej
- * Date: 2021-2-9
+ * User: fyfej (Justin Fyfe)
+ * Date: 2021-8-5
  */
 using RestSrvr;
 using SanteDB.Core;
@@ -87,7 +87,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
         {
-            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
+            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
             {
                 return propertyProvider.Add(this.Type, scopingEntityKey, scopedItem);
             }
@@ -123,7 +123,7 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.ReadMetadata), Demand(PermissionPolicyIdentifiers.ReadClinicalData)]
         public object GetChildObject(object scopingEntity, string propertyName, object subItemKey)
         {
-            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
+            if (this.TryGetChainedResource(propertyName, scopingEntity == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
             {
                 return propertyProvider.Get(this.Type, scopingEntity, subItemKey);
             }
@@ -175,7 +175,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public IEnumerable<object> QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
         {
-            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
+            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
             {
                 return propertyProvider.Query(this.Type, scopingEntityKey, filter, offset, count, out totalCount);
             }
@@ -190,7 +190,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
         {
-            if (this.m_propertyProviders.TryGetValue(propertyName, out IApiChildResourceHandler propertyProvider))
+            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
             {
                 return propertyProvider.Remove(this.Type,scopingEntityKey, subItemKey);
             }
@@ -218,6 +218,21 @@ namespace SanteDB.Rest.AMI.Resources
         public void AddChildResource(IApiChildResourceHandler property)
         {
             this.m_propertyProviders.TryAdd(property.Name, property);
+        }
+
+
+        /// <summary>
+        /// Try to get a chained resource
+        /// </summary>
+        public bool TryGetChainedResource(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildResourceHandler childHandler)
+        {
+            var retVal = this.m_propertyProviders.TryGetValue(propertyName, out childHandler) &&
+                childHandler.ScopeBinding.HasFlag(bindingType);
+            if (!retVal)
+            {
+                childHandler = null;//clear in case of lazy programmers like me
+            }
+            return retVal;
         }
     }
 }

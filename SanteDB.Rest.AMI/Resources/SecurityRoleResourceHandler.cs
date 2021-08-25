@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE.md)
+ * Portions Copyright 2019-2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you 
  * may not use this file except in compliance with the License. You may 
@@ -13,8 +13,8 @@
  * License for the specific language governing permissions and limitations under 
  * the License.
  * 
- * User: fyfej
- * Date: 2021-2-9
+ * User: fyfej (Justin Fyfe)
+ * Date: 2021-8-5
  */
 using SanteDB.Core;
 using SanteDB.Core.Security;
