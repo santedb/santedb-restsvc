@@ -18431,13 +18431,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.Concept)));
             }
-            if (context.ShouldSerialize("isReadonly")) {
-                if ((_strong.IsReadonly == null)) {
-                }
-                else {
-                    context.JsonContext.WritePropertyUtil(w, "isReadonly", _strong.IsReadonly, context);
-                }
-            }
+            
             if (context.ShouldSerialize("mnemonic")) {
                 if ((_strong.Mnemonic == null)) {
                 }
@@ -18838,14 +18832,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                 }
                                                                                                             }
                                                                                                             else {
-                                                                                                                if ("isReadonly".Equals(r.Value)) {
-                                                                                                                    r.Read();
-                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(bool), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("isReadonly", context.JsonContext, _retVal, context));
-                                                                                                                    if ((_instance != null)) {
-                                                                                                                        _retVal.IsReadonly = ((bool)(_instance));
-                                                                                                                    }
-                                                                                                                }
-                                                                                                                else {
+                                                                                                                
                                                                                                                     if ("$type".Equals(r.Value)) {
                                                                                                                         System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                         if ((_type != typeof(SanteDB.Core.Model.DataTypes.Concept))) {
@@ -18857,7 +18844,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                     else {
                                                                                                                         r.Skip();
                                                                                                                     }
-                                                                                                                }
+                                                                                                                
                                                                                                             }
                                                                                                         }
                                                                                                     }
