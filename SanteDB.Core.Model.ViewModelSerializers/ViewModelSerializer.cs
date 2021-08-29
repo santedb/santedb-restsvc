@@ -18552,11 +18552,11 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
             }
             if (context.ShouldSerialize("conceptSet")) {
-                if (((_strong.ConceptSetsXml == null) 
-                            || (_strong.ConceptSetsXml.Count == 0))) {
+                if (((_strong.ConceptSetKeys == null) 
+                            || (_strong.ConceptSetKeys.Count == 0))) {
                 }
                 else {
-                    context.JsonContext.WritePropertyUtil(w, "conceptSet", _strong.ConceptSetsXml, context);
+                    context.JsonContext.WritePropertyUtil(w, "conceptSet", _strong.ConceptSetKeys, context);
                 }
             }
             if (context.ShouldSerialize("previousVersion")) {
@@ -18764,7 +18764,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                 r.Read();
                                                                                 object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("conceptSet", context.JsonContext, _retVal, context));
                                                                                 if ((_instance != null)) {
-                                                                                    _retVal.ConceptSetsXml = ((System.Collections.Generic.List<System.Guid>)(_instance));
+                                                                                    _retVal.ConceptSetKeys = ((System.Collections.Generic.List<System.Guid>)(_instance));
                                                                                 }
                                                                             }
                                                                             else {
