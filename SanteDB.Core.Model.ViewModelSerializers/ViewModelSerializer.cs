@@ -20264,11 +20264,11 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
             }
             if (context.ShouldSerialize("concept")) {
-                if (((_strong.ConceptsXml == null) 
-                            || (_strong.ConceptsXml.Count == 0))) {
+                if (((_strong.ConceptKeys == null) 
+                            || (_strong.ConceptKeys.Count == 0))) {
                 }
                 else {
-                    context.JsonContext.WritePropertyUtil(w, "concept", _strong.ConceptsXml, context);
+                    context.JsonContext.WritePropertyUtil(w, "concept", _strong.ConceptKeys, context);
                 }
             }
             if (context.ShouldSerialize("obsoletionreasonModel")) {
@@ -20476,7 +20476,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                 r.Read();
                                                                                 object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("concept", context.JsonContext, _retVal, context));
                                                                                 if ((_instance != null)) {
-                                                                                    _retVal.ConceptsXml = ((System.Collections.Generic.List<System.Guid>)(_instance));
+                                                                                    _retVal.ConceptKeys = ((System.Collections.Generic.List<System.Guid>)(_instance));
                                                                                 }
                                                                             }
                                                                             else {
