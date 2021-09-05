@@ -62,14 +62,14 @@ namespace SanteDB.Rest.AMI.Resources
         public override object Create(object data, bool updateIfExists)
         {
             if (data is SecurityRole)
-                data = new SecurityRoleInfo(data as SecurityRole);
+                data = new SecurityRoleInfo(data as SecurityRole, this.m_policyInformationService);
 
 
             var retVal = base.Create(data, updateIfExists) as SecurityRoleInfo;
             var td = data as SecurityRoleInfo;
             
            
-            return new SecurityRoleInfo(retVal.Entity);
+            return new SecurityRoleInfo(retVal.Entity, this.m_policyInformationService);
         }
 
         /// <summary>
@@ -127,12 +127,12 @@ namespace SanteDB.Rest.AMI.Resources
         public override object Update(object data)
         {
             if (data is SecurityRole)
-                data = new SecurityRoleInfo(data as SecurityRole);
+                data = new SecurityRoleInfo(data as SecurityRole, this.m_policyInformationService);
             var td = data as SecurityRoleInfo;
 
             var retVal = base.Update(data) as SecurityRoleInfo;
             
-            return new SecurityRoleInfo(td.Entity);
+            return new SecurityRoleInfo(td.Entity, this.m_policyInformationService);
         }
     }
 }

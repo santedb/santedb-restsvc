@@ -64,11 +64,11 @@ namespace SanteDB.Rest.AMI.Resources
         {
 
             if (data is SecurityDevice)
-                data = new SecurityDeviceInfo(data as SecurityDevice);
+                data = new SecurityDeviceInfo(data as SecurityDevice, this.m_policyInformationService);
 
             var sde = data as SecurityDeviceInfo;
             // If no policies then assign the ones from DEVICE
-            if (sde.Policies == null || sde.Policies.Count == 0 && sde.Entity?.Policies == null || sde.Entity.Policies.Count == 0)
+            if (sde.Policies?.Any() != null)
             {
                 var role = this.m_securityRepository?.GetRole("DEVICE");
                 var policies = this.m_policyInformationService?.GetPolicies(role);
@@ -86,7 +86,7 @@ namespace SanteDB.Rest.AMI.Resources
         public override object Update(object data)
         {
             if (data is SecurityDevice)
-                data = new SecurityDeviceInfo(data as SecurityDevice);
+                data = new SecurityDeviceInfo(data as SecurityDevice, this.m_policyInformationService);
             return base.Update(data);
         }
 

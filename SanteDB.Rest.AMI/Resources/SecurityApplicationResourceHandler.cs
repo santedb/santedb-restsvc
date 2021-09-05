@@ -61,12 +61,11 @@ namespace SanteDB.Rest.AMI.Resources
         public override object Create(object data, bool updateIfExists)
         {
             if (data is SecurityApplication)
-                data = new SecurityApplicationInfo(data as SecurityApplication);
+                data = new SecurityApplicationInfo(data as SecurityApplication, this.m_policyInformationService);
 
             var sde = data as SecurityApplicationInfo;
             // If no policies then assign the ones from SYNCHRONIZERS
-            if (sde.Policies == null || sde.Policies.Count == 0 && sde.Entity?.Policies == null || sde.Entity.Policies.Count == 0)
-
+            if (sde.Policies?.Any() != true)
             {
                 var role = this.m_securityRepository.GetRole("SYNCHRONIZERS");
                 var policies = this.m_policyInformationService?.GetPolicies(role);
@@ -84,7 +83,7 @@ namespace SanteDB.Rest.AMI.Resources
         public override object Update(object data)
         {
             if (data is SecurityApplication)
-                data = new SecurityApplicationInfo(data as SecurityApplication);
+                data = new SecurityApplicationInfo(data as SecurityApplication, this.m_policyInformationService);
             return base.Update(data);
         }
 

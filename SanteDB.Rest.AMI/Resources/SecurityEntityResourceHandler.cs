@@ -21,6 +21,7 @@ using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interfaces;
 using SanteDB.Core.Interop;
+using SanteDB.Core.Model;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Security;
@@ -45,7 +46,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary>
     /// <typeparam name="TSecurityEntity">The type of security entity being wrapped</typeparam>
     public abstract class SecurityEntityResourceHandler<TSecurityEntity> : IApiResourceHandler, IChainedApiResourceHandler
-        where TSecurityEntity : SecurityEntity
+        where TSecurityEntity : NonVersionedEntityData
     {
 
 
@@ -143,10 +144,6 @@ namespace SanteDB.Rest.AMI.Resources
 
             try
             {
-                // Now for the fun part we want to map any policies over to the wrapped type
-                if (td.Entity.Policies != null && td.Policies != null)
-                    td.Entity.Policies = td.Policies.Select(p => new SecurityPolicyInstance(p.Policy, p.Grant)).ToList();
-
                 if (updateIfExists)
                 {
                     td.Entity = this.GetRepository().Save(td.Entity);
@@ -156,6 +153,15 @@ namespace SanteDB.Rest.AMI.Resources
                 {
                     td.Entity = this.GetRepository().Insert(td.Entity);
                     AuditUtil.AuditEventDataAction(EventTypeCodes.SecurityObjectChanged, Core.Model.Audit.ActionType.Create, Core.Model.Audit.AuditableObjectLifecycle.Creation, Core.Model.Audit.EventIdentifierType.SecurityAlert, Core.Model.Audit.OutcomeIndicator.Success, null, td.Entity);
+                }
+
+                // Add policies
+                if (td.Policies?.Any() == true)
+                {
+                    foreach (var pol in td.Policies.GroupBy(o => o.Grant))
+                    {
+                        this.m_policyInformationService.AddPolicies(td.Entity, pol.Key, AuthenticationContext.Current.Principal, pol.Select(o => o.Oid).ToArray());
+                    }
                 }
 
                 // Special case for security entity wrappers, we want to load them from DB from fresh
@@ -262,10 +268,18 @@ namespace SanteDB.Rest.AMI.Resources
 
             try
             {
-                // Now for the fun part we want to map any policies over to the wrapped type
-                if (td.Policies != null)
-                    td.Entity.Policies = td.Policies.Select(p => new SecurityPolicyInstance(p.Policy, p.Grant)).ToList();
+               
                 td.Entity = this.GetRepository().Save(td.Entity);
+
+                // Add policies
+                if (td.Policies?.Any() == true)
+                {
+                    this.m_policyInformationService.RemovePolicies(td.Entity, AuthenticationContext.Current.Principal, td.Policies.Select(o => o.Policy.Oid).ToArray());
+                    foreach (var pol in td.Policies.GroupBy(o => o.Grant))
+                    {
+                        this.m_policyInformationService.AddPolicies(td.Entity, pol.Key, AuthenticationContext.Current.Principal, pol.Select(o => o.Oid).ToArray());
+                    }
+                }
 
                 FireSecurityAttributesChanged(td.Entity, true);
 

@@ -24,6 +24,7 @@ using System.Linq;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SanteDB.Core.Model.Security;
+using SanteDB.Core.Security.Services;
 
 namespace SanteDB.Core.Model.AMI.Auth
 {
@@ -46,10 +47,10 @@ namespace SanteDB.Core.Model.AMI.Auth
 	    /// <summary>
         /// Creates a new app info from the specified object
         /// </summary>
-        public SecurityApplicationInfo(SecurityApplication app)
+        public SecurityApplicationInfo(SecurityApplication app, IPolicyInformationService pipService)
         {
             this.Entity = app;
-            this.Policies = app.Policies.Where(o => o.Policy != null).Select(o => new SecurityPolicyInfo(o)).ToList();
+            this.Policies = pipService.GetPolicies(app).Select(o => new SecurityPolicyInfo(o)).ToList();
         }
 
 	    /// <summary>
