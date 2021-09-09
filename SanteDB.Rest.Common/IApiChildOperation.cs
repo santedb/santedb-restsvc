@@ -53,7 +53,7 @@ namespace SanteDB.Rest.Common
         public bool TryGet<TValue>(String parameterName, out TValue value)
         {
             var p = this.Parameters?.Find(o => o.Name == parameterName);
-            value = (TValue)p?.Value;
+            value = (TValue)(p?.Value ?? default(TValue));
             return p != null;
         }
     }
