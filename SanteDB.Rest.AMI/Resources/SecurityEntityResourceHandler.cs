@@ -108,11 +108,7 @@ namespace SanteDB.Rest.AMI.Resources
                 this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<TSecurityEntity>>();
             if (this.m_repository == null)
             {
-                this.m_tracer.TraceWarning("IRepositoryService<{0}> was not found will generate a default one using IRepositoryServiceFactory", typeof(TSecurityEntity).FullName);
-                var factoryService = ApplicationServiceContext.Current.GetService<IRepositoryServiceFactory>();
-                if (factoryService == null)
-                    throw new KeyNotFoundException($"IRepositoryService<{typeof(TSecurityEntity).FullName}> not found and no repository is found");
-                this.m_repository = factoryService.CreateRepository<TSecurityEntity>();
+                throw new KeyNotFoundException($"IRepositoryService<{typeof(TSecurityEntity).FullName}> not found and no repository is found");
             }
             return this.m_repository;
         }

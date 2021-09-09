@@ -71,13 +71,9 @@ namespace SanteDB.Rest.Common
         {
             if (this.m_repository == null)
                 this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<TResource>>();
-            if(this.m_repository == null)
+            if (this.m_repository == null)
             {
-                this.m_tracer.TraceWarning("IRepositoryService<{0}> was not found will generate a default one using IRepositoryServiceFactory", typeof(TResource).FullName);
-                var factoryService = ApplicationServiceContext.Current.GetService<IRepositoryServiceFactory>();
-                if (factoryService == null)
-                    throw new KeyNotFoundException($"IRepositoryService<{typeof(TResource).FullName}> not found and no repository is found");
-                this.m_repository = factoryService.CreateRepository<TResource>();
+                throw new KeyNotFoundException($"IRepositoryService<{typeof(TResource).FullName}> not found and no repository is found");
             }
             return this.m_repository;
         }
@@ -152,16 +148,16 @@ namespace SanteDB.Rest.Common
                     throw new ArgumentException($"Invalid data submission. Expected {typeof(TResource).FullName} but received {processData.GetType().FullName}. If you are submitting a bundle, ensure it has an entry point.");
                 else if (processData is TResource)
                 {
-                    
+
                     var resourceData = processData as TResource;
                     resourceData = updateIfExists ? this.GetRepository().Save(resourceData) : this.GetRepository().Insert(resourceData);
 
                     AuditUtil.AuditCreate(Core.Auditing.OutcomeIndicator.Success, null, resourceData);
-                  
+
                     return resourceData;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 AuditUtil.AuditCreate(Core.Auditing.OutcomeIndicator.MinorFail, null, data);
                 throw new Exception($"Error creating {data}", e);
@@ -183,11 +179,11 @@ namespace SanteDB.Rest.Common
             try
             {
                 var retVal = this.GetRepository().Get((Guid)id, (Guid)versionId);
-                if(retVal is Entity || retVal is Act)
+                if (retVal is Entity || retVal is Act)
                     AuditUtil.AuditRead(Core.Auditing.OutcomeIndicator.Success, id.ToString(), retVal);
                 return retVal;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 AuditUtil.AuditRead<TResource>(Core.Auditing.OutcomeIndicator.MinorFail, id.ToString());
                 throw new Exception($"Error getting resource {id}", e);
@@ -210,7 +206,7 @@ namespace SanteDB.Rest.Common
                 AuditUtil.AuditDelete(Core.Auditing.OutcomeIndicator.Success, key.ToString(), retVal);
                 return retVal;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 AuditUtil.AuditDelete<TResource>(Core.Auditing.OutcomeIndicator.MinorFail, key.ToString());
                 throw new Exception($"Error obsoleting resource {key}", e);
@@ -345,7 +341,7 @@ namespace SanteDB.Rest.Common
                 else if (processData is TResource)
                 {
                     var entityData = processData as TResource;
-                    
+
                     var retVal = this.GetRepository().Save(entityData);
                     AuditUtil.AuditUpdate(Core.Auditing.OutcomeIndicator.Success, null, retVal);
                     return retVal;
