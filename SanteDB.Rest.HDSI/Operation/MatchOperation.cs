@@ -25,6 +25,7 @@ using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Roles;
 using SanteDB.Core.Model.Serialization;
 using SanteDB.Core.Services;
+using SanteDB.Core.Matching;
 using SanteDB.Rest.Common;
 using System;
 using System.Collections.Generic;
