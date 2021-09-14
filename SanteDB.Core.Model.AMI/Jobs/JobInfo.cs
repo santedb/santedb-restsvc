@@ -58,7 +58,7 @@ namespace SanteDB.Core.Model.AMI.Jobs
             }
             else
             {
-                this.Key = job.GetType().FullName;
+                this.Key = job.Id.ToString();
                 this.Tag = job.GetType().Assembly.GetName().Version.ToString();
                 this.ModifiedOn = ApplicationServiceContext.Current.StartTime;
             }
@@ -69,6 +69,12 @@ namespace SanteDB.Core.Model.AMI.Jobs
             this.LastStart = job.LastStarted;
             this.LastFinish = job.LastFinished;
             this.JobType = job.GetType().AssemblyQualifiedName;
+
+            if(job is IReportProgressJob pj)
+            {
+                this.Progress = pj.Progress;
+                this.StatusText = pj.StatusText;
+            }
         }
 
         /// <summary>
@@ -76,6 +82,18 @@ namespace SanteDB.Core.Model.AMI.Jobs
         /// </summary>
         [XmlElement("id"), JsonProperty("id")]
         public string Key { get; set; }
+
+        /// <summary>
+        /// Progress of the job
+        /// </summary>
+        [XmlElement("progress"), JsonProperty("progress")]
+        public float Progress { get; set; }
+
+        /// <summary>
+        /// Gets or set the status text
+        /// </summary>
+        [XmlElement("status"), JsonProperty("status")]
+        public string StatusText { get; set; }
 
         /// <summary>
         /// Gets the tag for the job
