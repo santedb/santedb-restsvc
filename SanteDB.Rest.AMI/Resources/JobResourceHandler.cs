@@ -77,7 +77,7 @@ namespace SanteDB.Rest.AMI.Resources
         {
             ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
             var manager = ApplicationServiceContext.Current.GetService<IJobManagerService>();
-            var job = manager.GetJobInstance(id.ToString());
+            var job = manager.GetJobInstance(Guid.Parse(id.ToString()));
             if (job == null)
                 throw new KeyNotFoundException($"No IJob of type {id.ToString()} found");
             return new JobInfo(job);
@@ -91,7 +91,7 @@ namespace SanteDB.Rest.AMI.Resources
 
             ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
             var manager = ApplicationServiceContext.Current.GetService<IJobManagerService>();
-            var job = manager.GetJobInstance(key.ToString());
+            var job = manager.GetJobInstance(Guid.Parse(key.ToString()));
             if (job == null)
                 throw new KeyNotFoundException($"No IJob of type {key.ToString()} found");
 
@@ -143,7 +143,7 @@ namespace SanteDB.Rest.AMI.Resources
                 if (jobManager == null)
                     throw new InvalidOperationException("No IJobManager configured");
 
-                var job = jobManager.GetJobInstance(jobInfo.Key);
+                var job = jobManager.GetJobInstance(Guid.Parse(jobInfo.Key));
                 if (job == null)
                     throw new KeyNotFoundException($"Could not find job with ID {jobInfo.Key}");
                 jobManager.StartJob(job, jobInfo.Parameters?.Select(o => o.Value).ToArray());

@@ -25,6 +25,7 @@ using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Services;
+using SanteDB.Core.Matching;
 using SanteDB.Rest.Common;
 using System;
 using System.Collections.Generic;
@@ -120,10 +121,10 @@ namespace SanteDB.Rest.HDSI.Operation
                     switch (RestOperationContext.Current.IncomingRequest.QueryString["_mode"])
                     {
                         case "block":
-                            retVal = BundleUtil.CreateBundle(matcher.Block(target, config.Name, merger.GetIgnoredKeys(targetKey)), 0, 0, true);
+                            retVal = BundleUtil.CreateBundle(matcher.Block(target, config.Id, merger.GetIgnoredKeys(targetKey)), 0, 0, true);
                             break;
                         default:
-                            retVal = (matcher as IMatchReportFactory).CreateMatchReport(target, matcher.Match(target, config.Name, merger.GetIgnoredKeys(targetKey)));
+                            retVal = (matcher as IMatchReportFactory).CreateMatchReport(target, matcher.Match(target, config.Id, merger.GetIgnoredKeys(targetKey)));
                             break;
                     }
                     return retVal;
@@ -166,7 +167,7 @@ namespace SanteDB.Rest.HDSI.Operation
                 else
                 {
                     var merger = ApplicationServiceContext.Current.GetService(typeof(IRecordMergingService<>).MakeGenericType(config.AppliesTo.First())) as IRecordMergingService;
-                    return targets.Select(o => matcher.Match(o, config.Name, merger.GetIgnoredKeys(o)));
+                    return targets.Select(o => matcher.Match(o, config.Id, merger.GetIgnoredKeys(o)));
                 }
             }
             catch (Exception e)

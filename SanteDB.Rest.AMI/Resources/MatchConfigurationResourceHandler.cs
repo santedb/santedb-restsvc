@@ -25,6 +25,7 @@ using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Services;
+using SanteDB.Core.Matching;
 using SanteDB.Rest.AMI;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
@@ -157,16 +158,14 @@ namespace SanteDB.Rest.AMI.Resources
             totalCount = this.m_configurationService.Configurations.Count();
             if (queryParameters.TryGetValue("name", out List<String> values))
                 return this.m_configurationService.Configurations
-                    .Where(o => o == values.First())
+                    .Where(o => o.Id == values.First())
                     .Skip(offset)
                     .Take(count)
-                    .Select(o => this.m_configurationService.GetConfiguration(o))
                     .OfType<Object>();
             else
                 return this.m_configurationService.Configurations
                     .Skip(offset)
                     .Take(count)
-                    .Select(o => this.m_configurationService.GetConfiguration(o))
                     .OfType<Object>();
         }
 
