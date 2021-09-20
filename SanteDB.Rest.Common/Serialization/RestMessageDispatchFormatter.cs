@@ -374,6 +374,8 @@ namespace SanteDB.Rest.Common.Serialization
                                 MemoryStream ms = new MemoryStream();
                                 try
                                 {
+                                    if(xsz == null)
+                                        xsz = XmlModelSerializerFactory.Current.CreateSerializer(result.GetType());
                                     xsz.Serialize(ms, result);
                                 }
                                 catch (InvalidOperationException e) when (e.Message.Contains("XML document") && result is Bundle bundle)
