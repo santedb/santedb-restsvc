@@ -18,10 +18,10 @@
  * User: fyfej
  * Date: 2021-8-5
  */
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Xml.Serialization;
-using Newtonsoft.Json;
 
 namespace SanteDB.Core.Model.AMI.Security
 {
@@ -33,61 +33,70 @@ namespace SanteDB.Core.Model.AMI.Security
     [JsonObject(nameof(SubmissionInfo))]
     public class SubmissionInfo
     {
-	    /// <summary>
+        /// <summary>
         /// Administration contact
         /// </summary>
-        [XmlElement("adminContact")][JsonProperty("adminContact")]
+        [XmlElement("adminContact")]
+        [JsonProperty("adminContact")]
         public string AdminContact { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Administration
         /// </summary>
-        [XmlElement("adminAddress")][JsonProperty("adminAddress")]
+        [XmlElement("adminAddress")]
+        [JsonProperty("adminAddress")]
         public string AdminSiteAddress { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Disposition message
         /// </summary>
-        [XmlElement("message")][JsonProperty("message")]
+        [XmlElement("message")]
+        [JsonProperty("message")]
         public string DispositionMessage { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// DN
         /// </summary>
-        [XmlElement("dn")][JsonProperty("dn")]
+        [XmlElement("dn")]
+        [JsonProperty("dn")]
         public string DistinguishedName { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Email address of user
         /// </summary>
-        [XmlElement("email")][JsonProperty("email")]
+        [XmlElement("email")]
+        [JsonProperty("email")]
         public string EMail { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Expiry
         /// </summary>
-        [XmlElement("notAfter")][JsonProperty("notAfter")]
+        [XmlElement("notAfter")]
+        [JsonProperty("notAfter")]
         public string NotAfter { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Before date
         /// </summary>
-        [XmlElement("notBefore")][JsonProperty("notBefore")]
+        [XmlElement("notBefore")]
+        [JsonProperty("notBefore")]
         public string NotBefore { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// RequestId
         /// </summary>
-        [XmlAttribute("id")][JsonProperty("id")]
+        [XmlAttribute("id")]
+        [JsonProperty("id")]
         public string RequestID { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Resolved on
         /// </summary>
-        [XmlElement("resolved")][JsonProperty("resolved")]
+        [XmlElement("resolved")]
+        [JsonProperty("resolved")]
         public string ResolvedWhen { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Revoke reason from Keystore
         /// </summary>
         [XmlIgnore]
@@ -98,36 +107,40 @@ namespace SanteDB.Core.Model.AMI.Security
             {
                 if (value != null)
                 {
-	                this.XmlRevokeReason = (RevokeReason)int.Parse(value);
+                    this.XmlRevokeReason = (RevokeReason)int.Parse(value);
                 }
             }
         }
 
-	    /// <summary>
+        /// <summary>
         /// Revoked on
         /// </summary>
-        [XmlElement("revoked")][JsonProperty("revoked")]
+        [XmlElement("revoked")]
+        [JsonProperty("revoked")]
         public string RevokedWhen { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Submitted on
         /// </summary>
-        [XmlElement("submitted")][JsonProperty("submitted")]
+        [XmlElement("submitted")]
+        [JsonProperty("submitted")]
         public string SubmittedWhen { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Revokation reason
         /// </summary>
-        [XmlElement("revokationReason")][JsonProperty("revokationReason")]
+        [XmlElement("revokationReason")]
+        [JsonProperty("revokationReason")]
         public RevokeReason XmlRevokeReason { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Status code
         /// </summary>
-        [XmlAttribute("status")][JsonProperty("status")]
+        [XmlAttribute("status")]
+        [JsonProperty("status")]
         public SubmissionStatus XmlStatusCode { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Create new submission info from attributes
         /// </summary>
         public static SubmissionInfo FromAttributes(List<KeyValuePair<string, string>> certAttrs)

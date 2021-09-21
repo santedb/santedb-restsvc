@@ -123,7 +123,7 @@ namespace SanteDB.Rest.AMI.Resources
             }
         }
 
-       
+
         /// <summary>
         /// Obsoletes the specified applet
         /// </summary>

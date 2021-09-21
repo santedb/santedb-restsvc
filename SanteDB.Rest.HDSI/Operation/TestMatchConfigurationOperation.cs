@@ -21,16 +21,15 @@
 using RestSrvr;
 using SanteDB.Core;
 using SanteDB.Core.Interop;
+using SanteDB.Core.Matching;
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Services;
-using SanteDB.Core.Matching;
 using SanteDB.Rest.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.HDSI.Operation
 {
@@ -144,8 +143,6 @@ namespace SanteDB.Rest.HDSI.Operation
 
             try
             {
-                // Get the target object 
-                dynamic target = null;
                 var config = this.m_configService.GetConfiguration(scopingKey.ToString());
 
                 IEnumerable<dynamic> targets = null;

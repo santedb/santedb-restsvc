@@ -21,8 +21,6 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Reflection;
-using System.Text;
 
 namespace SanteDB.Rest.Common
 {
@@ -32,7 +30,7 @@ namespace SanteDB.Rest.Common
     public static class ExtensionMethods
     {
 
-     
+
         /// <summary>
         /// Get if modified since
         /// </summary>
@@ -92,10 +90,10 @@ namespace SanteDB.Rest.Common
         {
             var retVal = new List<KeyValuePair<String, Object>>();
             foreach (var k in nvc.AllKeys)
-                foreach(var v in nvc.GetValues(k))
+                foreach (var v in nvc.GetValues(k))
                     retVal.Add(new KeyValuePair<String, Object>(k, v));
             return retVal;
         }
-        
+
     }
 }

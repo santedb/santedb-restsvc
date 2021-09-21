@@ -21,7 +21,6 @@
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
-using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
@@ -32,7 +31,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a resource handler for entities.
     /// </summary>
     public class EntityResourceHandler : ResourceHandlerBase<Entity>
-	{
+    {
 
         /// <summary>
         /// Creates an entity.
@@ -42,9 +41,9 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <returns>Returns the created entity.s</returns>
         [Demand(PermissionPolicyIdentifiers.WriteClinicalData)]
         public override Object Create(Object data, bool updateIfExists)
-		{
+        {
             return base.Create(data, updateIfExists);
-		}
+        }
 
         /// <summary>
         /// Gets an entity by id and version id.

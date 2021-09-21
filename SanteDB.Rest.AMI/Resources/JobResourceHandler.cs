@@ -24,12 +24,9 @@ using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Rest.Common;
-using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -59,12 +56,12 @@ namespace SanteDB.Rest.AMI.Resources
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Update | // start
             ResourceCapabilityType.Delete | // cancel
             ResourceCapabilityType.Search | // find
-            ResourceCapabilityType.Get; 
+            ResourceCapabilityType.Get;
 
         /// <summary>
         /// Create a new job instance
         /// </summary>
-        
+
         public object Create(object data, bool updateIfExists)
         {
             throw new NotSupportedException();
@@ -136,7 +133,7 @@ namespace SanteDB.Rest.AMI.Resources
             if (data is JobInfo)
             {
                 ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
-                    
+
 
                 var jobInfo = data as JobInfo;
                 var jobManager = ApplicationServiceContext.Current.GetService<IJobManagerService>();

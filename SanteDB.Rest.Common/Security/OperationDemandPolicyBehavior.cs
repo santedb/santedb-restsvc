@@ -24,12 +24,9 @@ using SanteDB.Core;
 using SanteDB.Core.Security.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SanteDB.Rest.Common.Security
 {
@@ -58,7 +55,7 @@ namespace SanteDB.Rest.Common.Security
             var methInfo = this.m_behaviorType.GetMethod(operation.Description.InvokeMethod.Name, operation.Description.InvokeMethod.GetParameters().Select(p => p.ParameterType).ToArray());
             foreach (var demand in methInfo.GetCustomAttributes<DemandAttribute>())
                 ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(demand.PolicyId);
-            
+
         }
 
         /// <summary>

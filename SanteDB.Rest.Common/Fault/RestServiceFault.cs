@@ -21,13 +21,11 @@
 using Newtonsoft.Json;
 using SanteDB.Core.BusinessRules;
 using SanteDB.Core.Exceptions;
-using SanteDB.Core.Services;
+using SanteDB.Core.Model.Security;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Xml.Serialization;
 using System.Linq;
-using SanteDB.Core.Model.Security;
+using System.Xml.Serialization;
 
 namespace SanteDB.Rest.Common.Fault
 {
@@ -66,7 +64,7 @@ namespace SanteDB.Rest.Common.Fault
             }
 
             this.Rules = (ex as DetectedIssueException)?.Issues;
-            if(ex.InnerException != null)
+            if (ex.InnerException != null)
                 this.CausedBy = new RestServiceFault(ex.InnerException);
 
             if (ex.Data.Count > 0)

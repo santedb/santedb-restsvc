@@ -27,10 +27,10 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents concept class resource handler.
     /// </summary>
     public class ConceptClassResourceHandler : ResourceHandlerBase<ConceptClass>
-	{
+    {
         /// <summary>
         /// Get capabilities
         /// </summary>
         public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Get | ResourceCapabilityType.Search;
-	}
+    }
 }

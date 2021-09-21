@@ -118,7 +118,7 @@ namespace SanteDB.Rest.AMI
         /// <returns></returns>
         [Get("/Tfa")]
         AmiCollection GetTfaMechanisms();
-        
+
         #region Diagnostic / Ad-Hoc interfaces
 
         /// <summary>

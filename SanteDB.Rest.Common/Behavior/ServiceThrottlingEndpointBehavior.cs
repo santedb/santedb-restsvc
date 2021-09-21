@@ -24,11 +24,9 @@ using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Model.Serialization;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -42,7 +40,7 @@ namespace SanteDB.Rest.Common.Behavior
     [XmlType(nameof(ServiceThrottlingConfiguration), Namespace = "http://santedb.org/configuration")]
     public class ServiceThrottlingConfiguration
     {
-       
+
         /// <summary>
         /// Gets the resource settings
         /// </summary>
@@ -50,7 +48,7 @@ namespace SanteDB.Rest.Common.Behavior
         public Int32 Limit { get; set; }
 
     }
-    
+
     /// <summary>
     /// Represents a basic service throttling behavior that limits the concurrent number of 
     /// requests on a particular endpoint.
@@ -68,7 +66,7 @@ namespace SanteDB.Rest.Common.Behavior
         /// <summary>
         /// CORS endpoint behavior as configured from endpoint behavior
         /// </summary>
-        public ServiceThrottlingEndpointBehavior(XElement xe) 
+        public ServiceThrottlingEndpointBehavior(XElement xe)
         {
             if (xe == null)
                 throw new InvalidOperationException("Missing ServiceThrottlingConfiguration");
@@ -79,7 +77,7 @@ namespace SanteDB.Rest.Common.Behavior
         /// <summary>
         /// Creates a new CORS endpoint behavior
         /// </summary>
-        public ServiceThrottlingEndpointBehavior(ServiceThrottlingConfiguration settings) 
+        public ServiceThrottlingEndpointBehavior(ServiceThrottlingConfiguration settings)
         {
             this.m_settings = settings;
         }
@@ -139,6 +137,6 @@ namespace SanteDB.Rest.Common.Behavior
             // Decrement our instance
             Interlocked.Decrement(ref this.m_requests);
         }
-       
+
     }
 }
