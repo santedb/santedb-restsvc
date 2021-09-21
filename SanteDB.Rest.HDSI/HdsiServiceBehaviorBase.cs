@@ -970,30 +970,37 @@ namespace SanteDB.Rest.HDSI
                 {
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.GetChildObject));
 
-                    var retVal = handler.GetChildObject(Guid.Parse(key), childResourceType, Guid.Parse(scopedEntityKey)) as IdentifiedData;
+                    var retVal = handler.GetChildObject(Guid.Parse(key), childResourceType, Guid.Parse(scopedEntityKey));
 
-                    RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
-                    RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.ModifiedOn.DateTime);
-
-                    // HTTP IF headers?
-                    if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null &&
-                        retVal.ModifiedOn <= RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() ||
-                        RestOperationContext.Current.IncomingRequest.GetIfNoneMatch()?.Any(o => retVal.Tag == o) == true)
+                    if (retVal is IdentifiedData idData)
                     {
-                        RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
-                        return null;
+                        RestOperationContext.Current.OutgoingResponse.SetETag(idData.Tag);
+                        RestOperationContext.Current.OutgoingResponse.SetLastModified(idData.ModifiedOn.DateTime);
+
+                        // HTTP IF headers?
+                        if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null &&
+                            idData.ModifiedOn <= RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() ||
+                            RestOperationContext.Current.IncomingRequest.GetIfNoneMatch()?.Any(o => idData.Tag == o) == true)
+                        {
+                            RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
+                            return null;
+                        }
+                        else if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true" ||
+                            RestOperationContext.Current.IncomingRequest.QueryString["_all"] == "true")
+                        {
+                            retVal = idData.GetLocked();
+                            ObjectExpander.ExpandProperties(idData, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
+                            ObjectExpander.ExcludeProperties(idData, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
+                            return Bundle.CreateBundle(idData);
+                        }
+                        else
+                        {
+                            return retVal;
+                        }
                     }
-
-                    else if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true" ||
-                        RestOperationContext.Current.IncomingRequest.QueryString["_all"] == "true")
+                    else // Not much we can do about it
                     {
-                        retVal = retVal.GetLocked();
-                        ObjectExpander.ExpandProperties(retVal, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
-                        ObjectExpander.ExcludeProperties(retVal, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
-                        return Bundle.CreateBundle(retVal);
-                    }
-                    else
-                    {
+                        RestOperationContext.Current.OutgoingResponse.SetLastModified(DateTime.Now);
                         return retVal;
                     }
 
