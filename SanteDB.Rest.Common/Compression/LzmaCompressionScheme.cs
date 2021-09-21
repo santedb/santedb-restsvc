@@ -20,8 +20,8 @@
  */
 using SharpCompress.Compressors;
 using SharpCompress.Compressors.LZMA;
-using System.IO;
 using SharpCompress.IO;
+using System.IO;
 
 
 namespace SanteDB.Rest.Common.Compression

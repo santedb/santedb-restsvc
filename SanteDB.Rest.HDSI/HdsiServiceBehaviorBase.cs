@@ -21,7 +21,6 @@
 using RestSrvr;
 using RestSrvr.Attributes;
 using SanteDB.Core;
-using SanteDB.Core.Services;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Interop;
@@ -39,7 +38,6 @@ using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -47,7 +45,6 @@ using System.Reflection;
 using System.Text;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using System.Net.Http;
 
 namespace SanteDB.Rest.HDSI
 {

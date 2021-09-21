@@ -18,8 +18,8 @@
  * User: fyfej
  * Date: 2021-8-5
  */
-using System.Xml.Serialization;
 using Newtonsoft.Json;
+using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Security
 {
@@ -31,22 +31,25 @@ namespace SanteDB.Core.Model.AMI.Security
     [JsonObject(nameof(SubmissionRequest))]
     public class SubmissionRequest
     {
-	    /// <summary>
+        /// <summary>
         /// Gets or sets the admin address
         /// </summary>
-        [XmlElement("address")][JsonProperty("address")]
+        [XmlElement("address")]
+        [JsonProperty("address")]
         public string AdminAddress { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Gets or sets the contact name
         /// </summary>
-        [XmlElement("contact")][JsonProperty("contact")]
+        [XmlElement("contact")]
+        [JsonProperty("contact")]
         public string AdminContactName { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Gets or sets the cmc request
         /// </summary>
-        [XmlElement("cmc")][JsonProperty("cmc")]
+        [XmlElement("cmc")]
+        [JsonProperty("cmc")]
         public string CmcRequest { get; set; }
     }
 }

@@ -28,16 +28,13 @@ using SanteDB.Core.Applets.Services;
 using SanteDB.Core.Applets.ViewModel.Description;
 using SanteDB.Core.Applets.ViewModel.Json;
 using SanteDB.Core.Diagnostics;
-using SanteDB.Core.Interfaces;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Json.Formatter;
 using SanteDB.Core.Model.Serialization;
-using SanteDB.Core.Security;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Diagnostics.Tracing;
 using System.IO;
 using System.Linq;
@@ -123,7 +120,7 @@ namespace SanteDB.Rest.Common.Serialization
                 {
                     s_knownTypes = typeof(TContract).GetCustomAttributes<ServiceKnownResourceAttribute>().Select(t => t.Type).ToArray();
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     this.m_traceSource.TraceError("Error scanning for known types on contract {0} - {1}", typeof(TContract), e);
                     throw;
@@ -182,7 +179,8 @@ namespace SanteDB.Rest.Common.Serialization
                     }
                     else
                     {
-                        switch(contentType.MediaType) {
+                        switch (contentType.MediaType)
+                        {
                             case "application/xml":
                                 XmlSerializer serializer = null;
                                 using (XmlReader bodyReader = XmlReader.Create(request.Body))
@@ -255,8 +253,8 @@ namespace SanteDB.Rest.Common.Serialization
                                 throw new InvalidOperationException("Invalid request format");
                         }
                     }
-                    
-                        
+
+
                 }
             }
             catch (Exception e)
@@ -281,11 +279,11 @@ namespace SanteDB.Rest.Common.Serialization
                 string accepts = httpRequest.Headers["Accept"],
                     contentType = httpRequest.Headers["Content-Type"];
 
-                if(String.IsNullOrEmpty(accepts) && String.IsNullOrEmpty(contentType))
+                if (String.IsNullOrEmpty(accepts) && String.IsNullOrEmpty(contentType))
                 {
                     accepts = "application/xml";
                 }
-                var contentTypeMime = (accepts ?? contentType).Split(',').Select(o=>new ContentType(o)).First();
+                var contentTypeMime = (accepts ?? contentType).Split(',').Select(o => new ContentType(o)).First();
 
                 // Result is serializable
                 if (result == null)
@@ -296,7 +294,7 @@ namespace SanteDB.Rest.Common.Serialization
                 else if (result?.GetType().GetCustomAttribute<XmlTypeAttribute>() != null ||
                     result?.GetType().GetCustomAttribute<JsonObjectAttribute>() != null)
                 {
-                    switch(contentTypeMime.MediaType)
+                    switch (contentTypeMime.MediaType)
                     {
                         case "application/json+sdb-viewmodel":
 
@@ -374,7 +372,7 @@ namespace SanteDB.Rest.Common.Serialization
                                 MemoryStream ms = new MemoryStream();
                                 try
                                 {
-                                    if(xsz == null)
+                                    if (xsz == null)
                                         xsz = XmlModelSerializerFactory.Current.CreateSerializer(result.GetType());
                                     xsz.Serialize(ms, result);
                                 }

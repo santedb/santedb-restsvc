@@ -49,7 +49,7 @@ namespace SanteDB.Rest.HDSI.Resources
                 return ResourceCapabilityType.Get | ResourceCapabilityType.Search;
             }
         }
-        
+
         /// <summary>
         /// Gets the scope
         /// </summary>
@@ -90,9 +90,9 @@ namespace SanteDB.Rest.HDSI.Resources
 
             // Get care plan service
             var carePlanner = ApplicationServiceContext.Current.GetService<ICarePlanService>();
-            var plan = carePlanner.CreateCarePlan(data as Patient, 
+            var plan = carePlanner.CreateCarePlan(data as Patient,
                 RestOperationContext.Current.IncomingRequest.QueryString["_asEncounters"] == "true",
-                RestOperationContext.Current.IncomingRequest.QueryString.ToQuery().ToDictionary(o=>o.Key, o=>(Object)o.Value));
+                RestOperationContext.Current.IncomingRequest.QueryString.ToQuery().ToDictionary(o => o.Key, o => (Object)o.Value));
 
             // Expand the participation roles form the care planner
             IConceptRepositoryService conceptService = ApplicationServiceContext.Current.GetService<IConceptRepositoryService>();
@@ -114,7 +114,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Obsolete the care plan
         /// </summary>
-        public Object Obsolete(object  key)
+        public Object Obsolete(object key)
         {
             throw new NotSupportedException();
         }
@@ -137,7 +137,7 @@ namespace SanteDB.Rest.HDSI.Resources
             var repositoryService = ApplicationServiceContext.Current.GetService<IRepositoryService<Patient>>();
             if (repositoryService == null)
                 throw new InvalidOperationException("Could not find patient repository service");
-            
+
             // Query
             var carePlanner = ApplicationServiceContext.Current.GetService<ICarePlanService>();
 
@@ -151,7 +151,8 @@ namespace SanteDB.Rest.HDSI.Resources
 
             // Create care plan for the patients
             IConceptRepositoryService conceptService = ApplicationServiceContext.Current.GetService<IConceptRepositoryService>();
-            return patients.Select(o => {
+            return patients.Select(o =>
+            {
                 var plan = carePlanner.CreateCarePlan(o);
                 foreach (var p in plan.Action)
                     p.Participations.ForEach(x => x.ParticipationRoleKey = x.ParticipationRoleKey ?? conceptService.GetConcept(x.ParticipationRole?.Mnemonic).Key);
@@ -163,7 +164,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Update care plan 
         /// </summary>
-        public Object Update(Object  data)
+        public Object Update(Object data)
         {
             throw new NotSupportedException();
         }

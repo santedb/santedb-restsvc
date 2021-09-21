@@ -19,22 +19,16 @@
  * Date: 2021-8-5
  */
 using SanteDB.Core;
-using SanteDB.Core.Services;
-using SanteDB.Core.Exceptions;
+using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
-using SanteDB.Core.Model.Collection;
-using SanteDB.Core.Model.DataTypes;
-using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Collections.Concurrent;
 using SanteDB.Rest.Common.Attributes;
-using SanteDB.Core.Security;
-using SanteDB.Core.Interop;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace SanteDB.Rest.HDSI.Resources
 {

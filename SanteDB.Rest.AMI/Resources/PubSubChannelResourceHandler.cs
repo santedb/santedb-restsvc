@@ -24,7 +24,6 @@ using SanteDB.Rest.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -137,7 +136,7 @@ namespace SanteDB.Rest.AMI.Resources
                 var filter = QueryExpressionParser.BuildLinqExpression<PubSubChannelDefinition>(queryParameters);
                 return this.m_manager.FindChannel(filter, offset, count, out totalCount);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 this.m_tracer.TraceError("Error querying channel definitions - {0}", e);
                 throw new Exception($"Error performing query for channel definitions", e);

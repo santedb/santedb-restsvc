@@ -31,7 +31,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents an organization resource handler.
     /// </summary>
     public class OrganizationResourceHandler : ResourceHandlerBase<Organization>
-	{
+    {
         /// <summary>
         /// Create the specified material
         /// </summary>

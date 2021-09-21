@@ -56,7 +56,7 @@ namespace SanteDB.Rest.Common
         /// </summary>
         private static Dictionary<String, IClaimTypeHandler> s_claimHandlers = new Dictionary<string, IClaimTypeHandler>();
 
-        
+
         /// <summary>
         /// Gets the specified claim type handler
         /// </summary>
@@ -80,6 +80,6 @@ namespace SanteDB.Rest.Common
                 var data = Encoding.UTF8.GetString(Convert.FromBase64String(claimsHeaders));
                 return data.Split(';').Select(o => o.Split('=')).Select(c => new SanteDBClaim(c[0], c[1])).OfType<IClaim>().ToList();
             }
-        } 
+        }
     }
 }

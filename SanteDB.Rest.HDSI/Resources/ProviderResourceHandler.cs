@@ -31,7 +31,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Resource handler for providers
     /// </summary>
 	public class ProviderResourceHandler : ResourceHandlerBase<Provider>
-	{
+    {
         /// <summary>
         /// Create the specified place
         /// </summary>

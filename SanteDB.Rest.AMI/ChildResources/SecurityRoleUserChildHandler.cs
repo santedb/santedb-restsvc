@@ -27,7 +27,6 @@ using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SanteDB.Rest.AMI.ChildResources
 {
@@ -79,15 +78,15 @@ namespace SanteDB.Rest.AMI.ChildResources
         /// <summary>
         /// Security challenge child handler
         /// </summary>
-        public SecurityRoleUserChildHandler(IRepositoryService<SecurityRole> roleRepository, 
-            IRepositoryService<SecurityUser> userRepository, 
-            ISecurityRepositoryService securityRepository, 
-            IRoleProviderService roleProvider, 
+        public SecurityRoleUserChildHandler(IRepositoryService<SecurityRole> roleRepository,
+            IRepositoryService<SecurityUser> userRepository,
+            ISecurityRepositoryService securityRepository,
+            IRoleProviderService roleProvider,
             IPolicyEnforcementService pepService)
         {
             this.m_userRepository = userRepository;
             this.m_pep = pepService;
-            this.m_roleRepository= roleRepository;
+            this.m_roleRepository = roleRepository;
             this.m_securityRepository = securityRepository;
             this.m_roleProvider = roleProvider;
         }

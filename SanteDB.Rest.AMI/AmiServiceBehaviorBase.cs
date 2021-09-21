@@ -95,7 +95,7 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// <returns>Returns a collection of log files.</returns>
         public abstract AmiCollection GetLogs();
 
-      
+
         /// <summary>
         /// Perform an ACL check
         /// </summary>
@@ -161,7 +161,7 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// <returns>Returns the created diagnostic report.</returns>
         public abstract DiagnosticReport GetServerDiagnosticReport();
 
-     
+
         /// <summary>
         /// Gets options for the AMI service.
         /// </summary>
@@ -205,7 +205,7 @@ namespace SanteDB.Messaging.AMI.Wcf
 
                 if (existing == null)
                     throw new FileNotFoundException($"/{resourceType}/{id}");
-                else if (!String.IsNullOrEmpty(match) && (existing as IdentifiedData)?.Tag != match  && !force)
+                else if (!String.IsNullOrEmpty(match) && (existing as IdentifiedData)?.Tag != match && !force)
                 {
                     this.m_traceSource.TraceError("Object {0} ETAG is {1} but If-Match specified {2}", existing.Key, existing.Tag, match);
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 409;
@@ -258,7 +258,7 @@ namespace SanteDB.Messaging.AMI.Wcf
         {
             RestOperationContext.Current.OutgoingResponse.StatusCode = (int)System.Net.HttpStatusCode.NoContent;
         }
-        
+
         /// <summary>
         /// Creates the specified resource for the AMI service 
         /// </summary>
@@ -327,7 +327,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                     var versioned = retVal as IVersionedEntity;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.Created;
 
-                    if(retVal is IdentifiedData)
+                    if (retVal is IdentifiedData)
                         RestOperationContext.Current.OutgoingResponse.SetETag((retVal as IdentifiedData).Tag);
 
                     if (versioned != null)
@@ -370,7 +370,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                     this.AclCheck(handler, nameof(IApiResourceHandler.Obsolete));
 
                     object retVal = null;
-                    if(Guid.TryParse(key, out Guid uuid))
+                    if (Guid.TryParse(key, out Guid uuid))
                         retVal = handler.Obsolete(uuid);
                     else
                         retVal = handler.Obsolete(key);
@@ -434,7 +434,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                     var adata = retVal as IAmiIdentified;
 
                     var tag = idata?.Tag ?? adata?.Tag;
-                    if(!String.IsNullOrEmpty(tag))
+                    if (!String.IsNullOrEmpty(tag))
                         RestOperationContext.Current.OutgoingResponse.SetETag(tag);
                     RestOperationContext.Current.OutgoingResponse.SetLastModified((idata?.ModifiedOn.DateTime ?? adata?.ModifiedOn.DateTime ?? DateTime.Now));
 
@@ -623,7 +623,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                     // Modified on?
                     if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince().HasValue)
                         query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince().Value.ToString("o"));
-                    
+
                     int totalResults = 0;
 
                     // Lean mode
@@ -716,7 +716,7 @@ namespace SanteDB.Messaging.AMI.Wcf
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
-                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString().Replace("{","{{").Replace("}","}}")));
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString().Replace("{", "{{").Replace("}", "}}")));
                 throw;
 
             }
@@ -830,7 +830,7 @@ namespace SanteDB.Messaging.AMI.Wcf
             {
 
                 var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as IChainedApiResourceHandler;
-                if (handler != null )
+                if (handler != null)
                 {
                     String offset = RestOperationContext.Current.IncomingRequest.QueryString["_offset"],
                       count = RestOperationContext.Current.IncomingRequest.QueryString["_count"];
@@ -876,7 +876,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                     }
 
                 }
-                else 
+                else
                     throw new FileNotFoundException(resourceType);
             }
             catch (Exception e)

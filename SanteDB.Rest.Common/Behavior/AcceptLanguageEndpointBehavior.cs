@@ -24,13 +24,10 @@ using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace SanteDB.Rest.Common.Behavior
 {
@@ -53,7 +50,7 @@ namespace SanteDB.Rest.Common.Behavior
             {
                 RestOperationContext.Current.Data.Add("originalLanguage", Thread.CurrentThread.CurrentUICulture.Name);
                 var langPrincipal = AuthenticationContext.Current.Principal.GetClaimValue(SanteDBClaimTypes.Language);
-                if (langPrincipal != null) 
+                if (langPrincipal != null)
                     Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(langPrincipal);
                 else if (RestOperationContext.Current.Data.TryGetValue("Session", out object dataSession) && dataSession is ISession session &&
                     session.Claims.Any(o => o.Type == SanteDBClaimTypes.Language))
@@ -68,7 +65,7 @@ namespace SanteDB.Rest.Common.Behavior
                     Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(language[0]);
                 }
 
-                if (request.Headers["X-SdbLanguage"]  != null) // Language override
+                if (request.Headers["X-SdbLanguage"] != null) // Language override
                 {
                     var language = request.Headers["X-SdbLanguage"].Split(',');
                     Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(language[0]);
@@ -102,7 +99,7 @@ namespace SanteDB.Rest.Common.Behavior
                 if (RestOperationContext.Current.Data.TryGetValue("originalLanguage", out Object name))
                     Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(name.ToString());
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 this.m_tracer.TraceWarning("Error setting culture - {0}", e);
             }

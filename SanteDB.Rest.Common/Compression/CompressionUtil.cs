@@ -36,7 +36,7 @@ namespace SanteDB.Rest.Common.Compression
         /// </summary>
         public static ICompressionScheme GetCompressionScheme(String schemeName)
         {
-            switch(schemeName)
+            switch (schemeName)
             {
                 case "gzip":
                     return new GzipCompressionScheme();
@@ -50,6 +50,6 @@ namespace SanteDB.Rest.Common.Compression
                     return null;
             }
         }
-        
+
     }
 }

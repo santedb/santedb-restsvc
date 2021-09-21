@@ -17,18 +17,14 @@
  * Date: 2021-8-5
  */
 using SanteDB.Core;
-using SanteDB.Core.Security;
 using SanteDB.Core.Model.AMI.Auth;
-using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
-using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -55,8 +51,8 @@ namespace SanteDB.Rest.AMI.Resources
 
             var retVal = base.Create(data, updateIfExists) as SecurityRoleInfo;
             var td = data as SecurityRoleInfo;
-            
-           
+
+
             return new SecurityRoleInfo(retVal.Entity);
         }
 
@@ -69,7 +65,7 @@ namespace SanteDB.Rest.AMI.Resources
             return base.Obsolete(key);
         }
 
-        
+
 
         /// <summary>
         /// Remove an associated entity
@@ -81,11 +77,11 @@ namespace SanteDB.Rest.AMI.Resources
             if (scope == null)
                 throw new KeyNotFoundException($"Could not find SecurityRole with identifier {scopingEntityKey}");
 
-            switch(propertyName)
+            switch (propertyName)
             {
                 case "policy":
 
-                    
+
                 case "user":
                     var user = ApplicationServiceContext.Current.GetService<IRepositoryService<SecurityUser>>().Get(Guid.Parse(subItemKey.ToString()));
                     if (user == null)
@@ -119,7 +115,7 @@ namespace SanteDB.Rest.AMI.Resources
             var td = data as SecurityRoleInfo;
 
             var retVal = base.Update(data) as SecurityRoleInfo;
-            
+
             return new SecurityRoleInfo(td.Entity);
         }
     }

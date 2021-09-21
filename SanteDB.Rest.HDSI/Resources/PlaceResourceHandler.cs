@@ -32,7 +32,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a resource handler which queries places
     /// </summary>
     public class PlaceResourceHandler : ResourceHandlerBase<Place>
-	{
+    {
 
         /// <summary>
         /// Create the specified place
@@ -83,7 +83,7 @@ namespace SanteDB.Rest.HDSI.Resources
             // Clean reverse relationships
             List<String> lean = null;
             if (queryParameters.TryGetValue("_lean", out lean) && lean[0] == "true")
-                foreach(var r in retVal.OfType<Entity>())
+                foreach (var r in retVal.OfType<Entity>())
                     r.Relationships.RemoveAll(o => o.SourceEntityKey != r.Key);
 
             return retVal;

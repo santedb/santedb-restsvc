@@ -23,9 +23,6 @@ using SanteDB.Core.Jobs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Jobs
@@ -50,7 +47,7 @@ namespace SanteDB.Core.Model.AMI.Jobs
         /// </summary>
         public JobInfo(IJob job)
         {
-            if(job is IAmiIdentified ident)
+            if (job is IAmiIdentified ident)
             {
                 this.Key = ident.Key;
                 this.Tag = ident.Tag;
@@ -65,12 +62,12 @@ namespace SanteDB.Core.Model.AMI.Jobs
             this.Name = job.Name;
             this.CanCancel = job.CanCancel;
             this.State = job.CurrentState;
-            this.Parameters = job.Parameters?.Select(o=>new JobParameter() { Key = o.Key, Type = o.Value.Name }).ToList();
+            this.Parameters = job.Parameters?.Select(o => new JobParameter() { Key = o.Key, Type = o.Value.Name }).ToList();
             this.LastStart = job.LastStarted;
             this.LastFinish = job.LastFinished;
             this.JobType = job.GetType().AssemblyQualifiedName;
 
-            if(job is IReportProgressJob pj)
+            if (job is IReportProgressJob pj)
             {
                 this.Progress = pj.Progress;
                 this.StatusText = pj.StatusText;
@@ -111,7 +108,7 @@ namespace SanteDB.Core.Model.AMI.Jobs
         /// Gets the name of the job
         /// </summary>
         [XmlElement("name"), JsonProperty("name")]
-        public string Name { get; set;  }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets whether the job can be cancelled
@@ -123,7 +120,7 @@ namespace SanteDB.Core.Model.AMI.Jobs
         /// Gets the current state of the job
         /// </summary>
         [XmlElement("state"), JsonProperty("state")]
-        public JobStateType State { get; set;  }
+        public JobStateType State { get; set; }
 
         /// <summary>
         /// Gets the parameters for this job execution
