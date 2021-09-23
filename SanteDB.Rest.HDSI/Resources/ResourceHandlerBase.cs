@@ -2,22 +2,24 @@
  * Copyright (C) 2021 - 2021, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
  * Date: 2021-8-5
  */
+
+using RestSrvr.Exceptions;
 using SanteDB.Core;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
@@ -46,9 +48,9 @@ namespace SanteDB.Rest.HDSI.Resources
 
         where TData : IdentifiedData, new()
     {
-
         // Property providers
         private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
+
         // Property providers
         private ConcurrentDictionary<String, IApiChildOperation> m_operationProviders = new ConcurrentDictionary<string, IApiChildOperation>();
 
@@ -66,7 +68,6 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Get all child resources
         /// </summary>
         public IEnumerable<IApiChildOperation> Operations => this.m_operationProviders.Values;
-
 
         /// <summary>
         /// OBsoletion wrapper with locking
@@ -175,8 +176,7 @@ namespace SanteDB.Rest.HDSI.Resources
         public object CheckOut(object key)
         {
             var adHocCache = ApplicationServiceContext.Current.GetService<IResourceCheckoutService>();
-            adHocCache?.Checkout<TData>((Guid)key);
-            return null;
+            return adHocCache?.Checkout<TData>((Guid)key);
         }
 
         /// <summary>
@@ -244,8 +244,7 @@ namespace SanteDB.Rest.HDSI.Resources
         public object CheckIn(object key)
         {
             var adHocCache = ApplicationServiceContext.Current.GetService<IResourceCheckoutService>();
-            adHocCache?.Checkin<TData>((Guid)key);
-            return null;
+            return adHocCache?.Checkin<TData>((Guid)key);
         }
 
         /// <summary>
@@ -260,11 +259,9 @@ namespace SanteDB.Rest.HDSI.Resources
                 exRepo.Touch(objectKey);
                 ApplicationServiceContext.Current.GetService<IDataCachingService>().Remove(objectKey);
                 return this.Get(key, Guid.Empty);
-
             }
             else
                 throw new InvalidOperationException("Repository service does not support TOUCH");
-
         }
 
         /// <summary>
