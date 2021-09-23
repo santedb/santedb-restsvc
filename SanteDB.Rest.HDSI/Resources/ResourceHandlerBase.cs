@@ -21,6 +21,7 @@
 
 using RestSrvr.Exceptions;
 using SanteDB.Core;
+using SanteDB.Core.Exceptions;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Query;
@@ -176,7 +177,11 @@ namespace SanteDB.Rest.HDSI.Resources
         public object CheckOut(object key)
         {
             var adHocCache = ApplicationServiceContext.Current.GetService<IResourceCheckoutService>();
-            return adHocCache?.Checkout<TData>((Guid)key);
+            if (adHocCache?.Checkout<TData>((Guid)key) == false)
+            {
+                throw new ObjectLockedException();
+            }
+            return null;
         }
 
         /// <summary>
@@ -244,7 +249,11 @@ namespace SanteDB.Rest.HDSI.Resources
         public object CheckIn(object key)
         {
             var adHocCache = ApplicationServiceContext.Current.GetService<IResourceCheckoutService>();
-            return adHocCache?.Checkin<TData>((Guid)key);
+            if (adHocCache?.Checkin<TData>((Guid)key) == false)
+            {
+                throw new ObjectLockedException();
+            }
+            return null;
         }
 
         /// <summary>
