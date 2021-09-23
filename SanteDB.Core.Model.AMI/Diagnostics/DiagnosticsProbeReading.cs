@@ -21,10 +21,7 @@
 using Newtonsoft.Json;
 using SanteDB.Core.Diagnostics;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Diagnostics
@@ -35,7 +32,7 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
     [JsonObject(nameof(DiagnosticsProbeReading))]
     [XmlType(nameof(DiagnosticsProbeReading), Namespace = "http://santedb.org/ami")]
     [XmlRoot(nameof(DiagnosticsProbeReading), Namespace = "http://santedb.org/ami")]
-    public class DiagnosticsProbeReading 
+    public class DiagnosticsProbeReading
     {
 
         /// <summary>

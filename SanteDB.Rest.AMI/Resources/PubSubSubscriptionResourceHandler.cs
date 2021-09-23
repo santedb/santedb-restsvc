@@ -24,7 +24,6 @@ using SanteDB.Rest.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -114,7 +113,7 @@ namespace SanteDB.Rest.AMI.Resources
             else
                 throw new ArgumentException($"ID must be a uuid");
         }
-        
+
         /// <summary>
         /// Deletes the specified subscription
         /// </summary>
@@ -154,7 +153,7 @@ namespace SanteDB.Rest.AMI.Resources
                 var filter = QueryExpressionParser.BuildLinqExpression<PubSubSubscriptionDefinition>(queryParameters);
                 return this.m_manager.FindSubscription(filter, offset, count, out totalCount);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 this.m_tracer.TraceError("Error querying subscriptions - {0}", e);
                 throw new Exception($"Could not execute subscription query", e);

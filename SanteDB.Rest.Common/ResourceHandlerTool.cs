@@ -25,7 +25,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace SanteDB.Rest.Common
 {
@@ -76,7 +75,7 @@ namespace SanteDB.Rest.Common
                         {
                             tPropertyProviders.Where(p => p.ParentTypes.Contains(rh.Type)).ToList().ForEach(p => assoc.AddChildResource(p));
                         }
-                        if(rh is IOperationalApiResourceHandler oper)
+                        if (rh is IOperationalApiResourceHandler oper)
                         {
                             tOperationProviders.Where(p => p.ParentTypes.Contains(rh.Type)).ToList().ForEach(p => oper.AddOperation(p));
                         }
@@ -106,7 +105,7 @@ namespace SanteDB.Rest.Common
         /// </summary>
         public IEnumerable<IApiResourceHandler> GetResourceHandler(Type resourceType)
         {
-            return this.m_handlers.Values.Where(o=>o.Type == resourceType);
+            return this.m_handlers.Values.Where(o => o.Type == resourceType);
         }
 
     }

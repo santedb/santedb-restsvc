@@ -19,14 +19,12 @@
  * Date: 2021-8-5
  */
 using RestSrvr;
-using SanteDB.Core.Exceptions;
 using SanteDB.Core.Model.Serialization;
 using SanteDB.Rest.Common.Serialization;
 using System;
 using System.ComponentModel;
 using System.IO;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 
 namespace SanteDB.Rest.Common.Behavior
 {

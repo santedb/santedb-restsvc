@@ -18,9 +18,6 @@
  * User: fyfej
  * Date: 2021-8-9
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SanteDB.Rest.Common
 {

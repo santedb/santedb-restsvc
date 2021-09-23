@@ -23,7 +23,6 @@ using SanteDB.Core.Model;
 using SanteDB.Core.Model.Collection;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.Tracing;
 using System.Linq;
 
@@ -60,7 +59,7 @@ namespace SanteDB.Rest.Common
                     if (!retVal.HasTag(itm.Tag) && itm.Key.HasValue)
                     {
                         retVal.Add(itm);
-                        if(!lean)
+                        if (!lean)
                             Bundle.ProcessModel(itm.GetLocked(), retVal, !lean);
                     }
                 }

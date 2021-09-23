@@ -18,16 +18,15 @@
  * User: fyfej
  * Date: 2021-8-5
  */
+using SanteDB.Core;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
+using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
+using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
-using SanteDB.Core;
-using SanteDB.Core.Model.Security;
-using SanteDB.Core.Services;
-using SanteDB.Core.Model;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
@@ -35,7 +34,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a user entity resource handler.
     /// </summary>
     public class UserEntityResourceHandler : ResourceHandlerBase<UserEntity>
-	{
+    {
 
         /// <summary>
         /// Create the specified user entity
@@ -55,7 +54,7 @@ namespace SanteDB.Rest.HDSI.Resources
                     return base.Create(userEntity, updateIfExists);
                 }
             }
-            else 
+            else
                 throw new ArgumentOutOfRangeException("Can only handle UserEntity");
         }
 
@@ -112,7 +111,7 @@ namespace SanteDB.Rest.HDSI.Resources
                     userEntity.SecurityUserKey = null;
                     return base.Update(userEntity);
                 }
-                    
+
             }
             else
                 throw new ArgumentOutOfRangeException("Can only handle UserEntity");

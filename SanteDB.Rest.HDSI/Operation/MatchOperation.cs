@@ -20,17 +20,13 @@
  */
 using SanteDB.Core;
 using SanteDB.Core.Interop;
-using SanteDB.Core.Model.Entities;
-using SanteDB.Core.Model.Query;
-using SanteDB.Core.Model.Roles;
-using SanteDB.Core.Model.Serialization;
-using SanteDB.Core.Services;
 using SanteDB.Core.Matching;
+using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Model.Roles;
+using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.HDSI.Operation
 {
@@ -87,17 +83,17 @@ namespace SanteDB.Rest.HDSI.Operation
             }
 
 
-            if(this.m_matchingService is IMatchReportFactory reportFactory)
+            if (this.m_matchingService is IMatchReportFactory reportFactory)
             {
                 var repoService = ApplicationServiceContext.Current.GetService(typeof(IRepositoryService<>).MakeGenericType(scopingType)) as IRepositoryService;
                 var source = repoService.Get(uuid);
-                if(source == null)
+                if (source == null)
                 {
                     throw new KeyNotFoundException($"{uuid} not found");
                 }
 
                 // key of match configuration
-                if(!parameters.TryGet<String>("configuration", out String configuration))
+                if (!parameters.TryGet<String>("configuration", out String configuration))
                 {
                     throw new InvalidOperationException("Required parameter 'configuration' missing");
                 }

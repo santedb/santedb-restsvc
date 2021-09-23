@@ -32,6 +32,6 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Get capabilities 
         /// </summary>
         public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Search;
-        
+
     }
 }

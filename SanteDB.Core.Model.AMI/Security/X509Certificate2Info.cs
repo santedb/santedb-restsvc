@@ -18,11 +18,11 @@
  * User: fyfej
  * Date: 2021-8-5
  */
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
-using Newtonsoft.Json;
 
 namespace SanteDB.Core.Model.AMI.Security
 {
@@ -34,14 +34,14 @@ namespace SanteDB.Core.Model.AMI.Security
     [JsonObject(nameof(X509Certificate2Info))]
     public class X509Certificate2Info
     {
-	    /// <summary>
+        /// <summary>
         /// Creates a new X509 certificate information class
         /// </summary>
-		public X509Certificate2Info()
+        public X509Certificate2Info()
         {
         }
 
-	    /// <summary>
+        /// <summary>
         /// Constructs a certificate info
         /// </summary>
         /// <param name="issuer">The issuer of th ecert</param>
@@ -58,7 +58,7 @@ namespace SanteDB.Core.Model.AMI.Security
             this.Thumbprint = ser;
         }
 
-	    /// <summary>
+        /// <summary>
         /// Create from a CA attribute set
         /// </summary>
         /// <param name="attributes"></param>
@@ -72,53 +72,59 @@ namespace SanteDB.Core.Model.AMI.Security
             this.Issuer = attributes.First(o => o.Key == "ccm").Value;
         }
 
-	    /// <summary>
+        /// <summary>
         /// The identifier of the certificate
         /// </summary>
-        [XmlAttribute("id")][JsonProperty("id")]
+        [XmlAttribute("id")]
+        [JsonProperty("id")]
         public int Id { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Gets or sets the issuers
         /// </summary>
-        [XmlElement("iss")][JsonProperty("iss")]
+        [XmlElement("iss")]
+        [JsonProperty("iss")]
         public string Issuer { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Gets or sets the expiry date
         /// </summary>
-        [XmlElement("exp")][JsonProperty("exp")]
+        [XmlElement("exp")]
+        [JsonProperty("exp")]
         public DateTime? NotAfter { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Gets or sets the issue date
         /// </summary>
-        [XmlElement("nbf")][JsonProperty("nbf")]
+        [XmlElement("nbf")]
+        [JsonProperty("nbf")]
         public DateTime? NotBefore { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Distinguished name
         /// </summary>
-        [XmlElement("sub")][JsonProperty("sub")]
+        [XmlElement("sub")]
+        [JsonProperty("sub")]
         public string Subject { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Gets or sets the thumbprint
         /// </summary>
-        [XmlElement("thumbprint")][JsonProperty("thumbprint")]
+        [XmlElement("thumbprint")]
+        [JsonProperty("thumbprint")]
         public string Thumbprint { get; set; }
 
 
 #pragma warning disable CS1591
-	    public bool ShouldSerializeNotAfter()
-	    {
-		    return this.NotAfter.HasValue;
-	    }
+        public bool ShouldSerializeNotAfter()
+        {
+            return this.NotAfter.HasValue;
+        }
 
-	    public bool ShouldSerializeNotBefore()
-	    {
-		    return this.NotBefore.HasValue;
-	    }
+        public bool ShouldSerializeNotBefore()
+        {
+            return this.NotBefore.HasValue;
+        }
 #pragma warning restore CS1591
     }
 }

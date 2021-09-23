@@ -24,7 +24,6 @@ using SanteDB.Core.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Diagnostics.Tracing;
 
 namespace SanteDB.Rest.Common.Behavior
@@ -51,7 +50,7 @@ namespace SanteDB.Rest.Common.Behavior
         {
             Guid httpCorrelator = Guid.NewGuid();
 
-            
+
             this.m_traceSource.TraceEvent(EventLevel.Verbose, "HTTP RQO {0} : {1} {2} ({3}) - {4}",
                 RestOperationContext.Current.IncomingRequest.RemoteEndPoint,
                 request.Method,

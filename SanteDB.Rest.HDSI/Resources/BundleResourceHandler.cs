@@ -27,11 +27,11 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a resource handler which is for the persistence of bundles.
     /// </summary>
     public class BundleResourceHandler : ResourceHandlerBase<Bundle>
-	{
+    {
         /// <summary>
         /// Get capabilities
         /// </summary>
         public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Update | ResourceCapabilityType.Create;
 
-	}
+    }
 }

@@ -16,10 +16,8 @@
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
-using RestSrvr;
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
-using SanteDB.Core.Interfaces;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Query;
@@ -34,7 +32,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Xml.Serialization;
 

@@ -55,7 +55,7 @@ namespace SanteDB.Rest.AMI.Resources
                 sortParameters = QueryExpressionParser.BuildSort<SecurityProvenance>(qvalue);
             return ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().FindProvenance(query, offset, count, out totalCount, queryId, sortParameters);
 
-            
+
         }
 
         /// <summary>

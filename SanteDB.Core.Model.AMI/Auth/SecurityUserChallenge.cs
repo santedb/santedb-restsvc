@@ -18,9 +18,9 @@
  * User: fyfej
  * Date: 2021-8-5
  */
+using Newtonsoft.Json;
 using System;
 using System.Xml.Serialization;
-using Newtonsoft.Json;
 
 namespace SanteDB.Core.Model.AMI.Auth
 {
@@ -32,16 +32,18 @@ namespace SanteDB.Core.Model.AMI.Auth
     [JsonObject(nameof(SecurityUserChallengeInfo))]
     public class SecurityUserChallengeInfo
     {
-	    /// <summary>
+        /// <summary>
         /// Gets or sets the key of the challenge
         /// </summary>
-        [XmlElement("challenge")][JsonProperty("challenge")]
+        [XmlElement("challenge")]
+        [JsonProperty("challenge")]
         public Guid ChallengeKey { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// The challenge response
         /// </summary>
-        [XmlElement("response")][JsonProperty("response")]
+        [XmlElement("response")]
+        [JsonProperty("response")]
         public string ChallengeResponse { get; set; }
     }
 }

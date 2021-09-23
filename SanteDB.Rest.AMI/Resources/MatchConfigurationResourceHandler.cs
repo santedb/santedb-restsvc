@@ -16,25 +16,16 @@
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
-using RestSrvr;
-using SanteDB.Core;
 using SanteDB.Core.Interop;
-using SanteDB.Core.Model;
-using SanteDB.Core.Model.Acts;
-using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Matching;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
-using SanteDB.Core.Services;
-using SanteDB.Core.Matching;
-using SanteDB.Rest.AMI;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -191,7 +182,7 @@ namespace SanteDB.Rest.AMI.Resources
         {
             if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
             {
-                return propertyProvider.Remove(this.Type,scopingEntityKey, subItemKey);
+                return propertyProvider.Remove(this.Type, scopingEntityKey, subItemKey);
             }
             else
             {

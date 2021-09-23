@@ -89,7 +89,7 @@ namespace SanteDB.Rest.HDSI
     [RestServiceFault(429, "The server rejected the request due to a throttling constraint")]
     [RestServiceFault(500, "The server encountered an error processing the result")]
     [RestServiceFault(503, "The service is not available (starting up or shutting down)")]
-    public interface IHdsiServiceContract  : IRestApiContractImplementation
+    public interface IHdsiServiceContract : IRestApiContractImplementation
     {
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace SanteDB.Rest.HDSI
         /// </remarks>
         [RestInvoke("PATCH", "/{resourceType}/{id}")]
         [RestServiceFault(409, "The patch submitted does not match the current version of the object being patched")]
-        void Patch(string resourceType, string id , Patch body);
+        void Patch(string resourceType, string id, Patch body);
 
         /// <summary>
         /// Returns a list of patches for the specified resource 

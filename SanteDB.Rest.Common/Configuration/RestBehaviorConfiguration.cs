@@ -94,7 +94,8 @@ namespace SanteDB.Rest.Common.Configuration
         public String ConfigurationString
         {
             get => this.Configuration?.ToString();
-            set {
+            set
+            {
                 if (!String.IsNullOrEmpty(value))
                     this.Configuration = XElement.Parse(value);
                 else
@@ -115,7 +116,8 @@ namespace SanteDB.Rest.Common.Configuration
     /// </summary>
     [XmlType(nameof(RestServiceBehaviorConfiguration), Namespace = "http://santedb.org/configuration")]
     [JsonObject]
-    public class RestServiceBehaviorConfiguration : RestBehaviorConfiguration {
+    public class RestServiceBehaviorConfiguration : RestBehaviorConfiguration
+    {
 
         /// <summary>
         /// Default ctor
@@ -123,7 +125,7 @@ namespace SanteDB.Rest.Common.Configuration
         public RestServiceBehaviorConfiguration()
         {
 
-        }   
+        }
 
         /// <summary>
         /// Create a new behavior configuration with specified type
@@ -145,11 +147,11 @@ namespace SanteDB.Rest.Common.Configuration
         /// <summary>
         /// Gets the type
         /// </summary>
-        [XmlIgnore, JsonIgnore, Editor("SanteDB.Configuration.Editors.TypeSelectorEditor, SanteDB.Configuration", "System.Drawing.Design.UITypeEditor, System.Drawing"), 
+        [XmlIgnore, JsonIgnore, Editor("SanteDB.Configuration.Editors.TypeSelectorEditor, SanteDB.Configuration", "System.Drawing.Design.UITypeEditor, System.Drawing"),
             TypeConverter("SanteDB.Configuration.Converters.TypeDisplayConverter, SanteDB.Configuration"), BindingAttribute(typeof(IServiceBehavior))]
         public override Type Type { get => base.Type; set => base.Type = value; }
 
-       
+
     }
 
     /// <summary>

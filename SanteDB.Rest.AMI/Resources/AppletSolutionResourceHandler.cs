@@ -44,7 +44,7 @@ namespace SanteDB.Rest.AMI.Resources
 
         // Property providers
         private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
-       
+
         /// <summary>
         /// Gets the capabilities of the resource handler
         /// </summary>
@@ -124,7 +124,7 @@ namespace SanteDB.Rest.AMI.Resources
         public object Get(Object solutionId, Object versionId)
         {
             var appletService = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>();
-            var appletData = appletService.Solutions.FirstOrDefault(o=>o.Meta.Id == solutionId.ToString());
+            var appletData = appletService.Solutions.FirstOrDefault(o => o.Meta.Id == solutionId.ToString());
 
             if (appletData == null)
                 throw new FileNotFoundException(solutionId.ToString());
@@ -133,8 +133,8 @@ namespace SanteDB.Rest.AMI.Resources
                 return new AppletSolutionInfo(appletData, null);
             }
         }
-        
-        
+
+
         /// <summary>
         /// Set applet headers
         /// </summary>
@@ -192,7 +192,7 @@ namespace SanteDB.Rest.AMI.Resources
             return applets.Skip(offset).Take(count).OfType<Object>();
 
         }
-      
+
         /// <summary>
         /// Update the specified applet
         /// </summary>

@@ -31,7 +31,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Resource handler for patients
     /// </summary>
     public class PatientResourceHandler : ResourceHandlerBase<Patient>
-	{
+    {
         /// <summary>
         /// Create the specified patient
         /// </summary>

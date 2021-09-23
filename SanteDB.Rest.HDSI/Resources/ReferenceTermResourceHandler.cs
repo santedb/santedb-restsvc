@@ -31,12 +31,12 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a resource handler for concept reference terms.
     /// </summary>
     public class ReferenceTermResourceHandler : ResourceHandlerBase<ReferenceTerm>
-	{
+    {
         /// <summary>
         /// Gets the scope
         /// </summary>
         public override Type Scope => typeof(IHdsiServiceContract);
-        
+
         [Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
         public override object Create(object data, bool updateIfExists)
         {

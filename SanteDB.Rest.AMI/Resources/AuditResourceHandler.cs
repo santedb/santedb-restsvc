@@ -24,13 +24,11 @@ using SanteDB.Core.Model;
 using SanteDB.Core.Model.AMI.Security;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
-using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -41,7 +39,7 @@ namespace SanteDB.Rest.AMI.Resources
     {
 
         // Configuration
-        private AuditAccountabilityConfigurationSection m_configuration= ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<AuditAccountabilityConfigurationSection>();
+        private AuditAccountabilityConfigurationSection m_configuration = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<AuditAccountabilityConfigurationSection>();
 
         // The audit repository
         private IRepositoryService<AuditData> m_repository = null;
@@ -54,7 +52,7 @@ namespace SanteDB.Rest.AMI.Resources
 
             if (this.m_repository == null)
                 this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<AuditData>>();
-            if(this.m_repository == null)
+            if (this.m_repository == null)
                 throw new InvalidOperationException("No audit repository is configured");
 
             return this.m_repository;
@@ -65,7 +63,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public AuditResourceHandler()
         {
-            
+
         }
 
         /// <summary>
@@ -100,7 +98,7 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public object Create(object data, bool updateIfExists)
         {
-            
+
             var auditData = data as AuditSubmission;
             if (auditData == null) // may be a single audit
             {
@@ -134,9 +132,9 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.AccessAuditLog)]
         public object Get(object id, object versionId)
         {
-           
+
             var retVal = new AuditData();
-            if(Guid.TryParse(id.ToString(), out Guid gid))
+            if (Guid.TryParse(id.ToString(), out Guid gid))
                 retVal.CopyObjectData(this.GetRepository().Get(gid));
             return retVal;
         }
@@ -174,7 +172,7 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.AccessAuditLog)]
         public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
         {
-      
+
             var filter = QueryExpressionParser.BuildLinqExpression<AuditData>(queryParameters);
 
             ModelSort<AuditData>[] sortParameters = null;

@@ -16,11 +16,14 @@
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
-using System.Collections.Generic;
 using SanteDB.Core.Mail;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+<<<<<<< HEAD
 using SanteDB.Core.Security.Principal;
+=======
+using System.Collections.Generic;
+>>>>>>> develop
 
 namespace SanteDB.Rest.AMI.Resources
 {

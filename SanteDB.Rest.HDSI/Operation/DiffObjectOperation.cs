@@ -4,9 +4,7 @@ using SanteDB.Core.Model;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.HDSI.Operation
 {
@@ -47,12 +45,12 @@ namespace SanteDB.Rest.HDSI.Operation
         /// </summary>
         public object Invoke(Type scopingType, object scopingKey, ApiOperationParameterCollection parameters)
         {
-            
-            if(parameters.TryGet<String>("other", out string bKeyString) &&
+
+            if (parameters.TryGet<String>("other", out string bKeyString) &&
                 Guid.TryParse(scopingKey.ToString(), out Guid aKey) && Guid.TryParse(bKeyString, out Guid bKey))
             {
                 var repository = ApplicationServiceContext.Current.GetService(typeof(IRepositoryService<>).MakeGenericType(scopingType)) as IRepositoryService;
-                if(repository == null)
+                if (repository == null)
                 {
                     throw new InvalidOperationException($"Cannot load repository for {scopingType.Name}");
                 }
