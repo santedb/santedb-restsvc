@@ -298,46 +298,53 @@ namespace SanteDB.Rest.Common.Serialization
                     {
                         case "application/json+sdb-viewmodel":
 
-#if DEBUG
-                            this.m_traceSource.TraceInfo("Serializing {0} as view model result", result);
-#endif
-                            var viewModel = httpRequest.Headers["X-SanteDB-ViewModel"] ?? httpRequest.QueryString["_viewModel"];
-
-                            // Create the view model serializer
-                            var viewModelSerializer = new JsonViewModelSerializer();
-
-#if DEBUG
-                            this.m_traceSource.TraceInfo("Will load serialization assembly {0}", typeof(ActExtensionViewModelSerializer).Assembly);
-#endif
-                            viewModelSerializer.LoadSerializerAssembly(typeof(ActExtensionViewModelSerializer).Assembly);
-
-                            if (!String.IsNullOrEmpty(viewModel))
+                            if (result is IdentifiedData id)
                             {
-                                var viewModelDescription = ApplicationServiceContext.Current.GetService<IAppletManagerService>()?.Applets.GetViewModelDescription(viewModel);
-                                viewModelSerializer.ViewModel = viewModelDescription;
+#if DEBUG
+                                this.m_traceSource.TraceInfo("Serializing {0} as view model result", result);
+#endif
+                                var viewModel = httpRequest.Headers["X-SanteDB-ViewModel"] ?? httpRequest.QueryString["_viewModel"];
+
+                                // Create the view model serializer
+                                var viewModelSerializer = new JsonViewModelSerializer();
+
+#if DEBUG
+                                this.m_traceSource.TraceInfo("Will load serialization assembly {0}", typeof(ActExtensionViewModelSerializer).Assembly);
+#endif
+                                viewModelSerializer.LoadSerializerAssembly(typeof(ActExtensionViewModelSerializer).Assembly);
+
+                                if (!String.IsNullOrEmpty(viewModel))
+                                {
+                                    var viewModelDescription = ApplicationServiceContext.Current.GetService<IAppletManagerService>()?.Applets.GetViewModelDescription(viewModel);
+                                    viewModelSerializer.ViewModel = viewModelDescription;
+                                }
+                                else
+                                {
+                                    viewModelSerializer.ViewModel = m_defaultViewModel;
+                                }
+
+#if DEBUG
+                                this.m_traceSource.TraceInfo("Using view model {0}", viewModelSerializer.ViewModel?.Name);
+#endif
+                                using (var tms = new MemoryStream())
+                                using (StreamWriter sw = new StreamWriter(tms, new UTF8Encoding(false)))
+                                using (JsonWriter jsw = new JsonTextWriter(sw))
+                                {
+                                    viewModelSerializer.Serialize(jsw, id);
+                                    jsw.Flush();
+                                    sw.Flush();
+                                    response.Body = new MemoryStream(tms.ToArray());
+                                }
+
+#if DEBUG
+                                this.m_traceSource.TraceInfo("Serialized body of  {0}", result);
+#endif
+                                contentType = "application/json+sdb-viewmodel";
                             }
                             else
                             {
-                                viewModelSerializer.ViewModel = m_defaultViewModel;
+                                goto case "application/json"; // HACK: C# doesn't do fallthrough so we have to push it
                             }
-
-#if DEBUG
-                            this.m_traceSource.TraceInfo("Using view model {0}", viewModelSerializer.ViewModel?.Name);
-#endif
-                            using (var tms = new MemoryStream())
-                            using (StreamWriter sw = new StreamWriter(tms, new UTF8Encoding(false)))
-                            using (JsonWriter jsw = new JsonTextWriter(sw))
-                            {
-                                viewModelSerializer.Serialize(jsw, result as IdentifiedData);
-                                jsw.Flush();
-                                sw.Flush();
-                                response.Body = new MemoryStream(tms.ToArray());
-                            }
-
-#if DEBUG
-                            this.m_traceSource.TraceInfo("Serialized body of  {0}", result);
-#endif
-                            contentType = "application/json+sdb-viewmodel";
                             break;
                         case "application/json":
                             {
