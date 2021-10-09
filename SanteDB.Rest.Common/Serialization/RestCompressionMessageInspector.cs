@@ -23,7 +23,6 @@ using RestSrvr.Message;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Rest.Common.Compression;
 using System;
-using System.Diagnostics;
 using System.Diagnostics.Tracing;
 using System.IO;
 
@@ -37,7 +36,7 @@ namespace SanteDB.Rest.Common.Serialization
     {
         // Trace source
         private Tracer m_traceSource = Tracer.GetTracer(typeof(RestCompressionMessageInspector));
-        
+
         /// <summary>
         /// After request is received
         /// </summary>
@@ -53,10 +52,10 @@ namespace SanteDB.Rest.Common.Serialization
             }
             catch (Exception e)
             {
-                this.m_traceSource.TraceEvent(EventLevel.Error,  e.ToString());
+                this.m_traceSource.TraceEvent(EventLevel.Error, e.ToString());
             }
         }
-        
+
         /// <summary>
         /// Before sending the response
         /// </summary>
@@ -83,7 +82,7 @@ namespace SanteDB.Rest.Common.Serialization
                     else
                         response.Headers.Add("X-CompressResponseStream", "no-known-accept");
                 }
-                
+
                 // No reply = no compress :)
                 if (response.Body == null)
                     return;
@@ -108,13 +107,13 @@ namespace SanteDB.Rest.Common.Serialization
                     }
                     catch (Exception e)
                     {
-                        this.m_traceSource.TraceEvent(EventLevel.Error,  e.ToString());
+                        this.m_traceSource.TraceEvent(EventLevel.Error, e.ToString());
                     }
                 }
             }
             catch (Exception e)
             {
-                this.m_traceSource.TraceEvent(EventLevel.Error,  e.ToString());
+                this.m_traceSource.TraceEvent(EventLevel.Error, e.ToString());
             }
         }
     }

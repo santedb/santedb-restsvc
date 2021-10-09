@@ -1,21 +1,22 @@
 ﻿/*
  * Portions Copyright 2019-2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
+
 using SanteDB.Core;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Jobs;
@@ -24,12 +25,9 @@ using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Rest.Common;
-using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -59,12 +57,12 @@ namespace SanteDB.Rest.AMI.Resources
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Update | // start
             ResourceCapabilityType.Delete | // cancel
             ResourceCapabilityType.Search | // find
-            ResourceCapabilityType.Get; 
+            ResourceCapabilityType.Get;
 
         /// <summary>
         /// Create a new job instance
         /// </summary>
-        
+
         public object Create(object data, bool updateIfExists)
         {
             throw new NotSupportedException();
@@ -88,7 +86,6 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public object Obsolete(object key)
         {
-
             ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
             var manager = ApplicationServiceContext.Current.GetService<IJobManagerService>();
             var job = manager.GetJobInstance(Guid.Parse(key.ToString()));
@@ -136,7 +133,6 @@ namespace SanteDB.Rest.AMI.Resources
             if (data is JobInfo)
             {
                 ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
-                    
 
                 var jobInfo = data as JobInfo;
                 var jobManager = ApplicationServiceContext.Current.GetService<IJobManagerService>();
@@ -155,4 +151,3 @@ namespace SanteDB.Rest.AMI.Resources
         }
     }
 }
-

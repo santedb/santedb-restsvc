@@ -18,10 +18,10 @@
  * User: fyfej
  * Date: 2021-8-5
  */
-using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
+using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Auth
 {
@@ -33,14 +33,14 @@ namespace SanteDB.Core.Model.AMI.Auth
     [JsonObject(nameof(SecurityPolicyInfo))]
     public class SecurityPolicyInfo
     {
-	    /// <summary>
+        /// <summary>
         /// Policy information
         /// </summary>
         public SecurityPolicyInfo()
         {
         }
 
-	    /// <summary>
+        /// <summary>
         /// Constructs this policy information object from an IMS policy instane
         /// </summary>
         public SecurityPolicyInfo(SecurityPolicy o)
@@ -51,7 +51,7 @@ namespace SanteDB.Core.Model.AMI.Auth
             this.Policy = o;
         }
 
-	    /// <summary>
+        /// <summary>
         /// Constructs this policy information object from an IMS policy instane
         /// </summary>
         public SecurityPolicyInfo(IPolicyInstance o)
@@ -69,7 +69,7 @@ namespace SanteDB.Core.Model.AMI.Auth
             };
         }
 
-	    /// <summary>
+        /// <summary>
         /// Constructs this policy information object from an IMS policy instane
         /// </summary>
         public SecurityPolicyInfo(SecurityPolicyInstance o) : this(o.Policy)
@@ -77,34 +77,39 @@ namespace SanteDB.Core.Model.AMI.Auth
             this.Grant = o.GrantType;
         }
 
-	    /// <summary>
+        /// <summary>
         /// True if the policy can be overridden
         /// </summary>
-        [XmlAttribute("canOverride")][JsonProperty("canOverride")]
+        [XmlAttribute("canOverride")]
+        [JsonProperty("canOverride")]
         public bool CanOverride { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// The outcome grant if an instance
         /// </summary>
-        [XmlAttribute("grant")][JsonProperty("grant")]
+        [XmlAttribute("grant")]
+        [JsonProperty("grant")]
         public PolicyGrantType Grant { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// The name of the policy
         /// </summary>
-        [XmlAttribute("name")][JsonProperty("name")]
+        [XmlAttribute("name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// The OID of the policy
         /// </summary>
-        [XmlAttribute("oid")][JsonProperty("oid")]
+        [XmlAttribute("oid")]
+        [JsonProperty("oid")]
         public string Oid { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Gets or sets the policy information
         /// </summary>
-        [XmlElement("policyInfo")][JsonProperty("policyInfo")]
+        [XmlElement("policyInfo")]
+        [JsonProperty("policyInfo")]
         public SecurityPolicy Policy { get; set; }
     }
 }

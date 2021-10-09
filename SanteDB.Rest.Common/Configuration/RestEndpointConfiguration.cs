@@ -54,7 +54,8 @@ namespace SanteDB.Rest.Common.Configuration
         public RestEndpointConfiguration(RestEndpointConfiguration configuration) : this()
         {
             this.Behaviors = new List<RestEndpointBehaviorConfiguration>(configuration.Behaviors.Select(o => new RestEndpointBehaviorConfiguration(o)));
-            if (configuration.CertificateBinding != null) {
+            if (configuration.CertificateBinding != null)
+            {
                 this.CertificateBinding = new X509ConfigurationElement()
                 {
                     FindType = configuration.CertificateBinding.FindType,
@@ -99,7 +100,7 @@ namespace SanteDB.Rest.Common.Configuration
             set
             {
                 this.m_address = value;
-                if(Uri.TryCreate(value, UriKind.Absolute, out Uri uri) && uri.Scheme == "https" && this.CertificateBinding == null)
+                if (Uri.TryCreate(value, UriKind.Absolute, out Uri uri) && uri.Scheme == "https" && this.CertificateBinding == null)
                 {
                     this.CertificateBinding = new X509ConfigurationElement();
                 }

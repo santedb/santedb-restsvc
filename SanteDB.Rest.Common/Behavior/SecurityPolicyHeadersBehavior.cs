@@ -20,14 +20,8 @@
  */
 using RestSrvr;
 using RestSrvr.Message;
-using SanteDB.Core;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace SanteDB.Rest.Common.Behaviors
 {
@@ -81,7 +75,7 @@ namespace SanteDB.Rest.Common.Behaviors
             response.Headers.Add("Feature-Policy", "autoplay 'none'; accelerometer 'none'; geolocation 'none'; payment 'none'");
 
             response.Headers.Add("X-Content-Type-Options", "nosniff");
-            
+
         }
     }
 }

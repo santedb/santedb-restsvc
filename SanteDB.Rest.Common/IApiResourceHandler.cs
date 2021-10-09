@@ -18,8 +18,6 @@
  * User: fyfej
  * Date: 2021-8-5
  */
-using RestSrvr;
-using SanteDB.Core.Interfaces;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
 using System;
@@ -31,18 +29,18 @@ namespace SanteDB.Rest.Common
     /// <summary>
     /// Represents a resource handler.
     /// </summary>
-    public interface IApiResourceHandler 
-	{
+    public interface IApiResourceHandler
+    {
 
-		/// <summary>
-		/// Gets the name of the resource which the resource handler supports.
-		/// </summary>
-		string ResourceName { get; }
+        /// <summary>
+        /// Gets the name of the resource which the resource handler supports.
+        /// </summary>
+        string ResourceName { get; }
 
-		/// <summary>
-		/// Gets the type which the resource handler supports.
-		/// </summary>
-		Type Type { get; }
+        /// <summary>
+        /// Gets the type which the resource handler supports.
+        /// </summary>
+        Type Type { get; }
 
         /// <summary>
         /// Get the scope of this resource handler (the service to which the resources are bound)
@@ -52,7 +50,7 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Gets the capabilities of this service
         /// </summary>
-        ResourceCapabilityType Capabilities { get;  }
+        ResourceCapabilityType Capabilities { get; }
 
         /// <summary>
         /// Creates a resource.
@@ -77,22 +75,22 @@ namespace SanteDB.Rest.Common
         /// <returns>Returns the obsoleted resource.</returns>
         Object Obsolete(Object key);
 
-		/// <summary>
-		/// Queries for a resource.
-		/// </summary>
-		/// <param name="queryParameters">The query parameters of the resource.</param>
-		/// <returns>Returns a collection of resources.</returns>
-		IEnumerable<Object> Query(NameValueCollection queryParameters);
+        /// <summary>
+        /// Queries for a resource.
+        /// </summary>
+        /// <param name="queryParameters">The query parameters of the resource.</param>
+        /// <returns>Returns a collection of resources.</returns>
+        IEnumerable<Object> Query(NameValueCollection queryParameters);
 
-		/// <summary>
-		/// Queries for a resource.
-		/// </summary>
-		/// <param name="queryParameters">The query parameters of the resource.</param>
-		/// <param name="offset">The offset of the query.</param>
-		/// <param name="count">The count of the query.</param>
-		/// <param name="totalCount">The total count of the results.</param>
-		/// <returns>Returns a collection of resources.</returns>
-		IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out Int32 totalCount);
+        /// <summary>
+        /// Queries for a resource.
+        /// </summary>
+        /// <param name="queryParameters">The query parameters of the resource.</param>
+        /// <param name="offset">The offset of the query.</param>
+        /// <param name="count">The count of the query.</param>
+        /// <param name="totalCount">The total count of the results.</param>
+        /// <returns>Returns a collection of resources.</returns>
+        IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out Int32 totalCount);
 
         /// <summary>
         /// Updates a resource.
@@ -103,5 +101,5 @@ namespace SanteDB.Rest.Common
 
     }
 
-   
+
 }

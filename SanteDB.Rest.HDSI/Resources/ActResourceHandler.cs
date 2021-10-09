@@ -31,7 +31,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a resource handler for ACTs
     /// </summary>
 	public class ActResourceHandler : ResourceHandlerBase<Act>
-	{
+    {
         /// <summary>
         /// Creates the specified act
         /// </summary>

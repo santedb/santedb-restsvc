@@ -31,7 +31,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a resource handler that can perform operations on materials
     /// </summary>
     public class MaterialResourceHandler : ResourceHandlerBase<Material>
-	{
+    {
         /// <summary>
         /// Create the specified material
         /// </summary>

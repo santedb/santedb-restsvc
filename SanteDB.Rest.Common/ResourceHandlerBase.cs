@@ -20,26 +20,21 @@
  */
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
-using SanteDB.Core.Interfaces;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
+using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Collection;
+using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
+using SanteDB.Core.Security;
+using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Services;
+using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Xml.Serialization;
-using SanteDB.Core.Model.Query;
-using SanteDB.Rest.Common.Attributes;
-using SanteDB.Core.Security;
-using SanteDB.Core.Security.Audit;
-using RestSrvr;
-using SanteDB.Core.Model.Interfaces;
-using SanteDB.Core.Model.Entities;
-using SanteDB.Core.Model.Acts;
 
 namespace SanteDB.Rest.Common
 {

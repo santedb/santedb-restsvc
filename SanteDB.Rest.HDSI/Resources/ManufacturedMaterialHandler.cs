@@ -35,7 +35,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a HDSI handler for manufactured materials
     /// </summary>
     public class ManufacturedMaterialHandler : ResourceHandlerBase<ManufacturedMaterial>
-	{
+    {
 
         /// <summary>
         /// Create the specified material
@@ -83,13 +83,13 @@ namespace SanteDB.Rest.HDSI.Resources
         {
             var retVal = base.Query(queryParameters, offset, count, out totalCount);
 
-            var erPersistence = ApplicationServiceContext.Current.GetService<IRepositoryService<EntityRelationship>>() ;
+            var erPersistence = ApplicationServiceContext.Current.GetService<IRepositoryService<EntityRelationship>>();
             var auth = AuthenticationContext.Current;
 
-            foreach(var o in retVal.OfType<ManufacturedMaterial>())
+            foreach (var o in retVal.OfType<ManufacturedMaterial>())
             {
                 int tr = 0;
-                if(!o.Relationships.Any(r=>r.RelationshipTypeKey == EntityRelationshipTypeKeys.Instance))
+                if (!o.Relationships.Any(r => r.RelationshipTypeKey == EntityRelationshipTypeKeys.Instance))
                     o.Relationships.AddRange(erPersistence.Find(q => q.TargetEntityKey == o.Key && q.RelationshipTypeKey == EntityRelationshipTypeKeys.Instance, 0, 100, out tr));
             };
 

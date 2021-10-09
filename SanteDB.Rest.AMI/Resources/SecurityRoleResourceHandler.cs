@@ -1,44 +1,38 @@
 ﻿/*
  * Portions Copyright 2019-2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
 using SanteDB.Core;
-using SanteDB.Core.Security;
 using SanteDB.Core.Model.AMI.Auth;
-using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
-using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
 {
     /// <summary>
     /// A resource handler which handles security roles
-    /// </summary> 
+    /// </summary>
     public class SecurityRoleResourceHandler : SecurityEntityResourceHandler<SecurityRole>
     {
-
-
         // Security repository
         private IRoleProviderService m_roleProvider;
 
@@ -64,11 +58,9 @@ namespace SanteDB.Rest.AMI.Resources
             if (data is SecurityRole)
                 data = new SecurityRoleInfo(data as SecurityRole, this.m_policyInformationService);
 
-
             var retVal = base.Create(data, updateIfExists) as SecurityRoleInfo;
             var td = data as SecurityRoleInfo;
-            
-           
+
             return new SecurityRoleInfo(retVal.Entity, this.m_policyInformationService);
         }
 
@@ -81,8 +73,6 @@ namespace SanteDB.Rest.AMI.Resources
             return base.Obsolete(key);
         }
 
-        
-
         /// <summary>
         /// Remove an associated entity
         /// </summary>
@@ -93,11 +83,10 @@ namespace SanteDB.Rest.AMI.Resources
             if (scope == null)
                 throw new KeyNotFoundException($"Could not find SecurityRole with identifier {scopingEntityKey}");
 
-            switch(propertyName)
+            switch (propertyName)
             {
                 case "policy":
 
-                    
                 case "user":
                     var user = ApplicationServiceContext.Current.GetService<IRepositoryService<SecurityUser>>().Get(Guid.Parse(subItemKey.ToString()));
                     if (user == null)
@@ -131,7 +120,7 @@ namespace SanteDB.Rest.AMI.Resources
             var td = data as SecurityRoleInfo;
 
             var retVal = base.Update(data) as SecurityRoleInfo;
-            
+
             return new SecurityRoleInfo(td.Entity, this.m_policyInformationService);
         }
     }

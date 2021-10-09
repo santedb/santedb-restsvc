@@ -28,16 +28,13 @@ using SanteDB.Core.Applets.Services;
 using SanteDB.Core.Applets.ViewModel.Description;
 using SanteDB.Core.Applets.ViewModel.Json;
 using SanteDB.Core.Diagnostics;
-using SanteDB.Core.Interfaces;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Json.Formatter;
 using SanteDB.Core.Model.Serialization;
-using SanteDB.Core.Security;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Diagnostics.Tracing;
 using System.IO;
 using System.Linq;
@@ -123,7 +120,7 @@ namespace SanteDB.Rest.Common.Serialization
                 {
                     s_knownTypes = typeof(TContract).GetCustomAttributes<ServiceKnownResourceAttribute>().Select(t => t.Type).ToArray();
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     this.m_traceSource.TraceError("Error scanning for known types on contract {0} - {1}", typeof(TContract), e);
                     throw;
@@ -182,7 +179,8 @@ namespace SanteDB.Rest.Common.Serialization
                     }
                     else
                     {
-                        switch(contentType.MediaType) {
+                        switch (contentType.MediaType)
+                        {
                             case "application/xml":
                                 XmlSerializer serializer = null;
                                 using (XmlReader bodyReader = XmlReader.Create(request.Body))
@@ -255,8 +253,8 @@ namespace SanteDB.Rest.Common.Serialization
                                 throw new InvalidOperationException("Invalid request format");
                         }
                     }
-                    
-                        
+
+
                 }
             }
             catch (Exception e)
@@ -281,11 +279,11 @@ namespace SanteDB.Rest.Common.Serialization
                 string accepts = httpRequest.Headers["Accept"],
                     contentType = httpRequest.Headers["Content-Type"];
 
-                if(String.IsNullOrEmpty(accepts) && String.IsNullOrEmpty(contentType))
+                if (String.IsNullOrEmpty(accepts) && String.IsNullOrEmpty(contentType))
                 {
                     accepts = "application/xml";
                 }
-                var contentTypeMime = (accepts ?? contentType).Split(',').Select(o=>new ContentType(o)).First();
+                var contentTypeMime = (accepts ?? contentType).Split(',').Select(o => new ContentType(o)).First();
 
                 // Result is serializable
                 if (result == null)
@@ -296,50 +294,57 @@ namespace SanteDB.Rest.Common.Serialization
                 else if (result?.GetType().GetCustomAttribute<XmlTypeAttribute>() != null ||
                     result?.GetType().GetCustomAttribute<JsonObjectAttribute>() != null)
                 {
-                    switch(contentTypeMime.MediaType)
+                    switch (contentTypeMime.MediaType)
                     {
                         case "application/json+sdb-viewmodel":
 
-#if DEBUG
-                            this.m_traceSource.TraceInfo("Serializing {0} as view model result", result);
-#endif
-                            var viewModel = httpRequest.Headers["X-SanteDB-ViewModel"] ?? httpRequest.QueryString["_viewModel"];
-
-                            // Create the view model serializer
-                            var viewModelSerializer = new JsonViewModelSerializer();
-
-#if DEBUG
-                            this.m_traceSource.TraceInfo("Will load serialization assembly {0}", typeof(ActExtensionViewModelSerializer).Assembly);
-#endif
-                            viewModelSerializer.LoadSerializerAssembly(typeof(ActExtensionViewModelSerializer).Assembly);
-
-                            if (!String.IsNullOrEmpty(viewModel))
+                            if (result is IdentifiedData id)
                             {
-                                var viewModelDescription = ApplicationServiceContext.Current.GetService<IAppletManagerService>()?.Applets.GetViewModelDescription(viewModel);
-                                viewModelSerializer.ViewModel = viewModelDescription;
+#if DEBUG
+                                this.m_traceSource.TraceInfo("Serializing {0} as view model result", result);
+#endif
+                                var viewModel = httpRequest.Headers["X-SanteDB-ViewModel"] ?? httpRequest.QueryString["_viewModel"];
+
+                                // Create the view model serializer
+                                var viewModelSerializer = new JsonViewModelSerializer();
+
+#if DEBUG
+                                this.m_traceSource.TraceInfo("Will load serialization assembly {0}", typeof(ActExtensionViewModelSerializer).Assembly);
+#endif
+                                viewModelSerializer.LoadSerializerAssembly(typeof(ActExtensionViewModelSerializer).Assembly);
+
+                                if (!String.IsNullOrEmpty(viewModel))
+                                {
+                                    var viewModelDescription = ApplicationServiceContext.Current.GetService<IAppletManagerService>()?.Applets.GetViewModelDescription(viewModel);
+                                    viewModelSerializer.ViewModel = viewModelDescription;
+                                }
+                                else
+                                {
+                                    viewModelSerializer.ViewModel = m_defaultViewModel;
+                                }
+
+#if DEBUG
+                                this.m_traceSource.TraceInfo("Using view model {0}", viewModelSerializer.ViewModel?.Name);
+#endif
+                                using (var tms = new MemoryStream())
+                                using (StreamWriter sw = new StreamWriter(tms, new UTF8Encoding(false)))
+                                using (JsonWriter jsw = new JsonTextWriter(sw))
+                                {
+                                    viewModelSerializer.Serialize(jsw, id);
+                                    jsw.Flush();
+                                    sw.Flush();
+                                    response.Body = new MemoryStream(tms.ToArray());
+                                }
+
+#if DEBUG
+                                this.m_traceSource.TraceInfo("Serialized body of  {0}", result);
+#endif
+                                contentType = "application/json+sdb-viewmodel";
                             }
                             else
                             {
-                                viewModelSerializer.ViewModel = m_defaultViewModel;
+                                goto case "application/json"; // HACK: C# doesn't do fallthrough so we have to push it
                             }
-
-#if DEBUG
-                            this.m_traceSource.TraceInfo("Using view model {0}", viewModelSerializer.ViewModel?.Name);
-#endif
-                            using (var tms = new MemoryStream())
-                            using (StreamWriter sw = new StreamWriter(tms, new UTF8Encoding(false)))
-                            using (JsonWriter jsw = new JsonTextWriter(sw))
-                            {
-                                viewModelSerializer.Serialize(jsw, result as IdentifiedData);
-                                jsw.Flush();
-                                sw.Flush();
-                                response.Body = new MemoryStream(tms.ToArray());
-                            }
-
-#if DEBUG
-                            this.m_traceSource.TraceInfo("Serialized body of  {0}", result);
-#endif
-                            contentType = "application/json+sdb-viewmodel";
                             break;
                         case "application/json":
                             {
@@ -374,6 +379,8 @@ namespace SanteDB.Rest.Common.Serialization
                                 MemoryStream ms = new MemoryStream();
                                 try
                                 {
+                                    if (xsz == null)
+                                        xsz = XmlModelSerializerFactory.Current.CreateSerializer(result.GetType());
                                     xsz.Serialize(ms, result);
                                 }
                                 catch (InvalidOperationException e) when (e.Message.Contains("XML document") && result is Bundle bundle)

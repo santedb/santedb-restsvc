@@ -2,26 +2,25 @@
  * Copyright (C) 2021 - 2021, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
  * Date: 2021-8-5
  */
 using RestSrvr;
 using RestSrvr.Attributes;
 using SanteDB.Core;
-using SanteDB.Core.Services;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Interop;
@@ -39,7 +38,6 @@ using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -47,7 +45,6 @@ using System.Reflection;
 using System.Text;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using System.Net.Http;
 
 namespace SanteDB.Rest.HDSI
 {
@@ -134,7 +131,6 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
-
                     this.AclCheck(handler, nameof(IApiResourceHandler.Create));
                     var retVal = handler.Create(body, false) as IdentifiedData;
                     var versioned = retVal as IVersionedEntity;
@@ -155,11 +151,9 @@ namespace SanteDB.Rest.HDSI
                 }
                 else
                     throw new FileNotFoundException(resourceType);
-
             }
             catch (Exception e)
             {
-
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw new Exception($"Error creating {body}", e);
@@ -198,7 +192,6 @@ namespace SanteDB.Rest.HDSI
                 }
                 else
                     throw new FileNotFoundException(resourceType);
-
             }
             catch (Exception e)
             {
@@ -219,11 +212,9 @@ namespace SanteDB.Rest.HDSI
 
             try
             {
-
                 var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
-
                     if (handler is IChainedApiResourceHandler chainedHandler && chainedHandler.TryGetChainedResource(id, ChildObjectScopeBinding.Class, out IApiChildResourceHandler childHandler))
                     {
                         return this.AssociationSearch(resourceType, id) as IdentifiedData;
@@ -245,7 +236,6 @@ namespace SanteDB.Rest.HDSI
                         RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
                         return null;
                     }
-
                     else if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true" ||
                         RestOperationContext.Current.IncomingRequest.QueryString["_all"] == "true")
                     {
@@ -260,7 +250,6 @@ namespace SanteDB.Rest.HDSI
                 }
                 else
                     throw new FileNotFoundException(resourceType);
-
             }
             catch (Exception e)
             {
@@ -297,7 +286,6 @@ namespace SanteDB.Rest.HDSI
                 }
                 else
                     throw new FileNotFoundException(resourceType);
-
             }
             catch (Exception e)
             {
@@ -360,7 +348,7 @@ namespace SanteDB.Rest.HDSI
                     String since = RestOperationContext.Current.IncomingRequest.QueryString["_since"];
                     Guid sinceGuid = since != null ? Guid.Parse(since) : Guid.Empty;
 
-                    // Query 
+                    // Query
                     this.AclCheck(handler, nameof(IApiResourceHandler.Get));
                     var retVal = handler.Get(Guid.Parse(id), Guid.Empty) as IVersionedEntity;
                     List<IVersionedEntity> histItm = new List<IVersionedEntity>() { retVal };
@@ -372,7 +360,6 @@ namespace SanteDB.Rest.HDSI
                         // Should we stop fetching?
                         if (retVal?.VersionKey == sinceGuid)
                             break;
-
                     }
 
                     // Lock the item
@@ -386,7 +373,6 @@ namespace SanteDB.Rest.HDSI
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw new Exception($"Error getting history for {resourceType}/{id}");
-
             }
         }
 
@@ -474,7 +460,6 @@ namespace SanteDB.Rest.HDSI
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw new Exception($"Error searching {resourceType}", e);
-
             }
         }
 
@@ -520,14 +505,12 @@ namespace SanteDB.Rest.HDSI
                 }
                 else
                     throw new FileNotFoundException(resourceType);
-
             }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw new Exception($"Error updating {resourceType}/{id}", e);
-
             }
         }
 
@@ -567,6 +550,7 @@ namespace SanteDB.Rest.HDSI
                             this.AclCheck(handler, nameof(IApiResourceHandler.Obsolete));
                             retVal = handler.Obsolete(Guid.Parse(id)) as IdentifiedData;
                             break;
+
                         default:
                             throw new InvalidOperationException($"Can't understand X-Delete-Mode header");
                     }
@@ -579,19 +563,16 @@ namespace SanteDB.Rest.HDSI
                     else
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id));
 
-
                     return retVal;
                 }
                 else
                     throw new FileNotFoundException(resourceType);
-
             }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw new Exception($"Error deleting {resourceType}/{id}", e);
-
             }
         }
 
@@ -668,7 +649,6 @@ namespace SanteDB.Rest.HDSI
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id, "_history", versioned));
                     else
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id));
-
                 }
             }
             catch (PatchAssertionException e)
@@ -682,7 +662,6 @@ namespace SanteDB.Rest.HDSI
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw new Exception($"Error patching {resourceType}/{id}", e);
-
             }
         }
 
@@ -713,7 +692,6 @@ namespace SanteDB.Rest.HDSI
                 {
                     InterfaceVersion = "1.0.0.0",
                     Resources = new List<ServiceResourceOptions>()
-
                 };
 
                 // Get the resources which are supported
@@ -755,16 +733,21 @@ namespace SanteDB.Rest.HDSI
                         case ResourceCapabilityType.Create:
                         case ResourceCapabilityType.CreateOrUpdate:
                             return this.GetDemands(handler, nameof(IApiResourceHandler.Create));
+
                         case ResourceCapabilityType.Delete:
                             return this.GetDemands(handler, nameof(IApiResourceHandler.Create));
+
                         case ResourceCapabilityType.Get:
                         case ResourceCapabilityType.GetVersion:
                             return this.GetDemands(handler, nameof(IApiResourceHandler.Get));
+
                         case ResourceCapabilityType.History:
                         case ResourceCapabilityType.Search:
                             return this.GetDemands(handler, nameof(IApiResourceHandler.Query));
+
                         case ResourceCapabilityType.Update:
                             return this.GetDemands(handler, nameof(IApiResourceHandler.Update));
+
                         default:
                             return new string[] { PermissionPolicyIdentifiers.Login };
                     }
@@ -773,7 +756,7 @@ namespace SanteDB.Rest.HDSI
                 // Get the resource capabilities
                 List<ServiceResourceCapability> caps = handler.Capabilities.ToResourceCapabilityStatement(getCaps).ToList();
 
-                // Patching 
+                // Patching
                 if (ApplicationServiceContext.Current.GetService<IPatchService>() != null &&
                     handler.Capabilities.HasFlag(ResourceCapabilityType.Update))
                     caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Patch, this.GetDemands(handler, nameof(IApiResourceHandler.Update))));
@@ -807,7 +790,6 @@ namespace SanteDB.Rest.HDSI
             this.ThrowIfNotReady();
             try
             {
-
                 var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
@@ -825,7 +807,6 @@ namespace SanteDB.Rest.HDSI
                     // No obsoletion time?
                     if (typeof(BaseEntityData).IsAssignableFrom(handler.Type) && !query.ContainsKey("obsoletionTime"))
                         query.Add("obsoletionTime", "null");
-
 
                     int totalResults = 0;
 
@@ -890,7 +871,6 @@ namespace SanteDB.Rest.HDSI
 
             try
             {
-
                 IChainedApiResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
@@ -905,7 +885,6 @@ namespace SanteDB.Rest.HDSI
                     }
 
                     return retVal;
-
                 }
                 else
                     throw new FileNotFoundException(resourceType);
@@ -915,7 +894,6 @@ namespace SanteDB.Rest.HDSI
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
-
             }
         }
 
@@ -928,7 +906,6 @@ namespace SanteDB.Rest.HDSI
 
             try
             {
-
                 IChainedApiResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
@@ -939,7 +916,6 @@ namespace SanteDB.Rest.HDSI
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
                     RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, key, childResourceType, retVal.Key));
                     return retVal;
-
                 }
                 else
                     throw new FileNotFoundException(resourceType);
@@ -949,7 +925,6 @@ namespace SanteDB.Rest.HDSI
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
-
             }
         }
 
@@ -962,16 +937,17 @@ namespace SanteDB.Rest.HDSI
 
             try
             {
-
                 IChainedApiResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.GetChildObject));
 
-                    var retVal = handler.GetChildObject(Guid.Parse(key), childResourceType, Guid.Parse(scopedEntityKey)) as IdentifiedData;
+                    var retVal = handler.GetChildObject(Guid.Parse(key), childResourceType, Guid.Parse(scopedEntityKey));
 
-                    RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
-                    RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.ModifiedOn.DateTime);
+                    if (retVal is IdentifiedData idData)
+                    {
+                        RestOperationContext.Current.OutgoingResponse.SetETag(idData.Tag);
+                        RestOperationContext.Current.OutgoingResponse.SetLastModified(idData.ModifiedOn.DateTime);
 
                     // HTTP IF headers?
                     if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null &&
@@ -981,7 +957,6 @@ namespace SanteDB.Rest.HDSI
                         RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
                         return null;
                     }
-
                     else if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true" ||
                         RestOperationContext.Current.IncomingRequest.QueryString["_all"] == "true")
                     {
@@ -993,7 +968,6 @@ namespace SanteDB.Rest.HDSI
                     {
                         return retVal;
                     }
-
                 }
                 else
                     throw new FileNotFoundException(resourceType);
@@ -1003,7 +977,6 @@ namespace SanteDB.Rest.HDSI
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
-
             }
         }
 
@@ -1074,14 +1047,12 @@ namespace SanteDB.Rest.HDSI
                 }
                 else
                     throw new FileNotFoundException(resourceType);
-
             }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw new Exception($"Error updating {resourceType}/{id}", e);
-
             }
         }
 
@@ -1116,7 +1087,6 @@ namespace SanteDB.Rest.HDSI
                 }
                 else
                     throw new KeyNotFoundException($"Object not found");
-
             }
             catch (Exception e)
             {
@@ -1147,7 +1117,6 @@ namespace SanteDB.Rest.HDSI
                         throw new KeyNotFoundException($"{resourceType} {id}");
                     else
                     {
-
                         RestOperationContext.Current.OutgoingResponse.ContentType = "application/jose";
                         if (data is Entity entity)
                         {
@@ -1185,7 +1154,6 @@ namespace SanteDB.Rest.HDSI
 
             try
             {
-
                 var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IOperationalApiResourceHandler;
                 if (handler != null)
                 {
@@ -1217,7 +1185,6 @@ namespace SanteDB.Rest.HDSI
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
-
             }
         }
         /// <summary>
@@ -1269,7 +1236,6 @@ namespace SanteDB.Rest.HDSI
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
-
             }
         }
 
@@ -1313,7 +1279,6 @@ namespace SanteDB.Rest.HDSI
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
-
             }
         }
 
@@ -1326,7 +1291,6 @@ namespace SanteDB.Rest.HDSI
 
             try
             {
-
                 IChainedApiResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
@@ -1345,7 +1309,6 @@ namespace SanteDB.Rest.HDSI
                         RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
                         return null;
                     }
-
                     else if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true" ||
                         RestOperationContext.Current.IncomingRequest.QueryString["_all"] == "true")
                     {
@@ -1358,7 +1321,6 @@ namespace SanteDB.Rest.HDSI
                     {
                         return retVal;
                     }
-
                 }
                 else
                     throw new FileNotFoundException(resourceType);
@@ -1368,12 +1330,11 @@ namespace SanteDB.Rest.HDSI
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
-
             }
         }
 
         /// <summary>
-        /// Operates a DELETE on the instance 
+        /// Operates a DELETE on the instance
         /// </summary>
         public virtual object AssociationRemove(string resourceType, string childResourceType, string childResourceKey)
         {
@@ -1381,7 +1342,6 @@ namespace SanteDB.Rest.HDSI
 
             try
             {
-
                 IChainedApiResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
@@ -1392,7 +1352,6 @@ namespace SanteDB.Rest.HDSI
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
                     RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, childResourceType, retVal.Key));
                     return retVal;
-
                 }
                 else
                     throw new FileNotFoundException(resourceType);
@@ -1402,7 +1361,6 @@ namespace SanteDB.Rest.HDSI
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
-
             }
         }
 
@@ -1420,7 +1378,6 @@ namespace SanteDB.Rest.HDSI
             this.ThrowIfNotReady();
             try
             {
-
                 var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
@@ -1438,7 +1395,6 @@ namespace SanteDB.Rest.HDSI
                     // No obsoletion time?
                     if (typeof(BaseEntityData).IsAssignableFrom(handler.Type) && !query.ContainsKey("obsoletionTime"))
                         query.Add("obsoletionTime", "null");
-
 
                     int totalResults = 0;
 

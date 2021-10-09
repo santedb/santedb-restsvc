@@ -29,7 +29,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// Represents an identifier type resource handler.
     /// </summary>
     public class IdentifierTypeResourceHandler : ResourceHandlerBase<IdentifierType>
-	{
+    {
 
         /// <summary>
         /// Get capabilities for this resource handler

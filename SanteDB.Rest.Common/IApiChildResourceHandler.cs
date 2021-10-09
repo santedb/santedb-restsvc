@@ -22,7 +22,6 @@ using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SanteDB.Rest.Common
 {
@@ -31,7 +30,7 @@ namespace SanteDB.Rest.Common
     /// </summary>
     public interface IApiChildResourceHandler : IApiChildObject
     {
-       
+
         /// <summary>
         /// Gets the type of data this associative property is expecting
         /// </summary>

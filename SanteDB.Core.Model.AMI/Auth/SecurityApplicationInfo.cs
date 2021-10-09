@@ -18,6 +18,8 @@
  * User: fyfej
  * Date: 2021-8-5
  */
+using Newtonsoft.Json;
+using SanteDB.Core.Model.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +38,7 @@ namespace SanteDB.Core.Model.AMI.Auth
     [JsonObject(nameof(SecurityApplicationInfo))]
     public class SecurityApplicationInfo : ISecurityEntityInfo<SecurityApplication>
     {
-	    /// <summary>
+        /// <summary>
         /// Default CTOR
         /// </summary>
         public SecurityApplicationInfo()
@@ -44,7 +46,7 @@ namespace SanteDB.Core.Model.AMI.Auth
 
         }
 
-	    /// <summary>
+        /// <summary>
         /// Creates a new app info from the specified object
         /// </summary>
         public SecurityApplicationInfo(SecurityApplication app, IPolicyInformationService pipService)
@@ -53,13 +55,14 @@ namespace SanteDB.Core.Model.AMI.Auth
             this.Policies = pipService.GetPolicies(app).Select(o => new SecurityPolicyInfo(o)).ToList();
         }
 
-	    /// <summary>
+        /// <summary>
         /// Gets or sets the entity that is wrapped by this wrapper
         /// </summary>
-        [XmlElement("entity")][JsonProperty("entity")]
+        [XmlElement("entity")]
+        [JsonProperty("entity")]
         public SecurityApplication Entity { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Get the key for the object
         /// </summary>
         [JsonProperty("id"), XmlElement("id")]
@@ -69,30 +72,33 @@ namespace SanteDB.Core.Model.AMI.Auth
             set => this.Entity.Key = Guid.Parse(value);
         }
 
-	    /// <summary>
+        /// <summary>
         /// Get the modified on
         /// </summary>
-        [JsonIgnore][XmlIgnore]
+        [JsonIgnore]
+        [XmlIgnore]
         public DateTimeOffset ModifiedOn => this.Entity?.ModifiedOn ?? DateTimeOffset.Now;
 
-	    /// <summary>
+        /// <summary>
         /// Gets or sets the policies that are to be applied are already applied to the entity
         /// </summary>
-        [XmlElement("policy")][JsonProperty("policy")]
+        [XmlElement("policy")]
+        [JsonProperty("policy")]
         public List<SecurityPolicyInfo> Policies { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Get the tag
         /// </summary>
-        [JsonIgnore][XmlIgnore]
+        [JsonIgnore]
+        [XmlIgnore]
         public string Tag => this.Entity?.Tag;
 
-	    /// <summary>
+        /// <summary>
         /// Gets the object as identified data
         /// </summary>
         public IdentifiedData ToIdentifiedData()
-	    {
-		    return this.Entity;
-	    }
+        {
+            return this.Entity;
+        }
     }
 }

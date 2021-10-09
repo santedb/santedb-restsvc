@@ -30,7 +30,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Security.Principal;
-using System.Text;
 
 namespace SanteDB.Rest.Common.Security
 {
@@ -103,7 +102,7 @@ namespace SanteDB.Rest.Common.Security
                 {
                     case "bearer":
                         var contextToken = this.CheckBearerAccess(auth[1]);
-                        RestOperationContext.Current.Disposed += (o,e) => contextToken.Dispose();
+                        RestOperationContext.Current.Disposed += (o, e) => contextToken.Dispose();
                         break;
                     default:
                         throw new SecuritySessionException(SessionExceptionType.TokenType, "Invalid authentication scheme", null);

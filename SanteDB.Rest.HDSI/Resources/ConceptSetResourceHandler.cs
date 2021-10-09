@@ -31,63 +31,63 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Resource handler for concept sets
     /// </summary>
     public class ConceptSetResourceHandler : ResourceHandlerBase<ConceptSet>
-	{
-        
-		/// <summary>
-		/// Creates the specified data
-		/// </summary>
-		[Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
-		public override Object Create(Object data, bool updateIfExists)
-		{
+    {
+
+        /// <summary>
+        /// Creates the specified data
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
+        public override Object Create(Object data, bool updateIfExists)
+        {
             return base.Create(data, updateIfExists);
-		}
+        }
 
-		/// <summary>
-		/// Gets the specified conceptset
-		/// </summary>
+        /// <summary>
+        /// Gets the specified conceptset
+        /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-		public override Object Get(object id, object versionId)
-		{
+        public override Object Get(object id, object versionId)
+        {
             return base.Get(id, versionId);
-		}
+        }
 
-		/// <summary>
-		/// Obsolete the specified concept set
-		/// </summary>
-		[Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
-		public override Object Obsolete(object key)
-		{
-			return base.Obsolete((Guid)key);
-		}
+        /// <summary>
+        /// Obsolete the specified concept set
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
+        public override Object Obsolete(object key)
+        {
+            return base.Obsolete((Guid)key);
+        }
 
-		/// <summary>
-		/// Perform query
-		/// </summary>
+        /// <summary>
+        /// Perform query
+        /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
         public override IEnumerable<Object> Query(NameValueCollection queryParameters)
-		{
+        {
             int tr = 0;
             return this.Query(queryParameters, 0, 100, out tr);
-		}
+        }
 
         /// <summary>
         /// Query with specified parameter data
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
         public override IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
-		{
+        {
             return base.Query(queryParameters, offset, count, out totalCount);
-		}
+        }
 
-		/// <summary>
-		/// Update the specified object
-		/// </summary>
-		/// <param name="data"></param>
-		/// <returns></returns>
-		[Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
-		public override Object Update(Object  data)
-		{
+        /// <summary>
+        /// Update the specified object
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
+        public override Object Update(Object data)
+        {
             return base.Update(data);
-		}
-	}
+        }
+    }
 }

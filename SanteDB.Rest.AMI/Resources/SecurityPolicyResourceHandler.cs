@@ -16,9 +16,7 @@
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
-using SanteDB.Core.Interfaces;
 using SanteDB.Core.Interop;
-using SanteDB.Core.Model;
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
@@ -39,7 +37,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Get the capabilities of this resource
         /// </summary>
         public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.Update | ResourceCapabilityType.Search | ResourceCapabilityType.Get | ResourceCapabilityType.GetVersion | ResourceCapabilityType.Delete;
-        
+
         /// <summary>
         /// Create the policy
         /// </summary>
@@ -57,8 +55,8 @@ namespace SanteDB.Rest.AMI.Resources
         {
             var key = (data as IIdentifiedEntity).Key.Value;
             var policy = this.Get(key, Guid.Empty);
-            if(policy == null || (policy as SecurityPolicy).IsPublic)
-               return base.Update(data);
+            if (policy == null || (policy as SecurityPolicy).IsPublic)
+                return base.Update(data);
             else if (policy == null)
                 throw new KeyNotFoundException($"Policy {key} not found");
             else

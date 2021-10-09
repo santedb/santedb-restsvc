@@ -21,7 +21,6 @@
 using RestSrvr;
 using RestSrvr.Message;
 using SanteDB.Core;
-using SanteDB.Core.Configuration;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
@@ -31,7 +30,6 @@ using SanteDB.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Security;
@@ -132,7 +130,7 @@ namespace SanteDB.Rest.Common.Security
             }
             catch (Exception e)
             {
-                this.m_traceSource.TraceEvent(EventLevel.Error,  e.ToString());
+                this.m_traceSource.TraceEvent(EventLevel.Error, e.ToString());
             }
             finally
             {

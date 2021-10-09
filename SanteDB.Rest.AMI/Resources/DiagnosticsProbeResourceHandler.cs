@@ -26,8 +26,6 @@ using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -55,7 +53,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Gets the capabilities of this resource handler
         /// </summary>
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Search | ResourceCapabilityType.Get;
-        
+
 
         /// <summary>
         /// Create an entity
@@ -100,14 +98,14 @@ namespace SanteDB.Rest.AMI.Resources
             try
             {
                 var filter = QueryExpressionParser.BuildLinqExpression<IDiagnosticsProbe>(queryParameters);
-                return DiagnosticsProbeManager.Current.Find(filter.Compile(), offset, count, out totalCount).Select(o=>new DiagnosticsProbe(o));
+                return DiagnosticsProbeManager.Current.Find(filter.Compile(), offset, count, out totalCount).Select(o => new DiagnosticsProbe(o));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new Exception($"Error querying probes : {e.Message}", e);
             }
         }
-        
+
         /// <summary>
         /// Update the object
         /// </summary>

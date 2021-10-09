@@ -31,7 +31,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a resource handler for persons.
     /// </summary>
     public class PersonResourceHandler : ResourceHandlerBase<Person>
-	{
+    {
         /// <summary>
         /// Create the specified person
         /// </summary>

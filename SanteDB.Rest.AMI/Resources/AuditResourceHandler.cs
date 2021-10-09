@@ -1,18 +1,18 @@
 ﻿/*
  * Portions Copyright 2019-2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
@@ -24,13 +24,11 @@ using SanteDB.Core.Model;
 using SanteDB.Core.Model.AMI.Security;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
-using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -39,9 +37,8 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary>
     public class AuditResourceHandler : IApiResourceHandler
     {
-
         // Configuration
-        private AuditAccountabilityConfigurationSection m_configuration= ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<AuditAccountabilityConfigurationSection>();
+        private AuditAccountabilityConfigurationSection m_configuration = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<AuditAccountabilityConfigurationSection>();
 
         // The audit repository
         private IRepositoryService<AuditEventData> m_repository = null;
@@ -51,7 +48,6 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         private IRepositoryService<AuditEventData> GetRepository()
         {
-
             if (this.m_repository == null)
                 this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<AuditEventData>>();
             if(this.m_repository == null)
@@ -65,7 +61,6 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public AuditResourceHandler()
         {
-            
         }
 
         /// <summary>
@@ -73,7 +68,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.Get | ResourceCapabilityType.Search;
 
-        // Dispatcher 
+        // Dispatcher
         private IAuditDispatchService m_dispatcher = ApplicationServiceContext.Current.GetService<IAuditDispatchService>();
 
         /// <summary>
@@ -100,7 +95,6 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public object Create(object data, bool updateIfExists)
         {
-            
             var auditData = data as AuditSubmission;
             if (auditData == null) // may be a single audit
             {
@@ -124,7 +118,6 @@ namespace SanteDB.Rest.AMI.Resources
             return null;
         }
 
-
         /// <summary>
         /// Get the specified audit identifier from the database
         /// </summary>
@@ -134,7 +127,6 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.AccessAuditLog)]
         public object Get(object id, object versionId)
         {
-           
             var retVal = new AuditEventData();
             if(Guid.TryParse(id.ToString(), out Guid gid))
                 retVal.CopyObjectData(this.GetRepository().Get(gid));
@@ -152,7 +144,7 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <summary>
-        /// Query for the audit 
+        /// Query for the audit
         /// </summary>
         /// <param name="queryParameters">The query to perform</param>
         /// <returns>The matching audits</returns>
@@ -174,7 +166,6 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.AccessAuditLog)]
         public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
         {
-      
             var filter = QueryExpressionParser.BuildLinqExpression<AuditEventData>(queryParameters);
 
             ModelSort<AuditEventData>[] sortParameters = null;

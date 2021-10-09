@@ -52,13 +52,13 @@ namespace SanteDB.Rest.Common
         private static Dictionary<Type, MethodInfo> m_relatedLoadAssociations = new Dictionary<Type, MethodInfo>();
 
 
-		/// <summary>
-		/// Load related object
-		/// </summary>
-		/// <param name="propertyType">Type of the property.</param>
-		/// <param name="key">The key.</param>
-		/// <returns>System.Object.</returns>
-		internal static object LoadRelated(Type propertyType, Guid key)
+        /// <summary>
+        /// Load related object
+        /// </summary>
+        /// <param name="propertyType">Type of the property.</param>
+        /// <param name="key">The key.</param>
+        /// <returns>System.Object.</returns>
+        internal static object LoadRelated(Type propertyType, Guid key)
         {
             MethodInfo methodInfo = null;
             if (!m_relatedLoadMethods.TryGetValue(propertyType, out methodInfo))
@@ -72,13 +72,13 @@ namespace SanteDB.Rest.Common
             return methodInfo.Invoke(null, new object[] { key });
         }
 
-		/// <summary>
-		/// Load collection
-		/// </summary>
-		/// <param name="propertyType">Type of the property.</param>
-		/// <param name="entity">The entity.</param>
-		/// <returns>IList.</returns>
-		internal static IList LoadCollection(Type propertyType, IIdentifiedEntity entity)
+        /// <summary>
+        /// Load collection
+        /// </summary>
+        /// <param name="propertyType">Type of the property.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>IList.</returns>
+        internal static IList LoadCollection(Type propertyType, IIdentifiedEntity entity)
         {
             MethodInfo methodInfo = null;
 
@@ -114,52 +114,52 @@ namespace SanteDB.Rest.Common
 
         }
 
-		/// <summary>
-		/// Delay loads the specified collection association
-		/// </summary>
-		/// <typeparam name="TAssociation">The type of the t association.</typeparam>
-		/// <param name="sourceKey">The source key.</param>
-		/// <param name="sourceSequence">The source sequence.</param>
-		/// <returns>IEnumerable&lt;TAssociation&gt;.</returns>
-		public static IEnumerable<TAssociation> LoadCollection<TAssociation>(Guid sourceKey, int? sourceSequence) where TAssociation : IdentifiedData, IVersionedAssociation, new()
+        /// <summary>
+        /// Delay loads the specified collection association
+        /// </summary>
+        /// <typeparam name="TAssociation">The type of the t association.</typeparam>
+        /// <param name="sourceKey">The source key.</param>
+        /// <param name="sourceSequence">The source sequence.</param>
+        /// <returns>IEnumerable&lt;TAssociation&gt;.</returns>
+        public static IEnumerable<TAssociation> LoadCollection<TAssociation>(Guid sourceKey, int? sourceSequence) where TAssociation : IdentifiedData, IVersionedAssociation, new()
         {
             return EntitySource.Current.Provider.GetRelations<TAssociation>(sourceKey);
         }
 
-		/// <summary>
-		/// Delay loads the specified collection association
-		/// </summary>
-		/// <typeparam name="TAssociation">The type of the t association.</typeparam>
-		/// <param name="sourceKey">The source key.</param>
-		/// <returns>IEnumerable&lt;TAssociation&gt;.</returns>
-		public static IEnumerable<TAssociation> LoadCollection<TAssociation>(Guid sourceKey) where TAssociation : IdentifiedData, ISimpleAssociation, new()
+        /// <summary>
+        /// Delay loads the specified collection association
+        /// </summary>
+        /// <typeparam name="TAssociation">The type of the t association.</typeparam>
+        /// <param name="sourceKey">The source key.</param>
+        /// <returns>IEnumerable&lt;TAssociation&gt;.</returns>
+        public static IEnumerable<TAssociation> LoadCollection<TAssociation>(Guid sourceKey) where TAssociation : IdentifiedData, ISimpleAssociation, new()
         {
             return EntitySource.Current.Provider.GetRelations<TAssociation>(sourceKey);
         }
 
-		/// <summary>
-		/// Load the related information
-		/// </summary>
-		/// <typeparam name="TRelated">The type of the t related.</typeparam>
-		/// <param name="objectKey">The object key.</param>
-		/// <returns>TRelated.</returns>
-		public static TRelated LoadRelated<TRelated>(Guid? objectKey) where TRelated : IdentifiedData, new()
-		{
-			if (objectKey.HasValue && objectKey != Guid.Empty)
+        /// <summary>
+        /// Load the related information
+        /// </summary>
+        /// <typeparam name="TRelated">The type of the t related.</typeparam>
+        /// <param name="objectKey">The object key.</param>
+        /// <returns>TRelated.</returns>
+        public static TRelated LoadRelated<TRelated>(Guid? objectKey) where TRelated : IdentifiedData, new()
+        {
+            if (objectKey.HasValue && objectKey != Guid.Empty)
                 return EntitySource.Current.Provider.Get<TRelated>(objectKey);
 
-			return default(TRelated);
-		}
+            return default(TRelated);
+        }
 
 
-		/// <summary>
-		/// Expand properties
-		/// </summary>
-		/// <param name="returnValue">The return value.</param>
-		/// <param name="qp">The qp.</param>
-		/// <param name="keyStack">The key stack.</param>
-		/// <param name="emptyCollections">The empty collections.</param>
-		public static void ExpandProperties(IdentifiedData returnValue, NameValueCollection qp, Stack<Guid> keyStack = null, Dictionary<Guid, HashSet<String>> emptyCollections = null)
+        /// <summary>
+        /// Expand properties
+        /// </summary>
+        /// <param name="returnValue">The return value.</param>
+        /// <param name="qp">The qp.</param>
+        /// <param name="keyStack">The key stack.</param>
+        /// <param name="emptyCollections">The empty collections.</param>
+        public static void ExpandProperties(IdentifiedData returnValue, NameValueCollection qp, Stack<Guid> keyStack = null, Dictionary<Guid, HashSet<String>> emptyCollections = null)
         {
             if (emptyCollections == null)
                 emptyCollections = new Dictionary<Guid, HashSet<string>>();
@@ -170,14 +170,14 @@ namespace SanteDB.Rest.Common
             else if (returnValue.Key.HasValue && keyStack.Contains(returnValue.Key.Value))
                 return;
 
-	        if (!returnValue.Key.HasValue || returnValue.Key.Equals(Guid.Empty))
-	        {
-		        return;
-	        }
+            if (!returnValue.Key.HasValue || returnValue.Key.Equals(Guid.Empty))
+            {
+                return;
+            }
 
-	        keyStack.Push(returnValue.Key.Value);
+            keyStack.Push(returnValue.Key.Value);
 
-	        try
+            try
             {
                 // Expand property?
                 if (qp.ContainsKey("_expand") && qp.ContainsKey("_all"))
@@ -271,19 +271,19 @@ namespace SanteDB.Rest.Common
                 {
                     var subScope = DoPopulateObject(itm, match.Groups[1].Value);
 
-	                if (subScope == null)
-		                return;
+                    if (subScope == null)
+                        return;
 
-					if (!String.IsNullOrEmpty(match.Groups[2].Value))
+                    if (!String.IsNullOrEmpty(match.Groups[2].Value))
                         DoExpand(subScope, match.Groups[2].Value);
                 }
             else
             {
                 var subScope = DoPopulateObject(scope, match.Groups[1].Value);
 
-	            if (subScope == null)
-		            return;
-						
+                if (subScope == null)
+                    return;
+
                 if (!String.IsNullOrEmpty(match.Groups[2].Value))
                     DoExpand(subScope, match.Groups[2].Value);
             }
@@ -294,8 +294,8 @@ namespace SanteDB.Rest.Common
         /// </summary>
         private static object DoPopulateObject(object scope, string property)
         {
-	        if (scope == null)
-		        return null;
+            if (scope == null)
+                return null;
 
             // Look for the property in the scope
             var propertyInfo = scope.GetType().GetRuntimeProperties().FirstOrDefault(o => o.GetCustomAttributes<XmlElementAttribute>().FirstOrDefault()?.ElementName == property);
