@@ -18,11 +18,13 @@
  * User: fyfej
  * Date: 2021-8-5
  */
+
 using RestSrvr;
 using RestSrvr.Message;
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using System;
@@ -126,6 +128,7 @@ namespace SanteDB.Rest.Common.Security
                 throw new SecuritySessionException(SessionExceptionType.Other, e.Message, e);
             }
         }
+
         /// <summary>
         /// Apply the service behavior
         /// </summary>
