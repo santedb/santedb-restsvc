@@ -18,6 +18,7 @@
  * User: fyfej
  * Date: 2021-8-5
  */
+
 using RestSrvr;
 using RestSrvr.Attributes;
 using SanteDB.Core;
@@ -949,20 +950,25 @@ namespace SanteDB.Rest.HDSI
                         RestOperationContext.Current.OutgoingResponse.SetETag(idData.Tag);
                         RestOperationContext.Current.OutgoingResponse.SetLastModified(idData.ModifiedOn.DateTime);
 
-                    // HTTP IF headers?
-                    if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null &&
-                        retVal.ModifiedOn <= RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() ||
-                        RestOperationContext.Current.IncomingRequest.GetIfNoneMatch()?.Any(o => retVal.Tag == o) == true)
-                    {
-                        RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
-                        return null;
-                    }
-                    else if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true" ||
-                        RestOperationContext.Current.IncomingRequest.QueryString["_all"] == "true")
-                    {
-                        ObjectExpander.ExpandProperties(retVal, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
-                        ObjectExpander.ExcludeProperties(retVal, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
-                        return Bundle.CreateBundle(retVal);
+                        // HTTP IF headers?
+                        if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null &&
+                            idData.ModifiedOn <= RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() ||
+                            RestOperationContext.Current.IncomingRequest.GetIfNoneMatch()?.Any(o => idData.Tag == o) == true)
+                        {
+                            RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
+                            return null;
+                        }
+                        else if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true" ||
+                            RestOperationContext.Current.IncomingRequest.QueryString["_all"] == "true")
+                        {
+                            ObjectExpander.ExpandProperties(idData, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
+                            ObjectExpander.ExcludeProperties(idData, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
+                            return Bundle.CreateBundle(idData);
+                        }
+                        else
+                        {
+                            return retVal;
+                        }
                     }
                     else
                     {
@@ -1187,6 +1193,7 @@ namespace SanteDB.Rest.HDSI
                 throw;
             }
         }
+
         /// <summary>
         /// Check-in the specified object
         /// </summary>

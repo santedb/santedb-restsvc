@@ -18,13 +18,12 @@
  * User: fyfej
  * Date: 2021-8-5
  */
+
 using Newtonsoft.Json;
-using SanteDB.Core.Auditing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
-using Newtonsoft.Json;
 using SanteDB.Core.Model.Audit;
 
 namespace SanteDB.Core.Model.AMI.Security
@@ -57,7 +56,8 @@ namespace SanteDB.Core.Model.AMI.Security
         /// <summary>
         /// Gets or sets the audit
         /// </summary>
-        [XmlElement("audit")][JsonProperty("audit")]
+        [XmlElement("audit")]
+        [JsonProperty("audit")]
         public List<AuditEventData> Audit { get; set; }
 
         /// <summary>

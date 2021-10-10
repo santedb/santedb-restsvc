@@ -63,14 +63,24 @@ namespace SanteDB.Rest.Common.Fault
                 this.PolicyOutcome = polViolation.PolicyDecision;
             }
 
-            this.Rules = (ex as DetectedIssueException)?.Issues;
+            if (ex is DetectedIssueException dte)
+            {
+                this.Rules = new List<DetectedIssue>(dte.Issues);
+            }
+
             if (ex.InnerException != null)
+            {
                 this.CausedBy = new RestServiceFault(ex.InnerException);
+            }
 
             if (ex.Data.Count > 0)
+            {
                 this.Data = ex.Data.Values.OfType<object>().Select(o => o.ToString()).ToList();
+            }
             else
+            {
                 this.Data = new List<string>();
+            }
         }
 
         /// <summary>
