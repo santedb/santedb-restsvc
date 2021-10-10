@@ -2,19 +2,19 @@
  * Copyright (C) 2021 - 2021, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
  * Date: 2021-8-5
  */
@@ -39,7 +39,6 @@ namespace SanteDB.Rest.Common.Security
     [DisplayName("BEARER Token Authorization")]
     public class TokenAuthorizationAccessBehavior : IServicePolicy, IServiceBehavior
     {
-
         /// <summary>
         /// Gets the session property name
         /// </summary>
@@ -83,7 +82,6 @@ namespace SanteDB.Rest.Common.Security
                 // Http message inbound
                 var httpMessage = RestOperationContext.Current.IncomingRequest;
 
-
                 // Get the authorize header
                 String authorization = httpMessage.Headers["Authorization"];
                 if (authorization == null)
@@ -104,26 +102,28 @@ namespace SanteDB.Rest.Common.Security
                         var contextToken = this.CheckBearerAccess(auth[1]);
                         RestOperationContext.Current.Disposed += (o, e) => contextToken.Dispose();
                         break;
+
                     default:
                         throw new SecuritySessionException(SessionExceptionType.TokenType, "Invalid authentication scheme", null);
                 }
-
             }
             catch (UnauthorizedAccessException e)
             {
                 this.m_traceSource.TraceError("Token Error (From: {0}) : {1}", RestOperationContext.Current.IncomingRequest.RemoteEndPoint, e);
+                AuditUtil.AuditNetworkRequestFailure(e, RestOperationContext.Current.IncomingRequest.Url, RestOperationContext.Current.IncomingRequest.Headers, null);
                 throw;
             }
             catch (KeyNotFoundException e)
             {
                 this.m_traceSource.TraceError("Token Error (From: {0}) : {1}", RestOperationContext.Current.IncomingRequest.RemoteEndPoint, e);
+                AuditUtil.AuditNetworkRequestFailure(e, RestOperationContext.Current.IncomingRequest.Url, RestOperationContext.Current.IncomingRequest.Headers, null);
                 throw new SecuritySessionException(SessionExceptionType.NotEstablished, e.Message, e);
             }
             catch (Exception e)
             {
                 this.m_traceSource.TraceError("Token Error (From: {0}) : {1}", RestOperationContext.Current.IncomingRequest.RemoteEndPoint, e);
+                AuditUtil.AuditNetworkRequestFailure(e, RestOperationContext.Current.IncomingRequest.Url, RestOperationContext.Current.IncomingRequest.Headers, null);
                 throw new SecuritySessionException(SessionExceptionType.Other, e.Message, e);
-
             }
         }
         /// <summary>
