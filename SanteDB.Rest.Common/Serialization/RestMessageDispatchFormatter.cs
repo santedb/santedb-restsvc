@@ -2,22 +2,23 @@
  * Copyright (C) 2021 - 2021, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
  * Date: 2021-8-5
  */
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using RestSrvr;
@@ -48,13 +49,11 @@ using System.Xml.Serialization;
 
 namespace SanteDB.Rest.Common.Serialization
 {
-
     /// <summary>
     /// Represents the non-generic rest message dispatch formatter
     /// </summary>
     public abstract class RestMessageDispatchFormatter : IDispatchMessageFormatter
     {
-
         // Formatters
         private static Dictionary<Type, RestMessageDispatchFormatter> m_formatters = new Dictionary<Type, RestMessageDispatchFormatter>();
 
@@ -95,7 +94,6 @@ namespace SanteDB.Rest.Common.Serialization
     /// </summary>
     public class RestMessageDispatchFormatter<TContract> : RestMessageDispatchFormatter
     {
-
         private String m_version = Assembly.GetEntryAssembly()?.GetName().Version.ToString();
         private String m_versionName = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "Unnamed";
 
@@ -107,6 +105,7 @@ namespace SanteDB.Rest.Common.Serialization
 
         // Default view model
         private static ViewModelDescription m_defaultViewModel = null;
+
         /// <summary>
         /// Create new dispatch message formatter
         /// </summary>
@@ -156,7 +155,6 @@ namespace SanteDB.Rest.Common.Serialization
         /// </summary>
         public override void DeserializeRequest(EndpointOperation operation, RestRequestMessage request, object[] parameters)
         {
-
             try
             {
 #if DEBUG
@@ -170,7 +168,6 @@ namespace SanteDB.Rest.Common.Serialization
 
                 for (int pNumber = 0; pNumber < parameters.Length; pNumber++)
                 {
-
                     var parm = operation.Description.InvokeMethod.GetParameters()[pNumber];
                     // Simple parameter
                     if (parameters[pNumber] != null)
@@ -197,6 +194,7 @@ namespace SanteDB.Rest.Common.Serialization
                                     parameters[pNumber] = serializer.Deserialize(bodyReader);
                                 }
                                 break;
+
                             case "application/json+sdb-viewmodel":
                                 var viewModel = httpRequest.Headers["X-SanteDB-ViewModel"] ?? httpRequest.QueryString["_viewModel"];
 
@@ -217,6 +215,7 @@ namespace SanteDB.Rest.Common.Serialization
                                 using (var sr = new StreamReader(request.Body))
                                     parameters[pNumber] = viewModelSerializer.DeSerialize(sr, parm.ParameterType);
                                 break;
+
                             case "application/json":
                                 using (var sr = new StreamReader(request.Body))
                                 {
@@ -231,9 +230,11 @@ namespace SanteDB.Rest.Common.Serialization
                                     parameters[pNumber] = jsz.Deserialize(sr, dserType);
                                 }
                                 break;
+
                             case "application/octet-stream":
                                 parameters[pNumber] = request.Body;
                                 break;
+
                             case "application/x-www-form-urlencoded":
                                 NameValueCollection nvc = new NameValueCollection();
                                 using (var sr = new StreamReader(request.Body))
@@ -249,12 +250,11 @@ namespace SanteDB.Rest.Common.Serialization
                                 }
                                 parameters[pNumber] = nvc;
                                 break;
+
                             default:
                                 throw new InvalidOperationException("Invalid request format");
                         }
                     }
-
-
                 }
             }
             catch (Exception e)
@@ -262,7 +262,6 @@ namespace SanteDB.Rest.Common.Serialization
                 this.m_traceSource.TraceEvent(EventLevel.Error, e.ToString());
                 throw;
             }
-
         }
 
         /// <summary>
@@ -272,7 +271,6 @@ namespace SanteDB.Rest.Common.Serialization
         {
             try
             {
-
                 this.m_traceSource.TraceInfo("Serializing {0}", result?.GetType());
                 // Outbound control
                 var httpRequest = RestOperationContext.Current.IncomingRequest;
@@ -346,6 +344,7 @@ namespace SanteDB.Rest.Common.Serialization
                                 goto case "application/json"; // HACK: C# doesn't do fallthrough so we have to push it
                             }
                             break;
+
                         case "application/json":
                             {
                                 // Prepare the serializer
@@ -366,7 +365,6 @@ namespace SanteDB.Rest.Common.Serialization
                                     jsw.Flush();
                                     sw.Flush();
                                     response.Body = new MemoryStream(ms.ToArray());
-
                                 }
 
                                 // Prepare reply for the WCF pipeline

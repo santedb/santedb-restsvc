@@ -23,6 +23,7 @@ using RestSrvr.Message;
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -111,16 +112,19 @@ namespace SanteDB.Rest.Common.Security
             catch (UnauthorizedAccessException e)
             {
                 this.m_traceSource.TraceError("Token Error (From: {0}) : {1}", RestOperationContext.Current.IncomingRequest.RemoteEndPoint, e);
+                AuditUtil.AuditNetworkRequestFailure(e, RestOperationContext.Current.IncomingRequest.Url, RestOperationContext.Current.IncomingRequest.Headers, null);
                 throw;
             }
             catch (KeyNotFoundException e)
             {
                 this.m_traceSource.TraceError("Token Error (From: {0}) : {1}", RestOperationContext.Current.IncomingRequest.RemoteEndPoint, e);
+                AuditUtil.AuditNetworkRequestFailure(e, RestOperationContext.Current.IncomingRequest.Url, RestOperationContext.Current.IncomingRequest.Headers, null);
                 throw new SecuritySessionException(SessionExceptionType.NotEstablished, e.Message, e);
             }
             catch (Exception e)
             {
                 this.m_traceSource.TraceError("Token Error (From: {0}) : {1}", RestOperationContext.Current.IncomingRequest.RemoteEndPoint, e);
+                AuditUtil.AuditNetworkRequestFailure(e, RestOperationContext.Current.IncomingRequest.Url, RestOperationContext.Current.IncomingRequest.Headers, null);
                 throw new SecuritySessionException(SessionExceptionType.Other, e.Message, e);
 
             }
