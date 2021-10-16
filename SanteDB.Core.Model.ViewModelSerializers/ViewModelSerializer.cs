@@ -11012,6 +11012,31 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "classification", _strong.ClassificationKey, context);
                 }
             }
+            if (context.ShouldSerialize("holderModel"))
+            {
+                if ((_strong.Holder == null))
+                {
+                    if ((_strong.HolderKey.HasValue && context.ShouldForceLoad("holderModel", _strong.Key)))
+                    {
+                        SanteDB.Core.Model.Entities.Entity _delay = null;
+                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Entities.Entity>(_strong.HolderKey);
+                        if ((_delay != null))
+                        {
+                            _strong.Holder = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "holderModel", _strong.Holder, context);
+                        }
+                        else
+                        {
+                            context.RegisterMissTarget("holderModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else
+                {
+                    context.JsonContext.WritePropertyUtil(w, "targetModel", _strong.TargetEntity, context);
+                }
+            }
             if (context.ShouldSerialize("targetModel")) {
                 if ((_strong.TargetEntity == null)) {
                     if ((_strong.TargetEntityKey.HasValue && context.ShouldForceLoad("targetModel", _strong.Key))) {
