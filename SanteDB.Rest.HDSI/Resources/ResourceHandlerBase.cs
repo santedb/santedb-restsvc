@@ -39,13 +39,15 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a resource handler base type that is always bound to HDSI
     /// </summary>
     /// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
+    [ServiceProvider("HDSI Resource Handler")]
     public abstract class ResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData>,
         INullifyResourceHandler,
         ICancelResourceHandler,
         IChainedApiResourceHandler,
         ICheckoutResourceHandler,
         IApiResourceHandlerEx,
-        IOperationalApiResourceHandler
+        IOperationalApiResourceHandler,
+        IServiceImplementation
 
         where TData : IdentifiedData, new()
     {
@@ -69,6 +71,11 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Get all child resources
         /// </summary>
         public IEnumerable<IApiChildOperation> Operations => this.m_operationProviders.Values;
+
+        /// <summary>
+        /// Gets the service name
+        /// </summary>
+        public string ServiceName => "HDSI Resource Handler";
 
         /// <summary>
         /// OBsoletion wrapper with locking
