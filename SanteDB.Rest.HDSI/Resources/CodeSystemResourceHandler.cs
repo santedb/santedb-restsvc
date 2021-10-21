@@ -20,6 +20,7 @@
  */
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Security;
+using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 
 namespace SanteDB.Rest.HDSI.Resources
@@ -29,6 +30,14 @@ namespace SanteDB.Rest.HDSI.Resources
     /// </summary>
     public class CodeSystemResourceHandler : ResourceHandlerBase<CodeSystem>
     {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public CodeSystemResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
+
+        }
         /// <summary>
         /// Create, update and delete require administer concept dictionary 
         /// </summary>

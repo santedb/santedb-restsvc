@@ -20,6 +20,7 @@
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.DataTypes;
+using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
@@ -28,7 +29,14 @@ namespace SanteDB.Rest.HDSI.Resources
     /// </summary>
     public class ExtensionTypeResourceHandler : ResourceHandlerBase<ExtensionType>
     {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public ExtensionTypeResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
 
+        }
         /// <summary>
         /// Get capabilities of this handler
         /// </summary>

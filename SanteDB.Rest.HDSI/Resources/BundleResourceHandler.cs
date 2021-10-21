@@ -20,6 +20,7 @@
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Collection;
+using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
@@ -28,6 +29,14 @@ namespace SanteDB.Rest.HDSI.Resources
     /// </summary>
     public class BundleResourceHandler : ResourceHandlerBase<Bundle>
     {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public BundleResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
+
+        }
         /// <summary>
         /// Get capabilities
         /// </summary>

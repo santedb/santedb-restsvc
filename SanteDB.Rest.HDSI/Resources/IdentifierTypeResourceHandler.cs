@@ -22,6 +22,7 @@ using SanteDB.Core.Interop;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System.Collections.Generic;
 
@@ -32,7 +33,14 @@ namespace SanteDB.Rest.HDSI.Resources
     /// </summary>
     public class IdentifierTypeResourceHandler : ResourceHandlerBase<IdentifierType>
     {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public IdentifierTypeResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
 
+        }
         /// <summary>
         /// Get capabilities for this resource handler
         /// </summary>
