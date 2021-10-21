@@ -20,6 +20,7 @@
  */
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
+using SanteDB.Core.Services;
 using System;
 using System.Collections.Generic;
 
@@ -32,7 +33,14 @@ namespace SanteDB.Rest.HDSI.Resources
     /// of an entity on the server so the changes propagate down</remarks>
     public class EntityRelationshipResourceHandler : ResourceHandlerBase<EntityRelationship>
     {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public EntityRelationshipResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
 
+        }
         /// <summary>
         /// Get the name of the resource
         /// </summary>

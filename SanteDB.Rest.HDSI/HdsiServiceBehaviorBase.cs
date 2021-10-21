@@ -365,7 +365,7 @@ namespace SanteDB.Rest.HDSI
                     }
 
                     // Lock the item
-                    return BundleUtil.CreateBundle(histItm.OfType<IdentifiedData>(), histItm.Count, 0, false);
+                    return new Bundle(histItm.OfType<IdentifiedData>(), 0, histItm.Count);
                 }
                 else
                     throw new FileNotFoundException(resourceType);
@@ -385,7 +385,6 @@ namespace SanteDB.Rest.HDSI
         [UrlParameter("_count", typeof(int), "The count of items to return in this result set")]
         [UrlParameter("_orderBy", typeof(string), "Instructs the result set to be ordered")]
         [UrlParameter("_includeRefs", typeof(bool), "True if all referenced objects should be loaded")]
-        [UrlParameter("_lean", typeof(bool), "True if the result bundle should only contains primary results")]
         [UrlParameter("_all", typeof(bool), "True if all properties should be expanded")]
         [UrlParameter("_expand", typeof(string), "The names of the properties which should be forced loaded", Multiple = true)]
         [UrlParameter("_exclude", typeof(string), "The names of the properties which should removed from the bundle", Multiple = true)]
@@ -397,8 +396,13 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
-                    String offset = RestOperationContext.Current.IncomingRequest.QueryString["_offset"],
-                        count = RestOperationContext.Current.IncomingRequest.QueryString["_count"];
+                    String offsetStr = RestOperationContext.Current.IncomingRequest.QueryString["_offset"],
+                     countStr = RestOperationContext.Current.IncomingRequest.QueryString["_count"];
+
+                    if (!Int32.TryParse(offsetStr, out int offset))
+                        offset = 0;
+                    if (!Int32.TryParse(countStr, out int count))
+                        count = 100;
 
                     var query = NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query); //RestOperationContext.Current.IncomingRequest.QueryString.ToQuery();
 
@@ -410,15 +414,9 @@ namespace SanteDB.Rest.HDSI
                     if (typeof(BaseEntityData).IsAssignableFrom(handler.Type) && !query.ContainsKey("obsoletionTime"))
                         query.Add("obsoletionTime", "null");
 
-                    int totalResults = 0;
-
-                    // Lean mode
-                    bool.TryParse(RestOperationContext.Current.IncomingRequest.QueryString["_includeRefs"], out bool parsedInclusive);
-                    bool.TryParse(RestOperationContext.Current.IncomingRequest.QueryString["_lean"], out bool parsedLean);
-
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
-                    var retVal = handler.Query(query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).OfType<IdentifiedData>().Select(o => o.GetLocked()).ToList();
+                    var retVal = handler.Query(query, offset, count, out int totalResults).OfType<IdentifiedData>().Select(o => o.GetLocked()).ToList();
                     RestOperationContext.Current.OutgoingResponse.SetLastModified((retVal.OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now));
 
                     // Last modification time and not modified conditions
@@ -451,7 +449,7 @@ namespace SanteDB.Rest.HDSI
                             }).ToList();
                         }
 
-                        return BundleUtil.CreateBundle(retVal, totalResults, Int32.Parse(offset ?? "0"), !parsedInclusive || parsedLean);
+                        return new Bundle(retVal, offset, totalResults);
                     }
                 }
                 else
@@ -783,7 +781,6 @@ namespace SanteDB.Rest.HDSI
         /// </summary>
         [UrlParameter("_offset", typeof(int), "The offet of the first result to return")]
         [UrlParameter("_count", typeof(int), "The count of items to return in this result set")]
-        [UrlParameter("_lean", typeof(bool), "True if the result bundle should only contains primary results")]
         [UrlParameter("_all", typeof(bool), "True if all properties should be expanded")]
         [UrlParameter("_expand", typeof(string), "The names of the properties which should be forced loaded", Multiple = true)]
         [UrlParameter("_exclude", typeof(string), "The names of the properties which should removed from the bundle", Multiple = true)]
@@ -795,8 +792,13 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
-                    String offset = RestOperationContext.Current.IncomingRequest.QueryString["_offset"],
-                      count = RestOperationContext.Current.IncomingRequest.QueryString["_count"];
+                    String offsetStr = RestOperationContext.Current.IncomingRequest.QueryString["_offset"],
+                        countStr = RestOperationContext.Current.IncomingRequest.QueryString["_count"];
+
+                    if (!Int32.TryParse(offsetStr, out int offset))
+                        offset = 0;
+                    if (!Int32.TryParse(countStr, out int count))
+                        count = 100;
 
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.QueryChildObjects));
 
@@ -810,14 +812,10 @@ namespace SanteDB.Rest.HDSI
                     if (typeof(BaseEntityData).IsAssignableFrom(handler.Type) && !query.ContainsKey("obsoletionTime"))
                         query.Add("obsoletionTime", "null");
 
-                    int totalResults = 0;
-
                     // Lean mode
-                    var lean = RestOperationContext.Current.IncomingRequest.QueryString["_lean"];
-                    bool.TryParse(lean, out bool parsedLean);
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
-                    IEnumerable<IdentifiedData> retVal = handler.QueryChildObjects(Guid.Parse(key), childResourceType, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).OfType<IdentifiedData>();
+                    IEnumerable<IdentifiedData> retVal = handler.QueryChildObjects(Guid.Parse(key), childResourceType, query, offset, count, out int totalResults).OfType<IdentifiedData>();
 
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.OfType<IdentifiedData>().OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now);
                     // Last modification time and not modified conditions
@@ -850,7 +848,7 @@ namespace SanteDB.Rest.HDSI
                             }).ToList();
                         }
 
-                        return BundleUtil.CreateBundle(retVal, totalResults, Int32.Parse(offset ?? "0"), parsedLean);
+                        return new Bundle(retVal, offset, totalResults);
                     }
                 }
                 else
@@ -1390,7 +1388,6 @@ namespace SanteDB.Rest.HDSI
         /// </summary>
         [UrlParameter("_offset", typeof(int), "The offet of the first result to return")]
         [UrlParameter("_count", typeof(int), "The count of items to return in this result set")]
-        [UrlParameter("_lean", typeof(bool), "True if the result bundle should only contains primary results")]
         [UrlParameter("_all", typeof(bool), "True if all properties should be expanded")]
         [UrlParameter("_expand", typeof(string), "The names of the properties which should be forced loaded", Multiple = true)]
         [UrlParameter("_exclude", typeof(string), "The names of the properties which should removed from the bundle", Multiple = true)]
@@ -1402,8 +1399,13 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
-                    String offset = RestOperationContext.Current.IncomingRequest.QueryString["_offset"],
-                      count = RestOperationContext.Current.IncomingRequest.QueryString["_count"];
+                    String offsetStr = RestOperationContext.Current.IncomingRequest.QueryString["_offset"],
+                      countStr = RestOperationContext.Current.IncomingRequest.QueryString["_count"];
+
+                    if (!Int32.TryParse(offsetStr, out int offset))
+                        offset = 0;
+                    if (!Int32.TryParse(countStr, out int count))
+                        count = 100;
 
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.QueryChildObjects));
 
@@ -1417,14 +1419,10 @@ namespace SanteDB.Rest.HDSI
                     if (typeof(BaseEntityData).IsAssignableFrom(handler.Type) && !query.ContainsKey("obsoletionTime"))
                         query.Add("obsoletionTime", "null");
 
-                    int totalResults = 0;
-
                     // Lean mode
-                    var lean = RestOperationContext.Current.IncomingRequest.QueryString["_lean"];
-                    bool.TryParse(lean, out bool parsedLean);
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
-                    IEnumerable<IdentifiedData> retVal = handler.QueryChildObjects(null, childResourceType, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).OfType<IdentifiedData>();
+                    IEnumerable<IdentifiedData> retVal = handler.QueryChildObjects(null, childResourceType, query, offset, count, out int totalResults).OfType<IdentifiedData>();
 
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.OfType<IdentifiedData>().OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now);
                     // Last modification time and not modified conditions
@@ -1457,7 +1455,7 @@ namespace SanteDB.Rest.HDSI
                             }).ToList();
                         }
 
-                        return BundleUtil.CreateBundle(retVal, totalResults, Int32.Parse(offset ?? "0"), parsedLean);
+                        return new Bundle(retVal, offset, totalResults);
                     }
                 }
                 else

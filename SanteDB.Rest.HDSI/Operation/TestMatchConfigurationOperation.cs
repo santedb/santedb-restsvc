@@ -2,27 +2,29 @@
  * Copyright (C) 2021 - 2021, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
  * Date: 2021-8-5
  */
+
 using RestSrvr;
 using SanteDB.Core;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Matching;
 using SanteDB.Core.Model.Acts;
+using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Services;
@@ -38,7 +40,6 @@ namespace SanteDB.Rest.HDSI.Operation
     /// </summary>
     public class TestMatchConfigurationOperation : IApiChildResourceHandler
     {
-
         // Config service
         private IRecordMatchingConfigurationService m_configService;
 
@@ -48,9 +49,7 @@ namespace SanteDB.Rest.HDSI.Operation
         public TestMatchConfigurationOperation(IRecordMatchingConfigurationService configService)
         {
             this.m_configService = configService;
-
         }
-
 
         /// <summary>
         /// Gets the type to bind to
@@ -86,7 +85,7 @@ namespace SanteDB.Rest.HDSI.Operation
         }
 
         /// <summary>
-        /// Test the specified object 
+        /// Test the specified object
         /// </summary>
         /// <param name="scopingKey">The name of the match configuration</param>
         /// <param name="key">The entity to use as the test object</param>
@@ -97,7 +96,7 @@ namespace SanteDB.Rest.HDSI.Operation
 
             try
             {
-                // Get the target object 
+                // Get the target object
                 dynamic target = null;
                 var config = this.m_configService.GetConfiguration(scopingKey.ToString());
 
@@ -120,8 +119,9 @@ namespace SanteDB.Rest.HDSI.Operation
                     switch (RestOperationContext.Current.IncomingRequest.QueryString["_mode"])
                     {
                         case "block":
-                            retVal = BundleUtil.CreateBundle(matcher.Block(target, config.Id, merger.GetIgnoredKeys(targetKey)), 0, 0, true);
+                            retVal = new Bundle(matcher.Block(target, config.Id, merger.GetIgnoredKeys(targetKey)));
                             break;
+
                         default:
                             retVal = (matcher as IMatchReportFactory).CreateMatchReport(target, matcher.Match(target, config.Id, merger.GetIgnoredKeys(targetKey)));
                             break;
@@ -140,7 +140,6 @@ namespace SanteDB.Rest.HDSI.Operation
         /// </summary>
         public IEnumerable<object> Query(Type scopingType, object scopingKey, NameValueCollection filter, int offset, int count, out int totalCount)
         {
-
             try
             {
                 var config = this.m_configService.GetConfiguration(scopingKey.ToString());

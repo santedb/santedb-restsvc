@@ -36,7 +36,14 @@ namespace SanteDB.Rest.HDSI.Resources
     /// </summary>
     public class ManufacturedMaterialHandler : ResourceHandlerBase<ManufacturedMaterial>
     {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public ManufacturedMaterialHandler(ILocalizationService localizationService) : base(localizationService)
+        {
 
+        }
         /// <summary>
         /// Create the specified material
         /// </summary>

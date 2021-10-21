@@ -21,6 +21,7 @@
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,14 @@ namespace SanteDB.Rest.HDSI.Resources
     /// </summary>
 	public class ActResourceHandler : ResourceHandlerBase<Act>
     {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public ActResourceHandler(ILocalizationService localizationService): base(localizationService)
+        {
+
+        }
         /// <summary>
         /// Creates the specified act
         /// </summary>
