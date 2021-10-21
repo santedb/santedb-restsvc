@@ -21,6 +21,7 @@
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,14 @@ namespace SanteDB.Rest.HDSI.Resources
     /// </summary>
     public class PlaceResourceHandler : ResourceHandlerBase<Place>
     {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public PlaceResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
 
+        }
         /// <summary>
         /// Create the specified place
         /// </summary>

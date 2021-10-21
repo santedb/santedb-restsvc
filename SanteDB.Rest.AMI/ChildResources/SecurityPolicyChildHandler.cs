@@ -150,7 +150,7 @@ namespace SanteDB.Rest.AMI.ChildResources
 
                 var rd = item as SecurityPolicyInfo;
                 this.m_pip.AddPolicies(scope, rd.Grant, AuthenticationContext.Current.Principal, rd.Oid);
-                AuditUtil.AuditSecurityAttributeAction(new object[] { scope }, true, $"policy={rd.Oid}");
+                AuditUtil.AuditSecurityAttributeAction(new object[] { scope }, true, $"added policy={rd.Oid}:{rd.Policy}");
                 return rd;
             }
             catch
@@ -203,12 +203,12 @@ namespace SanteDB.Rest.AMI.ChildResources
             {
                 this.DemandFor(scopingType);
                 this.m_pip.RemovePolicies(scope, AuthenticationContext.Current.Principal, policy.Oid);
-                AuditUtil.AuditSecurityAttributeAction(new object[] { scope }, true, $"del policy={policy.Oid}");
+                AuditUtil.AuditSecurityAttributeAction(new object[] { scope }, true, $"removed policy={policy.Oid}");
                 return null;
             }
             catch
             {
-                AuditUtil.AuditSecurityAttributeAction(new object[] { scope }, false, $"del policy={policy.Oid}");
+                AuditUtil.AuditSecurityAttributeAction(new object[] { scope }, false, $"removed policy={policy.Oid}");
                 throw;
             }
         }

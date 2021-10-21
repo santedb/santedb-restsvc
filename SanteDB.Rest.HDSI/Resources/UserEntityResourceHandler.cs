@@ -35,7 +35,14 @@ namespace SanteDB.Rest.HDSI.Resources
     /// </summary>
     public class UserEntityResourceHandler : ResourceHandlerBase<UserEntity>
     {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public UserEntityResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
 
+        }
         /// <summary>
         /// Create the specified user entity
         /// </summary>
@@ -55,7 +62,10 @@ namespace SanteDB.Rest.HDSI.Resources
                 }
             }
             else
-                throw new ArgumentOutOfRangeException("Can only handle UserEntity");
+            {
+                this.m_tracer.TraceError("Can only handle UserEntity");
+                throw new ArgumentOutOfRangeException(this.m_localizationService.GetString("error.rest.hdsi.handleUserEntity"));
+            }
         }
 
         /// <summary>
@@ -114,7 +124,10 @@ namespace SanteDB.Rest.HDSI.Resources
 
             }
             else
-                throw new ArgumentOutOfRangeException("Can only handle UserEntity");
+            {
+                this.m_tracer.TraceError("Can only handle UserEntity");
+                throw new ArgumentOutOfRangeException(this.m_localizationService.GetString("error.rest.hdsi.handleUserEntity"));
+            }
         }
     }
 }

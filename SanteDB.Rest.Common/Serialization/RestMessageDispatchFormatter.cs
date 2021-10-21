@@ -190,7 +190,7 @@ namespace SanteDB.Rest.Common.Serialization
                                     if (eType == null)
                                         eType = new ModelSerializationBinder().BindToType(null, bodyReader.LocalName); // Try to find by root element
 
-                                    serializer = XmlModelSerializerFactory.Current.CreateSerializer(eType);
+                                    serializer = XmlModelSerializerFactory.Current.CreateSerializer(eType ?? parm.ParameterType);
                                     parameters[pNumber] = serializer.Deserialize(bodyReader);
                                 }
                                 break;

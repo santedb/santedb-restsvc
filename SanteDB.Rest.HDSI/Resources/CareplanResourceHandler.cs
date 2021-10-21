@@ -20,6 +20,7 @@
  */
 using RestSrvr;
 using SanteDB.Core;
+using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Collection;
@@ -39,6 +40,12 @@ namespace SanteDB.Rest.HDSI.Resources
     /// </summary>
     public class CareplanResourceHandler : IApiResourceHandler
     {
+        // Tracer
+        private Tracer m_tracer = Tracer.GetTracer(typeof(CareplanResourceHandler));
+
+        // Localization service
+        private ILocalizationService m_localizationService = ApplicationServiceContext.Current.GetService<ILocalizationService>();
+
         /// <summary>
         /// Get capabilities statement
         /// </summary>
@@ -86,7 +93,10 @@ namespace SanteDB.Rest.HDSI.Resources
             (data as Bundle)?.Reconstitute();
             data = (data as CarePlan)?.Target ?? data as Patient;
             if (data == null)
-                throw new InvalidOperationException("Careplan requires a patient or bundle containing a patient entry");
+            {
+                this.m_tracer.TraceError("Careplan requires a patient or bundle containing a patient entry");
+                throw new InvalidOperationException(this.m_localizationService.GetString("error.messaging.rest.HDSI.careplanRequiresPatient"));
+            }
 
             // Get care plan service
             var carePlanner = ApplicationServiceContext.Current.GetService<ICarePlanService>();
@@ -108,7 +118,7 @@ namespace SanteDB.Rest.HDSI.Resources
         public Object Get(object id, object versionId)
         {
             // TODO: This will become the retrieval of care plan object 
-            throw new NotSupportedException();
+            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
         }
 
         /// <summary>
@@ -116,7 +126,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// </summary>
         public Object Obsolete(object key)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
         }
 
         /// <summary>
@@ -136,7 +146,11 @@ namespace SanteDB.Rest.HDSI.Resources
         {
             var repositoryService = ApplicationServiceContext.Current.GetService<IRepositoryService<Patient>>();
             if (repositoryService == null)
-                throw new InvalidOperationException("Could not find patient repository service");
+            {
+                this.m_tracer.TraceError("Could not find patient repository service");
+                throw new InvalidOperationException(this.m_localizationService.GetString("error.type.InvalidOperation.missingPatientRepo"));
+            }
+                
 
             // Query
             var carePlanner = ApplicationServiceContext.Current.GetService<ICarePlanService>();
@@ -166,7 +180,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// </summary>
         public Object Update(Object data)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
         }
     }
 }

@@ -19,6 +19,7 @@
  * Date: 2021-8-5
  */
 using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
@@ -27,5 +28,13 @@ namespace SanteDB.Rest.HDSI.Resources
     /// </summary>
     public class DeviceEntityResourceHandler : ResourceHandlerBase<DeviceEntity>
     {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public DeviceEntityResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
+
+        }
     }
 }
