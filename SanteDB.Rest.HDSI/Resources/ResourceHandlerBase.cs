@@ -20,6 +20,7 @@
  */
 
 using SanteDB.Core;
+using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
@@ -50,11 +51,23 @@ namespace SanteDB.Rest.HDSI.Resources
 
         where TData : IdentifiedData, new()
     {
+        // Localization Service
+        protected readonly ILocalizationService m_localizationService;
+
         // Property providers
         private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
 
         // Property providers
         private ConcurrentDictionary<String, IApiChildOperation> m_operationProviders = new ConcurrentDictionary<string, IApiChildOperation>();
+
+        /// <summary>
+        /// Creates a new resource handler base with a specified privacy service
+        /// </summary>
+        /// <param name="localizationService"></param>
+        protected ResourceHandlerBase(ILocalizationService localizationService)
+        {
+            this.m_localizationService = localizationService;
+        }
 
         /// <summary>
         /// Gets the scope
@@ -128,7 +141,11 @@ namespace SanteDB.Rest.HDSI.Resources
                 }
                 else
                 {
-                    throw new KeyNotFoundException($"{propertyName} not found");
+                    this.m_tracer.TraceError($"{propertyName} not found");
+                    throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                    {
+                        param = propertyName
+                    }));
                 }
             }
             finally
@@ -151,7 +168,13 @@ namespace SanteDB.Rest.HDSI.Resources
                 if (this.GetRepository() is ICancelRepositoryService<TData>)
                     return (this.GetRepository() as ICancelRepositoryService<TData>).Cancel((Guid)key);
                 else
-                    throw new NotSupportedException($"Repository for {this.ResourceName} does not support Cancel");
+                {
+                    this.m_tracer.TraceError($"Repository for {this.ResourceName} does not support Cancel");
+                    throw new NotSupportedException(this.m_localizationService.FormatString("error.rest.hdsi.notSupportCancel", new 
+                    { 
+                        param = this.ResourceName
+                    }));
+                }
             }
             finally
             {
@@ -172,7 +195,11 @@ namespace SanteDB.Rest.HDSI.Resources
             }
             else
             {
-                throw new KeyNotFoundException($"{propertyName} not found");
+                this.m_tracer.TraceError($"{propertyName} not found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                {
+                    param = propertyName
+                }));
             }
         }
 
@@ -185,7 +212,7 @@ namespace SanteDB.Rest.HDSI.Resources
             var adHocCache = ApplicationServiceContext.Current.GetService<IResourceCheckoutService>();
             if (adHocCache?.Checkout<TData>((Guid)key) == false)
             {
-                throw new ObjectLockedException();
+                throw new ObjectLockedException(this.m_localizationService.GetString("error.type.ObjectLockedException"));
             }
             return null;
         }
@@ -199,7 +226,13 @@ namespace SanteDB.Rest.HDSI.Resources
             if (this.GetRepository() is IRepositoryServiceEx<TData> exRepo)
                 return exRepo.Nullify((Guid)key);
             else
-                throw new NotSupportedException($"Repository for {this.ResourceName} does not support Nullify");
+            {
+                this.m_tracer.TraceError($"Repository for {this.ResourceName} does not support Nullify");
+                throw new NotSupportedException(this.m_localizationService.FormatString("error.rest.hdsi.notSupportNullify", new
+                {
+                    param = this.ResourceName
+                }));
+            }
         }
 
         /// <summary>
@@ -214,7 +247,11 @@ namespace SanteDB.Rest.HDSI.Resources
             }
             else
             {
-                throw new KeyNotFoundException($"{propertyName} not found");
+                this.m_tracer.TraceError($"{propertyName} not found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                {
+                    param = propertyName
+                }));
             }
         }
 
@@ -236,7 +273,11 @@ namespace SanteDB.Rest.HDSI.Resources
                 }
                 else
                 {
-                    throw new KeyNotFoundException($"{propertyName} not found");
+                    this.m_tracer.TraceError($"{propertyName} not found");
+                    throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                    {
+                        param = propertyName
+                    }));
                 }
             }
             finally
@@ -257,7 +298,7 @@ namespace SanteDB.Rest.HDSI.Resources
             var adHocCache = ApplicationServiceContext.Current.GetService<IResourceCheckoutService>();
             if (adHocCache?.Checkin<TData>((Guid)key) == false)
             {
-                throw new ObjectLockedException();
+                throw new ObjectLockedException(this.m_localizationService.GetString("error.type.OJectLockedException"));
             }
             return null;
         }
@@ -276,7 +317,10 @@ namespace SanteDB.Rest.HDSI.Resources
                 return this.Get(key, Guid.Empty);
             }
             else
-                throw new InvalidOperationException("Repository service does not support TOUCH");
+            {
+                this.m_tracer.TraceError("Repository service does not support TOUCH");
+                throw new InvalidOperationException(this.m_localizationService.GetString("error.rest.hdsi.supportTouch"));
+            }
         }
 
         /// <summary>
@@ -306,7 +350,11 @@ namespace SanteDB.Rest.HDSI.Resources
             }
             else
             {
-                throw new NotSupportedException($"Operation {operationName} not supported");
+                this.m_tracer.TraceError($"Operation {operationName} not supported");
+                throw new NotSupportedException(this.m_localizationService.FormatString("error.type.NotSupportedException.operation", new
+                {
+                    param = operationName
+                }));
             }
         }
 

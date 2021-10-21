@@ -21,6 +21,7 @@
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
@@ -31,21 +32,61 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Handler for QOBS
     /// </summary>
-    public class QuantityObservationResourceHandler : ObservationResourceHandler<QuantityObservation> { }
+    public class QuantityObservationResourceHandler : ObservationResourceHandler<QuantityObservation> 
+    {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public QuantityObservationResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
+
+        }
+    }
     /// <summary>
     /// Handler for COBS
     /// </summary>
-    public class CodedObservationResourceHandler : ObservationResourceHandler<CodedObservation> { }
+    public class CodedObservationResourceHandler : ObservationResourceHandler<CodedObservation> 
+    {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public CodedObservationResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
+
+        }
+    }
     /// <summary>
     /// Handlers TOBS
     /// </summary>
-    public class TextObservationResourceHandler : ObservationResourceHandler<TextObservation> { }
+    public class TextObservationResourceHandler : ObservationResourceHandler<TextObservation> 
+    {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public TextObservationResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
+
+        }
+
+    }
 
     /// <summary>
     /// Handler for observations (handles permissions)
     /// </summary>
     public abstract class ObservationResourceHandler<TObservation> : ResourceHandlerBase<TObservation> where TObservation : Observation, new()
     {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public ObservationResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
+
+        }
+
         [Demand(PermissionPolicyIdentifiers.WriteClinicalData)]
         public override Object Create(Object data, bool updateIfExists)
         {
