@@ -19,7 +19,6 @@
  * Date: 2021-8-5
  */
 
-using RestSrvr.Exceptions;
 using SanteDB.Core;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Interop;
@@ -35,11 +34,11 @@ using System.Collections.Generic;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
-    /// <summary>
-    /// Represents a resource handler base type that is always bound to HDSI
-    /// </summary>
-    /// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
-    [ServiceProvider("HDSI Resource Handler")]
+	/// <summary>
+	/// Represents a resource handler base type that is always bound to HDSI
+	/// </summary>
+	/// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
+	[ServiceProvider("HDSI Resource Handler")]
     public abstract class ResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData>,
         INullifyResourceHandler,
         ICancelResourceHandler,
