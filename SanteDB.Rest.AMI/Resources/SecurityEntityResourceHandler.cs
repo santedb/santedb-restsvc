@@ -41,10 +41,11 @@ namespace SanteDB.Rest.AMI.Resources
     /// Represents a resource handler that wraps a security based entity
     /// </summary>
     /// <typeparam name="TSecurityEntity">The type of security entity being wrapped</typeparam>
-    public abstract class SecurityEntityResourceHandler<TSecurityEntity> : IApiResourceHandler, IChainedApiResourceHandler
+    public abstract class SecurityEntityResourceHandler<TSecurityEntity> : IApiResourceHandler, IChainedApiResourceHandler,IServiceImplementation
         where TSecurityEntity : SecurityEntity
     {
-
+        // Localization Service
+        protected readonly ILocalizationService m_localizationService;
 
         // Property providers
         private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
@@ -53,14 +54,15 @@ namespace SanteDB.Rest.AMI.Resources
         private IRepositoryService<TSecurityEntity> m_repository;
 
         // Get the tracer
-        private Tracer m_tracer = Tracer.GetTracer(typeof(SecurityEntityResourceHandler<TSecurityEntity>));
+        protected Tracer m_tracer = Tracer.GetTracer(typeof(SecurityEntityResourceHandler<TSecurityEntity>));
 
         /// <summary>
         /// Create a new instance of the security entity resource handler
         /// </summary>
-        public SecurityEntityResourceHandler()
+        public SecurityEntityResourceHandler(ILocalizationService localizationService)
         {
             ApplicationServiceContext.Current.Started += (o, e) => this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<TSecurityEntity>>();
+            this.m_localizationService = localizationService;
         }
 
         /// <summary>
@@ -96,6 +98,8 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public IEnumerable<IApiChildResourceHandler> ChildResources => this.m_propertyProviders.Values;
 
+        public string ServiceName => "Security Entity Resource Service";
+
         /// <summary>
         /// Gets the repository
         /// </summary>
@@ -105,7 +109,11 @@ namespace SanteDB.Rest.AMI.Resources
                 this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<TSecurityEntity>>();
             if (this.m_repository == null)
             {
-                throw new KeyNotFoundException($"IRepositoryService<{typeof(TSecurityEntity).FullName}> not found and no repository is found");
+                this.m_tracer.TraceError($"IRepositoryService<{typeof(TSecurityEntity).FullName}> not found and no repository is found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.repositoryNotFound", new
+                {
+                    param = typeof(TSecurityEntity).FullName
+                }));
             }
             return this.m_repository;
         }
@@ -122,7 +130,14 @@ namespace SanteDB.Rest.AMI.Resources
 
             // First, we want to copy over the roles
             var td = data as ISecurityEntityInfo<TSecurityEntity>;
-            if (td is null) throw new ArgumentException("Invalid type", nameof(data));
+            if (td is null)
+            {
+                this.m_tracer.TraceError($"Invalid type {nameof(data)}");
+                throw new ArgumentException(this.m_localizationService.FormatString("error.type.ArgumentException", new
+                {
+                    param = nameof(data)
+                }));
+            }
 
             try
             {
@@ -241,7 +256,14 @@ namespace SanteDB.Rest.AMI.Resources
         {
             // First, we want to copy over the roles
             var td = data as ISecurityEntityInfo<TSecurityEntity>;
-            if (td is null) throw new ArgumentException("Invalid type", nameof(data));
+            if (td is null)
+            {
+                this.m_tracer.TraceError($"Invalid type {nameof(data)}");
+                throw new ArgumentException(this.m_localizationService.FormatString("error.type.ArgumentException", new
+                {
+                    param = nameof(data)
+                }));
+            }
 
             try
             {
@@ -286,7 +308,11 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                throw new KeyNotFoundException($"{propertyName} not found");
+                this.m_tracer.TraceError($"{propertyName} not found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                {
+                    param = propertyName
+                }));
             }
         }
 
@@ -303,7 +329,11 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                throw new KeyNotFoundException($"{propertyName} not found");
+                this.m_tracer.TraceError($"{propertyName} not found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                {
+                    param = propertyName
+                }));
             }
         }
 
@@ -320,7 +350,11 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                throw new KeyNotFoundException($"{propertyName} not found");
+                this.m_tracer.TraceError($"{propertyName} not found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound",new
+                {
+                    param = propertyName
+                }));
             }
         }
 
@@ -337,7 +371,11 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                throw new KeyNotFoundException($"{propertyName} not found");
+                this.m_tracer.TraceError($"{propertyName} not found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                {
+                    param = propertyName
+                }));
             }
         }
 
