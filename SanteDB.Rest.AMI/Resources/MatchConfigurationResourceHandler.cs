@@ -1,21 +1,22 @@
 ﻿/*
  * Portions Copyright 2019-2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
+
 using SanteDB.Core.Interop;
 using SanteDB.Core.Matching;
 using SanteDB.Core.Model.Query;
@@ -34,7 +35,6 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary>
     public class MatchConfigurationResourceHandler : IApiResourceHandler, IChainedApiResourceHandler
     {
-
         // Configuration service
         private IRecordMatchingConfigurationService m_configurationService;
 
@@ -149,7 +149,7 @@ namespace SanteDB.Rest.AMI.Resources
             totalCount = this.m_configurationService.Configurations.Count();
             if (queryParameters.TryGetValue("name", out List<String> values))
                 return this.m_configurationService.Configurations
-                    .Where(o => o.Id == values.First())
+                    .Where(o => o.Id.Contains(values.First().Replace("~", "")))
                     .Skip(offset)
                     .Take(count)
                     .OfType<Object>();
@@ -201,7 +201,6 @@ namespace SanteDB.Rest.AMI.Resources
                 throw new ArgumentException("Incorrect match configuration type");
         }
 
-
         /// <summary>
         /// Add the property handler to this handler
         /// </summary>
@@ -209,7 +208,6 @@ namespace SanteDB.Rest.AMI.Resources
         {
             this.m_propertyProviders.TryAdd(property.Name, property);
         }
-
 
         /// <summary>
         /// Try to get a chained resource
