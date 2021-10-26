@@ -34,13 +34,6 @@ namespace SanteDB.Rest.AMI.Resources
     public class MetadataResourceHandler<TMetadata> : ResourceHandlerBase<TMetadata>
         where TMetadata : IdentifiedData, new()
     {
-        /// <summary>
-        /// Initializes the metadata resource handler
-        /// </summary>
-        /// <param name="localizationService"></param>
-        public MetadataResourceHandler(ILocalizationService localizationService) : base(localizationService)
-        {
-        }
 
         /// <summary>
         /// Create a resource
