@@ -17,6 +17,7 @@
  * Date: 2021-8-5
  */
 using SanteDB.Core.Model.Security;
+using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -26,7 +27,14 @@ namespace SanteDB.Rest.AMI.Resources
     public class SecurityChallengeResourceHandler : ResourceHandlerBase<SecurityChallenge>
     {
 
-
+        /// <summary>
+		/// DI constructor
+		/// </summary>
+		/// <param name="localizationService"></param>
+		public SecurityChallengeResourceHandler(ILocalizationService localizationService):base(localizationService)
+        {
+            
+        }
 
     }
 }

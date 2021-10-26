@@ -17,6 +17,7 @@
  * Date: 2021-8-5
  */
 using SanteDB.Core.Model.DataTypes;
+using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -25,5 +26,12 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary>
     public class ExtensionTypeResourceHandler : MetadataResourceHandler<ExtensionType>
     {
+	    /// <summary>
+	    /// DI constructor
+	    /// </summary>
+	    /// <param name="localizationService"></param>
+	    public ExtensionTypeResourceHandler(ILocalizationService localizationService) : base(localizationService)
+	    {
+	    }
     }
 }

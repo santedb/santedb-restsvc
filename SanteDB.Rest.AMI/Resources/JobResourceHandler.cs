@@ -18,12 +18,14 @@
  */
 
 using SanteDB.Core;
+using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Jobs;
 using SanteDB.Core.Model.AMI.Jobs;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
+using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
 using System.Collections.Generic;
@@ -34,7 +36,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents a resource handler which handles the execution and enumeration of jobs
     /// </summary>
-    public class JobResourceHandler : IApiResourceHandler
+    public class JobResourceHandler : IServiceImplementation, IApiResourceHandler
     {
         /// <summary>
         /// Gets the resource name
@@ -60,12 +62,32 @@ namespace SanteDB.Rest.AMI.Resources
             ResourceCapabilityType.Get;
 
         /// <summary>
+        /// Gets the service name
+        /// </summary>
+        public string ServiceName => "Job Resource Handler";
+
+        // Tracer
+        private readonly Tracer m_tracer = Tracer.GetTracer(typeof(JobResourceHandler));
+
+        // Localization service
+        private readonly ILocalizationService m_localizationService;
+
+        /// <summary>
+        /// Initializes the job resource handler
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public JobResourceHandler(ILocalizationService localizationService)
+        {
+            this.m_localizationService = localizationService;
+        }
+
+        /// <summary>
         /// Create a new job instance
         /// </summary>
 
         public object Create(object data, bool updateIfExists)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
         }
 
         /// <summary>
@@ -77,7 +99,10 @@ namespace SanteDB.Rest.AMI.Resources
             var manager = ApplicationServiceContext.Current.GetService<IJobManagerService>();
             var job = manager.GetJobInstance(Guid.Parse(id.ToString()));
             if (job == null)
-                throw new KeyNotFoundException($"No IJob of type {id.ToString()} found");
+            {
+                this.m_tracer.TraceError($"No IJob of type {id} found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.noIJobType", new { param = id.ToString() }));
+            }
             return new JobInfo(job);
         }
 
@@ -90,12 +115,18 @@ namespace SanteDB.Rest.AMI.Resources
             var manager = ApplicationServiceContext.Current.GetService<IJobManagerService>();
             var job = manager.GetJobInstance(Guid.Parse(key.ToString()));
             if (job == null)
-                throw new KeyNotFoundException($"No IJob of type {key.ToString()} found");
-
+            {
+                this.m_tracer.TraceError($"No IJob of type {key} found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.noIJobType", new { param = key.ToString() }));
+            }
+                
             if (job.CanCancel)
                 job.Cancel();
             else
-                throw new InvalidOperationException("Job cannot be cancelled");
+            {
+                this.m_tracer.TraceError("Job cannot be cancelled");
+                throw new InvalidOperationException(this.m_localizationService.GetString("error.rest.ami.jobCannotBeCancelled"));
+            }
 
             // Last execution
             return new JobInfo(job);
@@ -106,7 +137,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public IEnumerable<object> Query(NameValueCollection queryParameters)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
         }
 
         /// <summary>
@@ -129,7 +160,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public object Update(object data)
         {
-            // First try to cast dat as JobInfo
+            // First try to cast data as JobInfo
             if (data is JobInfo)
             {
                 ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
@@ -137,17 +168,27 @@ namespace SanteDB.Rest.AMI.Resources
                 var jobInfo = data as JobInfo;
                 var jobManager = ApplicationServiceContext.Current.GetService<IJobManagerService>();
                 if (jobManager == null)
-                    throw new InvalidOperationException("No IJobManager configured");
+                {
+                    this.m_tracer.TraceError("No IJobManager configured");
+                    throw new InvalidOperationException(this.m_localizationService.GetString("error.rest.ami.noIJobManager"));
+                }    
+                    
 
                 var job = jobManager.GetJobInstance(Guid.Parse(jobInfo.Key));
                 if (job == null)
-                    throw new KeyNotFoundException($"Could not find job with ID {jobInfo.Key}");
+                {
+                    this.m_tracer.TraceError($"Could not find job with ID {jobInfo.Key}");
+                    throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.couldNotFindJob", new { param = jobInfo.Key }));
+                }
                 jobManager.StartJob(job, jobInfo.Parameters?.Select(o => o.Value).ToArray());
                 jobInfo.State = job.CurrentState;
                 return jobInfo;
             }
             else
-                throw new InvalidOperationException("Need to pass JobInfo to start a Job");
+            {
+                this.m_tracer.TraceError("Need to pass JobInfo to start a Job");
+                throw new InvalidOperationException(this.m_localizationService.GetString("error.rest.ami.missingJobInfo"));
+            }
         }
     }
 }

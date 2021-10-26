@@ -18,6 +18,7 @@
  */
 using RestSrvr.Exceptions;
 using SanteDB.Core;
+using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
@@ -35,7 +36,14 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary>
     public class SecurityUserResourceHandler : SecurityEntityResourceHandler<SecurityUser>, ILockableResourceHandler
     {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public SecurityUserResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
 
+        }
         /// <summary>
         /// Gets the type of object that is expected
         /// </summary>
@@ -111,7 +119,15 @@ namespace SanteDB.Rest.AMI.Resources
                 var user = ApplicationServiceContext.Current.GetService<IRepositoryService<SecurityUser>>().Get(td.Entity.Key.Value);
                 // Check upstream?
                 if (user != null && user.UserName?.ToLowerInvariant() != td.Entity.UserName.ToLowerInvariant())
-                    throw new FaultException(403, $"Username mismatch expect {user.UserName.ToLowerInvariant()} but got {td.Entity.UserName.ToLowerInvariant()}");
+                {
+                    this.m_tracer.TraceError($"Username mismatch expect {user.UserName.ToLowerInvariant()} but got {td.Entity.UserName.ToLowerInvariant()}",403);
+                    throw new FaultException(403, this.m_localizationService.FormatString("error.rest.ami.mismatchUsername", new
+                    {
+                        param = user.UserName.ToLowerInvariant(),
+                        param2 = td.Entity.UserName.ToLowerInvariant()
+                    }));
+
+                }
 
                 ApplicationServiceContext.Current.GetService<IIdentityProviderService>().ChangePassword(td.Entity.UserName, td.Entity.Password, AuthenticationContext.Current.Principal);
 
