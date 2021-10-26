@@ -20,6 +20,7 @@ using SanteDB.Core.Mail;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using System.Collections.Generic;
+using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -39,6 +40,14 @@ namespace SanteDB.Rest.AMI.Resources
                 queryParameters.Add("rcpt.userName", new List<string>() { "SYSTEM", AuthenticationContext.Current.Principal.Identity.Name });
             }
             return base.Query(queryParameters, offset, count, out totalCount);
+        }
+
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public MailMessageResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
         }
     }
 }
