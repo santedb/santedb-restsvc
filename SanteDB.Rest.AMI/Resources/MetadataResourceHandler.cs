@@ -79,5 +79,13 @@ namespace SanteDB.Rest.AMI.Resources
         {
             return base.Update(data);
         }
+
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public MetadataResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
+        }
     }
 }

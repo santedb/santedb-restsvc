@@ -44,5 +44,13 @@ namespace SanteDB.Rest.AMI.Resources
             }
             return base.Query(queryParameters, offset, count, out totalCount);
         }
+
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public MailMessageResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
+        }
     }
 }
