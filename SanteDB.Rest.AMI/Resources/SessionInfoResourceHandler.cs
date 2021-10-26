@@ -33,13 +33,22 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Session information resource handler
     /// </summary>
-    public class SessionInfoResourceHandler : IApiResourceHandler
+    public class SessionInfoResourceHandler : IApiResourceHandler, IServiceImplementation
     {
         // ILocalization Service
-        private readonly ILocalizationService m_localizationService = ApplicationServiceContext.Current.GetService<ILocalizationService>();
+        private readonly ILocalizationService m_localizationService;
 
         // Tracer 
         private readonly Tracer m_tracer = Tracer.GetTracer(typeof(SessionInfoResourceHandler));
+
+        /// <summary>
+        /// Instantiate the localization service
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public SessionInfoResourceHandler(ILocalizationService localizationService)
+        {
+            this.m_localizationService = localizationService;
+        }
         /// <summary>
         /// Gets the resource name
         /// </summary>
@@ -59,6 +68,12 @@ namespace SanteDB.Rest.AMI.Resources
         /// Gets the capabilities for this object
         /// </summary>
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Get | ResourceCapabilityType.Delete;
+
+        /// <summary>
+        /// Gets the service name
+        /// </summary>
+
+        public string ServiceName => "Session Inoformation Resource Service";
 
         /// <summary>
         /// Create an object
