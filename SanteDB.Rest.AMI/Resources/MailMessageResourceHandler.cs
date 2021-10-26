@@ -19,6 +19,7 @@
 using SanteDB.Core.Mail;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Services;
 using System.Collections.Generic;
 using SanteDB.Core.Services;
 
@@ -29,6 +30,13 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary>
     public class MailMessageResourceHandler : ResourceHandlerBase<MailMessage>
     {
+        /// <summary>
+        /// Initializes the mail messaging resource handler
+        /// </summary>
+        /// <param name="localizationService">Localization service</param>
+        public MailMessageResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
+        }
 
         /// <summary>
         /// Query for mail messages should default to my messages

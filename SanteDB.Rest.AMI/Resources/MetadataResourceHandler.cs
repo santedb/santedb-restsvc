@@ -19,6 +19,7 @@
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System.Collections.Generic;
 using SanteDB.Core.Services;
@@ -31,6 +32,13 @@ namespace SanteDB.Rest.AMI.Resources
     public class MetadataResourceHandler<TMetadata> : ResourceHandlerBase<TMetadata>
         where TMetadata : IdentifiedData, new()
     {
+        /// <summary>
+        /// Initializes the metadata resource handler
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public MetadataResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
+        }
 
         /// <summary>
         /// Create a resource 
