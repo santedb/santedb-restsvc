@@ -18,6 +18,7 @@
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Subscription;
+using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -26,6 +27,14 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary>
     public class SubscriptionDefinitionResourceHandler : ResourceHandlerBase<SubscriptionDefinition>
     {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public SubscriptionDefinitionResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
+
+        }
         /// <summary>
         /// Gets the capabilities
         /// </summary>

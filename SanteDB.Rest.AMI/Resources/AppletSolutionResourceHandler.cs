@@ -20,11 +20,13 @@ using RestSrvr;
 using SanteDB.Core;
 using SanteDB.Core.Applets.Model;
 using SanteDB.Core.Applets.Services;
+using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Applet;
 using SanteDB.Core.Model.AMI.Security;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
@@ -39,11 +41,17 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents a resource handler for applet solution files
     /// </summary>
-    public class AppletSolutionResourceHandler : IApiResourceHandler, IChainedApiResourceHandler
+    public class AppletSolutionResourceHandler : IServiceImplementation, IApiResourceHandler, IChainedApiResourceHandler
     {
 
         // Property providers
         private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
+
+        // Tracer
+        private readonly Tracer m_tracer = Tracer.GetTracer(typeof(AppletSolutionResourceHandler));
+
+        // Localization service
+        private readonly ILocalizationService m_localizationService;
 
         /// <summary>
         /// Gets the capabilities of the resource handler
@@ -83,6 +91,20 @@ namespace SanteDB.Rest.AMI.Resources
         public IEnumerable<IApiChildResourceHandler> ChildResources => this.m_propertyProviders.Values;
 
         /// <summary>
+        /// Gets the service name
+        /// </summary>
+        public string ServiceName => "Applet Solution Resource Handler";
+
+        /// <summary>
+        /// Constructor for AppletSolutionResourceHandler
+        /// </summary>
+        /// <param name="localizationService">Localization service</param>
+        public AppletSolutionResourceHandler(ILocalizationService localizationService)
+        {
+            this.m_localizationService = localizationService;
+        }
+
+        /// <summary>
         /// Create / install an applet on the server
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.AdministerApplet)]
@@ -90,8 +112,11 @@ namespace SanteDB.Rest.AMI.Resources
         {
             var pkg = AppletPackage.Load((Stream)data) as AppletSolution;
             if (pkg == null)
-                throw new InvalidOperationException($"Package does not appear to be a solution");
-
+            {
+                this.m_tracer.TraceError("Package does not appear to be a solution");
+                throw new InvalidOperationException(this.m_localizationService.GetString("error.rest.ami.packageNotASolution"));
+            }
+               
             ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().Install(pkg);
             X509Certificate2 cert = null;
             if (pkg.PublicKey != null)
@@ -127,7 +152,13 @@ namespace SanteDB.Rest.AMI.Resources
             var appletData = appletService.Solutions.FirstOrDefault(o => o.Meta.Id == solutionId.ToString());
 
             if (appletData == null)
-                throw new FileNotFoundException(solutionId.ToString());
+            {
+                this.m_tracer.TraceError($"File not found: {solutionId}");
+                throw new FileNotFoundException(this.m_localizationService.FormatString("error.rest.ami.FileNotFoundParam", new 
+                { 
+                    param = solutionId.ToString()
+                }));
+            }
             else
             {
                 return new AppletSolutionInfo(appletData, null);
@@ -205,7 +236,14 @@ namespace SanteDB.Rest.AMI.Resources
 
             var pkg = AppletPackage.Load((Stream)data) as AppletSolution;
             if (!appletMgr.Solutions.Any(o => pkg.Meta.Id == o.Meta.Id))
-                throw new FileNotFoundException(pkg.Meta.Id);
+            {
+                this.m_tracer.TraceError($"File not found: {pkg.Meta.Id}");
+                throw new FileNotFoundException(this.m_localizationService.FormatString("error.rest.ami.FileNotFoundParam", new
+                {
+                    param = pkg.Meta.Id
+                }));
+            }
+               
 
             appletMgr.Install(pkg, true);
             X509Certificate2 cert = null;
@@ -251,7 +289,11 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                throw new KeyNotFoundException($"{propertyName} not found");
+                this.m_tracer.TraceError($"{propertyName} not found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new 
+                { 
+                    param = propertyName
+                }));
             }
         }
 
@@ -267,7 +309,11 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                throw new KeyNotFoundException($"{propertyName} not found");
+                this.m_tracer.TraceError($"{propertyName} not found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                {
+                    param = propertyName
+                }));
             }
         }
 
@@ -283,7 +329,11 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                throw new KeyNotFoundException($"{propertyName} not found");
+                this.m_tracer.TraceError($"{propertyName} not found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                {
+                    param = propertyName
+                }));
             }
         }
 
@@ -299,7 +349,11 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                throw new KeyNotFoundException($"{propertyName} not found");
+                this.m_tracer.TraceError($"{propertyName} not found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                {
+                    param = propertyName
+                }));
             }
         }
 

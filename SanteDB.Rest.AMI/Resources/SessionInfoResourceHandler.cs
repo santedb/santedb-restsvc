@@ -17,6 +17,7 @@
  * Date: 2021-8-5
  */
 using SanteDB.Core;
+using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Security;
 using SanteDB.Core.Model.Query;
@@ -32,8 +33,22 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Session information resource handler
     /// </summary>
-    public class SessionInfoResourceHandler : IApiResourceHandler
+    public class SessionInfoResourceHandler : IApiResourceHandler, IServiceImplementation
     {
+        // ILocalization Service
+        private readonly ILocalizationService m_localizationService;
+
+        // Tracer 
+        private readonly Tracer m_tracer = Tracer.GetTracer(typeof(SessionInfoResourceHandler));
+
+        /// <summary>
+        /// Instantiate the localization service
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public SessionInfoResourceHandler(ILocalizationService localizationService)
+        {
+            this.m_localizationService = localizationService;
+        }
         /// <summary>
         /// Gets the resource name
         /// </summary>
@@ -55,11 +70,17 @@ namespace SanteDB.Rest.AMI.Resources
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Get | ResourceCapabilityType.Delete;
 
         /// <summary>
+        /// Gets the service name
+        /// </summary>
+
+        public string ServiceName => "Session Inoformation Resource Service";
+
+        /// <summary>
         /// Create an object
         /// </summary>
         public object Create(object data, bool updateIfExists)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException.userMessage"));
         }
 
         /// <summary>
@@ -71,7 +92,13 @@ namespace SanteDB.Rest.AMI.Resources
             var uuid = (Guid)id;
             var session = ApplicationServiceContext.Current.GetService<ISessionProviderService>().Get(uuid.ToByteArray(), true);
             if (session == null)
-                throw new KeyNotFoundException($"Session {uuid} not found");
+            {
+                this.m_tracer.TraceError($"Session {uuid} not found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.sessionNotFound", new
+                {
+                    param = uuid
+                }));
+            }
             return new SecuritySessionInfo(session);
         }
 
@@ -84,7 +111,13 @@ namespace SanteDB.Rest.AMI.Resources
             var uuid = (Guid)key;
             var session = ApplicationServiceContext.Current.GetService<ISessionProviderService>().Get(uuid.ToByteArray(), false);
             if (session == null)
-                throw new KeyNotFoundException($"Session {uuid} not found");
+            {
+                this.m_tracer.TraceError($"Session {uuid} not found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.sessionNotFound", new
+                {
+                    param = uuid
+                }));
+            }
             ApplicationServiceContext.Current.GetService<ISessionProviderService>().Abandon(session);
             return null;
         }
@@ -94,7 +127,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public IEnumerable<object> Query(NameValueCollection queryParameters)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException.userMessage"));
         }
 
         /// <summary>
@@ -102,7 +135,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException.userMessage"));
         }
 
         /// <summary>
@@ -110,7 +143,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public object Update(object data)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException.userMessage"));
         }
     }
 }
