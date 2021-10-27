@@ -95,7 +95,7 @@ namespace SanteDB.Rest.HDSI.Resources
             if (data == null)
             {
                 this.m_tracer.TraceError("Careplan requires a patient or bundle containing a patient entry");
-                throw new InvalidOperationException(this.m_localizationService.GetString("error.messaging.rest.HDSI.careplanRequiresPatient"));
+                throw new InvalidOperationException(this.m_localizationService.GetString("error.rest.hdsi.careplanRequiresPatient"));
             }
 
             // Get care plan service

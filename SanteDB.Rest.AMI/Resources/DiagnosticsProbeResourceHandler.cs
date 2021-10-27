@@ -21,6 +21,7 @@ using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Diagnostics;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
@@ -32,7 +33,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Performance counter handler
     /// </summary>
-    public class DiagnosticsProbeResourceHandler : IApiResourceHandler
+    public class DiagnosticsProbeResourceHandler : IServiceImplementation, IApiResourceHandler
     {
         /// <summary>
         /// Gets the resource name
@@ -54,13 +55,32 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Search | ResourceCapabilityType.Get;
 
+        /// <summary>
+        /// Gets the service name
+        /// </summary>
+        public string ServiceName => "Diagnostics Probe Resource Handler";
+
+        // Tracer
+        private readonly Tracer m_tracer = Tracer.GetTracer(typeof(DiagnosticsProbeResourceHandler));
+
+        // Localization service
+        private readonly ILocalizationService m_localizationService;
+
+        /// <summary>
+        /// Initializes the diagnostics probe resource handler
+        /// </summary>
+        /// <param name="localizationService">Localization service</param>
+        public DiagnosticsProbeResourceHandler(ILocalizationService localizationService)
+        {
+            this.m_localizationService = localizationService;
+        }
 
         /// <summary>
         /// Create an entity
         /// </summary>
         public object Create(object data, bool updateIfExists)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
         }
 
         /// <summary>
@@ -77,7 +97,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public object Obsolete(object key)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
         }
 
         /// <summary>
@@ -102,7 +122,8 @@ namespace SanteDB.Rest.AMI.Resources
             }
             catch (Exception e)
             {
-                throw new Exception($"Error querying probes : {e.Message}", e);
+                this.m_tracer.TraceError($"Error querying probes : {e.Message}");
+                throw new Exception(this.m_localizationService.FormatString("error.rest.ami.errorQueryingProbes", new { param = e.Message }), e);
             }
         }
 
@@ -111,7 +132,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public object Update(object data)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
         }
     }
 }

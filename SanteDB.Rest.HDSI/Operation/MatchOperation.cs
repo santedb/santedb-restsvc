@@ -46,7 +46,7 @@ namespace SanteDB.Rest.HDSI.Operation
         /// <summary>
         /// Matching service
         /// </summary>
-        public MatchOperation(IRecordMatchingService matchingService, IRecordMatchingConfigurationService matchConfigService)
+        public MatchOperation(IRecordMatchingService matchingService = null, IRecordMatchingConfigurationService matchConfigService = null)
         {
             this.m_matchingService = matchingService;
             this.m_matchConfiguration = matchConfigService;

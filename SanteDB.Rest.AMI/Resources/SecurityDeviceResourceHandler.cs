@@ -35,6 +35,14 @@ namespace SanteDB.Rest.AMI.Resources
     public class SecurityDeviceResourceHandler : SecurityEntityResourceHandler<SecurityDevice>, ILockableResourceHandler
     {
         /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public SecurityDeviceResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
+
+        }
+        /// <summary>
         /// Type of security device
         /// </summary>
         public override Type Type => typeof(SecurityDeviceInfo);

@@ -46,7 +46,7 @@ namespace SanteDB.Rest.HDSI.Operation
         /// <summary>
         /// Create a new match configuration operation
         /// </summary>
-        public TestMatchConfigurationOperation(IRecordMatchingConfigurationService configService)
+        public TestMatchConfigurationOperation(IRecordMatchingConfigurationService configService = null)
         {
             this.m_configService = configService;
         }

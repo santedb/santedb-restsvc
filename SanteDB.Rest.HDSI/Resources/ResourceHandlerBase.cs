@@ -298,7 +298,7 @@ namespace SanteDB.Rest.HDSI.Resources
             var adHocCache = ApplicationServiceContext.Current.GetService<IResourceCheckoutService>();
             if (adHocCache?.Checkin<TData>((Guid)key) == false)
             {
-                throw new ObjectLockedException(this.m_localizationService.GetString("error.type.OJectLockedException"));
+                throw new ObjectLockedException(this.m_localizationService.GetString("error.type.ObjectLockedException"));
             }
             return null;
         }
