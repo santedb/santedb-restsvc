@@ -20,16 +20,8 @@
 using SanteDB.Core.Mail;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
-<<<<<<< HEAD
-<<<<<<< HEAD
 using SanteDB.Core.Security.Principal;
-=======
 using SanteDB.Core.Services;
->>>>>>> develop
-=======
-using SanteDB.Core.Services;
-using SanteDB.Core.Security.Principal;
->>>>>>> bc850a8cd22d2a16987e0c4189625c593d801f7c
 using System.Collections.Generic;
 
 namespace SanteDB.Rest.AMI.Resources
