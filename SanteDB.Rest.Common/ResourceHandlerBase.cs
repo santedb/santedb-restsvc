@@ -41,7 +41,7 @@ namespace SanteDB.Rest.Common
     /// <summary>
     /// Resource handler base
     /// </summary>
-    public abstract class ResourceHandlerBase<TResource> : IApiResourceHandler where TResource : IdentifiedData, new()
+    public abstract class ResourceHandlerBase<TResource> : IServiceImplementation, IApiResourceHandler where TResource : IdentifiedData, new()
     {
 
         // Tracer
@@ -53,10 +53,16 @@ namespace SanteDB.Rest.Common
         protected IRepositoryService<TResource> m_repository = null;
 
         /// <summary>
+        /// Localization service
+        /// </summary>
+        protected readonly ILocalizationService m_localizationService;
+
+        /// <summary>
         /// Constructs the resource handler base
         /// </summary>
-        public ResourceHandlerBase()
+        public ResourceHandlerBase(ILocalizationService localizationService)
         {
+            this.m_localizationService = localizationService;
         }
 
         /// <summary>
@@ -68,7 +74,8 @@ namespace SanteDB.Rest.Common
                 this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<TResource>>();
             if (this.m_repository == null)
             {
-                throw new KeyNotFoundException($"IRepositoryService<{typeof(TResource).FullName}> not found and no repository is found");
+                this.m_tracer.TraceError($"IRepositoryService<{typeof(TResource).FullName}> not found and no repository is found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.common.RepositoryServiceNotFound", new { param = typeof(TResource).FullName }));
             }
             return this.m_repository;
         }
@@ -118,6 +125,11 @@ namespace SanteDB.Rest.Common
             }
         }
 
+        /// <summary>
+        /// Get service name
+        /// </summary>
+        public string ServiceName => typeof(ResourceHandlerBase<TResource>).Name;
+
 
         /// <summary>
         /// Create a resource
@@ -126,10 +138,13 @@ namespace SanteDB.Rest.Common
         public virtual Object Create(Object data, bool updateIfExists)
         {
             if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            {
+                this.m_tracer.TraceError($"{nameof(data)} cannot be null");
+                throw new ArgumentNullException(this.m_localizationService.FormatString("error.type.ArgumentNullException.param", new { param = nameof(data) }));
+            }
             else if ((this.Capabilities & ResourceCapabilityType.Create) == 0 &&
                 (this.Capabilities & ResourceCapabilityType.CreateOrUpdate) == 0)
-                throw new NotSupportedException();
+                throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
 
             var bundle = data as Bundle;
 
@@ -140,7 +155,14 @@ namespace SanteDB.Rest.Common
             try
             {
                 if (!(processData is TResource))
-                    throw new ArgumentException($"Invalid data submission. Expected {typeof(TResource).FullName} but received {processData.GetType().FullName}. If you are submitting a bundle, ensure it has an entry point.");
+                {
+                    this.m_tracer.TraceError($"Invalid data submission. Expected {typeof(TResource).FullName} but received {processData.GetType().FullName}. If you are submitting a bundle, ensure it has an entry point.");
+                    throw new ArgumentException(this.m_localizationService.FormatString("error.rest.common.invalidDataSubmission", new 
+                    { 
+                        param = typeof(TResource).FullName,
+                        param1 = processData.GetType().FullName
+                    }));
+                }
                 else if (processData is TResource)
                 {
 
@@ -155,10 +177,11 @@ namespace SanteDB.Rest.Common
             catch (Exception e)
             {
                 AuditUtil.AuditCreate(Core.Auditing.OutcomeIndicator.MinorFail, null, data);
-                throw new Exception($"Error creating {data}", e);
+                this.m_tracer.TraceError($"Error creating {data}");
+                throw new Exception(this.m_localizationService.FormatString("error.rest.common.errorCreatingParam", new { param = nameof(data) }), e);
             }
-
-            throw new ArgumentException(nameof(data), "Invalid data type");
+            this.m_tracer.TraceError($"Invalid data type: {nameof(data)}");
+            throw new ArgumentException(nameof(data), this.m_localizationService.GetString("error.rest.common.invalidDataType"));
         }
 
         /// <summary>
@@ -169,7 +192,7 @@ namespace SanteDB.Rest.Common
         {
             if ((this.Capabilities & ResourceCapabilityType.Get) == 0 &&
                 (this.Capabilities & ResourceCapabilityType.GetVersion) == 0)
-                throw new NotSupportedException();
+                throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
 
             try
             {
@@ -181,7 +204,8 @@ namespace SanteDB.Rest.Common
             catch (Exception e)
             {
                 AuditUtil.AuditRead<TResource>(Core.Auditing.OutcomeIndicator.MinorFail, id.ToString());
-                throw new Exception($"Error getting resource {id}", e);
+                this.m_tracer.TraceError($"Error getting resource {id}");
+                throw new Exception(this.m_localizationService.FormatString("error.rest.common.gettingResource", new { param = nameof(id) }), e);
 
             }
         }
@@ -193,7 +217,7 @@ namespace SanteDB.Rest.Common
         public virtual Object Obsolete(object key)
         {
             if ((this.Capabilities & ResourceCapabilityType.Delete) == 0)
-                throw new NotSupportedException();
+                throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
 
             try
             {
@@ -204,7 +228,8 @@ namespace SanteDB.Rest.Common
             catch (Exception e)
             {
                 AuditUtil.AuditDelete<TResource>(Core.Auditing.OutcomeIndicator.MinorFail, key.ToString());
-                throw new Exception($"Error obsoleting resource {key}", e);
+                this.m_tracer.TraceError($"Error obsoleting resource {key}");
+                throw new Exception(this.m_localizationService.FormatString("error.rest.common.obsoletingResource", new { param = nameof(key) }), e);
 
             }
         }
@@ -216,7 +241,7 @@ namespace SanteDB.Rest.Common
         public virtual IEnumerable<Object> Query(NameValueCollection queryParameters)
         {
             if ((this.Capabilities & ResourceCapabilityType.Search) == 0)
-                throw new NotSupportedException();
+                throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
 
             try
             {
@@ -227,7 +252,8 @@ namespace SanteDB.Rest.Common
             }
             catch (Exception e)
             {
-                throw new Exception("Error querying datasource", e);
+                this.m_tracer.TraceError("Error querying data source");
+                throw new Exception(this.m_localizationService.GetString("error.rest.common.queryDataSource"), e);
 
             }
 
@@ -240,7 +266,7 @@ namespace SanteDB.Rest.Common
         public virtual IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
         {
             if ((this.Capabilities & ResourceCapabilityType.Search) == 0)
-                throw new NotSupportedException();
+                throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
             try
             {
                 IEnumerable<TResource> retVal = null;
@@ -249,7 +275,11 @@ namespace SanteDB.Rest.Common
                 if (queryParameters.ContainsKey("_any"))
                 {
                     var fts = ApplicationServiceContext.Current.GetService<IFreetextSearchService>();
-                    if (fts == null) throw new InvalidOperationException("Attempting to run a freetext search in a context which does not support freetext searches");
+                    if (fts == null)
+                    {
+                        this.m_tracer.TraceError("Attempting to run a freetext search in a context which does not support freetext searches");
+                        throw new InvalidOperationException(this.m_localizationService.GetString("error.rest.common.freetextNotSupported"));
+                    }
 
                     // Order by
                     ModelSort<TResource>[] sortParameters = null;
@@ -311,7 +341,8 @@ namespace SanteDB.Rest.Common
             catch (Exception e)
             {
                 AuditUtil.AuditQuery<TResource>(Core.Auditing.OutcomeIndicator.MinorFail, queryParameters.ToString());
-                throw new Exception("Error querying underlying repository", e);
+                this.m_tracer.TraceError("Error querying underlying repository");
+                throw new Exception(this.m_localizationService.GetString("error.rest.common.queryingRepository"), e);
             }
         }
 
@@ -323,7 +354,7 @@ namespace SanteDB.Rest.Common
         {
 
             if ((this.Capabilities & ResourceCapabilityType.Update) == 0)
-                throw new NotSupportedException();
+                throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
 
             Bundle bundleData = data as Bundle;
             bundleData?.Reconstitute();
@@ -332,7 +363,14 @@ namespace SanteDB.Rest.Common
             try
             {
                 if (!(processData is TResource))
-                    throw new ArgumentException($"Invalid data submission. Expected {typeof(TResource).FullName} but received {processData.GetType().FullName}. If you are submitting a bundle, ensure it has an entry point.");
+                {
+                    this.m_tracer.TraceError($"Invalid data submission. Expected {typeof(TResource).FullName} but received {processData.GetType().FullName}. If you are submitting a bundle, ensure it has an entry point");
+                    throw new ArgumentException(this.m_localizationService.FormatString("error.rest.common.invalidDataSubmission", new
+                    {
+                        param = typeof(TResource).FullName,
+                        param1 = processData.GetType().FullName
+                    }));
+                }
                 else if (processData is TResource)
                 {
                     var entityData = processData as TResource;
@@ -343,13 +381,15 @@ namespace SanteDB.Rest.Common
                 }
                 else
                 {
-                    throw new ArgumentException("Invalid persistence type");
+                    this.m_tracer.TraceError("Invalid persistence type");
+                    throw new ArgumentException(this.m_localizationService.GetString("error.rest.common.invalidPersistentType"));
                 }
             }
             catch (Exception e)
             {
                 AuditUtil.AuditUpdate(Core.Auditing.OutcomeIndicator.MinorFail, null, data);
-                throw new Exception("Error updating resource", e);
+                this.m_tracer.TraceError("Error updating resource");
+                throw new Exception(this.m_localizationService.GetString("error.rest.common.updatingResource"), e);
             }
         }
     }

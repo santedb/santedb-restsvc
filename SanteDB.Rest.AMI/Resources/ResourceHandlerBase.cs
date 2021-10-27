@@ -28,19 +28,17 @@ namespace SanteDB.Rest.AMI.Resources
 	/// Represents a resource handler base type that is always bound to AMI.
 	/// </summary>
 	/// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
-	public class ResourceHandlerBase<TData> : Common.ResourceHandlerBase<TData>, IServiceImplementation where TData : IdentifiedData, new()
+	public class ResourceHandlerBase<TData> : Common.ResourceHandlerBase<TData> where TData : IdentifiedData, new()
 	{
-		// Localization Service
-		protected readonly ILocalizationService m_localizationService;
 
 		/// <summary>
 		/// DI constructor
 		/// </summary>
 		/// <param name="localizationService"></param>
-		public ResourceHandlerBase(ILocalizationService localizationService)
+		public ResourceHandlerBase(ILocalizationService localizationService) : base(localizationService)
         {
-			this.m_localizationService = localizationService;
         }
+
 		/// <summary>
 		/// Gets the resource capabilities for the object
 		/// </summary>
@@ -50,10 +48,5 @@ namespace SanteDB.Rest.AMI.Resources
 		/// Gets the scope
 		/// </summary>
 		public override Type Scope => typeof(IAmiServiceContract);
-
-		/// <summary>
-		/// Gets the service name
-		/// </summary>
-		public string ServiceName => "AMI Resource Handler";
 	}
 }
