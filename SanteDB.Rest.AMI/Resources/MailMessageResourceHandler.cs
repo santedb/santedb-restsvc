@@ -21,9 +21,8 @@ using SanteDB.Core.Mail;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Services;
+using SanteDB.Core.Security.Principal;
 using System.Collections.Generic;
-
-using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -39,7 +38,7 @@ namespace SanteDB.Rest.AMI.Resources
         {
             if (data is MailMessage message)
             {
-                if(!(AuthenticationContext.Current.Principal.Identity is IDeviceIdentity ||
+                if (!(AuthenticationContext.Current.Principal.Identity is IDeviceIdentity ||
                     AuthenticationContext.Current.Principal.Identity is IApplicationIdentity))
                     message.From = AuthenticationContext.Current.Principal.Identity.Name;
             }
