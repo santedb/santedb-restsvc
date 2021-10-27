@@ -46,13 +46,10 @@ namespace SanteDB.Rest.HDSI.Resources
         IChainedApiResourceHandler,
         ICheckoutResourceHandler,
         IApiResourceHandlerEx,
-        IOperationalApiResourceHandler,
-        IServiceImplementation
+        IOperationalApiResourceHandler
 
         where TData : IdentifiedData, new()
     {
-        // Localization Service
-        protected readonly ILocalizationService m_localizationService;
 
         // Property providers
         private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
@@ -64,9 +61,8 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Creates a new resource handler base with a specified privacy service
         /// </summary>
         /// <param name="localizationService"></param>
-        protected ResourceHandlerBase(ILocalizationService localizationService)
+        protected ResourceHandlerBase(ILocalizationService localizationService) : base(localizationService)
         {
-            this.m_localizationService = localizationService;
         }
 
         /// <summary>
@@ -83,11 +79,6 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Get all child resources
         /// </summary>
         public IEnumerable<IApiChildOperation> Operations => this.m_operationProviders.Values;
-
-        /// <summary>
-        /// Gets the service name
-        /// </summary>
-        public string ServiceName => "HDSI Resource Handler";
 
         /// <summary>
         /// OBsoletion wrapper with locking
