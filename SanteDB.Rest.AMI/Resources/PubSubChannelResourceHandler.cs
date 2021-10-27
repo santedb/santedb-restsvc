@@ -21,6 +21,7 @@ using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.PubSub;
+using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// A resource handler which can interact with the IPubSubManager interface.
     /// </summary>
-    public class PubSubChannelResourceHandler : IApiResourceHandler
+    public class PubSubChannelResourceHandler : IServiceImplementation, IApiResourceHandler
     {
         // The manager for the pub-sub service
         private IPubSubManagerService m_manager;
@@ -39,12 +40,15 @@ namespace SanteDB.Rest.AMI.Resources
         // Tracer
         private Tracer m_tracer = Tracer.GetTracer(typeof(PubSubSubscriptionDefinition));
 
+        private ILocalizationService m_localizationService;
+
         /// <summary>
         /// Creates a new pub-sub manager resource hander
         /// </summary>
-        public PubSubChannelResourceHandler(IPubSubManagerService manager)
+        public PubSubChannelResourceHandler(IPubSubManagerService manager, ILocalizationService localizationService)
         {
             this.m_manager = manager;
+            this.m_localizationService = localizationService;
         }
 
         /// <summary>
@@ -70,6 +74,11 @@ namespace SanteDB.Rest.AMI.Resources
             ResourceCapabilityType.Search | ResourceCapabilityType.Update;
 
         /// <summary>
+        /// Get service name
+        /// </summary>
+        public string ServiceName => "Pub Sub Channel Resource Handler";
+
+        /// <summary>
         /// Create the specified channel
         /// </summary>
         public object Create(object data, bool updateIfExists)
@@ -89,11 +98,14 @@ namespace SanteDB.Rest.AMI.Resources
                 catch (Exception e)
                 {
                     this.m_tracer.TraceError("Error creating channel - {0}", e);
-                    throw new Exception($"Error creating channel", e);
+                    throw new Exception(this.m_localizationService.GetString("error.rest.ami.errorCreatingChannel"), e);
                 }
             }
             else
-                throw new ArgumentException("Body must be of type PubSubChannelDefinition");
+            {
+                this.m_tracer.TraceError("Body must be of type PubSubChannelDefinition");
+                throw new ArgumentException(this.m_localizationService.GetString("error.rest.ami.bodyMustBePubSubChannel"));
+            }
         }
 
         /// <summary>
@@ -104,18 +116,24 @@ namespace SanteDB.Rest.AMI.Resources
             if (id is Guid uuid)
                 return this.m_manager.GetChannel(uuid);
             else
-                throw new ArgumentException($"{id} is not a valid UUID");
+            {
+                this.m_tracer.TraceError($"{id} is not a valid UUID");
+                throw new ArgumentException(this.m_localizationService.FormatString("error.rest.ami.invalidUUID", new { param = id.ToString() }));
+            }
         }
 
         /// <summary>
-        /// Obsolete the specifed object
+        /// Obsolete the specified object
         /// </summary>
         public object Obsolete(object key)
         {
             if (key is Guid uuid)
                 return this.m_manager.RemoveChannel(uuid);
             else
-                throw new ArgumentException($"{key} is not a valid UUID");
+            {
+                this.m_tracer.TraceError($"{key} is not a valid UUID");
+                throw new ArgumentException(this.m_localizationService.FormatString("error.rest.ami.invalidUUID", new { param = key.ToString() }));
+            }
         }
 
         /// <summary>
@@ -127,7 +145,7 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <summary>
-        /// Query the specifed channels
+        /// Query the specified channels
         /// </summary>
         public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
         {
@@ -139,7 +157,7 @@ namespace SanteDB.Rest.AMI.Resources
             catch (Exception e)
             {
                 this.m_tracer.TraceError("Error querying channel definitions - {0}", e);
-                throw new Exception($"Error performing query for channel definitions", e);
+                throw new Exception(this.m_localizationService.GetString("error.rest.ami.errorPerformingChannelQuery"), e);
             }
         }
 
@@ -156,12 +174,16 @@ namespace SanteDB.Rest.AMI.Resources
                 }
                 catch (Exception e)
                 {
-                    this.m_tracer.TraceError("Error updating channel definition", e);
-                    throw new Exception($"Error updating channel {definition.Key}", e);
+                    this.m_tracer.TraceError($"Error updating channel definition: {definition.Key}", e);
+                    throw new Exception(this.m_localizationService.FormatString("error.rest.ami.updatingChannel", new { param = definition.Key }), e);
                 }
             }
             else
-                throw new ArgumentException($"Body must be of type PubSubChannelDefinition");
+            {
+                this.m_tracer.TraceError("Body must be of type PubSubChannelDefinition");
+                throw new ArgumentException(this.m_localizationService.GetString("error.rest.ami.bodyMustBePubSubChannel"));
+            }
+                
         }
     }
 }
