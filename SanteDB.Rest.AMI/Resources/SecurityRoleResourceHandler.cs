@@ -17,6 +17,7 @@
  * Date: 2021-8-5
  */
 using SanteDB.Core;
+using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
@@ -33,7 +34,14 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary> 
     public class SecurityRoleResourceHandler : SecurityEntityResourceHandler<SecurityRole>
     {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public SecurityRoleResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
 
+        }
         /// <summary>
         /// Get the type
         /// </summary>
@@ -75,7 +83,13 @@ namespace SanteDB.Rest.AMI.Resources
         {
             var scope = this.GetRepository().Get(Guid.Parse(scopingEntityKey.ToString()));
             if (scope == null)
-                throw new KeyNotFoundException($"Could not find SecurityRole with identifier {scopingEntityKey}");
+            {
+               this.m_tracer.TraceError($"Could not find SecurityRole with identifier {scopingEntityKey}");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.securityRoleNotFound", new
+                {
+                    param = scopingEntityKey
+                }));
+            }
 
             switch (propertyName)
             {
@@ -85,7 +99,10 @@ namespace SanteDB.Rest.AMI.Resources
                 case "user":
                     var user = ApplicationServiceContext.Current.GetService<IRepositoryService<SecurityUser>>().Get(Guid.Parse(subItemKey.ToString()));
                     if (user == null)
-                        throw new KeyNotFoundException($"User {subItemKey} not found");
+                    {
+                        this.m_tracer.TraceError($"User {subItemKey} not found");
+                        throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.userMessage"));
+                    }
                     try
                     {
                         ApplicationServiceContext.Current.GetService<IRoleProviderService>().RemoveUsersFromRoles(new string[] { user.UserName }, new string[] { scope.Name }, AuthenticationContext.Current.Principal);
@@ -98,7 +115,13 @@ namespace SanteDB.Rest.AMI.Resources
                         throw;
                     }
                 default:
-                    throw new ArgumentException($"Property with {propertyName} not valid");
+                    {
+                       this.m_tracer.TraceError($"Property with {propertyName} not valid");
+                        throw new ArgumentException(this.m_localizationService.FormatString("error.rest.ami.invalidProperty", new
+                        {
+                            param = propertyName
+                        }));
+                    }
             }
         }
 

@@ -17,6 +17,7 @@
  * Date: 2021-8-5
  */
 using SanteDB.Core;
+using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Security;
@@ -32,6 +33,14 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary>
     public class SecurityProvenanceHandler : ResourceHandlerBase<SecurityProvenance>
     {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public SecurityProvenanceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
+
+        }
         /// <summary>
         /// Capabilities
         /// </summary>

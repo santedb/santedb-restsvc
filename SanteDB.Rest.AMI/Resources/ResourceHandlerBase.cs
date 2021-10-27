@@ -30,6 +30,17 @@ namespace SanteDB.Rest.AMI.Resources
 	/// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
 	public class ResourceHandlerBase<TData> : Common.ResourceHandlerBase<TData>, IServiceImplementation where TData : IdentifiedData, new()
 	{
+		// Localization Service
+		protected readonly ILocalizationService m_localizationService;
+
+		/// <summary>
+		/// DI constructor
+		/// </summary>
+		/// <param name="localizationService"></param>
+		public ResourceHandlerBase(ILocalizationService localizationService)
+        {
+			this.m_localizationService = localizationService;
+        }
 		/// <summary>
 		/// Gets the resource capabilities for the object
 		/// </summary>
