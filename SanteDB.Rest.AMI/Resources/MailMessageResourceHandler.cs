@@ -21,13 +21,16 @@ using SanteDB.Core.Mail;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 <<<<<<< HEAD
+<<<<<<< HEAD
 using SanteDB.Core.Security.Principal;
 =======
 using SanteDB.Core.Services;
 >>>>>>> develop
-using System.Collections.Generic;
-
+=======
 using SanteDB.Core.Services;
+using SanteDB.Core.Security.Principal;
+>>>>>>> bc850a8cd22d2a16987e0c4189625c593d801f7c
+using System.Collections.Generic;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -36,7 +39,6 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary>
     public class MailMessageResourceHandler : ResourceHandlerBase<MailMessage>
     {
-
         /// <summary>
         /// Create the mail
         /// </summary>
@@ -44,7 +46,7 @@ namespace SanteDB.Rest.AMI.Resources
         {
             if (data is MailMessage message)
             {
-                if(!(AuthenticationContext.Current.Principal.Identity is IDeviceIdentity ||
+                if (!(AuthenticationContext.Current.Principal.Identity is IDeviceIdentity ||
                     AuthenticationContext.Current.Principal.Identity is IApplicationIdentity))
                     message.From = AuthenticationContext.Current.Principal.Identity.Name;
             }
