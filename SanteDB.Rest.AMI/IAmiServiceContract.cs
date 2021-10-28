@@ -1,21 +1,22 @@
 ﻿/*
  * Portions Copyright 2019-2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
+
 using RestSrvr.Attributes;
 using SanteDB.Core.Applets.Model;
 using SanteDB.Core.Auditing;
@@ -163,10 +164,10 @@ namespace SanteDB.Rest.AMI
 		[RestInvoke("PING", "/")]
         void Ping();
 
-        #endregion
+        #endregion Diagnostic / Ad-Hoc interfaces
 
         /// <summary>
-        /// Creates the specified resource 
+        /// Creates the specified resource
         /// </summary>
         /// <param name="resourceType">The type of resource to be created</param>
         /// <param name="data">The resource data to be created</param>
@@ -246,7 +247,7 @@ namespace SanteDB.Rest.AMI
         object AssociationCreate(String resourceType, String key, String childResourceType, Object body);
 
         /// <summary>
-        /// Removes an association 
+        /// Removes an association
         /// </summary>
         /// <param name="resourceType">The type of resource which is the container</param>
         /// <param name="key">The key of the container</param>
@@ -326,12 +327,42 @@ namespace SanteDB.Rest.AMI
         void Patch(string resourceType, string id, Patch body);
 
         /// <summary>
-        /// Get the specific options supported for the 
+        /// Get the specific options supported for the
         /// </summary>
         /// <param name="resourceType">The type of resource to get service options</param>
         [RestInvoke("OPTIONS", "/{resourceType}")]
         ServiceResourceOptions ResourceOptions(String resourceType);
 
+        /// <summary>
+        /// Releases an edit lock on the specified object
+        /// </summary>
+        [RestInvoke("CHECKIN", "/{resourceType}/{id}")]
+        object CheckIn(String resourceType, String id);
 
+        /// <summary>
+        /// Acquires an edit lock on the specified object
+        /// </summary>
+        [RestInvoke("CHECKOUT", "/{resourceType}/{id}")]
+        object CheckOut(String resourceType, String id);
+
+        /// <summary>
+        /// Invokes the specified operation
+        /// </summary>
+        /// <param name="resourceType">The type of operation being invoked</param>
+        /// <param name="id">The ID of the operation</param>
+        /// <param name="operationName">The name of the operation</param>
+        /// <returns>The result of the operation invokation</returns>
+        [RestInvoke("POST", "/{resourceType}/${operationName}")]
+        object InvokeMethod(String resourceType, String operationName, ApiOperationParameterCollection body);
+
+        /// <summary>
+        /// Invokes the specified operation
+        /// </summary>
+        /// <param name="resourceType">The type of operation being invoked</param>
+        /// <param name="id">The ID of the operation</param>
+        /// <param name="operationName">The name of the operation</param>
+        /// <returns>The result of the operation invokation</returns>
+        [RestInvoke("POST", "/{resourceType}/{id}/${operationName}")]
+        object InvokeMethod(String resourceType, String id, String operationName, ApiOperationParameterCollection body);
     }
 }

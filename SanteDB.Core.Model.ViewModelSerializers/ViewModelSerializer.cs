@@ -118,11 +118,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
             }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
-            }
         }
         
         public object Deserialize(Newtonsoft.Json.JsonReader r, System.Type asType, SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext context) {
@@ -216,7 +211,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                         }
                                                         else {
                                                             if ("$type".Equals(r.Value)) {
-                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                 if ((_type != typeof(SanteDB.Core.Auditing.AuditData))) {
                                                                     SanteDB.Core.Auditing.AuditData _nretVal = ((SanteDB.Core.Auditing.AuditData)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                     _nretVal.CopyObjectData(_retVal);
@@ -292,6 +287,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "updatedTime", _strong.UpdatedTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("updatedByModel")) {
+                if ((_strong.UpdatedBy == null)) {
+                    if ((_strong.UpdatedByKey.HasValue && context.ShouldForceLoad("updatedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "UpdatedBy");
+                        if ((_delay != null)) {
+                            _strong.UpdatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("updatedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                }
+            }
             if (context.ShouldSerialize("updatedBy")) {
                 if ((_strong.UpdatedByKey == null)) {
                 }
@@ -327,6 +341,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -354,11 +406,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -477,7 +524,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                     }
                                                                     else {
                                                                         if ("$type".Equals(r.Value)) {
-                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                             if ((_type != typeof(SanteDB.Core.Model.NonVersionedEntityData))) {
                                                                                 SanteDB.Core.Model.NonVersionedEntityData _nretVal = ((SanteDB.Core.Model.NonVersionedEntityData)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -585,11 +632,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
             }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
-            }
         }
         
         public object Deserialize(Newtonsoft.Json.JsonReader r, System.Type asType, SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext context) {
@@ -635,7 +677,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                 }
                                 else {
                                     if ("$type".Equals(r.Value)) {
-                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                         if ((_type != typeof(SanteDB.Core.Model.Subscription.SubscriptionDefinition))) {
                                             SanteDB.Core.Model.Subscription.SubscriptionDefinition _nretVal = ((SanteDB.Core.Model.Subscription.SubscriptionDefinition)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                             _nretVal.CopyObjectData(_retVal);
@@ -754,6 +796,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "updatedTime", _strong.UpdatedTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("updatedByModel")) {
+                if ((_strong.UpdatedBy == null)) {
+                    if ((_strong.UpdatedByKey.HasValue && context.ShouldForceLoad("updatedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "UpdatedBy");
+                        if ((_delay != null)) {
+                            _strong.UpdatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("updatedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                }
+            }
             if (context.ShouldSerialize("updatedBy")) {
                 if ((_strong.UpdatedByKey == null)) {
                 }
@@ -789,6 +850,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -816,11 +915,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -995,7 +1089,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                 }
                                                                                                 else {
                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Security.SecurityApplication))) {
                                                                                                             SanteDB.Core.Model.Security.SecurityApplication _nretVal = ((SanteDB.Core.Model.Security.SecurityApplication)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -1088,6 +1182,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "updatedTime", _strong.UpdatedTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("updatedByModel")) {
+                if ((_strong.UpdatedBy == null)) {
+                    if ((_strong.UpdatedByKey.HasValue && context.ShouldForceLoad("updatedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "UpdatedBy");
+                        if ((_delay != null)) {
+                            _strong.UpdatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("updatedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                }
+            }
             if (context.ShouldSerialize("updatedBy")) {
                 if ((_strong.UpdatedByKey == null)) {
                 }
@@ -1123,6 +1236,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -1150,11 +1301,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -1281,7 +1427,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                         }
                                                                         else {
                                                                             if ("$type".Equals(r.Value)) {
-                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                 if ((_type != typeof(SanteDB.Core.Model.Security.SecurityChallenge))) {
                                                                                     SanteDB.Core.Model.Security.SecurityChallenge _nretVal = ((SanteDB.Core.Model.Security.SecurityChallenge)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -1410,6 +1556,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "updatedTime", _strong.UpdatedTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("updatedByModel")) {
+                if ((_strong.UpdatedBy == null)) {
+                    if ((_strong.UpdatedByKey.HasValue && context.ShouldForceLoad("updatedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "UpdatedBy");
+                        if ((_delay != null)) {
+                            _strong.UpdatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("updatedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                }
+            }
             if (context.ShouldSerialize("updatedBy")) {
                 if ((_strong.UpdatedByKey == null)) {
                 }
@@ -1445,6 +1610,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -1472,11 +1675,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -1651,7 +1849,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                 }
                                                                                                 else {
                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Security.SecurityDevice))) {
                                                                                                             SanteDB.Core.Model.Security.SecurityDevice _nretVal = ((SanteDB.Core.Model.Security.SecurityDevice)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -1737,6 +1935,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "updatedTime", _strong.UpdatedTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("updatedByModel")) {
+                if ((_strong.UpdatedBy == null)) {
+                    if ((_strong.UpdatedByKey.HasValue && context.ShouldForceLoad("updatedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "UpdatedBy");
+                        if ((_delay != null)) {
+                            _strong.UpdatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("updatedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                }
+            }
             if (context.ShouldSerialize("updatedBy")) {
                 if ((_strong.UpdatedByKey == null)) {
                 }
@@ -1772,6 +1989,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -1799,11 +2054,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -1922,7 +2172,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                     }
                                                                     else {
                                                                         if ("$type".Equals(r.Value)) {
-                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                             if ((_type != typeof(SanteDB.Core.Model.Security.SecurityEntity))) {
                                                                                 SanteDB.Core.Model.Security.SecurityEntity _nretVal = ((SanteDB.Core.Model.Security.SecurityEntity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -2057,6 +2307,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -2084,11 +2372,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -2223,7 +2506,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                             }
                                                                             else {
                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                     if ((_type != typeof(SanteDB.Core.Model.Security.SecurityPolicy))) {
                                                                                         SanteDB.Core.Model.Security.SecurityPolicy _nretVal = ((SanteDB.Core.Model.Security.SecurityPolicy)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -2332,7 +2615,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Policy == null)) {
                     if ((_strong.PolicyKey.HasValue && context.ShouldForceLoad("policyModel", _strong.Key))) {
                         SanteDB.Core.Model.Security.SecurityPolicy _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Security.SecurityPolicy>(_strong.PolicyKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityPolicy>(_strong, "Policy");
                         if ((_delay != null)) {
                             _strong.Policy = _delay;
                             _loaded = true;
@@ -2368,6 +2651,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityEntity _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityEntity>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("id")) {
                 if ((_strong.Key == null)) {
                 }
@@ -2381,11 +2683,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -2456,7 +2753,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                             }
                                             else {
                                                 if ("$type".Equals(r.Value)) {
-                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                     if ((_type != typeof(SanteDB.Core.Model.Security.SecurityPolicyInstance))) {
                                                         SanteDB.Core.Model.Security.SecurityPolicyInstance _nretVal = ((SanteDB.Core.Model.Security.SecurityPolicyInstance)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                         _nretVal.CopyObjectData(_retVal);
@@ -2589,7 +2886,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Device == null)) {
                     if ((_strong.DeviceKey.HasValue && context.ShouldForceLoad("deviceModel", _strong.Key))) {
                         SanteDB.Core.Model.Security.SecurityDevice _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Security.SecurityDevice>(_strong.DeviceKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityDevice>(_strong, "Device");
                         if ((_delay != null)) {
                             _strong.Device = _delay;
                             _loaded = true;
@@ -2608,7 +2905,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.User == null)) {
                     if ((_strong.UserKey.HasValue && context.ShouldForceLoad("userModel", _strong.Key))) {
                         SanteDB.Core.Model.Security.SecurityUser _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Security.SecurityUser>(_strong.UserKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityUser>(_strong, "User");
                         if ((_delay != null)) {
                             _strong.User = _delay;
                             _loaded = true;
@@ -2627,7 +2924,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Application == null)) {
                     if ((_strong.ApplicationKey.HasValue && context.ShouldForceLoad("applicationModel", _strong.Key))) {
                         SanteDB.Core.Model.Security.SecurityApplication _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Security.SecurityApplication>(_strong.ApplicationKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityApplication>(_strong, "Application");
                         if ((_delay != null)) {
                             _strong.Application = _delay;
                             _loaded = true;
@@ -2655,11 +2952,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -2778,7 +3070,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                     }
                                                                     else {
                                                                         if ("$type".Equals(r.Value)) {
-                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                             if ((_type != typeof(SanteDB.Core.Model.Security.SecurityProvenance))) {
                                                                                 SanteDB.Core.Model.Security.SecurityProvenance _nretVal = ((SanteDB.Core.Model.Security.SecurityProvenance)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -2871,6 +3163,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "updatedTime", _strong.UpdatedTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("updatedByModel")) {
+                if ((_strong.UpdatedBy == null)) {
+                    if ((_strong.UpdatedByKey.HasValue && context.ShouldForceLoad("updatedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "UpdatedBy");
+                        if ((_delay != null)) {
+                            _strong.UpdatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("updatedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                }
+            }
             if (context.ShouldSerialize("updatedBy")) {
                 if ((_strong.UpdatedByKey == null)) {
                 }
@@ -2906,6 +3217,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -2933,11 +3282,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -3072,7 +3416,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                             }
                                                                             else {
                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                     if ((_type != typeof(SanteDB.Core.Model.Security.SecurityRole))) {
                                                                                         SanteDB.Core.Model.Security.SecurityRole _nretVal = ((SanteDB.Core.Model.Security.SecurityRole)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -3279,6 +3623,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "updatedTime", _strong.UpdatedTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("updatedByModel")) {
+                if ((_strong.UpdatedBy == null)) {
+                    if ((_strong.UpdatedByKey.HasValue && context.ShouldForceLoad("updatedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "UpdatedBy");
+                        if ((_delay != null)) {
+                            _strong.UpdatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("updatedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                }
+            }
             if (context.ShouldSerialize("updatedBy")) {
                 if ((_strong.UpdatedByKey == null)) {
                 }
@@ -3314,6 +3677,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -3341,11 +3742,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -3608,7 +4004,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                             }
                                                                                                                                             else {
                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Security.SecurityUser))) {
                                                                                                                                                         SanteDB.Core.Model.Security.SecurityUser _nretVal = ((SanteDB.Core.Model.Security.SecurityUser)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -3754,11 +4150,37 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "religion", _strong.ReligiousAffiliationKey, context);
                 }
             }
+            if (context.ShouldSerialize("nationality")) {
+                if ((_strong.NationalityKey == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "nationality", _strong.NationalityKey, context);
+                }
+            }
+            if (context.ShouldSerialize("nationalityModel")) {
+                if ((_strong.Nationality == null)) {
+                    if ((_strong.NationalityKey.HasValue && context.ShouldForceLoad("nationalityModel", _strong.Key))) {
+                        SanteDB.Core.Model.DataTypes.Concept _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "Nationality");
+                        if ((_delay != null)) {
+                            _strong.Nationality = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "nationalityModel", _strong.Nationality, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("nationalityModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "nationalityModel", _strong.Nationality, context);
+                }
+            }
             if (context.ShouldSerialize("maritalStatusModel")) {
                 if ((_strong.MaritalStatus == null)) {
                     if ((_strong.MaritalStatusKey.HasValue && context.ShouldForceLoad("maritalStatusModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MaritalStatusKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "MaritalStatus");
                         if ((_delay != null)) {
                             _strong.MaritalStatus = _delay;
                             _loaded = true;
@@ -3777,7 +4199,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.VipStatus == null)) {
                     if ((_strong.VipStatusKey.HasValue && context.ShouldForceLoad("vipStatusModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.VipStatusKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "VipStatus");
                         if ((_delay != null)) {
                             _strong.VipStatus = _delay;
                             _loaded = true;
@@ -3796,7 +4218,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.EducationLevel == null)) {
                     if ((_strong.EducationLevelKey.HasValue && context.ShouldForceLoad("educationLevelModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.EducationLevelKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "EducationLevel");
                         if ((_delay != null)) {
                             _strong.EducationLevel = _delay;
                             _loaded = true;
@@ -3815,7 +4237,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.LivingArrangement == null)) {
                     if ((_strong.LivingArrangementKey.HasValue && context.ShouldForceLoad("livingArrangementModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.LivingArrangementKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "LivingArrangement");
                         if ((_delay != null)) {
                             _strong.LivingArrangement = _delay;
                             _loaded = true;
@@ -3834,7 +4256,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ReligiousAffiliation == null)) {
                     if ((_strong.ReligiousAffiliationKey.HasValue && context.ShouldForceLoad("religionModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReligiousAffiliationKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ReligiousAffiliation");
                         if ((_delay != null)) {
                             _strong.ReligiousAffiliation = _delay;
                             _loaded = true;
@@ -3860,7 +4282,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.EthnicGroup == null)) {
                     if ((_strong.EthnicGroupCodeKey.HasValue && context.ShouldForceLoad("ethnicityModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.EthnicGroupCodeKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "EthnicGroup");
                         if ((_delay != null)) {
                             _strong.EthnicGroup = _delay;
                             _loaded = true;
@@ -3893,7 +4315,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.GenderConcept == null)) {
                     if ((_strong.GenderConceptKey.HasValue && context.ShouldForceLoad("genderConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.GenderConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "GenderConcept");
                         if ((_delay != null)) {
                             _strong.GenderConcept = _delay;
                             _loaded = true;
@@ -3920,7 +4342,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.LanguageCommunication.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("language", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.PersonLanguageCommunication>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.PersonLanguageCommunication>(_strong, "LanguageCommunication"));
                         if ((_delay.Count > 0)) {
                             _strong.LanguageCommunication = _delay;
                             _loaded = true;
@@ -3946,7 +4368,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Occupation == null)) {
                     if ((_strong.OccupationKey.HasValue && context.ShouldForceLoad("occupationModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.OccupationKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "Occupation");
                         if ((_delay != null)) {
                             _strong.Occupation = _delay;
                             _loaded = true;
@@ -3966,7 +4388,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Addresses.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("address", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong, "Addresses"));
                         if ((_delay.Count > 0)) {
                             _strong.Addresses = _delay;
                             _loaded = true;
@@ -3985,7 +4407,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -4011,7 +4433,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             _loaded = true;
@@ -4037,7 +4459,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.DeterminerConcept == null)) {
                     if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "DeterminerConcept");
                         if ((_delay != null)) {
                             _strong.DeterminerConcept = _delay;
                             _loaded = true;
@@ -4064,7 +4486,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -4084,7 +4506,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -4104,7 +4526,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Names.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("name", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong, "Names"));
                         if ((_delay.Count > 0)) {
                             _strong.Names = _delay;
                             _loaded = true;
@@ -4124,7 +4546,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -4144,7 +4566,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -4164,7 +4586,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -4183,7 +4605,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -4210,7 +4632,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -4230,7 +4652,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Telecoms.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("telecom", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong, "Telecoms"));
                         if ((_delay.Count > 0)) {
                             _strong.Telecoms = _delay;
                             _loaded = true;
@@ -4256,7 +4678,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -4275,7 +4697,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -4302,7 +4724,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -4366,6 +4788,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -4393,12 +4853,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -4804,80 +5258,98 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                                         }
                                                                                                                                                                                                                     }
                                                                                                                                                                                                                     else {
-                                                                                                                                                                                                                        if ("religion".Equals(r.Value)) {
+                                                                                                                                                                                                                        if ("nationalityModel".Equals(r.Value)) {
                                                                                                                                                                                                                             r.Read();
-                                                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("religion", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("nationalityModel", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                             if ((_instance != null)) {
-                                                                                                                                                                                                                                _retVal.ReligiousAffiliationKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                                                _retVal.Nationality = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                                                                                             }
                                                                                                                                                                                                                         }
                                                                                                                                                                                                                         else {
-                                                                                                                                                                                                                            if ("livingArrangement".Equals(r.Value)) {
+                                                                                                                                                                                                                            if ("nationality".Equals(r.Value)) {
                                                                                                                                                                                                                                 r.Read();
-                                                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("livingArrangement", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("nationality", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                                 if ((_instance != null)) {
-                                                                                                                                                                                                                                    _retVal.LivingArrangementKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                                                    _retVal.NationalityKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                                                                                 }
                                                                                                                                                                                                                             }
                                                                                                                                                                                                                             else {
-                                                                                                                                                                                                                                if ("educationLevel".Equals(r.Value)) {
+                                                                                                                                                                                                                                if ("religion".Equals(r.Value)) {
                                                                                                                                                                                                                                     r.Read();
-                                                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("educationLevel", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("religion", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                                     if ((_instance != null)) {
-                                                                                                                                                                                                                                        _retVal.EducationLevelKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                                                        _retVal.ReligiousAffiliationKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                                                                                     }
                                                                                                                                                                                                                                 }
                                                                                                                                                                                                                                 else {
-                                                                                                                                                                                                                                    if ("maritalStatus".Equals(r.Value)) {
+                                                                                                                                                                                                                                    if ("livingArrangement".Equals(r.Value)) {
                                                                                                                                                                                                                                         r.Read();
-                                                                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("maritalStatus", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("livingArrangement", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                                         if ((_instance != null)) {
-                                                                                                                                                                                                                                            _retVal.MaritalStatusKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                                                            _retVal.LivingArrangementKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                                                                                         }
                                                                                                                                                                                                                                     }
                                                                                                                                                                                                                                     else {
-                                                                                                                                                                                                                                        if ("vipStatus".Equals(r.Value)) {
+                                                                                                                                                                                                                                        if ("educationLevel".Equals(r.Value)) {
                                                                                                                                                                                                                                             r.Read();
-                                                                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("vipStatus", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("educationLevel", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                                             if ((_instance != null)) {
-                                                                                                                                                                                                                                                _retVal.VipStatusKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                                                                _retVal.EducationLevelKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                                                                                             }
                                                                                                                                                                                                                                         }
                                                                                                                                                                                                                                         else {
-                                                                                                                                                                                                                                            if ("multipleBirthOrder".Equals(r.Value)) {
+                                                                                                                                                                                                                                            if ("maritalStatus".Equals(r.Value)) {
                                                                                                                                                                                                                                                 r.Read();
-                                                                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<int>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("multipleBirthOrder", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("maritalStatus", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                                                 if ((_instance != null)) {
-                                                                                                                                                                                                                                                    _retVal.MultipleBirthOrder = ((System.Nullable<int>)(_instance));
+                                                                                                                                                                                                                                                    _retVal.MaritalStatusKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                                                                                                 }
                                                                                                                                                                                                                                             }
                                                                                                                                                                                                                                             else {
-                                                                                                                                                                                                                                                if ("deceasedDatePrecision".Equals(r.Value)) {
+                                                                                                                                                                                                                                                if ("vipStatus".Equals(r.Value)) {
                                                                                                                                                                                                                                                     r.Read();
-                                                                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("deceasedDatePrecision", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("vipStatus", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                                                     if ((_instance != null)) {
-                                                                                                                                                                                                                                                        _retVal.DeceasedDatePrecision = ((System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>)(_instance));
+                                                                                                                                                                                                                                                        _retVal.VipStatusKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                                                                                                     }
                                                                                                                                                                                                                                                 }
                                                                                                                                                                                                                                                 else {
-                                                                                                                                                                                                                                                    if ("deceasedDate".Equals(r.Value)) {
+                                                                                                                                                                                                                                                    if ("multipleBirthOrder".Equals(r.Value)) {
                                                                                                                                                                                                                                                         r.Read();
-                                                                                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("deceasedDate", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<int>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("multipleBirthOrder", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                                                         if ((_instance != null)) {
-                                                                                                                                                                                                                                                            _retVal.DeceasedDateXml = ((string)(_instance));
+                                                                                                                                                                                                                                                            _retVal.MultipleBirthOrder = ((System.Nullable<int>)(_instance));
                                                                                                                                                                                                                                                         }
                                                                                                                                                                                                                                                     }
                                                                                                                                                                                                                                                     else {
-                                                                                                                                                                                                                                                        if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
-                                                                                                                                                                                                                                                            if ((_type != typeof(SanteDB.Core.Model.Roles.Patient))) {
-                                                                                                                                                                                                                                                                SanteDB.Core.Model.Roles.Patient _nretVal = ((SanteDB.Core.Model.Roles.Patient)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
-                                                                                                                                                                                                                                                                _nretVal.CopyObjectData(_retVal);
-                                                                                                                                                                                                                                                                return _nretVal;
+                                                                                                                                                                                                                                                        if ("deceasedDatePrecision".Equals(r.Value)) {
+                                                                                                                                                                                                                                                            r.Read();
+                                                                                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("deceasedDatePrecision", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                                                            if ((_instance != null)) {
+                                                                                                                                                                                                                                                                _retVal.DeceasedDatePrecision = ((System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>)(_instance));
                                                                                                                                                                                                                                                             }
                                                                                                                                                                                                                                                         }
                                                                                                                                                                                                                                                         else {
-                                                                                                                                                                                                                                                            r.Skip();
+                                                                                                                                                                                                                                                            if ("deceasedDate".Equals(r.Value)) {
+                                                                                                                                                                                                                                                                r.Read();
+                                                                                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("deceasedDate", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                                                                if ((_instance != null)) {
+                                                                                                                                                                                                                                                                    _retVal.DeceasedDateXml = ((string)(_instance));
+                                                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                                            else {
+                                                                                                                                                                                                                                                                if ("$type".Equals(r.Value)) {
+                                                                                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                                                                                    if ((_type != typeof(SanteDB.Core.Model.Roles.Patient))) {
+                                                                                                                                                                                                                                                                        SanteDB.Core.Model.Roles.Patient _nretVal = ((SanteDB.Core.Model.Roles.Patient)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
+                                                                                                                                                                                                                                                                        _nretVal.CopyObjectData(_retVal);
+                                                                                                                                                                                                                                                                        return _nretVal;
+                                                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                                                                else {
+                                                                                                                                                                                                                                                                    r.Skip();
+                                                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                                                            }
                                                                                                                                                                                                                                                         }
                                                                                                                                                                                                                                                     }
                                                                                                                                                                                                                                                 }
@@ -4996,7 +5468,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ProviderSpecialty == null)) {
                     if ((_strong.ProviderSpecialtyKey.HasValue && context.ShouldForceLoad("providerSpecialtyModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ProviderSpecialtyKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ProviderSpecialty");
                         if ((_delay != null)) {
                             _strong.ProviderSpecialty = _delay;
                             _loaded = true;
@@ -5029,7 +5501,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.GenderConcept == null)) {
                     if ((_strong.GenderConceptKey.HasValue && context.ShouldForceLoad("genderConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.GenderConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "GenderConcept");
                         if ((_delay != null)) {
                             _strong.GenderConcept = _delay;
                             _loaded = true;
@@ -5056,7 +5528,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.LanguageCommunication.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("language", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.PersonLanguageCommunication>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.PersonLanguageCommunication>(_strong, "LanguageCommunication"));
                         if ((_delay.Count > 0)) {
                             _strong.LanguageCommunication = _delay;
                             _loaded = true;
@@ -5082,7 +5554,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Occupation == null)) {
                     if ((_strong.OccupationKey.HasValue && context.ShouldForceLoad("occupationModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.OccupationKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "Occupation");
                         if ((_delay != null)) {
                             _strong.Occupation = _delay;
                             _loaded = true;
@@ -5102,7 +5574,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Addresses.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("address", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong, "Addresses"));
                         if ((_delay.Count > 0)) {
                             _strong.Addresses = _delay;
                             _loaded = true;
@@ -5121,7 +5593,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -5147,7 +5619,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             _loaded = true;
@@ -5173,7 +5645,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.DeterminerConcept == null)) {
                     if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "DeterminerConcept");
                         if ((_delay != null)) {
                             _strong.DeterminerConcept = _delay;
                             _loaded = true;
@@ -5200,7 +5672,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -5220,7 +5692,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -5240,7 +5712,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Names.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("name", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong, "Names"));
                         if ((_delay.Count > 0)) {
                             _strong.Names = _delay;
                             _loaded = true;
@@ -5260,7 +5732,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -5280,7 +5752,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -5300,7 +5772,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -5319,7 +5791,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -5346,7 +5818,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -5366,7 +5838,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Telecoms.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("telecom", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong, "Telecoms"));
                         if ((_delay.Count > 0)) {
                             _strong.Telecoms = _delay;
                             _loaded = true;
@@ -5392,7 +5864,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -5411,7 +5883,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -5438,7 +5910,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -5502,6 +5974,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -5529,12 +6039,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -5901,7 +6405,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                 }
                                                                                                                                                                                                 else {
                                                                                                                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Roles.Provider))) {
                                                                                                                                                                                                             SanteDB.Core.Model.Roles.Provider _nretVal = ((SanteDB.Core.Model.Roles.Provider)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -6054,6 +6558,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -6081,11 +6623,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -6204,7 +6741,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                     }
                                                                     else {
                                                                         if ("$type".Equals(r.Value)) {
-                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                             if ((_type != typeof(SanteDB.Core.Model.Patch.Patch))) {
                                                                                 SanteDB.Core.Model.Patch.Patch _nretVal = ((SanteDB.Core.Model.Patch.Patch)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -6280,7 +6817,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.SecurityApplication == null)) {
                     if ((_strong.SecurityApplicationKey.HasValue && context.ShouldForceLoad("securityApplicationModel", _strong.Key))) {
                         SanteDB.Core.Model.Security.SecurityApplication _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Security.SecurityApplication>(_strong.SecurityApplicationKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityApplication>(_strong, "SecurityApplication");
                         if ((_delay != null)) {
                             _strong.SecurityApplication = _delay;
                             _loaded = true;
@@ -6328,7 +6865,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Addresses.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("address", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong, "Addresses"));
                         if ((_delay.Count > 0)) {
                             _strong.Addresses = _delay;
                             _loaded = true;
@@ -6347,7 +6884,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -6373,7 +6910,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             _loaded = true;
@@ -6399,7 +6936,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.DeterminerConcept == null)) {
                     if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "DeterminerConcept");
                         if ((_delay != null)) {
                             _strong.DeterminerConcept = _delay;
                             _loaded = true;
@@ -6426,7 +6963,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -6446,7 +6983,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -6466,7 +7003,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Names.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("name", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong, "Names"));
                         if ((_delay.Count > 0)) {
                             _strong.Names = _delay;
                             _loaded = true;
@@ -6486,7 +7023,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -6506,7 +7043,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -6526,7 +7063,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -6545,7 +7082,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -6572,7 +7109,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -6592,7 +7129,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Telecoms.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("telecom", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong, "Telecoms"));
                         if ((_delay.Count > 0)) {
                             _strong.Telecoms = _delay;
                             _loaded = true;
@@ -6618,7 +7155,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -6637,7 +7174,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -6664,7 +7201,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -6728,6 +7265,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -6755,12 +7330,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -7095,7 +7664,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                 }
                                                                                                                                                                                 else {
                                                                                                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Entities.ApplicationEntity))) {
                                                                                                                                                                                             SanteDB.Core.Model.Entities.ApplicationEntity _nretVal = ((SanteDB.Core.Model.Entities.ApplicationEntity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -7233,7 +7802,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.FormConcept == null)) {
                     if ((_strong.FormConceptKey.HasValue && context.ShouldForceLoad("formConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.FormConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "FormConcept");
                         if ((_delay != null)) {
                             _strong.FormConcept = _delay;
                             _loaded = true;
@@ -7273,7 +7842,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.QuantityConcept == null)) {
                     if ((_strong.QuantityConceptKey.HasValue && context.ShouldForceLoad("quantityConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.QuantityConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "QuantityConcept");
                         if ((_delay != null)) {
                             _strong.QuantityConcept = _delay;
                             _loaded = true;
@@ -7300,7 +7869,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Addresses.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("address", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong, "Addresses"));
                         if ((_delay.Count > 0)) {
                             _strong.Addresses = _delay;
                             _loaded = true;
@@ -7319,7 +7888,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -7345,7 +7914,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             _loaded = true;
@@ -7371,7 +7940,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.DeterminerConcept == null)) {
                     if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "DeterminerConcept");
                         if ((_delay != null)) {
                             _strong.DeterminerConcept = _delay;
                             _loaded = true;
@@ -7398,7 +7967,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -7418,7 +7987,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -7438,7 +8007,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Names.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("name", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong, "Names"));
                         if ((_delay.Count > 0)) {
                             _strong.Names = _delay;
                             _loaded = true;
@@ -7458,7 +8027,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -7478,7 +8047,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -7498,7 +8067,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -7517,7 +8086,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -7544,7 +8113,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -7564,7 +8133,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Telecoms.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("telecom", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong, "Telecoms"));
                         if ((_delay.Count > 0)) {
                             _strong.Telecoms = _delay;
                             _loaded = true;
@@ -7590,7 +8159,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -7609,7 +8178,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -7636,7 +8205,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -7700,6 +8269,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -7727,12 +8334,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -8115,7 +8716,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                         }
                                                                                                                                                                                                         else {
                                                                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Entities.Container))) {
                                                                                                                                                                                                                     SanteDB.Core.Model.Entities.Container _nretVal = ((SanteDB.Core.Model.Entities.Container)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -8238,7 +8839,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.SecurityDevice == null)) {
                     if ((_strong.SecurityDeviceKey.HasValue && context.ShouldForceLoad("securityDeviceModel", _strong.Key))) {
                         SanteDB.Core.Model.Security.SecurityDevice _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Security.SecurityDevice>(_strong.SecurityDeviceKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityDevice>(_strong, "SecurityDevice");
                         if ((_delay != null)) {
                             _strong.SecurityDevice = _delay;
                             _loaded = true;
@@ -8272,7 +8873,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Addresses.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("address", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong, "Addresses"));
                         if ((_delay.Count > 0)) {
                             _strong.Addresses = _delay;
                             _loaded = true;
@@ -8291,7 +8892,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -8317,7 +8918,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             _loaded = true;
@@ -8343,7 +8944,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.DeterminerConcept == null)) {
                     if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "DeterminerConcept");
                         if ((_delay != null)) {
                             _strong.DeterminerConcept = _delay;
                             _loaded = true;
@@ -8370,7 +8971,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -8390,7 +8991,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -8410,7 +9011,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Names.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("name", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong, "Names"));
                         if ((_delay.Count > 0)) {
                             _strong.Names = _delay;
                             _loaded = true;
@@ -8430,7 +9031,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -8450,7 +9051,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -8470,7 +9071,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -8489,7 +9090,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -8516,7 +9117,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -8536,7 +9137,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Telecoms.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("telecom", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong, "Telecoms"));
                         if ((_delay.Count > 0)) {
                             _strong.Telecoms = _delay;
                             _loaded = true;
@@ -8562,7 +9163,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -8581,7 +9182,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -8608,7 +9209,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -8672,6 +9273,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -8699,12 +9338,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -9039,7 +9672,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                 }
                                                                                                                                                                                 else {
                                                                                                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Entities.DeviceEntity))) {
                                                                                                                                                                                             SanteDB.Core.Model.Entities.DeviceEntity _nretVal = ((SanteDB.Core.Model.Entities.DeviceEntity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -9143,7 +9776,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Addresses.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("address", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong, "Addresses"));
                         if ((_delay.Count > 0)) {
                             _strong.Addresses = _delay;
                             _loaded = true;
@@ -9162,7 +9795,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -9188,7 +9821,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             _loaded = true;
@@ -9214,7 +9847,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.DeterminerConcept == null)) {
                     if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "DeterminerConcept");
                         if ((_delay != null)) {
                             _strong.DeterminerConcept = _delay;
                             _loaded = true;
@@ -9241,7 +9874,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -9261,7 +9894,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -9281,7 +9914,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Names.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("name", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong, "Names"));
                         if ((_delay.Count > 0)) {
                             _strong.Names = _delay;
                             _loaded = true;
@@ -9301,7 +9934,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -9321,7 +9954,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -9341,7 +9974,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -9360,7 +9993,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -9387,7 +10020,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -9407,7 +10040,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Telecoms.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("telecom", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong, "Telecoms"));
                         if ((_delay.Count > 0)) {
                             _strong.Telecoms = _delay;
                             _loaded = true;
@@ -9433,7 +10066,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -9452,7 +10085,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -9479,7 +10112,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -9543,6 +10176,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -9570,12 +10241,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -9870,7 +10535,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                             }
                                                                                                                                                             else {
                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Entities.Entity))) {
                                                                                                                                                                         SanteDB.Core.Model.Entities.Entity _nretVal = ((SanteDB.Core.Model.Entities.Entity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -9968,7 +10633,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.AddressUse == null)) {
                     if ((_strong.AddressUseKey.HasValue && context.ShouldForceLoad("useModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.AddressUseKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "AddressUse");
                         if ((_delay != null)) {
                             _strong.AddressUse = _delay;
                             _loaded = true;
@@ -9995,7 +10660,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Component.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("component", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddressComponent> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddressComponent>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityAddressComponent>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityAddressComponent>(_strong, "Component"));
                         if ((_delay.Count > 0)) {
                             _strong.Component = _delay;
                             _loaded = true;
@@ -10038,6 +10703,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.Entities.Entity _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("id")) {
                 if ((_strong.Key == null)) {
                 }
@@ -10051,11 +10735,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -10142,7 +10821,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                     }
                                                     else {
                                                         if ("$type".Equals(r.Value)) {
-                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                             if ((_type != typeof(SanteDB.Core.Model.Entities.EntityAddress))) {
                                                                 SanteDB.Core.Model.Entities.EntityAddress _nretVal = ((SanteDB.Core.Model.Entities.EntityAddress)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                 _nretVal.CopyObjectData(_retVal);
@@ -10221,7 +10900,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ComponentType == null)) {
                     if ((_strong.ComponentTypeKey.HasValue && context.ShouldForceLoad("typeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ComponentTypeKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ComponentType");
                         if ((_delay != null)) {
                             _strong.ComponentType = _delay;
                             _loaded = true;
@@ -10257,6 +10936,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.Entities.EntityAddress _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.EntityAddress>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("id")) {
                 if ((_strong.Key == null)) {
                 }
@@ -10270,11 +10968,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -10345,7 +11038,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                             }
                                             else {
                                                 if ("$type".Equals(r.Value)) {
-                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                     if ((_type != typeof(SanteDB.Core.Model.Entities.EntityAddressComponent))) {
                                                         SanteDB.Core.Model.Entities.EntityAddressComponent _nretVal = ((SanteDB.Core.Model.Entities.EntityAddressComponent)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                         _nretVal.CopyObjectData(_retVal);
@@ -10440,7 +11133,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Component.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("component", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityNameComponent> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityNameComponent>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityNameComponent>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityNameComponent>(_strong, "Component"));
                         if ((_delay.Count > 0)) {
                             _strong.Component = _delay;
                             _loaded = true;
@@ -10459,7 +11152,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.NameUse == null)) {
                     if ((_strong.NameUseKey.HasValue && context.ShouldForceLoad("useModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.NameUseKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "NameUse");
                         if ((_delay != null)) {
                             _strong.NameUse = _delay;
                             _loaded = true;
@@ -10509,6 +11202,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.Entities.Entity _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("id")) {
                 if ((_strong.Key == null)) {
                 }
@@ -10522,11 +11234,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -10613,7 +11320,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                     }
                                                     else {
                                                         if ("$type".Equals(r.Value)) {
-                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                             if ((_type != typeof(SanteDB.Core.Model.Entities.EntityName))) {
                                                                 SanteDB.Core.Model.Entities.EntityName _nretVal = ((SanteDB.Core.Model.Entities.EntityName)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                 _nretVal.CopyObjectData(_retVal);
@@ -10692,7 +11399,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ComponentType == null)) {
                     if ((_strong.ComponentTypeKey.HasValue && context.ShouldForceLoad("typeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ComponentTypeKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ComponentType");
                         if ((_delay != null)) {
                             _strong.ComponentType = _delay;
                             _loaded = true;
@@ -10728,6 +11435,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.Entities.EntityName _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.EntityName>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("id")) {
                 if ((_strong.Key == null)) {
                 }
@@ -10741,11 +11467,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -10816,7 +11537,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                             }
                                             else {
                                                 if ("$type".Equals(r.Value)) {
-                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                     if ((_type != typeof(SanteDB.Core.Model.Entities.EntityNameComponent))) {
                                                         SanteDB.Core.Model.Entities.EntityNameComponent _nretVal = ((SanteDB.Core.Model.Entities.EntityNameComponent)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                         _nretVal.CopyObjectData(_retVal);
@@ -10906,6 +11627,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Entities.EntityRelationship)));
             }
+            if (context.ShouldSerialize("holderModel")) {
+                if ((_strong.Holder == null)) {
+                    if ((_strong.HolderKey.HasValue && context.ShouldForceLoad("holderModel", _strong.Key))) {
+                        SanteDB.Core.Model.Entities.Entity _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "Holder");
+                        if ((_delay != null)) {
+                            _strong.Holder = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "holderModel", _strong.Holder, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("holderModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "holderModel", _strong.Holder, context);
+                }
+            }
             if (context.ShouldSerialize("holder")) {
                 if ((_strong.HolderKey == null)) {
                 }
@@ -10938,7 +11678,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.RelationshipType == null)) {
                     if ((_strong.RelationshipTypeKey.HasValue && context.ShouldForceLoad("relationshipTypeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.RelationshipTypeKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "RelationshipType");
                         if ((_delay != null)) {
                             _strong.RelationshipType = _delay;
                             _loaded = true;
@@ -10964,7 +11704,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.RelationshipRole == null)) {
                     if ((_strong.RelationshipRoleKey.HasValue && context.ShouldForceLoad("relationshipRoleModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.RelationshipRoleKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "RelationshipRole");
                         if ((_delay != null)) {
                             _strong.RelationshipRole = _delay;
                             _loaded = true;
@@ -10990,7 +11730,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Classification == null)) {
                     if ((_strong.ClassificationKey.HasValue && context.ShouldForceLoad("classificationModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassificationKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "Classification");
                         if ((_delay != null)) {
                             _strong.Classification = _delay;
                             _loaded = true;
@@ -11012,36 +11752,11 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "classification", _strong.ClassificationKey, context);
                 }
             }
-            if (context.ShouldSerialize("holderModel"))
-            {
-                if ((_strong.Holder == null))
-                {
-                    if ((_strong.HolderKey.HasValue && context.ShouldForceLoad("holderModel", _strong.Key)))
-                    {
-                        SanteDB.Core.Model.Entities.Entity _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Entities.Entity>(_strong.HolderKey);
-                        if ((_delay != null))
-                        {
-                            _strong.Holder = _delay;
-                            _loaded = true;
-                            context.JsonContext.WritePropertyUtil(w, "holderModel", _strong.Holder, context);
-                        }
-                        else
-                        {
-                            context.RegisterMissTarget("holderModel", _strong.Key.GetValueOrDefault());
-                        }
-                    }
-                }
-                else
-                {
-                    context.JsonContext.WritePropertyUtil(w, "targetModel", _strong.TargetEntity, context);
-                }
-            }
             if (context.ShouldSerialize("targetModel")) {
                 if ((_strong.TargetEntity == null)) {
                     if ((_strong.TargetEntityKey.HasValue && context.ShouldForceLoad("targetModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Entities.Entity>(_strong.TargetEntityKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "TargetEntity");
                         if ((_delay != null)) {
                             _strong.TargetEntity = _delay;
                             _loaded = true;
@@ -11091,6 +11806,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.Entities.Entity _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("id")) {
                 if ((_strong.Key == null)) {
                 }
@@ -11104,11 +11838,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -11275,7 +12004,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                             }
                                                                                             else {
                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Entities.EntityRelationship))) {
                                                                                                         SanteDB.Core.Model.Entities.EntityRelationship _nretVal = ((SanteDB.Core.Model.Entities.EntityRelationship)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -11357,7 +12086,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.AddressUse == null)) {
                     if ((_strong.AddressUseKey.HasValue && context.ShouldForceLoad("useModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.AddressUseKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "AddressUse");
                         if ((_delay != null)) {
                             _strong.AddressUse = _delay;
                             _loaded = true;
@@ -11383,7 +12112,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -11440,6 +12169,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.Entities.Entity _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("id")) {
                 if ((_strong.Key == null)) {
                 }
@@ -11453,11 +12201,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -11560,7 +12303,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                             }
                                                             else {
                                                                 if ("$type".Equals(r.Value)) {
-                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                     if ((_type != typeof(SanteDB.Core.Model.Entities.EntityTelecomAddress))) {
                                                                         SanteDB.Core.Model.Entities.EntityTelecomAddress _nretVal = ((SanteDB.Core.Model.Entities.EntityTelecomAddress)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                         _nretVal.CopyObjectData(_retVal);
@@ -11648,7 +12391,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.FormConcept == null)) {
                     if ((_strong.FormConceptKey.HasValue && context.ShouldForceLoad("formConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.FormConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "FormConcept");
                         if ((_delay != null)) {
                             _strong.FormConcept = _delay;
                             _loaded = true;
@@ -11688,7 +12431,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.QuantityConcept == null)) {
                     if ((_strong.QuantityConceptKey.HasValue && context.ShouldForceLoad("quantityConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.QuantityConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "QuantityConcept");
                         if ((_delay != null)) {
                             _strong.QuantityConcept = _delay;
                             _loaded = true;
@@ -11715,7 +12458,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Addresses.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("address", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong, "Addresses"));
                         if ((_delay.Count > 0)) {
                             _strong.Addresses = _delay;
                             _loaded = true;
@@ -11734,7 +12477,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -11760,7 +12503,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             _loaded = true;
@@ -11786,7 +12529,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.DeterminerConcept == null)) {
                     if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "DeterminerConcept");
                         if ((_delay != null)) {
                             _strong.DeterminerConcept = _delay;
                             _loaded = true;
@@ -11813,7 +12556,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -11833,7 +12576,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -11853,7 +12596,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Names.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("name", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong, "Names"));
                         if ((_delay.Count > 0)) {
                             _strong.Names = _delay;
                             _loaded = true;
@@ -11873,7 +12616,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -11893,7 +12636,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -11913,7 +12656,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -11932,7 +12675,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -11959,7 +12702,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -11979,7 +12722,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Telecoms.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("telecom", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong, "Telecoms"));
                         if ((_delay.Count > 0)) {
                             _strong.Telecoms = _delay;
                             _loaded = true;
@@ -12005,7 +12748,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -12024,7 +12767,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -12051,7 +12794,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -12115,6 +12858,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -12142,12 +12923,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -12506,7 +13281,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                             }
                                                                                                                                                                                             else {
                                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Entities.ManufacturedMaterial))) {
                                                                                                                                                                                                         SanteDB.Core.Model.Entities.ManufacturedMaterial _nretVal = ((SanteDB.Core.Model.Entities.ManufacturedMaterial)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -12619,7 +13394,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.FormConcept == null)) {
                     if ((_strong.FormConceptKey.HasValue && context.ShouldForceLoad("formConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.FormConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "FormConcept");
                         if ((_delay != null)) {
                             _strong.FormConcept = _delay;
                             _loaded = true;
@@ -12659,7 +13434,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.QuantityConcept == null)) {
                     if ((_strong.QuantityConceptKey.HasValue && context.ShouldForceLoad("quantityConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.QuantityConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "QuantityConcept");
                         if ((_delay != null)) {
                             _strong.QuantityConcept = _delay;
                             _loaded = true;
@@ -12686,7 +13461,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Addresses.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("address", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong, "Addresses"));
                         if ((_delay.Count > 0)) {
                             _strong.Addresses = _delay;
                             _loaded = true;
@@ -12705,7 +13480,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -12731,7 +13506,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             _loaded = true;
@@ -12757,7 +13532,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.DeterminerConcept == null)) {
                     if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "DeterminerConcept");
                         if ((_delay != null)) {
                             _strong.DeterminerConcept = _delay;
                             _loaded = true;
@@ -12784,7 +13559,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -12804,7 +13579,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -12824,7 +13599,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Names.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("name", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong, "Names"));
                         if ((_delay.Count > 0)) {
                             _strong.Names = _delay;
                             _loaded = true;
@@ -12844,7 +13619,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -12864,7 +13639,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -12884,7 +13659,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -12903,7 +13678,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -12930,7 +13705,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -12950,7 +13725,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Telecoms.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("telecom", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong, "Telecoms"));
                         if ((_delay.Count > 0)) {
                             _strong.Telecoms = _delay;
                             _loaded = true;
@@ -12976,7 +13751,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -12995,7 +13770,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -13022,7 +13797,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -13086,6 +13861,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -13113,12 +13926,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -13469,7 +14276,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                         }
                                                                                                                                                                                         else {
                                                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Entities.Material))) {
                                                                                                                                                                                                     SanteDB.Core.Model.Entities.Material _nretVal = ((SanteDB.Core.Model.Entities.Material)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -13574,7 +14381,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.IndustryConcept == null)) {
                     if ((_strong.IndustryConceptKey.HasValue && context.ShouldForceLoad("industryConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.IndustryConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "IndustryConcept");
                         if ((_delay != null)) {
                             _strong.IndustryConcept = _delay;
                             _loaded = true;
@@ -13601,7 +14408,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Addresses.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("address", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong, "Addresses"));
                         if ((_delay.Count > 0)) {
                             _strong.Addresses = _delay;
                             _loaded = true;
@@ -13620,7 +14427,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -13646,7 +14453,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             _loaded = true;
@@ -13672,7 +14479,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.DeterminerConcept == null)) {
                     if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "DeterminerConcept");
                         if ((_delay != null)) {
                             _strong.DeterminerConcept = _delay;
                             _loaded = true;
@@ -13699,7 +14506,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -13719,7 +14526,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -13739,7 +14546,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Names.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("name", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong, "Names"));
                         if ((_delay.Count > 0)) {
                             _strong.Names = _delay;
                             _loaded = true;
@@ -13759,7 +14566,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -13779,7 +14586,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -13799,7 +14606,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -13818,7 +14625,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -13845,7 +14652,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -13865,7 +14672,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Telecoms.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("telecom", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong, "Telecoms"));
                         if ((_delay.Count > 0)) {
                             _strong.Telecoms = _delay;
                             _loaded = true;
@@ -13891,7 +14698,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -13910,7 +14717,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -13937,7 +14744,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -14001,6 +14808,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -14028,12 +14873,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -14344,7 +15183,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                     }
                                                                                                                                                                     else {
                                                                                                                                                                         if ("$type".Equals(r.Value)) {
-                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                             if ((_type != typeof(SanteDB.Core.Model.Entities.Organization))) {
                                                                                                                                                                                 SanteDB.Core.Model.Entities.Organization _nretVal = ((SanteDB.Core.Model.Entities.Organization)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -14458,7 +15297,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.GenderConcept == null)) {
                     if ((_strong.GenderConceptKey.HasValue && context.ShouldForceLoad("genderConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.GenderConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "GenderConcept");
                         if ((_delay != null)) {
                             _strong.GenderConcept = _delay;
                             _loaded = true;
@@ -14485,7 +15324,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.LanguageCommunication.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("language", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.PersonLanguageCommunication>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.PersonLanguageCommunication>(_strong, "LanguageCommunication"));
                         if ((_delay.Count > 0)) {
                             _strong.LanguageCommunication = _delay;
                             _loaded = true;
@@ -14511,7 +15350,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Occupation == null)) {
                     if ((_strong.OccupationKey.HasValue && context.ShouldForceLoad("occupationModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.OccupationKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "Occupation");
                         if ((_delay != null)) {
                             _strong.Occupation = _delay;
                             _loaded = true;
@@ -14531,7 +15370,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Addresses.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("address", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong, "Addresses"));
                         if ((_delay.Count > 0)) {
                             _strong.Addresses = _delay;
                             _loaded = true;
@@ -14550,7 +15389,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -14576,7 +15415,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             _loaded = true;
@@ -14602,7 +15441,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.DeterminerConcept == null)) {
                     if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "DeterminerConcept");
                         if ((_delay != null)) {
                             _strong.DeterminerConcept = _delay;
                             _loaded = true;
@@ -14629,7 +15468,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -14649,7 +15488,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -14669,7 +15508,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Names.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("name", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong, "Names"));
                         if ((_delay.Count > 0)) {
                             _strong.Names = _delay;
                             _loaded = true;
@@ -14689,7 +15528,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -14709,7 +15548,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -14729,7 +15568,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -14748,7 +15587,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -14775,7 +15614,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -14795,7 +15634,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Telecoms.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("telecom", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong, "Telecoms"));
                         if ((_delay.Count > 0)) {
                             _strong.Telecoms = _delay;
                             _loaded = true;
@@ -14821,7 +15660,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -14840,7 +15679,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -14867,7 +15706,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -14931,6 +15770,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -14958,12 +15835,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -15314,7 +16185,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                         }
                                                                                                                                                                                         else {
                                                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Entities.Person))) {
                                                                                                                                                                                                     SanteDB.Core.Model.Entities.Person _nretVal = ((SanteDB.Core.Model.Entities.Person)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -15457,6 +16328,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.Entities.Entity _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("id")) {
                 if ((_strong.Key == null)) {
                 }
@@ -15470,11 +16360,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -15553,7 +16438,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                 }
                                                 else {
                                                     if ("$type".Equals(r.Value)) {
-                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                         if ((_type != typeof(SanteDB.Core.Model.Entities.PersonLanguageCommunication))) {
                                                             SanteDB.Core.Model.Entities.PersonLanguageCommunication _nretVal = ((SanteDB.Core.Model.Entities.PersonLanguageCommunication)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                             _nretVal.CopyObjectData(_retVal);
@@ -15646,7 +16531,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Services.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("service", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.PlaceService> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.PlaceService>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.PlaceService>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.PlaceService>(_strong, "Services"));
                         if ((_delay.Count > 0)) {
                             _strong.Services = _delay;
                             _loaded = true;
@@ -15666,7 +16551,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Addresses.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("address", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong, "Addresses"));
                         if ((_delay.Count > 0)) {
                             _strong.Addresses = _delay;
                             _loaded = true;
@@ -15685,7 +16570,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -15704,7 +16589,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             _loaded = true;
@@ -15730,7 +16615,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.DeterminerConcept == null)) {
                     if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "DeterminerConcept");
                         if ((_delay != null)) {
                             _strong.DeterminerConcept = _delay;
                             _loaded = true;
@@ -15757,7 +16642,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -15777,7 +16662,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -15797,7 +16682,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Names.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("name", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong, "Names"));
                         if ((_delay.Count > 0)) {
                             _strong.Names = _delay;
                             _loaded = true;
@@ -15817,7 +16702,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -15837,7 +16722,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -15857,7 +16742,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -15876,7 +16761,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -15903,7 +16788,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -15923,7 +16808,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Telecoms.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("telecom", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong, "Telecoms"));
                         if ((_delay.Count > 0)) {
                             _strong.Telecoms = _delay;
                             _loaded = true;
@@ -15949,7 +16834,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -15968,7 +16853,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -15995,7 +16880,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -16059,6 +16944,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -16086,12 +17009,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -16410,7 +17327,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                         }
                                                                                                                                                                         else {
                                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Entities.Place))) {
                                                                                                                                                                                     SanteDB.Core.Model.Entities.Place _nretVal = ((SanteDB.Core.Model.Entities.Place)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -16511,7 +17428,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ServiceConcept == null)) {
                     if ((_strong.ServiceConceptKey.HasValue && context.ShouldForceLoad("serviceConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ServiceConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ServiceConcept");
                         if ((_delay != null)) {
                             _strong.ServiceConcept = _delay;
                             _loaded = true;
@@ -16568,6 +17485,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.Entities.Entity _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("id")) {
                 if ((_strong.Key == null)) {
                 }
@@ -16581,11 +17517,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -16672,7 +17603,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                     }
                                                     else {
                                                         if ("$type".Equals(r.Value)) {
-                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                             if ((_type != typeof(SanteDB.Core.Model.Entities.PlaceService))) {
                                                                 SanteDB.Core.Model.Entities.PlaceService _nretVal = ((SanteDB.Core.Model.Entities.PlaceService)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                 _nretVal.CopyObjectData(_retVal);
@@ -16740,6 +17671,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Entities.UserEntity)));
             }
+            if (context.ShouldSerialize("securityUserModel")) {
+                if ((_strong.SecurityUser == null)) {
+                    if ((_strong.SecurityUserKey.HasValue && context.ShouldForceLoad("securityUserModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityUser _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityUser>(_strong, "SecurityUser");
+                        if ((_delay != null)) {
+                            _strong.SecurityUser = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "securityUserModel", _strong.SecurityUser, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("securityUserModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "securityUserModel", _strong.SecurityUser, context);
+                }
+            }
             if (context.ShouldSerialize("securityUser")) {
                 if ((_strong.SecurityUserKey == null)) {
                 }
@@ -16765,7 +17715,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.GenderConcept == null)) {
                     if ((_strong.GenderConceptKey.HasValue && context.ShouldForceLoad("genderConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.GenderConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "GenderConcept");
                         if ((_delay != null)) {
                             _strong.GenderConcept = _delay;
                             _loaded = true;
@@ -16792,7 +17742,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.LanguageCommunication.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("language", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.PersonLanguageCommunication>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.PersonLanguageCommunication>(_strong, "LanguageCommunication"));
                         if ((_delay.Count > 0)) {
                             _strong.LanguageCommunication = _delay;
                             _loaded = true;
@@ -16818,7 +17768,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Occupation == null)) {
                     if ((_strong.OccupationKey.HasValue && context.ShouldForceLoad("occupationModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.OccupationKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "Occupation");
                         if ((_delay != null)) {
                             _strong.Occupation = _delay;
                             _loaded = true;
@@ -16838,7 +17788,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Addresses.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("address", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityAddress>(_strong, "Addresses"));
                         if ((_delay.Count > 0)) {
                             _strong.Addresses = _delay;
                             _loaded = true;
@@ -16857,7 +17807,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -16883,7 +17833,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.CreationActKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             _loaded = true;
@@ -16909,7 +17859,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.DeterminerConcept == null)) {
                     if ((_strong.DeterminerConceptKey.HasValue && context.ShouldForceLoad("determinerConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DeterminerConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "DeterminerConcept");
                         if ((_delay != null)) {
                             _strong.DeterminerConcept = _delay;
                             _loaded = true;
@@ -16936,7 +17886,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -16956,7 +17906,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -16976,7 +17926,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Names.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("name", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityName>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityName>(_strong, "Names"));
                         if ((_delay.Count > 0)) {
                             _strong.Names = _delay;
                             _loaded = true;
@@ -16996,7 +17946,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -17016,7 +17966,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -17036,7 +17986,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -17055,7 +18005,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -17082,7 +18032,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.EntityTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.EntityTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -17102,7 +18052,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Telecoms.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("telecom", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Entities.EntityTelecomAddress>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Entities.EntityTelecomAddress>(_strong, "Telecoms"));
                         if ((_delay.Count > 0)) {
                             _strong.Telecoms = _delay;
                             _loaded = true;
@@ -17128,7 +18078,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -17147,7 +18097,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -17174,7 +18124,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -17238,6 +18188,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -17265,12 +18253,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -17637,7 +18619,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                 }
                                                                                                                                                                                                 else {
                                                                                                                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Entities.UserEntity))) {
                                                                                                                                                                                                             SanteDB.Core.Model.Entities.UserEntity _nretVal = ((SanteDB.Core.Model.Entities.UserEntity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -17794,7 +18776,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Policy == null)) {
                     if ((_strong.PolicyKey.HasValue && context.ShouldForceLoad("policyModel", _strong.Key))) {
                         SanteDB.Core.Model.Security.SecurityPolicy _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Security.SecurityPolicy>(_strong.PolicyKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityPolicy>(_strong, "Policy");
                         if ((_delay != null)) {
                             _strong.Policy = _delay;
                             _loaded = true;
@@ -17841,7 +18823,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.AssigningApplication == null)) {
                     if ((_strong.AssigningApplicationKey.HasValue && context.ShouldForceLoad("assigningApplicationModel", _strong.Key))) {
                         SanteDB.Core.Model.Security.SecurityApplication _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Security.SecurityApplication>(_strong.AssigningApplicationKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityApplication>(_strong, "AssigningApplication");
                         if ((_delay != null)) {
                             _strong.AssigningApplication = _delay;
                             _loaded = true;
@@ -17856,11 +18838,41 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "assigningApplicationModel", _strong.AssigningApplication, context);
                 }
             }
+            if (context.ShouldSerialize("scopeModel")) {
+                if (((_strong.AuthorityScope == null) 
+                            || (_strong.AuthorityScope.Count == 0))) {
+                    if ((_strong.Key.HasValue && context.ShouldForceLoad("scopeModel", _strong.Key.Value))) {
+                        System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.Concept> _delay = null;
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "scopeModel", _strong.AuthorityScope, context);
+                }
+            }
             if (context.ShouldSerialize("updatedTime")) {
                 if ((_strong.UpdatedTimeXml == null)) {
                 }
                 else {
                     context.JsonContext.WritePropertyUtil(w, "updatedTime", _strong.UpdatedTimeXml, context);
+                }
+            }
+            if (context.ShouldSerialize("updatedByModel")) {
+                if ((_strong.UpdatedBy == null)) {
+                    if ((_strong.UpdatedByKey.HasValue && context.ShouldForceLoad("updatedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "UpdatedBy");
+                        if ((_delay != null)) {
+                            _strong.UpdatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("updatedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
                 }
             }
             if (context.ShouldSerialize("updatedBy")) {
@@ -17898,6 +18910,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -17925,11 +18975,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -18160,7 +19205,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                             }
                                                                                                                             else {
                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.AssigningAuthority))) {
                                                                                                                                         SanteDB.Core.Model.DataTypes.AssigningAuthority _nretVal = ((SanteDB.Core.Model.DataTypes.AssigningAuthority)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -18302,6 +19347,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "updatedTime", _strong.UpdatedTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("updatedByModel")) {
+                if ((_strong.UpdatedBy == null)) {
+                    if ((_strong.UpdatedByKey.HasValue && context.ShouldForceLoad("updatedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "UpdatedBy");
+                        if ((_delay != null)) {
+                            _strong.UpdatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("updatedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                }
+            }
             if (context.ShouldSerialize("updatedBy")) {
                 if ((_strong.UpdatedByKey == null)) {
                 }
@@ -18337,6 +19401,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -18364,11 +19466,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -18543,7 +19640,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                 }
                                                                                                 else {
                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                         if ((_type != typeof(SanteDB.Core.Model.DataTypes.CodeSystem))) {
                                                                                                             SanteDB.Core.Model.DataTypes.CodeSystem _nretVal = ((SanteDB.Core.Model.DataTypes.CodeSystem)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -18647,7 +19744,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -18667,7 +19764,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationship.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ConceptRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ConceptRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ConceptRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ConceptRelationship>(_strong, "Relationship"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationship = _delay;
                             _loaded = true;
@@ -18693,7 +19790,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Class == null)) {
                     if ((_strong.ClassKey.HasValue && context.ShouldForceLoad("conceptClassModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.ConceptClass _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.ConceptClass>(_strong.ClassKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.ConceptClass>(_strong, "Class");
                         if ((_delay != null)) {
                             _strong.Class = _delay;
                             _loaded = true;
@@ -18713,7 +19810,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.ReferenceTerms.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("referenceTerm", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ConceptReferenceTerm> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ConceptReferenceTerm>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ConceptReferenceTerm>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ConceptReferenceTerm>(_strong, "ReferenceTerms"));
                         if ((_delay.Count > 0)) {
                             _strong.ReferenceTerms = _delay;
                             _loaded = true;
@@ -18733,7 +19830,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.ConceptNames.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("name", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ConceptName> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ConceptName>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ConceptName>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ConceptName>(_strong, "ConceptNames"));
                         if ((_delay.Count > 0)) {
                             _strong.ConceptNames = _delay;
                             _loaded = true;
@@ -18754,6 +19851,17 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
                 else {
                     context.JsonContext.WritePropertyUtil(w, "conceptSet", _strong.ConceptSetsXml, context);
+                }
+            }
+            if (context.ShouldSerialize("conceptSetModel")) {
+                if (((_strong.ConceptSets == null) 
+                            || (_strong.ConceptSets.Count == 0))) {
+                    if ((_strong.Key.HasValue && context.ShouldForceLoad("conceptSetModel", _strong.Key.Value))) {
+                        System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ConceptSet> _delay = null;
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "conceptSetModel", _strong.ConceptSets, context);
                 }
             }
             if (context.ShouldSerialize("previousVersion")) {
@@ -18805,6 +19913,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -18832,12 +19978,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -19044,7 +20184,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                 }
                                                                                                                 else {
                                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                         if ((_type != typeof(SanteDB.Core.Model.DataTypes.Concept))) {
                                                                                                                             SanteDB.Core.Model.DataTypes.Concept _nretVal = ((SanteDB.Core.Model.DataTypes.Concept)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -19148,6 +20288,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "updatedTime", _strong.UpdatedTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("updatedByModel")) {
+                if ((_strong.UpdatedBy == null)) {
+                    if ((_strong.UpdatedByKey.HasValue && context.ShouldForceLoad("updatedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "UpdatedBy");
+                        if ((_delay != null)) {
+                            _strong.UpdatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("updatedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                }
+            }
             if (context.ShouldSerialize("updatedBy")) {
                 if ((_strong.UpdatedByKey == null)) {
                 }
@@ -19183,6 +20342,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -19210,11 +20407,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -19349,7 +20541,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                             }
                                                                             else {
                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptClass))) {
                                                                                         SanteDB.Core.Model.DataTypes.ConceptClass _nretVal = ((SanteDB.Core.Model.DataTypes.ConceptClass)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -19465,6 +20657,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.DataTypes.Concept _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("id")) {
                 if ((_strong.Key == null)) {
                 }
@@ -19478,11 +20689,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -19561,7 +20767,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                 }
                                                 else {
                                                     if ("$type".Equals(r.Value)) {
-                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                         if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptName))) {
                                                             SanteDB.Core.Model.DataTypes.ConceptName _nretVal = ((SanteDB.Core.Model.DataTypes.ConceptName)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                             _nretVal.CopyObjectData(_retVal);
@@ -19663,7 +20869,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ReferenceTerm == null)) {
                     if ((_strong.ReferenceTermKey.HasValue && context.ShouldForceLoad("termModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.ReferenceTerm _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.ReferenceTerm>(_strong.ReferenceTermKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.ReferenceTerm>(_strong, "ReferenceTerm");
                         if ((_delay != null)) {
                             _strong.ReferenceTerm = _delay;
                             _loaded = true;
@@ -19689,7 +20895,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.RelationshipType == null)) {
                     if ((_strong.RelationshipTypeKey.HasValue && context.ShouldForceLoad("relationshipTypeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.ConceptRelationshipType _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.ConceptRelationshipType>(_strong.RelationshipTypeKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.ConceptRelationshipType>(_strong, "RelationshipType");
                         if ((_delay != null)) {
                             _strong.RelationshipType = _delay;
                             _loaded = true;
@@ -19732,6 +20938,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.DataTypes.Concept _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("id")) {
                 if ((_strong.Key == null)) {
                 }
@@ -19745,11 +20970,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -19844,7 +21064,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                         }
                                                         else {
                                                             if ("$type".Equals(r.Value)) {
-                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                 if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptReferenceTerm))) {
                                                                     SanteDB.Core.Model.DataTypes.ConceptReferenceTerm _nretVal = ((SanteDB.Core.Model.DataTypes.ConceptReferenceTerm)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                     _nretVal.CopyObjectData(_retVal);
@@ -19924,7 +21144,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TargetConcept == null)) {
                     if ((_strong.TargetConceptKey.HasValue && context.ShouldForceLoad("targetConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TargetConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TargetConcept");
                         if ((_delay != null)) {
                             _strong.TargetConcept = _delay;
                             _loaded = true;
@@ -19950,7 +21170,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.RelationshipType == null)) {
                     if ((_strong.RelationshipTypeKey.HasValue && context.ShouldForceLoad("relationshipTypeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.ConceptRelationshipType _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.ConceptRelationshipType>(_strong.RelationshipTypeKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.ConceptRelationshipType>(_strong, "RelationshipType");
                         if ((_delay != null)) {
                             _strong.RelationshipType = _delay;
                             _loaded = true;
@@ -19993,6 +21213,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.DataTypes.Concept _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("id")) {
                 if ((_strong.Key == null)) {
                 }
@@ -20006,11 +21245,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -20105,7 +21339,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                         }
                                                         else {
                                                             if ("$type".Equals(r.Value)) {
-                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                 if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptRelationship))) {
                                                                     SanteDB.Core.Model.DataTypes.ConceptRelationship _nretVal = ((SanteDB.Core.Model.DataTypes.ConceptRelationship)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                     _nretVal.CopyObjectData(_retVal);
@@ -20195,6 +21429,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "updatedTime", _strong.UpdatedTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("updatedByModel")) {
+                if ((_strong.UpdatedBy == null)) {
+                    if ((_strong.UpdatedByKey.HasValue && context.ShouldForceLoad("updatedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "UpdatedBy");
+                        if ((_delay != null)) {
+                            _strong.UpdatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("updatedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                }
+            }
             if (context.ShouldSerialize("updatedBy")) {
                 if ((_strong.UpdatedByKey == null)) {
                 }
@@ -20230,6 +21483,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -20257,11 +21548,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -20396,7 +21682,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                             }
                                                                             else {
                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptRelationshipType))) {
                                                                                         SanteDB.Core.Model.DataTypes.ConceptRelationshipType _nretVal = ((SanteDB.Core.Model.DataTypes.ConceptRelationshipType)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -20520,6 +21806,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "updatedTime", _strong.UpdatedTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("updatedByModel")) {
+                if ((_strong.UpdatedBy == null)) {
+                    if ((_strong.UpdatedByKey.HasValue && context.ShouldForceLoad("updatedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "UpdatedBy");
+                        if ((_delay != null)) {
+                            _strong.UpdatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("updatedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                }
+            }
             if (context.ShouldSerialize("updatedBy")) {
                 if ((_strong.UpdatedByKey == null)) {
                 }
@@ -20555,6 +21860,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -20582,11 +21925,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -20753,7 +22091,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                             }
                                                                                             else {
                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptSet))) {
                                                                                                         SanteDB.Core.Model.DataTypes.ConceptSet _nretVal = ((SanteDB.Core.Model.DataTypes.ConceptSet)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -20849,7 +22187,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ExtensionType == null)) {
                     if ((_strong.ExtensionTypeKey.HasValue && context.ShouldForceLoad("extensionTypeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.ExtensionType _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.ExtensionType>(_strong.ExtensionTypeKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.ExtensionType>(_strong, "ExtensionType");
                         if ((_delay != null)) {
                             _strong.ExtensionType = _delay;
                             _loaded = true;
@@ -20899,6 +22237,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.Entities.Entity _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("id")) {
                 if ((_strong.Key == null)) {
                 }
@@ -20912,11 +22269,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -21011,7 +22363,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                         }
                                                         else {
                                                             if ("$type".Equals(r.Value)) {
-                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                 if ((_type != typeof(SanteDB.Core.Model.DataTypes.EntityExtension))) {
                                                                     SanteDB.Core.Model.DataTypes.EntityExtension _nretVal = ((SanteDB.Core.Model.DataTypes.EntityExtension)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                     _nretVal.CopyObjectData(_retVal);
@@ -21122,7 +22474,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ExtensionType == null)) {
                     if ((_strong.ExtensionTypeKey.HasValue && context.ShouldForceLoad("extensionTypeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.ExtensionType _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.ExtensionType>(_strong.ExtensionTypeKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.ExtensionType>(_strong, "ExtensionType");
                         if ((_delay != null)) {
                             _strong.ExtensionType = _delay;
                             _loaded = true;
@@ -21172,6 +22524,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.Acts.Act _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("id")) {
                 if ((_strong.Key == null)) {
                 }
@@ -21185,11 +22556,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -21284,7 +22650,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                         }
                                                         else {
                                                             if ("$type".Equals(r.Value)) {
-                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                 if ((_type != typeof(SanteDB.Core.Model.DataTypes.ActExtension))) {
                                                                     SanteDB.Core.Model.DataTypes.ActExtension _nretVal = ((SanteDB.Core.Model.DataTypes.ActExtension)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                     _nretVal.CopyObjectData(_retVal);
@@ -21398,6 +22764,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "updatedTime", _strong.UpdatedTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("updatedByModel")) {
+                if ((_strong.UpdatedBy == null)) {
+                    if ((_strong.UpdatedByKey.HasValue && context.ShouldForceLoad("updatedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "UpdatedBy");
+                        if ((_delay != null)) {
+                            _strong.UpdatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("updatedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                }
+            }
             if (context.ShouldSerialize("updatedBy")) {
                 if ((_strong.UpdatedByKey == null)) {
                 }
@@ -21433,6 +22818,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -21460,11 +22883,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -21599,7 +23017,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                             }
                                                                             else {
                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ExtensionType))) {
                                                                                         SanteDB.Core.Model.DataTypes.ExtensionType _nretVal = ((SanteDB.Core.Model.DataTypes.ExtensionType)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -21715,11 +23133,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
             }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
-            }
         }
         
         public object Deserialize(Newtonsoft.Json.JsonReader r, System.Type asType, SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext context) {
@@ -21773,7 +23186,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                     }
                                     else {
                                         if ("$type".Equals(r.Value)) {
-                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                             if ((_type != typeof(SanteDB.Core.Model.DataTypes.GeoTag))) {
                                                 SanteDB.Core.Model.DataTypes.GeoTag _nretVal = ((SanteDB.Core.Model.DataTypes.GeoTag)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                 _nretVal.CopyObjectData(_retVal);
@@ -21811,11 +23224,11 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
     }
     
-    public class IdentifiedDataReferenceViewModelSerializer : SanteDB.Core.Applets.ViewModel.Json.IJsonViewModelTypeFormatter {
+    public class ReferenceViewModelSerializer : SanteDB.Core.Applets.ViewModel.Json.IJsonViewModelTypeFormatter {
         
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
-        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(IdentifiedDataReferenceViewModelSerializer));
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ReferenceViewModelSerializer));
         
         public System.Type HandlesType {
             get {
@@ -21851,11 +23264,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
             }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
-            }
         }
         
         public object Deserialize(Newtonsoft.Json.JsonReader r, System.Type asType, SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext context) {
@@ -21885,7 +23293,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                         }
                         else {
                             if ("$type".Equals(r.Value)) {
-                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                 if ((_type != typeof(SanteDB.Core.Model.DataTypes.IdentifiedDataReference))) {
                                     SanteDB.Core.Model.DataTypes.IdentifiedDataReference _nretVal = ((SanteDB.Core.Model.DataTypes.IdentifiedDataReference)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                     _nretVal.CopyObjectData(_retVal);
@@ -21978,7 +23386,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.IdentifierType == null)) {
                     if ((_strong.IdentifierTypeKey.HasValue && context.ShouldForceLoad("type", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.IdentifierType _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.IdentifierType>(_strong.IdentifierTypeKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.IdentifierType>(_strong, "IdentifierType");
                         if ((_delay != null)) {
                             _strong.IdentifierType = _delay;
                             _loaded = true;
@@ -22028,6 +23436,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.Entities.Entity _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("id")) {
                 if ((_strong.Key == null)) {
                 }
@@ -22041,11 +23468,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -22156,7 +23578,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                 }
                                                                 else {
                                                                     if ("$type".Equals(r.Value)) {
-                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                         if ((_type != typeof(SanteDB.Core.Model.DataTypes.EntityIdentifier))) {
                                                                             SanteDB.Core.Model.DataTypes.EntityIdentifier _nretVal = ((SanteDB.Core.Model.DataTypes.EntityIdentifier)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                             _nretVal.CopyObjectData(_retVal);
@@ -22259,7 +23681,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.IdentifierType == null)) {
                     if ((_strong.IdentifierTypeKey.HasValue && context.ShouldForceLoad("type", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.IdentifierType _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.IdentifierType>(_strong.IdentifierTypeKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.IdentifierType>(_strong, "IdentifierType");
                         if ((_delay != null)) {
                             _strong.IdentifierType = _delay;
                             _loaded = true;
@@ -22309,6 +23731,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.Acts.Act _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("id")) {
                 if ((_strong.Key == null)) {
                 }
@@ -22322,11 +23763,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -22437,7 +23873,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                 }
                                                                 else {
                                                                     if ("$type".Equals(r.Value)) {
-                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                         if ((_type != typeof(SanteDB.Core.Model.DataTypes.ActIdentifier))) {
                                                                             SanteDB.Core.Model.DataTypes.ActIdentifier _nretVal = ((SanteDB.Core.Model.DataTypes.ActIdentifier)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                             _nretVal.CopyObjectData(_retVal);
@@ -22526,7 +23962,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -22545,7 +23981,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ScopeConcept == null)) {
                     if ((_strong.ScopeConceptKey.HasValue && context.ShouldForceLoad("scopeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ScopeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ScopeConcept");
                         if ((_delay != null)) {
                             _strong.ScopeConcept = _delay;
                             _loaded = true;
@@ -22588,6 +24024,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -22615,11 +24089,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -22746,7 +24215,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                         }
                                                                         else {
                                                                             if ("$type".Equals(r.Value)) {
-                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                 if ((_type != typeof(SanteDB.Core.Model.DataTypes.IdentifierType))) {
                                                                                     SanteDB.Core.Model.DataTypes.IdentifierType _nretVal = ((SanteDB.Core.Model.DataTypes.IdentifierType)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -22837,7 +24306,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Author == null)) {
                     if ((_strong.AuthorKey.HasValue && context.ShouldForceLoad("authorModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Entities.Entity>(_strong.AuthorKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "Author");
                         if ((_delay != null)) {
                             _strong.Author = _delay;
                             _loaded = true;
@@ -22880,6 +24349,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.Entities.Entity _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("id")) {
                 if ((_strong.Key == null)) {
                 }
@@ -22893,11 +24381,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -22984,7 +24467,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                     }
                                                     else {
                                                         if ("$type".Equals(r.Value)) {
-                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                             if ((_type != typeof(SanteDB.Core.Model.DataTypes.EntityNote))) {
                                                                 SanteDB.Core.Model.DataTypes.EntityNote _nretVal = ((SanteDB.Core.Model.DataTypes.EntityNote)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                 _nretVal.CopyObjectData(_retVal);
@@ -23070,7 +24553,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Author == null)) {
                     if ((_strong.AuthorKey.HasValue && context.ShouldForceLoad("authorModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Entities.Entity>(_strong.AuthorKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "Author");
                         if ((_delay != null)) {
                             _strong.Author = _delay;
                             _loaded = true;
@@ -23113,6 +24596,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.Acts.Act _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("id")) {
                 if ((_strong.Key == null)) {
                 }
@@ -23126,11 +24628,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -23217,7 +24714,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                     }
                                                     else {
                                                         if ("$type".Equals(r.Value)) {
-                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                             if ((_type != typeof(SanteDB.Core.Model.DataTypes.ActNote))) {
                                                                 SanteDB.Core.Model.DataTypes.ActNote _nretVal = ((SanteDB.Core.Model.DataTypes.ActNote)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                 _nretVal.CopyObjectData(_retVal);
@@ -23296,7 +24793,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.CodeSystem == null)) {
                     if ((_strong.CodeSystemKey.HasValue && context.ShouldForceLoad("codeSystemModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.CodeSystem _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.CodeSystem>(_strong.CodeSystemKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.CodeSystem>(_strong, "CodeSystem");
                         if ((_delay != null)) {
                             _strong.CodeSystem = _delay;
                             _loaded = true;
@@ -23323,7 +24820,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.DisplayNames.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("name", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ReferenceTermName> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ReferenceTermName>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ReferenceTermName>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ReferenceTermName>(_strong, "DisplayNames"));
                         if ((_delay.Count > 0)) {
                             _strong.DisplayNames = _delay;
                             _loaded = true;
@@ -23343,6 +24840,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
                 else {
                     context.JsonContext.WritePropertyUtil(w, "updatedTime", _strong.UpdatedTimeXml, context);
+                }
+            }
+            if (context.ShouldSerialize("updatedByModel")) {
+                if ((_strong.UpdatedBy == null)) {
+                    if ((_strong.UpdatedByKey.HasValue && context.ShouldForceLoad("updatedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "UpdatedBy");
+                        if ((_delay != null)) {
+                            _strong.UpdatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("updatedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
                 }
             }
             if (context.ShouldSerialize("updatedBy")) {
@@ -23380,6 +24896,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -23407,11 +24961,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -23562,7 +25111,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                     }
                                                                                     else {
                                                                                         if ("$type".Equals(r.Value)) {
-                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                             if ((_type != typeof(SanteDB.Core.Model.DataTypes.ReferenceTerm))) {
                                                                                                 SanteDB.Core.Model.DataTypes.ReferenceTerm _nretVal = ((SanteDB.Core.Model.DataTypes.ReferenceTerm)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -23687,6 +25236,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -23714,11 +25301,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -23837,7 +25419,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                     }
                                                                     else {
                                                                         if ("$type".Equals(r.Value)) {
-                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                             if ((_type != typeof(SanteDB.Core.Model.DataTypes.ReferenceTermName))) {
                                                                                 SanteDB.Core.Model.DataTypes.ReferenceTermName _nretVal = ((SanteDB.Core.Model.DataTypes.ReferenceTermName)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -23954,6 +25536,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.Entities.Entity _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("creationTimeModel")) {
                 if ((_strong.CreationTime == null)) {
                 }
@@ -23980,6 +25581,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
                 else {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
+                }
+            }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
                 }
             }
             if (context.ShouldSerialize("createdBy")) {
@@ -24009,11 +25648,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -24140,7 +25774,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                         }
                                                                         else {
                                                                             if ("$type".Equals(r.Value)) {
-                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                 if ((_type != typeof(SanteDB.Core.Model.DataTypes.EntityTag))) {
                                                                                     SanteDB.Core.Model.DataTypes.EntityTag _nretVal = ((SanteDB.Core.Model.DataTypes.EntityTag)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -24258,6 +25892,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.Acts.Act _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("creationTimeModel")) {
                 if ((_strong.CreationTime == null)) {
                 }
@@ -24284,6 +25937,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
                 else {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
+                }
+            }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
                 }
             }
             if (context.ShouldSerialize("createdBy")) {
@@ -24313,11 +26004,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -24444,7 +26130,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                         }
                                                                         else {
                                                                             if ("$type".Equals(r.Value)) {
-                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                 if ((_type != typeof(SanteDB.Core.Model.DataTypes.ActTag))) {
                                                                                     SanteDB.Core.Model.DataTypes.ActTag _nretVal = ((SanteDB.Core.Model.DataTypes.ActTag)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -24576,6 +26262,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "updatedTime", _strong.UpdatedTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("updatedByModel")) {
+                if ((_strong.UpdatedBy == null)) {
+                    if ((_strong.UpdatedByKey.HasValue && context.ShouldForceLoad("updatedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "UpdatedBy");
+                        if ((_delay != null)) {
+                            _strong.UpdatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("updatedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "updatedByModel", _strong.UpdatedBy, context);
+                }
+            }
             if (context.ShouldSerialize("updatedBy")) {
                 if ((_strong.UpdatedByKey == null)) {
                 }
@@ -24611,6 +26316,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -24638,11 +26381,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -24793,7 +26531,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                     }
                                                                                     else {
                                                                                         if ("$type".Equals(r.Value)) {
-                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                             if ((_type != typeof(SanteDB.Core.Model.DataTypes.TemplateDefinition))) {
                                                                                                 SanteDB.Core.Model.DataTypes.TemplateDefinition _nretVal = ((SanteDB.Core.Model.DataTypes.TemplateDefinition)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -24930,11 +26668,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
             }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
-            }
         }
         
         public object Deserialize(Newtonsoft.Json.JsonReader r, System.Type asType, SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext context) {
@@ -25004,7 +26737,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                             }
                                             else {
                                                 if ("$type".Equals(r.Value)) {
-                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                     if ((_type != typeof(SanteDB.Core.Model.Collection.Bundle))) {
                                                         SanteDB.Core.Model.Collection.Bundle _nretVal = ((SanteDB.Core.Model.Collection.Bundle)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                         _nretVal.CopyObjectData(_retVal);
@@ -25088,7 +26821,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Currency == null)) {
                     if ((_strong.CurrencyKey.HasValue && context.ShouldForceLoad("currencyModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.CurrencyKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "Currency");
                         if ((_delay != null)) {
                             _strong.Currency = _delay;
                             _loaded = true;
@@ -25135,7 +26868,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -25210,7 +26943,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -25229,7 +26962,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.MoodConcept == null)) {
                     if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "MoodConcept");
                         if ((_delay != null)) {
                             _strong.MoodConcept = _delay;
                             _loaded = true;
@@ -25248,7 +26981,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ReasonConcept == null)) {
                     if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ReasonConcept");
                         if ((_delay != null)) {
                             _strong.ReasonConcept = _delay;
                             _loaded = true;
@@ -25267,7 +27000,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -25286,7 +27019,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -25306,7 +27039,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -25326,7 +27059,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -25346,7 +27079,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -25366,7 +27099,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -25386,7 +27119,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -25406,7 +27139,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -25426,7 +27159,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Protocols.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("protocol", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong, "Protocols"));
                         if ((_delay.Count > 0)) {
                             _strong.Protocols = _delay;
                             _loaded = true;
@@ -25446,7 +27179,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -25517,6 +27250,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -25544,12 +27315,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -25908,7 +27673,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                             }
                                                                                                                                                                                             else {
                                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Acts.Account))) {
                                                                                                                                                                                                         SanteDB.Core.Model.Acts.Account _nretVal = ((SanteDB.Core.Model.Acts.Account)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -26028,7 +27793,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -26103,7 +27868,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -26122,7 +27887,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.MoodConcept == null)) {
                     if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "MoodConcept");
                         if ((_delay != null)) {
                             _strong.MoodConcept = _delay;
                             _loaded = true;
@@ -26141,7 +27906,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ReasonConcept == null)) {
                     if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ReasonConcept");
                         if ((_delay != null)) {
                             _strong.ReasonConcept = _delay;
                             _loaded = true;
@@ -26160,7 +27925,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -26179,7 +27944,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -26199,7 +27964,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -26219,7 +27984,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -26239,7 +28004,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -26259,7 +28024,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -26279,7 +28044,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -26299,7 +28064,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -26319,7 +28084,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Protocols.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("protocol", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong, "Protocols"));
                         if ((_delay.Count > 0)) {
                             _strong.Protocols = _delay;
                             _loaded = true;
@@ -26339,7 +28104,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -26410,6 +28175,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -26437,12 +28240,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -26761,7 +28558,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                         }
                                                                                                                                                                         else {
                                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Acts.Act))) {
                                                                                                                                                                                     SanteDB.Core.Model.Acts.Act _nretVal = ((SanteDB.Core.Model.Acts.Act)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -26862,7 +28659,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Classification == null)) {
                     if ((_strong.ClassificationKey.HasValue && context.ShouldForceLoad("classificationModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassificationKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "Classification");
                         if ((_delay != null)) {
                             _strong.Classification = _delay;
                             _loaded = true;
@@ -26902,7 +28699,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.PlayerEntity == null)) {
                     if ((_strong.PlayerEntityKey.HasValue && context.ShouldForceLoad("playerModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Entities.Entity>(_strong.PlayerEntityKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "PlayerEntity");
                         if ((_delay != null)) {
                             _strong.PlayerEntity = _delay;
                             _loaded = true;
@@ -26921,7 +28718,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ParticipationRole == null)) {
                     if ((_strong.ParticipationRoleKey.HasValue && context.ShouldForceLoad("participationRoleModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ParticipationRoleKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ParticipationRole");
                         if ((_delay != null)) {
                             _strong.ParticipationRole = _delay;
                             _loaded = true;
@@ -26941,6 +28738,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
                 else {
                     context.JsonContext.WritePropertyUtil(w, "act", _strong.ActKey, context);
+                }
+            }
+            if (context.ShouldSerialize("actModel")) {
+                if ((_strong.Act == null)) {
+                    if ((_strong.ActKey.HasValue && context.ShouldForceLoad("actModel", _strong.Key))) {
+                        SanteDB.Core.Model.Acts.Act _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "Act");
+                        if ((_delay != null)) {
+                            _strong.Act = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "actModel", _strong.Act, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("actModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "actModel", _strong.Act, context);
                 }
             }
             if (context.ShouldSerialize("quantity")) {
@@ -26978,6 +28794,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.Acts.Act _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("id")) {
                 if ((_strong.Key == null)) {
                 }
@@ -26991,11 +28826,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -27130,7 +28960,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                             }
                                                                             else {
                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                     if ((_type != typeof(SanteDB.Core.Model.Acts.ActParticipation))) {
                                                                                         SanteDB.Core.Model.Acts.ActParticipation _nretVal = ((SanteDB.Core.Model.Acts.ActParticipation)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -27215,7 +29045,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Protocol == null)) {
                     if ((_strong.ProtocolKey != System.Guid.Empty && context.ShouldForceLoad("protocolModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Protocol _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Protocol>(_strong.ProtocolKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Protocol>(_strong, "Protocol");
                         if ((_delay != null)) {
                             _strong.Protocol = _delay;
                             _loaded = true;
@@ -27258,6 +29088,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.Acts.Act _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("id")) {
                 if ((_strong.Key == null)) {
                 }
@@ -27271,11 +29120,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -27354,7 +29198,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                 }
                                                 else {
                                                     if ("$type".Equals(r.Value)) {
-                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                         if ((_type != typeof(SanteDB.Core.Model.Acts.ActProtocol))) {
                                                             SanteDB.Core.Model.Acts.ActProtocol _nretVal = ((SanteDB.Core.Model.Acts.ActProtocol)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                             _nretVal.CopyObjectData(_retVal);
@@ -27425,7 +29269,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Classification == null)) {
                     if ((_strong.ClassificationKey.HasValue && context.ShouldForceLoad("classificationModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassificationKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "Classification");
                         if ((_delay != null)) {
                             _strong.Classification = _delay;
                             _loaded = true;
@@ -27458,7 +29302,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TargetAct == null)) {
                     if ((_strong.TargetActKey.HasValue && context.ShouldForceLoad("targetModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.Acts.Act>(_strong.TargetActKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "TargetAct");
                         if ((_delay != null)) {
                             _strong.TargetAct = _delay;
                             _loaded = true;
@@ -27484,7 +29328,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.RelationshipType == null)) {
                     if ((_strong.RelationshipTypeKey.HasValue && context.ShouldForceLoad("relationshipTypeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.RelationshipTypeKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "RelationshipType");
                         if ((_delay != null)) {
                             _strong.RelationshipType = _delay;
                             _loaded = true;
@@ -27527,6 +29371,25 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "source", _strong.SourceEntityKey, context);
                 }
             }
+            if (context.ShouldSerialize("sourceModel")) {
+                if ((_strong.SourceEntity == null)) {
+                    if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
+                        SanteDB.Core.Model.Acts.Act _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity");
+                        if ((_delay != null)) {
+                            _strong.SourceEntity = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("sourceModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
+                }
+            }
             if (context.ShouldSerialize("id")) {
                 if ((_strong.Key == null)) {
                 }
@@ -27540,11 +29403,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -27655,7 +29513,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                 }
                                                                 else {
                                                                     if ("$type".Equals(r.Value)) {
-                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                         if ((_type != typeof(SanteDB.Core.Model.Acts.ActRelationship))) {
                                                                             SanteDB.Core.Model.Acts.ActRelationship _nretVal = ((SanteDB.Core.Model.Acts.ActRelationship)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                             _nretVal.CopyObjectData(_retVal);
@@ -27772,6 +29630,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -27799,11 +29695,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -27914,7 +29805,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                 }
                                                                 else {
                                                                     if ("$type".Equals(r.Value)) {
-                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                         if ((_type != typeof(SanteDB.Core.Model.Acts.CarePlan))) {
                                                                             SanteDB.Core.Model.Acts.CarePlan _nretVal = ((SanteDB.Core.Model.Acts.CarePlan)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                             _nretVal.CopyObjectData(_retVal);
@@ -28003,7 +29894,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -28078,7 +29969,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -28097,7 +29988,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.MoodConcept == null)) {
                     if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "MoodConcept");
                         if ((_delay != null)) {
                             _strong.MoodConcept = _delay;
                             _loaded = true;
@@ -28116,7 +30007,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ReasonConcept == null)) {
                     if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ReasonConcept");
                         if ((_delay != null)) {
                             _strong.ReasonConcept = _delay;
                             _loaded = true;
@@ -28135,7 +30026,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -28154,7 +30045,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -28174,7 +30065,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -28194,7 +30085,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -28214,7 +30105,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -28234,7 +30125,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -28254,7 +30145,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -28274,7 +30165,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -28294,7 +30185,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Protocols.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("protocol", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong, "Protocols"));
                         if ((_delay.Count > 0)) {
                             _strong.Protocols = _delay;
                             _loaded = true;
@@ -28314,7 +30205,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -28385,6 +30276,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -28412,12 +30341,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -28736,7 +30659,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                         }
                                                                                                                                                                         else {
                                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Acts.ControlAct))) {
                                                                                                                                                                                     SanteDB.Core.Model.Acts.ControlAct _nretVal = ((SanteDB.Core.Model.Acts.ControlAct)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -28844,7 +30767,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.PaymentTerms == null)) {
                     if ((_strong.PaymentTermsKey.HasValue && context.ShouldForceLoad("paymentTermsModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.PaymentTermsKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "PaymentTerms");
                         if ((_delay != null)) {
                             _strong.PaymentTerms = _delay;
                             _loaded = true;
@@ -28877,7 +30800,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -28952,7 +30875,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -28971,7 +30894,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.MoodConcept == null)) {
                     if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "MoodConcept");
                         if ((_delay != null)) {
                             _strong.MoodConcept = _delay;
                             _loaded = true;
@@ -28990,7 +30913,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ReasonConcept == null)) {
                     if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ReasonConcept");
                         if ((_delay != null)) {
                             _strong.ReasonConcept = _delay;
                             _loaded = true;
@@ -29009,7 +30932,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -29028,7 +30951,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -29048,7 +30971,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -29068,7 +30991,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -29088,7 +31011,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -29108,7 +31031,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -29128,7 +31051,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -29148,7 +31071,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -29168,7 +31091,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Protocols.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("protocol", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong, "Protocols"));
                         if ((_delay.Count > 0)) {
                             _strong.Protocols = _delay;
                             _loaded = true;
@@ -29188,7 +31111,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -29259,6 +31182,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -29286,12 +31247,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -29626,7 +31581,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                 }
                                                                                                                                                                                 else {
                                                                                                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Acts.FinancialContract))) {
                                                                                                                                                                                             SanteDB.Core.Model.Acts.FinancialContract _nretVal = ((SanteDB.Core.Model.Acts.FinancialContract)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -29743,7 +31698,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Currency == null)) {
                     if ((_strong.CurrencyKey.HasValue && context.ShouldForceLoad("currencyModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.CurrencyKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "Currency");
                         if ((_delay != null)) {
                             _strong.Currency = _delay;
                             _loaded = true;
@@ -29790,7 +31745,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -29865,7 +31820,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -29884,7 +31839,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.MoodConcept == null)) {
                     if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "MoodConcept");
                         if ((_delay != null)) {
                             _strong.MoodConcept = _delay;
                             _loaded = true;
@@ -29903,7 +31858,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ReasonConcept == null)) {
                     if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ReasonConcept");
                         if ((_delay != null)) {
                             _strong.ReasonConcept = _delay;
                             _loaded = true;
@@ -29922,7 +31877,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -29941,7 +31896,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -29961,7 +31916,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -29981,7 +31936,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -30001,7 +31956,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -30021,7 +31976,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -30041,7 +31996,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -30061,7 +32016,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -30081,7 +32036,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Protocols.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("protocol", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong, "Protocols"));
                         if ((_delay.Count > 0)) {
                             _strong.Protocols = _delay;
                             _loaded = true;
@@ -30101,7 +32056,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -30172,6 +32127,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -30199,12 +32192,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -30563,7 +32550,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                             }
                                                                                                                                                                                             else {
                                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Acts.FinancialTransaction))) {
                                                                                                                                                                                                         SanteDB.Core.Model.Acts.FinancialTransaction _nretVal = ((SanteDB.Core.Model.Acts.FinancialTransaction)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -30676,7 +32663,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Modifier == null)) {
                     if ((_strong.ModifierKey.HasValue && context.ShouldForceLoad("modifierModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ModifierKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "Modifier");
                         if ((_delay != null)) {
                             _strong.Modifier = _delay;
                             _loaded = true;
@@ -30723,7 +32710,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Currency == null)) {
                     if ((_strong.CurrencyKey.HasValue && context.ShouldForceLoad("currencyModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.CurrencyKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "Currency");
                         if ((_delay != null)) {
                             _strong.Currency = _delay;
                             _loaded = true;
@@ -30763,7 +32750,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -30838,7 +32825,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -30857,7 +32844,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.MoodConcept == null)) {
                     if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "MoodConcept");
                         if ((_delay != null)) {
                             _strong.MoodConcept = _delay;
                             _loaded = true;
@@ -30876,7 +32863,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ReasonConcept == null)) {
                     if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ReasonConcept");
                         if ((_delay != null)) {
                             _strong.ReasonConcept = _delay;
                             _loaded = true;
@@ -30895,7 +32882,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -30914,7 +32901,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -30934,7 +32921,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -30954,7 +32941,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -30974,7 +32961,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -30994,7 +32981,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -31014,7 +33001,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -31034,7 +33021,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -31054,7 +33041,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Protocols.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("protocol", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong, "Protocols"));
                         if ((_delay.Count > 0)) {
                             _strong.Protocols = _delay;
                             _loaded = true;
@@ -31074,7 +33061,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -31145,6 +33132,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -31172,12 +33197,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -31560,7 +33579,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                         }
                                                                                                                                                                                                         else {
                                                                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Acts.InvoiceElement))) {
                                                                                                                                                                                                                     SanteDB.Core.Model.Acts.InvoiceElement _nretVal = ((SanteDB.Core.Model.Acts.InvoiceElement)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -31683,7 +33702,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.InterpretationConcept == null)) {
                     if ((_strong.InterpretationConceptKey.HasValue && context.ShouldForceLoad("interpretationConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.InterpretationConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "InterpretationConcept");
                         if ((_delay != null)) {
                             _strong.InterpretationConcept = _delay;
                             _loaded = true;
@@ -31716,7 +33735,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -31791,7 +33810,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -31810,7 +33829,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.MoodConcept == null)) {
                     if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "MoodConcept");
                         if ((_delay != null)) {
                             _strong.MoodConcept = _delay;
                             _loaded = true;
@@ -31829,7 +33848,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ReasonConcept == null)) {
                     if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ReasonConcept");
                         if ((_delay != null)) {
                             _strong.ReasonConcept = _delay;
                             _loaded = true;
@@ -31848,7 +33867,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -31867,7 +33886,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -31887,7 +33906,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -31907,7 +33926,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -31927,7 +33946,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -31947,7 +33966,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -31967,7 +33986,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -31987,7 +34006,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -32007,7 +34026,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Protocols.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("protocol", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong, "Protocols"));
                         if ((_delay.Count > 0)) {
                             _strong.Protocols = _delay;
                             _loaded = true;
@@ -32027,7 +34046,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -32098,6 +34117,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -32125,12 +34182,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -32473,7 +34524,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                     }
                                                                                                                                                                                     else {
                                                                                                                                                                                         if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                             if ((_type != typeof(SanteDB.Core.Model.Acts.Observation))) {
                                                                                                                                                                                                 SanteDB.Core.Model.Acts.Observation _nretVal = ((SanteDB.Core.Model.Acts.Observation)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -32598,7 +34649,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.UnitOfMeasure == null)) {
                     if ((_strong.UnitOfMeasureKey.HasValue && context.ShouldForceLoad("unitOfMeasureModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.UnitOfMeasureKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "UnitOfMeasure");
                         if ((_delay != null)) {
                             _strong.UnitOfMeasure = _delay;
                             _loaded = true;
@@ -32624,7 +34675,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.InterpretationConcept == null)) {
                     if ((_strong.InterpretationConceptKey.HasValue && context.ShouldForceLoad("interpretationConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.InterpretationConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "InterpretationConcept");
                         if ((_delay != null)) {
                             _strong.InterpretationConcept = _delay;
                             _loaded = true;
@@ -32657,7 +34708,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -32732,7 +34783,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -32751,7 +34802,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.MoodConcept == null)) {
                     if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "MoodConcept");
                         if ((_delay != null)) {
                             _strong.MoodConcept = _delay;
                             _loaded = true;
@@ -32770,7 +34821,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ReasonConcept == null)) {
                     if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ReasonConcept");
                         if ((_delay != null)) {
                             _strong.ReasonConcept = _delay;
                             _loaded = true;
@@ -32789,7 +34840,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -32808,7 +34859,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -32828,7 +34879,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -32848,7 +34899,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -32868,7 +34919,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -32888,7 +34939,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -32908,7 +34959,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -32928,7 +34979,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -32948,7 +34999,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Protocols.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("protocol", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong, "Protocols"));
                         if ((_delay.Count > 0)) {
                             _strong.Protocols = _delay;
                             _loaded = true;
@@ -32968,7 +35019,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -33039,6 +35090,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -33066,12 +35155,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -33438,7 +35521,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                 }
                                                                                                                                                                                                 else {
                                                                                                                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Acts.QuantityObservation))) {
                                                                                                                                                                                                             SanteDB.Core.Model.Acts.QuantityObservation _nretVal = ((SanteDB.Core.Model.Acts.QuantityObservation)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -33566,7 +35649,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.InterpretationConcept == null)) {
                     if ((_strong.InterpretationConceptKey.HasValue && context.ShouldForceLoad("interpretationConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.InterpretationConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "InterpretationConcept");
                         if ((_delay != null)) {
                             _strong.InterpretationConcept = _delay;
                             _loaded = true;
@@ -33599,7 +35682,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -33674,7 +35757,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -33693,7 +35776,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.MoodConcept == null)) {
                     if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "MoodConcept");
                         if ((_delay != null)) {
                             _strong.MoodConcept = _delay;
                             _loaded = true;
@@ -33712,7 +35795,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ReasonConcept == null)) {
                     if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ReasonConcept");
                         if ((_delay != null)) {
                             _strong.ReasonConcept = _delay;
                             _loaded = true;
@@ -33731,7 +35814,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -33750,7 +35833,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -33770,7 +35853,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -33790,7 +35873,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -33810,7 +35893,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -33830,7 +35913,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -33850,7 +35933,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -33870,7 +35953,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -33890,7 +35973,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Protocols.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("protocol", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong, "Protocols"));
                         if ((_delay.Count > 0)) {
                             _strong.Protocols = _delay;
                             _loaded = true;
@@ -33910,7 +35993,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -33981,6 +36064,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -34008,12 +36129,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -34364,7 +36479,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                         }
                                                                                                                                                                                         else {
                                                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Acts.TextObservation))) {
                                                                                                                                                                                                     SanteDB.Core.Model.Acts.TextObservation _nretVal = ((SanteDB.Core.Model.Acts.TextObservation)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -34483,7 +36598,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Value == null)) {
                     if ((_strong.ValueKey != System.Guid.Empty && context.ShouldForceLoad("valueModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ValueKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "Value");
                         if ((_delay != null)) {
                             _strong.Value = _delay;
                             _loaded = true;
@@ -34509,7 +36624,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.InterpretationConcept == null)) {
                     if ((_strong.InterpretationConceptKey.HasValue && context.ShouldForceLoad("interpretationConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.InterpretationConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "InterpretationConcept");
                         if ((_delay != null)) {
                             _strong.InterpretationConcept = _delay;
                             _loaded = true;
@@ -34542,7 +36657,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -34617,7 +36732,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -34636,7 +36751,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.MoodConcept == null)) {
                     if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "MoodConcept");
                         if ((_delay != null)) {
                             _strong.MoodConcept = _delay;
                             _loaded = true;
@@ -34655,7 +36770,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ReasonConcept == null)) {
                     if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ReasonConcept");
                         if ((_delay != null)) {
                             _strong.ReasonConcept = _delay;
                             _loaded = true;
@@ -34674,7 +36789,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -34693,7 +36808,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -34713,7 +36828,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -34733,7 +36848,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -34753,7 +36868,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -34773,7 +36888,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -34793,7 +36908,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -34813,7 +36928,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -34833,7 +36948,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Protocols.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("protocol", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong, "Protocols"));
                         if ((_delay.Count > 0)) {
                             _strong.Protocols = _delay;
                             _loaded = true;
@@ -34853,7 +36968,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -34924,6 +37039,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -34951,12 +37104,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -35315,7 +37462,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                             }
                                                                                                                                                                                             else {
                                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Acts.CodedObservation))) {
                                                                                                                                                                                                         SanteDB.Core.Model.Acts.CodedObservation _nretVal = ((SanteDB.Core.Model.Acts.CodedObservation)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -35428,7 +37575,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.DischargeDisposition == null)) {
                     if ((_strong.DischargeDispositionKey.HasValue && context.ShouldForceLoad("dischargeDispositionModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DischargeDispositionKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "DischargeDisposition");
                         if ((_delay != null)) {
                             _strong.DischargeDisposition = _delay;
                             _loaded = true;
@@ -35461,7 +37608,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -35536,7 +37683,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -35555,7 +37702,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.MoodConcept == null)) {
                     if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "MoodConcept");
                         if ((_delay != null)) {
                             _strong.MoodConcept = _delay;
                             _loaded = true;
@@ -35574,7 +37721,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ReasonConcept == null)) {
                     if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ReasonConcept");
                         if ((_delay != null)) {
                             _strong.ReasonConcept = _delay;
                             _loaded = true;
@@ -35593,7 +37740,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -35612,7 +37759,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -35632,7 +37779,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -35652,7 +37799,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -35672,7 +37819,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -35692,7 +37839,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -35712,7 +37859,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -35732,7 +37879,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -35752,7 +37899,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Protocols.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("protocol", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong, "Protocols"));
                         if ((_delay.Count > 0)) {
                             _strong.Protocols = _delay;
                             _loaded = true;
@@ -35772,7 +37919,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -35843,6 +37990,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -35870,12 +38055,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -36210,7 +38389,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                 }
                                                                                                                                                                                 else {
                                                                                                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Acts.PatientEncounter))) {
                                                                                                                                                                                             SanteDB.Core.Model.Acts.PatientEncounter _nretVal = ((SanteDB.Core.Model.Acts.PatientEncounter)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -36334,7 +38513,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Method == null)) {
                     if ((_strong.MethodKey.HasValue && context.ShouldForceLoad("methodModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MethodKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "Method");
                         if ((_delay != null)) {
                             _strong.Method = _delay;
                             _loaded = true;
@@ -36353,7 +38532,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ApproachSite == null)) {
                     if ((_strong.ApproachSiteKey.HasValue && context.ShouldForceLoad("approachSiteModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ApproachSiteKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ApproachSite");
                         if ((_delay != null)) {
                             _strong.ApproachSite = _delay;
                             _loaded = true;
@@ -36372,7 +38551,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TargetSite == null)) {
                     if ((_strong.TargetSiteKey.HasValue && context.ShouldForceLoad("targetSiteModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TargetSiteKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TargetSite");
                         if ((_delay != null)) {
                             _strong.TargetSite = _delay;
                             _loaded = true;
@@ -36405,7 +38584,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -36480,7 +38659,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -36499,7 +38678,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.MoodConcept == null)) {
                     if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "MoodConcept");
                         if ((_delay != null)) {
                             _strong.MoodConcept = _delay;
                             _loaded = true;
@@ -36518,7 +38697,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ReasonConcept == null)) {
                     if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ReasonConcept");
                         if ((_delay != null)) {
                             _strong.ReasonConcept = _delay;
                             _loaded = true;
@@ -36537,7 +38716,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -36556,7 +38735,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -36576,7 +38755,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -36596,7 +38775,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -36616,7 +38795,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -36636,7 +38815,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -36656,7 +38835,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -36676,7 +38855,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -36696,7 +38875,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Protocols.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("protocol", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong, "Protocols"));
                         if ((_delay.Count > 0)) {
                             _strong.Protocols = _delay;
                             _loaded = true;
@@ -36716,7 +38895,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -36787,6 +38966,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -36814,12 +39031,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -37186,7 +39397,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                 }
                                                                                                                                                                                                 else {
                                                                                                                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Acts.Procedure))) {
                                                                                                                                                                                                             SanteDB.Core.Model.Acts.Procedure _nretVal = ((SanteDB.Core.Model.Acts.Procedure)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -37338,6 +39549,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -37365,11 +39614,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if ((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue))) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -37488,7 +39732,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                     }
                                                                     else {
                                                                         if ("$type".Equals(r.Value)) {
-                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                             if ((_type != typeof(SanteDB.Core.Model.Acts.Protocol))) {
                                                                                 SanteDB.Core.Model.Acts.Protocol _nretVal = ((SanteDB.Core.Model.Acts.Protocol)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -37578,7 +39822,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Route == null)) {
                     if ((_strong.RouteKey.HasValue && context.ShouldForceLoad("routeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.RouteKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "Route");
                         if ((_delay != null)) {
                             _strong.Route = _delay;
                             _loaded = true;
@@ -37597,7 +39841,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.DoseUnit == null)) {
                     if ((_strong.DoseUnitKey.HasValue && context.ShouldForceLoad("doseUnitModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.DoseUnitKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "DoseUnit");
                         if ((_delay != null)) {
                             _strong.DoseUnit = _delay;
                             _loaded = true;
@@ -37637,7 +39881,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Site == null)) {
                     if ((_strong.SiteKey.HasValue && context.ShouldForceLoad("siteModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.SiteKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "Site");
                         if ((_delay != null)) {
                             _strong.Site = _delay;
                             _loaded = true;
@@ -37670,7 +39914,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.Template == null)) {
                     if ((_strong.TemplateKey.HasValue && context.ShouldForceLoad("templateModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.TemplateDefinition _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong.TemplateKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.TemplateDefinition>(_strong, "Template");
                         if ((_delay != null)) {
                             _strong.Template = _delay;
                             _loaded = true;
@@ -37745,7 +39989,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ClassConcept == null)) {
                     if ((_strong.ClassConceptKey.HasValue && context.ShouldForceLoad("classConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ClassConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ClassConcept");
                         if ((_delay != null)) {
                             _strong.ClassConcept = _delay;
                             _loaded = true;
@@ -37764,7 +40008,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.MoodConcept == null)) {
                     if ((_strong.MoodConceptKey.HasValue && context.ShouldForceLoad("moodConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.MoodConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "MoodConcept");
                         if ((_delay != null)) {
                             _strong.MoodConcept = _delay;
                             _loaded = true;
@@ -37783,7 +40027,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ReasonConcept == null)) {
                     if ((_strong.ReasonConceptKey.HasValue && context.ShouldForceLoad("reasonConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ReasonConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ReasonConcept");
                         if ((_delay != null)) {
                             _strong.ReasonConcept = _delay;
                             _loaded = true;
@@ -37802,7 +40046,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.StatusConcept == null)) {
                     if ((_strong.StatusConceptKey.HasValue && context.ShouldForceLoad("statusConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.StatusConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "StatusConcept");
                         if ((_delay != null)) {
                             _strong.StatusConcept = _delay;
                             _loaded = true;
@@ -37821,7 +40065,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.TypeConcept == null)) {
                     if ((_strong.TypeConceptKey.HasValue && context.ShouldForceLoad("typeConceptModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.TypeConceptKey);
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "TypeConcept");
                         if ((_delay != null)) {
                             _strong.TypeConcept = _delay;
                             _loaded = true;
@@ -37841,7 +40085,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Identifiers.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("identifier", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActIdentifier>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActIdentifier>(_strong, "Identifiers"));
                         if ((_delay.Count > 0)) {
                             _strong.Identifiers = _delay;
                             _loaded = true;
@@ -37861,7 +40105,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActRelationship>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActRelationship>(_strong, "Relationships"));
                         if ((_delay.Count > 0)) {
                             _strong.Relationships = _delay;
                             _loaded = true;
@@ -37881,7 +40125,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Policies.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("policy", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Security.SecurityPolicyInstance>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Security.SecurityPolicyInstance>(_strong, "Policies"));
                         if ((_delay.Count > 0)) {
                             _strong.Policies = _delay;
                             _loaded = true;
@@ -37901,7 +40145,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Extensions.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("extension", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActExtension>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActExtension>(_strong, "Extensions"));
                         if ((_delay.Count > 0)) {
                             _strong.Extensions = _delay;
                             _loaded = true;
@@ -37921,7 +40165,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Notes.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("note", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActNote>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActNote>(_strong, "Notes"));
                         if ((_delay.Count > 0)) {
                             _strong.Notes = _delay;
                             _loaded = true;
@@ -37941,7 +40185,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Tags.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("tag", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ActTag>(context.JsonContext.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ActTag>(_strong, "Tags"));
                         if ((_delay.Count > 0)) {
                             _strong.Tags = _delay;
                             _loaded = true;
@@ -37961,7 +40205,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Protocols.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("protocol", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActProtocol>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActProtocol>(_strong, "Protocols"));
                         if ((_delay.Count > 0)) {
                             _strong.Protocols = _delay;
                             _loaded = true;
@@ -37981,7 +40225,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             || (_strong.Participations.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("participation", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation> _delay = null;
-                        _delay = new System.Collections.Generic.List<SanteDB.Core.Model.Acts.ActParticipation>(context.JsonContext.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong.Key.Value));
+                        _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.Acts.ActParticipation>(_strong, "Participations"));
                         if ((_delay.Count > 0)) {
                             _strong.Participations = _delay;
                             _loaded = true;
@@ -38052,6 +40296,44 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "obsoletionTime", _strong.ObsoletionTimeXml, context);
                 }
             }
+            if (context.ShouldSerialize("createdByModel")) {
+                if ((_strong.CreatedBy == null)) {
+                    if ((_strong.CreatedByKey.HasValue && context.ShouldForceLoad("createdByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "CreatedBy");
+                        if ((_delay != null)) {
+                            _strong.CreatedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("createdByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "createdByModel", _strong.CreatedBy, context);
+                }
+            }
+            if (context.ShouldSerialize("obsoletedByModel")) {
+                if ((_strong.ObsoletedBy == null)) {
+                    if ((_strong.ObsoletedByKey.HasValue && context.ShouldForceLoad("obsoletedByModel", _strong.Key))) {
+                        SanteDB.Core.Model.Security.SecurityProvenance _delay = null;
+                        _delay = SanteDB.Core.Model.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Security.SecurityProvenance>(_strong, "ObsoletedBy");
+                        if ((_delay != null)) {
+                            _strong.ObsoletedBy = _delay;
+                            _loaded = true;
+                            context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("obsoletedByModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "obsoletedByModel", _strong.ObsoletedBy, context);
+                }
+            }
             if (context.ShouldSerialize("createdBy")) {
                 if ((_strong.CreatedByKey == null)) {
                 }
@@ -38079,12 +40361,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 else {
                     context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
                 }
-            }
-            if (((_loaded 
-                        && ((SanteDB.Core.Model.LoadState.New != _strong.LoadState) 
-                        && _strong.Key.HasValue)) 
-                        && _strong.VersionKey.HasValue)) {
-                ((SanteDB.Core.Services.IDataCachingService)(SanteDB.Core.ApplicationServiceContext.Current.GetService(typeof(SanteDB.Core.Services.IDataCachingService)))).Add(_strong);
             }
         }
         
@@ -38467,7 +40743,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                         }
                                                                                                                                                                                                         else {
                                                                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=2.1.90.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Acts.SubstanceAdministration))) {
                                                                                                                                                                                                                     SanteDB.Core.Model.Acts.SubstanceAdministration _nretVal = ((SanteDB.Core.Model.Acts.SubstanceAdministration)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
