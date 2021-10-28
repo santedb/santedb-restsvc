@@ -798,7 +798,7 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// <summary>
         /// Perform a search on the specified entity
         /// </summary>
-        public AmiCollection AssociationSearch(string resourceType, string key, string childResourceType)
+        public virtual AmiCollection AssociationSearch(string resourceType, string key, string childResourceType)
         {
             this.ThrowIfNotReady();
             try
@@ -862,7 +862,7 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// <summary>
         /// Create an associated entity
         /// </summary>
-        public object AssociationCreate(string resourceType, string key, string childResourceType, object body)
+        public virtual object AssociationCreate(string resourceType, string key, string childResourceType, object body)
         {
             this.ThrowIfNotReady();
 
@@ -903,7 +903,7 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// <summary>
         /// Removes an associated entity from the scoping property path
         /// </summary>
-        public object AssociationRemove(string resourceType, string key, string childResourceType, string scopedEntityKey)
+        public virtual object AssociationRemove(string resourceType, string key, string childResourceType, string scopedEntityKey)
         {
             this.ThrowIfNotReady();
 
@@ -945,7 +945,7 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// <summary>
         /// Removes an associated entity from the scoping property path
         /// </summary>
-        public object AssociationGet(string resourceType, string key, string childResourceType, string scopedEntityKey)
+        public virtual object AssociationGet(string resourceType, string key, string childResourceType, string scopedEntityKey)
         {
             this.ThrowIfNotReady();
 
