@@ -998,7 +998,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                 {
                     this.AclCheck(handler, nameof(IOperationalApiResourceHandler.InvokeOperation));
 
-                    var retValRaw = handler.InvokeOperation(Guid.Parse(id), operationName, body);
+                    var retValRaw = handler.InvokeOperation(id, operationName, body);
 
                     if (retValRaw is IdentifiedData retVal)
                     {
