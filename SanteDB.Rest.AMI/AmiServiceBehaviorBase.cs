@@ -830,9 +830,16 @@ namespace SanteDB.Messaging.AMI.Wcf
 
                     IEnumerable<Object> retVal = null;
                     if (Guid.TryParse(key, out Guid keyValue))
-                        retVal = handler.QueryChildObjects(keyValue, childResourceType, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).ToList();
+                        retVal = handler.QueryChildObjects(keyValue, childResourceType, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults)?.ToList();
                     else
-                        retVal = handler.QueryChildObjects(key, childResourceType, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).ToList();
+                        retVal = handler.QueryChildObjects(key, childResourceType, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults)?.ToList();
+
+                    // No content
+                    if (retVal == null)
+                    {
+                        return null;
+                    }
+
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.OfType<IdentifiedData>().OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now);
 
                     // Last modification time and not modified conditions
