@@ -66,11 +66,15 @@ namespace SanteDB.Rest.HDSI
         /// </summary>
         protected abstract ResourceHandlerTool GetResourceHandler();
 
+        // Adhoc cache
+        private readonly IDataCachingService m_dataCache;
+
         /// <summary>
         /// HDSI Service Behavior
         /// </summary>
-        public HdsiServiceBehaviorBase()
+        public HdsiServiceBehaviorBase(IDataCachingService dataCache)
         {
+            this.m_dataCache = dataCache;
         }
 
         /// <summary>
@@ -222,7 +226,25 @@ namespace SanteDB.Rest.HDSI
                     }
 
                     this.AclCheck(handler, nameof(IApiResourceHandler.Get));
-                    var retVal = handler.Get(Guid.Parse(id), Guid.Empty) as IdentifiedData;
+
+                    Guid objectId = Guid.Parse(id);
+                    var ifModifiedHeader = RestOperationContext.Current.IncomingRequest.GetIfModifiedSince();
+                    var ifNoneMatchHeader = RestOperationContext.Current.IncomingRequest.GetIfNoneMatch();
+
+                    // HTTP IF headers? - before we go to the DB lets check the cache for them
+                    if (ifNoneMatchHeader?.Any() == true || ifModifiedHeader.HasValue)
+                    {
+                        var cacheResult = this.m_dataCache.GetCacheItem(objectId) as IdentifiedData;
+
+                        if (cacheResult != null && (ifNoneMatchHeader?.Contains(cacheResult.Tag) == true ||
+                                cacheResult.ModifiedOn <= ifModifiedHeader))
+                        {
+                            RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
+                            return null;
+                        }
+                    }
+
+                    var retVal = handler.Get(objectId, Guid.Empty) as IdentifiedData;
                     if (retVal == null)
                         throw new FileNotFoundException(id);
 
@@ -230,15 +252,15 @@ namespace SanteDB.Rest.HDSI
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.ModifiedOn.DateTime);
 
                     // HTTP IF headers?
-                    if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null &&
+                    if (ifModifiedHeader.HasValue &&
                         retVal.ModifiedOn <= RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() ||
-                        RestOperationContext.Current.IncomingRequest.GetIfNoneMatch()?.Any(o => retVal.Tag == o) == true)
+                        ifNoneMatchHeader?.Any(o => retVal.Tag == o) == true)
                     {
                         RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
                         return null;
                     }
                     else if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true" ||
-                        RestOperationContext.Current.IncomingRequest.QueryString["_all"] == "true")
+                            RestOperationContext.Current.IncomingRequest.QueryString["_all"] == "true")
                     {
                         retVal = retVal.GetLocked();
                         ObjectExpander.ExpandProperties(retVal, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
