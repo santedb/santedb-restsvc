@@ -2,25 +2,27 @@
  * Copyright (C) 2021 - 2021, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
  * Date: 2021-8-5
  */
+
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interfaces;
+using SanteDB.Core.Services;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -33,7 +35,6 @@ namespace SanteDB.Rest.Common
     /// </summary>
     public class ResourceHandlerTool
     {
-
         // Common trace
         private Tracer m_traceSource = Tracer.GetTracer(typeof(ResourceHandlerTool));
 
@@ -59,11 +60,9 @@ namespace SanteDB.Rest.Common
             {
                 try
                 {
-
                     IApiResourceHandler rh = serviceManager.CreateInjected(t) as IApiResourceHandler;
                     if (rh == null)
                         continue; // TODO: Emit a warning
-
 
                     if (rh.Scope == scope)
                     {
@@ -86,8 +85,6 @@ namespace SanteDB.Rest.Common
                     this.m_traceSource.TraceError("Error binding: {0} due to {1}", t.FullName, e);
                 }
             }
-
-
         }
 
         /// <summary>
@@ -107,6 +104,5 @@ namespace SanteDB.Rest.Common
         {
             return this.m_handlers.Values.Where(o => o.Type == resourceType);
         }
-
     }
 }

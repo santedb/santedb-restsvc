@@ -16,34 +16,37 @@
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
+
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
+using SanteDB.Core.Services;
 using System;
 
 namespace SanteDB.Rest.AMI.Resources
 {
-    /// <summary>
-    /// Represents a resource handler base type that is always bound to HDSI
-    /// </summary>
-    /// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
-    public class ResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData> where TData : IdentifiedData, new()
-    {
+	/// <summary>
+	/// Represents a resource handler base type that is always bound to AMI.
+	/// </summary>
+	/// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
+	public class ResourceHandlerBase<TData> : Common.ResourceHandlerBase<TData> where TData : IdentifiedData, new()
+	{
 
-        /// <summary>
-        /// Gets the scope
-        /// </summary>
-        override public Type Scope => typeof(IAmiServiceContract);
-
-        /// <summary>
-        /// Gets the resource capabilities for the object
-        /// </summary>
-        public override ResourceCapabilityType Capabilities
+		/// <summary>
+		/// DI constructor
+		/// </summary>
+		/// <param name="localizationService"></param>
+		public ResourceHandlerBase(ILocalizationService localizationService) : base(localizationService)
         {
-            get
-            {
-                return ResourceCapabilityType.Create | ResourceCapabilityType.Update | ResourceCapabilityType.Get | ResourceCapabilityType.Search;
-            }
         }
 
-    }
+		/// <summary>
+		/// Gets the resource capabilities for the object
+		/// </summary>
+		public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.Update | ResourceCapabilityType.Get | ResourceCapabilityType.Search;
+
+		/// <summary>
+		/// Gets the scope
+		/// </summary>
+		public override Type Scope => typeof(IAmiServiceContract);
+	}
 }

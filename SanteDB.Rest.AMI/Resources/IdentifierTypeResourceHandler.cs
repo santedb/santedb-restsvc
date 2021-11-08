@@ -22,6 +22,7 @@ using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Rest.Common.Attributes;
 using System.Collections.Generic;
+using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -88,6 +89,14 @@ namespace SanteDB.Rest.AMI.Resources
         public override object Update(object data)
         {
             return base.Update(data);
+        }
+
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public IdentifierTypeResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
         }
     }
 }

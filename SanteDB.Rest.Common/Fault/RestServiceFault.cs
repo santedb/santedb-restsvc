@@ -38,8 +38,9 @@ namespace SanteDB.Rest.Common.Fault
     [JsonObject(nameof(RestServiceFault))]
     public class RestServiceFault
     {
-        private DetectedIssue itm;
-
+        /// <summary>
+        /// Default service fault ctor
+        /// </summary>
         public RestServiceFault()
         {
         }

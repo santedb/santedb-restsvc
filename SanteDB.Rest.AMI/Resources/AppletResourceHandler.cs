@@ -20,11 +20,13 @@ using RestSrvr;
 using SanteDB.Core;
 using SanteDB.Core.Applets.Model;
 using SanteDB.Core.Applets.Services;
+using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Applet;
 using SanteDB.Core.Model.AMI.Security;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
@@ -38,8 +40,14 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents a resource handler that handles applets
     /// </summary>
-    public class AppletResourceHandler : IApiResourceHandler
+    public class AppletResourceHandler : IServiceImplementation, IApiResourceHandler
     {
+        // Tracer
+        private readonly Tracer m_tracer = Tracer.GetTracer(typeof(AppletResourceHandler));
+
+        // Localization service
+        private readonly ILocalizationService m_localizationService;
+
         /// <summary>
         /// Gets the capabilities of the resource handler
         /// </summary>
@@ -71,6 +79,20 @@ namespace SanteDB.Rest.AMI.Resources
         /// Get the type of this
         /// </summary>
         public Type Type => typeof(Stream);
+
+        /// <summary>
+        /// Get the service name
+        /// </summary>
+        public string ServiceName => "Applet Resource Handler";
+
+        /// <summary>
+        /// Initializes the applet resource handler.
+        /// </summary>
+        /// <param name="localizationService">Localization service</param>
+        public AppletResourceHandler(ILocalizationService localizationService)
+        {
+            this.m_localizationService = localizationService;
+        }
 
         /// <summary>
         /// Create / install an applet on the server
@@ -114,7 +136,13 @@ namespace SanteDB.Rest.AMI.Resources
             var appletData = appletService.GetPackage(appletId.ToString());
 
             if (appletData == null)
-                throw new FileNotFoundException(appletId.ToString());
+            {
+                this.m_tracer.TraceError($"File not found: {appletId}");
+                throw new FileNotFoundException(this.m_localizationService.FormatString("error.rest.ami.FileNotFoundParam", new 
+                { 
+                    param = appletId.ToString()
+                }));
+            }    
             else
             {
                 var appletManifest = AppletPackage.Load(appletData);
@@ -171,7 +199,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public object RemoveAssociatedEntity(object scopingEntityKey, string propertyName, object subItemKey)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotImplementedException"));
         }
 
         /// <summary>
@@ -186,8 +214,14 @@ namespace SanteDB.Rest.AMI.Resources
 
             var pkg = AppletPackage.Load((Stream)data);
             if (!appletMgr.Applets.Any(o => pkg.Meta.Id == o.Info.Id))
-                throw new FileNotFoundException(pkg.Meta.Id);
-
+            {
+                this.m_tracer.TraceError($"File not found: {pkg.Meta.Id}");
+                throw new FileNotFoundException(this.m_localizationService.FormatString("error.rest.ami.FileNotFoundParam", new
+                {
+                    param = pkg.Meta.Id
+                }));
+            }
+                
             ApplicationServiceContext.Current.GetService<IAppletManagerService>().Install(pkg, true);
             X509Certificate2 cert = null;
             if (pkg.PublicKey != null)

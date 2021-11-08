@@ -19,6 +19,7 @@
 using SanteDB.Core;
 using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Configuration;
+using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.AMI.Security;
@@ -35,13 +36,19 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents a resource handler which can persist and forward audits
     /// </summary>
-    public class AuditResourceHandler : IApiResourceHandler
+    public class AuditResourceHandler : IServiceImplementation, IApiResourceHandler
     {
         // Configuration
         private AuditAccountabilityConfigurationSection m_configuration = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<AuditAccountabilityConfigurationSection>();
 
         // The audit repository
         private IRepositoryService<AuditEventData> m_repository = null;
+
+        // Tracer
+        private readonly Tracer m_tracer = Tracer.GetTracer(typeof(AuditResourceHandler));
+
+        // Localization service
+        private readonly ILocalizationService m_localizationService;
 
         /// <summary>
         /// Get the repository
@@ -59,8 +66,9 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Initializes the audit resource handler
         /// </summary>
-        public AuditResourceHandler()
+        public AuditResourceHandler(ILocalizationService localizationService)
         {
+            this.m_localizationService = localizationService;
         }
 
         /// <summary>
@@ -85,6 +93,11 @@ namespace SanteDB.Rest.AMI.Resources
         /// Get the type this persists
         /// </summary>
         public Type Type => typeof(AuditEventData);
+
+        /// <summary>
+        /// Get the service name
+        /// </summary>
+        public string ServiceName => "Audit Resource Handler";
 
         /// <summary>
         /// Create the audits in the audit data
@@ -140,7 +153,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <returns></returns>
         public object Obsolete(object key)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
         }
 
         /// <summary>
@@ -161,7 +174,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <param name="queryParameters">The filter parameters for the audit</param>
         /// <param name="offset">The first result to retrieve</param>
         /// <param name="count">The count of objects to retrieve</param>
-        /// <param name="totalCount">The total couns of objects</param>
+        /// <param name="totalCount">The total counts of objects</param>
         /// <returns>An array of objects matching the query </returns>
         [Demand(PermissionPolicyIdentifiers.AccessAuditLog)]
         public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
@@ -180,7 +193,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <param name="data">The data to be updated</param>
         public object Update(object data)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
         }
     }
 }

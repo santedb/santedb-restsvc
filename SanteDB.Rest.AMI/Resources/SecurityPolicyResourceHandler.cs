@@ -16,10 +16,12 @@
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
+using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
+using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
@@ -32,7 +34,14 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary>
     public class SecurityPolicyResourceHandler : ResourceHandlerBase<SecurityPolicy>
     {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public SecurityPolicyResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
 
+        }
         /// <summary>
         /// Get the capabilities of this resource
         /// </summary>
@@ -58,9 +67,22 @@ namespace SanteDB.Rest.AMI.Resources
             if (policy == null || (policy as SecurityPolicy).IsPublic)
                 return base.Update(data);
             else if (policy == null)
-                throw new KeyNotFoundException($"Policy {key} not found");
+            {
+                this.m_tracer.TraceError($"Policy {key} not found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.policyNotFound", new
+                {
+                    param = key
+                }));
+
+            }
             else
-                throw new SecurityException($"Policy {(policy as SecurityPolicy).Oid} is a system policy and cannot be edited");
+            {
+                this.m_tracer.TraceError($"Policy {(policy as SecurityPolicy).Oid} is a system policy and cannot be edited");
+                throw new SecurityException(this.m_localizationService.FormatString("error.rest.ami.editSystemPolicy", new 
+                { 
+                    param = (policy as SecurityPolicy).Oid
+                }));
+            }
         }
 
 
@@ -76,9 +98,21 @@ namespace SanteDB.Rest.AMI.Resources
             if (policy == null || (policy as SecurityPolicy).IsPublic)
                 return base.Obsolete(key);
             else if (policy == null)
-                throw new KeyNotFoundException($"Policy {key} not found");
+            {
+                this.m_tracer.TraceError($"Policy {key} not found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.policyNotFound", new
+                {
+                    param = key
+                }));
+            }
             else
-                throw new SecurityException($"Policy {(policy as SecurityPolicy).Oid} is a system policy and cannot be disabled");
+            {
+                this.m_tracer.TraceError($"Policy {(policy as SecurityPolicy).Oid} is a system policy and cannot be disabled");
+                throw new SecurityException(this.m_localizationService.FormatString("error.rest.ami.disableSystemPolicy", new
+                {
+                    param = (policy as SecurityPolicy).Oid
+                }));
+            }
         }
     }
 }

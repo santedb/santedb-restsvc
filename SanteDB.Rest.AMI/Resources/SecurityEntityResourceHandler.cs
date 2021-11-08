@@ -1,18 +1,18 @@
 ﻿/*
  * Portions Copyright 2019-2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
@@ -45,7 +45,8 @@ namespace SanteDB.Rest.AMI.Resources
     public abstract class SecurityEntityResourceHandler<TSecurityEntity> : IApiResourceHandler, IChainedApiResourceHandler
         where TSecurityEntity : NonVersionedEntityData
     {
-
+        // Localization Service
+        protected readonly ILocalizationService m_localizationService;
 
         // Property providers
         private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
@@ -57,7 +58,7 @@ namespace SanteDB.Rest.AMI.Resources
         private IDataCachingService m_cacheService;
 
         // Get the tracer
-        private Tracer m_tracer = Tracer.GetTracer(typeof(SecurityEntityResourceHandler<TSecurityEntity>));
+        protected Tracer m_tracer = Tracer.GetTracer(typeof(SecurityEntityResourceHandler<TSecurityEntity>));
 
         // Repository factory
         private IRepositoryServiceFactory m_repositoryFactory;
@@ -68,14 +69,15 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Create a new instance of the respository handler
         /// </summary>
-        public SecurityEntityResourceHandler(IPolicyInformationService policyInformationService, IRepositoryServiceFactory repositoryFactory, IDataCachingService cachingService = null, IRepositoryService<TSecurityEntity> repository = null)
+        public SecurityEntityResourceHandler(IPolicyInformationService policyInformationService, IRepositoryServiceFactory repositoryFactory, ILocalizationService localizationService, IDataCachingService cachingService = null, IRepositoryService<TSecurityEntity> repository = null)
+
         {
             this.m_cacheService = cachingService;
             this.m_repository = repository;
             this.m_repositoryFactory = repositoryFactory;
             this.m_policyInformationService = policyInformationService;
+            this.m_localizationService = localizationService;
         }
-
 
         /// <summary>
         /// Raise the security attributes change event
@@ -110,6 +112,8 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public IEnumerable<IApiChildResourceHandler> ChildResources => this.m_propertyProviders.Values;
 
+        public string ServiceName => "Security Entity Resource Service";
+
         /// <summary>
         /// Gets the repository
         /// </summary>
@@ -134,10 +138,16 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual object Create(object data, bool updateIfExists)
         {
-
             // First, we want to copy over the roles
             var td = data as ISecurityEntityInfo<TSecurityEntity>;
-            if (td is null) throw new ArgumentException("Invalid type", nameof(data));
+            if (td is null)
+            {
+                this.m_tracer.TraceError($"Invalid type {nameof(data)}");
+                throw new ArgumentException(this.m_localizationService.FormatString("error.type.ArgumentException", new
+                {
+                    param = nameof(data)
+                }));
+            }
 
             try
             {
@@ -184,7 +194,6 @@ namespace SanteDB.Rest.AMI.Resources
             var retVal = Activator.CreateInstance(this.Type, data) as ISecurityEntityInfo<TSecurityEntity>;
             retVal.Policies = this.m_policyInformationService.GetPolicies(data).Select(o => new SecurityPolicyInfo(o)).ToList();
             return retVal;
-
         }
 
         /// <summary>
@@ -250,7 +259,6 @@ namespace SanteDB.Rest.AMI.Resources
                 r.Policies = this.m_policyInformationService.GetPolicies(o).Select(p => new SecurityPolicyInfo(p)).ToList();
                 return r;
             }).OfType<Object>();
-
         }
 
         /// <summary>
@@ -261,11 +269,17 @@ namespace SanteDB.Rest.AMI.Resources
         {
             // First, we want to copy over the roles
             var td = data as ISecurityEntityInfo<TSecurityEntity>;
-            if (td is null) throw new ArgumentException("Invalid type", nameof(data));
+            if (td is null)
+            {
+                this.m_tracer.TraceError($"Invalid type {nameof(data)}");
+                throw new ArgumentException(this.m_localizationService.FormatString("error.type.ArgumentException", new
+                {
+                    param = nameof(data)
+                }));
+            }
 
             try
             {
-               
                 td.Entity = this.GetRepository().Save(td.Entity);
 
                 // Add policies
@@ -314,7 +328,11 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                throw new KeyNotFoundException($"{propertyName} not found");
+                this.m_tracer.TraceError($"{propertyName} not found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                {
+                    param = propertyName
+                }));
             }
         }
 
@@ -331,7 +349,11 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                throw new KeyNotFoundException($"{propertyName} not found");
+                this.m_tracer.TraceError($"{propertyName} not found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                {
+                    param = propertyName
+                }));
             }
         }
 
@@ -348,7 +370,11 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                throw new KeyNotFoundException($"{propertyName} not found");
+                this.m_tracer.TraceError($"{propertyName} not found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                {
+                    param = propertyName
+                }));
             }
         }
 
@@ -365,7 +391,11 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                throw new KeyNotFoundException($"{propertyName} not found");
+                this.m_tracer.TraceError($"{propertyName} not found");
+                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                {
+                    param = propertyName
+                }));
             }
         }
 

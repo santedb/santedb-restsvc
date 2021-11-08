@@ -1,21 +1,22 @@
 ﻿/*
  * Portions Copyright 2019-2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
+
 using RestSrvr;
 using RestSrvr.Attributes;
 using RestSrvr.Exceptions;
@@ -55,7 +56,6 @@ namespace SanteDB.Messaging.AMI.Wcf
     [ServiceBehavior(Name = "AMI", InstanceMode = ServiceInstanceMode.Singleton)]
     public abstract class AmiServiceBehaviorBase : IAmiServiceContract
     {
-
         /// <summary>
         /// Trace source for logging
         /// </summary>
@@ -95,7 +95,6 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// <returns>Returns a collection of log files.</returns>
         public abstract AmiCollection GetLogs();
 
-
         /// <summary>
         /// Perform an ACL check
         /// </summary>
@@ -115,7 +114,6 @@ namespace SanteDB.Messaging.AMI.Wcf
                 return demands.Where(o => o.Override).Select(o => o.PolicyId).ToArray();
             else
                 return demands.Select(o => o.PolicyId).ToArray();
-
         }
 
         /// <summary>
@@ -161,7 +159,6 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// <returns>Returns the created diagnostic report.</returns>
         public abstract DiagnosticReport GetServerDiagnosticReport();
 
-
         /// <summary>
         /// Gets options for the AMI service.
         /// </summary>
@@ -189,7 +186,6 @@ namespace SanteDB.Messaging.AMI.Wcf
                 var match = RestOperationContext.Current.IncomingRequest.Headers["If-Match"];
                 if (match == null && typeof(IVersionedEntity).IsAssignableFrom(handler.Type))
                     throw new InvalidOperationException("Missing If-Match header for versioned objects");
-
 
                 // Next we get the current version
                 this.AclCheck(handler, nameof(IApiResourceHandler.Get));
@@ -247,7 +243,6 @@ namespace SanteDB.Messaging.AMI.Wcf
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
-
             }
         }
 
@@ -260,7 +255,7 @@ namespace SanteDB.Messaging.AMI.Wcf
         }
 
         /// <summary>
-        /// Creates the specified resource for the AMI service 
+        /// Creates the specified resource for the AMI service
         /// </summary>
         /// <param name="resourceType">The type of resource being created</param>
         /// <param name="data">The resource data being created</param>
@@ -271,7 +266,6 @@ namespace SanteDB.Messaging.AMI.Wcf
 
             try
             {
-
                 IApiResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null)
                 {
@@ -292,7 +286,6 @@ namespace SanteDB.Messaging.AMI.Wcf
                             resourceType,
                             (retVal as IAmiIdentified)?.Key ?? (retVal as IdentifiedData)?.Key.ToString()));
                     return retVal;
-
                 }
                 else
                     throw new FileNotFoundException(resourceType);
@@ -302,7 +295,6 @@ namespace SanteDB.Messaging.AMI.Wcf
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw new Exception($"Error creating resource {resourceType}", e);
-
             }
         }
 
@@ -344,14 +336,12 @@ namespace SanteDB.Messaging.AMI.Wcf
                 }
                 else
                     throw new FileNotFoundException(resourceType);
-
             }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
-
             }
         }
 
@@ -366,7 +356,6 @@ namespace SanteDB.Messaging.AMI.Wcf
                 var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null)
                 {
-
                     this.AclCheck(handler, nameof(IApiResourceHandler.Obsolete));
 
                     object retVal = null;
@@ -391,19 +380,16 @@ namespace SanteDB.Messaging.AMI.Wcf
                             RestOperationContext.Current.IncomingRequest.Url,
                             (retVal as IAmiIdentified)?.Key ?? (retVal as IdentifiedData)?.Key.ToString()));
 
-
                     return retVal;
                 }
                 else
                     throw new FileNotFoundException(resourceType);
-
             }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
-
             }
         }
 
@@ -415,8 +401,6 @@ namespace SanteDB.Messaging.AMI.Wcf
             this.ThrowIfNotReady();
             try
             {
-
-
                 var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null)
                 {
@@ -453,19 +437,17 @@ namespace SanteDB.Messaging.AMI.Wcf
                 }
                 else
                     throw new FileNotFoundException(resourceType);
-
             }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
-
             }
         }
 
         /// <summary>
-        /// Get a specific version of the resource 
+        /// Get a specific version of the resource
         /// </summary>
         public virtual Object GetVersion(string resourceType, string key, string versionKey)
         {
@@ -487,25 +469,22 @@ namespace SanteDB.Messaging.AMI.Wcf
                     if (retVal == null)
                         throw new FileNotFoundException(key);
 
-
                     RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
                     return retVal;
                 }
                 else
                     throw new FileNotFoundException(resourceType);
-
             }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
-
             }
         }
 
         /// <summary>
-        /// Get the complete history of a resource 
+        /// Get the complete history of a resource
         /// </summary>
         public virtual AmiCollection History(string resourceType, string key)
         {
@@ -519,7 +498,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                     String since = RestOperationContext.Current.IncomingRequest.QueryString["_since"];
                     Guid sinceGuid = since != null ? Guid.Parse(since) : Guid.Empty;
 
-                    // Query 
+                    // Query
                     this.AclCheck(handler, nameof(IApiResourceHandler.Get));
                     var retVal = handler.Get(Guid.Parse(key), Guid.Empty) as IVersionedEntity;
                     List<IVersionedEntity> histItm = new List<IVersionedEntity>() { retVal };
@@ -531,7 +510,6 @@ namespace SanteDB.Messaging.AMI.Wcf
                         // Should we stop fetching?
                         if (retVal?.VersionKey == sinceGuid)
                             break;
-
                     }
 
                     // Lock the item
@@ -545,7 +523,6 @@ namespace SanteDB.Messaging.AMI.Wcf
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
-
             }
         }
 
@@ -566,16 +543,21 @@ namespace SanteDB.Messaging.AMI.Wcf
                         case ResourceCapabilityType.Create:
                         case ResourceCapabilityType.CreateOrUpdate:
                             return this.GetDemands(handler, nameof(IApiResourceHandler.Create));
+
                         case ResourceCapabilityType.Delete:
                             return this.GetDemands(handler, nameof(IApiResourceHandler.Create));
+
                         case ResourceCapabilityType.Get:
                         case ResourceCapabilityType.GetVersion:
                             return this.GetDemands(handler, nameof(IApiResourceHandler.Get));
+
                         case ResourceCapabilityType.History:
                         case ResourceCapabilityType.Search:
                             return this.GetDemands(handler, nameof(IApiResourceHandler.Query));
+
                         case ResourceCapabilityType.Update:
                             return this.GetDemands(handler, nameof(IApiResourceHandler.Update));
+
                         default:
                             return new string[] { PermissionPolicyIdentifiers.Login };
                     }
@@ -584,7 +566,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                 // Get the resource capabilities
                 List<ServiceResourceCapability> caps = handler.Capabilities.ToResourceCapabilityStatement(getCaps).ToList();
 
-                // Patching 
+                // Patching
                 if (ApplicationServiceContext.Current.GetService<IPatchService>() != null &&
                     handler.Capabilities.HasFlag(ResourceCapabilityType.Update))
                     caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Patch, this.GetDemands(handler, nameof(IApiResourceHandler.Update))));
@@ -656,7 +638,6 @@ namespace SanteDB.Messaging.AMI.Wcf
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw new Exception($"Error searching resource type {resourceType}", e);
-
             }
         }
 
@@ -711,14 +692,12 @@ namespace SanteDB.Messaging.AMI.Wcf
                 }
                 else
                     throw new FileNotFoundException(resourceType);
-
             }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString().Replace("{", "{{").Replace("}", "}}")));
                 throw;
-
             }
         }
 
@@ -746,7 +725,6 @@ namespace SanteDB.Messaging.AMI.Wcf
             this.ThrowIfNotReady();
             try
             {
-
                 var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null && handler is ILockableResourceHandler)
                 {
@@ -775,7 +753,6 @@ namespace SanteDB.Messaging.AMI.Wcf
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
-
             }
         }
 
@@ -787,7 +764,6 @@ namespace SanteDB.Messaging.AMI.Wcf
             this.ThrowIfNotReady();
             try
             {
-
                 var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null && handler is ILockableResourceHandler)
                 {
@@ -816,19 +792,17 @@ namespace SanteDB.Messaging.AMI.Wcf
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
-
             }
         }
 
         /// <summary>
         /// Perform a search on the specified entity
         /// </summary>
-        public AmiCollection AssociationSearch(string resourceType, string key, string childResourceType)
+        public virtual AmiCollection AssociationSearch(string resourceType, string key, string childResourceType)
         {
             this.ThrowIfNotReady();
             try
             {
-
                 var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
@@ -847,7 +821,6 @@ namespace SanteDB.Messaging.AMI.Wcf
                     if (typeof(BaseEntityData).IsAssignableFrom(handler.Type) && !query.ContainsKey("obsoletionTime"))
                         query.Add("obsoletionTime", "null");
 
-
                     int totalResults = 0;
 
                     // Lean mode
@@ -857,9 +830,16 @@ namespace SanteDB.Messaging.AMI.Wcf
 
                     IEnumerable<Object> retVal = null;
                     if (Guid.TryParse(key, out Guid keyValue))
-                        retVal = handler.QueryChildObjects(keyValue, childResourceType, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).ToList();
+                        retVal = handler.QueryChildObjects(keyValue, childResourceType, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults)?.ToList();
                     else
-                        retVal = handler.QueryChildObjects(key, childResourceType, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).ToList();
+                        retVal = handler.QueryChildObjects(key, childResourceType, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults)?.ToList();
+
+                    // No content
+                    if (retVal == null)
+                    {
+                        return null;
+                    }
+
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.OfType<IdentifiedData>().OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now);
 
                     // Last modification time and not modified conditions
@@ -874,7 +854,6 @@ namespace SanteDB.Messaging.AMI.Wcf
                     {
                         return new AmiCollection(retVal, Int32.Parse(offset ?? "0"), totalResults);
                     }
-
                 }
                 else
                     throw new FileNotFoundException(resourceType);
@@ -890,13 +869,12 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// <summary>
         /// Create an associated entity
         /// </summary>
-        public object AssociationCreate(string resourceType, string key, string childResourceType, object body)
+        public virtual object AssociationCreate(string resourceType, string key, string childResourceType, object body)
         {
             this.ThrowIfNotReady();
 
             try
             {
-
                 IChainedApiResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
@@ -917,7 +895,6 @@ namespace SanteDB.Messaging.AMI.Wcf
                             childResourceType,
                             (retVal as IAmiIdentified)?.Key ?? (retVal as IdentifiedData)?.Key.ToString()));
                     return retVal;
-
                 }
                 else
                     throw new FileNotFoundException(resourceType);
@@ -927,20 +904,18 @@ namespace SanteDB.Messaging.AMI.Wcf
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
-
             }
         }
 
         /// <summary>
         /// Removes an associated entity from the scoping property path
         /// </summary>
-        public object AssociationRemove(string resourceType, string key, string childResourceType, string scopedEntityKey)
+        public virtual object AssociationRemove(string resourceType, string key, string childResourceType, string scopedEntityKey)
         {
             this.ThrowIfNotReady();
 
             try
             {
-
                 IChainedApiResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
@@ -962,7 +937,6 @@ namespace SanteDB.Messaging.AMI.Wcf
                             childResourceType,
                             (retVal as IAmiIdentified)?.Key ?? (retVal as IdentifiedData)?.Key.ToString()));
                     return retVal;
-
                 }
                 else
                     throw new FileNotFoundException(resourceType);
@@ -972,20 +946,18 @@ namespace SanteDB.Messaging.AMI.Wcf
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
-
             }
         }
 
         /// <summary>
         /// Removes an associated entity from the scoping property path
         /// </summary>
-        public object AssociationGet(string resourceType, string key, string childResourceType, string scopedEntityKey)
+        public virtual object AssociationGet(string resourceType, string key, string childResourceType, string scopedEntityKey)
         {
             this.ThrowIfNotReady();
 
             try
             {
-
                 IChainedApiResourceHandler handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
@@ -1007,7 +979,6 @@ namespace SanteDB.Messaging.AMI.Wcf
                             childResourceType,
                             (retVal as IAmiIdentified)?.Key ?? (retVal as IdentifiedData)?.Key.ToString()));
                     return retVal;
-
                 }
                 else
                     throw new FileNotFoundException(resourceType);
@@ -1017,7 +988,144 @@ namespace SanteDB.Messaging.AMI.Wcf
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw;
+            }
+        }
 
+        /// <summary>
+        /// Invoke the specified method on the API
+        /// </summary>
+        public virtual object InvokeMethod(string resourceType, string id, string operationName, ApiOperationParameterCollection body)
+        {
+            this.ThrowIfNotReady();
+
+            try
+            {
+                var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as IOperationalApiResourceHandler;
+                if (handler != null)
+                {
+                    this.AclCheck(handler, nameof(IOperationalApiResourceHandler.InvokeOperation));
+
+                    var retValRaw = handler.InvokeOperation(id, operationName, body);
+
+                    if (retValRaw is IdentifiedData retVal)
+                    {
+                        RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
+                        RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.ModifiedOn.DateTime);
+
+                        // HTTP IF headers?
+                        if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null &&
+                            retVal.ModifiedOn <= RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() ||
+                            RestOperationContext.Current.IncomingRequest.GetIfNoneMatch()?.Any(o => retVal.Tag == o) == true)
+                        {
+                            RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
+                            return null;
+                        }
+                    }
+                    return retValRaw;
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Check-in the specified object
+        /// </summary>
+        public virtual object CheckIn(string resourceType, string key)
+        {
+            this.ThrowIfNotReady();
+
+            try
+            {
+                var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as ICheckoutResourceHandler;
+                if (handler != null)
+                {
+                    this.AclCheck(handler, nameof(ICheckoutResourceHandler.CheckIn));
+                    return handler.CheckIn(Guid.Parse(key));
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Check-out the specified object
+        /// </summary>
+        public virtual object CheckOut(string resourceType, string key)
+        {
+            this.ThrowIfNotReady();
+
+            try
+            {
+                var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as ICheckoutResourceHandler;
+                if (handler != null)
+                {
+                    this.AclCheck(handler, nameof(ICheckoutResourceHandler.CheckIn));
+                    return handler.CheckOut(Guid.Parse(key));
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Invoke a method which is not tied to a classifier object
+        /// </summary>
+        public virtual object InvokeMethod(string resourceType, string operationName, ApiOperationParameterCollection body)
+        {
+            this.ThrowIfNotReady();
+
+            try
+            {
+                var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as IOperationalApiResourceHandler;
+                if (handler != null)
+                {
+                    this.AclCheck(handler, nameof(IOperationalApiResourceHandler.InvokeOperation));
+
+                    var retValRaw = handler.InvokeOperation(null, operationName, body);
+
+                    if (retValRaw is IdentifiedData retVal)
+                    {
+                        RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
+                        RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.ModifiedOn.DateTime);
+
+                        // HTTP IF headers?
+                        if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null &&
+                            retVal.ModifiedOn <= RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() ||
+                            RestOperationContext.Current.IncomingRequest.GetIfNoneMatch()?.Any(o => retVal.Tag == o) == true)
+                        {
+                            RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
+                            return null;
+                        }
+                    }
+                    return retValRaw;
+                }
+                else
+                    throw new FileNotFoundException(resourceType);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                throw;
             }
         }
     }

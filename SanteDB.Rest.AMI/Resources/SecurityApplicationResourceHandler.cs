@@ -34,6 +34,14 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary>
     public class SecurityApplicationResourceHandler : SecurityEntityResourceHandler<SecurityApplication>, ILockableResourceHandler
     {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        /// <param name="localizationService"></param>
+        public SecurityApplicationResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
+
+        }
 
         // Security repository
         private ISecurityRepositoryService m_securityRepository;
