@@ -133,7 +133,7 @@ namespace SanteDB.Rest.HDSI.Resources
                 else
                 {
                     this.m_tracer.TraceError($"{propertyName} not found");
-                    throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                    throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
                     {
                         param = propertyName
                     }));
@@ -161,7 +161,7 @@ namespace SanteDB.Rest.HDSI.Resources
                 else
                 {
                     this.m_tracer.TraceError($"Repository for {this.ResourceName} does not support Cancel");
-                    throw new NotSupportedException(this.m_localizationService.FormatString("error.rest.hdsi.notSupportCancel", new 
+                    throw new NotSupportedException(this.m_localizationService.GetString("error.rest.hdsi.notSupportCancel", new 
                     { 
                         param = this.ResourceName
                     }));
@@ -187,7 +187,7 @@ namespace SanteDB.Rest.HDSI.Resources
             else
             {
                 this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
                 {
                     param = propertyName
                 }));
@@ -219,7 +219,7 @@ namespace SanteDB.Rest.HDSI.Resources
             else
             {
                 this.m_tracer.TraceError($"Repository for {this.ResourceName} does not support Nullify");
-                throw new NotSupportedException(this.m_localizationService.FormatString("error.rest.hdsi.notSupportNullify", new
+                throw new NotSupportedException(this.m_localizationService.GetString("error.rest.hdsi.notSupportNullify", new
                 {
                     param = this.ResourceName
                 }));
@@ -239,7 +239,7 @@ namespace SanteDB.Rest.HDSI.Resources
             else
             {
                 this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
                 {
                     param = propertyName
                 }));
@@ -265,7 +265,7 @@ namespace SanteDB.Rest.HDSI.Resources
                 else
                 {
                     this.m_tracer.TraceError($"{propertyName} not found");
-                    throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                    throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
                     {
                         param = propertyName
                     }));
@@ -342,7 +342,7 @@ namespace SanteDB.Rest.HDSI.Resources
             else
             {
                 this.m_tracer.TraceError($"Operation {operationName} not supported");
-                throw new NotSupportedException(this.m_localizationService.FormatString("error.type.NotSupportedException.operation", new
+                throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException.operation", new
                 {
                     param = operationName
                 }));

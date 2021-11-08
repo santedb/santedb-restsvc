@@ -18,6 +18,7 @@
  * User: fyfej
  * Date: 2021-8-5
  */
+
 using RestSrvr;
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
@@ -41,5 +42,11 @@ namespace SanteDB.Rest.HDSI.Resources
     /// </summary>
     public class CareplanResourceHandler : ResourceHandlerBase<CarePlan>
     {
+        /// <summary>
+        /// Create careplan resource handler
+        /// </summary>
+        public CareplanResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        {
+        }
     }
 }

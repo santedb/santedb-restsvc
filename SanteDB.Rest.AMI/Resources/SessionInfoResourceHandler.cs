@@ -95,7 +95,7 @@ namespace SanteDB.Rest.AMI.Resources
             if (session == null)
             {
                 this.m_tracer.TraceError($"Session {uuid} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.sessionNotFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.ami.sessionNotFound", new
                 {
                     param = uuid
                 }));
@@ -114,7 +114,7 @@ namespace SanteDB.Rest.AMI.Resources
             if (session == null)
             {
                 this.m_tracer.TraceError($"Session {uuid} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.sessionNotFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.ami.sessionNotFound", new
                 {
                     param = uuid
                 }));

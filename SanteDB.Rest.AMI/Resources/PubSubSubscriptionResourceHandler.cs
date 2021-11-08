@@ -1,21 +1,22 @@
 ﻿/*
  * Portions Copyright 2019-2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
+
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
@@ -33,12 +34,11 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary>
     public class PubSubSubscriptionResourceHandler : IServiceImplementation, IApiResourceHandler
     {
-
         // The manager for the pub-sub service
         private IPubSubManagerService m_manager;
 
         // Tracer
-        private Tracer m_tracer = Tracer.GetTracer(typeof(PubSubSubscriptionDefinition));
+        private readonly Tracer m_tracer = Tracer.GetTracer(typeof(PubSubSubscriptionDefinition));
 
         // Localization service
         private readonly ILocalizationService m_localizationService;
@@ -120,7 +120,7 @@ namespace SanteDB.Rest.AMI.Resources
                 catch (Exception e)
                 {
                     this.m_tracer.TraceError("Error fetching subscription {0} - {1}", id, e);
-                    throw new Exception(this.m_localizationService.FormatString("error.rest.ami.fetchingSubscription", new { param = uuid.ToString() }), e);
+                    throw new Exception(this.m_localizationService.GetString("error.rest.ami.fetchingSubscription", new { param = uuid.ToString() }), e);
                 }
             }
             else
@@ -128,7 +128,6 @@ namespace SanteDB.Rest.AMI.Resources
                 this.m_tracer.TraceError("ID must be a uuid");
                 throw new ArgumentException(this.m_localizationService.GetString("error.rest.ami.idMustBeUUID"));
             }
-                
         }
 
         /// <summary>
@@ -145,7 +144,7 @@ namespace SanteDB.Rest.AMI.Resources
                 catch (Exception e)
                 {
                     this.m_tracer.TraceError("Error obsoleting / deleting subscription {0} - {1}", uuid, e);
-                    throw new Exception(this.m_localizationService.FormatString("error.rest.ami.obsoletingSubscription", new { param = uuid.ToString() }), e);
+                    throw new Exception(this.m_localizationService.GetString("error.rest.ami.obsoletingSubscription", new { param = uuid.ToString() }), e);
                 }
             }
             else
@@ -153,7 +152,6 @@ namespace SanteDB.Rest.AMI.Resources
                 this.m_tracer.TraceError("ID must be a uuid");
                 throw new ArgumentOutOfRangeException(this.m_localizationService.GetString("error.rest.ami.idMustBeUUID"));
             }
-                
         }
 
         /// <summary>
@@ -197,7 +195,7 @@ namespace SanteDB.Rest.AMI.Resources
                 catch (Exception e)
                 {
                     this.m_tracer.TraceError("Error updating subscription {0} - {1}", definition.Key, e);
-                    throw new Exception(this.m_localizationService.FormatString("error.rest.ami.updatingSubscription", new { param = definition.Key.ToString() }), e);
+                    throw new Exception(this.m_localizationService.GetString("error.rest.ami.updatingSubscription", new { param = definition.Key.ToString() }), e);
                 }
             }
             else

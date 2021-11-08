@@ -1,21 +1,22 @@
 ﻿/*
  * Portions Copyright 2019-2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
+
 using SanteDB.Core;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Security;
@@ -34,22 +35,13 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary>
     public class SecurityApplicationResourceHandler : SecurityEntityResourceHandler<SecurityApplication>, ILockableResourceHandler
     {
-        /// <summary>
-        /// DI constructor
-        /// </summary>
-        /// <param name="localizationService"></param>
-        public SecurityApplicationResourceHandler(ILocalizationService localizationService) : base(localizationService)
-        {
-
-        }
-
         // Security repository
-        private ISecurityRepositoryService m_securityRepository;
+        private readonly ISecurityRepositoryService m_securityRepository;
 
         /// <summary>
         /// Create security repository
         /// </summary>
-        public SecurityApplicationResourceHandler(ISecurityRepositoryService securityRepository, IPolicyInformationService policyInformationService, IRepositoryServiceFactory repositoryFactory, IDataCachingService cachingService = null, IRepositoryService<SecurityApplication> repository = null) : base(policyInformationService, repositoryFactory, cachingService, repository)
+        public SecurityApplicationResourceHandler(ISecurityRepositoryService securityRepository, IPolicyInformationService policyInformationService, ILocalizationService localizationService, IDataCachingService cachingService = null, IRepositoryService<SecurityApplication> repository = null) : base(policyInformationService, localizationService, cachingService, repository)
         {
             this.m_securityRepository = securityRepository;
         }
@@ -124,6 +116,5 @@ namespace SanteDB.Rest.AMI.Resources
             this.FireSecurityAttributesChanged(retVal, true, "Lockout = false");
             return retVal;
         }
-
     }
 }

@@ -47,7 +47,7 @@ namespace SanteDB.Rest.Common.Security
         public const string RestPropertyNameSession = "Session";
 
         // Trace source
-        private Tracer m_traceSource = Tracer.GetTracer(typeof(TokenAuthorizationAccessBehavior));
+        private readonly Tracer m_traceSource = Tracer.GetTracer(typeof(TokenAuthorizationAccessBehavior));
 
         /// <summary>
         /// Checks bearer access token

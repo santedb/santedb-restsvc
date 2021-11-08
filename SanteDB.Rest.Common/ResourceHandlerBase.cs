@@ -2,27 +2,29 @@
  * Copyright (C) 2021 - 2021, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
  * Date: 2021-8-5
  */
+
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Acts;
+using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
@@ -43,9 +45,8 @@ namespace SanteDB.Rest.Common
     /// </summary>
     public abstract class ResourceHandlerBase<TResource> : IServiceImplementation, IApiResourceHandler where TResource : IdentifiedData, new()
     {
-
         // Tracer
-        protected Tracer m_tracer = Tracer.GetTracer(typeof(ResourceHandlerBase<TResource>));
+        protected readonly Tracer m_tracer = Tracer.GetTracer(typeof(ResourceHandlerBase<TResource>));
 
         /// <summary>
         /// IRepository service
@@ -75,7 +76,7 @@ namespace SanteDB.Rest.Common
             if (this.m_repository == null)
             {
                 this.m_tracer.TraceError($"IRepositoryService<{typeof(TResource).FullName}> not found and no repository is found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.common.RepositoryServiceNotFound", new { param = typeof(TResource).FullName }));
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.common.RepositoryServiceNotFound", new { param = typeof(TResource).FullName }));
             }
             return this.m_repository;
         }
@@ -130,7 +131,6 @@ namespace SanteDB.Rest.Common
         /// </summary>
         public string ServiceName => typeof(ResourceHandlerBase<TResource>).Name;
 
-
         /// <summary>
         /// Create a resource
         /// </summary>
@@ -140,7 +140,7 @@ namespace SanteDB.Rest.Common
             if (data == null)
             {
                 this.m_tracer.TraceError($"{nameof(data)} cannot be null");
-                throw new ArgumentNullException(this.m_localizationService.FormatString("error.type.ArgumentNullException.param", new { param = nameof(data) }));
+                throw new ArgumentNullException(this.m_localizationService.GetString("error.type.ArgumentNullException.param", new { param = nameof(data) }));
             }
             else if ((this.Capabilities & ResourceCapabilityType.Create) == 0 &&
                 (this.Capabilities & ResourceCapabilityType.CreateOrUpdate) == 0)
@@ -151,34 +151,33 @@ namespace SanteDB.Rest.Common
             bundle?.Reconstitute();
 
             var processData = bundle?.GetFocalObject() ?? data;
-            
+
             try
             {
                 if (!(processData is TResource))
                 {
                     this.m_tracer.TraceError($"Invalid data submission. Expected {typeof(TResource).FullName} but received {processData.GetType().FullName}. If you are submitting a bundle, ensure it has an entry point.");
-                    throw new ArgumentException(this.m_localizationService.FormatString("error.rest.common.invalidDataSubmission", new 
-                    { 
+                    throw new ArgumentException(this.m_localizationService.GetString("error.rest.common.invalidDataSubmission", new
+                    {
                         param = typeof(TResource).FullName,
                         param1 = processData.GetType().FullName
                     }));
                 }
                 else if (processData is TResource)
                 {
-
                     var resourceData = processData as TResource;
                     resourceData = updateIfExists ? this.GetRepository().Save(resourceData) : this.GetRepository().Insert(resourceData);
 
-                    AuditUtil.AuditCreate(Core.Model.Audit.OutcomeIndicator.Success, null, resourceData);
-                  
+                    AuditUtil.AuditCreate(OutcomeIndicator.Success, null, resourceData);
+
                     return resourceData;
                 }
             }
             catch (Exception e)
             {
-                AuditUtil.AuditCreate(Core.Auditing.OutcomeIndicator.MinorFail, null, data);
+                AuditUtil.AuditCreate(OutcomeIndicator.MinorFail, null, data);
                 this.m_tracer.TraceError($"Error creating {data}");
-                throw new Exception(this.m_localizationService.FormatString("error.rest.common.errorCreatingParam", new { param = nameof(data) }), e);
+                throw new Exception(this.m_localizationService.GetString("error.rest.common.errorCreatingParam", new { param = nameof(data) }), e);
             }
             this.m_tracer.TraceError($"Invalid data type: {nameof(data)}");
             throw new ArgumentException(nameof(data), this.m_localizationService.GetString("error.rest.common.invalidDataType"));
@@ -197,16 +196,15 @@ namespace SanteDB.Rest.Common
             try
             {
                 var retVal = this.GetRepository().Get((Guid)id, (Guid)versionId);
-                if(retVal is Entity || retVal is Act)
-                    AuditUtil.AuditRead(Core.Model.Audit.OutcomeIndicator.Success, id.ToString(), retVal);
+                if (retVal is Entity || retVal is Act)
+                    AuditUtil.AuditRead(OutcomeIndicator.Success, id.ToString(), retVal);
                 return retVal;
             }
             catch (Exception e)
             {
-                AuditUtil.AuditRead<TResource>(Core.Auditing.OutcomeIndicator.MinorFail, id.ToString());
+                AuditUtil.AuditRead<TResource>(OutcomeIndicator.MinorFail, id.ToString());
                 this.m_tracer.TraceError($"Error getting resource {id}");
-                throw new Exception(this.m_localizationService.FormatString("error.rest.common.gettingResource", new { param = nameof(id) }), e);
-
+                throw new Exception(this.m_localizationService.GetString("error.rest.common.gettingResource", new { param = nameof(id) }), e);
             }
         }
 
@@ -222,20 +220,19 @@ namespace SanteDB.Rest.Common
             try
             {
                 var retVal = this.GetRepository().Obsolete((Guid)key);
-                AuditUtil.AuditDelete(Core.Model.Audit.OutcomeIndicator.Success, key.ToString(), retVal);
+                AuditUtil.AuditDelete(OutcomeIndicator.Success, key.ToString(), retVal);
                 return retVal;
             }
             catch (Exception e)
             {
-                AuditUtil.AuditDelete<TResource>(Core.Auditing.OutcomeIndicator.MinorFail, key.ToString());
+                AuditUtil.AuditDelete<TResource>(OutcomeIndicator.MinorFail, key.ToString());
                 this.m_tracer.TraceError($"Error obsoleting resource {key}");
-                throw new Exception(this.m_localizationService.FormatString("error.rest.common.obsoletingResource", new { param = nameof(key) }), e);
-
+                throw new Exception(this.m_localizationService.GetString("error.rest.common.obsoletingResource", new { param = nameof(key) }), e);
             }
         }
 
         /// <summary>
-        /// Perform a query 
+        /// Perform a query
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual IEnumerable<Object> Query(NameValueCollection queryParameters)
@@ -254,9 +251,7 @@ namespace SanteDB.Rest.Common
             {
                 this.m_tracer.TraceError("Error querying data source");
                 throw new Exception(this.m_localizationService.GetString("error.rest.common.queryDataSource"), e);
-
             }
-
         }
 
         /// <summary>
@@ -271,7 +266,7 @@ namespace SanteDB.Rest.Common
             {
                 IEnumerable<TResource> retVal = null;
 
-                // IS this a freetext search? 
+                // IS this a freetext search?
                 if (queryParameters.ContainsKey("_any"))
                 {
                     var fts = ApplicationServiceContext.Current.GetService<IFreetextSearchService>();
@@ -329,12 +324,12 @@ namespace SanteDB.Rest.Common
                     }
                 }
                 if (typeof(Act).IsAssignableFrom(typeof(TResource)) || typeof(Entity).IsAssignableFrom(typeof(TResource)))
-                    AuditUtil.AuditQuery(Core.Model.Audit.OutcomeIndicator.Success, queryParameters.ToString(), retVal.ToArray());
+                    AuditUtil.AuditQuery(OutcomeIndicator.Success, queryParameters.ToString(), retVal.ToArray());
                 return retVal;
             }
             catch (Exception e)
             {
-                AuditUtil.AuditQuery<TResource>(Core.Auditing.OutcomeIndicator.MinorFail, queryParameters.ToString());
+                AuditUtil.AuditQuery<TResource>(OutcomeIndicator.MinorFail, queryParameters.ToString());
                 this.m_tracer.TraceError("Error querying underlying repository");
                 throw new Exception(this.m_localizationService.GetString("error.rest.common.queryingRepository"), e);
             }
@@ -346,7 +341,6 @@ namespace SanteDB.Rest.Common
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual Object Update(Object data)
         {
-
             if ((this.Capabilities & ResourceCapabilityType.Update) == 0)
                 throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
 
@@ -359,7 +353,7 @@ namespace SanteDB.Rest.Common
                 if (!(processData is TResource))
                 {
                     this.m_tracer.TraceError($"Invalid data submission. Expected {typeof(TResource).FullName} but received {processData.GetType().FullName}. If you are submitting a bundle, ensure it has an entry point");
-                    throw new ArgumentException(this.m_localizationService.FormatString("error.rest.common.invalidDataSubmission", new
+                    throw new ArgumentException(this.m_localizationService.GetString("error.rest.common.invalidDataSubmission", new
                     {
                         param = typeof(TResource).FullName,
                         param1 = processData.GetType().FullName
@@ -370,7 +364,7 @@ namespace SanteDB.Rest.Common
                     var entityData = processData as TResource;
 
                     var retVal = this.GetRepository().Save(entityData);
-                    AuditUtil.AuditUpdate(Core.Model.Audit.OutcomeIndicator.Success, null, retVal);
+                    AuditUtil.AuditUpdate(OutcomeIndicator.Success, null, retVal);
                     return retVal;
                 }
                 else
@@ -381,7 +375,7 @@ namespace SanteDB.Rest.Common
             }
             catch (Exception e)
             {
-                AuditUtil.AuditUpdate(Core.Auditing.OutcomeIndicator.MinorFail, null, data);
+                AuditUtil.AuditUpdate(OutcomeIndicator.MinorFail, null, data);
                 this.m_tracer.TraceError("Error updating resource");
                 throw new Exception(this.m_localizationService.GetString("error.rest.common.updatingResource"), e);
             }

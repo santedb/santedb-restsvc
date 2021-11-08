@@ -16,6 +16,7 @@
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
+
 using RestSrvr.Exceptions;
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
@@ -48,7 +49,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Create security repository
         /// </summary>
-        public SecurityUserResourceHandler(IIdentityProviderService identityProvider, IRoleProviderService roleProvider, ISecurityRepositoryService securityRepository, IPolicyInformationService policyInformationService, IRepositoryServiceFactory repositoryFactory, ILocalizationService localizationService, IDataCachingService cachingService = null, IRepositoryService<SecurityUser> repository = null) : base(policyInformationService, repositoryFactory, localizationService, cachingService, repository)
+        public SecurityUserResourceHandler(IIdentityProviderService identityProvider, ILocalizationService localizationService, IRoleProviderService roleProvider, ISecurityRepositoryService securityRepository, IPolicyInformationService policyInformationService, IDataCachingService cachingService = null, IRepositoryService<SecurityUser> repository = null) : base(policyInformationService, localizationService, cachingService, repository)
         {
             this.m_securityRepository = securityRepository;
             this.m_roleProvider = roleProvider;
@@ -133,7 +134,7 @@ namespace SanteDB.Rest.AMI.Resources
                 if (user != null && user.UserName?.ToLowerInvariant() != td.Entity.UserName.ToLowerInvariant())
                 {
                     this.m_tracer.TraceError($"Username mismatch expect {user.UserName.ToLowerInvariant()} but got {td.Entity.UserName.ToLowerInvariant()}", 403);
-                    throw new FaultException(403, this.m_localizationService.FormatString("error.rest.ami.mismatchUsername", new
+                    throw new FaultException(403, this.m_localizationService.GetString("error.rest.ami.mismatchUsername", new
                     {
                         param = user.UserName.ToLowerInvariant(),
                         param2 = td.Entity.UserName.ToLowerInvariant()

@@ -176,7 +176,7 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                throw new NotSupportedException(this.m_localizationService.FormatString("error.type.NotSupportedException.operation", new
+                throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException.operation", new
                 {
                     param = operationName
                 }));
@@ -231,7 +231,7 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
                 {
                     param = propertyName
                 }));
@@ -250,7 +250,7 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
                 {
                     param = propertyName
                 }));
@@ -269,7 +269,7 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
                 {
                     param = propertyName
                 }));
@@ -289,7 +289,7 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
                 {
                     param = propertyName
                 }));

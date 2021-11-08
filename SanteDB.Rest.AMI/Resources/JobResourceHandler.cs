@@ -101,7 +101,7 @@ namespace SanteDB.Rest.AMI.Resources
             if (job == null)
             {
                 this.m_tracer.TraceError($"No IJob of type {id} found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.noIJobType", new { param = id.ToString() }));
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.ami.noIJobType", new { param = id.ToString() }));
             }
             return new JobInfo(job);
         }
@@ -117,7 +117,7 @@ namespace SanteDB.Rest.AMI.Resources
             if (job == null)
             {
                 this.m_tracer.TraceError($"No IJob of type {key} found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.noIJobType", new { param = key.ToString() }));
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.ami.noIJobType", new { param = key.ToString() }));
             }
                 
             if (job.CanCancel)
@@ -178,7 +178,7 @@ namespace SanteDB.Rest.AMI.Resources
                 if (job == null)
                 {
                     this.m_tracer.TraceError($"Could not find job with ID {jobInfo.Key}");
-                    throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.couldNotFindJob", new { param = jobInfo.Key }));
+                    throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.ami.couldNotFindJob", new { param = jobInfo.Key }));
                 }
                 jobManager.StartJob(job, jobInfo.Parameters?.Select(o => o.Value).ToArray());
                 jobInfo.State = job.CurrentState;

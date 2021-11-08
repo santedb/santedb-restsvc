@@ -126,6 +126,7 @@
           <Name>RestSrvr</Name>
         </ProjectReference>
         <ProjectReference Include="..\..\santedb-docker\SanteDB.Docker.Core\SanteDB.Docker.Core.csproj" />
+        <ProjectReference Include="..\..\santedb-i18n\SanteDB.Core.i18n\SanteDB.Core.i18n.csproj" />
 
       </ItemGroup>
     </When>
@@ -135,13 +136,13 @@
         <PackageReference Include="SanteDB.Core.Applets" Version="$(VersionNumber)" />
         <PackageReference Include="SanteDB.Core.Api" Version="$(VersionNumber)" />
         <PackageReference Include="SanteDB.Core.Model" Version="$(VersionNumber)" />
+        <PackageReference Include="SanteDB.Core.i18n" Version="$(VersionNumber)" />
         <PackageReference Include="SanteDB.Docker.Core" Version="$(VersionNumber)" />
 
       </ItemGroup>
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <ProjectReference Include="..\..\santedb-i18n\SanteDB.Core.i18n\SanteDB.Core.i18n.csproj" />
     <ProjectReference Include="..\SanteDB.Rest.Common\SanteDB.Rest.Common.csproj">
       <Project>{786bd0ee-1806-4158-ba45-80249ac6dfe7}</Project>
       <Name>SanteDB.Rest.Common</Name>

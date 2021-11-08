@@ -98,7 +98,7 @@ namespace SanteDB.Rest.Common.Serialization
         private String m_versionName = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "Unnamed";
 
         // Trace source
-        private Tracer m_traceSource = Tracer.GetTracer(typeof(RestMessageDispatchFormatter));
+        private readonly Tracer m_traceSource = Tracer.GetTracer(typeof(RestMessageDispatchFormatter));
 
         // Known types
         private static Type[] s_knownTypes;

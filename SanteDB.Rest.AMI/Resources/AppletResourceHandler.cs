@@ -138,7 +138,7 @@ namespace SanteDB.Rest.AMI.Resources
             if (appletData == null)
             {
                 this.m_tracer.TraceError($"File not found: {appletId}");
-                throw new FileNotFoundException(this.m_localizationService.FormatString("error.rest.ami.FileNotFoundParam", new 
+                throw new FileNotFoundException(this.m_localizationService.GetString("error.rest.ami.FileNotFoundParam", new 
                 { 
                     param = appletId.ToString()
                 }));
@@ -216,7 +216,7 @@ namespace SanteDB.Rest.AMI.Resources
             if (!appletMgr.Applets.Any(o => pkg.Meta.Id == o.Info.Id))
             {
                 this.m_tracer.TraceError($"File not found: {pkg.Meta.Id}");
-                throw new FileNotFoundException(this.m_localizationService.FormatString("error.rest.ami.FileNotFoundParam", new
+                throw new FileNotFoundException(this.m_localizationService.GetString("error.rest.ami.FileNotFoundParam", new
                 {
                     param = pkg.Meta.Id
                 }));

@@ -123,7 +123,7 @@ namespace SanteDB.Rest.AMI.Resources
             catch (Exception e)
             {
                 this.m_tracer.TraceError($"Error querying probes : {e.Message}");
-                throw new Exception(this.m_localizationService.FormatString("error.rest.ami.errorQueryingProbes", new { param = e.Message }), e);
+                throw new Exception(this.m_localizationService.GetString("error.rest.ami.errorQueryingProbes", new { param = e.Message }), e);
             }
         }
 

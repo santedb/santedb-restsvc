@@ -36,7 +36,7 @@ namespace SanteDB.Rest.Common
     public class ResourceHandlerTool
     {
         // Common trace
-        private Tracer m_traceSource = Tracer.GetTracer(typeof(ResourceHandlerTool));
+        private readonly Tracer m_traceSource = Tracer.GetTracer(typeof(ResourceHandlerTool));
 
         // Handlers
         private ConcurrentDictionary<String, IApiResourceHandler> m_handlers = new ConcurrentDictionary<string, IApiResourceHandler>();

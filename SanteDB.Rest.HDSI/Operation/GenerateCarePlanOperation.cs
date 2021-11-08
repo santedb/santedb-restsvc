@@ -20,18 +20,23 @@ namespace SanteDB.Rest.HDSI.Operation
     /// </summary>
     public class GenerateCarePlanOperation : IApiChildOperation
     {
-
         // Care plan service
         private ICarePlanService m_carePlanService;
+
+        // Repo service
         private IConceptRepositoryService m_conceptRepositoryService;
+
+        // Locale service
+        private readonly ILocalizationService m_localizationService;
 
         /// <summary>
         /// DI constructor for care plan
         /// </summary>
-        public GenerateCarePlanOperation(ICarePlanService carePlanService, IConceptRepositoryService conceptRepositoryService)
+        public GenerateCarePlanOperation(ICarePlanService carePlanService, IConceptRepositoryService conceptRepositoryService, ILocalizationService localizationService)
         {
             this.m_carePlanService = carePlanService;
             this.m_conceptRepositoryService = conceptRepositoryService;
+            this.m_localizationService = localizationService;
         }
 
         /// <summary>
@@ -55,13 +60,13 @@ namespace SanteDB.Rest.HDSI.Operation
         public object Invoke(Type scopingType, object scopingKey, ApiOperationParameterCollection parameters)
         {
             // Target - of the operation
-            if(!parameters.TryGet("targetPatient", out Patient target))
+            if (!parameters.TryGet("targetPatient", out Patient target))
             {
-                throw new InvalidOperationException(ErrorMessages.ERR_MISSING_ARGUMENT.Format("targetPatient"));
+                throw new ArgumentNullException("targetPatient", this.m_localizationService.GetString(ErrorMessageStrings.MISSING_ARGUMENT));
             }
 
             // Get parameters for the history of the patient which can provide history
-            if(!parameters.TryGet("history", out Bundle history))
+            if (!parameters.TryGet("history", out Bundle history))
             {
                 history = new Bundle();
             }

@@ -38,7 +38,7 @@ namespace SanteDB.Rest.AMI.Resources
         private IPubSubManagerService m_manager;
 
         // Tracer
-        private Tracer m_tracer = Tracer.GetTracer(typeof(PubSubSubscriptionDefinition));
+        private readonly Tracer m_tracer = Tracer.GetTracer(typeof(PubSubSubscriptionDefinition));
 
         private ILocalizationService m_localizationService;
 
@@ -118,7 +118,7 @@ namespace SanteDB.Rest.AMI.Resources
             else
             {
                 this.m_tracer.TraceError($"{id} is not a valid UUID");
-                throw new ArgumentException(this.m_localizationService.FormatString("error.rest.ami.invalidUUID", new { param = id.ToString() }));
+                throw new ArgumentException(this.m_localizationService.GetString("error.rest.ami.invalidUUID", new { param = id.ToString() }));
             }
         }
 
@@ -132,7 +132,7 @@ namespace SanteDB.Rest.AMI.Resources
             else
             {
                 this.m_tracer.TraceError($"{key} is not a valid UUID");
-                throw new ArgumentException(this.m_localizationService.FormatString("error.rest.ami.invalidUUID", new { param = key.ToString() }));
+                throw new ArgumentException(this.m_localizationService.GetString("error.rest.ami.invalidUUID", new { param = key.ToString() }));
             }
         }
 
@@ -175,7 +175,7 @@ namespace SanteDB.Rest.AMI.Resources
                 catch (Exception e)
                 {
                     this.m_tracer.TraceError($"Error updating channel definition: {definition.Key}", e);
-                    throw new Exception(this.m_localizationService.FormatString("error.rest.ami.updatingChannel", new { param = definition.Key }), e);
+                    throw new Exception(this.m_localizationService.GetString("error.rest.ami.updatingChannel", new { param = definition.Key }), e);
                 }
             }
             else
@@ -183,7 +183,6 @@ namespace SanteDB.Rest.AMI.Resources
                 this.m_tracer.TraceError("Body must be of type PubSubChannelDefinition");
                 throw new ArgumentException(this.m_localizationService.GetString("error.rest.ami.bodyMustBePubSubChannel"));
             }
-                
         }
     }
 }

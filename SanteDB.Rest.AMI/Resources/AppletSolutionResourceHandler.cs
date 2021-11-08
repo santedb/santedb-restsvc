@@ -154,7 +154,7 @@ namespace SanteDB.Rest.AMI.Resources
             if (appletData == null)
             {
                 this.m_tracer.TraceError($"File not found: {solutionId}");
-                throw new FileNotFoundException(this.m_localizationService.FormatString("error.rest.ami.FileNotFoundParam", new 
+                throw new FileNotFoundException(this.m_localizationService.GetString("error.rest.ami.FileNotFoundParam", new 
                 { 
                     param = solutionId.ToString()
                 }));
@@ -238,7 +238,7 @@ namespace SanteDB.Rest.AMI.Resources
             if (!appletMgr.Solutions.Any(o => pkg.Meta.Id == o.Meta.Id))
             {
                 this.m_tracer.TraceError($"File not found: {pkg.Meta.Id}");
-                throw new FileNotFoundException(this.m_localizationService.FormatString("error.rest.ami.FileNotFoundParam", new
+                throw new FileNotFoundException(this.m_localizationService.GetString("error.rest.ami.FileNotFoundParam", new
                 {
                     param = pkg.Meta.Id
                 }));
@@ -290,7 +290,7 @@ namespace SanteDB.Rest.AMI.Resources
             else
             {
                 this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new 
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new 
                 { 
                     param = propertyName
                 }));
@@ -310,7 +310,7 @@ namespace SanteDB.Rest.AMI.Resources
             else
             {
                 this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
                 {
                     param = propertyName
                 }));
@@ -330,7 +330,7 @@ namespace SanteDB.Rest.AMI.Resources
             else
             {
                 this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
                 {
                     param = propertyName
                 }));
@@ -350,7 +350,7 @@ namespace SanteDB.Rest.AMI.Resources
             else
             {
                 this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
                 {
                     param = propertyName
                 }));

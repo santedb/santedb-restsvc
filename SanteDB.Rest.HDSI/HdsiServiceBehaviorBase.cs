@@ -59,7 +59,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// The trace source for HDSI based implementations
         /// </summary>
-        protected Tracer m_traceSource = Tracer.GetTracer(typeof(HdsiServiceBehaviorBase));
+        protected readonly Tracer m_traceSource = Tracer.GetTracer(typeof(HdsiServiceBehaviorBase));
 
         /// <summary>
         /// Get resource handler
@@ -437,7 +437,7 @@ namespace SanteDB.Rest.HDSI
 
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
-                    var retVal = handler.Query(query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).OfType<IdentifiedData>();
+                    var retVal = handler.Query(query, offset, count, out int totalResults).OfType<IdentifiedData>();
                     RestOperationContext.Current.OutgoingResponse.SetLastModified((retVal.OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now));
 
                     // Last modification time and not modified conditions
@@ -832,8 +832,6 @@ namespace SanteDB.Rest.HDSI
                     // No obsoletion time?
                     if (typeof(BaseEntityData).IsAssignableFrom(handler.Type) && !query.ContainsKey("obsoletionTime"))
                         query.Add("obsoletionTime", "null");
-
-                    int totalResults = 0;
 
                     // Lean mode
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));
@@ -1439,8 +1437,6 @@ namespace SanteDB.Rest.HDSI
                     // No obsoletion time?
                     if (typeof(BaseEntityData).IsAssignableFrom(handler.Type) && !query.ContainsKey("obsoletionTime"))
                         query.Add("obsoletionTime", "null");
-
-                    int totalResults = 0;
 
                     // Lean mode
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));

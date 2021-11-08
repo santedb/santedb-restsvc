@@ -16,6 +16,7 @@
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
+
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Model.AMI.Auth;
@@ -36,108 +37,108 @@ namespace SanteDB.Rest.AMI.Resources
     {
         // Security repository
         private IRoleProviderService m_roleProvider;
-    }
-    /// <summary>
-    /// Create security repository
-    /// </summary>
-    public SecurityRoleResourceHandler(IRoleProviderService roleProvider, IPolicyInformationService policyInformationService, IRepositoryServiceFactory repositoryFactory, ILocalizationService localizationService, IDataCachingService cachingService = null, IRepositoryService<SecurityRole> repository = null) : base(policyInformationService, repositoryFactory, localizationService, cachingService, repository)
-    {
-        this.m_roleProvider = roleProvider;
-    }
 
-    /// <summary>
-    /// Get the type
-    /// </summary>
-    public override Type Type => typeof(SecurityRoleInfo);
-
-    /// <summary>
-    /// Create the specified security role
-    /// </summary>
-    [Demand(PermissionPolicyIdentifiers.CreateRoles)]
-    public override object Create(object data, bool updateIfExists)
-    {
-        if (data is SecurityRole)
-            data = new SecurityRoleInfo(data as SecurityRole, this.m_policyInformationService);
-
-        var retVal = base.Create(data, updateIfExists) as SecurityRoleInfo;
-        var td = data as SecurityRoleInfo;
-
-        return new SecurityRoleInfo(retVal.Entity, this.m_policyInformationService);
-    }
-
-    /// <summary>
-    /// Obsolete roles
-    /// </summary>
-    [Demand(PermissionPolicyIdentifiers.AlterRoles)]
-    public override object Obsolete(object key)
-    {
-        return base.Obsolete(key);
-    }
-
-    /// <summary>
-    /// Remove an associated entity
-    /// </summary>
-    [Demand(PermissionPolicyIdentifiers.AlterRoles)]
-    public object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
-    {
-        var scope = this.GetRepository().Get(Guid.Parse(scopingEntityKey.ToString()));
-        if (scope == null)
+        /// <summary>
+        /// Create security repository
+        /// </summary>
+        public SecurityRoleResourceHandler(IRoleProviderService roleProvider, IPolicyInformationService policyInformationService, ILocalizationService localizationService, IDataCachingService cachingService = null, IRepositoryService<SecurityRole> repository = null) : base(policyInformationService, localizationService, cachingService, repository)
         {
-            this.m_tracer.TraceError($"Could not find SecurityRole with identifier {scopingEntityKey}");
-            throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.securityRoleNotFound", new
+            this.m_roleProvider = roleProvider;
+        }
+
+        /// <summary>
+        /// Get the type
+        /// </summary>
+        public override Type Type => typeof(SecurityRoleInfo);
+
+        /// <summary>
+        /// Create the specified security role
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.CreateRoles)]
+        public override object Create(object data, bool updateIfExists)
+        {
+            if (data is SecurityRole)
+                data = new SecurityRoleInfo(data as SecurityRole, this.m_policyInformationService);
+
+            var retVal = base.Create(data, updateIfExists) as SecurityRoleInfo;
+            var td = data as SecurityRoleInfo;
+
+            return new SecurityRoleInfo(retVal.Entity, this.m_policyInformationService);
+        }
+
+        /// <summary>
+        /// Obsolete roles
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.AlterRoles)]
+        public override object Obsolete(object key)
+        {
+            return base.Obsolete(key);
+        }
+
+        /// <summary>
+        /// Remove an associated entity
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.AlterRoles)]
+        public object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
+        {
+            var scope = this.GetRepository().Get(Guid.Parse(scopingEntityKey.ToString()));
+            if (scope == null)
             {
-                param = scopingEntityKey
-            }));
-        }
+                this.m_tracer.TraceError($"Could not find SecurityRole with identifier {scopingEntityKey}");
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.ami.securityRoleNotFound", new
+                {
+                    param = scopingEntityKey
+                }));
+            }
 
-        switch (propertyName)
-        {
-            case "policy":
+            switch (propertyName)
+            {
+                case "policy":
 
-            case "user":
-                var user = ApplicationServiceContext.Current.GetService<IRepositoryService<SecurityUser>>().Get(Guid.Parse(subItemKey.ToString()));
-                if (user == null)
-                {
-                    this.m_tracer.TraceError($"User {subItemKey} not found");
-                    throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.userMessage"));
-                }
-                try
-                {
-                    this.m_roleProvider.RemoveUsersFromRoles(new string[] { user.UserName }, new string[] { scope.Name }, AuthenticationContext.Current.Principal);
-                    this.FireSecurityAttributesChanged(scope, true, $"del user={user.UserName}");
-                    return user;
-                }
-                catch
-                {
-                    this.FireSecurityAttributesChanged(scope, false, $"del user={subItemKey}");
-                    throw;
-                }
-            default:
-                {
-                    this.m_tracer.TraceError($"Property with {propertyName} not valid");
-                    throw new ArgumentException(this.m_localizationService.FormatString("error.rest.ami.invalidProperty", new
+                case "user":
+                    var user = ApplicationServiceContext.Current.GetService<IRepositoryService<SecurityUser>>().Get(Guid.Parse(subItemKey.ToString()));
+                    if (user == null)
                     {
-                        param = propertyName
-                    }));
-                }
+                        this.m_tracer.TraceError($"User {subItemKey} not found");
+                        throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.userMessage"));
+                    }
+                    try
+                    {
+                        this.m_roleProvider.RemoveUsersFromRoles(new string[] { user.UserName }, new string[] { scope.Name }, AuthenticationContext.Current.Principal);
+                        this.FireSecurityAttributesChanged(scope, true, $"del user={user.UserName}");
+                        return user;
+                    }
+                    catch
+                    {
+                        this.FireSecurityAttributesChanged(scope, false, $"del user={subItemKey}");
+                        throw;
+                    }
+                default:
+                    {
+                        this.m_tracer.TraceError($"Property with {propertyName} not valid");
+                        throw new ArgumentException(this.m_localizationService.GetString("error.rest.ami.invalidProperty", new
+                        {
+                            param = propertyName
+                        }));
+                    }
+            }
+        }
+
+        /// <summary>
+        /// Update roles
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [Demand(PermissionPolicyIdentifiers.AlterRoles)]
+        public override object Update(object data)
+        {
+            if (data is SecurityRole)
+                data = new SecurityRoleInfo(data as SecurityRole, this.m_policyInformationService);
+            var td = data as SecurityRoleInfo;
+
+            var retVal = base.Update(data) as SecurityRoleInfo;
+
+            return new SecurityRoleInfo(td.Entity, this.m_policyInformationService);
         }
     }
-
-    /// <summary>
-    /// Update roles
-    /// </summary>
-    /// <param name="data"></param>
-    /// <returns></returns>
-    [Demand(PermissionPolicyIdentifiers.AlterRoles)]
-    public override object Update(object data)
-    {
-        if (data is SecurityRole)
-            data = new SecurityRoleInfo(data as SecurityRole, this.m_policyInformationService);
-        var td = data as SecurityRoleInfo;
-
-        var retVal = base.Update(data) as SecurityRoleInfo;
-
-        return new SecurityRoleInfo(td.Entity, this.m_policyInformationService);
-    }
-}
 }

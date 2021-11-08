@@ -16,6 +16,7 @@
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
+
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
@@ -58,10 +59,7 @@ namespace SanteDB.Rest.AMI.Resources
         private IDataCachingService m_cacheService;
 
         // Get the tracer
-        protected Tracer m_tracer = Tracer.GetTracer(typeof(SecurityEntityResourceHandler<TSecurityEntity>));
-
-        // Repository factory
-        private IRepositoryServiceFactory m_repositoryFactory;
+        protected readonly Tracer m_tracer = Tracer.GetTracer(typeof(SecurityEntityResourceHandler<TSecurityEntity>));
 
         // Policy information service
         protected IPolicyInformationService m_policyInformationService;
@@ -69,12 +67,11 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Create a new instance of the respository handler
         /// </summary>
-        public SecurityEntityResourceHandler(IPolicyInformationService policyInformationService, IRepositoryServiceFactory repositoryFactory, ILocalizationService localizationService, IDataCachingService cachingService = null, IRepositoryService<TSecurityEntity> repository = null)
+        public SecurityEntityResourceHandler(IPolicyInformationService policyInformationService, ILocalizationService localizationService, IDataCachingService cachingService = null, IRepositoryService<TSecurityEntity> repository = null)
 
         {
             this.m_cacheService = cachingService;
             this.m_repository = repository;
-            this.m_repositoryFactory = repositoryFactory;
             this.m_policyInformationService = policyInformationService;
             this.m_localizationService = localizationService;
         }
@@ -120,12 +117,10 @@ namespace SanteDB.Rest.AMI.Resources
         protected IRepositoryService<TSecurityEntity> GetRepository()
         {
             if (this.m_repository == null)
-                this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<TSecurityEntity>>();
-            if (this.m_repository == null)
             {
-                this.m_tracer.TraceWarning("IRepositoryService<{0}> was not found will generate a default one using IRepositoryServiceFactory", typeof(TSecurityEntity).FullName);
-                this.m_repository = this.m_repositoryFactory.CreateRepository<TSecurityEntity>();
+                this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<TSecurityEntity>>();
             }
+
             return this.m_repository;
         }
 
@@ -143,7 +138,7 @@ namespace SanteDB.Rest.AMI.Resources
             if (td is null)
             {
                 this.m_tracer.TraceError($"Invalid type {nameof(data)}");
-                throw new ArgumentException(this.m_localizationService.FormatString("error.type.ArgumentException", new
+                throw new ArgumentException(this.m_localizationService.GetString("error.type.ArgumentException", new
                 {
                     param = nameof(data)
                 }));
@@ -272,7 +267,7 @@ namespace SanteDB.Rest.AMI.Resources
             if (td is null)
             {
                 this.m_tracer.TraceError($"Invalid type {nameof(data)}");
-                throw new ArgumentException(this.m_localizationService.FormatString("error.type.ArgumentException", new
+                throw new ArgumentException(this.m_localizationService.GetString("error.type.ArgumentException", new
                 {
                     param = nameof(data)
                 }));
@@ -329,7 +324,7 @@ namespace SanteDB.Rest.AMI.Resources
             else
             {
                 this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
                 {
                     param = propertyName
                 }));
@@ -350,7 +345,7 @@ namespace SanteDB.Rest.AMI.Resources
             else
             {
                 this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
                 {
                     param = propertyName
                 }));
@@ -371,7 +366,7 @@ namespace SanteDB.Rest.AMI.Resources
             else
             {
                 this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
                 {
                     param = propertyName
                 }));
@@ -392,7 +387,7 @@ namespace SanteDB.Rest.AMI.Resources
             else
             {
                 this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
                 {
                     param = propertyName
                 }));

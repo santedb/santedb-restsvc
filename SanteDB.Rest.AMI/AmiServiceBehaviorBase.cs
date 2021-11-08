@@ -59,7 +59,7 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// <summary>
         /// Trace source for logging
         /// </summary>
-        protected Tracer m_traceSource = Tracer.GetTracer(typeof(AmiServiceBehaviorBase));
+        protected readonly Tracer m_traceSource = Tracer.GetTracer(typeof(AmiServiceBehaviorBase));
 
         /// <summary>
         /// The resource handler tool for executing operations

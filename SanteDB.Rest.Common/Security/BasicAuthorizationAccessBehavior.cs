@@ -2,22 +2,23 @@
  * Copyright (C) 2021 - 2021, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
  * Date: 2021-8-5
  */
+
 using RestSrvr;
 using RestSrvr.Message;
 using SanteDB.Core;
@@ -45,12 +46,11 @@ namespace SanteDB.Rest.Common.Security
     [DisplayName("HTTP BASIC Authentication")]
     public class BasicAuthorizationAccessBehavior : IServicePolicy, IServiceBehavior
     {
-
         // Configuration from main SanteDB
         private BasicAuthorizationConfigurationSection m_configuration = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<BasicAuthorizationConfigurationSection>();
 
         // Trace source
-        private Tracer m_traceSource = Tracer.GetTracer(typeof(BasicAuthorizationAccessBehavior));
+        private readonly Tracer m_traceSource = Tracer.GetTracer(typeof(BasicAuthorizationAccessBehavior));
 
         /// <summary>
         /// Apply the policy to the request
@@ -108,7 +108,7 @@ namespace SanteDB.Rest.Common.Security
                 if (pipService != null)
                     claims.AddRange(pdpService.GetEffectivePolicySet(principal).Where(o => o.Rule == PolicyGrantType.Grant).Select(o => new SanteDBClaim(SanteDBClaimTypes.SanteDBGrantedPolicyClaim, o.Policy.Oid)));
 
-                // Finally validate the client 
+                // Finally validate the client
                 var claimsPrincipal = new SanteDBClaimsPrincipal(new SanteDBClaimsIdentity(principal.Identity, claims));
 
                 if (this.m_configuration?.RequireClientAuth == true)
@@ -137,7 +137,6 @@ namespace SanteDB.Rest.Common.Security
                 // Disposed context so reset the auth
                 RestOperationContext.Current.Disposed += (o, e) => context?.Dispose();
             }
-
         }
 
         /// <summary>
