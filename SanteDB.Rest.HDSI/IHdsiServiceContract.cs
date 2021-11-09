@@ -2,22 +2,23 @@
  * Copyright (C) 2021 - 2021, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
  * Date: 2021-8-5
  */
+
 using RestSrvr.Attributes;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
@@ -91,9 +92,8 @@ namespace SanteDB.Rest.HDSI
     [RestServiceFault(503, "The service is not available (starting up or shutting down)")]
     public interface IHdsiServiceContract : IRestApiContractImplementation
     {
-
         /// <summary>
-        /// Gets the current server time from the API allowing for time synchronization 
+        /// Gets the current server time from the API allowing for time synchronization
         /// </summary>
         [Get("/time")]
         DateTime Time();
@@ -112,7 +112,7 @@ namespace SanteDB.Rest.HDSI
         /// Returns a service capability statement of the HDSI
         /// </summary>
         /// <remarks>
-        /// This service options statement contains a complete list of all operations supported, their 
+        /// This service options statement contains a complete list of all operations supported, their
         /// capabilities (get, set, etc.) and the authentication mechanism required.
         /// </remarks>
         [RestInvoke("OPTIONS", "/")]
@@ -128,7 +128,7 @@ namespace SanteDB.Rest.HDSI
         /// Performs a minimal PING request to test service uptime
         /// </summary>
         /// <remarks>The PING operation is used by the mobile (or other applications)
-        /// to ensure that not only is the network available (like a network ping) but that the 
+        /// to ensure that not only is the network available (like a network ping) but that the
         /// API is available on this endpoint. PING returns the current service time and should
         /// be used in lieu of the /time operation</remarks>
         [RestInvoke("PING", "/")]
@@ -200,22 +200,15 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Updates the specified resource according to the instructions in the PATCH file
         /// </summary>
-        /// <remarks>The PATCH operation allows for partial updating of a resource. 
-        /// 
+        /// <remarks>The PATCH operation allows for partial updating of a resource.
+        ///
         /// This method must be used in conjunction with an If-Match header indicating the version that you would like apply the patch against.
-        /// 
+        ///
         /// The server will load the most recent version and compre the version code with If-Match, if the match is successful the instructions in the PATCH are applied to the loaded version.
         /// </remarks>
         [RestInvoke("PATCH", "/{resourceType}/{id}")]
         [RestServiceFault(409, "The patch submitted does not match the current version of the object being patched")]
         void Patch(string resourceType, string id, Patch body);
-
-        /// <summary>
-        /// Returns a list of patches for the specified resource 
-        /// </summary>
-        [Get("/{resourceType}/{id}/_patch")]
-        [Obsolete]
-        Patch GetPatch(string resourceType, string id);
 
         /// <summary>
         /// Retrieves a specific version of the specified resource
@@ -236,7 +229,7 @@ namespace SanteDB.Rest.HDSI
         /// Updates the specified resource. If the resource does not exist than a 404 is thrown, if there is a conflict (such a mismatch of data) a 409 is thrown
         /// </summary>
         /// <remarks>This operation will update an existing resource on the server such that the data in the database exactly matches the data passed via the API.
-        /// 
+        ///
         /// Note: If you post an incomplete object (such as one missing identifiers, or addresses) then the current resource will have those attributes removed. For partial updates, use the PATCH operation instead.</remarks>
         [Put("/{resourceType}/{id}")]
         [RestServiceFault(409, "There is a conflict in the update request (version mismatch)")]
@@ -245,12 +238,13 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Gets the specified barcode for the resource
         /// </summary>
-        /// <remarks>This method returns a barcode which explicitly points at the specified resource in the specified authority. 
-        /// 
-        /// The barcode is generated using the server's configuration, and is signed by the server's signing key. 
-        /// 
+        /// <remarks>This method returns a barcode which explicitly points at the specified resource in the specified authority.
+        ///
+        /// The barcode is generated using the server's configuration, and is signed by the server's signing key.
+        ///
         /// For complete specification see: https://help.santesuite.org/santedb/extending-santedb/service-apis/health-data-service-interface-hdsi/digitally-signed-visual-code-api</remarks>
         [Get("/{resourceType}/{id}/_code/{authority}")]
+        [ServiceProduces("image/png")]
         Stream GetBarcode(String resourceType, String id, String authority);
 
         /// <summary>
@@ -259,7 +253,7 @@ namespace SanteDB.Rest.HDSI
         /// <remarks>
         /// This operation (like the _code operation) generates a digitally signed pointer for an object. Rather than rendering that pointer as a visual code, the API will return
         /// the structured contents of that code so the client can best determine how to represent the data.
-        /// 
+        ///
         /// For complete specification see: https://help.santesuite.org/santedb/extending-santedb/service-apis/health-data-service-interface-hdsi/digitally-signed-visual-code-api
         /// </remarks>
         [Get("/{resourceType}/{id}/_ptr/{authorityId}")]
@@ -380,7 +374,5 @@ namespace SanteDB.Rest.HDSI
         /// <remarks>This method will unlink, or delete (depending on behavior of the provider) the child resource from the container.</remarks>
         [Delete("/{resourceType}/{childResourceType}/{childResourceKey}")]
         object AssociationRemove(String resourceType, String childResourceType, String childResourceKey);
-
-
     }
 }

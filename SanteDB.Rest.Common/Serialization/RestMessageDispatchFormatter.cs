@@ -381,13 +381,14 @@ namespace SanteDB.Rest.Common.Serialization
                                         xsz = XmlModelSerializerFactory.Current.CreateSerializer(result.GetType());
                                     xsz.Serialize(ms, result);
                                 }
-                                catch (InvalidOperationException e) when (e.Message.Contains("XML document") && result is Bundle bundle)
-                                {
-                                    this.m_traceSource.TraceWarning("Will create a new serializer because of XML error {0}", e.Message);
-                                    xsz = XmlModelSerializerFactory.Current.CreateSerializer(typeof(Bundle), bundle.Item?.Select(o => o.GetType()).Distinct().ToArray());
-                                    ms.Seek(0, SeekOrigin.Begin);
-                                    xsz.Serialize(ms, result);
-                                }
+                                // No longer needed
+                                //catch (InvalidOperationException e) when (e.Message.Contains("XML document") && result is Bundle bundle)
+                                //{
+                                //    this.m_traceSource.TraceWarning("Will create a new serializer because of XML error {0}", e.Message);
+                                //    xsz = XmlModelSerializerFactory.Current.CreateSerializer(typeof(Bundle), bundle.Item?.Select(o => o.GetType()).Distinct().ToArray());
+                                //    ms.Seek(0, SeekOrigin.Begin);
+                                //    xsz.Serialize(ms, result);
+                                //}
                                 catch (Exception e)
                                 {
                                     this.m_traceSource.TraceError("Error serializing response: {0}", e);
