@@ -687,15 +687,6 @@ namespace SanteDB.Rest.HDSI
         }
 
         /// <summary>
-        /// Gets the specifieed patch id
-        /// </summary>
-        public virtual Patch GetPatch(string resourceType, string id)
-        {
-            this.ThrowIfNotReady();
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Get options
         /// </summary>
         public virtual ServiceOptions Options()
