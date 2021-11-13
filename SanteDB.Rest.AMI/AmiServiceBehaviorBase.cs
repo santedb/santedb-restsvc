@@ -32,6 +32,7 @@ using SanteDB.Core.Model.AMI.Diagnostics;
 using SanteDB.Core.Model.AMI.Logging;
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Patch;
+using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
@@ -597,37 +598,34 @@ namespace SanteDB.Messaging.AMI.Wcf
                 var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null)
                 {
-                    String offset = RestOperationContext.Current.IncomingRequest.QueryString["_offset"],
-                        count = RestOperationContext.Current.IncomingRequest.QueryString["_count"];
+                    this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
-                    var query = RestOperationContext.Current.IncomingRequest.QueryString.ToQuery();
+                    // Send the query to the resource handler
+                    var query = NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query);
 
                     // Modified on?
-                    if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince().HasValue)
-                        query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince().Value.ToString("o"));
+                    if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null)
+                        query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince()?.ToString("o"));
 
-                    int totalResults = 0;
+                    // Query for results
+                    var results = handler.Query(query);
 
-                    // Lean mode
-                    var lean = RestOperationContext.Current.IncomingRequest.QueryString["_lean"];
-                    bool parsedLean = false;
-                    bool.TryParse(lean, out parsedLean);
+                    // Now apply controls
+                    var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<Object>();
 
-                    this.AclCheck(handler, nameof(IApiResourceHandler.Query));
-                    var retVal = handler.Query(query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults).ToList();
-                    RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.OfType<IdentifiedData>().OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now);
+                    RestOperationContext.Current.OutgoingResponse.SetLastModified((retVal.OfType<IdentifiedData>().OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now));
 
                     // Last modification time and not modified conditions
-                    if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince().HasValue ||
+                    if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||
                         RestOperationContext.Current.IncomingRequest.GetIfNoneMatch() != null) &&
-                        totalResults == 0)
+                        totalCount == 0)
                     {
-                        RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.NotModified;
+                        RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
                         return null;
                     }
                     else
                     {
-                        return new AmiCollection(retVal, Int32.Parse(offset ?? "0"), totalResults);
+                        return new AmiCollection(retVal, offset, totalCount);
                     }
                 }
                 else
@@ -806,53 +804,42 @@ namespace SanteDB.Messaging.AMI.Wcf
                 var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
-                    String offset = RestOperationContext.Current.IncomingRequest.QueryString["_offset"],
-                      count = RestOperationContext.Current.IncomingRequest.QueryString["_count"];
-
-                    this.AclCheck(handler, nameof(IChainedApiResourceHandler.QueryChildObjects));
-
-                    var query = RestOperationContext.Current.IncomingRequest.QueryString.ToQuery();
-
-                    // Modified on?
-                    if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince().HasValue)
-                        query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince().Value.ToString("o"));
-
-                    // No obsoletion time?
-                    if (typeof(BaseEntityData).IsAssignableFrom(handler.Type) && !query.ContainsKey("obsoletionTime"))
-                        query.Add("obsoletionTime", "null");
-
-                    int totalResults = 0;
-
-                    // Lean mode
-                    var lean = RestOperationContext.Current.IncomingRequest.QueryString["_lean"];
-                    bool.TryParse(lean, out bool parsedLean);
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
-                    IEnumerable<Object> retVal = null;
-                    if (Guid.TryParse(key, out Guid keyValue))
-                        retVal = handler.QueryChildObjects(keyValue, childResourceType, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults)?.ToList();
-                    else
-                        retVal = handler.QueryChildObjects(key, childResourceType, query, Int32.Parse(offset ?? "0"), Int32.Parse(count ?? "100"), out totalResults)?.ToList();
+                    // Send the query to the resource handler
+                    var query = NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query);
 
-                    // No content
-                    if (retVal == null)
+                    // Modified on?
+                    if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null)
+                        query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince()?.ToString("o"));
+
+                    // Query for results
+                    IQueryResultSet results = null;
+                    if (Guid.TryParse(key, out Guid keyUuid))
                     {
-                        return null;
+                        results = handler.QueryChildObjects(keyUuid, childResourceType, query);
+                    }
+                    else
+                    {
+                        results = handler.QueryChildObjects(key, childResourceType, query);
                     }
 
-                    RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.OfType<IdentifiedData>().OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now);
+                    // Now apply controls
+                    var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<Object>();
+
+                    RestOperationContext.Current.OutgoingResponse.SetLastModified((retVal.OfType<IdentifiedData>().OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now));
 
                     // Last modification time and not modified conditions
-                    if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince().HasValue ||
+                    if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||
                         RestOperationContext.Current.IncomingRequest.GetIfNoneMatch() != null) &&
-                        totalResults == 0)
+                        totalCount == 0)
                     {
-                        RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.NotModified;
+                        RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
                         return null;
                     }
                     else
                     {
-                        return new AmiCollection(retVal, Int32.Parse(offset ?? "0"), totalResults);
+                        return new AmiCollection(retVal, offset, totalCount);
                     }
                 }
                 else

@@ -209,8 +209,6 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Get the specified object
         /// </summary>
-        [UrlParameter("_bundle", typeof(bool), "Return dependent objects in a bundle")]
-        [UrlParameter("_all", typeof(bool), "Return all dependent properties (force load them from DB)")]
         public virtual IdentifiedData Get(string resourceType, string id)
         {
             this.ThrowIfNotReady();
@@ -262,6 +260,7 @@ namespace SanteDB.Rest.HDSI
                     else if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true" ||
                             RestOperationContext.Current.IncomingRequest.QueryString["_all"] == "true")
                     {
+                        this.m_traceSource.TraceWarning("Remote client {0} is using a deprecated feature, it may be removed in future versions, please upgrade this client", RemoteEndpointUtil.Current.GetRemoteClient().RemoteAddress);
                         ObjectExpander.ExpandProperties(retVal, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
                         ObjectExpander.ExcludeProperties(retVal, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
                         return Bundle.CreateBundle(retVal);
@@ -285,7 +284,6 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Gets a specific version of a resource
         /// </summary>
-        [UrlParameter("_bundle", typeof(bool), "Return dependent objects in a bundle")]
         public virtual IdentifiedData GetVersion(string resourceType, string id, string versionId)
         {
             this.ThrowIfNotReady();
@@ -405,10 +403,6 @@ namespace SanteDB.Rest.HDSI
         [UrlParameter("_offset", typeof(int), "The offet of the first result to return")]
         [UrlParameter("_count", typeof(int), "The count of items to return in this result set")]
         [UrlParameter("_orderBy", typeof(string), "Instructs the result set to be ordered")]
-        [UrlParameter("_includeRefs", typeof(bool), "True if all referenced objects should be loaded")]
-        [UrlParameter("_all", typeof(bool), "True if all properties should be expanded")]
-        [UrlParameter("_expand", typeof(string), "The names of the properties which should be forced loaded", Multiple = true)]
-        [UrlParameter("_exclude", typeof(string), "The names of the properties which should removed from the bundle", Multiple = true)]
         public virtual IdentifiedData Search(string resourceType)
         {
             this.ThrowIfNotReady();
@@ -417,64 +411,40 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
-                    String offsetStr = RestOperationContext.Current.IncomingRequest.QueryString["_offset"],
-                     countStr = RestOperationContext.Current.IncomingRequest.QueryString["_count"];
+                    this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
-                    if (!Int32.TryParse(offsetStr, out int offset))
-                        offset = 0;
-                    if (!Int32.TryParse(countStr, out int count))
-                        count = 100;
-
-                    var query = NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query); //RestOperationContext.Current.IncomingRequest.QueryString.ToQuery();
+                    // Send the query to the resource handler
+                    var query = NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query);
 
                     // Modified on?
                     if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null)
                         query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince()?.ToString("o"));
 
-                    // No obsoletion time?
-                    if (typeof(BaseEntityData).IsAssignableFrom(handler.Type) && !query.ContainsKey("obsoletionTime"))
-                        query.Add("obsoletionTime", "null");
+                    // Query for results
+                    var results = handler.Query(query);
 
-                    this.AclCheck(handler, nameof(IApiResourceHandler.Query));
+                    // Now apply controls
+                    var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<IdentifiedData>();
 
-                    var retVal = handler.Query(query, offset, count, out int totalResults).OfType<IdentifiedData>();
                     RestOperationContext.Current.OutgoingResponse.SetLastModified((retVal.OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now));
 
                     // Last modification time and not modified conditions
                     if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||
                         RestOperationContext.Current.IncomingRequest.GetIfNoneMatch() != null) &&
-                        totalResults == 0)
+                        totalCount == 0)
                     {
                         RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
                         return null;
                     }
                     else
                     {
-                        if (query.ContainsKey("_all") || query.ContainsKey("_expand") || query.ContainsKey("_exclude"))
-                        {
-                            var wtp = ApplicationServiceContext.Current.GetService<IThreadPoolService>();
-                            retVal.AsParallel().Select((itm) =>
-                            {
-                                try
-                                {
-                                    var i = itm as IdentifiedData;
-                                    ObjectExpander.ExpandProperties(i, query);
-                                    ObjectExpander.ExcludeProperties(i, query);
-                                    return true;
-                                }
-                                catch (Exception e)
-                                {
-                                    this.m_traceSource.TraceError("Error setting properties: {0}", e);
-                                    return false;
-                                }
-                            }).ToList();
-                        }
-
-                        return new Bundle(retVal, offset, totalResults);
+                        return new Bundle(retVal, offset, totalCount);
                     }
                 }
                 else
+                {
                     throw new FileNotFoundException(resourceType);
+                }
             }
             catch (Exception e)
             {
@@ -793,74 +763,47 @@ namespace SanteDB.Rest.HDSI
         /// </summary>
         [UrlParameter("_offset", typeof(int), "The offet of the first result to return")]
         [UrlParameter("_count", typeof(int), "The count of items to return in this result set")]
-        [UrlParameter("_all", typeof(bool), "True if all properties should be expanded")]
-        [UrlParameter("_expand", typeof(string), "The names of the properties which should be forced loaded", Multiple = true)]
-        [UrlParameter("_exclude", typeof(string), "The names of the properties which should removed from the bundle", Multiple = true)]
         public virtual Object AssociationSearch(string resourceType, string key, string childResourceType)
         {
             this.ThrowIfNotReady();
             try
             {
+                if (!Guid.TryParse(key, out Guid keyGuid))
+                {
+                    throw new ArgumentException(nameof(key));
+                }
+
                 var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
-                    String offsetStr = RestOperationContext.Current.IncomingRequest.QueryString["_offset"],
-                        countStr = RestOperationContext.Current.IncomingRequest.QueryString["_count"];
-
-                    if (!Int32.TryParse(offsetStr, out int offset))
-                        offset = 0;
-                    if (!Int32.TryParse(countStr, out int count))
-                        count = 100;
-
-                    this.AclCheck(handler, nameof(IChainedApiResourceHandler.QueryChildObjects));
-
-                    var query = RestOperationContext.Current.IncomingRequest.QueryString.ToQuery();
-
-                    // Modified on?
-                    if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince().HasValue)
-                        query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince().Value.ToString("o"));
-
-                    // No obsoletion time?
-                    if (typeof(BaseEntityData).IsAssignableFrom(handler.Type) && !query.ContainsKey("obsoletionTime"))
-                        query.Add("obsoletionTime", "null");
-
-                    // Lean mode
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
-                    IEnumerable<IdentifiedData> retVal = handler.QueryChildObjects(Guid.Parse(key), childResourceType, query, offset, count, out int totalResults).OfType<IdentifiedData>();
+                    // Send the query to the resource handler
+                    var query = NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query);
 
-                    RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.OfType<IdentifiedData>().OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now);
+                    // Modified on?
+                    if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null)
+                        query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince()?.ToString("o"));
+
+                    // Query for results
+                    var results = handler.QueryChildObjects(keyGuid, childResourceType, query);
+
+                    // Now apply controls
+                    var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<IdentifiedData>();
+
+                    RestOperationContext.Current.OutgoingResponse.SetLastModified((retVal.OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now));
+
                     // Last modification time and not modified conditions
                     if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||
                         RestOperationContext.Current.IncomingRequest.GetIfNoneMatch() != null) &&
-                        totalResults == 0)
+                        totalCount == 0)
                     {
                         RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
                         return null;
                     }
                     else
                     {
-                        if (query.ContainsKey("_all") || query.ContainsKey("_expand") || query.ContainsKey("_exclude"))
-                        {
-                            var wtp = ApplicationServiceContext.Current.GetService<IThreadPoolService>();
-                            retVal.AsParallel().Select((itm) =>
-                            {
-                                try
-                                {
-                                    var i = itm as IdentifiedData;
-                                    ObjectExpander.ExpandProperties(i, query);
-                                    ObjectExpander.ExcludeProperties(i, query);
-                                    return true;
-                                }
-                                catch (Exception e)
-                                {
-                                    this.m_traceSource.TraceError("Error setting properties: {0}", e);
-                                    return false;
-                                }
-                            }).ToList();
-                        }
-
-                        return new Bundle(retVal, offset, totalResults);
+                        return new Bundle(retVal, offset, totalCount);
                     }
                 }
                 else
@@ -1409,67 +1352,40 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
-                    String offsetStr = RestOperationContext.Current.IncomingRequest.QueryString["_offset"],
-                      countStr = RestOperationContext.Current.IncomingRequest.QueryString["_count"];
-
-                    if (!Int32.TryParse(offsetStr, out int offset))
-                        offset = 0;
-                    if (!Int32.TryParse(countStr, out int count))
-                        count = 100;
-
-                    this.AclCheck(handler, nameof(IChainedApiResourceHandler.QueryChildObjects));
-
-                    var query = RestOperationContext.Current.IncomingRequest.QueryString.ToQuery();
-
-                    // Modified on?
-                    if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince().HasValue)
-                        query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince().Value.ToString("o"));
-
-                    // No obsoletion time?
-                    if (typeof(BaseEntityData).IsAssignableFrom(handler.Type) && !query.ContainsKey("obsoletionTime"))
-                        query.Add("obsoletionTime", "null");
-
-                    // Lean mode
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
-                    IEnumerable<IdentifiedData> retVal = handler.QueryChildObjects(null, childResourceType, query, offset, count, out int totalResults).OfType<IdentifiedData>();
+                    // Send the query to the resource handler
+                    var query = NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query);
 
-                    RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.OfType<IdentifiedData>().OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now);
+                    // Modified on?
+                    if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null)
+                        query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince()?.ToString("o"));
+
+                    // Query for results
+                    var results = handler.QueryChildObjects(null, childResourceType, query);
+
+                    // Now apply controls
+                    var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<IdentifiedData>();
+
+                    RestOperationContext.Current.OutgoingResponse.SetLastModified((retVal.OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now));
+
                     // Last modification time and not modified conditions
                     if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||
                         RestOperationContext.Current.IncomingRequest.GetIfNoneMatch() != null) &&
-                        totalResults == 0)
+                        totalCount == 0)
                     {
                         RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
                         return null;
                     }
                     else
                     {
-                        if (query.ContainsKey("_all") || query.ContainsKey("_expand") || query.ContainsKey("_exclude"))
-                        {
-                            var wtp = ApplicationServiceContext.Current.GetService<IThreadPoolService>();
-                            retVal.AsParallel().Select((itm) =>
-                            {
-                                try
-                                {
-                                    var i = itm as IdentifiedData;
-                                    ObjectExpander.ExpandProperties(i, query);
-                                    ObjectExpander.ExcludeProperties(i, query);
-                                    return true;
-                                }
-                                catch (Exception e)
-                                {
-                                    this.m_traceSource.TraceError("Error setting properties: {0}", e);
-                                    return false;
-                                }
-                            }).ToList();
-                        }
-
-                        return new Bundle(retVal, offset, totalResults);
+                        return new Bundle(retVal, offset, totalCount);
                     }
                 }
                 else
+                {
                     throw new FileNotFoundException(resourceType);
+                }
             }
             catch (Exception e)
             {

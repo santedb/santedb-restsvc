@@ -34,6 +34,12 @@ namespace SanteDB.Rest.AMI.Resources
     public class MetadataResourceHandler<TMetadata> : ResourceHandlerBase<TMetadata>
         where TMetadata : IdentifiedData, new()
     {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        public MetadataResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<TMetadata> repositoryService) : base(localizationService, freetextSearchService, repositoryService)
+        {
+        }
 
         /// <summary>
         /// Create a resource
@@ -57,9 +63,9 @@ namespace SanteDB.Rest.AMI.Resources
         /// Query for metadata
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public override IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
-            return base.Query(queryParameters, offset, count, out totalCount);
+            return base.Query(queryParameters);
         }
 
         /// <summary>
@@ -78,14 +84,6 @@ namespace SanteDB.Rest.AMI.Resources
         public override object Update(object data)
         {
             return base.Update(data);
-        }
-
-        /// <summary>
-        /// DI constructor
-        /// </summary>
-        /// <param name="localizationService"></param>
-        public MetadataResourceHandler(ILocalizationService localizationService) : base(localizationService)
-        {
         }
     }
 }

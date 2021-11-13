@@ -35,12 +35,12 @@ using System.Collections.Generic;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
-	/// <summary>
-	/// Represents a resource handler base type that is always bound to HDSI
-	/// </summary>
-	/// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
-	[ServiceProvider("HDSI Resource Handler")]
-    public abstract class ResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData>,
+    /// <summary>
+    /// Represents a resource handler base type that is always bound to HDSI
+    /// </summary>
+    /// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
+    [ServiceProvider("HDSI Resource Handler")]
+    public abstract class HdsiResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData>,
         INullifyResourceHandler,
         ICancelResourceHandler,
         IChainedApiResourceHandler,
@@ -50,7 +50,6 @@ namespace SanteDB.Rest.HDSI.Resources
 
         where TData : IdentifiedData, new()
     {
-
         // Property providers
         private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
 
@@ -58,17 +57,16 @@ namespace SanteDB.Rest.HDSI.Resources
         private ConcurrentDictionary<String, IApiChildOperation> m_operationProviders = new ConcurrentDictionary<string, IApiChildOperation>();
 
         /// <summary>
-        /// Creates a new resource handler base with a specified privacy service
+        /// DI Constructor
         /// </summary>
-        /// <param name="localizationService"></param>
-        protected ResourceHandlerBase(ILocalizationService localizationService) : base(localizationService)
+        protected HdsiResourceHandlerBase(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<TData> repositoryService) : base(localizationService, freetextSearchService, repositoryService)
         {
         }
 
         /// <summary>
         /// Gets the scope
         /// </summary>
-        override public Type Scope => typeof(IHdsiServiceContract);
+        public override Type Scope => typeof(IHdsiServiceContract);
 
         /// <summary>
         /// Get all child resources
@@ -156,13 +154,13 @@ namespace SanteDB.Rest.HDSI.Resources
             try
             {
                 this.CheckOut(key);
-                if (this.GetRepository() is ICancelRepositoryService<TData>)
-                    return (this.GetRepository() as ICancelRepositoryService<TData>).Cancel((Guid)key);
+                if (this.m_repository is ICancelRepositoryService<TData> cr)
+                    return cr.Cancel((Guid)key);
                 else
                 {
                     this.m_tracer.TraceError($"Repository for {this.ResourceName} does not support Cancel");
-                    throw new NotSupportedException(this.m_localizationService.GetString("error.rest.hdsi.notSupportCancel", new 
-                    { 
+                    throw new NotSupportedException(this.m_localizationService.GetString("error.rest.hdsi.notSupportCancel", new
+                    {
                         param = this.ResourceName
                     }));
                 }
@@ -214,7 +212,7 @@ namespace SanteDB.Rest.HDSI.Resources
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public object Nullify(object key)
         {
-            if (this.GetRepository() is IRepositoryServiceEx<TData> exRepo)
+            if (this.m_repository is IRepositoryServiceEx<TData> exRepo)
                 return exRepo.Nullify((Guid)key);
             else
             {
@@ -230,11 +228,11 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Query for associated entities
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual IEnumerable<object> QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
+        public virtual IQueryResultSet QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter)
         {
             if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
             {
-                return propertyProvider.Query(typeof(TData), scopingEntityKey, filter, offset, count, out totalCount);
+                return propertyProvider.Query(typeof(TData), scopingEntityKey, filter);
             }
             else
             {
@@ -300,7 +298,7 @@ namespace SanteDB.Rest.HDSI.Resources
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public object Touch(object key)
         {
-            if (this.GetRepository() is IRepositoryServiceEx<TData> exRepo)
+            if (this.m_repository is IRepositoryServiceEx<TData> exRepo)
             {
                 var objectKey = (Guid)key;
                 exRepo.Touch(objectKey);

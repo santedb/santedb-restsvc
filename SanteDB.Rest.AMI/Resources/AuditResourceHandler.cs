@@ -16,6 +16,7 @@
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
+
 using SanteDB.Core;
 using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Configuration;
@@ -47,28 +48,20 @@ namespace SanteDB.Rest.AMI.Resources
         // Tracer
         private readonly Tracer m_tracer = Tracer.GetTracer(typeof(AuditResourceHandler));
 
+        // Audit dispatch
+        private readonly IAuditDispatchService m_auditDispatch;
+
         // Localization service
         private readonly ILocalizationService m_localizationService;
 
         /// <summary>
-        /// Get the repository
-        /// </summary>
-        private IRepositoryService<AuditEventData> GetRepository()
-        {
-            if (this.m_repository == null)
-                this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<AuditEventData>>();
-            if(this.m_repository == null)
-                throw new InvalidOperationException("No audit repository is configured");
-
-            return this.m_repository;
-        }
-
-        /// <summary>
         /// Initializes the audit resource handler
         /// </summary>
-        public AuditResourceHandler(ILocalizationService localizationService)
+        public AuditResourceHandler(ILocalizationService localizationService, IRepositoryService<AuditEventData> repositoryService, IAuditDispatchService dispatchService = null)
         {
             this.m_localizationService = localizationService;
+            this.m_repository = repositoryService;
+            this.m_auditDispatch = dispatchService;
         }
 
         /// <summary>
@@ -114,7 +107,7 @@ namespace SanteDB.Rest.AMI.Resources
                 var singleAudit = data as AuditEventData;
                 if (singleAudit != null)
                 {
-                    var retVal = this.GetRepository().Insert(singleAudit);
+                    var retVal = this.m_repository.Insert(singleAudit);
                     ApplicationServiceContext.Current.GetService<IAuditDispatchService>()?.SendAudit(singleAudit);
                     return null;
                 }
@@ -123,8 +116,8 @@ namespace SanteDB.Rest.AMI.Resources
             {
                 auditData.Audit.ForEach(o =>
                 {
-                    this.GetRepository().Insert(o);
-                    ApplicationServiceContext.Current.GetService<IAuditDispatchService>()?.SendAudit(o);
+                    this.m_repository.Insert(o);
+                    this.m_auditDispatch?.SendAudit(o);
                 });
                 // Send the audit to the audit repo
             }
@@ -141,8 +134,8 @@ namespace SanteDB.Rest.AMI.Resources
         public object Get(object id, object versionId)
         {
             var retVal = new AuditEventData();
-            if(Guid.TryParse(id.ToString(), out Guid gid))
-                retVal.CopyObjectData(this.GetRepository().Get(gid));
+            if (Guid.TryParse(id.ToString(), out Guid gid))
+                retVal.CopyObjectData(this.m_repository.Get(gid));
             return retVal;
         }
 
@@ -157,34 +150,15 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <summary>
-        /// Query for the audit
-        /// </summary>
-        /// <param name="queryParameters">The query to perform</param>
-        /// <returns>The matching audits</returns>
-        [Demand(PermissionPolicyIdentifiers.AccessAuditLog)]
-        public IEnumerable<object> Query(NameValueCollection queryParameters)
-        {
-            int tr = 0;
-            return this.Query(queryParameters, 0, 100, out tr);
-        }
-
-        /// <summary>
         /// Perform the query for audits
         /// </summary>
         /// <param name="queryParameters">The filter parameters for the audit</param>
-        /// <param name="offset">The first result to retrieve</param>
-        /// <param name="count">The count of objects to retrieve</param>
-        /// <param name="totalCount">The total counts of objects</param>
         /// <returns>An array of objects matching the query </returns>
         [Demand(PermissionPolicyIdentifiers.AccessAuditLog)]
-        public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        public IQueryResultSet Query(NameValueCollection queryParameters)
         {
             var filter = QueryExpressionParser.BuildLinqExpression<AuditEventData>(queryParameters);
-
-            ModelSort<AuditEventData>[] sortParameters = null;
-            if (queryParameters.TryGetValue("_orderBy", out var orderBy))
-                sortParameters = QueryExpressionParser.BuildSort<AuditEventData>(orderBy);
-            return this.GetRepository().Find(filter, offset, count, out totalCount, sortParameters);
+            return this.m_repository.Find(filter);
         }
 
         /// <summary>

@@ -20,20 +20,35 @@
  */
 
 using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Model.Query;
 using SanteDB.Core.Services;
+using System.Collections.Generic;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
     /// <summary>
-    /// Represents a device entity handler for security devices
+    /// Entity resource handler base
     /// </summary>
-    public class DeviceEntityResourceHandler : EntityResourceHandlerBase<DeviceEntity>
+    /// <typeparam name="TData">The type of entity this handler handles</typeparam>
+    public class EntityResourceHandlerBase<TData> : HdsiResourceHandlerBase<TData>
+        where TData : Entity, new()
     {
         /// <summary>
         /// DI constructor
         /// </summary>
-        public DeviceEntityResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<DeviceEntity> repositoryService) : base(localizationService, freetextSearchService, repositoryService)
+        /// <param name="localizationService"></param>
+        /// <param name="freetextSearchService"></param>
+        /// <param name="repositoryService"></param>
+        public EntityResourceHandlerBase(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<TData> repositoryService) : base(localizationService, freetextSearchService, repositoryService)
         {
+        }
+
+        /// <summary>
+        /// Handle a free text search
+        /// </summary>
+        protected override IQueryResultSet HandleFreeTextSearch(List<string> terms)
+        {
+            return this.m_freetextSearch.SearchEntity<TData>(terms.ToArray());
         }
     }
 }

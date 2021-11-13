@@ -32,6 +32,13 @@ namespace SanteDB.Rest.AMI.Resources
     public class MailMessageResourceHandler : ResourceHandlerBase<MailMessage>
     {
         /// <summary>
+        /// DI Constructor
+        /// </summary>
+        public MailMessageResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<MailMessage> repositoryService) : base(localizationService, freetextSearchService, repositoryService)
+        {
+        }
+
+        /// <summary>
         /// Create the mail
         /// </summary>
         public override object Create(object data, bool updateIfExists)
@@ -48,21 +55,13 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Query for mail messages should default to my messages
         /// </summary>
-        public override IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             if (!queryParameters.ContainsKey("rcpt.userName") && !queryParameters.ContainsKey("from"))
             {
                 queryParameters.Add("rcpt.userName", new List<string>() { "SYSTEM", AuthenticationContext.Current.Principal.Identity.Name });
             }
-            return base.Query(queryParameters, offset, count, out totalCount);
-        }
-
-        /// <summary>
-        /// DI constructor
-        /// </summary>
-        /// <param name="localizationService"></param>
-        public MailMessageResourceHandler(ILocalizationService localizationService) : base(localizationService)
-        {
+            return base.Query(queryParameters);
         }
     }
 }

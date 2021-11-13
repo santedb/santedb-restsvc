@@ -1,21 +1,22 @@
 ﻿/*
  * Portions Copyright 2019-2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
+
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Diagnostics;
@@ -104,21 +105,12 @@ namespace SanteDB.Rest.AMI.Resources
         /// Query for probes
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.Login)]
-        public IEnumerable<object> Query(NameValueCollection queryParameters)
-        {
-            return this.Query(queryParameters, 0, 100, out int tr);
-        }
-
-        /// <summary>
-        /// Query for probes
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.Login)]
-        public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        public IQueryResultSet Query(NameValueCollection queryParameters)
         {
             try
             {
                 var filter = QueryExpressionParser.BuildLinqExpression<IDiagnosticsProbe>(queryParameters);
-                return DiagnosticsProbeManager.Current.Find(filter.Compile(), offset, count, out totalCount).Select(o => new DiagnosticsProbe(o));
+                return new MemoryQueryResultSet(DiagnosticsProbeManager.Current.Find(filter.Compile()).Select(o => new DiagnosticsProbe((IDiagnosticsProbe)o)));
             }
             catch (Exception e)
             {

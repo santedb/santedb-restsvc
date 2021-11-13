@@ -1,21 +1,22 @@
 ﻿/*
  * Portions Copyright 2019-2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
+
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Query;
@@ -36,7 +37,6 @@ namespace SanteDB.Rest.AMI.ChildResources
     /// </summary>
     public class SecurityPolicyChildHandler : IApiChildResourceHandler
     {
-
         // Challenge service
         private IPolicyInformationService m_pip;
 
@@ -91,25 +91,28 @@ namespace SanteDB.Rest.AMI.ChildResources
 
         private void DemandFor(Type scopingType)
         {
-
             switch (scopingType.Name)
             {
                 case "SecurityDeviceInfo":
                 case "SecurityDevice":
                     this.m_pep.Demand(PermissionPolicyIdentifiers.CreateDevice);
                     break;
+
                 case "SecurityApplicationInfo":
                 case "SecurityApplication":
                     this.m_pep.Demand(PermissionPolicyIdentifiers.CreateApplication);
                     break;
+
                 case "SecurityRole":
                 case "SecurityRoleInfo":
                     this.m_pep.Demand(PermissionPolicyIdentifiers.AlterRoles);
                     break;
+
                 default:
                     throw new InvalidOperationException("Don't understand this scoping type");
             }
         }
+
         /// <summary>
         /// Get scope based on type and key
         /// </summary>
@@ -120,12 +123,15 @@ namespace SanteDB.Rest.AMI.ChildResources
                 case "SecurityDeviceInfo":
                 case "SecurityDevice":
                     return this.m_deviceRepository.Get((Guid)scopingKey);
+
                 case "SecurityApplicationInfo":
                 case "SecurityApplication":
                     return this.m_applicationRepository.Get((Guid)scopingKey);
+
                 case "SecurityRole":
                 case "SecurityRoleInfo":
                     return this.m_roleRepository.Get((Guid)scopingKey);
+
                 default:
                     throw new InvalidOperationException("Don't understand this scoping type");
             }
@@ -171,7 +177,7 @@ namespace SanteDB.Rest.AMI.ChildResources
         /// <summary>
         /// Get all challenges
         /// </summary>
-        public IEnumerable<object> Query(Type scopingType, object scopingKey, NameValueCollection filter, int offset, int count, out int totalCount)
+        public IQueryResultSet Query(Type scopingType, object scopingKey, NameValueCollection filter)
         {
             // Get scope
             object scope = this.GetScope(scopingType, scopingKey);
@@ -179,9 +185,8 @@ namespace SanteDB.Rest.AMI.ChildResources
                 throw new KeyNotFoundException($"Could not find scoped object with identifier {scopingKey}");
 
             var policies = this.m_pip.GetPolicies(scope).OrderBy(o => o.Policy.Oid).Select(o => o.ToPolicyInstance());
-            totalCount = policies.Count();
             var filterExpression = QueryExpressionParser.BuildLinqExpression<SecurityPolicy>(filter).Compile();
-            return policies.Where(o => filterExpression(o.Policy)).Skip(offset).Take(count).Select(o => new SecurityPolicyInfo(o));
+            return new MemoryQueryResultSet(policies.Where(o => filterExpression(o.Policy)).Select(o => new SecurityPolicyInfo(o)));
         }
 
         /// <summary>
@@ -189,7 +194,6 @@ namespace SanteDB.Rest.AMI.ChildResources
         /// </summary>
         public object Remove(Type scopingType, object scopingKey, object key)
         {
-
             // Get scope
             object scope = this.GetScope(scopingType, scopingKey);
             if (scope == null)

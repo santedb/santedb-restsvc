@@ -119,7 +119,7 @@ namespace SanteDB.Rest.AMI.Resources
                 this.m_tracer.TraceError($"No IJob of type {key} found");
                 throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.ami.noIJobType", new { param = key.ToString() }));
             }
-                
+
             if (job.CanCancel)
                 job.Cancel();
             else
@@ -135,15 +135,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Query for all jobs
         /// </summary>
-        public IEnumerable<object> Query(NameValueCollection queryParameters)
-        {
-            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
-        }
-
-        /// <summary>
-        /// Query for jobs
-        /// </summary>
-        public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        public IQueryResultSet Query(NameValueCollection queryParameters)
         {
             ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
 
@@ -151,8 +143,7 @@ namespace SanteDB.Rest.AMI.Resources
             var jobs = manager.Jobs;
             if (queryParameters.TryGetValue("name", out List<string> data))
                 jobs = jobs.Where(o => o.Name.Contains(data.First()));
-            totalCount = jobs.Count();
-            return jobs.Skip(offset).Take(count).Select(o => new JobInfo(o));
+            return new MemoryQueryResultSet(jobs.Select(o => new JobInfo(o)));
         }
 
         /// <summary>
@@ -171,8 +162,7 @@ namespace SanteDB.Rest.AMI.Resources
                 {
                     this.m_tracer.TraceError("No IJobManager configured");
                     throw new InvalidOperationException(this.m_localizationService.GetString("error.rest.ami.noIJobManager"));
-                }    
-                    
+                }
 
                 var job = jobManager.GetJobInstance(Guid.Parse(jobInfo.Key));
                 if (job == null)

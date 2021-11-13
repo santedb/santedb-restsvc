@@ -1,21 +1,22 @@
 ﻿/*
  * Portions Copyright 2019-2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
+
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Interfaces;
@@ -37,11 +38,10 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        /// <param name="localizationService"></param>
-        public SecurityPolicyResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        public SecurityPolicyResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<SecurityPolicy> repositoryService) : base(localizationService, freetextSearchService, repositoryService)
         {
-
         }
+
         /// <summary>
         /// Get the capabilities of this resource
         /// </summary>
@@ -73,19 +73,16 @@ namespace SanteDB.Rest.AMI.Resources
                 {
                     param = key
                 }));
-
             }
             else
             {
                 this.m_tracer.TraceError($"Policy {(policy as SecurityPolicy).Oid} is a system policy and cannot be edited");
-                throw new SecurityException(this.m_localizationService.GetString("error.rest.ami.editSystemPolicy", new 
-                { 
+                throw new SecurityException(this.m_localizationService.GetString("error.rest.ami.editSystemPolicy", new
+                {
                     param = (policy as SecurityPolicy).Oid
                 }));
             }
         }
-
-
 
         /// <summary>
         /// Obsolete the policy

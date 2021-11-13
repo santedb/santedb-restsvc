@@ -157,20 +157,12 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Find all subscriptions
         /// </summary>
-        public IEnumerable<object> Query(NameValueCollection queryParameters)
-        {
-            return this.Query(queryParameters, 0, 25, out int _);
-        }
-
-        /// <summary>
-        /// Query for subscriptions
-        /// </summary>
-        public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        public IQueryResultSet Query(NameValueCollection queryParameters)
         {
             try
             {
                 var filter = QueryExpressionParser.BuildLinqExpression<PubSubSubscriptionDefinition>(queryParameters);
-                return this.m_manager.FindSubscription(filter, offset, count, out totalCount);
+                return this.m_manager.FindSubscription(filter);
             }
             catch (Exception e)
             {

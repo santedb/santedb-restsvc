@@ -218,42 +218,24 @@ namespace SanteDB.Rest.AMI.Resources
         /// Query for the specified object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual IEnumerable<object> Query(NameValueCollection queryParameters)
-        {
-            int tr = 0;
-            return this.Query(queryParameters, 0, 100, out tr);
-        }
-
-        /// <summary>
-        /// Query for specified objects
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        public virtual IQueryResultSet Query(NameValueCollection queryParameters)
         {
             var query = QueryExpressionParser.BuildLinqExpression<TSecurityEntity>(queryParameters);
 
-            List<String> orderBy = null, queryId = null;
-            Guid? queryIdParsed = null;
-            // Order by
-            ModelSort<TSecurityEntity>[] sortParameters = null;
-            if (queryParameters.TryGetValue("_orderBy", out orderBy))
-                sortParameters = QueryExpressionParser.BuildSort<TSecurityEntity>(orderBy);
-            if (queryParameters.TryGetValue("_queryId", out queryId))
-                queryIdParsed = Guid.Parse(queryId.First());
-
-            var repo = this.GetRepository();
-            IEnumerable<TSecurityEntity> results = null;
-            if (repo is IPersistableQueryRepositoryService<TSecurityEntity> && queryIdParsed.HasValue)
-                results = (repo as IPersistableQueryRepositoryService<TSecurityEntity>).Find(query, offset, count, out totalCount, queryIdParsed.Value, sortParameters);
-            else
-                results = repo.Find(query, offset, count, out totalCount, sortParameters);
-
-            return results.Select(o =>
+            try
             {
-                var r = Activator.CreateInstance(this.Type, o) as ISecurityEntityInfo<TSecurityEntity>;
-                r.Policies = this.m_policyInformationService.GetPolicies(o).Select(p => new SecurityPolicyInfo(p)).ToList();
-                return r;
-            }).OfType<Object>();
+                return new NestedQueryResultSet(this.m_repository.Find(query), (o) =>
+                {
+                    var r = Activator.CreateInstance(this.Type, o) as ISecurityEntityInfo<TSecurityEntity>;
+                    r.Policies = this.m_policyInformationService.GetPolicies(o).Select(p => new SecurityPolicyInfo(p)).ToList();
+                    return r;
+                });
+            }
+            catch (Exception e)
+            {
+                this.m_tracer.TraceError("Error querying security resource {0} - {1}", typeof(TSecurityEntity), e);
+                throw new Exception(this.m_localizationService.GetString("error.rest.ami.subscriptionQuery"), e);
+            }
         }
 
         /// <summary>
@@ -335,12 +317,12 @@ namespace SanteDB.Rest.AMI.Resources
         /// Query child objects
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public IEnumerable<object> QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
+        public IQueryResultSet QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter)
         {
             Guid objectKey = (Guid)scopingEntityKey;
             if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
             {
-                return propertyProvider.Query(typeof(TSecurityEntity), objectKey, filter, offset, count, out totalCount);
+                return propertyProvider.Query(typeof(TSecurityEntity), objectKey, filter);
             }
             else
             {

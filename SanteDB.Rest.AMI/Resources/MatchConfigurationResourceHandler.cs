@@ -37,16 +37,16 @@ namespace SanteDB.Rest.AMI.Resources
     public class MatchConfigurationResourceHandler : IApiResourceHandler, IOperationalApiResourceHandler, IChainedApiResourceHandler
     {
         // Configuration service
-        private IRecordMatchingConfigurationService m_configurationService;
+        private readonly IRecordMatchingConfigurationService m_configurationService;
 
         // Property providers
-        private ConcurrentDictionary<String, IApiChildOperation> m_childOperations = new ConcurrentDictionary<string, IApiChildOperation>();
+        private readonly ConcurrentDictionary<String, IApiChildOperation> m_childOperations = new ConcurrentDictionary<string, IApiChildOperation>();
 
         // Child resources
-        private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
+        private readonly ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
 
         // Localization service
-        private ILocalizationService m_localizationService;
+        private readonly ILocalizationService m_localizationService;
 
         /// <summary>
         /// Gets the resource name
@@ -121,28 +121,13 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Query for match configurations
         /// </summary>
-        public IEnumerable<object> Query(NameValueCollection queryParameters)
+        public IQueryResultSet Query(NameValueCollection queryParameters)
         {
-            return this.Query(queryParameters, 0, 100, out int t);
-        }
-
-        /// <summary>
-        /// Query for match configurations
-        /// </summary>
-        public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
-        {
-            totalCount = this.m_configurationService.Configurations.Count();
             if (queryParameters.TryGetValue("name", out List<String> values))
-                return this.m_configurationService.Configurations
-                    .Where(o => o.Id.Contains(values.First().Replace("~", "")))
-                    .Skip(offset)
-                    .Take(count)
-                    .OfType<Object>();
+                return new MemoryQueryResultSet(this.m_configurationService.Configurations
+                    .Where(o => o.Id.Contains(values.First().Replace("~", ""))));
             else
-                return this.m_configurationService.Configurations
-                    .Skip(offset)
-                    .Take(count)
-                    .OfType<Object>();
+                return new MemoryQueryResultSet(this.m_configurationService.Configurations);
         }
 
         /// <summary>
@@ -223,11 +208,11 @@ namespace SanteDB.Rest.AMI.Resources
         /// Query for associated entities
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual IEnumerable<object> QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
+        public virtual IQueryResultSet QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter)
         {
             if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
             {
-                return propertyProvider.Query(typeof(IRecordMatchingConfiguration), scopingEntityKey, filter, offset, count, out totalCount);
+                return propertyProvider.Query(typeof(IRecordMatchingConfiguration), scopingEntityKey, filter);
             }
             else
             {

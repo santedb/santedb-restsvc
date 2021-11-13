@@ -59,26 +59,18 @@ namespace SanteDB.Rest.Common
         protected readonly ILocalizationService m_localizationService;
 
         /// <summary>
-        /// Constructs the resource handler base
+        /// Freetext search
         /// </summary>
-        public ResourceHandlerBase(ILocalizationService localizationService)
-        {
-            this.m_localizationService = localizationService;
-        }
+        protected readonly IFreetextSearchService m_freetextSearch;
 
         /// <summary>
-        /// Gets the repository
+        /// Constructs the resource handler base
         /// </summary>
-        protected IRepositoryService<TResource> GetRepository()
+        public ResourceHandlerBase(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<TResource> repositoryService)
         {
-            if (this.m_repository == null)
-                this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<TResource>>();
-            if (this.m_repository == null)
-            {
-                this.m_tracer.TraceError($"IRepositoryService<{typeof(TResource).FullName}> not found and no repository is found");
-                throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.common.RepositoryServiceNotFound", new { param = typeof(TResource).FullName }));
-            }
-            return this.m_repository;
+            this.m_localizationService = localizationService;
+            this.m_repository = repositoryService;
+            this.m_freetextSearch = freetextSearchService;
         }
 
         /// <summary>
@@ -166,7 +158,7 @@ namespace SanteDB.Rest.Common
                 else if (processData is TResource)
                 {
                     var resourceData = processData as TResource;
-                    resourceData = updateIfExists ? this.GetRepository().Save(resourceData) : this.GetRepository().Insert(resourceData);
+                    resourceData = updateIfExists ? this.m_repository.Save(resourceData) : this.m_repository.Insert(resourceData);
 
                     AuditUtil.AuditCreate(OutcomeIndicator.Success, null, resourceData);
 
@@ -195,7 +187,7 @@ namespace SanteDB.Rest.Common
 
             try
             {
-                var retVal = this.GetRepository().Get((Guid)id, (Guid)versionId);
+                var retVal = this.m_repository.Get((Guid)id, (Guid)versionId);
                 if (retVal is Entity || retVal is Act)
                     AuditUtil.AuditRead(OutcomeIndicator.Success, id.ToString(), retVal);
                 return retVal;
@@ -219,7 +211,7 @@ namespace SanteDB.Rest.Common
 
             try
             {
-                var retVal = this.GetRepository().Obsolete((Guid)key);
+                var retVal = this.m_repository.Obsolete((Guid)key);
                 AuditUtil.AuditDelete(OutcomeIndicator.Success, key.ToString(), retVal);
                 return retVal;
             }
@@ -235,17 +227,27 @@ namespace SanteDB.Rest.Common
         /// Perform a query
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual IEnumerable<Object> Query(NameValueCollection queryParameters)
+        public virtual IQueryResultSet Query(NameValueCollection queryParameters)
         {
             if ((this.Capabilities & ResourceCapabilityType.Search) == 0)
                 throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
 
             try
             {
-                int tr = 0;
-                var retVal = this.Query(queryParameters, 0, 100, out tr);
+                if ((this.Capabilities & ResourceCapabilityType.Search) == 0)
+                {
+                    throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
+                }
 
-                return retVal;
+                if (queryParameters.TryGetValue("_any", out List<String> terms))
+                {
+                    return this.HandleFreeTextSearch(terms);
+                }
+                else
+                {
+                    var queryExpression = QueryExpressionParser.BuildLinqExpression<TResource>(queryParameters, null, false);
+                    return this.m_repository.Find(queryExpression);
+                }
             }
             catch (Exception e)
             {
@@ -255,84 +257,12 @@ namespace SanteDB.Rest.Common
         }
 
         /// <summary>
-        /// Perform the actual query
+        /// Handle freetext search
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+
+        protected virtual IQueryResultSet HandleFreeTextSearch(List<string> terms)
         {
-            if ((this.Capabilities & ResourceCapabilityType.Search) == 0)
-                throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
-            try
-            {
-                IEnumerable<TResource> retVal = null;
-
-                // IS this a freetext search?
-                if (queryParameters.ContainsKey("_any"))
-                {
-                    var fts = ApplicationServiceContext.Current.GetService<IFreetextSearchService>();
-                    if (fts == null)
-                    {
-                        this.m_tracer.TraceError("Attempting to run a freetext search in a context which does not support freetext searches");
-                        throw new InvalidOperationException(this.m_localizationService.GetString("error.rest.common.freetextNotSupported"));
-                    }
-
-                    // Order by
-                    ModelSort<TResource>[] sortParameters = null;
-                    if (queryParameters.TryGetValue("_orderBy", out List<String> orderBy))
-                        sortParameters = QueryExpressionParser.BuildSort<TResource>(orderBy);
-
-                    Guid queryId = Guid.Empty;
-                    if (queryParameters.TryGetValue("_queryId", out List<String> query))
-                        queryId = Guid.Parse(query.First());
-
-                    retVal = fts.Search<TResource>(queryParameters["_any"].ToArray(), queryId, offset, count, out totalCount, sortParameters);
-                }
-                else
-                {
-                    var queryExpression = QueryExpressionParser.BuildLinqExpression<TResource>(queryParameters, null, false);
-                    List<String> query = null, id = null, orderBy = null;
-
-                    // Order by
-                    ModelSort<TResource>[] sortParameters = null;
-                    if (queryParameters.TryGetValue("_orderBy", out orderBy))
-                        sortParameters = QueryExpressionParser.BuildSort<TResource>(orderBy);
-
-                    if (queryParameters.TryGetValue("_id", out id))
-                    {
-                        var obj = this.GetRepository().Get(Guid.Parse(id.First()));
-                        if (obj != null)
-                            retVal = new List<TResource>() { obj };
-                        else
-                            retVal = new List<TResource>();
-                        totalCount = retVal.Count();
-                    }
-                    else if (queryParameters.TryGetValue("_queryId", out query) && this.GetRepository() is IPersistableQueryRepositoryService<TResource>)
-                    {
-                        Guid queryId = Guid.Parse(query[0]);
-                        List<String> data = null;
-                        if (queryParameters.TryGetValue("_subscription", out data))
-                        { // subscription based query
-                            totalCount = 0;
-                            retVal = ApplicationServiceContext.Current.GetService<ISubscriptionExecutor>()?.Execute(Guid.Parse(data.First()), queryParameters, offset, count, out totalCount, queryId).OfType<TResource>();
-                        }
-                        else
-                            retVal = (this.GetRepository() as IPersistableQueryRepositoryService<TResource>).Find(queryExpression, offset, count, out totalCount, queryId, sortParameters);
-                    }
-                    else
-                    {
-                        retVal = this.GetRepository().Find(queryExpression, offset, count, out totalCount, sortParameters);
-                    }
-                }
-                if (typeof(Act).IsAssignableFrom(typeof(TResource)) || typeof(Entity).IsAssignableFrom(typeof(TResource)))
-                    AuditUtil.AuditQuery(OutcomeIndicator.Success, queryParameters.ToString(), retVal.ToArray());
-                return retVal;
-            }
-            catch (Exception e)
-            {
-                AuditUtil.AuditQuery<TResource>(OutcomeIndicator.MinorFail, queryParameters.ToString());
-                this.m_tracer.TraceError("Error querying underlying repository");
-                throw new Exception(this.m_localizationService.GetString("error.rest.common.queryingRepository"), e);
-            }
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -363,7 +293,7 @@ namespace SanteDB.Rest.Common
                 {
                     var entityData = processData as TResource;
 
-                    var retVal = this.GetRepository().Save(entityData);
+                    var retVal = this.m_repository.Save(entityData);
                     AuditUtil.AuditUpdate(OutcomeIndicator.Success, null, retVal);
                     return retVal;
                 }

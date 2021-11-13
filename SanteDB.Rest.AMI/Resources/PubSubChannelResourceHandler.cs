@@ -139,20 +139,12 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Query the specified channels
         /// </summary>
-        public IEnumerable<object> Query(NameValueCollection queryParameters)
-        {
-            return this.Query(queryParameters, 0, 20, out int _);
-        }
-
-        /// <summary>
-        /// Query the specified channels
-        /// </summary>
-        public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        public IQueryResultSet Query(NameValueCollection queryParameters)
         {
             try
             {
                 var filter = QueryExpressionParser.BuildLinqExpression<PubSubChannelDefinition>(queryParameters);
-                return this.m_manager.FindChannel(filter, offset, count, out totalCount);
+                return this.m_manager.FindChannel(filter);
             }
             catch (Exception e)
             {

@@ -40,12 +40,12 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Represents a care plan resource handler
     /// </summary>
-    public class CareplanResourceHandler : ResourceHandlerBase<CarePlan>
+    public class CareplanResourceHandler : HdsiResourceHandlerBase<CarePlan>
     {
         /// <summary>
         /// Create careplan resource handler
         /// </summary>
-        public CareplanResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        public CareplanResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<CarePlan> repositoryService) : base(localizationService, freetextSearchService, repositoryService)
         {
         }
     }

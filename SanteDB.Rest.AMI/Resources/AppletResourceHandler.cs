@@ -1,21 +1,22 @@
 ﻿/*
  * Portions Copyright 2019-2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
+
 using RestSrvr;
 using SanteDB.Core;
 using SanteDB.Core.Applets.Model;
@@ -138,11 +139,11 @@ namespace SanteDB.Rest.AMI.Resources
             if (appletData == null)
             {
                 this.m_tracer.TraceError($"File not found: {appletId}");
-                throw new FileNotFoundException(this.m_localizationService.GetString("error.rest.ami.FileNotFoundParam", new 
-                { 
+                throw new FileNotFoundException(this.m_localizationService.GetString("error.rest.ami.FileNotFoundParam", new
+                {
                     param = appletId.ToString()
                 }));
-            }    
+            }
             else
             {
                 var appletManifest = AppletPackage.Load(appletData);
@@ -150,7 +151,6 @@ namespace SanteDB.Rest.AMI.Resources
                 return new MemoryStream(appletData);
             }
         }
-
 
         /// <summary>
         /// Obsoletes the specified applet
@@ -165,33 +165,16 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <summary>
-        /// Perform a query of applets
-        /// </summary>
-        /// <param name="queryParameters">The filter to apply to the applet</param>
-        /// <returns>The matching applet manifests</returns>
-        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public IEnumerable<object> Query(NameValueCollection queryParameters)
-        {
-            int tc = 0;
-            return this.Query(queryParameters, 0, 100, out tc);
-        }
-
-        /// <summary>
         /// Perform a query of applets with restrictions
         /// </summary>
         /// <param name="queryParameters">The filter to apply</param>
-        /// <param name="offset">The offset of the first result</param>
-        /// <param name="count">The count of objects</param>
-        /// <param name="totalCount">The total matching results</param>
         /// <returns>The applet manifests</returns>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        public IQueryResultSet Query(NameValueCollection queryParameters)
         {
             var query = QueryExpressionParser.BuildLinqExpression<AppletManifest>(queryParameters);
             var applets = ApplicationServiceContext.Current.GetService<IAppletManagerService>().Applets.Where(query.Compile()).Select(o => new AppletManifestInfo(o.Info, null));
-            totalCount = applets.Count();
-            return applets.Skip(offset).Take(count).OfType<Object>();
-
+            return new MemoryQueryResultSet(applets);
         }
 
         /// <summary>
@@ -221,7 +204,7 @@ namespace SanteDB.Rest.AMI.Resources
                     param = pkg.Meta.Id
                 }));
             }
-                
+
             ApplicationServiceContext.Current.GetService<IAppletManagerService>().Install(pkg, true);
             X509Certificate2 cert = null;
             if (pkg.PublicKey != null)
