@@ -72,11 +72,11 @@ namespace SanteDB.Rest.Common
                         // Associated prop handler
                         if (rh is IChainedApiResourceHandler assoc)
                         {
-                            tPropertyProviders.Where(p => p.ParentTypes.Contains(rh.Type)).ToList().ForEach(p => assoc.AddChildResource(p));
+                            tPropertyProviders.Where(p => p.ParentTypes.Contains(rh.Type) || p.ParentTypes == Type.EmptyTypes).ToList().ForEach(p => assoc.AddChildResource(p));
                         }
                         if (rh is IOperationalApiResourceHandler oper)
                         {
-                            tOperationProviders.Where(p => p.ParentTypes.Contains(rh.Type)).ToList().ForEach(p => oper.AddOperation(p));
+                            tOperationProviders.Where(p => p.ParentTypes.Contains(rh.Type) || p.ParentTypes == Type.EmptyTypes).ToList().ForEach(p => oper.AddOperation(p));
                         }
                     }
                 }
