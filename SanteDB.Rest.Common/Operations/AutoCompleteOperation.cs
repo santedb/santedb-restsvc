@@ -100,7 +100,7 @@ namespace SanteDB.Rest.Common.Operations
                 this.IsCollection = typeof(ICollection).IsAssignableFrom(propertyInfo.PropertyType);
 
                 // Output documentation
-                var typeDoc = AutoCompleteOperation.m_documentation.SelectSingleNode(String.Format("//*[local-name() = 'member'][@name = 'P:{0}.{1}']", propertyInfo.DeclaringType.FullName, propertyInfo.Name));
+                var typeDoc = AutoCompleteOperation.m_documentation?.SelectSingleNode(String.Format("//*[local-name() = 'member'][@name = 'P:{0}.{1}']", propertyInfo.DeclaringType.FullName, propertyInfo.Name));
                 if (typeDoc != null)
                 {
                     var docNode = typeDoc.SelectSingleNode(".//*[local-name() = 'summary']");
@@ -108,6 +108,10 @@ namespace SanteDB.Rest.Common.Operations
                     {
                         this.Documentation = docNode.InnerText;
                     }
+                }
+                else
+                {
+                    this.Documentation = $"Documentation could not be loaded";
                 }
             }
 
@@ -283,13 +287,13 @@ namespace SanteDB.Rest.Common.Operations
                             return variables.Values().Select(o => o.Path.Substring(1)).ToArray();
                         }
                     }
-                    else if(propertyExtract.Groups[1].Value.StartsWith(":(")) // function 
+                    else if (propertyExtract.Groups[1].Value.StartsWith(":(")) // function
                     {
                         var functionMatch = this.m_functionExtractor.Match(propertyPath);
                         if (functionMatch.Success && (!String.IsNullOrEmpty(functionMatch.Groups[2].Value) || !String.IsNullOrEmpty(functionMatch.Groups[3].Value)))
                         {
-                            return this.FollowPath(typeof(Object), 
-                                String.IsNullOrEmpty(functionMatch.Groups[2].Value) ? functionMatch.Groups[3].Value : functionMatch.Groups[2].Value, 
+                            return this.FollowPath(typeof(Object),
+                                String.IsNullOrEmpty(functionMatch.Groups[2].Value) ? functionMatch.Groups[3].Value : functionMatch.Groups[2].Value,
                                 variables);
                         }
                         else
