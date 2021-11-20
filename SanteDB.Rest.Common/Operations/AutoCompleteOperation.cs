@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Attributes;
+using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Serialization;
 using System;
@@ -240,7 +241,7 @@ namespace SanteDB.Rest.Common.Operations
         /// <summary>
         /// Invoke the operation on the specifed type instance
         /// </summary>
-        public object Invoke(Type scopingType, object scopingKey, ApiOperationParameterCollection parameters)
+        public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
             if (parameters.TryGet("expression", out String propertyPath))
             {
