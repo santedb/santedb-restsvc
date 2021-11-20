@@ -31,6 +31,7 @@ using SanteDB.Core.Model.AMI.Logging;
 using SanteDB.Core.Model.AMI.Security;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Model.Subscription;
@@ -219,43 +220,43 @@ namespace SanteDB.Rest.AMI
         /// Performs a linked or chained search on a sub-property
         /// </summary>
         /// <param name="resourceType">The type of resource which should be searched</param>
-        /// <param name="key">The key of the hosting (container object)</param>
+        /// <param name="id">The key of the hosting (container object)</param>
         /// <param name="childKey">The key of the sub-item to fetch</param>
         /// <param name="childResourceType">The property to search</param>
         /// <returns>The search for the specified resource type limited to the specified object</returns>
-        [Get("/{resourceType}/{key}/{childResourceType}/{childKey}")]
-        Object AssociationGet(String resourceType, String key, String childResourceType, String childKey);
+        [Get("/{resourceType}/{id}/{childResourceType}/{childKey}")]
+        Object AssociationGet(String resourceType, String id, String childResourceType, String childKey);
 
         /// <summary>
         /// Performs a linked or chained search on a sub-property
         /// </summary>
         /// <param name="resourceType">The type of resource which should be searched</param>
-        /// <param name="key">The key of the hosting (container object)</param>
+        /// <param name="id">The key of the hosting (container object)</param>
         /// <param name="childResourceType">The property to search</param>
         /// <returns>The search for the specified resource type limited to the specified object</returns>
-        [Get("/{resourceType}/{key}/{childResourceType}")]
-        AmiCollection AssociationSearch(String resourceType, String key, String childResourceType);
+        [Get("/{resourceType}/{id}/{childResourceType}")]
+        AmiCollection AssociationSearch(String resourceType, String id, String childResourceType);
 
         /// <summary>
         /// Assigns the <paramref name="body"/> object with the resource at <paramref name="resourceType"/>/<paramref name="key"/>
         /// </summary>
         /// <param name="resourceType">The type of container resource</param>
-        /// <param name="key">The identiifer of the container</param>
+        /// <param name="id">The identiifer of the container</param>
         /// <param name="childResourceType">The property which is the association to be added</param>
         /// <param name="body">The object to be added to the collection</param>
-        [Post("/{resourceType}/{key}/{childResourceType}")]
-        object AssociationCreate(String resourceType, String key, String childResourceType, Object body);
+        [Post("/{resourceType}/{id}/{childResourceType}")]
+        object AssociationCreate(String resourceType, String id, String childResourceType, Object body);
 
         /// <summary>
         /// Removes an association
         /// </summary>
         /// <param name="resourceType">The type of resource which is the container</param>
-        /// <param name="key">The key of the container</param>
+        /// <param name="id">The key of the container</param>
         /// <param name="childResourceType">The property on which the sub-key resides</param>
         /// <param name="childKey">The actual value of the sub-key</param>
         /// <returns>The removed object</returns>
-        [Delete("/{resourceType}/{key}/{childResourceType}/{childKey}")]
-        object AssociationRemove(String resourceType, String key, String childResourceType, String childKey);
+        [Delete("/{resourceType}/{id}/{childResourceType}/{childKey}")]
+        object AssociationRemove(String resourceType, String id, String childResourceType, String childKey);
 
         /// <summary>
         /// Locks the specified resource from the service
@@ -353,7 +354,7 @@ namespace SanteDB.Rest.AMI
         /// <param name="operationName">The name of the operation</param>
         /// <returns>The result of the operation invokation</returns>
         [RestInvoke("POST", "/{resourceType}/${operationName}")]
-        object InvokeMethod(String resourceType, String operationName, ApiOperationParameterCollection body);
+        object InvokeMethod(String resourceType, String operationName, ParameterCollection body);
 
         /// <summary>
         /// Invokes the specified operation
@@ -363,6 +364,6 @@ namespace SanteDB.Rest.AMI
         /// <param name="operationName">The name of the operation</param>
         /// <returns>The result of the operation invokation</returns>
         [RestInvoke("POST", "/{resourceType}/{id}/${operationName}")]
-        object InvokeMethod(String resourceType, String id, String operationName, ApiOperationParameterCollection body);
+        object InvokeMethod(String resourceType, String id, String operationName, ParameterCollection body);
     }
 }

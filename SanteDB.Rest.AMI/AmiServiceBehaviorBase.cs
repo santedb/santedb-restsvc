@@ -31,6 +31,7 @@ using SanteDB.Core.Model.AMI.Collections;
 using SanteDB.Core.Model.AMI.Diagnostics;
 using SanteDB.Core.Model.AMI.Logging;
 using SanteDB.Core.Model.Interfaces;
+using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
@@ -994,7 +995,7 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// <summary>
         /// Invoke the specified method on the API
         /// </summary>
-        public virtual object InvokeMethod(string resourceType, string id, string operationName, ApiOperationParameterCollection body)
+        public virtual object InvokeMethod(string resourceType, string id, string operationName, ParameterCollection body)
         {
             this.ThrowIfNotReady();
 
@@ -1089,7 +1090,7 @@ namespace SanteDB.Messaging.AMI.Wcf
         /// <summary>
         /// Invoke a method which is not tied to a classifier object
         /// </summary>
-        public virtual object InvokeMethod(string resourceType, string operationName, ApiOperationParameterCollection body)
+        public virtual object InvokeMethod(string resourceType, string operationName, ParameterCollection body)
         {
             this.ThrowIfNotReady();
 

@@ -1,21 +1,22 @@
 ﻿/*
  * Portions Copyright 2019-2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
+
 using RestSrvr;
 using SanteDB.Core;
 using SanteDB.Core.Applets.Model;
@@ -138,11 +139,11 @@ namespace SanteDB.Rest.AMI.Resources
             if (appletData == null)
             {
                 this.m_tracer.TraceError($"File not found: {appletId}");
-                throw new FileNotFoundException(this.m_localizationService.FormatString("error.rest.ami.FileNotFoundParam", new 
-                { 
+                throw new FileNotFoundException(this.m_localizationService.FormatString("error.rest.ami.FileNotFoundParam", new
+                {
                     param = appletId.ToString()
                 }));
-            }    
+            }
             else
             {
                 var appletManifest = AppletPackage.Load(appletData);
@@ -150,7 +151,6 @@ namespace SanteDB.Rest.AMI.Resources
                 return new MemoryStream(appletData);
             }
         }
-
 
         /// <summary>
         /// Obsoletes the specified applet
@@ -191,15 +191,6 @@ namespace SanteDB.Rest.AMI.Resources
             var applets = ApplicationServiceContext.Current.GetService<IAppletManagerService>().Applets.Where(query.Compile()).Select(o => new AppletManifestInfo(o.Info, null));
             totalCount = applets.Count();
             return applets.Skip(offset).Take(count).OfType<Object>();
-
-        }
-
-        /// <summary>
-        /// Remove an associated entity
-        /// </summary>
-        public object RemoveAssociatedEntity(object scopingEntityKey, string propertyName, object subItemKey)
-        {
-            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotImplementedException"));
         }
 
         /// <summary>
@@ -221,7 +212,7 @@ namespace SanteDB.Rest.AMI.Resources
                     param = pkg.Meta.Id
                 }));
             }
-                
+
             ApplicationServiceContext.Current.GetService<IAppletManagerService>().Install(pkg, true);
             X509Certificate2 cert = null;
             if (pkg.PublicKey != null)

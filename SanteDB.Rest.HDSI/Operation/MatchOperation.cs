@@ -23,6 +23,7 @@ using SanteDB.Core;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Matching;
 using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Roles;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
@@ -79,7 +80,7 @@ namespace SanteDB.Rest.HDSI.Operation
         /// <summary>
         /// Get the match report for the specified object
         /// </summary>
-        public object Invoke(Type scopingType, object scopingKey, ApiOperationParameterCollection parameters)
+        public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
             if (!(scopingKey is Guid uuid) && !Guid.TryParse(scopingKey.ToString(), out uuid))
             {

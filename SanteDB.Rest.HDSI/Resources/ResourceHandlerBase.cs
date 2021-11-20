@@ -24,6 +24,7 @@ using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
+using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Services;
@@ -35,11 +36,11 @@ using System.Collections.Generic;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
-	/// <summary>
-	/// Represents a resource handler base type that is always bound to HDSI
-	/// </summary>
-	/// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
-	[ServiceProvider("HDSI Resource Handler")]
+    /// <summary>
+    /// Represents a resource handler base type that is always bound to HDSI
+    /// </summary>
+    /// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
+    [ServiceProvider("HDSI Resource Handler")]
     public abstract class ResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData>,
         INullifyResourceHandler,
         ICancelResourceHandler,
@@ -50,7 +51,6 @@ namespace SanteDB.Rest.HDSI.Resources
 
         where TData : IdentifiedData, new()
     {
-
         // Property providers
         private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
 
@@ -68,7 +68,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Gets the scope
         /// </summary>
-        override public Type Scope => typeof(IHdsiServiceContract);
+        public override Type Scope => typeof(IHdsiServiceContract);
 
         /// <summary>
         /// Get all child resources
@@ -161,8 +161,8 @@ namespace SanteDB.Rest.HDSI.Resources
                 else
                 {
                     this.m_tracer.TraceError($"Repository for {this.ResourceName} does not support Cancel");
-                    throw new NotSupportedException(this.m_localizationService.FormatString("error.rest.hdsi.notSupportCancel", new 
-                    { 
+                    throw new NotSupportedException(this.m_localizationService.FormatString("error.rest.hdsi.notSupportCancel", new
+                    {
                         param = this.ResourceName
                     }));
                 }
@@ -333,7 +333,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Invoke the specified operation
         /// </summary>
-        public object InvokeOperation(object scopingEntityKey, string operationName, ApiOperationParameterCollection parameters)
+        public object InvokeOperation(object scopingEntityKey, string operationName, ParameterCollection parameters)
         {
             if (this.TryGetOperation(operationName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildOperation handler))
             {

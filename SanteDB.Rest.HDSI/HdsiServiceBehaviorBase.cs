@@ -30,6 +30,7 @@ using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Interfaces;
+using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
@@ -1179,7 +1180,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Invoke the specified method on the API
         /// </summary>
-        public virtual object InvokeMethod(string resourceType, string id, string operationName, ApiOperationParameterCollection body)
+        public virtual object InvokeMethod(string resourceType, string id, string operationName, ParameterCollection body)
         {
             this.ThrowIfNotReady();
 
@@ -1274,7 +1275,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Invoke a method which is not tied to a classifier object
         /// </summary>
-        public virtual object InvokeMethod(string resourceType, string operationName, ApiOperationParameterCollection body)
+        public virtual object InvokeMethod(string resourceType, string operationName, ParameterCollection body)
         {
             this.ThrowIfNotReady();
 

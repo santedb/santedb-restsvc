@@ -1,6 +1,7 @@
 ﻿using SanteDB.Core;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
+using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
@@ -13,7 +14,6 @@ namespace SanteDB.Rest.HDSI.Operation
     /// </summary>
     public class DiffObjectOperation : IApiChildOperation
     {
-
         // The patch service
         private IPatchService m_patchService;
 
@@ -43,9 +43,8 @@ namespace SanteDB.Rest.HDSI.Operation
         /// <summary>
         /// Invoke the operation
         /// </summary>
-        public object Invoke(Type scopingType, object scopingKey, ApiOperationParameterCollection parameters)
+        public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
-
             if (parameters.TryGet<String>("other", out string bKeyString) &&
                 Guid.TryParse(scopingKey.ToString(), out Guid aKey) && Guid.TryParse(bKeyString, out Guid bKey))
             {
@@ -61,7 +60,6 @@ namespace SanteDB.Rest.HDSI.Operation
             {
                 throw new ArgumentException("Both A and B parameters must be specified");
             }
-
         }
     }
 }
