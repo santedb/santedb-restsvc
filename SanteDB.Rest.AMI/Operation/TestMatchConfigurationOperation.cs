@@ -26,6 +26,7 @@ using SanteDB.Core.Matching;
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
@@ -73,7 +74,7 @@ namespace SanteDB.Rest.AMI.Operation
         /// <param name="scopingKey"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public object Invoke(Type scopingType, object scopingKey, ApiOperationParameterCollection parameters)
+        public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
             throw new NotSupportedException();
         }

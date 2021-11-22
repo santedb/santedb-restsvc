@@ -26,6 +26,7 @@ using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Model.Roles;
 using SanteDB.Core.Model.Security;
@@ -73,7 +74,7 @@ namespace SanteDB.Rest.HDSI
     [ServiceKnownResource(typeof(Bundle))]
     [ServiceKnownResource(typeof(ConceptSet))]
     [ServiceKnownResource(typeof(ConceptReferenceTerm))]
-    [ServiceKnownResource(typeof(ApiOperationParameter))]
+    [ServiceKnownResource(typeof(Parameter))]
     [ServiceProduces("application/json")]
     [ServiceProduces("application/json+sdb-viewmodel")]
     [ServiceProduces("application/xml")]
@@ -183,7 +184,7 @@ namespace SanteDB.Rest.HDSI
         /// <param name="operationName">The name of the operation</param>
         /// <returns>The result of the operation invokation</returns>
         [RestInvoke("POST", "/{resourceType}/{id}/${operationName}")]
-        object InvokeMethod(String resourceType, String id, String operationName, ApiOperationParameterCollection body);
+        object InvokeMethod(String resourceType, String id, String operationName, ParameterCollection body);
 
         /// <summary>
         /// Releases an edit lock on the specified object
@@ -343,7 +344,7 @@ namespace SanteDB.Rest.HDSI
         /// <param name="operationName">The name of the operation</param>
         /// <returns>The result of the operation invokation</returns>
         [RestInvoke("POST", "/{resourceType}/${operationName}")]
-        object InvokeMethod(String resourceType, String operationName, ApiOperationParameterCollection body);
+        object InvokeMethod(String resourceType, String operationName, ParameterCollection body);
 
         /// <summary>
         /// Performs a linked or chained search on a sub-property
