@@ -12,6 +12,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using SanteDB.Core.Model;
+using SanteDB.Core.Model.Parameters;
 
 namespace SanteDB.Rest.HDSI.Operation
 {
@@ -57,7 +58,7 @@ namespace SanteDB.Rest.HDSI.Operation
         /// <summary>
         /// Invoke the care plan operation
         /// </summary>
-        public object Invoke(Type scopingType, object scopingKey, ApiOperationParameterCollection parameters)
+        public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
             // Target - of the operation
             if (!parameters.TryGet("targetPatient", out Patient target))

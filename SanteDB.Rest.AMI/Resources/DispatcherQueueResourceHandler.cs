@@ -98,25 +98,15 @@ namespace SanteDB.Rest.AMI.Resources
         /// <param name="queryParameters"></param>
         /// <returns></returns>
         [Demand(PermissionPolicyIdentifiers.ManageDispatcherQueues)]
-        public IEnumerable<object> Query(NameValueCollection queryParameters)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Get all queues
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.ManageDispatcherQueues)]
-        public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        public IQueryResultSet Query(NameValueCollection queryParameters)
         {
             var queues = this.m_queueService.GetQueues();
-            totalCount = queues.Count();
 
             if (queryParameters.TryGetValue("name", out var nameFilter))
             {
                 queues = queues.Where(o => o.Name.Contains(nameFilter.First().Replace("*", "").Replace("%", "")));
             }
-            return queues.Skip(offset).Take(count);
+            return new MemoryQueryResultSet(queues);
         }
 
         /// <summary>
@@ -148,7 +138,7 @@ namespace SanteDB.Rest.AMI.Resources
             else
             {
                 this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
                 {
                     param = propertyName
                 }));
@@ -159,16 +149,16 @@ namespace SanteDB.Rest.AMI.Resources
         /// Query child objects
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ManageDispatcherQueues)]
-        public IEnumerable<object> QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
+        public IQueryResultSet QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter)
         {
             if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
             {
-                return propertyProvider.Query(typeof(DispatcherQueueInfo), scopingEntityKey, filter, offset, count, out totalCount);
+                return propertyProvider.Query(typeof(DispatcherQueueInfo), scopingEntityKey, filter);
             }
             else
             {
                 this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
                 {
                     param = propertyName
                 }));
@@ -188,7 +178,7 @@ namespace SanteDB.Rest.AMI.Resources
             else
             {
                 this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
                 {
                     param = propertyName
                 }));
@@ -208,7 +198,7 @@ namespace SanteDB.Rest.AMI.Resources
             else
             {
                 this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
                 {
                     param = propertyName
                 }));

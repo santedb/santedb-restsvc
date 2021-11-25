@@ -1,5 +1,6 @@
 ﻿using RestSrvr;
 using SanteDB.Core.Interop;
+using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Queue;
 using SanteDB.Core.Security.Audit;
@@ -71,17 +72,17 @@ namespace SanteDB.Rest.AMI.ChildResources
             if (item is DispatcherQueueEntry dqe)
             {
                 var retVal = this.m_queueService.Move(dqe, (string)scopingKey);
-                AuditUtil.SendAudit(new Core.Auditing.AuditData()
+                AuditUtil.SendAudit(new AuditEventData()
                .WithLocalDevice()
                .WithUser()
-               .WithAction(Core.Auditing.ActionType.Update)
-               .WithEventIdentifier(Core.Auditing.EventIdentifierType.Import)
-               .WithOutcome(Core.Auditing.OutcomeIndicator.Success)
+               .WithAction(ActionType.Update)
+               .WithEventIdentifier(EventIdentifierType.Import)
+               .WithOutcome(OutcomeIndicator.Success)
                .WithTimestamp(DateTime.Now)
                .WithEventType("MoveQueueObject")
                .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
-               .WithSystemObjects(Core.Auditing.AuditableObjectRole.Resource, Core.Auditing.AuditableObjectLifecycle.Archiving, new Uri($"{dqe.SourceQueue}/entry/{dqe.CorrelationId}"))
-               .WithSystemObjects(Core.Auditing.AuditableObjectRole.Resource, Core.Auditing.AuditableObjectLifecycle.Creation, new Uri($"{scopingKey}/entry/{retVal.CorrelationId}"))
+               .WithSystemObjects(AuditableObjectRole.Resource, AuditableObjectLifecycle.Archiving, new Uri($"{dqe.SourceQueue}/entry/{dqe.CorrelationId}"))
+               .WithSystemObjects(AuditableObjectRole.Resource, AuditableObjectLifecycle.Creation, new Uri($"{scopingKey}/entry/{retVal.CorrelationId}"))
                );
                 return retVal;
             }
@@ -102,27 +103,26 @@ namespace SanteDB.Rest.AMI.ChildResources
         /// <summary>
         /// Query for all entries on the specified queue
         /// </summary>
-        public IEnumerable<object> Query(Type scopingType, object scopingKey, NameValueCollection filter, int offset, int count, out int totalCount)
+        public IQueryResultSet Query(Type scopingType, object scopingKey, NameValueCollection filter)
         {
             var entries = this.m_queueService.GetQueueEntries((string)scopingKey);
             if (filter.TryGetValue("name", out var values))
             {
                 entries = entries.Where(o => o.CorrelationId.Contains(values.First().Replace("*", "")));
             }
-            totalCount = entries.Count();
 
-            AuditUtil.SendAudit(new Core.Auditing.AuditData()
+            AuditUtil.SendAudit(new AuditEventData()
                .WithLocalDevice()
                .WithUser()
-               .WithAction(Core.Auditing.ActionType.Execute)
-               .WithEventIdentifier(Core.Auditing.EventIdentifierType.Query)
-               .WithOutcome(Core.Auditing.OutcomeIndicator.Success)
+               .WithAction(ActionType.Execute)
+               .WithEventIdentifier(EventIdentifierType.Query)
+               .WithOutcome(OutcomeIndicator.Success)
                .WithTimestamp(DateTime.Now)
                .WithEventType("QueryQueueObject")
                .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
-               .WithSystemObjects(Core.Auditing.AuditableObjectRole.Resource, Core.Auditing.AuditableObjectLifecycle.PermanentErasure, entries.Select(o => new Uri($"{scopingKey}/entry/{o.CorrelationId}")).ToArray()));
+               .WithSystemObjects(AuditableObjectRole.Resource, AuditableObjectLifecycle.PermanentErasure, entries.Select(o => new Uri($"{scopingKey}/entry/{o.CorrelationId}")).ToArray()));
 
-            return entries.Skip(offset).Take(count);
+            return new MemoryQueryResultSet(entries);
         }
 
         /// <summary>
@@ -131,16 +131,16 @@ namespace SanteDB.Rest.AMI.ChildResources
         public object Remove(Type scopingType, object scopingKey, object key)
         {
             var data = this.m_queueService.DequeueById((String)scopingKey, (string)key);
-            AuditUtil.SendAudit(new Core.Auditing.AuditData()
+            AuditUtil.SendAudit(new AuditEventData()
                 .WithLocalDevice()
                 .WithUser()
-                .WithAction(Core.Auditing.ActionType.Delete)
-                .WithEventIdentifier(Core.Auditing.EventIdentifierType.ApplicationActivity)
-                .WithOutcome(Core.Auditing.OutcomeIndicator.Success)
+                .WithAction(ActionType.Delete)
+                .WithEventIdentifier(EventIdentifierType.ApplicationActivity)
+                .WithOutcome(OutcomeIndicator.Success)
                 .WithTimestamp(DateTime.Now)
                 .WithEventType("PurgeQueueObject")
                 .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
-                .WithSystemObjects(Core.Auditing.AuditableObjectRole.Resource, Core.Auditing.AuditableObjectLifecycle.PermanentErasure, new Uri($"urn:queue:{scopingKey}/event/{key}")));
+                .WithSystemObjects(AuditableObjectRole.Resource, AuditableObjectLifecycle.PermanentErasure, new Uri($"urn:queue:{scopingKey}/event/{key}")));
             return null;
         }
     }
