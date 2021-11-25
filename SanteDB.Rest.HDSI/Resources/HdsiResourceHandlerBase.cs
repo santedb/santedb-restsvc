@@ -24,6 +24,7 @@ using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
+using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Services;
@@ -331,7 +332,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Invoke the specified operation
         /// </summary>
-        public object InvokeOperation(object scopingEntityKey, string operationName, ApiOperationParameterCollection parameters)
+        public object InvokeOperation(object scopingEntityKey, string operationName, ParameterCollection parameters)
         {
             if (this.TryGetOperation(operationName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildOperation handler))
             {

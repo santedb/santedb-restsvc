@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Attributes;
+using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Serialization;
 using System;
@@ -100,7 +101,7 @@ namespace SanteDB.Rest.Common.Operations
                 this.IsCollection = typeof(ICollection).IsAssignableFrom(propertyInfo.PropertyType);
 
                 // Output documentation
-                var typeDoc = AutoCompleteOperation.m_documentation.SelectSingleNode(String.Format("//*[local-name() = 'member'][@name = 'P:{0}.{1}']", propertyInfo.DeclaringType.FullName, propertyInfo.Name));
+                var typeDoc = AutoCompleteOperation.m_documentation?.SelectSingleNode(String.Format("//*[local-name() = 'member'][@name = 'P:{0}.{1}']", propertyInfo.DeclaringType.FullName, propertyInfo.Name));
                 if (typeDoc != null)
                 {
                     var docNode = typeDoc.SelectSingleNode(".//*[local-name() = 'summary']");
@@ -108,6 +109,10 @@ namespace SanteDB.Rest.Common.Operations
                     {
                         this.Documentation = docNode.InnerText;
                     }
+                }
+                else
+                {
+                    this.Documentation = $"Documentation could not be loaded";
                 }
             }
 
@@ -236,7 +241,7 @@ namespace SanteDB.Rest.Common.Operations
         /// <summary>
         /// Invoke the operation on the specifed type instance
         /// </summary>
-        public object Invoke(Type scopingType, object scopingKey, ApiOperationParameterCollection parameters)
+        public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
             if (parameters.TryGet("expression", out String propertyPath))
             {
@@ -283,13 +288,13 @@ namespace SanteDB.Rest.Common.Operations
                             return variables.Values().Select(o => o.Path.Substring(1)).ToArray();
                         }
                     }
-                    else if(propertyExtract.Groups[1].Value.StartsWith(":(")) // function 
+                    else if (propertyExtract.Groups[1].Value.StartsWith(":(")) // function
                     {
                         var functionMatch = this.m_functionExtractor.Match(propertyPath);
                         if (functionMatch.Success && (!String.IsNullOrEmpty(functionMatch.Groups[2].Value) || !String.IsNullOrEmpty(functionMatch.Groups[3].Value)))
                         {
-                            return this.FollowPath(typeof(Object), 
-                                String.IsNullOrEmpty(functionMatch.Groups[2].Value) ? functionMatch.Groups[3].Value : functionMatch.Groups[2].Value, 
+                            return this.FollowPath(typeof(Object),
+                                String.IsNullOrEmpty(functionMatch.Groups[2].Value) ? functionMatch.Groups[3].Value : functionMatch.Groups[2].Value,
                                 variables);
                         }
                         else
