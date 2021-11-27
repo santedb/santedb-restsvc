@@ -35,6 +35,7 @@ using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Model.Subscription;
+using SanteDB.Core.Queue;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
@@ -90,6 +91,8 @@ namespace SanteDB.Rest.AMI
     [ServiceKnownResource(typeof(X509Certificate2Info))]
     [ServiceKnownResource(typeof(CodeSystem))]
     [ServiceKnownResource(typeof(LogFileInfo))]
+    [ServiceKnownResource(typeof(DispatcherQueueInfo))]
+    [ServiceKnownResource(typeof(DispatcherQueueEntry))]
     [ServiceProduces("application/json")]
     [ServiceProduces("application/xml")]
     [ServiceProduces("application/json+sdb-viewmodel")]

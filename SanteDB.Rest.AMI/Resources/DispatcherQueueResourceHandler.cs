@@ -1,8 +1,10 @@
-﻿using SanteDB.Core.Diagnostics;
+﻿using RestSrvr;
+using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Queue;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
@@ -58,7 +60,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Gets the capabilities of the object
         /// </summary>
-        public ResourceCapabilityType Capabilities => ResourceCapabilityType.Search | ResourceCapabilityType.Delete | ResourceCapabilityType.Get;
+        public ResourceCapabilityType Capabilities => ResourceCapabilityType.Search | ResourceCapabilityType.Delete | ResourceCapabilityType.Get | ResourceCapabilityType.Update;
 
         /// <summary>
         /// Get all child resources
@@ -89,7 +91,18 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.ManageDispatcherQueues)]
         public object Obsolete(object key)
         {
-            throw new NotSupportedException();
+            this.m_queueService.Purge((String)key);
+            AuditUtil.SendAudit(new Core.Auditing.AuditData()
+                .WithLocalDevice()
+                .WithUser()
+                .WithAction(Core.Auditing.ActionType.Delete)
+                .WithEventIdentifier(Core.Auditing.EventIdentifierType.ApplicationActivity)
+                .WithOutcome(Core.Auditing.OutcomeIndicator.Success)
+                .WithTimestamp(DateTime.Now)
+                .WithEventType("PurgeQueue")
+                .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithSystemObjects(Core.Auditing.AuditableObjectRole.Resource, Core.Auditing.AuditableObjectLifecycle.PermanentErasure, new Uri($"urn:santedb:org:DispatcherQueueInfo/{key}/event")));
+            return null;
         }
 
         /// <summary>
@@ -124,7 +137,21 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public object Update(object data)
         {
-            throw new NotSupportedException();
+            if (data is DispatcherQueueInfo dqe)
+            {
+                // The updated objects are the source queue,
+                var toQueue = RestOperationContext.Current.IncomingRequest.QueryString["_to"];
+                if (String.IsNullOrEmpty(toQueue))
+                {
+                    toQueue = dqe.Id.Replace(".dead", "");
+                }
+
+                foreach (var itm in this.m_queueService.GetQueueEntries(dqe.Id))
+                {
+                    this.m_queueService.Move(itm, toQueue);
+                }
+            }
+            return null;
         }
 
         /// <summary>
