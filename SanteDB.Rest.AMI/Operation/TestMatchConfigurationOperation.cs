@@ -23,11 +23,13 @@ using RestSrvr;
 using SanteDB.Core;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Matching;
+using SanteDB.Core.Model;
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Query;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
@@ -42,14 +44,22 @@ namespace SanteDB.Rest.AMI.Operation
     public class TestMatchConfigurationOperation : IApiChildOperation
     {
         // Config service
-        private IRecordMatchingConfigurationService m_configService;
+        private readonly IRecordMatchingConfigurationService m_configService;
+
+        // Matching service
+        private readonly IRecordMatchingService m_matchingService;
+
+        // Match report factory
+        private readonly IMatchReportFactory m_matchReportFactory;
 
         /// <summary>
         /// Create a new match configuration operation
         /// </summary>
-        public TestMatchConfigurationOperation(IRecordMatchingConfigurationService configService = null)
+        public TestMatchConfigurationOperation(IRecordMatchingConfigurationService configService = null, IRecordMatchingService matchingService = null, IMatchReportFactory matchReportFactory = null)
         {
             this.m_configService = configService;
+            this.m_matchingService = matchingService;
+            this.m_matchReportFactory = matchReportFactory;
         }
 
         /// <summary>
@@ -68,15 +78,74 @@ namespace SanteDB.Rest.AMI.Operation
         public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Instance;
 
         /// <summary>
-        ///
+        /// Invoke the operation
         /// </summary>
-        /// <param name="scopingType"></param>
-        /// <param name="scopingKey"></param>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
-            throw new NotSupportedException();
+            if (parameters.TryGet("input", out String inputIdString) && Guid.TryParse(inputIdString, out Guid inputId))
+            {
+                // Matching is run on system context
+
+                // Load the configuration
+                var config = this.m_configService?.GetConfiguration(scopingKey.ToString());
+                if (config == null)
+                {
+                    throw new KeyNotFoundException($"{scopingKey} not found");
+                }
+
+                // Get the target input
+                var inputObject = config.AppliesTo.Select(o =>
+                {
+                    using (AuthenticationContext.EnterSystemContext()) // The input should be in system concept since the privacy service may block our identity domains based on policy
+                    {
+                        var repo = ApplicationServiceContext.Current.GetService(typeof(IRepositoryService<>).MakeGenericType(o)) as IRepositoryService;
+                        if (repo != null)
+                        {
+                            return repo.Get(inputId);
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }).OfType<IdentifiedData>().FirstOrDefault();
+                if (inputObject == null)
+                {
+                    throw new KeyNotFoundException($"{inputId} not found or not applicable for {scopingKey}");
+                }
+
+                // Run the configuration
+                var mergeService = ApplicationServiceContext.Current.GetService(typeof(IRecordMergingService<>).MakeGenericType(inputObject.GetType())) as IRecordMergingService;
+                var repoService = ApplicationServiceContext.Current.GetService(typeof(IRepositoryService<>).MakeGenericType(inputObject.GetType())) as IRepositoryService;
+
+                IEnumerable<IdentifiedData> blocks = null;
+                var diagnosticSession = this.m_matchingService.CreateDiagnosticSession();
+
+                if (parameters.TryGet("targets", out String[] knownDuplicates) && knownDuplicates.Length > 0)
+                {
+                    // Start the "blocking" as specified
+                    IEnumerable<IRecordMatchResult> results = null;
+                    try
+                    {
+                        diagnosticSession.LogStart(config.Id);
+                        blocks = knownDuplicates.Select(o => repoService.Get(Guid.Parse(o)));
+                        results = this.m_matchingService.Classify(inputObject, blocks, config.Id, diagnosticSession);
+                    }
+                    finally
+                    {
+                        diagnosticSession.LogEnd();
+                    }
+                    return this.m_matchReportFactory.CreateMatchReport(inputObject.GetType(), inputObject, results, diagnosticSession);
+                }
+                else
+                {
+                    return this.m_matchReportFactory.CreateMatchReport(inputObject.GetType(), inputObject, this.m_matchingService.Match(inputObject, config.Id, mergeService.GetIgnoredKeys(inputId), diagnosticSession), diagnosticSession);
+                }
+            }
+            else
+            {
+                throw new ArgumentNullException("Missing input patient parameter");
+            }
         }
     }
 }
