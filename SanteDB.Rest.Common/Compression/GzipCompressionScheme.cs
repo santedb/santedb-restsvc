@@ -18,6 +18,7 @@
  * User: fyfej
  * Date: 2021-8-5
  */
+using SharpCompress.IO;
 using System.IO;
 using System.IO.Compression;
 
@@ -44,7 +45,7 @@ namespace SanteDB.Rest.Common.Compression
         /// </summary>
         public Stream CreateCompressionStream(Stream underlyingStream)
         {
-            return new GZipStream(underlyingStream, CompressionMode.Compress, true);
+            return new GZipStream(new NonDisposingStream(underlyingStream), CompressionMode.Compress);
         }
 
         /// <summary>
