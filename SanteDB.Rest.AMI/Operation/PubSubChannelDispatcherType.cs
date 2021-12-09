@@ -45,11 +45,7 @@ namespace SanteDB.Rest.AMI.Operation
         {
             if (this.m_dispatchers == null)
             {
-                this.m_dispatchers = AppDomain.CurrentDomain.GetAllTypes()
-                    .Where(t => typeof(IPubSubDispatcherFactory).IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface)
-                    .Select(o => this.m_serviceManager.CreateInjected(o) as IPubSubDispatcherFactory)
-                    .SelectMany(o => o.Schemes)
-                    .ToArray();
+                this.m_dispatchers = DispatcherFactoryUtil.GetFactories().Select(o => o.Value.Id).ToArray();
             }
             return new GenericRestResultCollection() { Values = this.m_dispatchers.OfType<Object>().ToList() };
         }
