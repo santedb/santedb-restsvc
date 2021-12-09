@@ -1,28 +1,33 @@
 ﻿/*
  * Portions Copyright 2019-2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
+
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
+using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.PubSub;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
+using SanteDB.Rest.Common.Attributes;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -31,8 +36,10 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Publish Subscribe Resource Handler
     /// </summary>
-    public class PubSubSubscriptionResourceHandler : IServiceImplementation, IApiResourceHandler
+    public class PubSubSubscriptionResourceHandler : IServiceImplementation, IApiResourceHandler, IOperationalApiResourceHandler
     {
+        // Operations
+        private ConcurrentDictionary<String, IApiChildOperation> m_operations = new ConcurrentDictionary<string, IApiChildOperation>();
 
         // The manager for the pub-sub service
         private IPubSubManagerService m_manager;
@@ -79,8 +86,14 @@ namespace SanteDB.Rest.AMI.Resources
         public string ServiceName => "Pub Sub Subscription Resource Handler";
 
         /// <summary>
+        /// Gets the operations for the resource handler
+        /// </summary>
+        public IEnumerable<IApiChildOperation> Operations => this.m_operations.Values;
+
+        /// <summary>
         /// Creates a new object
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.CreatePubSubSubscription)]
         public object Create(object data, bool updateIfExists)
         {
             if (data is PubSubSubscriptionDefinition definition)
@@ -109,6 +122,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Gets the specified definition
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.ReadPubSubSubscription)]
         public object Get(object id, object versionId)
         {
             if (id is Guid uuid)
@@ -128,12 +142,12 @@ namespace SanteDB.Rest.AMI.Resources
                 this.m_tracer.TraceError("ID must be a uuid");
                 throw new ArgumentException(this.m_localizationService.GetString("error.rest.ami.idMustBeUUID"));
             }
-                
         }
 
         /// <summary>
         /// Deletes the specified subscription
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.DeletePubSubSubscription)]
         public object Obsolete(object key)
         {
             if (key is Guid uuid)
@@ -153,12 +167,12 @@ namespace SanteDB.Rest.AMI.Resources
                 this.m_tracer.TraceError("ID must be a uuid");
                 throw new ArgumentOutOfRangeException(this.m_localizationService.GetString("error.rest.ami.idMustBeUUID"));
             }
-                
         }
 
         /// <summary>
         /// Find all subscriptions
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.ReadPubSubSubscription)]
         public IEnumerable<object> Query(NameValueCollection queryParameters)
         {
             return this.Query(queryParameters, 0, 25, out int _);
@@ -167,6 +181,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Query for subscriptions
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.ReadPubSubSubscription)]
         public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
         {
             try
@@ -184,6 +199,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Update the specified object
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.EnablePubSubSubscription)]
         public object Update(object data)
         {
             if (data is PubSubSubscriptionDefinition definition)
@@ -191,7 +207,6 @@ namespace SanteDB.Rest.AMI.Resources
                 try
                 {
                     var retVal = this.m_manager.UpdateSubscription(definition.Key.Value, definition.Name, definition.Description, definition.Event, definition.Filter.First(), definition.SupportContact, definition.NotBefore, definition.NotAfter);
-                    this.m_manager.ActivateSubscription(retVal.Key.Value, definition.IsActive);
                     return retVal;
                 }
                 catch (Exception e)
@@ -205,6 +220,31 @@ namespace SanteDB.Rest.AMI.Resources
                 this.m_tracer.TraceError("Parameter must be of type PubSubSubscription");
                 throw new ArgumentException(this.m_localizationService.GetString("error.rest.ami.incorrectParameterType"));
             }
+        }
+
+        /// <inheritdoc />
+        public void AddOperation(IApiChildOperation property)
+        {
+            this.m_operations.TryAdd(property.Name, property);
+        }
+
+        /// <inheritdoc/>
+        public object InvokeOperation(object scopingEntityKey, string operationName, ParameterCollection parameters)
+        {
+            if (this.TryGetOperation(operationName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildOperation operation))
+            {
+                return operation.Invoke(typeof(PubSubSubscriptionDefinition), scopingEntityKey, parameters);
+            }
+            else
+            {
+                throw new KeyNotFoundException($"{operationName} not registered");
+            }
+        }
+
+        /// <inheritdoc/>
+        public bool TryGetOperation(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildOperation operationHandler)
+        {
+            return this.m_operations.TryGetValue(propertyName, out operationHandler);
         }
     }
 }

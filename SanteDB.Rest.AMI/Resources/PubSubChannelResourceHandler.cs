@@ -21,8 +21,10 @@ using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.PubSub;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
+using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -81,6 +83,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Create the specified channel
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.CreatePubSubSubscription)]
         public object Create(object data, bool updateIfExists)
         {
             if (data is PubSubChannelDefinition definition)
@@ -111,6 +114,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Get the specified channel
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.ReadPubSubSubscription)]
         public object Get(object id, object versionId)
         {
             if (id is Guid uuid)
@@ -125,6 +129,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Obsolete the specified object
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.DeletePubSubSubscription)]
         public object Obsolete(object key)
         {
             if (key is Guid uuid)
@@ -139,6 +144,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Query the specified channels
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.ReadPubSubSubscription)]
         public IEnumerable<object> Query(NameValueCollection queryParameters)
         {
             return this.Query(queryParameters, 0, 20, out int _);
@@ -147,6 +153,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Query the specified channels
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.ReadPubSubSubscription)]
         public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
         {
             try
@@ -164,6 +171,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Update the specified channel definition
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.CreatePubSubSubscription)]
         public object Update(object data)
         {
             if (data is PubSubChannelDefinition definition)
@@ -183,7 +191,6 @@ namespace SanteDB.Rest.AMI.Resources
                 this.m_tracer.TraceError("Body must be of type PubSubChannelDefinition");
                 throw new ArgumentException(this.m_localizationService.GetString("error.rest.ami.bodyMustBePubSubChannel"));
             }
-                
         }
     }
 }
