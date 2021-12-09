@@ -46,7 +46,7 @@ namespace SanteDB.Rest.AMI.Operation
         {
             if (parameters.TryGet("status", out bool value))
             {
-                return this.m_manager.ActivateSubscription((Guid)scopingKey, value);
+                return this.m_manager.ActivateSubscription(Guid.Parse(scopingKey.ToString()), value);
             }
             else
             {

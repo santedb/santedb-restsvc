@@ -38,7 +38,7 @@ namespace SanteDB.Rest.AMI.Operation
                     .Select(o => $"{o.FullName}, {o.Assembly.FullName}")
                     .ToArray();
             }
-            return new GenericRestResultCollection<String>() { Values = this.m_dispatchers.ToList() };
+            return new GenericRestResultCollection() { Values = this.m_dispatchers.OfType<Object>().ToList() };
         }
     }
 }

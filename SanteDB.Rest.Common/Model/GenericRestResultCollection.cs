@@ -9,8 +9,8 @@ namespace SanteDB.Rest.Common.Model
     /// <summary>
     /// Generic rest result which has a wrapped simple type
     /// </summary>
-    [XmlType(Namespace = "http://santedb.org/model")]
-    public class GenericRestResultCollection<TResult>
+    [XmlType(nameof(GenericRestResultCollection), Namespace = "http://santedb.org/model")]
+    public class GenericRestResultCollection
     {
         /// <summary>
         /// Gets the values in the result collection
@@ -21,6 +21,6 @@ namespace SanteDB.Rest.Common.Model
             XmlElement("float", typeof(float)),
             XmlElement("guid", typeof(Guid)),
             JsonProperty("values")]
-        public List<TResult> Values { get; set; }
+        public List<object> Values { get; set; }
     }
 }
