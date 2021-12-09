@@ -90,11 +90,7 @@ namespace SanteDB.Rest.AMI.Resources
             {
                 try
                 {
-                    PubSubChannelDefinition retVal = null;
-                    if (definition.DispatcherFactoryType != null)
-                        retVal = this.m_manager.RegisterChannel(definition.Name, definition.DispatcherFactoryType, new Uri(definition.Endpoint), definition.Settings.ToDictionary(o => o.Name, o => o.Value));
-                    else
-                        retVal = this.m_manager.RegisterChannel(definition.Name, new Uri(definition.Endpoint), definition.Settings.ToDictionary(o => o.Name, o => o.Value));
+                    PubSubChannelDefinition retVal = this.m_manager.RegisterChannel(definition.Name, definition.DispatcherFactoryId, new Uri(definition.Endpoint), definition.Settings.ToDictionary(o => o.Name, o => o.Value));
 
                     return retVal;
                 }

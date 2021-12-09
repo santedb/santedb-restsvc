@@ -2,6 +2,7 @@
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.PubSub;
+using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Model;
 using System;
@@ -19,6 +20,17 @@ namespace SanteDB.Rest.AMI.Operation
         // Dipstachers
         private String[] m_dispatchers;
 
+        // Service manager
+        private readonly IServiceManager m_serviceManager;
+
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        public PubSubChannelDispatcherType(IServiceManager serviceManager)
+        {
+            this.m_serviceManager = serviceManager;
+        }
+
         /// <inheritdoc/>
         public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Class;
 
@@ -35,7 +47,8 @@ namespace SanteDB.Rest.AMI.Operation
             {
                 this.m_dispatchers = AppDomain.CurrentDomain.GetAllTypes()
                     .Where(t => typeof(IPubSubDispatcherFactory).IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface)
-                    .Select(o => $"{o.FullName}, {o.Assembly.FullName}")
+                    .Select(o => this.m_serviceManager.CreateInjected(o) as IPubSubDispatcherFactory)
+                    .SelectMany(o => o.Schemes)
                     .ToArray();
             }
             return new GenericRestResultCollection() { Values = this.m_dispatchers.OfType<Object>().ToList() };
