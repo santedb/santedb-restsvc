@@ -31,6 +31,7 @@ using SanteDB.Core.Applets.ViewModel.Json;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Collection;
+using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Json.Formatter;
 using SanteDB.Core.Model.Serialization;
 using System;
@@ -214,6 +215,7 @@ namespace SanteDB.Rest.Common.Serialization
 
                                 using (var sr = new StreamReader(request.Body))
                                     parameters[pNumber] = viewModelSerializer.DeSerialize(sr, parm.ParameterType);
+
                                 break;
 
                             case "application/json":
@@ -253,6 +255,18 @@ namespace SanteDB.Rest.Common.Serialization
 
                             default:
                                 throw new InvalidOperationException("Invalid request format");
+                        }
+
+                        // Set no load
+                        switch (parameters[pNumber])
+                        {
+                            case IResourceCollection irc:
+                                irc.AddAnnotationToAll(SanteDBConstants.NoDynamicLoadAnnotation);
+                                break;
+
+                            case IIdentifiedEntity ide:
+                                ide.AddAnnotation(SanteDBConstants.NoDynamicLoadAnnotation);
+                                break;
                         }
                     }
                 }

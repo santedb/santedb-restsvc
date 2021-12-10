@@ -43,7 +43,7 @@ namespace SanteDB.Core.Model.AMI.Collections
     /// <summary>
     /// Represents an administrative collection item.
     /// </summary>
-    [ResourceCollection]
+    [AddDependentSerializersAttribute]
     [XmlType(nameof(AmiCollection), Namespace = "http://santedb.org/ami")]
     [JsonObject(nameof(AmiCollection))]
     [XmlInclude(typeof(Entity))]

@@ -19,6 +19,7 @@
  * Date: 2021-8-5
  */
 using SharpCompress.Compressors.BZip2;
+using SharpCompress.IO;
 using System.IO;
 
 namespace SanteDB.Rest.Common.Compression
@@ -44,7 +45,7 @@ namespace SanteDB.Rest.Common.Compression
         /// </summary>
         public Stream CreateCompressionStream(Stream underlyingStream)
         {
-            return new BZip2Stream(underlyingStream, SharpCompress.Compressors.CompressionMode.Compress, true);
+            return new BZip2Stream(new NonDisposingStream(underlyingStream), SharpCompress.Compressors.CompressionMode.Compress, false);
         }
 
         /// <summary>
