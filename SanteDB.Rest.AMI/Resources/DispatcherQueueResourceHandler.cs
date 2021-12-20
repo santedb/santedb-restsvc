@@ -92,16 +92,16 @@ namespace SanteDB.Rest.AMI.Resources
         public object Obsolete(object key)
         {
             this.m_queueService.Purge((String)key);
-            AuditUtil.SendAudit(new Core.Auditing.AuditData()
+            AuditUtil.SendAudit(new Core.Model.Audit.AuditEventData()
                 .WithLocalDevice()
                 .WithUser()
-                .WithAction(Core.Auditing.ActionType.Delete)
-                .WithEventIdentifier(Core.Auditing.EventIdentifierType.ApplicationActivity)
-                .WithOutcome(Core.Auditing.OutcomeIndicator.Success)
+                .WithAction(Core.Model.Audit.ActionType.Delete)
+                .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.ApplicationActivity)
+                .WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
                 .WithTimestamp(DateTime.Now)
                 .WithEventType("PurgeQueue")
                 .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
-                .WithSystemObjects(Core.Auditing.AuditableObjectRole.Resource, Core.Auditing.AuditableObjectLifecycle.PermanentErasure, new Uri($"urn:santedb:org:DispatcherQueueInfo/{key}/event")));
+                .WithSystemObjects(Core.Model.Audit.AuditableObjectRole.Resource, Core.Model.Audit.AuditableObjectLifecycle.PermanentErasure, new Uri($"urn:santedb:org:DispatcherQueueInfo/{key}/event")));
             return null;
         }
 
