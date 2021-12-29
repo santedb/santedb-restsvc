@@ -6895,13 +6895,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "heightQuantity", _strong.HeightQuantity, context);
                 }
             }
-            if (context.ShouldSerialize("lotNumber")) {
-                if ((_strong.LotNumber == null)) {
-                }
-                else {
-                    context.JsonContext.WritePropertyUtil(w, "lotNumber", _strong.LotNumber, context);
-                }
-            }
+            
             if (context.ShouldSerialize("expiryDate")) {
                 if ((_strong.ExpiryDate == null)) {
                 }
@@ -7757,11 +7751,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                         }
                                                                                                                                                                                         else {
                                                                                                                                                                                             if ("lotNumber".Equals(r.Value)) {
-                                                                                                                                                                                                r.Read();
-                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("lotNumber", context.JsonContext, _retVal, context));
-                                                                                                                                                                                                if ((_instance != null)) {
-                                                                                                                                                                                                    _retVal.LotNumber = ((string)(_instance));
-                                                                                                                                                                                                }
+                                                                                                                                                                                                
                                                                                                                                                                                             }
                                                                                                                                                                                             else {
                                                                                                                                                                                                 if ("heightQuantity".Equals(r.Value)) {
