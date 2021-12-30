@@ -3553,17 +3553,17 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
             }
             if (context.ShouldSerialize("ethnicity")) {
-                if ((_strong.EthnicGroupCodeKey == null)) {
+                if ((_strong.EthnicGroupKey == null)) {
                 }
                 else {
-                    context.JsonContext.WritePropertyUtil(w, "ethnicity", _strong.EthnicGroupCodeKey, context);
+                    context.JsonContext.WritePropertyUtil(w, "ethnicity", _strong.EthnicGroupKey, context);
                 }
             }
             if (context.ShouldSerialize("ethnicityModel")) {
                 if ((_strong.EthnicGroup == null)) {
-                    if ((_strong.EthnicGroupCodeKey.HasValue && context.ShouldForceLoad("ethnicityModel", _strong.Key))) {
+                    if ((_strong.EthnicGroupKey.HasValue && context.ShouldForceLoad("ethnicityModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.EthnicGroupCodeKey);
+                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.EthnicGroupKey);
                         if ((_delay != null)) {
                             _strong.EthnicGroup = _delay;
                             _loaded = true;
@@ -4457,7 +4457,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                     r.Read();
                                                                                                                                                                                                     object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("ethnicity", context.JsonContext, _retVal, context));
                                                                                                                                                                                                     if ((_instance != null)) {
-                                                                                                                                                                                                        _retVal.EthnicGroupCodeKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                        _retVal.EthnicGroupKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                                                     }
                                                                                                                                                                                                 }
                                                                                                                                                                                                 else {
