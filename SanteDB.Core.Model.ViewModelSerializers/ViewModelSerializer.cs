@@ -4683,21 +4683,21 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Roles.Provider)));
             }
             if (context.ShouldSerialize("providerSpecialty")) {
-                if ((_strong.ProviderSpecialtyKey == null)) {
+                if ((_strong.SpecialtyKey == null)) {
                 }
                 else {
-                    context.JsonContext.WritePropertyUtil(w, "providerSpecialty", _strong.ProviderSpecialtyKey, context);
+                    context.JsonContext.WritePropertyUtil(w, "providerSpecialty", _strong.SpecialtyKey, context);
                 }
             }
             if (context.ShouldSerialize("providerSpecialtyModel")) {
-                if ((_strong.ProviderSpecialty == null)) {
-                    if ((_strong.ProviderSpecialtyKey.HasValue && context.ShouldForceLoad("providerSpecialtyModel", _strong.Key))) {
+                if ((_strong.Specialty == null)) {
+                    if ((_strong.SpecialtyKey.HasValue && context.ShouldForceLoad("providerSpecialtyModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.ProviderSpecialtyKey);
+                        _delay = context.JsonContext.LoadRelated<SanteDB.Core.Model.DataTypes.Concept>(_strong.SpecialtyKey);
                         if ((_delay != null)) {
-                            _strong.ProviderSpecialty = _delay;
+                            _strong.Specialty = _delay;
                             _loaded = true;
-                            context.JsonContext.WritePropertyUtil(w, "providerSpecialtyModel", _strong.ProviderSpecialty, context);
+                            context.JsonContext.WritePropertyUtil(w, "providerSpecialtyModel", _strong.Specialty, context);
                         }
                         else {
                             context.RegisterMissTarget("providerSpecialtyModel", _strong.Key.GetValueOrDefault());
@@ -4705,7 +4705,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     }
                 }
                 else {
-                    context.JsonContext.WritePropertyUtil(w, "providerSpecialtyModel", _strong.ProviderSpecialty, context);
+                    context.JsonContext.WritePropertyUtil(w, "providerSpecialtyModel", _strong.Specialty, context);
                 }
             }
             if (context.ShouldSerialize("dateOfBirthPrecision")) {
@@ -5579,7 +5579,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                 r.Read();
                                                                                                                                                                                                 object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("providerSpecialtyModel", context.JsonContext, _retVal, context));
                                                                                                                                                                                                 if ((_instance != null)) {
-                                                                                                                                                                                                    _retVal.ProviderSpecialty = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                                                                                                    _retVal.Specialty = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                                                                 }
                                                                                                                                                                                             }
                                                                                                                                                                                             else {
@@ -5587,7 +5587,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                     r.Read();
                                                                                                                                                                                                     object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("providerSpecialty", context.JsonContext, _retVal, context));
                                                                                                                                                                                                     if ((_instance != null)) {
-                                                                                                                                                                                                        _retVal.ProviderSpecialtyKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                        _retVal.SpecialtyKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                                                     }
                                                                                                                                                                                                 }
                                                                                                                                                                                                 else {
