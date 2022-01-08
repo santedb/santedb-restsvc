@@ -170,6 +170,7 @@ namespace SanteDB.Rest.AMI.Resources
                     this.m_tracer.TraceError($"Could not find job with ID {jobInfo.Key}");
                     throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.ami.couldNotFindJob", new { param = jobInfo.Key }));
                 }
+                this.m_tracer.TraceInfo($"Instructing Job Manager to start {job.Name}");
                 jobManager.StartJob(job, jobInfo.Parameters?.Select(o => o.Value).ToArray());
                 jobInfo.State = job.CurrentState;
                 return jobInfo;
