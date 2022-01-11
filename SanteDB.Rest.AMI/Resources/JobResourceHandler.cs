@@ -22,12 +22,14 @@ using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Jobs;
 using SanteDB.Core.Model.AMI.Jobs;
+using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -36,8 +38,13 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents a resource handler which handles the execution and enumeration of jobs
     /// </summary>
-    public class JobResourceHandler : IServiceImplementation, IApiResourceHandler
+    public class JobResourceHandler : IServiceImplementation, IApiResourceHandler, IOperationalApiResourceHandler
     {
+
+
+        // Property providers
+        private ConcurrentDictionary<String, IApiChildOperation> m_operationHandlers = new ConcurrentDictionary<string, IApiChildOperation>();
+
         /// <summary>
         /// Gets the resource name
         /// </summary>
@@ -57,7 +64,6 @@ namespace SanteDB.Rest.AMI.Resources
         /// Gets the capabilities
         /// </summary>
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Update | // start
-            ResourceCapabilityType.Delete | // cancel
             ResourceCapabilityType.Search | // find
             ResourceCapabilityType.Get;
 
@@ -65,6 +71,11 @@ namespace SanteDB.Rest.AMI.Resources
         /// Gets the service name
         /// </summary>
         public string ServiceName => "Job Resource Handler";
+
+        /// <summary>
+        /// Gets the operations for this job
+        /// </summary>
+        public IEnumerable<IApiChildOperation> Operations => this.m_operationHandlers.Values;
 
         // Tracer
         private readonly Tracer m_tracer = Tracer.GetTracer(typeof(JobResourceHandler));
@@ -84,7 +95,6 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Create a new job instance
         /// </summary>
-
         public object Create(object data, bool updateIfExists)
         {
             throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
@@ -111,25 +121,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public object Obsolete(object key)
         {
-            ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
-            var manager = ApplicationServiceContext.Current.GetService<IJobManagerService>();
-            var job = manager.GetJobInstance(Guid.Parse(key.ToString()));
-            if (job == null)
-            {
-                this.m_tracer.TraceError($"No IJob of type {key} found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.noIJobType", new { param = key.ToString() }));
-            }
-                
-            if (job.CanCancel)
-                job.Cancel();
-            else
-            {
-                this.m_tracer.TraceError("Job cannot be cancelled");
-                throw new InvalidOperationException(this.m_localizationService.GetString("error.rest.ami.jobCannotBeCancelled"));
-            }
-
-            // Last execution
-            return new JobInfo(job, null);
+            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
         }
 
         /// <summary>
@@ -179,12 +171,10 @@ namespace SanteDB.Rest.AMI.Resources
                     this.m_tracer.TraceError($"Could not find job with ID {jobInfo.Key}");
                     throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.couldNotFindJob", new { param = jobInfo.Key }));
                 }
-                this.m_tracer.TraceInfo($"Instructing Job Manager to start {job.Name}");
-                jobManager.StartJob(job, jobInfo.Parameters?.Select(o => o.Value).ToArray());
-                jobInfo.State = job.CurrentState;
-
+                
                 if(jobInfo.Schedule != null)
                 {
+                    this.m_tracer.TraceInfo("User setting job schedule for {0}", job.Name);
                     foreach(var itm in jobInfo.Schedule)
                     {
                         if(itm.IntervalSpecified)
@@ -201,8 +191,40 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                this.m_tracer.TraceError("Need to pass JobInfo to start a Job");
+                this.m_tracer.TraceError("Need to pass JobInfo to update a Job");
                 throw new InvalidOperationException(this.m_localizationService.GetString("error.rest.ami.missingJobInfo"));
+            }
+        }
+
+        /// <inheritdoc/>
+        public void AddOperation(IApiChildOperation property)
+        {
+            this.m_operationHandlers.TryAdd(property.Name, property);
+        }
+
+        /// <inheritdoc/>
+        public object InvokeOperation(object scopingEntityKey, string operationName, ParameterCollection parameters)
+        {
+            if(this.TryGetOperation(operationName, scopingEntityKey != null ? ChildObjectScopeBinding.Instance : ChildObjectScopeBinding.Class, out var handler))
+            {
+                return handler.Invoke(typeof(JobInfo), scopingEntityKey, parameters);
+            }
+            else
+            {
+                throw new KeyNotFoundException($"Operation {operationName} on JobInfo not found");
+            }
+        }
+
+        /// <inheritdoc/>
+        public bool TryGetOperation(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildOperation operationHandler)
+        {
+            if(this.m_operationHandlers.TryGetValue(propertyName, out operationHandler))
+            {
+                return operationHandler.ScopeBinding.HasFlag(bindingType);
+            }
+            else
+            {
+                return false;
             }
         }
     }
