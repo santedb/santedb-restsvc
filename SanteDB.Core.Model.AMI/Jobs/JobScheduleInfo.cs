@@ -1,0 +1,119 @@
+﻿/*
+ * Copyright (C) 2021 - 2021, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
+ * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ *
+ * User: fyfej
+ * Date: 2021-8-5
+ */
+
+using Newtonsoft.Json;
+using SanteDB.Core.Jobs;
+using System;
+using System.Xml.Serialization;
+
+namespace SanteDB.Core.Model.AMI.Jobs
+{
+
+    /// <summary>
+    /// Job schedule information type
+    /// </summary>
+    [XmlType(nameof(JobScheduleInfoType), Namespace = "http://santedb.org/ami")]
+    public enum JobScheduleInfoType
+    {
+        /// <summary>
+        /// The job is scheduled (on days at a time)
+        /// </summary>
+        [XmlEnum("scheduled")]
+        Scheduled,
+        /// <summary>
+        /// The job is fired on an interval
+        /// </summary>
+        [XmlEnum("interval")]
+        Interval
+    }
+
+    /// <summary>
+    /// Job scheduling information
+    /// </summary>
+    [XmlType(nameof(JobScheduleInfo), Namespace = "http://santedb.org/ami")]
+    [JsonObject(nameof(JobScheduleInfo))]
+    public class JobScheduleInfo
+    {
+
+        /// <summary>
+        /// Default ctor for serialization
+        /// </summary>
+        public JobScheduleInfo()
+        {
+
+        }
+
+        /// <summary>
+        /// Job scheduling information
+        /// </summary>
+        public JobScheduleInfo(IJobSchedule schedule)
+        {
+            this.Type = schedule.Interval.HasValue ? JobScheduleInfoType.Interval : JobScheduleInfoType.Scheduled;
+            this.Interval = schedule.Interval.GetValueOrDefault();
+            this.IntervalSpecified = schedule.Interval.HasValue;
+            this.StartDate = schedule.StartTime;
+            this.StopDate = schedule.StopTime.GetValueOrDefault();
+            this.StopDateSpecified = schedule.StopTime.HasValue;
+            this.RepeatOn = schedule.Days;
+        }
+
+        /// <summary>
+        /// Gets or sets the schedule type
+        /// </summary>
+        public JobScheduleInfoType Type { get; set; }
+
+        /// <summary>
+        /// Gets or sets the interval
+        /// </summary>
+        [XmlElement("interval"), JsonProperty("interval")]
+        public TimeSpan Interval { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether the interval is specified
+        /// </summary>
+        [XmlIgnore, JsonIgnore]
+        public bool IntervalSpecified { get; set; }
+
+        /// <summary>
+        /// Gets or sets the start date
+        /// </summary>
+        [XmlElement("start"), JsonProperty("start")]
+        public DateTime StartDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the stop date
+        /// </summary>
+        [XmlElement("stop"), JsonProperty("stop")]
+        public DateTime StopDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether the start/stop is specified
+        /// </summary>
+        [XmlIgnore, JsonIgnore]
+        public bool StopDateSpecified { get; set; }
+
+        /// <summary>
+        /// Gets or sets the repeat
+        /// </summary>
+        [XmlElement("repeat"), JsonProperty("repeat")]
+        public DayOfWeek[] RepeatOn { get; set; }
+    }
+}

@@ -46,7 +46,7 @@ namespace SanteDB.Core.Model.AMI.Jobs
         /// <summary>
         /// Create job information from the job
         /// </summary>
-        public JobInfo(IJob job)
+        public JobInfo(IJob job, IEnumerable<IJobSchedule> schedule)
         {
             if (job is IAmiIdentified ident)
             {
@@ -67,7 +67,7 @@ namespace SanteDB.Core.Model.AMI.Jobs
             this.LastStart = job.LastStarted;
             this.LastFinish = job.LastFinished;
             this.JobType = job.GetType().AssemblyQualifiedName;
-
+            this.Schedule = schedule?.Select(o => new JobScheduleInfo(o)).ToList();
             if (job is IReportProgressJob pj)
             {
                 this.Progress = pj.Progress;
@@ -80,6 +80,12 @@ namespace SanteDB.Core.Model.AMI.Jobs
         /// </summary>
         [XmlElement("id"), JsonProperty("id")]
         public string Key { get; set; }
+
+        /// <summary>
+        /// Gets or sets the key for the object
+        /// </summary>
+        [XmlElement("schedule"), JsonProperty("schedule")]
+        public List<JobScheduleInfo> Schedule { get; set; }
 
         /// <summary>
         /// Progress of the job

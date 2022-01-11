@@ -103,7 +103,7 @@ namespace SanteDB.Rest.AMI.Resources
                 this.m_tracer.TraceError($"No IJob of type {id} found");
                 throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.noIJobType", new { param = id.ToString() }));
             }
-            return new JobInfo(job);
+            return new JobInfo(job, manager.GetJobSchedules(job));
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace SanteDB.Rest.AMI.Resources
             }
 
             // Last execution
-            return new JobInfo(job);
+            return new JobInfo(job, null);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace SanteDB.Rest.AMI.Resources
             if (queryParameters.TryGetValue("name", out List<string> data))
                 jobs = jobs.Where(o => o.Name.Contains(data.First()));
             totalCount = jobs.Count();
-            return jobs.Skip(offset).Take(count).Select(o => new JobInfo(o));
+            return jobs.Skip(offset).Take(count).Select(o => new JobInfo(o, manager.GetJobSchedules(o)));
         }
 
         /// <summary>
