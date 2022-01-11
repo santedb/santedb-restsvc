@@ -78,6 +78,7 @@ namespace SanteDB.Core.Model.AMI.Jobs
         /// <summary>
         /// Gets or sets the schedule type
         /// </summary>
+        [XmlElement("type"), JsonProperty("type")]
         public JobScheduleInfoType Type { get; set; }
 
         /// <summary>
