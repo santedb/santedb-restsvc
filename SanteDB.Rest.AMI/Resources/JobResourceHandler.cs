@@ -177,7 +177,7 @@ namespace SanteDB.Rest.AMI.Resources
                     this.m_tracer.TraceInfo("User setting job schedule for {0}", job.Name);
                     foreach(var itm in jobInfo.Schedule)
                     {
-                        if(itm.IntervalSpecified)
+                        if(itm.IntervalXmlSpecified)
                         {
                             jobManager.SetJobSchedule(job, itm.Interval);
                         }

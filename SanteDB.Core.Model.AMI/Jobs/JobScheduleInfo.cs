@@ -22,6 +22,7 @@
 using Newtonsoft.Json;
 using SanteDB.Core.Jobs;
 using System;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Jobs
@@ -68,7 +69,7 @@ namespace SanteDB.Core.Model.AMI.Jobs
         {
             this.Type = schedule.Interval.HasValue ? JobScheduleInfoType.Interval : JobScheduleInfoType.Scheduled;
             this.Interval = schedule.Interval.GetValueOrDefault();
-            this.IntervalSpecified = schedule.Interval.HasValue;
+            this.IntervalXmlSpecified = schedule.Interval.HasValue;
             this.StartDate = schedule.StartTime;
             this.StopDate = schedule.StopTime.GetValueOrDefault();
             this.StopDateSpecified = schedule.StopTime.HasValue;
@@ -84,14 +85,24 @@ namespace SanteDB.Core.Model.AMI.Jobs
         /// <summary>
         /// Gets or sets the interval
         /// </summary>
-        [XmlElement("interval"), JsonProperty("interval")]
+        [XmlElement("interval"), JsonIgnore]
+        public String IntervalXml
+        {
+            get => XmlConvert.ToString(this.Interval);
+            set => this.Interval = XmlConvert.ToTimeSpan(value);
+        }
+
+        /// <summary>
+        /// Interval
+        /// </summary>
+        [XmlIgnore, JsonProperty("interval")]
         public TimeSpan Interval { get; set; }
 
         /// <summary>
         /// Gets or sets whether the interval is specified
         /// </summary>
         [XmlIgnore, JsonIgnore]
-        public bool IntervalSpecified { get; set; }
+        public bool IntervalXmlSpecified { get; set; }
 
         /// <summary>
         /// Gets or sets the start date
