@@ -182,6 +182,21 @@ namespace SanteDB.Rest.AMI.Resources
                 this.m_tracer.TraceInfo($"Instructing Job Manager to start {job.Name}");
                 jobManager.StartJob(job, jobInfo.Parameters?.Select(o => o.Value).ToArray());
                 jobInfo.State = job.CurrentState;
+
+                if(jobInfo.Schedule != null)
+                {
+                    foreach(var itm in jobInfo.Schedule)
+                    {
+                        if(itm.IntervalSpecified)
+                        {
+                            jobManager.SetJobSchedule(job, itm.Interval);
+                        }
+                        else
+                        {
+                            jobManager.SetJobSchedule(job, itm.RepeatOn, itm.StartDate);
+                        }
+                    }
+                }
                 return jobInfo;
             }
             else
