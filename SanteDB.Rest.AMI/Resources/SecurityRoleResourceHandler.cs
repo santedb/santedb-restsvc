@@ -79,7 +79,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Remove an associated entity
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.AlterRoles)]
-        public object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
+        public override object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
         {
             var scope = this.GetRepository().Get(Guid.Parse(scopingEntityKey.ToString()));
             if (scope == null)
