@@ -22,6 +22,7 @@ namespace SanteDB.Rest.Common.Operations
     /// <summary>
     /// Represents basic auto-completion data
     /// </summary>
+    [JsonObject(nameof(AutoCompleteTypeInfo))]
     public class AutoCompleteTypeInfo
     {
         /// <summary>
@@ -70,6 +71,7 @@ namespace SanteDB.Rest.Common.Operations
     /// <summary>
     /// Represents a simple class which is the auto-complete information for a property
     /// </summary>
+    [JsonObject(nameof(AutoCompletePropertyInfo))]
     public class AutoCompletePropertyInfo
     {
         /// <summary>
