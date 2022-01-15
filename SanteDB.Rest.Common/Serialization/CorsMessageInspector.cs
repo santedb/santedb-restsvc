@@ -56,6 +56,10 @@ namespace SanteDB.Rest.Common.Serialization
     public class CorsResourceSetting
     {
 
+        /// <summary>
+        /// Gets or sets the CORS message inspection settings
+        /// </summary>
+
         public CorsResourceSetting()
         {
 
@@ -66,6 +70,8 @@ namespace SanteDB.Rest.Common.Serialization
         /// </summary>
         /// <param name="name">The name of the resource or *</param>
         /// <param name="domain">The domain or *</param>
+        /// <param name="headers">The headers allows on the CORS endpoint</param>
+        /// <param name="verbs">The verbs permitted on the CORS endpoin</param>
         public CorsResourceSetting(String name, String domain, IEnumerable<String> verbs, IEnumerable<String> headers)
         {
             this.Name = name;

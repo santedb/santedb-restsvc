@@ -286,7 +286,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Add a child resource
         /// </summary>
-        public void AddChildResource(IApiChildResourceHandler property)
+        public virtual void AddChildResource(IApiChildResourceHandler property)
         {
             this.m_propertyProviders.TryAdd(property.Name, property);
         }
@@ -295,7 +295,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Remove a child object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
+        public virtual object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
         {
             Guid objectKey = (Guid)scopingEntityKey;
 
@@ -338,7 +338,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Add a child object instance
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
+        public virtual object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
         {
             Guid objectKey = (Guid)scopingEntityKey;
             if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
@@ -359,7 +359,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Get a child object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public object GetChildObject(object scopingEntity, string propertyName, object subItemKey)
+        public virtual object GetChildObject(object scopingEntity, string propertyName, object subItemKey)
         {
             Guid objectKey = (Guid)scopingEntity;
             if (this.TryGetChainedResource(propertyName, scopingEntity == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
@@ -379,7 +379,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Try to get a chained resource
         /// </summary>
-        public bool TryGetChainedResource(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildResourceHandler childHandler)
+        public virtual bool TryGetChainedResource(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildResourceHandler childHandler)
         {
             var retVal = this.m_propertyProviders.TryGetValue(propertyName, out childHandler) &&
                 childHandler.ScopeBinding.HasFlag(bindingType);

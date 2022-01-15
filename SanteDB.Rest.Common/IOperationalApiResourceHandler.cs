@@ -39,7 +39,8 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Add a property handler
         /// </summary>
-        void AddOperation(IApiChildOperation property);
+        /// <param name="operation">The operation to be added to the resource handler</param>
+        void AddOperation(IApiChildOperation operation);
 
         /// <summary>
         /// Fetchs the scoped entity
@@ -53,8 +54,8 @@ namespace SanteDB.Rest.Common
         /// Try to get chianed resource
         /// </summary>
         /// <param name="bindingType">The type of binding</param>
-        /// <param name="propertyName">The property name to obtain</param>
+        /// <param name="operationName">The property name to obtain</param>
         /// <param name="operationHandler">The operation handler</param>
-        bool TryGetOperation(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildOperation operationHandler);
+        bool TryGetOperation(string operationName, ChildObjectScopeBinding bindingType, out IApiChildOperation operationHandler);
     }
 }
