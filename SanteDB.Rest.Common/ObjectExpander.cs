@@ -78,12 +78,12 @@ namespace SanteDB.Rest.Common
         /// <param name="propertyType">Type of the property.</param>
         /// <param name="entity">The entity.</param>
         /// <returns>IList.</returns>
-        internal static IList LoadCollection(Type propertyType, IIdentifiedEntity entity)
+        internal static IList LoadCollection(Type propertyType, IIdentifiedData entity)
         {
             MethodInfo methodInfo = null;
 
             var key = entity.Key;
-            var versionKey = (entity as IVersionedEntity)?.VersionSequence;
+            var versionKey = (entity as IVersionedData)?.VersionSequence;
 
             // Load
             if (!m_relatedLoadAssociations.TryGetValue(propertyType, out methodInfo))
@@ -308,7 +308,7 @@ namespace SanteDB.Rest.Common
                 var rmi = typeof(ExtensionMethods).GetGenericMethod(nameof(SanteDB.Core.Model.ExtensionMethods.LoadCollection), new Type[] { propertyInfo.PropertyType.StripGeneric() }, new Type[] { scope.GetType(), typeof(String) });
                 if (rmi == null)
                 {
-                    propertyValue = LoadCollection(propertyInfo.PropertyType, scope as IIdentifiedEntity);
+                    propertyValue = LoadCollection(propertyInfo.PropertyType, scope as IIdentifiedData);
                     propertyInfo.SetValue(scope, propertyValue);
                     scope = propertyValue;
                 }

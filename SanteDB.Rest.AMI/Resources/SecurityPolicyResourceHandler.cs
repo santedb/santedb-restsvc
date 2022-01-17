@@ -62,7 +62,7 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.AlterPolicy)]
         public override object Update(object data)
         {
-            var key = (data as IIdentifiedEntity).Key.Value;
+            var key = (data as IIdentifiedData).Key.Value;
             var policy = this.Get(key, Guid.Empty);
             if (policy == null || (policy as SecurityPolicy).IsPublic)
                 return base.Update(data);

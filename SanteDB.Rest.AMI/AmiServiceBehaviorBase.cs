@@ -186,7 +186,7 @@ namespace SanteDB.Messaging.AMI.Wcf
 
                 // Validate
                 var match = RestOperationContext.Current.IncomingRequest.Headers["If-Match"];
-                if (match == null && typeof(IVersionedEntity).IsAssignableFrom(handler.Type))
+                if (match == null && typeof(IVersionedData).IsAssignableFrom(handler.Type))
                     throw new InvalidOperationException("Missing If-Match header for versioned objects");
 
                 // Next we get the current version
@@ -222,7 +222,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 204;
                     RestOperationContext.Current.OutgoingResponse.SetETag(data.Tag);
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(applied.ModifiedOn.DateTime);
-                    var versioned = (data as IVersionedEntity)?.VersionKey;
+                    var versioned = (data as IVersionedData)?.VersionKey;
                     if (versioned != null)
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/history/{2}",
                                 RestOperationContext.Current.IncomingRequest.Url,
@@ -274,7 +274,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                     this.AclCheck(handler, nameof(IApiResourceHandler.Create));
                     var retVal = handler.Create(data, false);
 
-                    var versioned = retVal as IVersionedEntity;
+                    var versioned = retVal as IVersionedData;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = retVal == null ? (int)HttpStatusCode.NoContent : (int)System.Net.HttpStatusCode.Created;
                     RestOperationContext.Current.OutgoingResponse.SetETag((retVal as IAmiIdentified)?.Tag ?? (retVal as IdentifiedData)?.Tag ?? Guid.NewGuid().ToString());
                     if (versioned != null)
@@ -318,7 +318,7 @@ namespace SanteDB.Messaging.AMI.Wcf
 
                     this.AclCheck(handler, nameof(IApiResourceHandler.Create));
                     var retVal = handler.Create(data, true);
-                    var versioned = retVal as IVersionedEntity;
+                    var versioned = retVal as IVersionedData;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.Created;
 
                     if (retVal is IdentifiedData)
@@ -366,7 +366,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                     else
                         retVal = handler.Obsolete(key);
 
-                    var versioned = retVal as IVersionedEntity;
+                    var versioned = retVal as IVersionedData;
 
                     RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.Created;
                     if (retVal is IdentifiedData)
@@ -502,11 +502,11 @@ namespace SanteDB.Messaging.AMI.Wcf
 
                     // Query
                     this.AclCheck(handler, nameof(IApiResourceHandler.Get));
-                    var retVal = handler.Get(Guid.Parse(key), Guid.Empty) as IVersionedEntity;
-                    List<IVersionedEntity> histItm = new List<IVersionedEntity>() { retVal };
+                    var retVal = handler.Get(Guid.Parse(key), Guid.Empty) as IVersionedData;
+                    List<IVersionedData> histItm = new List<IVersionedData>() { retVal };
                     while (retVal.PreviousVersionKey.HasValue)
                     {
-                        retVal = handler.Get(Guid.Parse(key), retVal.PreviousVersionKey.Value) as IVersionedEntity;
+                        retVal = handler.Get(Guid.Parse(key), retVal.PreviousVersionKey.Value) as IVersionedData;
                         if (retVal != null)
                             histItm.Add(retVal);
                         // Should we stop fetching?
@@ -674,18 +674,18 @@ namespace SanteDB.Messaging.AMI.Wcf
                     else
                         RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.Created;
 
-                    var versioned = retVal as IVersionedEntity;
+                    var versioned = retVal as IVersionedData;
                     RestOperationContext.Current.OutgoingResponse.SetETag((retVal as IdentifiedData)?.Tag);
 
                     if (versioned != null)
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/history/{2}",
                             RestOperationContext.Current.IncomingRequest.Url,
-                            (retVal as IIdentifiedEntity)?.Key?.ToString() ?? (retVal as IAmiIdentified)?.Key,
+                            (retVal as IIdentifiedData)?.Key?.ToString() ?? (retVal as IAmiIdentified)?.Key,
                             versioned.Key));
                     else
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}",
                             RestOperationContext.Current.IncomingRequest.Url,
-                            (retVal as IIdentifiedEntity)?.Key?.ToString() ?? (retVal as IAmiIdentified)?.Key));
+                            (retVal as IIdentifiedData)?.Key?.ToString() ?? (retVal as IAmiIdentified)?.Key));
 
                     return retVal;
                 }
@@ -873,7 +873,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                     else
                         retVal = handler.AddChildObject(key, childResourceType, body);
 
-                    var versioned = retVal as IVersionedEntity;
+                    var versioned = retVal as IVersionedData;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = retVal == null ? (int)HttpStatusCode.NoContent : (int)System.Net.HttpStatusCode.Created;
                     RestOperationContext.Current.OutgoingResponse.SetETag((retVal as IAmiIdentified)?.Tag ?? (retVal as IdentifiedData)?.Tag ?? Guid.NewGuid().ToString());
                     RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}/{3}",
@@ -915,7 +915,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                     else
                         retVal = handler.RemoveChildObject(key, childResourceType, scopedEntityKey);
 
-                    var versioned = retVal as IVersionedEntity;
+                    var versioned = retVal as IVersionedData;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = (int)System.Net.HttpStatusCode.OK;
                     RestOperationContext.Current.OutgoingResponse.SetETag((retVal as IAmiIdentified)?.Tag ?? (retVal as IdentifiedData)?.Tag ?? Guid.NewGuid().ToString());
                     RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}/{3}",
@@ -957,7 +957,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                     else
                         retVal = handler.GetChildObject(key, childResourceType, scopedEntityKey);
 
-                    var versioned = retVal as IVersionedEntity;
+                    var versioned = retVal as IVersionedData;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = (int)System.Net.HttpStatusCode.OK;
                     RestOperationContext.Current.OutgoingResponse.SetETag((retVal as IAmiIdentified)?.Tag ?? (retVal as IdentifiedData)?.Tag ?? Guid.NewGuid().ToString());
                     RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/{2}/{3}",

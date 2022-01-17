@@ -19327,14 +19327,14 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
             }
             if (context.ShouldSerialize("relationship")) {
-                if (((_strong.Relationship == null) 
-                            || (_strong.Relationship.Count == 0))) {
+                if (((_strong.Relationships == null) 
+                            || (_strong.Relationships.Count == 0))) {
                     if ((_strong.Key.HasValue && context.ShouldForceLoad("relationship", _strong.Key.Value))) {
                         System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ConceptRelationship> _delay = null;
                         _delay = System.Linq.Enumerable.ToList(SanteDB.Core.Model.ExtensionMethods.LoadCollection<SanteDB.Core.Model.DataTypes.ConceptRelationship>(_strong, "Relationship"));
                         if ((_delay.Count > 0)) {
-                            _strong.Relationship = _delay;
-                            context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationship, context);
+                            _strong.Relationships = _delay;
+                            context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                         }
                         else {
                             context.RegisterMissTarget("relationship", _strong.Key.GetValueOrDefault());
@@ -19342,7 +19342,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     }
                 }
                 else {
-                    context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationship, context);
+                    context.JsonContext.WritePropertyUtil(w, "relationship", _strong.Relationships, context);
                 }
             }
             if (context.ShouldSerialize("conceptClass")) {
@@ -19701,7 +19701,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                     r.Read();
                                                                                                     object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ConceptRelationship>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("relationship", context.JsonContext, _retVal, context));
                                                                                                     if ((_instance != null)) {
-                                                                                                        _retVal.Relationship = ((System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ConceptRelationship>)(_instance));
+                                                                                                        _retVal.Relationships = ((System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.ConceptRelationship>)(_instance));
                                                                                                     }
                                                                                                 }
                                                                                                 else {

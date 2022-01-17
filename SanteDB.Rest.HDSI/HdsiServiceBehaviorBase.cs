@@ -139,7 +139,7 @@ namespace SanteDB.Rest.HDSI
                 {
                     this.AclCheck(handler, nameof(IApiResourceHandler.Create));
                     var retVal = handler.Create(body, false) as IdentifiedData;
-                    var versioned = retVal as IVersionedEntity;
+                    var versioned = retVal as IVersionedData;
 
                     if (retVal == null)
                         return null;
@@ -179,7 +179,7 @@ namespace SanteDB.Rest.HDSI
                 {
                     this.AclCheck(handler, nameof(IApiResourceHandler.Create));
                     var retVal = handler.Create(body, true) as IdentifiedData;
-                    var versioned = retVal as IVersionedEntity;
+                    var versioned = retVal as IVersionedData;
 
                     if (retVal == null)
                         return null;
@@ -372,11 +372,11 @@ namespace SanteDB.Rest.HDSI
 
                     // Query
                     this.AclCheck(handler, nameof(IApiResourceHandler.Get));
-                    var retVal = handler.Get(Guid.Parse(id), Guid.Empty) as IVersionedEntity;
-                    List<IVersionedEntity> histItm = new List<IVersionedEntity>() { retVal };
+                    var retVal = handler.Get(Guid.Parse(id), Guid.Empty) as IVersionedData;
+                    List<IVersionedData> histItm = new List<IVersionedData>() { retVal };
                     while (retVal.PreviousVersionKey.HasValue)
                     {
-                        retVal = handler.Get(Guid.Parse(id), retVal.PreviousVersionKey.Value) as IVersionedEntity;
+                        retVal = handler.Get(Guid.Parse(id), retVal.PreviousVersionKey.Value) as IVersionedData;
                         if (retVal != null)
                             histItm.Add(retVal);
                         // Should we stop fetching?
@@ -478,7 +478,7 @@ namespace SanteDB.Rest.HDSI
                     this.AclCheck(handler, nameof(IApiResourceHandler.Update));
 
                     var retVal = handler.Update(body) as IdentifiedData;
-                    var versioned = retVal as IVersionedEntity;
+                    var versioned = retVal as IVersionedData;
 
                     if (retVal == null)
                         return null;
@@ -547,7 +547,7 @@ namespace SanteDB.Rest.HDSI
                             throw new InvalidOperationException($"Can't understand X-Delete-Mode header");
                     }
 
-                    var versioned = retVal as IVersionedEntity;
+                    var versioned = retVal as IVersionedData;
 
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
                     if (versioned != null)
@@ -636,7 +636,7 @@ namespace SanteDB.Rest.HDSI
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 204;
                     RestOperationContext.Current.OutgoingResponse.SetETag(data.Tag);
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(applied.ModifiedOn.DateTime);
-                    var versioned = (data as IVersionedEntity)?.VersionKey;
+                    var versioned = (data as IVersionedData)?.VersionKey;
                     if (versioned != null)
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id, "_history", versioned));
                     else
@@ -1009,7 +1009,7 @@ namespace SanteDB.Rest.HDSI
 
                     var retVal = exResourceHandler.Touch(Guid.Parse(id)) as IdentifiedData;
 
-                    var versioned = retVal as IVersionedEntity;
+                    var versioned = retVal as IVersionedData;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
                     RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
 

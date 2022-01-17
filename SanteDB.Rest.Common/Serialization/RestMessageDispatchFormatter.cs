@@ -264,7 +264,7 @@ namespace SanteDB.Rest.Common.Serialization
                                 irc.AddAnnotationToAll(SanteDBConstants.NoDynamicLoadAnnotation);
                                 break;
 
-                            case IIdentifiedEntity ide:
+                            case IIdentifiedData ide:
                                 ide.AddAnnotation(SanteDBConstants.NoDynamicLoadAnnotation);
                                 break;
                         }
