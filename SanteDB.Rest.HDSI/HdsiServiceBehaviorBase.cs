@@ -235,13 +235,16 @@ namespace SanteDB.Rest.HDSI
                     // HTTP IF headers? - before we go to the DB lets check the cache for them
                     if (ifNoneMatchHeader?.Any() == true || ifModifiedHeader.HasValue)
                     {
-                        var cacheResult = this.m_dataCache.GetCacheItem(objectId) as IdentifiedData;
+                        var cacheResult = this.m_dataCache.GetCacheItem(objectId);
 
                         if (cacheResult != null && (ifNoneMatchHeader?.Contains(cacheResult.Tag) == true ||
                                 cacheResult.ModifiedOn <= ifModifiedHeader))
                         {
-                            RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
-                            return null;
+                            if (!(cacheResult is ITaggable tagged) || tagged.GetTag(SanteDBConstants.DcdrRefetchTag) == null)
+                            {
+                                RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
+                                return null;
+                            }
                         }
                     }
 
@@ -257,10 +260,14 @@ namespace SanteDB.Rest.HDSI
                         retVal.ModifiedOn <= RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() ||
                         ifNoneMatchHeader?.Any(o => retVal.Tag == o) == true)
                     {
-                        RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
-                        return null;
+                        if (!(retVal is ITaggable tagged) || tagged.GetTag(SanteDBConstants.DcdrRefetchTag) == null)
+                        {
+                            RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
+                            return null;
+                        }
                     }
-                    else if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true" ||
+                    
+                    if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true" ||
                             RestOperationContext.Current.IncomingRequest.QueryString["_all"] == "true")
                     {
                         retVal = retVal.GetLocked();
