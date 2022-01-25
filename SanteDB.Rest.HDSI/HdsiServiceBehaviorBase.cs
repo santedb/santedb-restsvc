@@ -633,10 +633,7 @@ namespace SanteDB.Rest.HDSI
                 var match = RestOperationContext.Current.IncomingRequest.Headers["If-Match"];
                 if (match == null)
                     throw new InvalidOperationException("Missing If-Match header");
-
-                // Match bin
-                var versionId = Guid.ParseExact(match, "N");
-
+                
                 // First we load
                 var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
 
@@ -650,7 +647,7 @@ namespace SanteDB.Rest.HDSI
                 var force = Convert.ToBoolean(RestOperationContext.Current.IncomingRequest.Headers["X-Patch-Force"] ?? "false");
 
                 if (existing == null)
-                    throw new FileNotFoundException($"/{resourceType}/{id}/history/{versionId}");
+                    throw new FileNotFoundException($"/{resourceType}/{id}");
                 else if (existing.Tag != match && !force)
                 {
                     this.m_traceSource.TraceError("Object {0} ETAG is {1} but If-Match specified {2}", existing.Key, existing.Tag, match);
