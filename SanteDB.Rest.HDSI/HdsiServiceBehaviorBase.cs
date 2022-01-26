@@ -462,7 +462,7 @@ namespace SanteDB.Rest.HDSI
                         if (query.ContainsKey("_all") || query.ContainsKey("_expand") || query.ContainsKey("_exclude"))
                         {
                             var wtp = ApplicationServiceContext.Current.GetService<IThreadPoolService>();
-                            retVal.AsParallel().Select((itm) =>
+                            retVal.Select((itm) =>
                             {
                                 try
                                 {
@@ -849,7 +849,7 @@ namespace SanteDB.Rest.HDSI
                         if (query.ContainsKey("_all") || query.ContainsKey("_expand") || query.ContainsKey("_exclude"))
                         {
                             var wtp = ApplicationServiceContext.Current.GetService<IThreadPoolService>();
-                            retVal.AsParallel().Select((itm) =>
+                            retVal.Select((itm) =>
                             {
                                 try
                                 {
@@ -1456,7 +1456,7 @@ namespace SanteDB.Rest.HDSI
                         if (query.ContainsKey("_all") || query.ContainsKey("_expand") || query.ContainsKey("_exclude"))
                         {
                             var wtp = ApplicationServiceContext.Current.GetService<IThreadPoolService>();
-                            retVal.AsParallel().Select((itm) =>
+                            retVal.Select((itm) =>
                             {
                                 try
                                 {
