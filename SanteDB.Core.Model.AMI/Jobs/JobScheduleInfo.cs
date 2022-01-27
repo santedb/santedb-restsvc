@@ -85,7 +85,7 @@ namespace SanteDB.Core.Model.AMI.Jobs
         /// <summary>
         /// Gets or sets the interval
         /// </summary>
-        [XmlElement("interval"), JsonIgnore]
+        [XmlElement("interval"), JsonProperty("interval")]
         public String IntervalXml
         {
             get => XmlConvert.ToString(this.Interval);
@@ -95,7 +95,7 @@ namespace SanteDB.Core.Model.AMI.Jobs
         /// <summary>
         /// Interval
         /// </summary>
-        [XmlIgnore, JsonProperty("interval")]
+        [XmlIgnore, JsonIgnore]
         public TimeSpan Interval { get; set; }
 
         /// <summary>

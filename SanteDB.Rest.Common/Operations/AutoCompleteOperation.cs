@@ -145,7 +145,7 @@ namespace SanteDB.Rest.Common.Operations
                 var binding = propertyInfo.GetCustomAttribute<BindingAttribute>();
                 if (binding != null)
                 {
-                    this.Values = binding.Binding.GetFields().Where(r => r.FieldType == typeof(Guid)).Select(o => o.Name).ToArray();
+                    this.Values = binding.Binding.GetFields().Where(r => r.FieldType == typeof(Guid)).ToDictionary(o => o.GetValue(null).ToString(), o => o.Name);
                 }
             }
         }
@@ -196,7 +196,7 @@ namespace SanteDB.Rest.Common.Operations
         /// Gets the possible values which are allowed
         /// </summary>
         [JsonProperty("values")]
-        public String[] Values { get; private set; }
+        public Dictionary<String, String> Values { get; private set; }
     }
 
     /// <summary>

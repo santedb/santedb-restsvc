@@ -63,6 +63,7 @@ namespace SanteDB.Core.Model.AMI.Jobs
             this.Name = job.Name;
             this.CanCancel = job.CanCancel;
             this.State = job.CurrentState;
+            this.Description = job.Description;
             this.Parameters = job.Parameters?.Select(o => new JobParameter() { Key = o.Key, Type = o.Value.Name }).ToList();
             this.LastStart = job.LastStarted;
             this.LastFinish = job.LastFinished;
@@ -152,5 +153,11 @@ namespace SanteDB.Core.Model.AMI.Jobs
         /// </summary>
         [XmlElement("jobType"), JsonProperty("jobType")]
         public string JobType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the description of the job
+        /// </summary>
+        [XmlElement("description"), JsonProperty("description")]
+        public string Description { get; set; }
     }
 }
