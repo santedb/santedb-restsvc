@@ -56,11 +56,5 @@ namespace SanteDB.Rest.Common.Configuration
         [DisplayName("REST Services"), Description("A complete list of REST based services which are exposed within the host context on this server")]
         public List<RestServiceConfiguration> Services { get; set; }
 
-        /// <summary>
-        /// Gets or sets whether a custom http thread pool should be used
-        /// </summary>
-        [XmlElement("useSeparatePool"), JsonProperty("useSeparatePool")]
-        [DisplayName("Use Custom ThreadPool") ,Description("When set to true, indicates that rest services should use a custom thread pool provided by the RestSrvr library. Otherwise the .NET thread pool is used.")]
-        public bool UseSeparateHttpPool { get; set; }
     }
 }
