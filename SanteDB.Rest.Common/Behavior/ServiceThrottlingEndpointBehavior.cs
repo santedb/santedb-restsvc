@@ -103,6 +103,11 @@ namespace SanteDB.Rest.Common.Behavior
         public object Value => (float)this.m_requests / (float)this.m_settings.Limit;
 
         /// <summary>
+        /// Get the unit
+        /// </summary>
+        public string Unit => "";
+
+        /// <summary>
         /// Gets the type of the probe
         /// </summary>
         public Type Type => typeof(float);

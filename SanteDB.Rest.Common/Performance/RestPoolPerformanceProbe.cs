@@ -63,6 +63,12 @@ namespace SanteDB.Rest.Common.Performance
                     return waitingInQueue;
                 }
             }
+
+            /// <summary>
+            /// Gets the unit
+            /// </summary>
+            public override string Unit => null;
+
         }
 
         /// <summary>
@@ -93,6 +99,12 @@ namespace SanteDB.Rest.Common.Performance
                     return totalWorkers - availableWorkers;
                 }
             }
+
+            /// <summary>
+            /// Gets the unit
+            /// </summary>
+            public override string Unit => null;
+
         }
 
         /// <summary>
@@ -126,6 +138,11 @@ namespace SanteDB.Rest.Common.Performance
                     return workerCount;
                 }
             }
+
+            /// <summary>
+            /// Gets the unit
+            /// </summary>
+            public override string Unit => null;
         }
 
         /// <summary>
@@ -170,5 +187,10 @@ namespace SanteDB.Rest.Common.Performance
         /// Gets the value
         /// </summary>
         object IDiagnosticsProbe.Value => this.Value;
+
+        /// <summary>
+        /// Unit of the probe
+        /// </summary>
+        public string Unit => null;
     }
 }
