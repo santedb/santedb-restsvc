@@ -68,12 +68,12 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         [XmlElement("ts"), JsonProperty("ts")]
         public DateTime ReadingDate { get; set; }
 
-
         /// <summary>
         /// Gets the value of the reading
         /// </summary>
         [JsonProperty("value")]
         [XmlElement("valueInt", typeof(int))]
+        [XmlElement("valueLong", typeof(long))]
         [XmlElement("valueFloat", typeof(float))]
         [XmlElement("valueList", typeof(DiagnosticsProbeReading[]))]
         [XmlElement("valueBool", typeof(bool))]
