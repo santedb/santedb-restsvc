@@ -240,7 +240,19 @@ namespace SanteDB.Rest.HDSI
                         if (cacheResult != null && (ifNoneMatchHeader?.Contains(cacheResult.Tag) == true ||
                                 cacheResult.ModifiedOn <= ifModifiedHeader))
                         {
-                            if (!(cacheResult is ITaggable tagged) || tagged.GetTag(SanteDBConstants.DcdrRefetchTag) == null)
+                            if (cacheResult is ITaggable tagged)
+                            {
+                                if (tagged.GetTag(SanteDBConstants.DcdrRefetchTag) == null)
+                                {
+                                    RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
+                                    return null;
+                                }
+                                else
+                                {
+                                    tagged.RemoveTag(SanteDBConstants.DcdrRefetchTag);
+                                }
+                            }
+                            else
                             {
                                 RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
                                 return null;
