@@ -54,6 +54,7 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
             this.Name = counter.Name;
             this.ReadingType = counter.Type.AssemblyQualifiedName;
             this.Components = (counter as ICompositeDiagnosticsProbe)?.Value.Select(o => new DiagnosticsProbe(o)).ToList();
+            this.Unit = counter.Unit;
         }
 
         /// <summary>
@@ -78,6 +79,12 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         /// </summary>
         [XmlElement("type"), JsonProperty("type")]
         public String ReadingType { get; set; }
+
+        /// <summary>
+        /// Get the unit
+        /// </summary>
+        [XmlElement("unit"), JsonProperty("unit")]
+        public string Unit { get; set; }
 
         /// <summary>
         /// Gets or sets the component probes
