@@ -60,7 +60,7 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         /// <summary>
         /// Gets the last time that the performance counter was modified
         /// </summary>
-        public override DateTimeOffset ModifiedOn => DateTime.Now;
+        public override DateTimeOffset ModifiedOn => DateTimeOffset.Now;
 
         /// <summary>
         /// Gets or sets the name
