@@ -98,7 +98,7 @@ namespace SanteDB.Rest.AMI.Resources
                 .WithAction(Core.Auditing.ActionType.Delete)
                 .WithEventIdentifier(Core.Auditing.EventIdentifierType.ApplicationActivity)
                 .WithOutcome(Core.Auditing.OutcomeIndicator.Success)
-                .WithTimestamp(DateTime.Now)
+                .WithTimestamp(DateTimeOffset.Now)
                 .WithEventType("PurgeQueue")
                 .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
                 .WithSystemObjects(Core.Auditing.AuditableObjectRole.Resource, Core.Auditing.AuditableObjectLifecycle.PermanentErasure, new Uri($"urn:santedb:org:DispatcherQueueInfo/{key}/event")));
