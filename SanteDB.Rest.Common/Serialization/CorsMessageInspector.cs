@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2021, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2022, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-5
+ * Date: 2021-8-27
  */
 using RestSrvr;
 using RestSrvr.Message;
@@ -30,6 +30,7 @@ namespace SanteDB.Rest.Common.Serialization
     /// <summary>
     /// CORS settings
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     [XmlRoot(nameof(CorsEndpointBehaviorConfiguration), Namespace = "http://santedb.org/configuration")]
     [XmlType(nameof(CorsEndpointBehaviorConfiguration), Namespace = "http://santedb.org/configuration")]
     public class CorsEndpointBehaviorConfiguration
@@ -53,6 +54,7 @@ namespace SanteDB.Rest.Common.Serialization
     /// Represents a setting for one resource
     /// </summary>
     [XmlType(nameof(CorsResourceSetting), Namespace = "http://santedb.org/configuration")]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class CorsResourceSetting
     {
 
@@ -108,6 +110,7 @@ namespace SanteDB.Rest.Common.Serialization
     /// <summary>
     /// Represents a message inspector that adds CORS headers
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class CorsMessageInspector : IMessageInspector
     {
 

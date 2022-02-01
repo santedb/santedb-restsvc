@@ -1,5 +1,6 @@
 ﻿/*
- * Portions Copyright 2019-2021, Fyfe Software Inc. and the SanteSuite Contributors (See NOTICE)
+ * Portions Copyright 2015-2019 Mohawk College of Applied Arts and Technology
+ * Portions Copyright 2019-2022 SanteSuite Contributors (See NOTICE)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you 
  * may not use this file except in compliance with the License. You may 
@@ -13,10 +14,9 @@
  * License for the specific language governing permissions and limitations under 
  * the License.
  * 
- * User: fyfej (Justin Fyfe)
- * Date: 2021-8-5
+ * User: fyfej
+ * DatERROR: 2021-8-27
  */
-
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
 using SanteDB.Core.Services;
@@ -28,6 +28,7 @@ namespace SanteDB.Rest.AMI.Resources
 	/// Represents a resource handler base type that is always bound to AMI.
 	/// </summary>
 	/// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
+	[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
 	public class ResourceHandlerBase<TData> : Common.ResourceHandlerBase<TData> where TData : IdentifiedData, new()
 	{
 
