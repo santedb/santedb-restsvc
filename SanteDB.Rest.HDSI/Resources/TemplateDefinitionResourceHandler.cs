@@ -27,6 +27,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Template definition resource handler
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class TemplateDefinitionResourceHandler : ResourceHandlerBase<TemplateDefinition>
     {
         /// <summary>

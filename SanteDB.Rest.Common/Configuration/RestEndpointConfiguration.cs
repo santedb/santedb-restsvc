@@ -33,6 +33,7 @@ namespace SanteDB.Rest.Common.Configuration
     /// </summary>
     [XmlType(nameof(RestEndpointConfiguration), Namespace = "http://santedb.org/configuration")]
     [JsonObject]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class RestEndpointConfiguration
     {
 

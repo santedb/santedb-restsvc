@@ -31,6 +31,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Represents a resource handler for persons.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class PersonResourceHandler : ResourceHandlerBase<Person>
     {
         /// <summary>

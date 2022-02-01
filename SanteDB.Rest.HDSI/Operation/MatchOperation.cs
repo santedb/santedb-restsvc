@@ -35,6 +35,7 @@ namespace SanteDB.Rest.HDSI.Operation
     /// <summary>
     /// Represents a match operation
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class MatchOperation : IApiChildOperation
     {
         // Matching service

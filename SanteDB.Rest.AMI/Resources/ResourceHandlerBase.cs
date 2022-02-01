@@ -28,6 +28,7 @@ namespace SanteDB.Rest.AMI.Resources
 	/// Represents a resource handler base type that is always bound to AMI.
 	/// </summary>
 	/// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
+	[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
 	public class ResourceHandlerBase<TData> : Common.ResourceHandlerBase<TData> where TData : IdentifiedData, new()
 	{
 

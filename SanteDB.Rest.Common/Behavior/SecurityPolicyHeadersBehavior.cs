@@ -29,6 +29,7 @@ namespace SanteDB.Rest.Common.Behaviors
     /// Implements the Content-Security-Policy header
     /// </summary>
     [DisplayName("Content-Security-Policy Header Support")]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class SecurityPolicyHeadersBehavior : IEndpointBehavior, IMessageInspector
     {
 

@@ -33,6 +33,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Represents a user entity resource handler.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class UserEntityResourceHandler : ResourceHandlerBase<UserEntity>
     {
         /// <summary>

@@ -31,6 +31,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Represents a procedure based resource handler
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class ProcedureResourceHandler : ResourceHandlerBase<Procedure>
     {
         /// <summary>

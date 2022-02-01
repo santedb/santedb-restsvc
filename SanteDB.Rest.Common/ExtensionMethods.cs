@@ -27,6 +27,7 @@ namespace SanteDB.Rest.Common
     /// <summary>
     /// Extension methods
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public static class ExtensionMethods
     {
 

@@ -31,6 +31,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// A resource handler for a concept
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class ConceptResourceHandler : ResourceHandlerBase<Concept>
     {
         /// <summary>

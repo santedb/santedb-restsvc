@@ -29,6 +29,7 @@ namespace SanteDB.Rest.Common.Configuration
     /// <summary>
     /// Remove REST service into the configuration section
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class UnInstallRestServiceTask : IConfigurationTask
     {
         // Configuration

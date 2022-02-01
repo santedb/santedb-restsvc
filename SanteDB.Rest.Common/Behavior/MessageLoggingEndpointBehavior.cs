@@ -32,6 +32,7 @@ namespace SanteDB.Rest.Common.Behavior
     /// Represents an endpoint behavior that logs messages
     /// </summary>
     [DisplayName("Inbound/Outbound Message Logging Support")]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class MessageLoggingEndpointBehavior : IEndpointBehavior, IMessageInspector
     {
 

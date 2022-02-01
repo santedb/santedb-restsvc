@@ -38,6 +38,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents the primary queue resource handler
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class DispatcherQueueResourceHandler : IApiResourceHandler, IChainedApiResourceHandler
     {
         // Tracer

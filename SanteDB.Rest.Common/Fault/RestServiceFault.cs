@@ -35,6 +35,7 @@ namespace SanteDB.Rest.Common.Fault
     [XmlType(nameof(RestServiceFault), Namespace = "http://santedb.org/fault")]
     [XmlRoot(nameof(RestServiceFault), Namespace = "http://santedb.org/fault")]
     [JsonObject(nameof(RestServiceFault))]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // Model class provides no functions
     public class RestServiceFault
     {
         /// <summary>

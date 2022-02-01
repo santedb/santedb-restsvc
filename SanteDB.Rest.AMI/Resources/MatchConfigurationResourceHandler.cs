@@ -35,6 +35,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents a resource handler which serves out match metadata
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class MatchConfigurationResourceHandler : IApiResourceHandler, IOperationalApiResourceHandler, IChainedApiResourceHandler
     {
         // Configuration service

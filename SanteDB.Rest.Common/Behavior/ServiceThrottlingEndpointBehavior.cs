@@ -38,6 +38,7 @@ namespace SanteDB.Rest.Common.Behavior
     /// </summary>
     [XmlRoot(nameof(ServiceThrottlingConfiguration), Namespace = "http://santedb.org/configuration")]
     [XmlType(nameof(ServiceThrottlingConfiguration), Namespace = "http://santedb.org/configuration")]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class ServiceThrottlingConfiguration
     {
 
@@ -55,6 +56,7 @@ namespace SanteDB.Rest.Common.Behavior
     /// </summary>
     [Guid("B54FAA80-AA62-4069-B4A6-9AE970E3B222")]
     [DisplayName("Endpoint Throttling")]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class ServiceThrottlingEndpointBehavior : IEndpointBehavior, IMessageInspector, IDiagnosticsProbe
     {
         // Current request count

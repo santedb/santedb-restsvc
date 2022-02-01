@@ -27,6 +27,7 @@ namespace SanteDB.Rest.Common.Performance
     /// <summary>
     /// Performance constants
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public static class PerformanceConstants
     {
 

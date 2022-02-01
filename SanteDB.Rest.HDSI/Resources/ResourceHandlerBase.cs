@@ -40,6 +40,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// </summary>
     /// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
     [ServiceProvider("HDSI Resource Handler")]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public abstract class ResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData>,
         INullifyResourceHandler,
         ICancelResourceHandler,

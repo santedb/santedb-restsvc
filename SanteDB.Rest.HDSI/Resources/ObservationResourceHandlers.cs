@@ -32,6 +32,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Handler for QOBS
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class QuantityObservationResourceHandler : ObservationResourceHandler<QuantityObservation> 
     {
         /// <summary>
@@ -46,6 +47,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Handler for COBS
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class CodedObservationResourceHandler : ObservationResourceHandler<CodedObservation> 
     {
         /// <summary>
@@ -60,6 +62,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Handlers TOBS
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class TextObservationResourceHandler : ObservationResourceHandler<TextObservation> 
     {
         /// <summary>
@@ -76,6 +79,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Handler for observations (handles permissions)
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public abstract class ObservationResourceHandler<TObservation> : ResourceHandlerBase<TObservation> where TObservation : Observation, new()
     {
         /// <summary>

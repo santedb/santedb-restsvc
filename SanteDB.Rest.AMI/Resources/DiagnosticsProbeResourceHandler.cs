@@ -34,6 +34,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Performance counter handler
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class DiagnosticsProbeResourceHandler : IServiceImplementation, IApiResourceHandler
     {
         /// <summary>

@@ -30,6 +30,7 @@ namespace SanteDB.Rest.Common.Serialization
     /// <summary>
     /// CORS settings
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     [XmlRoot(nameof(CorsEndpointBehaviorConfiguration), Namespace = "http://santedb.org/configuration")]
     [XmlType(nameof(CorsEndpointBehaviorConfiguration), Namespace = "http://santedb.org/configuration")]
     public class CorsEndpointBehaviorConfiguration
@@ -53,6 +54,7 @@ namespace SanteDB.Rest.Common.Serialization
     /// Represents a setting for one resource
     /// </summary>
     [XmlType(nameof(CorsResourceSetting), Namespace = "http://santedb.org/configuration")]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class CorsResourceSetting
     {
 
@@ -108,6 +110,7 @@ namespace SanteDB.Rest.Common.Serialization
     /// <summary>
     /// Represents a message inspector that adds CORS headers
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class CorsMessageInspector : IMessageInspector
     {
 

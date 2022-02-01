@@ -32,6 +32,7 @@ namespace SanteDB.Rest.Common.Behavior
     /// Adds message CORS insepectors
     /// </summary>
     [DisplayName("Cross-Origin-Scripting (CORS) Support")]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class CorsEndpointBehavior : IEndpointBehavior
     {
 

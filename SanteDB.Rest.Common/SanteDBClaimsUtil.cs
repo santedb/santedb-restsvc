@@ -31,6 +31,7 @@ namespace SanteDB.Rest.Common
     /// <summary>
     /// SanteDB Claim Types
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public static class SanteDBClaimsUtil
     {
 

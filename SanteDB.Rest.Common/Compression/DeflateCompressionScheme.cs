@@ -27,6 +27,7 @@ namespace SanteDB.Rest.Common.Compression
     /// <summary>
     /// Compression scheme for deflate
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class DeflateCompressionScheme : ICompressionScheme
     {
         /// <summary>

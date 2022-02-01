@@ -41,6 +41,7 @@ namespace SanteDB.Rest.Common
     /// <summary>
     /// Resource handler base
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public abstract class ResourceHandlerBase<TResource> : IServiceImplementation, IApiResourceHandler where TResource : IdentifiedData, new()
     {
         // Tracer

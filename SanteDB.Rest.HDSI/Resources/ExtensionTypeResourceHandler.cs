@@ -27,6 +27,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Represents a handler for extension types
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class ExtensionTypeResourceHandler : ResourceHandlerBase<ExtensionType>
     {
         /// <summary>

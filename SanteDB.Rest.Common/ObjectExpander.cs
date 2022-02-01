@@ -37,6 +37,7 @@ namespace SanteDB.Rest.Common
     /// <summary>
     /// Object expansion tool
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public static class ObjectExpander
     {
         // Trace source

@@ -35,6 +35,7 @@ namespace SanteDB.Rest.Common.Behavior
     /// A service behavior that changes the current UI culture
     /// </summary>
     [DisplayName("Accept-Language Header Support")]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class AcceptLanguageEndpointBehavior : IEndpointBehavior, IMessageInspector
     {
         // Trace

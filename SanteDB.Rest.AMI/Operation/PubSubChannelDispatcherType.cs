@@ -34,6 +34,7 @@ namespace SanteDB.Rest.AMI.Operation
     /// <summary>
     /// Gets all instances of IPubSubDispatcher
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class PubSubChannelDispatcherType : IApiChildOperation
     {
         // Dipstachers

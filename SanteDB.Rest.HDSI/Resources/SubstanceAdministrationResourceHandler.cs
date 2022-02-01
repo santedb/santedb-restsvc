@@ -31,6 +31,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Resource handler for sbadm
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class SubstanceAdministrationResourceHandler : ResourceHandlerBase<SubstanceAdministration>
     {
         /// <summary>

@@ -34,6 +34,7 @@ namespace SanteDB.Rest.Common.Security
     /// Represents a policy behavior for demanding permission
     /// </summary>
     [DisplayName("API Policy Based Access Control")]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class OperationDemandPolicyBehavior : IOperationPolicy, IOperationBehavior, IEndpointBehavior
     {
 

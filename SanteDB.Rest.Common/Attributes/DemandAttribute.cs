@@ -26,6 +26,7 @@ namespace SanteDB.Rest.Common.Attributes
     /// Indicates a demand for a policy in the local execution environment
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class DemandAttribute : Attribute
     {
 

@@ -28,6 +28,7 @@ namespace SanteDB.Rest.Common.Behavior
     /// Dispatch formatter behavior
     /// </summary>
     [DisplayName("RIM Object Serialization")]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class MessageDispatchFormatterBehavior : IEndpointBehavior, IOperationBehavior
     {
         /// <summary>

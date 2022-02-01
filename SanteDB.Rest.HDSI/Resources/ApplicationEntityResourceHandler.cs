@@ -26,6 +26,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Represents the adminstrative application entity resource handler
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class ApplicationEntityResourceHandler : ResourceHandlerBase<ApplicationEntity>
     {
         /// <summary>

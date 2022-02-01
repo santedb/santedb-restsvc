@@ -27,6 +27,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Resource handler which can deal with metadata resources
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class AssigningAuthorityResourceHandler : ResourceHandlerBase<AssigningAuthority>
     {
         /// <summary>

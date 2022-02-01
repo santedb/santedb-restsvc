@@ -28,6 +28,7 @@ namespace SanteDB.Rest.Common.Compression
     /// <summary>
     /// Compression scheme which uses LZMA
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class LzmaCompressionScheme : ICompressionScheme
     {
         /// <summary>

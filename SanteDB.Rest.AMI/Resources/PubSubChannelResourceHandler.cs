@@ -34,6 +34,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// A resource handler which can interact with the IPubSubManager interface.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class PubSubChannelResourceHandler : IServiceImplementation, IApiResourceHandler
     {
         // The manager for the pub-sub service

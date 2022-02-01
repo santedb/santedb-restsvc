@@ -32,6 +32,7 @@ namespace SanteDB.Rest.HDSI.Operation
     /// <summary>
     /// Perform a difference operation
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class DiffObjectOperation : IApiChildOperation
     {
         // The patch service

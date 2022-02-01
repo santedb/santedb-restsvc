@@ -30,6 +30,7 @@ namespace SanteDB.Rest.Common.Model
     /// Generic rest result which has a wrapped simple type
     /// </summary>
     [XmlType(nameof(GenericRestResultCollection), Namespace = "http://santedb.org/model")]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class GenericRestResultCollection
     {
         /// <summary>

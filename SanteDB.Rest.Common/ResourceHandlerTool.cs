@@ -32,6 +32,7 @@ namespace SanteDB.Rest.Common
     /// <summary>
     /// Resource handler utility
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class ResourceHandlerTool
     {
         // Common trace

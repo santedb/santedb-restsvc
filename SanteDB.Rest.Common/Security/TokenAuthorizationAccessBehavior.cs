@@ -37,6 +37,7 @@ namespace SanteDB.Rest.Common.Security
     /// Token authorization access behavior
     /// </summary>
     [DisplayName("BEARER Token Authorization")]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class TokenAuthorizationAccessBehavior : IServicePolicy, IServiceBehavior
     {
 

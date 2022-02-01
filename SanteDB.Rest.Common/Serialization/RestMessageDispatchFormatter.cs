@@ -52,6 +52,7 @@ namespace SanteDB.Rest.Common.Serialization
     /// <summary>
     /// Represents the non-generic rest message dispatch formatter
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public abstract class RestMessageDispatchFormatter : IDispatchMessageFormatter
     {
         // Formatters
@@ -92,6 +93,7 @@ namespace SanteDB.Rest.Common.Serialization
     /// <summary>
     /// Represents a dispatch message formatter which uses the JSON.NET serialization
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class RestMessageDispatchFormatter<TContract> : RestMessageDispatchFormatter
     {
         private String m_version = Assembly.GetEntryAssembly()?.GetName().Version.ToString();

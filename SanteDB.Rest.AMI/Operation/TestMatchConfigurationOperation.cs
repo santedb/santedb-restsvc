@@ -39,6 +39,7 @@ namespace SanteDB.Rest.AMI.Operation
     /// <summary>
     /// Test the match configuration REST operation
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class TestMatchConfigurationOperation : IApiChildOperation
     {
         // Config service

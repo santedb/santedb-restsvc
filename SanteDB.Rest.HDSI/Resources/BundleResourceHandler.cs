@@ -27,6 +27,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Represents a resource handler which is for the persistence of bundles.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class BundleResourceHandler : ResourceHandlerBase<Bundle>
     {
         /// <summary>

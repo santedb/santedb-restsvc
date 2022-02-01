@@ -29,6 +29,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents an alert resource handler which can store / retrieve alerts
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class MailMessageResourceHandler : ResourceHandlerBase<MailMessage>
     {
         /// <summary>

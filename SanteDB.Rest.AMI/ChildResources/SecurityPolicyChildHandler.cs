@@ -35,6 +35,7 @@ namespace SanteDB.Rest.AMI.ChildResources
     /// <summary>
     /// API Child resource handler
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class SecurityPolicyChildHandler : IApiChildResourceHandler
     {
 

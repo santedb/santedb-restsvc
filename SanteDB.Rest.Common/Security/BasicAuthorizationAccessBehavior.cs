@@ -43,6 +43,7 @@ namespace SanteDB.Rest.Common.Security
     /// Basic authorization policy
     /// </summary>
     [DisplayName("HTTP BASIC Authentication")]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class BasicAuthorizationAccessBehavior : IServicePolicy, IServiceBehavior
     {
 

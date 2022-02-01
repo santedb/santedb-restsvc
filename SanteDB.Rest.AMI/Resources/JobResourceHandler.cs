@@ -38,6 +38,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents a resource handler which handles the execution and enumeration of jobs
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class JobResourceHandler : IServiceImplementation, IApiResourceHandler, IOperationalApiResourceHandler
     {
 

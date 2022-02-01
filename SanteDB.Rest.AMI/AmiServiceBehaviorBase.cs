@@ -55,6 +55,7 @@ namespace SanteDB.Messaging.AMI.Wcf
     /// </summary>
     /// <remarks>Represents a generic implementation of the Administrative Management Interface (AMI) contract</remarks>
     [ServiceBehavior(Name = "AMI", InstanceMode = ServiceInstanceMode.Singleton)]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public abstract class AmiServiceBehaviorBase : IAmiServiceContract
     {
         /// <summary>

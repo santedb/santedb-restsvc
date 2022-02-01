@@ -43,6 +43,7 @@ namespace SanteDB.Rest.Common.Operations
     /// Represents basic auto-completion data
     /// </summary>
     [JsonObject(nameof(AutoCompleteTypeInfo))]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class AutoCompleteTypeInfo
     {
         /// <summary>
@@ -92,6 +93,7 @@ namespace SanteDB.Rest.Common.Operations
     /// Represents a simple class which is the auto-complete information for a property
     /// </summary>
     [JsonObject(nameof(AutoCompletePropertyInfo))]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class AutoCompletePropertyInfo
     {
         /// <summary>
@@ -222,6 +224,7 @@ namespace SanteDB.Rest.Common.Operations
     /// <summary>
     /// Operation which emits schema and auto-complete information
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class AutoCompleteOperation : IApiChildOperation
     {
         // Property extractor

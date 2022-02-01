@@ -42,6 +42,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents a resource handler for applet solution files
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class AppletSolutionResourceHandler : IServiceImplementation, IApiResourceHandler, IChainedApiResourceHandler
     {
 

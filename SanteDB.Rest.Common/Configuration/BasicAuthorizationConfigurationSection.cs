@@ -20,6 +20,7 @@
  */
 using SanteDB.Core.Configuration;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Serialization;
 
 namespace SanteDB.Rest.Common
@@ -28,6 +29,7 @@ namespace SanteDB.Rest.Common
     /// Basic authorization configuration
     /// </summary>
     [XmlType(nameof(BasicAuthorizationConfigurationSection), Namespace = "http://santedb.org/configuration")]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class BasicAuthorizationConfigurationSection : IConfigurationSection
     {
 

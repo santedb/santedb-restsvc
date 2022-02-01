@@ -32,6 +32,7 @@ namespace SanteDB.Rest.AMI.Operation
     /// <summary>
     /// Execute job rest operation
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class CancelJobOperation : IApiChildOperation
     {
 

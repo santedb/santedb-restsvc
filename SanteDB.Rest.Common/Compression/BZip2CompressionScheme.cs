@@ -27,6 +27,7 @@ namespace SanteDB.Rest.Common.Compression
     /// <summary>
     /// BZip2 Compression stream
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class BZip2CompressionScheme : ICompressionScheme
     {
         /// <summary>

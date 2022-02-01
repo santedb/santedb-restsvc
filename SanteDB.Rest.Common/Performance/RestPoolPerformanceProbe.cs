@@ -29,6 +29,7 @@ namespace SanteDB.Rest.Common.Performance
     /// <summary>
     /// Represents a thread pool performance counter
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class RestPoolPerformanceProbe : ICompositeDiagnosticsProbe
     {
         // Performance counters

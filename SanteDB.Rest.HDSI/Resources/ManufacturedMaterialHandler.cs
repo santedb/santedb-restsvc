@@ -34,6 +34,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Represents a HDSI handler for manufactured materials
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class ManufacturedMaterialHandler : ResourceHandlerBase<ManufacturedMaterial>
     {
         /// <summary>

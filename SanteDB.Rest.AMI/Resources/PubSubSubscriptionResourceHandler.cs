@@ -36,6 +36,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Publish Subscribe Resource Handler
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class PubSubSubscriptionResourceHandler : IServiceImplementation, IApiResourceHandler, IOperationalApiResourceHandler
     {
         // Operations

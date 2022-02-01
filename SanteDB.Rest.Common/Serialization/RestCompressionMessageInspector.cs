@@ -32,6 +32,7 @@ namespace SanteDB.Rest.Common.Serialization
     /// Represents an HDSI message inspector which can inspect messages and perform tertiary functions
     /// not included in WCF (such as compression)
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class RestCompressionMessageInspector : IMessageInspector
     {
         // Trace source

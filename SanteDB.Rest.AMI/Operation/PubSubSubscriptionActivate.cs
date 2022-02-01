@@ -30,6 +30,7 @@ namespace SanteDB.Rest.AMI.Operation
     /// <summary>
     /// Pub-sub subscription activation
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class PubSubSubscriptionActivate : IApiChildOperation
     {
         // Manager

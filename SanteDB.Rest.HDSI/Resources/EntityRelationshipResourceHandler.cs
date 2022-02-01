@@ -31,6 +31,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// </summary>
     /// <remarks>This is a special resource handler which only supports updates/inserts. It actually just creates a new version
     /// of an entity on the server so the changes propagate down</remarks>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class EntityRelationshipResourceHandler : ResourceHandlerBase<EntityRelationship>
     {
         /// <summary>

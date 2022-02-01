@@ -31,6 +31,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents a resource handler base class which has appropriate permissions for metadata
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class MetadataResourceHandler<TMetadata> : ResourceHandlerBase<TMetadata>
         where TMetadata : IdentifiedData, new()
     {

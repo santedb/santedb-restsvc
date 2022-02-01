@@ -28,6 +28,7 @@ namespace SanteDB.Rest.Common.Behavior
     /// Adds message compression insepectors
     /// </summary>
     [DisplayName("Accept-Encoding Compression Support")]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class MessageCompressionEndpointBehavior : IEndpointBehavior
     {
         /// <summary>

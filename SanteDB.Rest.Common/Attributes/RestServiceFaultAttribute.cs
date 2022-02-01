@@ -28,6 +28,7 @@ namespace SanteDB.Rest.Common.Attributes
     /// Represents a common rest service fault
     /// </summary>
     [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Method, AllowMultiple = true)]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class RestServiceFaultAttribute : ServiceFaultAttribute
     {
 

@@ -34,6 +34,7 @@ namespace SanteDB.Rest.Common.Configuration
     /// </summary>
     [XmlType(nameof(RestBehaviorConfiguration), Namespace = "http://santedb.org/configuration")]
     [JsonObject]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class RestBehaviorConfiguration
     {
         /// <summary>
@@ -116,6 +117,7 @@ namespace SanteDB.Rest.Common.Configuration
     /// </summary>
     [XmlType(nameof(RestServiceBehaviorConfiguration), Namespace = "http://santedb.org/configuration")]
     [JsonObject]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class RestServiceBehaviorConfiguration : RestBehaviorConfiguration
     {
 
@@ -159,6 +161,7 @@ namespace SanteDB.Rest.Common.Configuration
     /// </summary>
     [XmlType(nameof(RestEndpointBehaviorConfiguration), Namespace = "http://santedb.org/configuration")]
     [JsonObject]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class RestEndpointBehaviorConfiguration : RestBehaviorConfiguration
     {
         /// <summary>
