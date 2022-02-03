@@ -22919,10 +22919,10 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
             }
             if (context.ShouldSerialize("authority")) {
-                if ((_strong.AuthorityXml == null)) {
+                if ((_strong.AuthorityKey == null)) {
                 }
                 else {
-                    context.JsonContext.WritePropertyUtil(w, "authority", _strong.AuthorityXml, context);
+                    context.JsonContext.WritePropertyUtil(w, "authority", _strong.AuthorityKey, context);
                 }
             }
             if (context.ShouldSerialize("effectiveVersionSequence")) {
@@ -23040,9 +23040,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                         else {
                                             if ("authority".Equals(r.Value)) {
                                                 r.Read();
-                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.AssigningAuthority), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("authority", context.JsonContext, _retVal, context));
+                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Guid), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("authority", context.JsonContext, _retVal, context));
                                                 if ((_instance != null)) {
-                                                    _retVal.AuthorityXml = ((SanteDB.Core.Model.DataTypes.AssigningAuthority)(_instance));
+                                                    _retVal.AuthorityKey = ((System.Guid)(_instance));
                                                 }
                                             }
                                             else {
@@ -23211,10 +23211,10 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
             }
             if (context.ShouldSerialize("authority")) {
-                if ((_strong.AuthorityXml == null)) {
+                if ((_strong.AuthorityKey == null)) {
                 }
                 else {
-                    context.JsonContext.WritePropertyUtil(w, "authority", _strong.AuthorityXml, context);
+                    context.JsonContext.WritePropertyUtil(w, "authority", _strong.AuthorityKey, context);
                 }
             }
             if (context.ShouldSerialize("effectiveVersionSequence")) {
@@ -23332,9 +23332,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                         else {
                                             if ("authority".Equals(r.Value)) {
                                                 r.Read();
-                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.AssigningAuthority), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("authority", context.JsonContext, _retVal, context));
+                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Guid), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("authority", context.JsonContext, _retVal, context));
                                                 if ((_instance != null)) {
-                                                    _retVal.AuthorityXml = ((SanteDB.Core.Model.DataTypes.AssigningAuthority)(_instance));
+                                                    _retVal.AuthorityKey = ((System.Guid)(_instance));
                                                 }
                                             }
                                             else {
