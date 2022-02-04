@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2021, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2022, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  *
@@ -16,7 +16,7 @@
  * the License.
  *
  * User: fyfej
- * Date: 2021-8-5
+ * Date: 2021-8-27
  */
 
 using SanteDB.Core.Model.Entities;
@@ -34,6 +34,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// </summary>
     /// <remarks>This is a special resource handler which only supports updates/inserts. It actually just creates a new version
     /// of an entity on the server so the changes propagate down</remarks>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class EntityRelationshipResourceHandler : HdsiResourceHandlerBase<EntityRelationship>
     {
         /// <summary>

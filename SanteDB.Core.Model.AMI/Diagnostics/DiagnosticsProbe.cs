@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2021, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2022, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-5
+ * Date: 2021-8-27
  */
 using Newtonsoft.Json;
 using SanteDB.Core.Diagnostics;
@@ -54,12 +54,13 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
             this.Name = counter.Name;
             this.ReadingType = counter.Type.AssemblyQualifiedName;
             this.Components = (counter as ICompositeDiagnosticsProbe)?.Value.Select(o => new DiagnosticsProbe(o)).ToList();
+            this.Unit = counter.Unit;
         }
 
         /// <summary>
         /// Gets the last time that the performance counter was modified
         /// </summary>
-        public override DateTimeOffset ModifiedOn => DateTime.Now;
+        public override DateTimeOffset ModifiedOn => DateTimeOffset.Now;
 
         /// <summary>
         /// Gets or sets the name
@@ -78,6 +79,12 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         /// </summary>
         [XmlElement("type"), JsonProperty("type")]
         public String ReadingType { get; set; }
+
+        /// <summary>
+        /// Get the unit
+        /// </summary>
+        [XmlElement("unit"), JsonProperty("unit")]
+        public string Unit { get; set; }
 
         /// <summary>
         /// Gets or sets the component probes

@@ -35,6 +35,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Session information resource handler
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class SessionInfoResourceHandler : IApiResourceHandler, IServiceImplementation
     {
         // ILocalization Service

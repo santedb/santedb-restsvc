@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2021, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2022, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-5
+ * Date: 2021-8-27
  */
 using RestSrvr;
 using RestSrvr.Message;
@@ -38,6 +38,7 @@ namespace SanteDB.Rest.Common.Behavior
     /// </summary>
     [XmlRoot(nameof(ServiceThrottlingConfiguration), Namespace = "http://santedb.org/configuration")]
     [XmlType(nameof(ServiceThrottlingConfiguration), Namespace = "http://santedb.org/configuration")]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class ServiceThrottlingConfiguration
     {
 
@@ -55,6 +56,7 @@ namespace SanteDB.Rest.Common.Behavior
     /// </summary>
     [Guid("B54FAA80-AA62-4069-B4A6-9AE970E3B222")]
     [DisplayName("Endpoint Throttling")]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class ServiceThrottlingEndpointBehavior : IEndpointBehavior, IMessageInspector, IDiagnosticsProbe
     {
         // Current request count
@@ -101,6 +103,11 @@ namespace SanteDB.Rest.Common.Behavior
         /// Gets the value of the probe
         /// </summary>
         public object Value => (float)this.m_requests / (float)this.m_settings.Limit;
+
+        /// <summary>
+        /// Get the unit
+        /// </summary>
+        public string Unit => "";
 
         /// <summary>
         /// Gets the type of the probe

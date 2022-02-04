@@ -25,6 +25,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents a resource handler for assigning authorities
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class AssigningAuthorityResourceHandler : MetadataResourceHandler<AssigningAuthority>
     {
         /// <summary>

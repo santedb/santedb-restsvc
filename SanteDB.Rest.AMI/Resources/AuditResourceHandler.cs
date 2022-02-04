@@ -37,6 +37,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents a resource handler which can persist and forward audits
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class AuditResourceHandler : IServiceImplementation, IApiResourceHandler
     {
         // Configuration

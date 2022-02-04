@@ -16,7 +16,6 @@
  * User: fyfej (Justin Fyfe)
  * Date: 2021-8-5
  */
-
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
 using SanteDB.Core.Services;

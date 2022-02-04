@@ -33,6 +33,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Represents a policy resource handler
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class SecurityPolicyResourceHandler : ResourceHandlerBase<SecurityPolicy>
     {
         /// <summary>

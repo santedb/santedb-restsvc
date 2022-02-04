@@ -34,6 +34,7 @@ namespace SanteDB.Rest.AMI.ChildResources
     /// <summary>
     /// Security role user child handler
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class SecurityRoleUserChildHandler : IApiChildResourceHandler
     {
         /// <summary>

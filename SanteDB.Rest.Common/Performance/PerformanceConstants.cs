@@ -16,48 +16,39 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-1-28
  */
-using Newtonsoft.Json;
 using System;
-using System.Xml.Serialization;
+using System.Collections.Generic;
+using System.Text;
 
-namespace SanteDB.Core.Model.AMI.Diagnostics
+namespace SanteDB.Rest.Common.Performance
 {
     /// <summary>
-    /// Environment information
+    /// Performance constants
     /// </summary>
-    [JsonObject(nameof(DiagnosticEnvironmentInfo)), XmlType(nameof(DiagnosticEnvironmentInfo), Namespace = "http://santedb.org/ami/diagnostics")]
-    public class DiagnosticEnvironmentInfo
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    public static class PerformanceConstants
     {
-        /// <summary>
-        /// Is platform 64 bit
-        /// </summary>
-        [JsonProperty("is64bit"), XmlAttribute("is64Bit")]
-        public bool Is64Bit { get; set; }
 
         /// <summary>
-        /// OS Version
+        /// Gets the thread pooling performance counter
         /// </summary>
-        [JsonProperty("osVersion"), XmlAttribute("osVersion")]
-        public String OSVersion { get; set; }
+        public static readonly Guid RestPoolPerformanceCounter = new Guid("8877D692-1F71-4442-BDA1-056D3DB1A480");
 
         /// <summary>
-        /// CPU count
+        /// Gets the thread pooling performance counter
         /// </summary>
-        [JsonProperty("processorCount"), XmlAttribute("processorCount")]
-        public int ProcessorCount { get; set; }
+        public static readonly Guid RestPoolConcurrencyCounter = new Guid("8877D692-1F71-4442-BDA1-056D3DB1A481");
 
         /// <summary>
-        /// Used memory
+        /// Gets the thread pooling performance counter
         /// </summary>
-        [JsonProperty("usedMem"), XmlElement("mem")]
-        public long UsedMemory { get; set; }
+        public static readonly Guid RestPoolWorkerCounter = new Guid("8877D692-1F71-4442-BDA1-056D3DB1A482");
 
         /// <summary>
-        /// Version
+        /// Gets the thread pooling performance counter for queue depth
         /// </summary>
-        [JsonProperty("version"), XmlElement("version")]
-        public String Version { get; set; }
+        public static readonly Guid RestPoolDepthCounter = new Guid("8877D692-1F71-4442-BDA1-056D3DB1A485");
     }
 }

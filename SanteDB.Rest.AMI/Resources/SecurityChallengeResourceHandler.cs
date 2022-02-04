@@ -25,6 +25,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Security challenge resource handler
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class SecurityChallengeResourceHandler : ResourceHandlerBase<SecurityChallenge>
     {
         /// <summary>

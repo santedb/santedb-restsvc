@@ -1,24 +1,23 @@
 ﻿/*
- * Copyright (C) 2021 - 2021, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2022, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you
- * may not use this file except in compliance with the License. You may
- * obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you 
+ * may not use this file except in compliance with the License. You may 
+ * obtain a copy of the License at 
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0 
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
+ * License for the specific language governing permissions and limitations under 
  * the License.
- *
+ * 
  * User: fyfej
- * Date: 2021-8-5
+ * Date: 2021-8-27
  */
-
 using RestSrvr;
 using RestSrvr.Attributes;
 using SanteDB.Core;
@@ -55,6 +54,7 @@ namespace SanteDB.Rest.HDSI
     /// </summary>
     /// <remarks>Represents generic implementation of the the Health Data Service Interface (HDSI) contract</remarks>
     [ServiceBehavior(Name = "HDSI", InstanceMode = ServiceInstanceMode.Singleton)]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public abstract class HdsiServiceBehaviorBase : IHdsiServiceContract
     {
         /// <summary>
@@ -233,13 +233,28 @@ namespace SanteDB.Rest.HDSI
                     // HTTP IF headers? - before we go to the DB lets check the cache for them
                     if (ifNoneMatchHeader?.Any() == true || ifModifiedHeader.HasValue)
                     {
-                        var cacheResult = this.m_dataCache.GetCacheItem(objectId) as IdentifiedData;
+                        var cacheResult = this.m_dataCache.GetCacheItem(objectId);
 
                         if (cacheResult != null && (ifNoneMatchHeader?.Contains(cacheResult.Tag) == true ||
                                 cacheResult.ModifiedOn <= ifModifiedHeader))
                         {
-                            RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
-                            return null;
+                            if (cacheResult is ITaggable tagged)
+                            {
+                                if (tagged.GetTag(SanteDBConstants.DcdrRefetchTag) == null)
+                                {
+                                    RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
+                                    return null;
+                                }
+                                else
+                                {
+                                    tagged.RemoveTag(SanteDBConstants.DcdrRefetchTag);
+                                }
+                            }
+                            else
+                            {
+                                RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
+                                return null;
+                            }
                         }
                     }
 
@@ -255,10 +270,14 @@ namespace SanteDB.Rest.HDSI
                         retVal.ModifiedOn <= RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() ||
                         ifNoneMatchHeader?.Any(o => retVal.Tag == o) == true)
                     {
-                        RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
-                        return null;
+                        if (!(retVal is ITaggable tagged) || tagged.GetTag(SanteDBConstants.DcdrRefetchTag) == null)
+                        {
+                            RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
+                            return null;
+                        }
                     }
-                    else if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true" ||
+                    
+                    if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true" ||
                             RestOperationContext.Current.IncomingRequest.QueryString["_all"] == "true")
                     {
                         this.m_traceSource.TraceWarning("Remote client {0} is using a deprecated feature, it may be removed in future versions, please upgrade this client", RemoteEndpointUtil.Current.GetRemoteClient().RemoteAddress);
@@ -602,10 +621,7 @@ namespace SanteDB.Rest.HDSI
                 var match = RestOperationContext.Current.IncomingRequest.Headers["If-Match"];
                 if (match == null)
                     throw new InvalidOperationException("Missing If-Match header");
-
-                // Match bin
-                var versionId = Guid.ParseExact(match, "N");
-
+                
                 // First we load
                 var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
 
@@ -619,7 +635,7 @@ namespace SanteDB.Rest.HDSI
                 var force = Convert.ToBoolean(RestOperationContext.Current.IncomingRequest.Headers["X-Patch-Force"] ?? "false");
 
                 if (existing == null)
-                    throw new FileNotFoundException($"/{resourceType}/{id}/history/{versionId}");
+                    throw new FileNotFoundException($"/{resourceType}/{id}");
                 else if (existing.Tag != match && !force)
                 {
                     this.m_traceSource.TraceError("Object {0} ETAG is {1} but If-Match specified {2}", existing.Key, existing.Tag, match);

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2021, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2022, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  *
@@ -16,7 +16,7 @@
  * the License.
  *
  * User: fyfej
- * Date: 2021-8-5
+ * Date: 2021-8-27
  */
 
 using SanteDB.Core.Model.Acts;
@@ -32,6 +32,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Handler for QOBS
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class QuantityObservationResourceHandler : ObservationResourceHandler<QuantityObservation>
     {
         /// <summary>
@@ -46,6 +47,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Handler for COBS
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class CodedObservationResourceHandler : ObservationResourceHandler<CodedObservation>
     {
         /// <summary>
@@ -60,6 +62,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Handlers TOBS
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class TextObservationResourceHandler : ObservationResourceHandler<TextObservation>
     {
         /// <summary>
@@ -74,6 +77,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <summary>
     /// Handler for observations (handles permissions)
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public abstract class ObservationResourceHandler<TObservation> : HdsiResourceHandlerBase<TObservation> where TObservation : Observation, new()
     {
         /// <summary>
