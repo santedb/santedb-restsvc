@@ -57,7 +57,7 @@ namespace SanteDB.Rest.Common.Behavior
     [Guid("B54FAA80-AA62-4069-B4A6-9AE970E3B222")]
     [DisplayName("Endpoint Throttling")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
-    public class ServiceThrottlingEndpointBehavior : IEndpointBehavior, IMessageInspector, IDiagnosticsProbe
+    public class ServiceThrottlingEndpointBehavior : IEndpointBehavior, IMessageInspector
     {
         // Current request count
         private long m_requests = 0;
@@ -85,36 +85,6 @@ namespace SanteDB.Rest.Common.Behavior
         }
 
         /// <summary>
-        /// Gets the uuid of this diagnostics probe
-        /// </summary>
-        public Guid Uuid => this.GetType().GUID;
-
-        /// <summary>
-        /// Gets the name of the endpoint behavior
-        /// </summary>
-        public string Name { get; private set; }
-
-        /// <summary>
-        /// Gets the description of this object
-        /// </summary>
-        public string Description { get; private set; }
-
-        /// <summary>
-        /// Gets the value of the probe
-        /// </summary>
-        public object Value => (float)this.m_requests / (float)this.m_settings.Limit;
-
-        /// <summary>
-        /// Get the unit
-        /// </summary>
-        public string Unit => "";
-
-        /// <summary>
-        /// Gets the type of the probe
-        /// </summary>
-        public Type Type => typeof(float);
-
-        /// <summary>
         /// After receiving a request
         /// </summary>
         public void AfterReceiveRequest(RestRequestMessage request)
@@ -132,8 +102,6 @@ namespace SanteDB.Rest.Common.Behavior
         public void ApplyEndpointBehavior(ServiceEndpoint endpoint, EndpointDispatcher dispatcher)
         {
             dispatcher.MessageInspectors.Add(this);
-            this.Name = $"Endpoint throttling ({endpoint.Description.ListenUri})";
-            this.Description = $"Shows % of total throttling for {endpoint.Description.ListenUri}";
         }
 
         /// <summary>
