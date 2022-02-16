@@ -45,7 +45,7 @@ namespace SanteDB.Core.Model.AMI.Jobs
         /// <summary>
         /// Create job information from the job
         /// </summary>
-        public JobInfo(IJob job, IEnumerable<IJobSchedule> schedule)
+        public JobInfo(IJobState job, IEnumerable<IJobSchedule> schedule)
         {
             if (job is IAmiIdentified ident)
             {
@@ -55,24 +55,21 @@ namespace SanteDB.Core.Model.AMI.Jobs
             }
             else
             {
-                this.Key = job.Id.ToString();
+                this.Key = job.Job.Id.ToString();
                 this.Tag = job.GetType().Assembly.GetName().Version.ToString();
                 this.ModifiedOn = ApplicationServiceContext.Current.StartTime;
             }
-            this.Name = job.Name;
-            this.CanCancel = job.CanCancel;
+            this.Name = job.Job.Name;
+            this.CanCancel = job.Job.CanCancel;
             this.State = job.CurrentState;
-            this.Description = job.Description;
-            this.Parameters = job.Parameters?.Select(o => new JobParameter() { Key = o.Key, Type = o.Value.Name }).ToList();
-            this.LastStart = job.LastStarted;
-            this.LastFinish = job.LastFinished;
+            this.Description = job.Job.Description;
+            this.Parameters = job.Job.Parameters?.Select(o => new JobParameter() { Key = o.Key, Type = o.Value.Name }).ToList();
+            this.LastStart = job.LastStartTime;
+            this.LastFinish = job.LastStopTime;
             this.JobType = job.GetType().AssemblyQualifiedName;
             this.Schedule = schedule?.Select(o => new JobScheduleInfo(o)).ToList();
-            if (job is IReportProgressJob pj)
-            {
-                this.Progress = pj.Progress;
-                this.StatusText = pj.StatusText;
-            }
+            this.Progress = job.Progress;
+            this.StatusText = job.StatusText;
         }
 
         /// <summary>
