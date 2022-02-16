@@ -42,9 +42,25 @@ namespace SanteDB.Rest.AMI.Resources
     public class JobResourceHandler : IServiceImplementation, IApiResourceHandler, IOperationalApiResourceHandler
     {
 
+        // Job manager
+        private readonly IJobManagerService m_jobManager;
+
+        // State service
+        private readonly IJobStateManagerService m_jobStateService;
 
         // Property providers
         private ConcurrentDictionary<String, IApiChildOperation> m_operationHandlers = new ConcurrentDictionary<string, IApiChildOperation>();
+
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        public JobResourceHandler(ILocalizationService localizationService, IJobManagerService jobManagerService, IJobStateManagerService jobStateManagerService)
+        {
+            this.m_jobManager = jobManagerService;
+            this.m_jobStateService = jobStateManagerService;
+            this.m_localizationService = localizationService;
+
+        }
 
         /// <summary>
         /// Gets the resource name
@@ -85,15 +101,6 @@ namespace SanteDB.Rest.AMI.Resources
         private readonly ILocalizationService m_localizationService;
 
         /// <summary>
-        /// Initializes the job resource handler
-        /// </summary>
-        /// <param name="localizationService"></param>
-        public JobResourceHandler(ILocalizationService localizationService)
-        {
-            this.m_localizationService = localizationService;
-        }
-
-        /// <summary>
         /// Create a new job instance
         /// </summary>
         public object Create(object data, bool updateIfExists)
@@ -107,14 +114,14 @@ namespace SanteDB.Rest.AMI.Resources
         public object Get(object id, object versionId)
         {
             ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
-            var manager = ApplicationServiceContext.Current.GetService<IJobManagerService>();
-            var job = manager.GetJobInstance(Guid.Parse(id.ToString()));
+            var job = this.m_jobManager.GetJobInstance(Guid.Parse(id.ToString()));
             if (job == null)
             {
                 this.m_tracer.TraceError($"No IJob of type {id} found");
                 throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.noIJobType", new { param = id.ToString() }));
             }
-            return new JobInfo(job, manager.GetJobSchedules(job));
+
+            return new JobInfo(this.m_jobStateService.GetJobState(job), this.m_jobManager.GetJobSchedules(job));
         }
 
         /// <summary>
@@ -139,13 +146,11 @@ namespace SanteDB.Rest.AMI.Resources
         public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
         {
             ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
-
-            var manager = ApplicationServiceContext.Current.GetService<IJobManagerService>();
-            var jobs = manager.Jobs;
+            var jobs = this.m_jobManager.Jobs;
             if (queryParameters.TryGetValue("name", out List<string> data))
                 jobs = jobs.Where(o => o.Name.Contains(data.First()));
             totalCount = jobs.Count();
-            return jobs.Skip(offset).Take(count).Select(o => new JobInfo(o, manager.GetJobSchedules(o)));
+            return jobs.Skip(offset).Take(count).Select(o => new JobInfo(this.m_jobStateService.GetJobState(o), this.m_jobManager.GetJobSchedules(o)));
         }
 
         /// <summary>
@@ -159,14 +164,7 @@ namespace SanteDB.Rest.AMI.Resources
                 ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
 
                 var jobInfo = data as JobInfo;
-                var jobManager = ApplicationServiceContext.Current.GetService<IJobManagerService>();
-                if (jobManager == null)
-                {
-                    this.m_tracer.TraceError("No IJobManager configured");
-                    throw new InvalidOperationException(this.m_localizationService.GetString("error.rest.ami.noIJobManager"));
-                }    
-                
-                var job = jobManager.GetJobInstance(Guid.Parse(jobInfo.Key));
+                var job = this.m_jobManager.GetJobInstance(Guid.Parse(jobInfo.Key));
                 if (job == null)
                 {
                     this.m_tracer.TraceError($"Could not find job with ID {jobInfo.Key}");
@@ -178,13 +176,13 @@ namespace SanteDB.Rest.AMI.Resources
                     this.m_tracer.TraceInfo("User setting job schedule for {0}", job.Name);
                     foreach(var itm in jobInfo.Schedule)
                     {
-                        if(itm.IntervalXmlSpecified)
+                        if(itm.Type == Core.Configuration.JobScheduleType.Interval)
                         {
-                            jobManager.SetJobSchedule(job, itm.Interval);
+                            this.m_jobManager.SetJobSchedule(job, itm.Interval);
                         }
                         else
                         {
-                            jobManager.SetJobSchedule(job, itm.RepeatOn, itm.StartDate);
+                            this.m_jobManager.SetJobSchedule(job, itm.RepeatOn, itm.StartDate);
                         }
                     }
                 }
