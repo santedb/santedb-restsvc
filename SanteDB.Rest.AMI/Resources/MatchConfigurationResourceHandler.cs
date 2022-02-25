@@ -155,6 +155,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Invoke the specified operation
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.AlterMatchConfiguration)]
         public object InvokeOperation(object scopingEntityKey, string operationName, ParameterCollection parameters)
         {
             if (this.TryGetOperation(operationName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildOperation handler))
@@ -228,7 +229,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Remove an associated entity
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
+        [Demand(PermissionPolicyIdentifiers.AlterMatchConfiguration)]
         public virtual object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
         {
             if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
@@ -247,7 +248,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Add an associated entity
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
+        [Demand(PermissionPolicyIdentifiers.AlterMatchConfiguration)]
         public virtual object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
         {
             if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
@@ -266,7 +267,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Get associated entity
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
+        [Demand(PermissionPolicyIdentifiers.AlterMatchConfiguration)]
         public virtual object GetChildObject(object scopingEntity, string propertyName, object subItem)
         {
             Guid objectKey = (Guid)scopingEntity, subItemKey = (Guid)subItem;

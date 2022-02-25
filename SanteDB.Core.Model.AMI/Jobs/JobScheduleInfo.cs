@@ -19,6 +19,7 @@
  * Date: 2022-1-11
  */
 using Newtonsoft.Json;
+using SanteDB.Core.Configuration;
 using SanteDB.Core.Jobs;
 using System;
 using System.Xml;
@@ -27,24 +28,7 @@ using System.Xml.Serialization;
 namespace SanteDB.Core.Model.AMI.Jobs
 {
 
-    /// <summary>
-    /// Job schedule information type
-    /// </summary>
-    [XmlType(nameof(JobScheduleInfoType), Namespace = "http://santedb.org/ami")]
-    public enum JobScheduleInfoType
-    {
-        /// <summary>
-        /// The job is scheduled (on days at a time)
-        /// </summary>
-        [XmlEnum("scheduled")]
-        Scheduled,
-        /// <summary>
-        /// The job is fired on an interval
-        /// </summary>
-        [XmlEnum("interval")]
-        Interval
-    }
-
+   
     /// <summary>
     /// Job scheduling information
     /// </summary>
@@ -66,7 +50,7 @@ namespace SanteDB.Core.Model.AMI.Jobs
         /// </summary>
         public JobScheduleInfo(IJobSchedule schedule)
         {
-            this.Type = schedule.Interval.HasValue ? JobScheduleInfoType.Interval : JobScheduleInfoType.Scheduled;
+            this.Type = schedule.Type;
             this.Interval = schedule.Interval.GetValueOrDefault();
             this.IntervalXmlSpecified = schedule.Interval.HasValue;
             this.StartDate = schedule.StartTime;
@@ -79,7 +63,7 @@ namespace SanteDB.Core.Model.AMI.Jobs
         /// Gets or sets the schedule type
         /// </summary>
         [XmlElement("type"), JsonProperty("type")]
-        public JobScheduleInfoType Type { get; set; }
+        public JobScheduleType Type { get; set; }
 
         /// <summary>
         /// Gets or sets the interval
