@@ -67,11 +67,12 @@ namespace SanteDB.Rest.Common
         Object Get(Object id, Object versionId);
 
         /// <summary>
-        /// Obsoletes a resource.
+        /// Delete a resource.
         /// </summary>
-        /// <param name="key">The key of the resource to obsolete.</param>
-        /// <returns>Returns the obsoleted resource.</returns>
-        Object Obsolete(Object key);
+        /// <param name="key">The key of the resource to delete.</param>
+        /// <returns>Returns the deleted resource.</returns>
+        /// <remarks>This functionality has changed since SanteDB 2.x</remarks>
+        Object Delete(Object key);
 
         /// <summary>
         /// Queries for a resource.

@@ -60,9 +60,9 @@ namespace SanteDB.Rest.HDSI.Resources
         }
 
         [Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
-        public override object Obsolete(object key)
+        public override object Delete(object key)
         {
-            return base.Obsolete(key);
+            return base.Delete(key);
         }
 
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]

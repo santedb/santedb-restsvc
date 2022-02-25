@@ -145,7 +145,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         /// <param name="key">Not supported</param>
         /// <returns></returns>
-        public object Obsolete(object key)
+        public object Delete(object key)
         {
             throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
         }

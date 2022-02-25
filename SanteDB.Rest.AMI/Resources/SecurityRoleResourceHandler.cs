@@ -71,9 +71,9 @@ namespace SanteDB.Rest.AMI.Resources
         /// Obsolete roles
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.AlterRoles)]
-        public override object Obsolete(object key)
+        public override object Delete(object key)
         {
-            return base.Obsolete(key);
+            return base.Delete(key);
         }
 
         /// <summary>

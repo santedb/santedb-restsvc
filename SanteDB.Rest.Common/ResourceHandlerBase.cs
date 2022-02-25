@@ -204,14 +204,14 @@ namespace SanteDB.Rest.Common
         /// Obsolete data
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual Object Obsolete(object key)
+        public virtual Object Delete(object key)
         {
             if ((this.Capabilities & ResourceCapabilityType.Delete) == 0)
                 throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
 
             try
             {
-                var retVal = this.m_repository.Obsolete((Guid)key);
+                var retVal = this.m_repository.Delete((Guid)key);
                 AuditUtil.AuditDelete(OutcomeIndicator.Success, key.ToString(), retVal);
                 return retVal;
             }

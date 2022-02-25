@@ -64,9 +64,9 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Obsolete the specified concept set
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
-        public override Object Obsolete(object key)
+        public override Object Delete(object key)
         {
-            return base.Obsolete((Guid)key);
+            return base.Delete((Guid)key);
         }
 
         /// <summary>

@@ -90,11 +90,11 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public override object Obsolete(object key)
+        public override object Delete(object key)
         {
             var policy = this.Get(key, Guid.Empty);
             if (policy == null || (policy as SecurityPolicy).IsPublic)
-                return base.Obsolete(key);
+                return base.Delete(key);
             else if (policy == null)
             {
                 this.m_tracer.TraceError($"Policy {key} not found");

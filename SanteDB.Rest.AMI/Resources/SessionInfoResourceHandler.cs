@@ -110,7 +110,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Obsolete the specified session
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.UnrestrictedAdministration)]
-        public object Obsolete(object key)
+        public object Delete(object key)
         {
             var uuid = (Guid)key;
             var session = ApplicationServiceContext.Current.GetService<ISessionProviderService>().Get(uuid.ToByteArray(), false);

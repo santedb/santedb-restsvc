@@ -72,9 +72,9 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <param name="key">The key of the entity to be obsoleted.</param>
         /// <returns>Returns the obsoleted entity.</returns>
         [Demand(PermissionPolicyIdentifiers.DeleteClinicalData)]
-        public override Object Obsolete(object key)
+        public override Object Delete(object key)
         {
-            return base.Obsolete(key);
+            return base.Delete(key);
         }
 
         /// <summary>

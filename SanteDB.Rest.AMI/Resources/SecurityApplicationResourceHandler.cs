@@ -89,9 +89,9 @@ namespace SanteDB.Rest.AMI.Resources
         /// Obolete the device
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.CreateApplication)]
-        public override object Obsolete(object key)
+        public override object Delete(object key)
         {
-            return base.Obsolete(key);
+            return base.Delete(key);
         }
 
         /// <summary>

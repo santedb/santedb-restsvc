@@ -187,7 +187,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <param name="solutionId">The identifier of the applet to uninstall</param>
         /// <returns>Null</returns>
         [Demand(PermissionPolicyIdentifiers.AdministerApplet)]
-        public object Obsolete(object solutionId)
+        public object Delete(object solutionId)
         {
             ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().UnInstall(solutionId.ToString());
             return null;

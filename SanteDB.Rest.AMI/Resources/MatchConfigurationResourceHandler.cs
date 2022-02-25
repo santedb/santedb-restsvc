@@ -115,7 +115,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Delete a match configuration
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.AlterMatchConfiguration)]
-        public object Obsolete(object key)
+        public object Delete(object key)
         {
             return this.m_configurationService.DeleteConfiguration(key.ToString());
         }

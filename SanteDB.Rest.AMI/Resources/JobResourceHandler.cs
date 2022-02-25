@@ -120,7 +120,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Cancels a job
         /// </summary>
-        public object Obsolete(object key)
+        public object Delete(object key)
         {
             throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
         }

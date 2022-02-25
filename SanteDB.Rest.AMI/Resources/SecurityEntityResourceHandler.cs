@@ -195,11 +195,11 @@ namespace SanteDB.Rest.AMI.Resources
         /// Obsolete the specified object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual object Obsolete(object key)
+        public virtual object Delete(object key)
         {
             try
             {
-                var retVal = Activator.CreateInstance(this.Type, this.GetRepository().Obsolete((Guid)key));
+                var retVal = Activator.CreateInstance(this.Type, this.GetRepository().Delete((Guid)key));
                 AuditUtil.AuditEventDataAction(EventTypeCodes.SecurityObjectChanged, Core.Model.Audit.ActionType.Delete, Core.Model.Audit.AuditableObjectLifecycle.LogicalDeletion, Core.Model.Audit.EventIdentifierType.SecurityAlert, Core.Model.Audit.OutcomeIndicator.Success, key.ToString(), retVal);
 
                 // Special case for security entity wrappers, we want to load them from DB from fresh

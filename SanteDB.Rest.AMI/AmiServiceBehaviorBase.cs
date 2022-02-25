@@ -359,13 +359,13 @@ namespace SanteDB.Messaging.AMI.Wcf
                 var handler = this.GetResourceHandler().GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null)
                 {
-                    this.AclCheck(handler, nameof(IApiResourceHandler.Obsolete));
+                    this.AclCheck(handler, nameof(IApiResourceHandler.Delete));
 
                     object retVal = null;
                     if (Guid.TryParse(key, out Guid uuid))
-                        retVal = handler.Obsolete(uuid);
+                        retVal = handler.Delete(uuid);
                     else
-                        retVal = handler.Obsolete(key);
+                        retVal = handler.Delete(key);
 
                     var versioned = retVal as IVersionedData;
 

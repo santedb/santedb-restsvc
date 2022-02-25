@@ -65,9 +65,9 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Obsoletes the specified material
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.DeletePlacesAndOrgs)]
-        public override Object Obsolete(object key)
+        public override Object Delete(object key)
         {
-            return base.Obsolete(key);
+            return base.Delete(key);
         }
 
         /// <summary>

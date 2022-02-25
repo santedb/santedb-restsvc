@@ -67,9 +67,9 @@ namespace SanteDB.Rest.AMI.Resources
         /// Demand unrestricted
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.UnrestrictedMetadata)]
-        public override object Obsolete(object key)
+        public override object Delete(object key)
         {
-            return base.Obsolete(key);
+            return base.Delete(key);
         }
 
         /// <summary>

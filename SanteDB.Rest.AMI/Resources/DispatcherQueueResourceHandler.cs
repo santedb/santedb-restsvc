@@ -109,7 +109,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Obsolete the specified queue - not supported
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ManageDispatcherQueues)]
-        public object Obsolete(object key)
+        public object Delete(object key)
         {
             this.m_queueService.Purge((String)key);
             AuditUtil.SendAudit(new Core.Model.Audit.AuditEventData()

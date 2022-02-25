@@ -127,7 +127,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Obsolete the specified object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.DeletePubSubSubscription)]
-        public object Obsolete(object key)
+        public object Delete(object key)
         {
             if (key is Guid uuid)
                 return this.m_manager.RemoveChannel(uuid);

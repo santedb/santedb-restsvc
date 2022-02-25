@@ -42,7 +42,6 @@ namespace SanteDB.Rest.HDSI.Resources
     [ServiceProvider("HDSI Resource Handler")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public abstract class HdsiResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData>,
-        INullifyResourceHandler,
         ICancelResourceHandler,
         IChainedApiResourceHandler,
         ICheckoutResourceHandler,
@@ -82,12 +81,12 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// OBsoletion wrapper with locking
         /// </summary>
-        public override object Obsolete(object key)
+        public override object Delete(object key)
         {
             try
             {
                 this.CheckOut((Guid)key);
-                return base.Obsolete(key);
+                return base.Delete(key);
             }
             finally
             {
@@ -205,24 +204,6 @@ namespace SanteDB.Rest.HDSI.Resources
                 throw new ObjectLockedException(this.m_localizationService.GetString("error.type.ObjectLockedException"));
             }
             return null;
-        }
-
-        /// <summary>
-        /// Nullify the specified object
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public object Nullify(object key)
-        {
-            if (this.m_repository is IRepositoryServiceEx<TData> exRepo)
-                return exRepo.Nullify((Guid)key);
-            else
-            {
-                this.m_tracer.TraceError($"Repository for {this.ResourceName} does not support Nullify");
-                throw new NotSupportedException(this.m_localizationService.GetString("error.rest.hdsi.notSupportNullify", new
-                {
-                    param = this.ResourceName
-                }));
-            }
         }
 
         /// <summary>

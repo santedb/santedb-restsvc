@@ -23,6 +23,7 @@ using RestSrvr.Attributes;
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
+using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Acts;
@@ -67,15 +68,32 @@ namespace SanteDB.Rest.HDSI
         /// </summary>
         protected abstract ResourceHandlerTool GetResourceHandler();
 
-        // Adhoc cache
-        private readonly IDataCachingService m_dataCache;
+        /// <summary>
+        /// Ad-hoc cache method
+        /// </summary>
+        protected readonly IDataCachingService m_dataCache;
+
+        /// <summary>
+        /// Locale service
+        /// </summary>
+        protected readonly ILocalizationService m_localeService;
+        private readonly IPolicyEnforcementService m_pepService;
+        private readonly IPatchService m_patchService;
+        private readonly IBarcodeProviderService m_barcodeService;
+
+        public IResourcePointerService m_resourcePointerService { get; }
 
         /// <summary>
         /// HDSI Service Behavior
         /// </summary>
-        public HdsiServiceBehaviorBase(IDataCachingService dataCache)
+        public HdsiServiceBehaviorBase(IDataCachingService dataCache, ILocalizationService localeService, IPatchService patchService, IPolicyEnforcementService pepService, IBarcodeProviderService barcodeService, IResourcePointerService resourcePointerService)
         {
             this.m_dataCache = dataCache;
+            this.m_localeService = localeService;
+            this.m_pepService = pepService;
+            this.m_patchService = patchService;
+            this.m_barcodeService = barcodeService;
+            this.m_resourcePointerService = resourcePointerService;
         }
 
         /// <summary>
@@ -101,7 +119,7 @@ namespace SanteDB.Rest.HDSI
         private void AclCheck(Object handler, String action)
         {
             foreach (var dmn in this.GetDemands(handler, action))
-                ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(dmn);
+                this.m_pepService.Demand(dmn);
         }
 
         /// <summary>
@@ -276,19 +294,7 @@ namespace SanteDB.Rest.HDSI
                             return null;
                         }
                     }
-                    
-                    if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true" ||
-                            RestOperationContext.Current.IncomingRequest.QueryString["_all"] == "true")
-                    {
-                        this.m_traceSource.TraceWarning("Remote client {0} is using a deprecated feature, it may be removed in future versions, please upgrade this client", RemoteEndpointUtil.Current.GetRemoteClient().RemoteAddress);
-                        ObjectExpander.ExpandProperties(retVal, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
-                        ObjectExpander.ExcludeProperties(retVal, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
-                        return Bundle.CreateBundle(retVal);
-                    }
-                    else
-                    {
-                        return retVal;
-                    }
+                    return retVal;
                 }
                 else
                     throw new FileNotFoundException(resourceType);
@@ -536,40 +542,16 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
-                    IdentifiedData retVal = null;
-                    switch (RestOperationContext.Current.IncomingRequest.Headers["X-Delete-Mode"]?.ToLower() ?? "obsolete")
+                    if (RestOperationContext.Current.IncomingRequest.Headers.AllKeys.Contains("X-Delete-Mode"))
                     {
-                        case "nullify":
-                            if (handler is INullifyResourceHandler)
-                            {
-                                this.AclCheck(handler, nameof(INullifyResourceHandler.Nullify));
-                                retVal = (handler as INullifyResourceHandler).Nullify(Guid.Parse(id)) as IdentifiedData;
-                                break;
-                            }
-                            else
-                                throw new NotSupportedException("X-Delete-Mode NULLIFY is not supported on this resource");
-                        case "cancel":
-                            if (handler is ICancelResourceHandler)
-                            {
-                                this.AclCheck(handler, nameof(ICancelResourceHandler.Cancel));
-                                retVal = (handler as ICancelResourceHandler).Cancel(Guid.Parse(id)) as IdentifiedData;
-                                break;
-                            }
-                            else
-                                throw new NotSupportedException("X-Delete-Mode CANCEL is not supported on this resource");
-                        case "obsolete":
-                            this.AclCheck(handler, nameof(IApiResourceHandler.Obsolete));
-                            retVal = handler.Obsolete(Guid.Parse(id)) as IdentifiedData;
-                            break;
-
-                        default:
-                            throw new InvalidOperationException($"Can't understand X-Delete-Mode header");
+                        throw new NotSupportedException(this.m_localeService.GetString(ErrorMessageStrings.OBSOLETE_FUNCTION, new { name = "X-Delete-Mode" }));
                     }
 
-                    var versioned = retVal as IVersionedData;
+                    this.AclCheck(handler, nameof(IApiResourceHandler.Delete));
+                    var retVal = handler.Delete(Guid.Parse(id)) as IdentifiedData;
 
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
-                    if (versioned != null)
+                    if (retVal is IVersionedData versioned)
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id, "_history", versioned.VersionKey));
                     else
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id));
@@ -621,7 +603,7 @@ namespace SanteDB.Rest.HDSI
                 var match = RestOperationContext.Current.IncomingRequest.Headers["If-Match"];
                 if (match == null)
                     throw new InvalidOperationException("Missing If-Match header");
-                
+
                 // First we load
                 var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
 
@@ -646,7 +628,7 @@ namespace SanteDB.Rest.HDSI
                 else
                 {
                     // Force load all properties for existing
-                    var applied = ApplicationServiceContext.Current.GetService<IPatchService>().Patch(body, existing, force);
+                    var applied = this.m_patchService.Patch(body, existing, force);
                     this.AclCheck(handler, nameof(IApiResourceHandler.Update));
                     var data = handler.Update(applied) as IdentifiedData;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 204;
@@ -682,8 +664,8 @@ namespace SanteDB.Rest.HDSI
             try
             {
                 RestOperationContext.Current.OutgoingResponse.StatusCode = 200;
-                RestOperationContext.Current.OutgoingResponse.Headers.Add("Allow", $"GET, PUT, POST, OPTIONS, HEAD, DELETE{(ApplicationServiceContext.Current.GetService<IPatchService>() != null ? ", PATCH" : null)}");
-                if (ApplicationServiceContext.Current.GetService<IPatchService>() != null)
+                RestOperationContext.Current.OutgoingResponse.Headers.Add("Allow", $"GET, PUT, POST, OPTIONS, HEAD, DELETE{(this.m_patchService != null ? ", PATCH" : null)}");
+                if (this.m_patchService != null)
                     RestOperationContext.Current.OutgoingResponse.Headers.Add("Accept-Patch", "application/xml+sdb-patch");
 
                 // Service options
@@ -756,7 +738,7 @@ namespace SanteDB.Rest.HDSI
                 List<ServiceResourceCapability> caps = handler.Capabilities.ToResourceCapabilityStatement(getCaps).ToList();
 
                 // Patching
-                if (ApplicationServiceContext.Current.GetService<IPatchService>() != null &&
+                if (this.m_patchService != null &&
                     handler.Capabilities.HasFlag(ResourceCapabilityType.Update))
                     caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Patch, this.GetDemands(handler, nameof(IApiResourceHandler.Update))));
 
@@ -967,8 +949,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
-                    var bcService = ApplicationServiceContext.Current.GetService<IBarcodeProviderService>();
-                    if (bcService == null)
+                    if (this.m_barcodeService == null)
                         throw new InvalidOperationException("Cannot find barcode generator service");
 
                     Guid objectId = Guid.Parse(id);
@@ -983,18 +964,18 @@ namespace SanteDB.Rest.HDSI
                         if (Guid.TryParse(authority, out Guid authorityId))
                         {
                             if (data is Entity entity)
-                                return bcService.Generate(entity.Identifiers.Where(o => o.AuthorityKey == authorityId));
+                                return this.m_barcodeService.Generate(entity.Identifiers.Where(o => o.AuthorityKey == authorityId));
                             else if (data is Act act)
-                                return bcService.Generate(act.Identifiers.Where(o => o.AuthorityKey == authorityId));
+                                return this.m_barcodeService.Generate(act.Identifiers.Where(o => o.AuthorityKey == authorityId));
                             else
                                 return null;
                         }
                         else
                         {
                             if (data is Entity entity)
-                                return bcService.Generate(entity.Identifiers);
+                                return this.m_barcodeService.Generate(entity.Identifiers);
                             else if (data is Act act)
-                                return bcService.Generate(act.Identifiers);
+                                return this.m_barcodeService.Generate(act.Identifiers);
                             else
                                 return null;
                         }
@@ -1055,8 +1036,7 @@ namespace SanteDB.Rest.HDSI
         {
             try
             {
-                var bcService = ApplicationServiceContext.Current.GetService<IResourcePointerService>();
-                if (bcService == null)
+                if (this.m_resourcePointerService == null)
                     throw new InvalidOperationException("Cannot find pointer service");
 
                 bool validate = true;
@@ -1065,7 +1045,7 @@ namespace SanteDB.Rest.HDSI
                 else if (!String.IsNullOrEmpty(parms["validate"]))
                     Boolean.TryParse(parms["validate"], out validate);
 
-                var result = bcService.ResolveResource(parms["code"], validate);
+                var result = this.m_resourcePointerService.ResolveResource(parms["code"], validate);
 
                 // Create a 303 see other
                 if (result != null)
@@ -1094,8 +1074,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler().GetResourceHandler<IHdsiServiceContract>(resourceType);
                 if (handler != null)
                 {
-                    var ptrService = ApplicationServiceContext.Current.GetService<IResourcePointerService>();
-                    if (ptrService == null)
+                    if (this.m_resourcePointerService == null)
                         throw new InvalidOperationException("Cannot find resource pointer service");
 
                     Guid objectId = Guid.Parse(id);
@@ -1108,11 +1087,11 @@ namespace SanteDB.Rest.HDSI
                         RestOperationContext.Current.OutgoingResponse.ContentType = "application/jose";
                         if (data is Entity entity)
                         {
-                            return new MemoryStream(Encoding.UTF8.GetBytes(ptrService.GeneratePointer(entity.Identifiers.Where(o => o.AuthorityKey == authorityId))));
+                            return new MemoryStream(Encoding.UTF8.GetBytes(this.m_resourcePointerService.GeneratePointer(entity.Identifiers.Where(o => o.AuthorityKey == authorityId))));
                         }
                         else if (data is Act act)
                         {
-                            return new MemoryStream(Encoding.UTF8.GetBytes(ptrService.GeneratePointer(act.Identifiers.Where(o => o.AuthorityKey == authorityId))));
+                            return new MemoryStream(Encoding.UTF8.GetBytes(this.m_resourcePointerService.GeneratePointer(act.Identifiers.Where(o => o.AuthorityKey == authorityId))));
                         }
                         else
                             return null;

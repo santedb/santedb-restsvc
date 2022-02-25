@@ -149,7 +149,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Deletes the specified subscription
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.DeletePubSubSubscription)]
-        public object Obsolete(object key)
+        public object Delete(object key)
         {
             if (key is Guid uuid)
             {
