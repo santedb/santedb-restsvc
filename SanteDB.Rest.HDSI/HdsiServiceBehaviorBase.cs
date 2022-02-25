@@ -911,13 +911,6 @@ namespace SanteDB.Rest.HDSI
                             RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
                             return null;
                         }
-                        else if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true" ||
-                            RestOperationContext.Current.IncomingRequest.QueryString["_all"] == "true")
-                        {
-                            ObjectExpander.ExpandProperties(idData, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
-                            ObjectExpander.ExcludeProperties(idData, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
-                            return Bundle.CreateBundle(idData);
-                        }
                         else
                         {
                             return retVal;
@@ -1276,14 +1269,6 @@ namespace SanteDB.Rest.HDSI
                     {
                         RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
                         return null;
-                    }
-                    else if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true" ||
-                        RestOperationContext.Current.IncomingRequest.QueryString["_all"] == "true")
-                    {
-                        //retVal = retVal.GetLocked();
-                        ObjectExpander.ExpandProperties(retVal, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
-                        ObjectExpander.ExcludeProperties(retVal, SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query));
-                        return Bundle.CreateBundle(retVal);
                     }
                     else
                     {

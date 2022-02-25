@@ -45,6 +45,7 @@ namespace SanteDB.Rest.AMI.Resources
         // Job manager
         private readonly IJobManagerService m_jobManager;
 
+
         // State service
         private readonly IJobStateManagerService m_jobStateService;
 
@@ -141,7 +142,7 @@ namespace SanteDB.Rest.AMI.Resources
             var jobs = this.m_jobManager.Jobs;
             if (queryParameters.TryGetValue("name", out List<string> data))
                 jobs = jobs.Where(o => o.Name.Contains(data.First()));
-            return new MemoryQueryResultSet(jobs.Select(o => new JobInfo(o, manager.GetJobSchedules(o))));
+            return new MemoryQueryResultSet(jobs.Select(o => new JobInfo(this.m_jobStateService.GetJobState(o), this.m_jobManager.GetJobSchedules(o))));
         }
 
         /// <summary>
