@@ -105,6 +105,7 @@ namespace SanteDB.Rest.AMI.ChildResources
             try
             {
                 this.m_pep.Demand(PermissionPolicyIdentifiers.AlterRoles);
+                this.m_pep.Demand(PermissionPolicyIdentifiers.AlterIdentity);
 
                 // Get user entity
                 if (item is SecurityUser su)
