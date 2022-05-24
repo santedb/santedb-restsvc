@@ -13,6 +13,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Parameters;
+using SanteDB.Core.Protocol;
 
 namespace SanteDB.Rest.HDSI.Operation
 {
@@ -23,6 +24,7 @@ namespace SanteDB.Rest.HDSI.Operation
     {
         // Care plan service
         private ICarePlanService m_carePlanService;
+        private readonly IClinicalProtocolRepositoryService m_clinicalProtocolRepository;
 
         // Repo service
         private IConceptRepositoryService m_conceptRepositoryService;
@@ -33,9 +35,10 @@ namespace SanteDB.Rest.HDSI.Operation
         /// <summary>
         /// DI constructor for care plan
         /// </summary>
-        public GenerateCarePlanOperation(ICarePlanService carePlanService, IConceptRepositoryService conceptRepositoryService, ILocalizationService localizationService)
+        public GenerateCarePlanOperation(ICarePlanService carePlanService, IClinicalProtocolRepositoryService clinicalProtocolRepository, IConceptRepositoryService conceptRepositoryService, ILocalizationService localizationService)
         {
             this.m_carePlanService = carePlanService;
+            this.m_clinicalProtocolRepository = clinicalProtocolRepository;
             this.m_conceptRepositoryService = conceptRepositoryService;
             this.m_localizationService = localizationService;
         }
@@ -73,12 +76,16 @@ namespace SanteDB.Rest.HDSI.Operation
             }
 
             // Get parameter for desired protocols
-            parameters.TryGet("protocol", out Guid protocolId);
+            IClinicalProtocol clinicalProtocol = null;
+            if(parameters.TryGet("protocol", out Guid protocolId))
+            {
+                clinicalProtocol = this.m_clinicalProtocolRepository.GetProtocol(protocolId);
+            }
             parameters.TryGet("asEncounter", out bool asEncounters);
 
             // Get care plan service
-            var plan = protocolId != Guid.Empty ?
-                this.m_carePlanService.CreateCarePlan(target, asEncounters, parameters.Parameters.ToDictionary(o => o.Name, o => (object)o.Value), protocolId) :
+            var plan = clinicalProtocol != null ?
+                this.m_carePlanService.CreateCarePlan(target, asEncounters, parameters.Parameters.ToDictionary(o => o.Name, o => (object)o.Value), clinicalProtocol) :
                 this.m_carePlanService.CreateCarePlan(target, asEncounters, parameters.Parameters.ToDictionary(o => o.Name, o => (object)o.Value));
 
             // Expand the participation roles form the care planner
