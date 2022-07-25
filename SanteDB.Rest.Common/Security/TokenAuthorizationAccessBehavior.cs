@@ -56,12 +56,8 @@ namespace SanteDB.Rest.Common.Security
         /// <returns>True if authorization is successful</returns>
         private IDisposable CheckBearerAccess(string authorizationToken)
         {
-            var session = ApplicationServiceContext.Current.GetService<ISessionProviderService>().Get(
-                Enumerable.Range(0, authorizationToken.Length)
-                                    .Where(x => x % 2 == 0)
-                                    .Select(x => Convert.ToByte(authorizationToken.Substring(x, 2), 16))
-                                    .ToArray()
-            );
+
+            var session = ApplicationServiceContext.Current.GetService<ISessionTokenResolverService>().Resolve(authorizationToken);
 
             IPrincipal principal = ApplicationServiceContext.Current.GetService<ISessionIdentityProviderService>().Authenticate(session);
             if (principal == null)
