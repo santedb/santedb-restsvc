@@ -56,7 +56,7 @@ namespace SanteDB.Rest.AMI
     [ServiceKnownResource(typeof(ExtensionType))]
     [ServiceKnownResource(typeof(MailMessage))]
     [ServiceKnownResource(typeof(SecurityApplication))]
-    [ServiceKnownResource(typeof(AssigningAuthority))]
+    [ServiceKnownResource(typeof(IdentityDomain))]
     [ServiceKnownResource(typeof(SecurityDeviceInfo))]
     [ServiceKnownResource(typeof(SecurityApplicationInfo))]
     [ServiceKnownResource(typeof(SecurityPolicyInfo))]

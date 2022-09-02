@@ -29,12 +29,12 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Resource handler which can deal with metadata resources
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class AssigningAuthorityResourceHandler : HdsiResourceHandlerBase<AssigningAuthority>
+    public class IdentityDomainResourceHandler : HdsiResourceHandlerBase<IdentityDomain>
     {
         /// <summary>
         /// DI Constructor
         /// </summary>
-        public AssigningAuthorityResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<AssigningAuthority> repositoryService) : base(localizationService, freetextSearchService, repositoryService)
+        public IdentityDomainResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<IdentityDomain> repositoryService) : base(localizationService, freetextSearchService, repositoryService)
         {
         }
 

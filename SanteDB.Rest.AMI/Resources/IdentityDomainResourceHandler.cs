@@ -26,12 +26,12 @@ namespace SanteDB.Rest.AMI.Resources
     /// Represents a resource handler for assigning authorities
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class AssigningAuthorityResourceHandler : MetadataResourceHandler<AssigningAuthority>
+    public class IdentityDomainResourceHandler : MetadataResourceHandler<IdentityDomain>
     {
         /// <summary>
         /// DI Constructor
         /// </summary>
-        public AssigningAuthorityResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<AssigningAuthority> repositoryService) : base(localizationService, freetextSearchService, repositoryService)
+        public IdentityDomainResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<IdentityDomain> repositoryService) : base(localizationService, freetextSearchService, repositoryService)
         {
         }
     }
