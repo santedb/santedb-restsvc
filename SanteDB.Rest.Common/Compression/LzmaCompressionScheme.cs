@@ -47,7 +47,7 @@ namespace SanteDB.Rest.Common.Compression
         /// </summary>
         public Stream CreateCompressionStream(Stream underlyingStream)
         {
-            return new LZipStream(new NonDisposingStream(underlyingStream), CompressionMode.Compress);
+            return new LZipStream(NonDisposingStream.Create(underlyingStream), CompressionMode.Compress);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace SanteDB.Rest.Common.Compression
         /// </summary>
         public Stream CreateDecompressionStream(Stream underlyingStream)
         {
-            return new LZipStream(new NonDisposingStream(underlyingStream), CompressionMode.Decompress);
+            return new LZipStream(NonDisposingStream.Create(underlyingStream), CompressionMode.Decompress);
         }
     }
 }

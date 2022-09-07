@@ -29,9 +29,6 @@ namespace SanteDB.Rest.Common.Compression
     public static class CompressionUtil
     {
 
-        // Buffer size
-        private const int BUFFER_SIZE = 1024;
-
         /// <summary>
         /// Get compression scheme
         /// </summary>

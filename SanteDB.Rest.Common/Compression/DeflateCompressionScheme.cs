@@ -46,7 +46,7 @@ namespace SanteDB.Rest.Common.Compression
         /// </summary>
         public Stream CreateCompressionStream(Stream underlyingStream)
         {
-            return new DeflateStream(new NonDisposingStream(underlyingStream), CompressionLevel.Optimal);
+            return new DeflateStream(NonDisposingStream.Create(underlyingStream), CompressionLevel.Optimal);
         }
 
         /// <summary>
