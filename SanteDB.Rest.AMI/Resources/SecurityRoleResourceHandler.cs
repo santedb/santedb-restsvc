@@ -78,56 +78,6 @@ namespace SanteDB.Rest.AMI.Resources
 
 
         /// <summary>
-        /// Remove an associated entity
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.AlterRoles)]
-        public override object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
-        {
-            var scope = this.GetRepository().Get(Guid.Parse(scopingEntityKey.ToString()));
-            if (scope == null)
-            {
-               this.m_tracer.TraceError($"Could not find SecurityRole with identifier {scopingEntityKey}");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.securityRoleNotFound", new
-                {
-                    param = scopingEntityKey
-                }));
-            }
-
-            switch (propertyName)
-            {
-                case "policy":
-
-
-                case "user":
-                    var user = ApplicationServiceContext.Current.GetService<IRepositoryService<SecurityUser>>().Get(Guid.Parse(subItemKey.ToString()));
-                    if (user == null)
-                    {
-                        this.m_tracer.TraceError($"User {subItemKey} not found");
-                        throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.userMessage"));
-                    }
-                    try
-                    {
-                        ApplicationServiceContext.Current.GetService<IRoleProviderService>().RemoveUsersFromRoles(new string[] { user.UserName }, new string[] { scope.Name }, AuthenticationContext.Current.Principal);
-                        this.FireSecurityAttributesChanged(scope, true, $"del user={user.UserName}");
-                        return user;
-                    }
-                    catch
-                    {
-                        this.FireSecurityAttributesChanged(scope, false, $"del user={subItemKey}");
-                        throw;
-                    }
-                default:
-                    {
-                       this.m_tracer.TraceError($"Property with {propertyName} not valid");
-                        throw new ArgumentException(this.m_localizationService.FormatString("error.rest.ami.invalidProperty", new
-                        {
-                            param = propertyName
-                        }));
-                    }
-            }
-        }
-
-        /// <summary>
         /// Update roles
         /// </summary>
         /// <param name="data"></param>
