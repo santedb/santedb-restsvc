@@ -604,7 +604,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
                     // Send the query to the resource handler
-                    var query = NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query);
+                    var query = RestOperationContext.Current.IncomingRequest.Url.Query.ParseQueryString();
 
                     // Modified on?
                     if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null)
@@ -810,7 +810,7 @@ namespace SanteDB.Messaging.AMI.Wcf
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
                     // Send the query to the resource handler
-                    var query = NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query);
+                    var query = RestOperationContext.Current.IncomingRequest.Url.Query.ParseQueryString();
 
                     // Modified on?
                     if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null)

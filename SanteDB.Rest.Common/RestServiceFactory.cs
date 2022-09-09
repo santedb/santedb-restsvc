@@ -34,7 +34,7 @@ using System.Linq;
 using System.Reflection;
 using SanteDB.Core.Interfaces;
 
-namespace SanteDB.Server.Core.Rest
+namespace SanteDB.Rest.Common
 {
     /// <summary>
     /// Rest service tool to create rest services
@@ -43,7 +43,7 @@ namespace SanteDB.Server.Core.Rest
     {
         // Configuration
         private SanteDB.Rest.Common.Configuration.RestConfigurationSection m_configuration;
-
+        
         // Service manager instance
         private IServiceManager m_serviceManager;
 

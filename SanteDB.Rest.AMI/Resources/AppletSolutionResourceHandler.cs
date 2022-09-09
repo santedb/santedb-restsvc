@@ -34,6 +34,7 @@ using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -200,7 +201,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <param name="queryParameters">The filter to apply</param>
         /// <returns>The applet manifests</returns>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public IQueryResultSet Query(Core.Model.Query.NameValueCollection queryParameters)
+        public IQueryResultSet Query(NameValueCollection queryParameters)
         {
             var query = QueryExpressionParser.BuildLinqExpression<AppletSolution>(queryParameters);
             var applets = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().Solutions.Where(query.Compile()).Select(o => new AppletSolutionInfo(o, null));

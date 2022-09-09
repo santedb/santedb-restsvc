@@ -27,6 +27,7 @@ using SanteDB.Core.Model.Query;
 using SanteDB.Rest.Common;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 

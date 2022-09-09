@@ -22,6 +22,7 @@ using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Services;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
@@ -45,7 +46,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Handle a free text search
         /// </summary>
-        protected override IQueryResultSet HandleFreeTextSearch(List<string> terms)
+        protected override IQueryResultSet HandleFreeTextSearch(IEnumerable<string> terms)
         {
             return this.m_freetextSearch.SearchEntity<TData>(terms.ToArray());
         }

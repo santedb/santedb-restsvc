@@ -518,8 +518,8 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.HealthDataService);
                         restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
                         // This NVC is UTF8 compliant
-                        var nvc = SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query);
-                        var retVal = restClient.Get<IdentifiedData>($"/{resourceType}", nvc.Select(o => new KeyValuePair<String, Object>(o.Key, o.Value)).ToArray());
+                        var nvc = RestOperationContext.Current.IncomingRequest.Url.Query.ParseQueryString();
+                        var retVal = restClient.Get<IdentifiedData>($"/{resourceType}", nvc.ToDictionary().ToArray().ToDictionary(o=>o.Key, o=>(object)o.Value).ToArray());
                         this.TagUpstream(retVal);
 
                         return retVal;
@@ -589,8 +589,8 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.HealthDataService);
                         restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
                         // This NVC is UTF8 compliant
-                        var nvc = SanteDB.Core.Model.Query.NameValueCollection.ParseQueryString(RestOperationContext.Current.IncomingRequest.Url.Query);
-                        var retVal = restClient.Get<Object>($"/{resourceType}/{key}/{childResourceType}", nvc.Select(o => new KeyValuePair<String, Object>(o.Key, o.Value)).ToArray()) as IdentifiedData;
+                        var nvc = RestOperationContext.Current.IncomingRequest.Url.Query.ParseQueryString();
+                        var retVal = restClient.Get<Object>($"/{resourceType}/{key}/{childResourceType}", nvc.ToDictionary().ToArray().ToDictionary(o => o.Key, o => (object)o.Value).ToArray()) as IdentifiedData;
                         this.TagUpstream(retVal);
                         
                         return retVal;

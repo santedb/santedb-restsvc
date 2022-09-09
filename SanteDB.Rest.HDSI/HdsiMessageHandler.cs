@@ -23,7 +23,6 @@ using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interfaces;
 using SanteDB.Core.Interop;
-using SanteDB.Server.Core.Rest;
 using SanteDB.Core.Services;
 using SanteDB.Rest.HDSI.Configuration;
 using SanteDB.Messaging.HDSI.Wcf;

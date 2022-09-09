@@ -24,6 +24,7 @@ using SanteDB.Core.Security;
 using SanteDB.Core.Security.Principal;
 using SanteDB.Core.Services;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -59,9 +60,10 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
-            if (!queryParameters.ContainsKey("rcpt.userName") && !queryParameters.ContainsKey("from"))
+            if (!queryParameters.TryGetValue("rcpt.userName", out _) && !queryParameters.TryGetValue("from", out _))
             {
-                queryParameters.Add("rcpt.userName", new List<string>() { "SYSTEM", AuthenticationContext.Current.Principal.Identity.Name });
+                queryParameters.Add("rcpt.userName", "SYSTEM");
+                queryParameters.Add("rcpt.userName", AuthenticationContext.Current.Principal.Identity.Name );
             }
             return base.Query(queryParameters);
         }

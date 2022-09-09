@@ -29,6 +29,7 @@ using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
@@ -126,7 +127,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public IQueryResultSet Query(NameValueCollection queryParameters)
         {
-            if (queryParameters.TryGetValue("name", out List<String> values))
+            if (queryParameters.TryGetValue("name", out var values))
                 return new MemoryQueryResultSet(this.m_configurationService.Configurations
                     .Where(o => o.Id.Contains(values.First().Replace("~", ""))));
             else

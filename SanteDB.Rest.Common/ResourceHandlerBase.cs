@@ -33,6 +33,7 @@ using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
@@ -239,7 +240,7 @@ namespace SanteDB.Rest.Common
                     throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
                 }
 
-                if (queryParameters.TryGetValue("_any", out List<String> terms))
+                if (queryParameters.TryGetValue("_any", out var terms))
                 {
                     return this.HandleFreeTextSearch(terms);
                 }
@@ -259,8 +260,7 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Handle freetext search
         /// </summary>
-
-        protected virtual IQueryResultSet HandleFreeTextSearch(List<string> terms)
+        protected virtual IQueryResultSet HandleFreeTextSearch(IEnumerable<string> terms)
         {
             throw new NotSupportedException();
         }

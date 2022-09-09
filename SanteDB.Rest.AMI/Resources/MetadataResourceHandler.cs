@@ -26,6 +26,7 @@ using SanteDB.Rest.Common.Attributes;
 using System.Collections.Generic;
 
 using SanteDB.Core.Services;
+using System.Collections.Specialized;
 
 namespace SanteDB.Rest.AMI.Resources
 {

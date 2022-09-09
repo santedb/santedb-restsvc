@@ -32,6 +32,7 @@ using SanteDB.Rest.Common;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
@@ -141,7 +142,7 @@ namespace SanteDB.Rest.AMI.Resources
         {
             ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
             var jobs = this.m_jobManager.Jobs;
-            if (queryParameters.TryGetValue("name", out List<string> data))
+            if (queryParameters.TryGetValue("name", out var data))
                 jobs = jobs.Where(o => o.Name.Contains(data.First()));
             return new MemoryQueryResultSet(jobs.Select(o => new JobInfo(this.m_jobStateService.GetJobState(o), this.m_jobManager.GetJobSchedules(o))));
         }

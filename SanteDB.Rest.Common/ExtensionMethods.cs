@@ -73,16 +73,6 @@ namespace SanteDB.Rest.Common
             me.AppendHeader("Last-Modified", lastModified.ToString("r"));
         }
 
-        /// <summary>
-        /// Convert query types
-        /// </summary>
-        public static SanteDB.Core.Model.Query.NameValueCollection ToQuery(this System.Collections.Specialized.NameValueCollection nvc)
-        {
-            var retVal = new SanteDB.Core.Model.Query.NameValueCollection();
-            foreach (var k in nvc.AllKeys)
-                retVal.Add(k, new List<String>(nvc.GetValues(k)));
-            return retVal;
-        }
 
         /// <summary>
         /// Convert query types

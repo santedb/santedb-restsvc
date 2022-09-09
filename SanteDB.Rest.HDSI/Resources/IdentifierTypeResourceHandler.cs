@@ -25,6 +25,7 @@ using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
