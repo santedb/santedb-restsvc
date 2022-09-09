@@ -23,6 +23,7 @@ using RestSrvr.Message;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
+using SanteDB.Rest.Common.Security;
 using System;
 using System.ComponentModel;
 using System.Globalization;

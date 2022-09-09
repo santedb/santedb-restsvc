@@ -21,7 +21,7 @@
 using RestSrvr;
 using RestSrvr.Message;
 using SanteDB.Core.Diagnostics;
-using SanteDB.Rest.Common.Compression;
+using SanteDB.Core.Http.Compression;
 using System;
 using System.Diagnostics.Tracing;
 using System.IO;

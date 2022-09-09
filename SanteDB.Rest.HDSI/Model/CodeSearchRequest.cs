@@ -16,45 +16,48 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2022-5-30
+ * Date: 2021-8-27
  */
-using SharpCompress.IO;
-using System.IO;
-using System.IO.Compression;
+using SanteDB.Core.Http;
+using System;
+using System.Collections.Specialized;
 
-namespace SanteDB.Rest.Common.Compression
+namespace SanteDB.Rest.HDSI.Model
 {
     /// <summary>
-    /// Represents a compresson scheme which can deflate objects
+    /// Represents a code search request
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
-    public class GzipCompressionScheme : ICompressionScheme
+    public class CodeSearchRequest
     {
+
         /// <summary>
-        /// Encoding this scheme handles
+        /// Default ctor for serialization
         /// </summary>
-        public string Encoding
+        public CodeSearchRequest()
         {
-            get
-            {
-                return "gzip";
-            }
+
         }
 
         /// <summary>
-        /// Create a compression stream
+        /// Constructor with default values
         /// </summary>
-        public Stream CreateCompressionStream(Stream underlyingStream)
+        public CodeSearchRequest(NameValueCollection nvc)
         {
-            return new GZipStream(NonDisposingStream.Create(underlyingStream), CompressionMode.Compress);
+            this.Code = nvc["code"];
+            if (Boolean.TryParse(nvc["validate"], out bool r))
+                this.Validate = r;
         }
 
         /// <summary>
-        /// Create a decompression stream
+        /// The code to be resolved
         /// </summary>
-        public Stream CreateDecompressionStream(Stream underlyingStream)
-        {
-            return new GZipStream(underlyingStream, CompressionMode.Decompress, true);
-        }
+        [FormElement("code")]
+        public String Code { get; set; }
+
+        /// <summary>
+        /// Validate the code
+        /// </summary>
+        [FormElement("validate")]
+        public bool Validate { get; set; }
     }
 }

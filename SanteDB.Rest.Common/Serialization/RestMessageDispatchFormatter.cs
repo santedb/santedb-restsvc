@@ -262,11 +262,11 @@ namespace SanteDB.Rest.Common.Serialization
                         switch (parameters[pNumber])
                         {
                             case IResourceCollection irc:
-                                irc.AddAnnotationToAll(SanteDBConstants.NoDynamicLoadAnnotation);
+                                irc.AddAnnotationToAll(SanteDBModelConstants.NoDynamicLoadAnnotation);
                                 break;
 
                             case IIdentifiedData ide:
-                                ide.AddAnnotation(SanteDBConstants.NoDynamicLoadAnnotation);
+                                ide.AddAnnotation(SanteDBModelConstants.NoDynamicLoadAnnotation);
                                 break;
                         }
                     }
