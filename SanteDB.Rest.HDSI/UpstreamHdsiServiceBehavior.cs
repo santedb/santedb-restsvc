@@ -271,7 +271,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         }
 
                         restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                        var retVal = restClient.Get<IdentifiedData>($"{resourceType}/{id}", RestOperationContext.Current.IncomingRequest.QueryString.ToList().ToArray());
+                        var retVal = restClient.Get<IdentifiedData>($"{resourceType}/{id}", RestOperationContext.Current.IncomingRequest.QueryString.ToArray());
                         this.TagUpstream(retVal);
                         return retVal;
                     }
@@ -519,7 +519,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
                         // This NVC is UTF8 compliant
                         var nvc = RestOperationContext.Current.IncomingRequest.Url.Query.ParseQueryString();
-                        var retVal = restClient.Get<IdentifiedData>($"/{resourceType}", nvc.ToDictionary().ToArray().ToDictionary(o=>o.Key, o=>(object)o.Value).ToArray());
+                        var retVal = restClient.Get<IdentifiedData>($"/{resourceType}", nvc.ToArray());
                         this.TagUpstream(retVal);
 
                         return retVal;
@@ -590,7 +590,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
                         // This NVC is UTF8 compliant
                         var nvc = RestOperationContext.Current.IncomingRequest.Url.Query.ParseQueryString();
-                        var retVal = restClient.Get<Object>($"/{resourceType}/{key}/{childResourceType}", nvc.ToDictionary().ToArray().ToDictionary(o => o.Key, o => (object)o.Value).ToArray()) as IdentifiedData;
+                        var retVal = restClient.Get<Object>($"/{resourceType}/{key}/{childResourceType}", nvc.ToArray()) as IdentifiedData;
                         this.TagUpstream(retVal);
                         
                         return retVal;
