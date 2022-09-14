@@ -86,6 +86,21 @@ namespace SanteDB.Rest.HDSI
         protected IApiResourceHandler GetResourceHandler(String resourceTypeName) => this.m_resourceHandlerTool.GetResourceHandler<IHdsiServiceContract>(resourceTypeName);
 
         /// <summary>
+        /// For REST service initialization
+        /// </summary>
+        public HdsiServiceBehavior() : 
+            this(ApplicationServiceContext.Current.GetService<IDataCachingService>(),
+                ApplicationServiceContext.Current.GetService<ILocalizationService>(),
+                ApplicationServiceContext.Current.GetService<IPatchService>(),
+                ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>(),
+                ApplicationServiceContext.Current.GetService<IBarcodeProviderService>(),
+                ApplicationServiceContext.Current.GetService<IResourcePointerService>(),
+                ApplicationServiceContext.Current.GetService<IServiceManager>()
+                )
+        {
+
+        }
+        /// <summary>
         /// HDSI Service Behavior
         /// </summary>
         public HdsiServiceBehavior(IDataCachingService dataCache, ILocalizationService localeService, IPatchService patchService, IPolicyEnforcementService pepService, IBarcodeProviderService barcodeService, IResourcePointerService resourcePointerService, IServiceManager serviceManager)
@@ -970,9 +985,9 @@ namespace SanteDB.Rest.HDSI
                         if (Guid.TryParse(authority, out Guid authorityId))
                         {
                             if (data is Entity entity)
-                                return this.m_barcodeService.Generate(entity.Identifiers.Where(o => o.AuthorityKey == authorityId));
+                                return this.m_barcodeService.Generate(entity.Identifiers.Where(o => o.IdentityDomainKey == authorityId));
                             else if (data is Act act)
-                                return this.m_barcodeService.Generate(act.Identifiers.Where(o => o.AuthorityKey == authorityId));
+                                return this.m_barcodeService.Generate(act.Identifiers.Where(o => o.IdentityDomainKey == authorityId));
                             else
                                 return null;
                         }
@@ -1093,11 +1108,11 @@ namespace SanteDB.Rest.HDSI
                         RestOperationContext.Current.OutgoingResponse.ContentType = "application/jose";
                         if (data is Entity entity)
                         {
-                            return new MemoryStream(Encoding.UTF8.GetBytes(this.m_resourcePointerService.GeneratePointer(entity.Identifiers.Where(o => o.AuthorityKey == authorityId))));
+                            return new MemoryStream(Encoding.UTF8.GetBytes(this.m_resourcePointerService.GeneratePointer(entity.Identifiers.Where(o => o.IdentityDomainKey == authorityId))));
                         }
                         else if (data is Act act)
                         {
-                            return new MemoryStream(Encoding.UTF8.GetBytes(this.m_resourcePointerService.GeneratePointer(act.Identifiers.Where(o => o.AuthorityKey == authorityId))));
+                            return new MemoryStream(Encoding.UTF8.GetBytes(this.m_resourcePointerService.GeneratePointer(act.Identifiers.Where(o => o.IdentityDomainKey == authorityId))));
                         }
                         else
                             return null;

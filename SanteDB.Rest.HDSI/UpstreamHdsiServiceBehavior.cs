@@ -69,6 +69,26 @@ namespace SanteDB.Messaging.HDSI.Wcf
         /// </summary>
         public event EventHandler<ProgressChangedEventArgs> ProgressChanged;
 
+        /// <summary>
+        /// For REST service initialization
+        /// </summary>
+        public UpstreamHdsiServiceBehavior() :
+            this(ApplicationServiceContext.Current.GetService<IDataCachingService>(),
+                ApplicationServiceContext.Current.GetService<ILocalizationService>(),
+                ApplicationServiceContext.Current.GetService<IPatchService>(),
+                ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>(),
+                ApplicationServiceContext.Current.GetService<IBarcodeProviderService>(),
+                ApplicationServiceContext.Current.GetService<IResourcePointerService>(),
+                ApplicationServiceContext.Current.GetService<IServiceManager>(),
+                ApplicationServiceContext.Current.GetService<IRestClientFactory>(),
+                ApplicationServiceContext.Current.GetService<IUpstreamIntegrationService>(),
+                ApplicationServiceContext.Current.GetService<IDataPersistenceService<Entity>>(),
+                ApplicationServiceContext.Current.GetService<IDataPersistenceService<Act>>()
+                )
+        {
+
+        }
+
         /// <inheritdoc/>
         public UpstreamHdsiServiceBehavior(IDataCachingService dataCache, ILocalizationService localeService, IPatchService patchService, IPolicyEnforcementService pepService, IBarcodeProviderService barcodeService, IResourcePointerService resourcePointerService, IServiceManager serviceManager, IRestClientFactory restClientResolver, IUpstreamIntegrationService upstreamIntegrationService, IDataPersistenceService<Entity> entityRepository = null, IDataPersistenceService<Act> actRepository = null) : base(dataCache, localeService, patchService, pepService, barcodeService, resourcePointerService, serviceManager)
         {

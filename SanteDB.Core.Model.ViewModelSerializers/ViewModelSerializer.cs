@@ -22382,10 +22382,10 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
             }
             if (context.ShouldSerialize("authority")) {
-                if ((_strong.AuthorityKey == null)) {
+                if ((_strong.IdentityDomainKey == null)) {
                 }
                 else {
-                    context.JsonContext.WritePropertyUtil(w, "authority", _strong.AuthorityKey, context);
+                    context.JsonContext.WritePropertyUtil(w, "authority", _strong.IdentityDomainKey, context);
                 }
             }
             if (context.ShouldSerialize("effectiveVersionSequence")) {
@@ -22505,7 +22505,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                 r.Read();
                                                 object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Guid), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("authority", context.JsonContext, _retVal, context));
                                                 if ((_instance != null)) {
-                                                    _retVal.AuthorityKey = ((System.Guid)(_instance));
+                                                    _retVal.IdentityDomainKey = ((System.Guid)(_instance));
                                                 }
                                             }
                                             else {
@@ -22674,10 +22674,10 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
             }
             if (context.ShouldSerialize("authority")) {
-                if ((_strong.AuthorityKey == null)) {
+                if ((_strong.IdentityDomainKey == null)) {
                 }
                 else {
-                    context.JsonContext.WritePropertyUtil(w, "authority", _strong.AuthorityKey, context);
+                    context.JsonContext.WritePropertyUtil(w, "authority", _strong.IdentityDomainKey, context);
                 }
             }
             if (context.ShouldSerialize("effectiveVersionSequence")) {
@@ -22797,7 +22797,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                 r.Read();
                                                 object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Guid), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("authority", context.JsonContext, _retVal, context));
                                                 if ((_instance != null)) {
-                                                    _retVal.AuthorityKey = ((System.Guid)(_instance));
+                                                    _retVal.IdentityDomainKey = ((System.Guid)(_instance));
                                                 }
                                             }
                                             else {

@@ -48,7 +48,7 @@ namespace SanteDB.Rest.HDSI
     /// starts the necessary REST and query services on start and tears them down on system shutdown.</para>
     /// </remarks>
     [Description("The primary iCDR Health Data Messaging Service (HDSI) allows sharing of RIM objects in XML or JSON over HTTP")]
-    [ApiServiceProvider("Health Data Services Interface", typeof(UpstreamHdsiServiceBehavior), configurationType: typeof(HdsiConfigurationSection), required: true)]
+    [ApiServiceProvider("Health Data Services Interface", typeof(HdsiServiceBehavior), configurationType: typeof(HdsiConfigurationSection), required: true)]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // Model classes - ignored
     public class HdsiMessageHandler : IDaemonService, IApiEndpointProvider
     {
@@ -60,7 +60,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Gets the contract type
         /// </summary>
-        public Type BehaviorType => typeof(UpstreamHdsiServiceBehavior);
+        public Type BehaviorType => typeof(HdsiServiceBehavior);
 
         /// <summary>
         /// Resource handler tool
