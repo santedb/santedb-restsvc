@@ -99,9 +99,9 @@ namespace SanteDB.Core.Model.AMI.Collections
         /// Initializes a new instance of the <see cref="AmiCollection"/> class
         /// with a specific list of collection items.
         /// </summary>
-        public AmiCollection(List<Object> collectionItems)
+        public AmiCollection(IEnumerable<Object> collectionItems)
         {
-            this.CollectionItem = collectionItems;
+            this.CollectionItem = new List<object>( collectionItems);
         }
 
         /// <summary>

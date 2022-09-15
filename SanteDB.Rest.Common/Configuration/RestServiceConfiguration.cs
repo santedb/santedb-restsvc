@@ -66,7 +66,7 @@ namespace SanteDB.Rest.Common.Configuration
             {
                 this.Endpoints = new List<RestEndpointConfiguration>(configuration.Endpoints?.Select(o => new RestEndpointConfiguration(o)));
             }
-            this.Name = configuration.Name;
+            this.ConfigurationName = configuration.ConfigurationName;
             this.ServiceType = configuration.ServiceType;
         }
 
@@ -75,16 +75,16 @@ namespace SanteDB.Rest.Common.Configuration
         /// </summary>
         internal RestServiceConfiguration(Type type) : this()
         {
-            this.Name = type.GetCustomAttribute<ServiceBehaviorAttribute>()?.Name ?? type.FullName;
+            this.ConfigurationName = type.GetCustomAttribute<ServiceBehaviorAttribute>()?.Name ?? type.FullName;
             this.ServiceType = type;
         }
 
         /// <summary>
         /// Gets or sets the name of the service
         /// </summary>
-        [XmlAttribute("name"), JsonProperty("name")]
-        [DisplayName("Info Name"), Description("Sets the informative name for this service")]
-        public string Name { get; set; }
+        [XmlAttribute("configurationName"), JsonProperty("configurationName")]
+        [DisplayName("Configuration Name"), Description("Sets the informative name for this service")]
+        public string ConfigurationName { get; set; }
 
         /// <summary>
         /// Gets or sets the behavior
@@ -130,7 +130,7 @@ namespace SanteDB.Rest.Common.Configuration
         /// <summary>
         /// Gets the string representation of this 
         /// </summary>
-        public override string ToString() => $"REST Service: {this.Name}";
+        public override string ToString() => $"REST Service: {this.ConfigurationName}";
 
     }
 }

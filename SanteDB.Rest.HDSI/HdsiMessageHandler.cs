@@ -63,6 +63,11 @@ namespace SanteDB.Rest.HDSI
         public Type BehaviorType => typeof(HdsiServiceBehavior);
 
         /// <summary>
+        /// Name of the service in the configuration file
+        /// </summary>
+        internal const string ConfigurationName = "HDSI";
+
+        /// <summary>
         /// Resource handler tool
         /// </summary>
         internal static ResourceHandlerTool ResourceHandler { get; private set; }
@@ -165,7 +170,7 @@ namespace SanteDB.Rest.HDSI
                         .ToList(), typeof(IHdsiServiceContract)
                     );
 
-                this.m_webHost = ApplicationServiceContext.Current.GetService<IRestServiceFactory>().CreateService(typeof(UpstreamHdsiServiceBehavior));
+                this.m_webHost = ApplicationServiceContext.Current.GetService<IRestServiceFactory>().CreateService(ConfigurationName);
                 this.m_webHost.AddServiceBehavior(new ErrorServiceBehavior());
 
                 // Add service behaviors

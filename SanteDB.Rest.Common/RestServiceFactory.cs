@@ -102,16 +102,15 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Create the rest service
         /// </summary>
-        public RestService CreateService(Type serviceType)
+        public RestService CreateService(String serviceConfigurationName)
         {
             try
             {
                 // Get the configuration
-                var sname = serviceType.GetCustomAttribute<ServiceBehaviorAttribute>()?.Name ?? serviceType.FullName;
-                var config = this.m_configuration.Services.FirstOrDefault(o => o.Name == sname);
+                var config = this.m_configuration.Services.FirstOrDefault(o => o.ConfigurationName == serviceConfigurationName);
                 if (config == null)
-                    throw new InvalidOperationException($"Cannot find configuration for {sname}");
-                var retVal = new RestService(serviceType);
+                    throw new InvalidOperationException($"Cannot find configuration for {serviceConfigurationName}");
+                var retVal = new RestService(config.ServiceType);
                 foreach (var bhvr in config.Behaviors)
                 {
                     if (bhvr.Type == null)
@@ -121,7 +120,7 @@ namespace SanteDB.Rest.Common
                         Activator.CreateInstance(bhvr.Type) as IServiceBehavior :
                         Activator.CreateInstance(bhvr.Type, bhvr.Configuration) as IServiceBehavior);
                 }
-                var demandPolicy = new OperationDemandPolicyBehavior(serviceType);
+                var demandPolicy = new OperationDemandPolicyBehavior(config.ServiceType);
 
                 foreach (var ep in config.Endpoints)
                 {
@@ -142,8 +141,8 @@ namespace SanteDB.Rest.Common
             }
             catch (Exception e)
             {
-                Tracer.GetTracer(typeof(RestServiceFactory)).TraceError("Could not start {0} : {1}", serviceType.FullName, e);
-                throw new Exception($"Could not start {serviceType.FullName}", e);
+                Tracer.GetTracer(typeof(RestServiceFactory)).TraceError("Could not start {0} : {1}", serviceConfigurationName, e);
+                throw new Exception($"Could not start {serviceConfigurationName}", e);
             }
         }
     }

@@ -23,6 +23,7 @@ using SanteDB.Core.Applets.Model;
 using SanteDB.Core.Diagnostics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
 
@@ -51,6 +52,7 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         {
             this.Uptime = DateTime.Now - ApplicationServiceContext.Current.StartTime;
             this.SanteDB = new DiagnosticVersionInfo(versionInfo);
+            this.Assemblies = AppDomain.CurrentDomain.GetAssemblies().Select(o => new DiagnosticVersionInfo(o)).ToList();
         }
 
         /// <summary>
@@ -58,6 +60,14 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         /// </summary>
         [JsonProperty("applet"), XmlElement("applet")]
         public List<AppletInfo> Applets { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets the applets
+        /// </summary>
+        [JsonProperty("solution"), XmlElement("solution")]
+        public List<AppletInfo> Solutions { get; set; }
+
 
         /// <summary>
         /// Gets or sets the assemblies
