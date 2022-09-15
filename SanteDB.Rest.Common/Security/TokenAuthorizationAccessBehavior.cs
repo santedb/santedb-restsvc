@@ -56,7 +56,7 @@ namespace SanteDB.Rest.Common.Security
         private IDisposable CheckBearerAccess(string authorizationToken)
         {
 
-            var session = ApplicationServiceContext.Current.GetService<ISessionTokenResolverService>().Resolve(authorizationToken);
+            var session = ApplicationServiceContext.Current.GetService<ISessionTokenResolverService>().GetSessionFromIdToken(authorizationToken);
 
             IPrincipal principal = ApplicationServiceContext.Current.GetService<ISessionIdentityProviderService>().Authenticate(session);
             if (principal == null)
