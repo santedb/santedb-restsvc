@@ -121,50 +121,7 @@ namespace SanteDB.Rest.AMI
         [Get("/?xsd={schemaId}")]
         XmlSchema GetSchema(int schemaId);
 
-        /// <summary>
-        /// Gets the TFA mechanisms which can be set for the specified ID
-        /// </summary>
-        /// <returns></returns>
-        [Get("/Tfa")]
-        AmiCollection GetTfaMechanisms();
-
         #region Diagnostic / Ad-Hoc interfaces
-
-        /// <summary>
-        /// Creates a diagnostic report.
-        /// </summary>
-        /// <param name="report">The diagnostic report to be created.</param>
-        /// <returns>Returns the created diagnostic report.</returns>
-        [Post("/Sherlock")]
-        DiagnosticReport CreateDiagnosticReport(DiagnosticReport report);
-
-        /// <summary>
-		/// Gets a specific log file.
-		/// </summary>
-		/// <param name="logId">The log identifier.</param>
-		/// <returns>Returns the log file information.</returns>
-		[Get("/Log/{logId}")]
-        LogFileInfo GetLog(string logId);
-
-        /// <summary>
-        /// Get log files on the server and their sizes.
-        /// </summary>
-        /// <returns>Returns a collection of log files.</returns>
-        [Get("/Log")]
-        AmiCollection GetLogs();
-
-        /// <summary>
-        /// Download log
-        /// </summary>
-        [Get("/Log/Stream/{logId}")]
-        Stream DownloadLog(String logId);
-
-        /// <summary>
-		/// Gets a server diagnostic report.
-		/// </summary>
-		/// <returns>Returns the created diagnostic report.</returns>
-		[Get("/Sherlock")]
-        DiagnosticReport GetServerDiagnosticReport();
 
         /// <summary>
 		/// Ping the service to determine up/down

@@ -42,6 +42,7 @@ namespace SanteDB.Rest.AMI.Resources
     {
         // ILocalization Service
         private readonly ILocalizationService m_localizationService;
+        private readonly ISessionProviderService m_sessionProvider;
 
         // Tracer
         private readonly Tracer m_tracer = Tracer.GetTracer(typeof(SessionInfoResourceHandler));
@@ -50,9 +51,10 @@ namespace SanteDB.Rest.AMI.Resources
         /// Instantiate the localization service
         /// </summary>
         /// <param name="localizationService"></param>
-        public SessionInfoResourceHandler(ILocalizationService localizationService)
+        public SessionInfoResourceHandler(ILocalizationService localizationService, ISessionProviderService sessionProvider)
         {
             this.m_localizationService = localizationService;
+            this.m_sessionProvider = sessionProvider;
         }
 
         /// <summary>
@@ -96,7 +98,7 @@ namespace SanteDB.Rest.AMI.Resources
         public object Get(object id, object versionId)
         {
             var uuid = (Guid)id;
-            var session = ApplicationServiceContext.Current.GetService<ISessionProviderService>().Get(uuid.ToByteArray(), true);
+            var session = this.m_sessionProvider.Get(uuid.ToByteArray(), true);
             if (session == null)
             {
                 this.m_tracer.TraceError($"Session {uuid} not found");
@@ -115,7 +117,7 @@ namespace SanteDB.Rest.AMI.Resources
         public object Delete(object key)
         {
             var uuid = (Guid)key;
-            var session = ApplicationServiceContext.Current.GetService<ISessionProviderService>().Get(uuid.ToByteArray(), false);
+            var session = this.m_sessionProvider.Get(uuid.ToByteArray(), false);
             if (session == null)
             {
                 this.m_tracer.TraceError($"Session {uuid} not found");
@@ -124,7 +126,7 @@ namespace SanteDB.Rest.AMI.Resources
                     param = uuid
                 }));
             }
-            ApplicationServiceContext.Current.GetService<ISessionProviderService>().Abandon(session);
+            this.m_sessionProvider.Abandon(session);
             return null;
         }
 
