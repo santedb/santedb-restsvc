@@ -79,7 +79,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Gets the service name
         /// </summary>
 
-        public string ServiceName => "Session Inoformation Resource Service";
+        public string ServiceName => "Session Information Resource Service";
 
         /// <summary>
         /// Create an object
