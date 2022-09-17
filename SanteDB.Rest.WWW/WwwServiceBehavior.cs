@@ -73,7 +73,7 @@ namespace SanteDB.Rest.WWW
             else
             {
                 var ms = new MemoryStream();
-                typeof(WwwServiceBehavior).Assembly.GetManifestResourceStream("SanteDB.Rest.Www.icon.ico").CopyTo(ms);
+                typeof(WwwServiceBehavior).Assembly.GetManifestResourceStream("SanteDB.Rest.WWW.Resources.icon.ico").CopyTo(ms);
                 ms.Seek(0, SeekOrigin.Begin);
                 return ms;
             }

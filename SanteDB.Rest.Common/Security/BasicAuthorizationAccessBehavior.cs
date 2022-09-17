@@ -45,7 +45,7 @@ namespace SanteDB.Rest.Common.Security
     /// </summary>
     [DisplayName("HTTP BASIC Authentication")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
-    public class BasicAuthorizationAccessBehavior : IServicePolicy, IServiceBehavior
+    public class BasicAuthorizationAccessBehavior : IAuthorizationServicePolicy, IServiceBehavior
     {
         // Configuration from main SanteDB
         private BasicAuthorizationConfigurationSection m_configuration = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<BasicAuthorizationConfigurationSection>();
@@ -146,6 +146,14 @@ namespace SanteDB.Rest.Common.Security
         public void ApplyServiceBehavior(RestService service, ServiceDispatcher dispatcher)
         {
             dispatcher.AddServiceDispatcherPolicy(this);
+        }
+
+        /// <summary>
+        /// Add authentication challenge header
+        /// </summary>
+        public void AddAuthenticateChallengeHeader(RestResponseMessage faultMessage, Exception error)
+        {
+            faultMessage.AddAuthenticateHeader("basic", this.m_configuration.Realm, description: error.Message);
         }
     }
 }

@@ -58,7 +58,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
     public class UpstreamHdsiServiceBehavior : HdsiServiceBehavior, IReportProgressChanged
     {
 
-      
+
         private readonly IRestClientFactory m_restClientResolver;
         private readonly IDataPersistenceService<Entity> m_entityPersistence;
         private readonly IDataPersistenceService<Act> m_actPersistence;
@@ -156,7 +156,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
             }
             else
             {
@@ -187,7 +187,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
             }
             else
             {
@@ -223,7 +223,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
             }
             else
             {
@@ -261,7 +261,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
             }
             else
             {
@@ -301,7 +301,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         throw new Exception("Error performing online operation", e);
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
             }
             else
             {
@@ -370,7 +370,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     throw;
                 }
             else
-                throw new FaultException(502);
+                throw new FaultException(System.Net.HttpStatusCode.BadGateway);
         }
 
         /// <summary>
@@ -395,7 +395,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
             }
             else
             {
@@ -425,7 +425,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
             }
             else
             {
@@ -454,7 +454,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
             }
             else
             {
@@ -484,7 +484,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
             }
             else
             {
@@ -515,7 +515,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
             }
             else
             {
@@ -550,7 +550,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
             }
             else
             {
@@ -586,7 +586,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
             }
             else
             {
@@ -612,7 +612,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         var nvc = RestOperationContext.Current.IncomingRequest.Url.Query.ParseQueryString();
                         var retVal = restClient.Get<Object>($"/{resourceType}/{key}/{childResourceType}", nvc.ToArray()) as IdentifiedData;
                         this.TagUpstream(retVal);
-                        
+
                         return retVal;
                     }
                     catch (Exception e)
@@ -621,7 +621,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
             }
             else
             {
@@ -662,7 +662,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
             }
             else
             {
@@ -693,7 +693,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
             }
             else
             {
@@ -732,7 +732,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
             }
             else
             {
@@ -761,7 +761,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
             }
             else
             {
@@ -801,7 +801,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
             }
             else
             {

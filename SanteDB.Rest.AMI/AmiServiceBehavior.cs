@@ -696,19 +696,18 @@ namespace SanteDB.Rest.AMI
                 if (handler != null)
                 {
                     // Get target of update and ensure
-                    if (data is IdentifiedData)
+                    switch(data)
                     {
-                        var iddata = data as IdentifiedData;
-                        if (iddata.Key.HasValue && iddata.Key != Guid.Parse(key))
-                            throw new FaultException(400, "Key mismatch");
-                        iddata.Key = Guid.Parse(key);
-                    }
-                    else if (data is IAmiIdentified)
-                    {
-                        var iddata = data as IAmiIdentified;
-                        if (!String.IsNullOrEmpty(iddata.Key) && iddata.Key != key)
-                            throw new FaultException(400, "Key mismatch");
-                        iddata.Key = key;
+                        case IdentifiedData iddata:
+                            if (iddata.Key.HasValue && (!Guid.TryParse(key, out var guidKey) ||  iddata.Key != guidKey))
+                                throw new FaultException(HttpStatusCode.BadRequest, "Key mismatch");
+                            iddata.Key = guidKey;
+                            break;
+                        case IAmiIdentified amid:
+                            if (!String.IsNullOrEmpty(amid.Key) && amid.Key != key)
+                                throw new FaultException(HttpStatusCode.BadRequest, "Key mismatch");
+                            amid.Key = key;
+                            break;
                     }
 
                     this.AclCheck(handler, nameof(IApiResourceHandler.Update));
