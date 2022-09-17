@@ -37,7 +37,7 @@ namespace SanteDB.Rest.WWW.Behaviors
         /// </summary>
         public CookieAuthenticationBehavior()
         {
-            var defaultSolution = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<WwwServiceConfigurationSection>()?.DefaultSolutionName;
+            var defaultSolution = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<WwwServiceConfigurationSection>()?.Solution;
             if (!String.IsNullOrEmpty(defaultSolution))
             {
                 this.m_appletCollection = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().GetApplets(defaultSolution);

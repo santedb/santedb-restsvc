@@ -38,14 +38,17 @@ namespace SanteDB.Rest.WWW
         {
             this.m_configuration = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<WwwServiceConfigurationSection>();
             this.m_policyEnforcementSerivce = ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>();
-            if (String.IsNullOrEmpty(this.m_configuration.DefaultSolutionName))
+            if (String.IsNullOrEmpty(this.m_configuration.Solution))
             {
                 this.m_serviceApplet = ApplicationServiceContext.Current.GetService<IAppletManagerService>().Applets;
             }
             else
             {
-                this.m_serviceApplet = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().GetApplets(this.m_configuration.DefaultSolutionName);
+                this.m_serviceApplet = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().GetApplets(this.m_configuration.Solution);
             }
+
+            // Set the default 
+            this.m_serviceApplet.DefaultApplet = this.m_serviceApplet.FirstOrDefault(o => o.Info.Id == (this.m_configuration.DefaultApplet ?? "org.santedb.uicore"));
         }
 
         /// <summary>
@@ -93,7 +96,7 @@ namespace SanteDB.Rest.WWW
             else
                 lang = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
-            var etag = $"{this.m_serviceApplet.DefaultApplet.Info.Version}/{lang}";
+            var etag = $"{String.Join(";", this.m_serviceApplet.Select(o=>o.Info.Version))}/{lang}";
             if (this.m_configuration.AllowClientCaching)
             {
                 if (RestOperationContext.Current.IncomingRequest.Headers["If-None-Match"] == etag)
@@ -112,7 +115,7 @@ namespace SanteDB.Rest.WWW
             }
 
             if (!m_cacheApplets.TryGetValue(appletPath, out var navigateAsset) &&
-                !this.m_serviceApplet.DefaultApplet.TryGetAsset(appletPath, out navigateAsset) &&
+                this.m_serviceApplet.DefaultApplet?.TryGetAsset(appletPath, out navigateAsset) != true &&
                 !this.m_serviceApplet.TryResolveApplet(appletPath, out navigateAsset))
             {
                 throw new FileNotFoundException(appletPath);
@@ -132,8 +135,8 @@ namespace SanteDB.Rest.WWW
             if (this.m_configuration.AllowClientCaching)
             {
                 RestOperationContext.Current.OutgoingResponse.AddHeader("ETag", etag);
-                RestOperationContext.Current.OutgoingResponse.ContentType = navigateAsset.MimeType;
             }
+            RestOperationContext.Current.OutgoingResponse.ContentType = navigateAsset.MimeType;
 
             // Write asset
             var content = this.m_serviceApplet.RenderAssetContent(navigateAsset, lang?.ToString(), bindingParameters: new Dictionary<String, String>()

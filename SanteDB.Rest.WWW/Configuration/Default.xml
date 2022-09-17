@@ -19,16 +19,18 @@
  - User: fyfej
  - Date: 2022-5-30
  -->
-<RestServiceConfiguration xmlns="http://santedb.org/configuration" name="FHIR" >
+<RestServiceConfiguration xmlns="http://santedb.org/configuration" name="WWW" >
   <behaviors>
     <add type="SanteDB.Rest.WWW.Behaviors.CookieAuthenticationBehavior, SanteDB.Rest.WWW"/>
   </behaviors>
-  <endpoint address="http://0.0.0.0:8080/" contract="SanteDB.Messaging.WWW.IWwwServiceContext, SanteDB.Messaging.WWW">
+  <endpoint address="http://0.0.0.0:8080/" contract="SanteDB.Rest.WWW.IWwwServiceContract, SanteDB.Rest.WWW">
     <behaviors>
       <add type="SanteDB.Rest.Common.Behavior.MessageLoggingEndpointBehavior, SanteDB.Rest.Common"/>
       <add type="SanteDB.Rest.Common.Behavior.MessageCompressionEndpointBehavior, SanteDB.Rest.Common"/>
       <add type="SanteDB.Rest.Common.Behavior.AcceptLanguageEndpointBehavior, SanteDB.Rest.Common"/>
       <add type="SanteDB.Rest.WWW.Behaviors.WebCachingBehavior, SanteDB.Rest.WWW" />
+      <add type="SanteDB.Rest.Common.Behaviors.SecurityPolicyHeadersBehavior, SanteDB.Rest.Common" />
+
     </behaviors>
   </endpoint>
 </RestServiceConfiguration>

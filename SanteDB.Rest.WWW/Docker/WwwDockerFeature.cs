@@ -27,7 +27,7 @@ namespace SanteDB.Rest.WWW.Docker
         /// <summary>
         /// Default solution to render pages from
         /// </summary>
-        public const string DefaultSolutionSetting = "SOLN";
+        public const string DefaultSolutionSetting = "SOLUTION";
 
         /// <summary>
         /// Whether to allow caching
@@ -153,7 +153,7 @@ namespace SanteDB.Rest.WWW.Docker
 
             if(settings.TryGetValue(DefaultSolutionSetting, out var defaultApp))
             {
-                wwwConfiguration.DefaultSolutionName = defaultApp;
+                wwwConfiguration.Solution = defaultApp;
             }
             if(settings.TryGetValue(AllowClientCachingSetting, out var allowCachingString) && Boolean.TryParse(allowCachingString, out var allowCaching ))
             {

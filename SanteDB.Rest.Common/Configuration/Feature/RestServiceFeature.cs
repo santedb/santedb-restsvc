@@ -18,7 +18,6 @@
  * User: fyfej
  * Date: 2022-5-30
  */
-using SanteDB.Configuration;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Configuration.Features;
 using SanteDB.Core.Diagnostics;
@@ -44,7 +43,7 @@ namespace SanteDB.Rest.Common.Configuration.Features
     /// <remarks>
     /// This class resides in the Server core project rather than core rest services project because it relies on the Windows SSL netsh P/Invokes to bind certificates
     /// </remarks>
-    public class RestServiceFeature : IFeature
+    public class RestServiceFeature : IFeature, IFeatureFactory
     {
         // Tracer
         internal readonly Tracer m_tracer;
@@ -67,17 +66,10 @@ namespace SanteDB.Rest.Common.Configuration.Features
         private Type m_serviceType = null;
 
         /// <summary>
-        /// REST service configuration
+        /// Default CTOR
         /// </summary>
         public RestServiceFeature()
         {
-            foreach (var feature in AppDomain.CurrentDomain.GetAssemblies()
-                .Where(a => !a.IsDynamic)
-                .SelectMany(t => { try { return t.ExportedTypes; } catch { return Type.EmptyTypes; } })
-                .Where(t => t.GetCustomAttribute<ApiServiceProviderAttribute>() != null && !t.IsInterface && !t.IsAbstract)
-                .Select(t => new RestServiceFeature(t))
-                .ToArray())
-                ConfigurationContext.Current.Features.Add(feature);
             this.Flags = FeatureFlags.NonPublic;
         }
 
@@ -236,6 +228,15 @@ namespace SanteDB.Rest.Common.Configuration.Features
 
             return featureState;
         }
+
+        /// <summary>
+        /// Get all features for the REST service
+        /// </summary>
+        /// <returns>The REST features detected in the configuration domain</returns>
+        public IEnumerable<IFeature> GetFeatures() =>
+            AppDomain.CurrentDomain.GetAllTypes()
+                           .Where(t => t.GetCustomAttribute<ApiServiceProviderAttribute>() != null && !t.IsInterface && !t.IsAbstract)
+                           .Select(t => new RestServiceFeature(t));
     }
 
     /// <summary>

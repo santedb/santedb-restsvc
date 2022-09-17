@@ -62,10 +62,12 @@
     <None Remove="Configuration\Default.xml" />
     <None Remove="icon.ico" />
     <None Remove="Resources\antihaxor" />
+    <None Remove="Resources\GenericError.html" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Configuration\Default.xml" />
+    <EmbeddedResource Include="Resources\GenericError.html" />
     <EmbeddedResource Include="Resources\icon.ico" />
     <EmbeddedResource Include="Resources\antihaxor" />
   </ItemGroup>

@@ -46,7 +46,6 @@ namespace SanteDB.Rest.WWW.Behaviors
         /// <inheritdoc cref="IMessageInspector.AfterReceiveRequest(RestRequestMessage)"/>
         public void AfterReceiveRequest(RestRequestMessage request)
         {
-            throw new NotImplementedException();
         }
 
         /// <inheritdoc cref="IEndpointBehavior.ApplyEndpointBehavior(ServiceEndpoint, EndpointDispatcher)"/>

@@ -82,7 +82,7 @@ namespace SanteDB.Rest.Common.Configuration
         /// <summary>
         /// Gets or sets the name of the service
         /// </summary>
-        [XmlAttribute("configurationName"), JsonProperty("configurationName")]
+        [XmlAttribute("name"), JsonProperty("name")]
         [DisplayName("Configuration Name"), Description("Sets the informative name for this service")]
         public string ConfigurationName { get; set; }
 

@@ -112,7 +112,7 @@ namespace SanteDB.Rest.WWW
         public bool Start()
         {
             // Don't start if we're in a test context
-            if (!Assembly.GetEntryAssembly().GetName().Name.StartsWith("SanteDB"))
+            if(ApplicationServiceContext.Current.HostType == SanteDBHostType.Test)
                 return true;
 
             try

@@ -33,7 +33,7 @@ namespace SanteDB.Rest.WWW.Behaviors
         /// </summary>
         public WebErrorBehavior()
         {
-            var defaultSolution = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<WwwServiceConfigurationSection>()?.DefaultSolutionName;
+            var defaultSolution = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<WwwServiceConfigurationSection>()?.Solution;
             if(!String.IsNullOrEmpty(defaultSolution))
             {
                 this.m_appletCollection = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().GetApplets(defaultSolution);
@@ -59,9 +59,10 @@ namespace SanteDB.Rest.WWW.Behaviors
         {
             try
             {
-                this.m_tracer.TraceWarning("{0} - {1}", RestOperationContext.Current?.EndpointOperation.Description?.InvokeMethod?.Name, error.Message);
+                this.m_tracer.TraceWarning("{0} - {1}", RestOperationContext.Current?.EndpointOperation?.Description?.InvokeMethod?.Name, error.Message);
 
                 // The error content stream
+                response.StatusCode = error.GetHttpStatusCode();
                 var errorAsset = this.m_appletCollection.GetErrorAsset(error.GetHttpStatusCode());
                 var errorVariables = new Dictionary<String, String>()
                 {

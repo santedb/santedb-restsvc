@@ -156,7 +156,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SanteDB.Configuration\SanteDB.Configuration.csproj" />
     <ProjectReference Include="..\SanteDB.Core.Model.ViewModelSerializers\SanteDB.Core.Model.ViewModelSerializers.csproj">
       <Project>{ece9b280-9647-4092-babf-eb2e25084670}</Project>
       <Name>SanteDB.Core.Model.ViewModelSerializers</Name>
