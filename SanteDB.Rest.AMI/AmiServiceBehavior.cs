@@ -86,7 +86,7 @@ namespace SanteDB.Rest.AMI
                 ApplicationServiceContext.Current.GetService<IServiceManager>(),
                 ApplicationServiceContext.Current.GetService<IPatchService>())
         {
-
+            m_resourceHandler = AmiMessageHandler.ResourceHandler;
         }
 
         /// <summary>
@@ -98,6 +98,7 @@ namespace SanteDB.Rest.AMI
             this.m_patchService = patchService;
             this.m_configurationManager = configurationManager;
             this.m_serviceManager = serviceManager;
+            m_resourceHandler = AmiMessageHandler.ResourceHandler;
         }
 
         /// <summary>
