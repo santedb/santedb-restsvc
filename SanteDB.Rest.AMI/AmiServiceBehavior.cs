@@ -201,12 +201,14 @@ namespace SanteDB.Rest.AMI
             {
                 serviceOptions.Endpoints.AddRange(config.Endpoints);
             }
-            
+
             // Get the resources which are supported
-            foreach (var itm in this.m_resourceHandler.Handlers)
-            {
-                var svc = this.ResourceOptions(itm.ResourceName);
-                serviceOptions.Resources.Add(svc);
+            if (null != m_resourceHandler?.Handlers) {
+                foreach (var itm in this.m_resourceHandler.Handlers)
+                {
+                    var svc = this.ResourceOptions(itm.ResourceName);
+                    serviceOptions.Resources.Add(svc);
+                }
             }
 
             return serviceOptions;
