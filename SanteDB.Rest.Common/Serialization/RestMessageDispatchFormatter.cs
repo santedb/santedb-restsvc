@@ -301,8 +301,8 @@ namespace SanteDB.Rest.Common.Serialization
                 // Result is serializable
                 if (result == null)
                 {
-                    if (response.StatusCode == 200)
-                        response.StatusCode = 204;
+                    if (response.StatusCode == HttpStatusCode.OK)
+                        response.StatusCode = HttpStatusCode.NoContent;
                 }
                 else if (result?.GetType().GetCustomAttribute<XmlTypeAttribute>() != null ||
                     result?.GetType().GetCustomAttribute<JsonObjectAttribute>() != null)
@@ -439,7 +439,6 @@ namespace SanteDB.Rest.Common.Serialization
                 this.m_traceSource.TraceVerbose("Setting response headers");
 #endif
                 RestOperationContext.Current.OutgoingResponse.ContentType = RestOperationContext.Current.OutgoingResponse.ContentType ?? contentType;
-                RestOperationContext.Current.OutgoingResponse.AppendHeader("X-PoweredBy", String.Format("SanteDB {0} ({1})", m_version, m_versionName));
                 RestOperationContext.Current.OutgoingResponse.AppendHeader("X-GeneratedOn", DateTime.Now.ToString("o"));
             }
             catch (Exception e)

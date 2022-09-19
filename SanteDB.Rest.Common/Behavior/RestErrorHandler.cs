@@ -40,6 +40,7 @@ using System.Security.Authentication;
 using SanteDB.Core;
 using SanteDB.Core.Security;
 using SanteDB.Rest.Common.Serialization;
+using SanteDB.Rest.Common.Util;
 
 namespace SanteDB.Rest.Common.Behavior
 {
@@ -66,106 +67,24 @@ namespace SanteDB.Rest.Common.Behavior
         {
             var uriMatched = RestOperationContext.Current.IncomingRequest.Url;
 
-            while (error.InnerException != null)
-                error = error.InnerException;
-
             var fault = new RestServiceFault(error);
-            var authScheme = RestOperationContext.Current.AppliedPolicies.OfType<BasicAuthorizationAccessBehavior>().Any() ? "Basic" : "Bearer";
-            var authRealm = RestOperationContext.Current.IncomingRequest.Url.Host;
-            // Formulate appropriate response
-            switch (error)
-            {
-                case SecuritySessionException ses:
-                    switch (ses.Type)
-                    {
-                        case SessionExceptionType.Expired:
-                        case SessionExceptionType.NotYetValid:
-                        case SessionExceptionType.NotEstablished:
-                            faultMessage.StatusCode = (int)System.Net.HttpStatusCode.Unauthorized;
-                            faultMessage.AddAuthenticateHeader(authScheme, authRealm, error: "unauthorized");
-                            break;
-
-                        default:
-                            faultMessage.StatusCode = (int)System.Net.HttpStatusCode.Forbidden;
-                            break;
-                    }
-                    break;
-                case DomainStateException dse:
-                    faultMessage.StatusCode = (int)System.Net.HttpStatusCode.ServiceUnavailable;
-                    break;
-                case ObjectLockedException lockException:
-                    faultMessage.StatusCode = 423;
-                    fault.Data.Add(lockException.LockedUser);
-                    break;
-                case PolicyViolationException pve:
-                    if (pve.PolicyDecision == PolicyGrantType.Elevate)
-                    {
-                        // Ask the user to elevate themselves
-                        faultMessage.StatusCode = 401;
-                        faultMessage.AddAuthenticateHeader(authScheme, authRealm, "insufficient_scope", pve.PolicyId, error.Message);
-                    }
-                    else
-                    {
-                        faultMessage.StatusCode = 403;
-                    }
-                    break;
-                case SecurityException se:
-                case UnauthorizedAccessException uae:
-                    faultMessage.StatusCode = (int)HttpStatusCode.Forbidden;
-                    break;
-
-                case LimitExceededException lee:
-                    faultMessage.StatusCode = (int)(HttpStatusCode)429;
-                    faultMessage.StatusDescription = "Too Many Requests";
-                    faultMessage.Headers.Add("Retry-After", "1200");
-                    break;
-                case AuthenticationException ae:
-                    faultMessage.StatusCode = (int)System.Net.HttpStatusCode.Unauthorized;
-                    faultMessage.AddAuthenticateHeader(authScheme, authRealm, "invalid_token", description: error.Message);
-                    break;
-                
-                case FaultException fe:
-                    faultMessage.StatusCode = (int)fe.StatusCode;
-                    break;
-                case Newtonsoft.Json.JsonException je:
-                case System.Xml.XmlException xe:
-                    faultMessage.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
-                    break;
-                case DuplicateNameException dne:
-                    faultMessage.StatusCode = (int)System.Net.HttpStatusCode.Conflict;
-                    break;
-                case FileNotFoundException fnf:
-                case KeyNotFoundException knf:
-                    faultMessage.StatusCode = (int)System.Net.HttpStatusCode.NotFound;
-                    break;
-                case DetectedIssueException die:
-                    faultMessage.StatusCode = (int)(System.Net.HttpStatusCode)422;
-                    break;
-                case NotImplementedException nie:
-                    faultMessage.StatusCode = (int)HttpStatusCode.NotImplemented;
-                    break;
-                case NotSupportedException nse:
-                    faultMessage.StatusCode = (int)HttpStatusCode.MethodNotAllowed;
-                    break;
-                case PatchException pe:
-                    faultMessage.StatusCode = (int)HttpStatusCode.Conflict;
-                    break;
-                default:
-                    faultMessage.StatusCode = (int)System.Net.HttpStatusCode.InternalServerError;
-                    break;
-            }
-
+            faultMessage.StatusCode = error.GetHttpStatusCode();
             switch (faultMessage.StatusCode)
             {
-                case 409:
-                case 429:
-                case 503:
+                case HttpStatusCode.Conflict:
+                case HttpStatusCode.ServiceUnavailable:
                     this.m_traceSource.TraceInfo("Issue on REST pipeline: {0}", error);
                     break;
-                case 401:
-                case 403:
-                case 501:
-                case 405:
+                case HttpStatusCode.Unauthorized:
+                    var authService = RestOperationContext.Current.AppliedPolicies.OfType<IAuthorizationServicePolicy>().FirstOrDefault();
+                    authService.AddAuthenticateChallengeHeader(faultMessage, error);
+                    break;
+                case (HttpStatusCode)429:
+                    faultMessage.Headers.Add("Retry-After", "3600");
+                    break;
+                case HttpStatusCode.Forbidden:
+                case HttpStatusCode.NotImplemented:
+                case HttpStatusCode.MethodNotAllowed:
                     this.m_traceSource.TraceWarning("Warning on REST pipeline: {0}", error);
                     break;
                 default:

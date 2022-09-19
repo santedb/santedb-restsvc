@@ -1,9 +1,32 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-
+  <PropertyGroup Condition="'$(VersionNumber)' == ''">
+    <VersionNumber>3.0-debug</VersionNumber>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PackageId>SanteDB.Rest.WWW</PackageId>
+    <Title>SanteDB.Rest.WWW</Title>
+    <Version>$(VersionNumber)</Version>
+    <Description>Web-based hosting of applet content files on the CDR instances</Description>
+    <Authors>SanteSuite Contributors</Authors>
+    <PackageTags>SanteDB</PackageTags>
+    <RepositoryUrl>https://github.com/santedb/santedb-restsvc</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <IncludeSymbols>true</IncludeSymbols>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Product>SanteDB</Product>
+    <Copyright>Copyright (C) 2015-2022 SanteSuite Contributors (See: NOTICES)</Copyright>
+    <Company>SanteSuite Contributors</Company>
+    <PackageIconUrl>http://santesuite.org/assets/img/logo.png</PackageIconUrl>
+    <PackageProjectUrl>http://santesuite.org</PackageProjectUrl>
+  </PropertyGroup>
+  
   <Choose>
     <When Condition="$(SolutionName.Contains('-ext'))">
       <ItemGroup>
@@ -34,6 +57,24 @@
       </ItemGroup>
     </Otherwise>
   </Choose>
+
+  <ItemGroup>
+    <None Remove="Configuration\Default.xml" />
+    <None Remove="icon.ico" />
+    <None Remove="Resources\antihaxor" />
+    <None Remove="Resources\GenericError.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Configuration\Default.xml" />
+    <EmbeddedResource Include="Resources\GenericError.html" />
+    <EmbeddedResource Include="Resources\icon.ico" />
+    <EmbeddedResource Include="Resources\antihaxor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\GenericError.html" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SanteDB.Rest.Common\SanteDB.Rest.Common.csproj">
       <Project>{786bd0ee-1806-4158-ba45-80249ac6dfe7}</Project>

@@ -18,7 +18,7 @@
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(VersionNumber)' == ''">
-    <VersionNumber>2.4.0-debug</VersionNumber>
+    <VersionNumber>3.0-debug</VersionNumber>
   </PropertyGroup>
   <PropertyGroup>
     <PackageId>SanteDB.Rest.Common</PackageId>
@@ -156,7 +156,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SanteDB.Configuration\SanteDB.Configuration.csproj" />
     <ProjectReference Include="..\SanteDB.Core.Model.ViewModelSerializers\SanteDB.Core.Model.ViewModelSerializers.csproj">
       <Project>{ece9b280-9647-4092-babf-eb2e25084670}</Project>
       <Name>SanteDB.Core.Model.ViewModelSerializers</Name>
@@ -164,9 +163,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\ViewModel.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Configuration\Feature\" />
   </ItemGroup>
   <!-- <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" /> -->
 </Project>

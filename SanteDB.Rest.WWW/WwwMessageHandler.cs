@@ -34,6 +34,7 @@ using System.Linq;
 using System.Reflection;
 using SanteDB.Rest.Common.Behavior;
 using SanteDB.Rest.WWW.Configuration;
+using SanteDB.Rest.WWW.Behaviors;
 
 namespace SanteDB.Rest.WWW
 {
@@ -111,7 +112,7 @@ namespace SanteDB.Rest.WWW
         public bool Start()
         {
             // Don't start if we're in a test context
-            if (!Assembly.GetEntryAssembly().GetName().Name.StartsWith("SanteDB"))
+            if(ApplicationServiceContext.Current.HostType == SanteDBHostType.Test)
                 return true;
 
             try
@@ -119,7 +120,7 @@ namespace SanteDB.Rest.WWW
                 this.Starting?.Invoke(this, EventArgs.Empty);
 
                 this.m_webHost = this.m_restServiceFactory.CreateService(ConfigurationName);
-                this.m_webHost.AddServiceBehavior(new ErrorServiceBehavior());
+                this.m_webHost.AddServiceBehavior(new WebErrorBehavior());
 
                 // Add service behaviors
                 foreach (ServiceEndpoint endpoint in this.m_webHost.Endpoints)

@@ -91,7 +91,7 @@ namespace SanteDB.Rest.AMI
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
             }
             else
             {
@@ -125,7 +125,8 @@ namespace SanteDB.Rest.AMI
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+
             }
             else
             {
@@ -159,7 +160,8 @@ namespace SanteDB.Rest.AMI
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+
             }
             else
             {
@@ -192,7 +194,8 @@ namespace SanteDB.Rest.AMI
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+
             }
             else
             {
@@ -222,7 +225,8 @@ namespace SanteDB.Rest.AMI
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+
             }
             else
             {
@@ -252,7 +256,8 @@ namespace SanteDB.Rest.AMI
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+
             }
             else
             {
@@ -283,7 +288,8 @@ namespace SanteDB.Rest.AMI
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+
             }
             else
             {
@@ -312,7 +318,8 @@ namespace SanteDB.Rest.AMI
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+
             }
             else
             {
@@ -346,7 +353,8 @@ namespace SanteDB.Rest.AMI
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+
             }
             else
             {
@@ -376,7 +384,8 @@ namespace SanteDB.Rest.AMI
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+
             }
             else
             {
@@ -406,7 +415,8 @@ namespace SanteDB.Rest.AMI
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+
             }
             else
             {
@@ -435,7 +445,8 @@ namespace SanteDB.Rest.AMI
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+
             }
             else
             {
@@ -473,7 +484,8 @@ namespace SanteDB.Rest.AMI
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+
             }
             else
             {
@@ -508,7 +520,8 @@ namespace SanteDB.Rest.AMI
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+
             }
             else
             {
@@ -549,7 +562,8 @@ namespace SanteDB.Rest.AMI
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+
             }
             else
             {
@@ -580,7 +594,8 @@ namespace SanteDB.Rest.AMI
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+
             }
             else
             {
@@ -619,7 +634,8 @@ namespace SanteDB.Rest.AMI
                         throw;
                     }
                 else
-                    throw new FaultException(502);
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+
             }
             else
             {
