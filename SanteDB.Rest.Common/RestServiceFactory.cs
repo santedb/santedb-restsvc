@@ -141,8 +141,15 @@ namespace SanteDB.Rest.Common
             }
             catch (Exception e)
             {
-                Tracer.GetTracer(typeof(RestServiceFactory)).TraceError("Could not start {0} : {1}", serviceConfigurationName, e);
-                throw new Exception($"Could not start {serviceConfigurationName}", e);
+                if (e is InvalidOperationException && e.Message.Contains("configuration") && m_configuration?.Services?.All(c => c.ConfigurationName == null) == true)
+                {
+                    Tracer.GetTracer(typeof(RestServiceFactory)).TraceError("Could not start {0} : {1}. This may be caused by not having name attributes on service elements in the configuration.", serviceConfigurationName, e);
+                }
+                else
+                {
+                    Tracer.GetTracer(typeof(RestServiceFactory)).TraceError("Could not start {0} : {1}", serviceConfigurationName, e);
+                }
+                    throw new Exception($"Could not start {serviceConfigurationName}", e);
             }
         }
     }
