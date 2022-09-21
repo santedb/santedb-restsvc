@@ -85,10 +85,12 @@
       <Link>SanteDB.licenseheader</Link>
     </None>
   </ItemGroup>
+  <ItemGroup>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
   <Choose>
     <When Condition="$(SolutionName.Contains('-ext'))">
       <ItemGroup>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         <ProjectReference Include="..\..\santedb-model\SanteDB.Core.Model\SanteDB.Core.Model.csproj">
           <Project>{F1A82A4F-4A57-47D7-AE76-444C8A4FF54A}</Project>
           <Name>SanteDB.Core.Model</Name>
@@ -101,7 +103,6 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         <PackageReference Include="SanteDB.Core.Api">
           <Version>$(VersionNumber)</Version>
         </PackageReference>
