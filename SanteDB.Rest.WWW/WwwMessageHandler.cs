@@ -42,7 +42,7 @@ namespace SanteDB.Rest.WWW
     /// Implementation of <see cref="IApiEndpointProvider"/> for the World Wide Web service
     /// </summary>
     /// <remarks>
-    /// <para>The world wide web message handler is responsible for serving HTTP requests for web pages 
+    /// The world wide web message handler is responsible for serving HTTP requests for web pages 
     /// </remarks>
     [ApiServiceProvider("WWW Interface", typeof(WwwServiceBehavior), configurationType: typeof(WwwServiceConfigurationSection), required: true)]
     public class WwwMessageHandler : IDaemonService
