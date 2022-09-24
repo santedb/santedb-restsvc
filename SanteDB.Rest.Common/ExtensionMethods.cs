@@ -20,6 +20,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 
 namespace SanteDB.Rest.Common
@@ -43,14 +44,38 @@ namespace SanteDB.Rest.Common
         }
 
         /// <summary>
+        /// Get if modified since
+        /// </summary>
+        public static DateTime? GetIfUnmodifiedSince(this HttpListenerRequest me)
+        {
+            if (me.Headers["If-Unmodified-Since"] != null)
+                return DateTime.Parse(me.Headers["If-Unmodified-Since"]);
+            return null;
+        }
+
+        /// <summary>
         /// Get if non match header
         /// </summary>
         public static String[] GetIfNoneMatch(this HttpListenerRequest me)
         {
-            if (me.Headers["If-None-Match"] != null)
-                return me.Headers["If-None-Match"].Split(',');
-            return null;
+            return me.Headers["If-None-Match"]?.ParseETagMatch();
         }
+
+        /// <summary>
+        /// Get the if match header
+        /// </summary>
+        public static string[] GetIfMatch(this HttpListenerRequest me)
+        {
+            return me.Headers["If-Match"]?.ParseETagMatch();
+        }
+
+        /// <summary>
+        /// Parse ETag match header
+        /// </summary>
+        private static string[] ParseETagMatch(this String me)=> me.Split('"').Where(o =>
+                        !o.StartsWith(",") &&
+                        !"W/".Equals(o) &&
+                        !String.IsNullOrEmpty(o)).ToArray();
 
         /// <summary>
         /// Set the e-tag

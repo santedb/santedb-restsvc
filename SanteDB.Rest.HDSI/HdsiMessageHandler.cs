@@ -60,7 +60,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Gets the contract type
         /// </summary>
-        public Type BehaviorType => typeof(HdsiServiceBehavior);
+        public Type BehaviorType => this.m_webHost.BehaviorType;
 
         /// <summary>
         /// Name of the service in the configuration file

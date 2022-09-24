@@ -32,13 +32,13 @@ namespace SanteDB.Rest.Common
     /// SanteDB Claim Types
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
-    public static class SanteDBClaimsUtil
+    public static class ClaimsUtility
     {
 
         /// <summary>
         /// Static ctor
         /// </summary>
-        static SanteDBClaimsUtil()
+        static ClaimsUtility()
         {
             foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
                 try
@@ -61,19 +61,19 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Gets the specified claim type handler
         /// </summary>
-        public static IClaimTypeHandler GetHandler(String claimType)
+        public static IClaimTypeHandler GetHandler(this IClaim claim)
         {
             IClaimTypeHandler handler = null;
-            s_claimHandlers.TryGetValue(claimType, out handler);
+            s_claimHandlers.TryGetValue(claim.Type, out handler);
             return handler;
         }
 
         /// <summary>
         /// Extract claims
         /// </summary>
-        public static List<IClaim> ExtractClaims(NameValueCollection headers)
+        public static List<IClaim> ExtractClientClaims(this NameValueCollection headers)
         {
-            var claimsHeaders = headers[SanteDBRestConstants.BasicHttpClientClaimHeaderName];
+            var claimsHeaders = headers[ExtendedHttpHeaderNames.BasicHttpClientClaimHeaderName];
             if (claimsHeaders == null)
                 return new List<IClaim>();
             else

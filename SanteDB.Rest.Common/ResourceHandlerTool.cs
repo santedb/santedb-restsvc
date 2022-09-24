@@ -68,7 +68,7 @@ namespace SanteDB.Rest.Common
                     if (rh.Scope == scope)
                     {
                         this.m_handlers.TryAdd($"{rh.Scope.Name}/{rh.ResourceName}", rh);
-                        this.m_traceSource.TraceInfo("Adding {0} to {1}", rh.ResourceName, rh.Scope);
+                        this.m_traceSource.TraceVerbose("Adding {0} to {1}", rh.ResourceName, rh.Scope);
 
                         // Associated prop handler
                         if (rh is IChainedApiResourceHandler assoc)
@@ -83,7 +83,7 @@ namespace SanteDB.Rest.Common
                 }
                 catch (Exception e)
                 {
-                    this.m_traceSource.TraceError("Error binding: {0} due to {1}", t.FullName, e);
+                    this.m_traceSource.TraceWarning("Error binding: {0} due to {1}", t.FullName, e);
                 }
             }
         }

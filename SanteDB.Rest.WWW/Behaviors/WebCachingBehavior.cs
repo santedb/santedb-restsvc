@@ -1,6 +1,7 @@
 ﻿using RestSrvr;
 using RestSrvr.Message;
 using SanteDB.Core;
+using SanteDB.Core.Exceptions;
 using SanteDB.Core.Services;
 using SanteDB.Rest.WWW.Configuration;
 using System;
@@ -46,6 +47,7 @@ namespace SanteDB.Rest.WWW.Behaviors
         /// <inheritdoc cref="IMessageInspector.AfterReceiveRequest(RestRequestMessage)"/>
         public void AfterReceiveRequest(RestRequestMessage request)
         {
+
         }
 
         /// <inheritdoc cref="IEndpointBehavior.ApplyEndpointBehavior(ServiceEndpoint, EndpointDispatcher)"/>
@@ -59,15 +61,18 @@ namespace SanteDB.Rest.WWW.Behaviors
         {
 
             var extension = Path.GetExtension(RestOperationContext.Current.IncomingRequest.Url.AbsolutePath);
-            if(this.m_cacheExtensions.Contains(extension) && this.m_configuration.AllowClientCaching)
+            if(this.m_cacheExtensions.Contains(extension) && this.m_configuration?.AllowClientCaching != false)
             {
-                response.Headers.Add("Cache-Control", "public, max-age=28800"); // TODO: make this configurable
+                response.Headers.Add("Cache-Control", "public, max-age=120, must-revalidate"); // TODO: make this configurable
                 response.Headers.Add("Expires", DateTime.UtcNow.AddHours(1).ToString("ddd, dd MMM yyyy HH:mm:ss 'GMT'"));
+
+
             }
             else
             {
                 response.Headers.Add("Cache-Control", "no-cache");
             }
+
         }
     }
 }

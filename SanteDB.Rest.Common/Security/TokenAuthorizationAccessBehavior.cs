@@ -107,6 +107,11 @@ namespace SanteDB.Rest.Common.Security
                         throw new SecuritySessionException(SessionExceptionType.TokenType, "Invalid authentication scheme", null);
                 }
             }
+            catch (SecuritySessionException e)
+            {
+                AuditUtil.AuditNetworkRequestFailure(e, RestOperationContext.Current.IncomingRequest.Url, RestOperationContext.Current.IncomingRequest.Headers, null);
+                throw;
+            }
             catch (UnauthorizedAccessException e)
             {
                 this.m_traceSource.TraceError("Token Error (From: {0}) : {1}", RestOperationContext.Current.IncomingRequest.RemoteEndPoint, e);

@@ -16,7 +16,7 @@ using System.Security;
 using System.Security.Authentication;
 using System.Text;
 
-namespace SanteDB.Rest.Common.Util
+namespace SanteDB.Rest.Common
 {
     /// <summary>
     /// Error utility for classifying errors
@@ -38,6 +38,15 @@ namespace SanteDB.Rest.Common.Util
            
             switch (rootException)
             {
+                case PreconditionFailedException pfe:
+                    switch(RestOperationContext.Current?.IncomingRequest?.HttpMethod.ToLowerInvariant())
+                    {
+                        case "get":
+                        case "head":
+                            return HttpStatusCode.NotModified;
+                        default:
+                            return HttpStatusCode.PreconditionFailed;
+                    }
                 case SecuritySessionException ses:
                     switch (ses.Type)
                     {

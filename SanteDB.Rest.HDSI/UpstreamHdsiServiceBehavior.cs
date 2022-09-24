@@ -48,6 +48,7 @@ using System.Linq;
 using SanteDB.Core.Model.Constants;
 using SanteDB.Core.Model.Roles;
 using SanteDB.Core.Model.Parameters;
+using RestSrvr.Attributes;
 
 namespace SanteDB.Messaging.HDSI.Wcf
 {
@@ -121,16 +122,14 @@ namespace SanteDB.Messaging.HDSI.Wcf
             }
         }
 
-        /// <summary>
-        /// Resolve the specified code
-        /// </summary>
-        /// <param name="parms"></param>
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override void ResolvePointer(NameValueCollection parms)
         {
             // create only on the external server
-            if (RestOperationContext.Current.IncomingRequest.QueryString["_upstream"] == "true" ||
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
                 parms["_upstream"] == "true" ||
-                RestOperationContext.Current.IncomingRequest.Headers["X-SanteDB-Upstream"] == "true")
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                     try
@@ -164,14 +163,13 @@ namespace SanteDB.Messaging.HDSI.Wcf
             }
         }
 
-        /// <summary>
-        /// Create the specified resource
-        /// </summary>
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override IdentifiedData Create(string resourceType, IdentifiedData body)
         {
             // create only on the external server
-            if (RestOperationContext.Current.IncomingRequest.QueryString["_upstream"] == "true" ||
-                RestOperationContext.Current.IncomingRequest.Headers["X-SanteDB-Upstream"] == "true")
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                     try
@@ -195,14 +193,13 @@ namespace SanteDB.Messaging.HDSI.Wcf
             }
         }
 
-        /// <summary>
-        /// Create or udpate with upstream
-        /// </summary>
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override IdentifiedData CreateUpdate(string resourceType, string id, IdentifiedData body)
         {
             // create only on the external server
-            if (RestOperationContext.Current.IncomingRequest.QueryString["_upstream"] == "true" ||
-                RestOperationContext.Current.IncomingRequest.Headers["X-SanteDB-Upstream"] == "true")
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                     try
@@ -231,14 +228,13 @@ namespace SanteDB.Messaging.HDSI.Wcf
             }
         }
 
-        /// <summary>
-        /// Delete the specified object on the server
-        /// </summary>
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override IdentifiedData Delete(string resourceType, string id)
         {
             // Only on the remote server
-            if (RestOperationContext.Current.IncomingRequest.QueryString["_upstream"] == "true" ||
-                RestOperationContext.Current.IncomingRequest.Headers["X-SanteDB-Upstream"] == "true")
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                     try
@@ -269,14 +265,13 @@ namespace SanteDB.Messaging.HDSI.Wcf
             }
         }
 
-        /// <summary>
-        /// Get the specified resource
-        /// </summary>
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override IdentifiedData Get(string resourceType, string id)
         {
             // Delete only on the external server
-            if ((RestOperationContext.Current.IncomingRequest.QueryString["_upstream"] == "true" ||
-                RestOperationContext.Current.IncomingRequest.Headers["X-SanteDB-Upstream"] == "true") &&
+            if ((Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr) &&
                 Guid.TryParse(id, out var idGuid))
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
@@ -309,9 +304,8 @@ namespace SanteDB.Messaging.HDSI.Wcf
             }
         }
 
-        /// <summary>
-        /// Copy the specified resource from the remote to this instance
-        /// </summary>
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override IdentifiedData Copy(string resourceType, string id)
         {
             if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable &&
@@ -373,14 +367,13 @@ namespace SanteDB.Messaging.HDSI.Wcf
                 throw new FaultException(System.Net.HttpStatusCode.BadGateway);
         }
 
-        /// <summary>
-        /// Get a specific version of the object
-        /// </summary>
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override IdentifiedData GetVersion(string resourceType, string id, string versionId)
         {
             // Delete only on the external server
-            if (RestOperationContext.Current.IncomingRequest.QueryString["_upstream"] == "true" ||
-                RestOperationContext.Current.IncomingRequest.Headers["X-SanteDB-Upstream"] == "true")
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                     try
@@ -403,14 +396,13 @@ namespace SanteDB.Messaging.HDSI.Wcf
             }
         }
 
-        /// <summary>
-        /// Get history of the object
-        /// </summary>
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override IdentifiedData History(string resourceType, string id)
         {
             // Delete only on the external server
-            if (RestOperationContext.Current.IncomingRequest.QueryString["_upstream"] == "true" ||
-                RestOperationContext.Current.IncomingRequest.Headers["X-SanteDB-Upstream"] == "true")
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                     try
@@ -433,14 +425,13 @@ namespace SanteDB.Messaging.HDSI.Wcf
             }
         }
 
-        /// <summary>
-        /// Perform options
-        /// </summary>
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override ServiceOptions Options()
         {
             // Perform only on the external server
-            if (RestOperationContext.Current.IncomingRequest.QueryString["_upstream"] == "true" ||
-                RestOperationContext.Current.IncomingRequest.Headers["X-SanteDB-Upstream"] == "true")
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                     try
@@ -462,14 +453,13 @@ namespace SanteDB.Messaging.HDSI.Wcf
             }
         }
 
-        /// <summary>
-        /// Perform a patch
-        /// </summary>
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override void Patch(string resourceType, string id, Patch body)
         {
             // Perform only on the external server
-            if (RestOperationContext.Current.IncomingRequest.QueryString["_upstream"] == "true" ||
-                RestOperationContext.Current.IncomingRequest.Headers["X-SanteDB-Upstream"] == "true")
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                     try
@@ -492,16 +482,13 @@ namespace SanteDB.Messaging.HDSI.Wcf
             }
         }
 
-        /// <summary>
-        /// Get options for resource
-        /// </summary>
-        /// <param name="resourceType"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override ServiceResourceOptions ResourceOptions(string resourceType)
         {
             // Perform only on the external server
-            if (RestOperationContext.Current.IncomingRequest.QueryString["_upstream"] == "true" ||
-                RestOperationContext.Current.IncomingRequest.Headers["X-SanteDB-Upstream"] == "true")
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                     try
@@ -523,14 +510,13 @@ namespace SanteDB.Messaging.HDSI.Wcf
             }
         }
 
-        /// <summary>
-        /// Perform search
-        /// </summary>
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override IdentifiedData Search(string resourceType)
         {
             // Perform only on the external server
-            if (RestOperationContext.Current.IncomingRequest.QueryString["_upstream"] == "true" ||
-                RestOperationContext.Current.IncomingRequest.Headers["X-SanteDB-Upstream"] == "true")
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                     try
@@ -558,14 +544,13 @@ namespace SanteDB.Messaging.HDSI.Wcf
             }
         }
 
-        /// <summary>
-        /// Update data
-        /// </summary>
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override IdentifiedData Update(string resourceType, string id, IdentifiedData body)
         {
             // Perform only on the external server
-            if (RestOperationContext.Current.IncomingRequest.QueryString["_upstream"] == "true" ||
-                RestOperationContext.Current.IncomingRequest.Headers["X-SanteDB-Upstream"] == "true")
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                     try
@@ -594,14 +579,13 @@ namespace SanteDB.Messaging.HDSI.Wcf
             }
         }
 
-        /// <summary>
-        /// Associated object search
-        /// </summary>
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override object AssociationSearch(string resourceType, string key, string childResourceType)
         {
             // Perform only on the external server
-            if (RestOperationContext.Current.IncomingRequest.QueryString["_upstream"] == "true" ||
-                RestOperationContext.Current.IncomingRequest.Headers["X-SanteDB-Upstream"] == "true")
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                     try
@@ -629,14 +613,13 @@ namespace SanteDB.Messaging.HDSI.Wcf
             }
         }
 
-        /// <summary>
-        /// Remove associated object
-        /// </summary>
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override object AssociationRemove(string resourceType, string key, string childResourceType, string scopedEntityKey)
         {
             // Only on the remote server
-            if (RestOperationContext.Current.IncomingRequest.QueryString["_upstream"] == "true" ||
-                RestOperationContext.Current.IncomingRequest.Headers["X-SanteDB-Upstream"] == "true")
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                     try
@@ -670,13 +653,12 @@ namespace SanteDB.Messaging.HDSI.Wcf
             }
         }
 
-        /// <summary>
-        /// Get associated object
-        /// </summary>
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override object AssociationGet(string resourceType, string key, string childResourceType, string scopedEntityKey)
         {
-            if (RestOperationContext.Current.IncomingRequest.QueryString["_upstream"] == "true" ||
-                RestOperationContext.Current.IncomingRequest.Headers["X-SanteDB-Upstream"] == "true")
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                     try
@@ -701,13 +683,12 @@ namespace SanteDB.Messaging.HDSI.Wcf
             }
         }
 
-        /// <summary>
-        /// Association based create
-        /// </summary>
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override object AssociationCreate(string resourceType, string key, string childResourceType, object body)
         {
-            if (RestOperationContext.Current.IncomingRequest.QueryString["_upstream"] == "true" ||
-                RestOperationContext.Current.IncomingRequest.Headers["X-SanteDB-Upstream"] == "true")
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                     try
@@ -740,13 +721,12 @@ namespace SanteDB.Messaging.HDSI.Wcf
             }
         }
 
-        /// <summary>
-        /// Invoke a method
-        /// </summary>
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override object InvokeMethod(string resourceType, string operationName, ParameterCollection body)
         {
-            if (RestOperationContext.Current.IncomingRequest.QueryString["_upstream"] == "true" ||
-                RestOperationContext.Current.IncomingRequest.Headers["X-SanteDB-Upstream"] == "true")
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                     try
@@ -769,9 +749,8 @@ namespace SanteDB.Messaging.HDSI.Wcf
             }
         }
 
-        /// <summary>
-        /// Invoke the specified operation on a specific instance
-        /// </summary>
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override object InvokeMethod(string resourceType, string id, string operationName, ParameterCollection body)
         {
             if (body is null)
@@ -779,8 +758,8 @@ namespace SanteDB.Messaging.HDSI.Wcf
                 throw new ArgumentNullException(nameof(body));
             }
 
-            if (RestOperationContext.Current.IncomingRequest.QueryString["_upstream"] == "true" ||
-                RestOperationContext.Current.IncomingRequest.Headers["X-SanteDB-Upstream"] == "true")
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                     try

@@ -174,9 +174,9 @@ namespace SanteDB.Rest.AMI.Resources
         private void SetAppletHeaders(AppletInfo package)
         {
             RestOperationContext.Current.OutgoingResponse.SetETag(package.Version);
-            RestOperationContext.Current.OutgoingResponse.Headers.Add("X-SanteDB-PakID", package.Id);
+            RestOperationContext.Current.OutgoingResponse.Headers.Add(ExtendedHttpHeaderNames.PackageIdentifierHeaderName, package.Id);
             if (package.Hash != null)
-                RestOperationContext.Current.OutgoingResponse.AppendHeader("X-SanteDB-Hash", Convert.ToBase64String(package.Hash));
+                RestOperationContext.Current.OutgoingResponse.AppendHeader(ExtendedHttpHeaderNames.PackageHashHeaderName, Convert.ToBase64String(package.Hash));
             RestOperationContext.Current.OutgoingResponse.AppendHeader("Content-Type", "application/octet-stream");
             RestOperationContext.Current.OutgoingResponse.ContentType = "application/octet-stream";
             RestOperationContext.Current.OutgoingResponse.AppendHeader("Content-Disposition", $"attachment; filename=\"{package.Id}.pak.gz\"");

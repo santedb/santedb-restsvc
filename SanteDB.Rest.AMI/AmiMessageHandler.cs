@@ -61,8 +61,7 @@ namespace SanteDB.Rest.AMI
         /// <summary>
         /// Gets the contract type
         /// </summary>
-        public Type BehaviorType => typeof(AmiServiceBehavior);
-
+        public Type BehaviorType => this.m_webHost.BehaviorType;
 
         /// <summary>
         /// Name of the service in the configuration file

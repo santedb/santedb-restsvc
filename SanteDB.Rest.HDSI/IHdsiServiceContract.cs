@@ -245,7 +245,7 @@ namespace SanteDB.Rest.HDSI
         /// For complete specification see: https://help.santesuite.org/santedb/extending-santedb/service-apis/health-data-service-interface-hdsi/digitally-signed-visual-code-api</remarks>
         [Get("/{resourceType}/{id}/_code/{authority}")]
         [ServiceProduces("image/png")]
-        Stream GetBarcode(String resourceType, String id, String authority);
+        Stream GetVrpCode(String resourceType, String id, String authority);
 
         /// <summary>
         /// Gets the digitally signed pointer (in JWS format) for the resource
@@ -257,7 +257,7 @@ namespace SanteDB.Rest.HDSI
         /// For complete specification see: https://help.santesuite.org/santedb/extending-santedb/service-apis/health-data-service-interface-hdsi/digitally-signed-visual-code-api
         /// </remarks>
         [Get("/{resourceType}/{id}/_ptr/{authorityId}")]
-        Stream GetPointer(String resourceType, String id, String authorityId);
+        Stream GetVrpPointerData(String resourceType, String id, String authorityId);
 
         /// <summary>
         /// Resolve a code to a resource by posting a form-encoded search to the API

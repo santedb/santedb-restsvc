@@ -40,7 +40,6 @@ using System.Security.Authentication;
 using SanteDB.Core;
 using SanteDB.Core.Security;
 using SanteDB.Rest.Common.Serialization;
-using SanteDB.Rest.Common.Util;
 
 namespace SanteDB.Rest.Common.Behavior
 {

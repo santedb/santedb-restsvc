@@ -97,9 +97,9 @@ namespace SanteDB.Rest.AMI.ChildResources
             {
                 var appletManifest = AppletPackage.Load(appletData);
                 RestOperationContext.Current.OutgoingResponse.SetETag(appletManifest.Meta.Version);
-                RestOperationContext.Current.OutgoingResponse.Headers.Add("X-SanteDB-PakID", appletManifest.Meta.Id);
+                RestOperationContext.Current.OutgoingResponse.Headers.Add(ExtendedHttpHeaderNames.PackageIdentifierHeaderName, appletManifest.Meta.Id);
                 if (appletManifest.Meta.Hash != null)
-                    RestOperationContext.Current.OutgoingResponse.AppendHeader("X-SanteDB-Hash", Convert.ToBase64String(appletManifest.Meta.Hash));
+                    RestOperationContext.Current.OutgoingResponse.AppendHeader(ExtendedHttpHeaderNames.PackageHashHeaderName, Convert.ToBase64String(appletManifest.Meta.Hash));
                 RestOperationContext.Current.OutgoingResponse.AppendHeader("Content-Type", "application/octet-stream");
                 RestOperationContext.Current.OutgoingResponse.ContentType = "application/octet-stream";
                 RestOperationContext.Current.OutgoingResponse.AppendHeader("Content-Disposition", $"attachment; filename=\"{appletManifest.Meta.Id}.pak.gz\"");

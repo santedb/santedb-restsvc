@@ -127,11 +127,11 @@ namespace SanteDB.Rest.Common.Serialization
                     throw;
                 }
 
-                this.m_traceSource.TraceInfo("Will generate serializer for {0} ({1} types)...", typeof(TContract).FullName, s_knownTypes.Length);
+                this.m_traceSource.TraceVerbose("Will generate serializer for {0} ({1} types)...", typeof(TContract).FullName, s_knownTypes.Length);
 
                 foreach (var s in s_knownTypes)
                 {
-                    this.m_traceSource.TraceInfo("Generating serializer for {0}...", s.Name);
+                    this.m_traceSource.TraceVerbose("Generating serializer for {0}...", s.Name);
                     try
                     {
                         // Force creation of .NET Serializer
@@ -198,7 +198,7 @@ namespace SanteDB.Rest.Common.Serialization
                                 break;
 
                             case "application/json+sdb-viewmodel":
-                                var viewModel = httpRequest.Headers["X-SanteDB-ViewModel"] ?? httpRequest.QueryString["_viewModel"];
+                                var viewModel = httpRequest.Headers[ExtendedHttpHeaderNames.ViewModelHeaderName] ?? httpRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName];
 
                                 // Create the view model serializer
                                 var viewModelSerializer = new JsonViewModelSerializer();
@@ -316,7 +316,7 @@ namespace SanteDB.Rest.Common.Serialization
 #if DEBUG
                                 this.m_traceSource.TraceInfo("Serializing {0} as view model result", result);
 #endif
-                                var viewModel = httpRequest.Headers["X-SanteDB-ViewModel"] ?? httpRequest.QueryString["_viewModel"];
+                                var viewModel = httpRequest.Headers[ExtendedHttpHeaderNames.ViewModelHeaderName] ?? httpRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName];
 
                                 // Create the view model serializer
                                 var viewModelSerializer = new JsonViewModelSerializer();

@@ -7,13 +7,13 @@ using SanteDB.Core.Diagnostics;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Services;
-using SanteDB.Rest.Common.Util;
 using SanteDB.Rest.WWW.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using SanteDB.Rest.Common;
 
 namespace SanteDB.Rest.WWW.Behaviors
 {

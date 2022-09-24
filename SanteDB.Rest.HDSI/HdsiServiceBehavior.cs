@@ -88,7 +88,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// For REST service initialization
         /// </summary>
-        public HdsiServiceBehavior() : 
+        public HdsiServiceBehavior() :
             this(ApplicationServiceContext.Current.GetService<IDataCachingService>(),
                 ApplicationServiceContext.Current.GetService<ILocalizationService>(),
                 ApplicationServiceContext.Current.GetService<IPatchService>(),
@@ -168,6 +168,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Create the specified resource
         /// </summary>
+        [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual IdentifiedData Create(string resourceType, IdentifiedData body)
         {
             this.ThrowIfNotReady();
@@ -209,6 +210,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Create or update the specified object
         /// </summary>
+        [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual IdentifiedData CreateUpdate(string resourceType, string id, IdentifiedData body)
         {
             this.ThrowIfNotReady();
@@ -250,6 +252,8 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Get the specified object
         /// </summary>
+        [UrlParameter(QueryControlParameterNames.HttpBundleRelatedParameterName, typeof(bool), "True if the server should send related objects to the caller in a bundle")]
+        [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual IdentifiedData Get(string resourceType, string id)
         {
             this.ThrowIfNotReady();
@@ -267,56 +271,29 @@ namespace SanteDB.Rest.HDSI
                     this.AclCheck(handler, nameof(IApiResourceHandler.Get));
 
                     Guid objectId = Guid.Parse(id);
-                    var ifModifiedHeader = RestOperationContext.Current.IncomingRequest.GetIfModifiedSince();
-                    var ifNoneMatchHeader = RestOperationContext.Current.IncomingRequest.GetIfNoneMatch();
+                    this.ThrowIfPreConditionFails(handler, objectId);
 
-                    // HTTP IF headers? - before we go to the DB lets check the cache for them
-                    if (ifNoneMatchHeader?.Any() == true || ifModifiedHeader.HasValue)
+                    IdentifiedData retVal = null;
+                    using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
                     {
-                        var cacheResult = this.m_dataCachingService.GetCacheItem(objectId);
-
-                        if (cacheResult != null && (ifNoneMatchHeader?.Contains(cacheResult.Tag) == true ||
-                                cacheResult.ModifiedOn <= ifModifiedHeader))
-                        {
-                            if (cacheResult is ITaggable tagged)
-                            {
-                                if (tagged.GetTag(SanteDBModelConstants.DcdrRefetchTag) == null)
-                                {
-                                    RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
-                                    return null;
-                                }
-                                else
-                                {
-                                    tagged.RemoveTag(SanteDBModelConstants.DcdrRefetchTag);
-                                }
-                            }
-                            else
-                            {
-                                RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
-                                return null;
-                            }
-                        }
+                        retVal = handler.Get(objectId, Guid.Empty) as IdentifiedData;
                     }
 
-                    var retVal = handler.Get(objectId, Guid.Empty) as IdentifiedData;
                     if (retVal == null)
                         throw new FileNotFoundException(id);
 
                     RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.ModifiedOn.DateTime);
 
-                    // HTTP IF headers?
-                    if (ifModifiedHeader.HasValue &&
-                        retVal.ModifiedOn <= RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() ||
-                        ifNoneMatchHeader?.Any(o => retVal.Tag == o) == true)
+                    if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[QueryControlParameterNames.HttpBundleRelatedParameterName] , out var bundle)
+                        && bundle)
                     {
-                        if (!(retVal is ITaggable tagged) || tagged.GetTag(SanteDBModelConstants.DcdrRefetchTag) == null)
-                        {
-                            RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
-                            return null;
-                        }
+                        return Bundle.CreateBundle(retVal);
                     }
-                    return retVal;
+                    else
+                    {
+                        return retVal;
+                    }
                 }
                 else
                     throw new FileNotFoundException(resourceType);
@@ -330,8 +307,108 @@ namespace SanteDB.Rest.HDSI
         }
 
         /// <summary>
+        /// Validate the none-match header
+        /// </summary>
+        private string ExtractValidateMatchHeader(Type resourceType, String headerString)
+        {
+            if (!headerString.Contains("."))
+            {
+                return headerString;
+            }
+            else
+            {
+                var headerParts = headerString.Split('.');
+                if (resourceType.IsAssignableFrom(this.GetResourceHandler(headerParts[0]).Type))
+                    return headerParts[1];
+                else
+                    throw new PreconditionFailedException();
+            }
+        }
+
+        /// <summary>
+        /// Adheres to the HTTP conditional read headers
+        /// </summary>
+        /// <exception cref="PreconditionFailedException">When the HTTP header pre-conditions fail</exception>
+        private void ThrowIfPreConditionFails(IApiResourceHandler handler, Guid objectId)
+        {
+
+            var ifModifiedHeader = RestOperationContext.Current.IncomingRequest.GetIfModifiedSince();
+            var ifUnmodifiedHeader = RestOperationContext.Current.IncomingRequest.GetIfUnmodifiedSince();
+            var ifNoneMatchHeader = RestOperationContext.Current.IncomingRequest.GetIfNoneMatch()?.Select(o => this.ExtractValidateMatchHeader(handler.Type, o));
+            var ifMatchHeader = RestOperationContext.Current.IncomingRequest.GetIfMatch()?.Select(o => this.ExtractValidateMatchHeader(handler.Type, o));
+
+            // HTTP IF headers? - before we go to the DB lets check the cache for them
+            if (ifNoneMatchHeader?.Any() == true || ifMatchHeader?.Any() == true || ifModifiedHeader.HasValue || ifUnmodifiedHeader.HasValue)
+            {
+                var cacheResult = this.m_dataCachingService.GetCacheItem(objectId);
+
+                if (cacheResult != null && (ifNoneMatchHeader?.Contains(cacheResult.Tag) == true ||
+                    !ifMatchHeader.Contains(cacheResult.Tag) == true ||
+                        ifModifiedHeader.HasValue && cacheResult.ModifiedOn <= ifModifiedHeader ||
+                        ifUnmodifiedHeader.HasValue && cacheResult.ModifiedOn >= ifUnmodifiedHeader))
+                {
+                    if (cacheResult is ITaggable tagged)
+                    {
+                        if (tagged.GetTag(SanteDBModelConstants.DcdrRefetchTag) == null)
+                        {
+                            throw new PreconditionFailedException();
+                        }
+                        else
+                        {
+                            tagged.RemoveTag(SanteDBModelConstants.DcdrRefetchTag);
+                        }
+                    }
+                    else
+                    {
+                        throw new PreconditionFailedException();
+                    }
+                }
+                else
+                {
+                    var checkQuery = $"id={objectId}".ParseQueryString();
+                    if (!handler.Query(checkQuery).Any()) // Object doesn't exist
+                    {
+                        throw new KeyNotFoundException();
+                    }
+
+                    // If-None-Match when used with If-Modified-Since then If-None-Match has priority
+                    if (ifNoneMatchHeader?.Any() == true ||
+                        ifMatchHeader?.Any() == true)
+                    {
+                        checkQuery.Add("tag", ifNoneMatchHeader?.Where(c => Guid.TryParse(c, out _)).Select(o => $"{o}").ToArray());
+                        checkQuery.Add("tag", ifMatchHeader?.Where(c => Guid.TryParse(c, out _)).Select(o => $"{o}").ToArray());
+                        if (typeof(IVersionedData).IsAssignableFrom(handler.Type))
+                        {
+                            checkQuery.Add("obsoletionTime", "null", "!null");
+                        }
+                        var matchingTags = handler.Query(checkQuery).Any();
+                        if ((ifNoneMatchHeader?.Any() == true && matchingTags) ^
+                            (ifMatchHeader?.Any() == true && !matchingTags))
+                            throw new PreconditionFailedException();
+                    }
+
+                    if (ifModifiedHeader.HasValue)
+                    {
+                        checkQuery.Remove("tag");
+                        checkQuery.Add("modifiedOn", $"<{ifModifiedHeader:o}");
+                        if (handler.Query(checkQuery).Any()) throw new PreconditionFailedException();
+                    }
+
+                    if (ifUnmodifiedHeader.HasValue)
+                    {
+                        checkQuery.Remove("tag");
+                        checkQuery.Remove("modifiedOn");
+                        checkQuery.Add("modifiedOn", $">{ifUnmodifiedHeader:o}");
+                        if (handler.Query(checkQuery).Any()) throw new PreconditionFailedException();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets a specific version of a resource
         /// </summary>
+        [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual IdentifiedData GetVersion(string resourceType, string id, string versionId)
         {
             this.ThrowIfNotReady();
@@ -341,11 +418,12 @@ namespace SanteDB.Rest.HDSI
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(IApiResourceHandler.Get));
+
                     var retVal = handler.Get(Guid.Parse(id), Guid.Parse(versionId)) as IdentifiedData;
                     if (retVal == null)
                         throw new FileNotFoundException(id);
 
-                    if (RestOperationContext.Current.IncomingRequest.QueryString["_bundle"] == "true")
+                    if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpBundleRelatedParameterName] , out var bundle) && bundle)
                         return Bundle.CreateBundle(retVal);
                     else
                     {
@@ -404,7 +482,8 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Gets the recent history an object
         /// </summary>
-        [UrlParameter("_since", typeof(Guid), "The last version of the object that should be returned")]
+        [UrlParameter(QueryControlParameterNames.HttpSinceParameterName, typeof(Guid), "The last version of the object that should be returned")]
+        [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual IdentifiedData History(string resourceType, string id)
         {
             this.ThrowIfNotReady();
@@ -414,12 +493,16 @@ namespace SanteDB.Rest.HDSI
 
                 if (handler != null)
                 {
-                    String since = RestOperationContext.Current.IncomingRequest.QueryString["_since"];
+
+
+                    String since = RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpSinceParameterName];
                     Guid sinceGuid = since != null ? Guid.Parse(since) : Guid.Empty;
+                    var objectId = Guid.Parse(id);
+                    this.ThrowIfPreConditionFails(handler, objectId);
 
                     // Query
                     this.AclCheck(handler, nameof(IApiResourceHandler.Get));
-                    var retVal = handler.Get(Guid.Parse(id), Guid.Empty) as IVersionedData;
+                    var retVal = handler.Get(objectId, Guid.Empty) as IVersionedData;
                     List<IVersionedData> histItm = new List<IVersionedData>() { retVal };
                     while (retVal.PreviousVersionKey.HasValue)
                     {
@@ -448,9 +531,12 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Perform a search on the specified resource type
         /// </summary>
-        [UrlParameter("_offset", typeof(int), "The offet of the first result to return")]
-        [UrlParameter("_count", typeof(int), "The count of items to return in this result set")]
-        [UrlParameter("_orderBy", typeof(string), "Instructs the result set to be ordered")]
+        [UrlParameter(QueryControlParameterNames.HttpOffsetParameterName, typeof(int), "The offet of the first result to return")]
+        [UrlParameter(QueryControlParameterNames.HttpCountParameterName, typeof(int), "The count of items to return in this result set")]
+        [UrlParameter(QueryControlParameterNames.HttpIncludeTotalParameterName, typeof(bool), "True if the server should count the matching results. May reduce performance")]
+        [UrlParameter(QueryControlParameterNames.HttpOrderByParameterName, typeof(string), "Instructs the result set to be ordered (in format: property:(asc|desc))")]
+        [UrlParameter(QueryControlParameterNames.HttpQueryStateParameterName, typeof(Guid), "The query state identifier. This allows the client to get a stable result set.")]
+        [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual IdentifiedData Search(string resourceType)
         {
             this.ThrowIfNotReady();
@@ -469,12 +555,19 @@ namespace SanteDB.Rest.HDSI
                         query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince()?.ToString("o"));
 
                     // Query for results
-                    var results = handler.Query(query);
+                    var results = handler.Query(query) as IOrderableQueryResultSet;
 
                     // Now apply controls
                     var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<IdentifiedData>();
 
-                    RestOperationContext.Current.OutgoingResponse.SetLastModified((retVal.OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now));
+                    // Last modified object
+                    var modifiedOnSelector = QueryExpressionParser.BuildPropertySelector(handler.Type, "modifiedOn", convertReturn: typeof(object));
+                    var lastModified = (DateTime)results.OrderByDescending(modifiedOnSelector).Select<DateTimeOffset>(modifiedOnSelector).FirstOrDefault().DateTime;
+
+                    if (lastModified != default(DateTime))
+                    {
+                        RestOperationContext.Current.OutgoingResponse.SetLastModified(lastModified);
+                    }
 
                     // Last modification time and not modified conditions
                     if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||
@@ -486,7 +579,10 @@ namespace SanteDB.Rest.HDSI
                     }
                     else
                     {
-                        return new Bundle(retVal, offset, totalCount);
+                        using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
+                        {
+                            return new Bundle(retVal, offset, totalCount);
+                        }
                     }
                 }
                 else
@@ -514,6 +610,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Update the specified resource
         /// </summary>
+        [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual IdentifiedData Update(string resourceType, string id, IdentifiedData body)
         {
             this.ThrowIfNotReady();
@@ -524,8 +621,17 @@ namespace SanteDB.Rest.HDSI
                 {
                     this.AclCheck(handler, nameof(IApiResourceHandler.Update));
 
-                    var retVal = handler.Update(body) as IdentifiedData;
-                    var versioned = retVal as IVersionedData;
+                    var objectId = Guid.Parse(id);
+
+                    this.ThrowIfPreConditionFails(handler, objectId);
+
+
+                    IdentifiedData retVal = null;
+                    using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
+                    {
+                        retVal = handler.Update(body) as IdentifiedData;
+                    }
+
 
                     if (retVal == null)
                         return null;
@@ -534,7 +640,7 @@ namespace SanteDB.Rest.HDSI
                         RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
                         RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
 
-                        if (versioned != null)
+                        if (retVal is IVersionedData versioned)
                             RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id, "_history", versioned.VersionKey));
                         else
                             RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id));
@@ -556,6 +662,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Obsolete the specified data
         /// </summary>
+        [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual IdentifiedData Delete(string resourceType, string id)
         {
             this.ThrowIfNotReady();
@@ -564,13 +671,25 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler(resourceType);
                 if (handler != null)
                 {
-                    if (RestOperationContext.Current.IncomingRequest.Headers.AllKeys.Contains("X-Delete-Mode"))
-                    {
-                        throw new NotSupportedException(this.m_localeService.GetString(ErrorMessageStrings.OBSOLETE_FUNCTION, new { name = "X-Delete-Mode" }));
-                    }
-
                     this.AclCheck(handler, nameof(IApiResourceHandler.Delete));
-                    var retVal = handler.Delete(Guid.Parse(id)) as IdentifiedData;
+
+                    var objectId = Guid.Parse(id);
+                    this.ThrowIfPreConditionFails(handler, objectId);
+
+                    IdentifiedData retVal = null;
+                    // Adhere to delete mode
+                    if (RestOperationContext.Current.IncomingRequest.Headers.TryGetValue(ExtendedHttpHeaderNames.DeleteModeHeaderName, out var deleteModeHeader) &&
+                        Enum.TryParse<DeleteMode>(deleteModeHeader[0], out var deleteMode))
+                    {
+                        using (DataPersistenceControlContext.Create(LoadMode.SyncLoad, deleteMode))
+                        {
+                            retVal = handler.Delete(objectId) as IdentifiedData;
+                        }
+                    }
+                    else
+                    {
+                        retVal = handler.Delete(objectId) as IdentifiedData;
+                    }
 
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
                     if (retVal is IVersionedData versioned)
@@ -619,6 +738,12 @@ namespace SanteDB.Rest.HDSI
         public virtual void Patch(string resourceType, string id, Patch body)
         {
             this.ThrowIfNotReady();
+
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
+
             try
             {
                 // Validate
@@ -635,32 +760,32 @@ namespace SanteDB.Rest.HDSI
                 // Next we get the current version
                 this.AclCheck(handler, nameof(IApiResourceHandler.Get));
 
-                var existing = handler.Get(Guid.Parse(id), Guid.Empty) as IdentifiedData;
-                var force = Convert.ToBoolean(RestOperationContext.Current.IncomingRequest.Headers["X-Patch-Force"] ?? "false");
+                var objectId = Guid.Parse(id);
+                var force = Convert.ToBoolean(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.ForceApplyPatchHeaderName] ?? "false");
 
-                if (existing == null)
-                    throw new FileNotFoundException($"/{resourceType}/{id}");
-                else if (existing.Tag != match && !force)
+                this.ThrowIfPreConditionFails(handler, objectId);
+
+                using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
                 {
-                    this.m_traceSource.TraceError("Object {0} ETAG is {1} but If-Match specified {2}", existing.Key, existing.Tag, match);
-                    throw new PatchAssertionException(match, existing.Tag, null);
-                }
-                else if (body == null)
-                    throw new ArgumentNullException(nameof(body));
-                else
-                {
-                    // Force load all properties for existing
-                    var applied = this.m_patchService.Patch(body, existing, force);
-                    this.AclCheck(handler, nameof(IApiResourceHandler.Update));
-                    var data = handler.Update(applied) as IdentifiedData;
-                    RestOperationContext.Current.OutgoingResponse.StatusCode = 204;
-                    RestOperationContext.Current.OutgoingResponse.SetETag(data.Tag);
-                    RestOperationContext.Current.OutgoingResponse.SetLastModified(applied.ModifiedOn.DateTime);
-                    var versioned = (data as IVersionedData)?.VersionKey;
-                    if (versioned != null)
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id, "_history", versioned));
+                    var existing = handler.Get(objectId, Guid.Empty) as IdentifiedData;
+
+                    if (existing == null)
+                        throw new FileNotFoundException($"/{resourceType}/{id}");
                     else
-                        RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id));
+                    {
+                        // Force load all properties for existing
+                        var applied = this.m_patchService.Patch(body, existing, force);
+                        this.AclCheck(handler, nameof(IApiResourceHandler.Update));
+                        var data = handler.Update(applied) as IdentifiedData;
+                        RestOperationContext.Current.OutgoingResponse.StatusCode = 204;
+                        RestOperationContext.Current.OutgoingResponse.SetETag(data.Tag);
+                        RestOperationContext.Current.OutgoingResponse.SetLastModified(applied.ModifiedOn.DateTime);
+                        var versioned = (data as IVersionedData)?.VersionKey;
+                        if (versioned != null)
+                            RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id, "_history", versioned));
+                        else
+                            RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id));
+                    }
                 }
             }
             catch (PatchAssertionException e)
@@ -719,7 +844,7 @@ namespace SanteDB.Rest.HDSI
         /// </summary>
         protected void ThrowIfNotReady()
         {
-            if(!ApplicationServiceContext.Current.IsRunning)
+            if (!ApplicationServiceContext.Current.IsRunning)
             {
                 throw new DomainStateException();
             }
@@ -788,8 +913,12 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Perform a search on the specified entity
         /// </summary>
-        [UrlParameter("_offset", typeof(int), "The offet of the first result to return")]
-        [UrlParameter("_count", typeof(int), "The count of items to return in this result set")]
+        [UrlParameter(QueryControlParameterNames.HttpOffsetParameterName, typeof(int), "The offet of the first result to return")]
+        [UrlParameter(QueryControlParameterNames.HttpCountParameterName, typeof(int), "The count of items to return in this result set")]
+        [UrlParameter(QueryControlParameterNames.HttpIncludeTotalParameterName, typeof(bool), "True if the server should count the matching results. May reduce performance")]
+        [UrlParameter(QueryControlParameterNames.HttpOrderByParameterName, typeof(string), "Instructs the result set to be ordered (in format: property:(asc|desc))")]
+        [UrlParameter(QueryControlParameterNames.HttpQueryStateParameterName, typeof(Guid), "The query state identifier. This allows the client to get a stable result set.")]
+        [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual Object AssociationSearch(string resourceType, string key, string childResourceType)
         {
             this.ThrowIfNotReady();
@@ -830,7 +959,10 @@ namespace SanteDB.Rest.HDSI
                     }
                     else
                     {
-                        return new Bundle(retVal, offset, totalCount);
+                        using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
+                        {
+                            return new Bundle(retVal, offset, totalCount);
+                        }
                     }
                 }
                 else
@@ -847,6 +979,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Create an associated entity
         /// </summary>
+        [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual object AssociationCreate(string resourceType, string key, string childResourceType, object body)
         {
             this.ThrowIfNotReady();
@@ -857,7 +990,14 @@ namespace SanteDB.Rest.HDSI
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.AddChildObject));
-                    var retVal = handler.AddChildObject(Guid.Parse(key), childResourceType, body) as IdentifiedData;
+                    var objectId = Guid.Parse(key);
+                    this.ThrowIfPreConditionFails(handler, objectId);
+
+                    IdentifiedData retVal = null;
+                    using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
+                    {
+                        retVal = handler.AddChildObject(objectId, childResourceType, body) as IdentifiedData;
+                    }
 
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
                     if (retVal != null)
@@ -882,6 +1022,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Removes an associated entity from the scoping property path
         /// </summary>
+        [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual object AssociationRemove(string resourceType, string key, string childResourceType, string scopedEntityKey)
         {
             this.ThrowIfNotReady();
@@ -893,7 +1034,13 @@ namespace SanteDB.Rest.HDSI
                 {
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.RemoveChildObject));
 
-                    var retVal = handler.RemoveChildObject(Guid.Parse(key), childResourceType, Guid.Parse(scopedEntityKey)) as IdentifiedData;
+                    var objectId = Guid.Parse(key);
+                    this.ThrowIfPreConditionFails(handler, objectId);
+                    IdentifiedData retVal = null;
+                    using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
+                    {
+                        retVal = handler.RemoveChildObject(objectId, childResourceType, Guid.Parse(scopedEntityKey)) as IdentifiedData;
+                    }
 
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
                     RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, key, childResourceType, retVal.Key));
@@ -913,6 +1060,8 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Removes an associated entity from the scoping property path
         /// </summary>
+        [UrlParameter(QueryControlParameterNames.HttpBundleRelatedParameterName, typeof(bool), "True if the server should include related objects in a bundle to the caller")]
+        [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual object AssociationGet(string resourceType, string key, string childResourceType, string scopedEntityKey)
         {
             this.ThrowIfNotReady();
@@ -924,20 +1073,23 @@ namespace SanteDB.Rest.HDSI
                 {
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.GetChildObject));
 
-                    var retVal = handler.GetChildObject(Guid.Parse(key), childResourceType, Guid.Parse(scopedEntityKey));
+                    var objectId = Guid.Parse(scopedEntityKey);
+                    this.ThrowIfPreConditionFails(handler, objectId);
+
+                    object retVal = null;
+                    using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
+                    {
+                        retVal = handler.GetChildObject(Guid.Parse(key), childResourceType, objectId);
+                    }
 
                     if (retVal is IdentifiedData idData)
                     {
                         RestOperationContext.Current.OutgoingResponse.SetETag(idData.Tag);
                         RestOperationContext.Current.OutgoingResponse.SetLastModified(idData.ModifiedOn.DateTime);
 
-                        // HTTP IF headers?
-                        if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null &&
-                            idData.ModifiedOn <= RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() ||
-                            RestOperationContext.Current.IncomingRequest.GetIfNoneMatch()?.Any(o => idData.Tag == o) == true)
+                        if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[QueryControlParameterNames.HttpBundleRelatedParameterName] , out var bundle) && bundle)
                         {
-                            RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
-                            return null;
+                            return Bundle.CreateBundle(idData);
                         }
                         else
                         {
@@ -963,7 +1115,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Generate the barcode for the specified object with specified authority
         /// </summary>
-        public virtual Stream GetBarcode(string resourceType, string id, string authority)
+        public virtual Stream GetVrpCode(string resourceType, string id, string authority)
         {
             try
             {
@@ -985,18 +1137,18 @@ namespace SanteDB.Rest.HDSI
                         if (Guid.TryParse(authority, out Guid authorityId))
                         {
                             if (data is Entity entity)
-                                return this.m_barcodeService.Generate(entity.Identifiers.Where(o => o.IdentityDomainKey == authorityId));
+                                return this.m_barcodeService.Generate(entity.LoadProperty(o => o.Identifiers).Where(o => o.IdentityDomainKey == authorityId));
                             else if (data is Act act)
-                                return this.m_barcodeService.Generate(act.Identifiers.Where(o => o.IdentityDomainKey == authorityId));
+                                return this.m_barcodeService.Generate(act.LoadProperty(o => o.Identifiers).Where(o => o.IdentityDomainKey == authorityId));
                             else
                                 return null;
                         }
                         else
                         {
                             if (data is Entity entity)
-                                return this.m_barcodeService.Generate(entity.Identifiers);
+                                return this.m_barcodeService.Generate(entity.LoadProperty(o => o.Identifiers));
                             else if (data is Act act)
-                                return this.m_barcodeService.Generate(act.Identifiers);
+                                return this.m_barcodeService.Generate(act.LoadProperty(o => o.Identifiers));
                             else
                                 return null;
                         }
@@ -1015,6 +1167,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Touches the specified data object
         /// </summary>
+        [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual IdentifiedData Touch(string resourceType, string id)
         {
             this.ThrowIfNotReady();
@@ -1025,7 +1178,13 @@ namespace SanteDB.Rest.HDSI
                 {
                     this.AclCheck(handler, nameof(IApiResourceHandler.Update));
 
-                    var retVal = exResourceHandler.Touch(Guid.Parse(id)) as IdentifiedData;
+                    var objectId = Guid.Parse(id);
+                    this.ThrowIfPreConditionFails(handler, objectId);
+                    IdentifiedData retVal = null;
+                    using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
+                    {
+                        retVal = exResourceHandler.Touch(objectId) as IdentifiedData;
+                    }
 
                     var versioned = retVal as IVersionedData;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
@@ -1088,7 +1247,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Get pointer to the specified resource
         /// </summary>
-        public virtual Stream GetPointer(string resourceType, string id, string authority)
+        public virtual Stream GetVrpPointerData(string resourceType, string id, string authority)
         {
             try
             {
@@ -1099,6 +1258,7 @@ namespace SanteDB.Rest.HDSI
                         throw new InvalidOperationException("Cannot find resource pointer service");
 
                     Guid objectId = Guid.Parse(id);
+
                     Guid authorityId = Guid.Parse(authority);
                     var data = handler.Get(objectId, Guid.Empty) as IdentifiedData;
                     if (data == null)
@@ -1108,11 +1268,11 @@ namespace SanteDB.Rest.HDSI
                         RestOperationContext.Current.OutgoingResponse.ContentType = "application/jose";
                         if (data is Entity entity)
                         {
-                            return new MemoryStream(Encoding.UTF8.GetBytes(this.m_resourcePointerService.GeneratePointer(entity.Identifiers.Where(o => o.IdentityDomainKey == authorityId))));
+                            return new MemoryStream(Encoding.UTF8.GetBytes(this.m_resourcePointerService.GeneratePointer(entity.LoadProperty(o => o.Identifiers).Where(o => o.IdentityDomainKey == authorityId))));
                         }
                         else if (data is Act act)
                         {
-                            return new MemoryStream(Encoding.UTF8.GetBytes(this.m_resourcePointerService.GeneratePointer(act.Identifiers.Where(o => o.IdentityDomainKey == authorityId))));
+                            return new MemoryStream(Encoding.UTF8.GetBytes(this.m_resourcePointerService.GeneratePointer(act.LoadProperty(o => o.Identifiers).Where(o => o.IdentityDomainKey == authorityId))));
                         }
                         else
                             return null;
@@ -1131,6 +1291,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Copy (download) a remote object to this instance
         /// </summary>
+        [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual IdentifiedData Copy(String reosurceType, String id)
         {
             throw new NotSupportedException();
@@ -1139,6 +1300,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Invoke the specified method on the API
         /// </summary>
+        [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual object InvokeMethod(string resourceType, string id, string operationName, ParameterCollection body)
         {
             this.ThrowIfNotReady();
@@ -1150,21 +1312,19 @@ namespace SanteDB.Rest.HDSI
                 {
                     this.AclCheck(handler, nameof(IOperationalApiResourceHandler.InvokeOperation));
 
-                    var retValRaw = handler.InvokeOperation(Guid.Parse(id), operationName, body);
+                    var objectId = Guid.Parse(id);
+                    this.ThrowIfPreConditionFails(handler, objectId);
+                    object retValRaw = null;
+                    using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
+                    {
+                        retValRaw = handler.InvokeOperation(objectId, operationName, body);
+                    }
 
                     if (retValRaw is IdentifiedData retVal)
                     {
                         RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
                         RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.ModifiedOn.DateTime);
 
-                        // HTTP IF headers?
-                        if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null &&
-                            retVal.ModifiedOn <= RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() ||
-                            RestOperationContext.Current.IncomingRequest.GetIfNoneMatch()?.Any(o => retVal.Tag == o) == true)
-                        {
-                            RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
-                            return null;
-                        }
                     }
                     return retValRaw;
                 }
@@ -1192,7 +1352,9 @@ namespace SanteDB.Rest.HDSI
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(ICheckoutResourceHandler.CheckIn));
-                    return handler.CheckIn(Guid.Parse(key));
+                    var objectId = Guid.Parse(key);
+                    this.ThrowIfPreConditionFails(handler, objectId);
+                    return handler.CheckIn(objectId);
                 }
                 else
                     throw new FileNotFoundException(resourceType);
@@ -1218,7 +1380,9 @@ namespace SanteDB.Rest.HDSI
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(ICheckoutResourceHandler.CheckIn));
-                    return handler.CheckOut(Guid.Parse(key));
+                    var objectId = Guid.Parse(key);
+                    this.ThrowIfPreConditionFails(handler, objectId);
+                    return handler.CheckOut(objectId);
                 }
                 else
                     throw new FileNotFoundException(resourceType);
@@ -1234,6 +1398,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Invoke a method which is not tied to a classifier object
         /// </summary>
+        [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual object InvokeMethod(string resourceType, string operationName, ParameterCollection body)
         {
             this.ThrowIfNotReady();
@@ -1245,21 +1410,17 @@ namespace SanteDB.Rest.HDSI
                 {
                     this.AclCheck(handler, nameof(IOperationalApiResourceHandler.InvokeOperation));
 
-                    var retValRaw = handler.InvokeOperation(null, operationName, body);
+                    object retValRaw = null;
+                    using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
+                    {
+                        retValRaw = handler.InvokeOperation(null, operationName, body);
+                    }
 
                     if (retValRaw is IdentifiedData retVal)
                     {
                         RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
                         RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.ModifiedOn.DateTime);
 
-                        // HTTP IF headers?
-                        if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null &&
-                            retVal.ModifiedOn <= RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() ||
-                            RestOperationContext.Current.IncomingRequest.GetIfNoneMatch()?.Any(o => retVal.Tag == o) == true)
-                        {
-                            RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
-                            return null;
-                        }
                     }
                     return retValRaw;
                 }
@@ -1277,6 +1438,8 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Perform a sub-get on a child resource and key without parent instance (exmaple: GET /Patient/extendedProperty/UUID)
         /// </summary>
+        [UrlParameter(QueryControlParameterNames.HttpBundleRelatedParameterName, typeof(bool), "True if the server should include related objects")]
+        [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual object AssociationGet(string resourceType, string childResourceType, string childResourceKey)
         {
             this.ThrowIfNotReady();
@@ -1287,19 +1450,21 @@ namespace SanteDB.Rest.HDSI
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.GetChildObject));
+                    var objectId = Guid.Parse(childResourceKey);
+                    this.ThrowIfPreConditionFails(handler, objectId);
 
-                    var retVal = handler.GetChildObject(null, childResourceType, Guid.Parse(childResourceKey)) as IdentifiedData;
+                    IdentifiedData retVal = null;
+                    using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
+                    {
+                        retVal = handler.GetChildObject(null, childResourceType, objectId) as IdentifiedData;
+                    }
 
                     RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.ModifiedOn.DateTime);
 
-                    // HTTP IF headers?
-                    if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null &&
-                        retVal.ModifiedOn <= RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() ||
-                        RestOperationContext.Current.IncomingRequest.GetIfNoneMatch()?.Any(o => retVal.Tag == o) == true)
+                    if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[QueryControlParameterNames.HttpBundleRelatedParameterName] , out var bundle) && bundle)
                     {
-                        RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
-                        return null;
+                        return Bundle.CreateBundle(retVal);
                     }
                     else
                     {
@@ -1320,6 +1485,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Operates a DELETE on the instance
         /// </summary>
+        [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual object AssociationRemove(string resourceType, string childResourceType, string childResourceKey)
         {
             this.ThrowIfNotReady();
@@ -1330,8 +1496,14 @@ namespace SanteDB.Rest.HDSI
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.RemoveChildObject));
+                    var objectId = Guid.Parse(childResourceKey);
+                    this.ThrowIfPreConditionFails(handler, objectId);
+                    IdentifiedData retVal = null;
 
-                    var retVal = handler.RemoveChildObject(null, childResourceType, Guid.Parse(childResourceKey)) as IdentifiedData;
+                    using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
+                    {
+                        retVal = handler.RemoveChildObject(null, childResourceType, objectId) as IdentifiedData;
+                    }
 
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
                     RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, childResourceType, retVal.Key));
@@ -1351,11 +1523,12 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Perform a search on the specified entity
         /// </summary>
-        [UrlParameter("_offset", typeof(int), "The offet of the first result to return")]
-        [UrlParameter("_count", typeof(int), "The count of items to return in this result set")]
-        [UrlParameter("_all", typeof(bool), "True if all properties should be expanded")]
-        [UrlParameter("_expand", typeof(string), "The names of the properties which should be forced loaded", Multiple = true)]
-        [UrlParameter("_exclude", typeof(string), "The names of the properties which should removed from the bundle", Multiple = true)]
+        [UrlParameter(QueryControlParameterNames.HttpOffsetParameterName, typeof(int), "The offet of the first result to return")]
+        [UrlParameter(QueryControlParameterNames.HttpCountParameterName, typeof(int), "The count of items to return in this result set")]
+        [UrlParameter(QueryControlParameterNames.HttpIncludeTotalParameterName, typeof(bool), "True if the server should count the matching results. May reduce performance")]
+        [UrlParameter(QueryControlParameterNames.HttpOrderByParameterName, typeof(string), "Instructs the result set to be ordered (in format: property:(asc|desc))")]
+        [UrlParameter(QueryControlParameterNames.HttpQueryStateParameterName, typeof(Guid), "The query state identifier. This allows the client to get a stable result set.")]
+        [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual Object AssociationSearch(string resourceType, string childResourceType)
         {
             this.ThrowIfNotReady();

@@ -89,14 +89,14 @@ namespace SanteDB.Rest.Common.Security
                 if (principal is IClaimsPrincipal)
                     claims.AddRange((principal as IClaimsPrincipal).Claims);
 
-                var clientClaims = SanteDBClaimsUtil.ExtractClaims(httpRequest.Headers);
+                var clientClaims = httpRequest.Headers.ExtractClientClaims();
                 foreach (var claim in clientClaims)
                 {
                     if (this.m_configuration?.AllowedClientClaims?.Contains(claim.Type) == false)
                         throw new SecurityException("Claim not allowed");
                     else
                     {
-                        var handler = SanteDBClaimsUtil.GetHandler(claim.Type);
+                        var handler = claim.GetHandler();
                         if (handler == null ||
                             handler.Validate(principal, claim.Value))
                             claims.Add(claim);
@@ -114,7 +114,7 @@ namespace SanteDB.Rest.Common.Security
 
                 if (this.m_configuration?.RequireClientAuth == true)
                 {
-                    var clientAuth = httpRequest.Headers[SanteDBRestConstants.BasicHttpClientCredentialHeaderName];
+                    var clientAuth = httpRequest.Headers[ExtendedHttpHeaderNames.BasicHttpClientCredentialHeaderName];
                     if (clientAuth == null ||
                         !clientAuth.StartsWith("basic", StringComparison.InvariantCultureIgnoreCase))
                         throw new SecurityException("Client credentials invalid");
