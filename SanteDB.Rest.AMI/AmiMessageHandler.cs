@@ -166,6 +166,17 @@ namespace SanteDB.Rest.AMI
             {
                 this.Starting?.Invoke(this, EventArgs.Empty);
 
+                //Setup the res handler before the service is instantiated.
+                if (this.m_configuration?.ResourceHandlers.Count() > 0)
+                    AmiMessageHandler.ResourceHandler = new ResourceHandlerTool(this.configuration.ResourceHandlers, typeof(IAmiServiceContract));
+                else
+                    AmiMessageHandler.ResourceHandler = new ResourceHandlerTool(
+                        ApplicationServiceContext.Current.GetService<IServiceManager>().GetAllTypes()
+                        .Where(t => !t.IsAbstract && !t.IsInterface && typeof(IApiResourceHandler).IsAssignableFrom(t))
+                        .ToList(),
+                        typeof(IAmiServiceContract)
+                    );
+
                 this.m_webHost = ApplicationServiceContext.Current.GetService<IRestServiceFactory>().CreateService(ConfigurationName);
                 this.m_webHost.AddServiceBehavior(new ErrorServiceBehavior());
 
@@ -178,16 +189,6 @@ namespace SanteDB.Rest.AMI
                 // Start the webhost
                 this.m_webHost.Start();
                 ModelSerializationBinder.RegisterModelType(typeof(SecurityPolicyInfo));
-
-                if (this.m_configuration?.ResourceHandlers.Count() > 0)
-                    AmiMessageHandler.ResourceHandler = new ResourceHandlerTool(this.configuration.ResourceHandlers, typeof(IAmiServiceContract));
-                else
-                    AmiMessageHandler.ResourceHandler = new ResourceHandlerTool(
-                        ApplicationServiceContext.Current.GetService<IServiceManager>().GetAllTypes()
-                        .Where(t => !t.IsAbstract && !t.IsInterface && typeof(IApiResourceHandler).IsAssignableFrom(t))
-                        .ToList(),
-                        typeof(IAmiServiceContract)
-                    );
 
                 this.Started?.Invoke(this, EventArgs.Empty);
                 return true;
