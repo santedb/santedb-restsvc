@@ -66,5 +66,9 @@ namespace SanteDB.Rest.Common
         /// Device authorization when using HTTP basic auth
         /// </summary>
         public const string HttpDeviceCredentialHeaderName = "X-Device-Authorization";
+        /// <summary>
+        /// Two-factor authentication secret value in HTTP header.
+        /// </summary>
+        public const string TfaSecret = "X-SanteDB-TfaSecret";
     }
 }
