@@ -37,7 +37,7 @@ namespace SanteDB.Rest.Common
                 }
             }
             // Next state
-            if (query.TryGetValue(QueryControlParameterNames.HttpQueryStateParameterName, out queryList) && Guid.TryParse(queryList.First(), out Guid queryId))
+            if (query.TryGetValue(QueryControlParameterNames.HttpQueryStateParameterName, out queryList) && Guid.TryParse(queryList.First(), out Guid queryId) && queryId != Guid.Empty)
             {
                 me = me.AsStateful(queryId);
             }
