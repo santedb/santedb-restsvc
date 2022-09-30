@@ -1,20 +1,15 @@
 ﻿using RestSrvr;
 using RestSrvr.Exceptions;
-using RestSrvr.Message;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
-using SanteDB.Rest.Common.Security;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Data;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Security;
 using System.Security.Authentication;
-using System.Text;
 
 namespace SanteDB.Rest.Common
 {
@@ -24,7 +19,7 @@ namespace SanteDB.Rest.Common
     public static class HttpErrorUtility
     {
 
-      
+
         /// <summary>
         /// Get the HTTP status code for <paramref name="exception"/>
         /// </summary>
@@ -34,12 +29,15 @@ namespace SanteDB.Rest.Common
         {
             // We need the root cause of the exception
             var rootException = exception;
-            while (rootException.InnerException != null) rootException = rootException.InnerException;
-           
+            while (rootException.InnerException != null)
+            {
+                rootException = rootException.InnerException;
+            }
+
             switch (rootException)
             {
                 case PreconditionFailedException pfe:
-                    switch(RestOperationContext.Current?.IncomingRequest?.HttpMethod.ToLowerInvariant())
+                    switch (RestOperationContext.Current?.IncomingRequest?.HttpMethod.ToLowerInvariant())
                     {
                         case "get":
                         case "head":

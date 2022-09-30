@@ -26,7 +26,6 @@ using SanteDB.Rest.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.AMI.Operation
 {
@@ -71,7 +70,7 @@ namespace SanteDB.Rest.AMI.Operation
             if (Guid.TryParse(scopingKey.ToString(), out var value))
             {
                 var job = this.m_manager.GetJobInstance(value);
-                if(job == null)
+                if (job == null)
                 {
                     throw new KeyNotFoundException($"Cannot find job {value}");
                 }

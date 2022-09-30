@@ -18,11 +18,8 @@
  * User: fyfej
  * Date: 2022-5-30
  */
-using Newtonsoft.Json;
 using SanteDB.Core.Model.Parameters;
 using System;
-using System.Collections.Generic;
-using System.Xml.Serialization;
 
 namespace SanteDB.Rest.Common
 {

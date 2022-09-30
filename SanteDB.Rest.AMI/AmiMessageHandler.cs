@@ -18,30 +18,25 @@
  * User: fyfej
  * Date: 2022-5-30
  */
-using SanteDB.Core.Services;
 using RestSrvr;
 using SanteDB.Core;
+using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
+using SanteDB.Core.Model.AMI.Auth;
+using SanteDB.Core.Model.Serialization;
+using SanteDB.Core.Services;
 using SanteDB.Rest.AMI.Configuration;
 using SanteDB.Rest.Common;
+using SanteDB.Rest.Common.Behavior;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
+using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Reflection;
-using SanteDB.Rest.AMI.Resources;
-using SanteDB.Rest.AMI;
-using SanteDB.Core.Diagnostics;
-using System.Diagnostics.Tracing;
-using SanteDB.Core.Model.Serialization;
-using SanteDB.Core.Model.AMI.Auth;
-using SanteDB.Core.Interfaces;
-using SanteDB.Rest.Common.Behavior;
 
 namespace SanteDB.Rest.AMI
 {
-   
+
     /// <summary>
     /// An implementation of the <see cref="IApiEndpointProvider"/> which hosts and manages the 
     /// <see href="https://help.santesuite.org/developers/service-apis/administration-management-interface-ami">Administrative Management Interface</see> REST services.
@@ -160,7 +155,9 @@ namespace SanteDB.Rest.AMI
         {
             // Don't startup unless in SanteDB
             if (!Assembly.GetEntryAssembly().GetName().Name.StartsWith("SanteDB"))
+            {
                 return true;
+            }
 
             try
             {
@@ -168,14 +165,18 @@ namespace SanteDB.Rest.AMI
 
                 //Setup the res handler before the service is instantiated.
                 if (this.m_configuration?.ResourceHandlers.Count() > 0)
+                {
                     AmiMessageHandler.ResourceHandler = new ResourceHandlerTool(this.configuration.ResourceHandlers, typeof(IAmiServiceContract));
+                }
                 else
+                {
                     AmiMessageHandler.ResourceHandler = new ResourceHandlerTool(
                         ApplicationServiceContext.Current.GetService<IServiceManager>().GetAllTypes()
                         .Where(t => !t.IsAbstract && !t.IsInterface && typeof(IApiResourceHandler).IsAssignableFrom(t))
                         .ToList(),
                         typeof(IAmiServiceContract)
                     );
+                }
 
                 this.m_webHost = ApplicationServiceContext.Current.GetService<IRestServiceFactory>().CreateService(ConfigurationName);
                 this.m_webHost.AddServiceBehavior(new ErrorServiceBehavior());

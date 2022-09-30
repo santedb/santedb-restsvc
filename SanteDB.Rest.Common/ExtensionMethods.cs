@@ -19,7 +19,6 @@
  * Date: 2022-5-30
  */
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
@@ -39,7 +38,10 @@ namespace SanteDB.Rest.Common
         public static DateTime? GetIfModifiedSince(this HttpListenerRequest me)
         {
             if (me.Headers["If-Modified-Since"] != null)
+            {
                 return DateTime.Parse(me.Headers["If-Modified-Since"]);
+            }
+
             return null;
         }
 
@@ -49,7 +51,10 @@ namespace SanteDB.Rest.Common
         public static DateTime? GetIfUnmodifiedSince(this HttpListenerRequest me)
         {
             if (me.Headers["If-Unmodified-Since"] != null)
+            {
                 return DateTime.Parse(me.Headers["If-Unmodified-Since"]);
+            }
+
             return null;
         }
 
@@ -72,7 +77,7 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Parse ETag match header
         /// </summary>
-        private static string[] ParseETagMatch(this String me)=> me.Split('"').Where(o =>
+        private static string[] ParseETagMatch(this String me) => me.Split('"').Where(o =>
                         !o.StartsWith(",") &&
                         !"W/".Equals(o) &&
                         !String.IsNullOrEmpty(o)).ToArray();
@@ -85,7 +90,9 @@ namespace SanteDB.Rest.Common
         public static void SetETag(this HttpListenerResponse me, String etag, bool isWeak = false)
         {
             if (!String.IsNullOrEmpty(etag))
+            {
                 me.AppendHeader("ETag", isWeak ? $"W/{etag}" : etag);
+            }
         }
 
         /// <summary>

@@ -25,7 +25,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
     /// </summary>
     internal static class HdsiConstants
     {
-        
+
         /// <summary>
         /// Trace source name for HDSI
         /// </summary>

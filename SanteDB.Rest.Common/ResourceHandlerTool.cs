@@ -20,8 +20,6 @@
  */
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
-using SanteDB.Core.Interfaces;
-using SanteDB.Core.Model.Query;
 using SanteDB.Core.Services;
 using System;
 using System.Collections.Concurrent;
@@ -50,7 +48,8 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Creates an single resource handler for a particular service
         /// </summary>
-        /// <param name="resourceTypes">The type of resource handlers</param>
+        /// <param name="resourceHandlerTypes">The type of resource handlers</param>
+        /// <param name="scope">The scope in which the handler types operate</param>
         public ResourceHandlerTool(IEnumerable<Type> resourceHandlerTypes, Type scope)
         {
             var serviceManager = ApplicationServiceContext.Current.GetService<IServiceManager>();
@@ -63,7 +62,9 @@ namespace SanteDB.Rest.Common
                 {
                     IApiResourceHandler rh = serviceManager.CreateInjected(t) as IApiResourceHandler;
                     if (rh == null)
+                    {
                         continue; // TODO: Emit a warning
+                    }
 
                     if (rh.Scope == scope)
                     {

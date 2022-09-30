@@ -21,7 +21,6 @@
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Exceptions;
 using SanteDB.Docker.Core;
-using SanteDB.Rest.AMI;
 using SanteDB.Rest.Common.Behavior;
 using SanteDB.Rest.Common.Configuration;
 using SanteDB.Rest.Common.Security;
@@ -29,8 +28,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SanteDB.Rest.AMI.Docker
 {

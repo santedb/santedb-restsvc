@@ -20,12 +20,9 @@
  */
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Model.Attributes;
-using SanteDB.Core.Model.Serialization;
 using SanteDB.Rest.Common;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Xml.Serialization;
 
 namespace SanteDB.Rest.HDSI.Configuration
@@ -42,7 +39,7 @@ namespace SanteDB.Rest.HDSI.Configuration
         /// </summary>
         public HdsiConfigurationSection()
         {
-            
+
         }
 
         /// <summary>
@@ -55,7 +52,7 @@ namespace SanteDB.Rest.HDSI.Configuration
         {
             get; set;
         }
-       
-       
+
+
     }
 }

@@ -19,7 +19,6 @@
  * Date: 2022-9-7
  */
 using SanteDB.Core;
-using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
@@ -103,13 +102,18 @@ namespace SanteDB.Rest.HDSI.Resources
             try
             {
                 if (data is IdentifiedData id)
+                {
                     this.CheckOut((Guid)id.Key);
+                }
+
                 return base.Update(data);
             }
             finally
             {
                 if (data is IdentifiedData id)
+                {
                     this.CheckIn((Guid)id.Key);
+                }
             }
         }
 
@@ -156,7 +160,9 @@ namespace SanteDB.Rest.HDSI.Resources
             {
                 this.CheckOut(key);
                 if (this.m_repository is ICancelRepositoryService<TData> cr)
+                {
                     return cr.Cancel((Guid)key);
+                }
                 else
                 {
                     this.m_tracer.TraceError($"Repository for {this.ResourceName} does not support Cancel");

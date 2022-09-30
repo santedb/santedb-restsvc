@@ -27,12 +27,9 @@ using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
-using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.AMI.ChildResources
 {

@@ -45,7 +45,9 @@ namespace SanteDB.Rest.HDSI.Model
         {
             this.Code = nvc["code"];
             if (Boolean.TryParse(nvc["validate"], out bool r))
+            {
                 this.Validate = r;
+            }
         }
 
         /// <summary>

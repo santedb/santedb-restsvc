@@ -82,7 +82,7 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         /// </summary>
         public DiagnosticServiceInfo(object daemon) : this(daemon.GetType())
         {
-            if(daemon is IDaemonService d)
+            if (daemon is IDaemonService d)
             {
                 this.IsRunning = d.IsRunning;
             }

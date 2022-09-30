@@ -74,40 +74,57 @@ namespace SanteDB.Rest.Common.Security
                 var authHeader = httpRequest.Headers["Authorization"];
                 if (String.IsNullOrEmpty(authHeader) ||
                     !authHeader.ToLowerInvariant().StartsWith("basic"))
+                {
                     throw new AuthenticationException("Invalid authentication scheme");
+                }
+
                 authHeader = authHeader.Substring(6);
                 var b64Data = Encoding.UTF8.GetString(Convert.FromBase64String(authHeader)).Split(':');
                 if (b64Data.Length != 2)
+                {
                     throw new SecurityException("Malformed HTTP Basic Header");
+                }
 
                 var principal = identityService.Authenticate(b64Data[0], b64Data[1]);
                 if (principal == null)
+                {
                     throw new AuthenticationException("Invalid username/password");
+                }
 
                 // Add claims made by the client
                 var claims = new List<IClaim>();
                 if (principal is IClaimsPrincipal)
+                {
                     claims.AddRange((principal as IClaimsPrincipal).Claims);
+                }
 
                 var clientClaims = httpRequest.Headers.ExtractClientClaims();
                 foreach (var claim in clientClaims)
                 {
                     if (this.m_configuration?.AllowedClientClaims?.Contains(claim.Type) == false)
+                    {
                         throw new SecurityException("Claim not allowed");
+                    }
                     else
                     {
                         var handler = claim.GetHandler();
                         if (handler == null ||
                             handler.Validate(principal, claim.Value))
+                        {
                             claims.Add(claim);
+                        }
                         else
+                        {
                             throw new SecurityException("Claim validation failed");
+                        }
                     }
                 }
 
                 // Claim headers built in
                 if (pipService != null)
+                {
                     claims.AddRange(pdpService.GetEffectivePolicySet(principal).Where(o => o.Rule == PolicyGrantType.Grant).Select(o => new SanteDBClaim(SanteDBClaimTypes.SanteDBGrantedPolicyClaim, o.Policy.Oid)));
+                }
 
                 // Finally validate the client
                 var claimsPrincipal = new SanteDBClaimsPrincipal(new SanteDBClaimsIdentity(principal.Identity, claims));
@@ -117,7 +134,9 @@ namespace SanteDB.Rest.Common.Security
                     var clientAuth = httpRequest.Headers[ExtendedHttpHeaderNames.BasicHttpClientCredentialHeaderName];
                     if (clientAuth == null ||
                         !clientAuth.StartsWith("basic", StringComparison.InvariantCultureIgnoreCase))
+                    {
                         throw new SecurityException("Client credentials invalid");
+                    }
                     else
                     {
                         String clientAuthString = clientAuth.Substring(clientAuth.IndexOf("basic", StringComparison.InvariantCultureIgnoreCase) + 5).Trim();

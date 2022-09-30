@@ -26,7 +26,6 @@ using SanteDB.Core.Model.AMI.Applet;
 using SanteDB.Core.Model.Query;
 using SanteDB.Rest.Common;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
@@ -92,14 +91,19 @@ namespace SanteDB.Rest.AMI.ChildResources
             var appletData = this.m_solutionManager.GetPackage(scopingKey.ToString(), key.ToString());
 
             if (appletData == null)
+            {
                 throw new FileNotFoundException(key.ToString());
+            }
             else
             {
                 var appletManifest = AppletPackage.Load(appletData);
                 RestOperationContext.Current.OutgoingResponse.SetETag(appletManifest.Meta.Version);
                 RestOperationContext.Current.OutgoingResponse.Headers.Add(ExtendedHttpHeaderNames.PackageIdentifierHeaderName, appletManifest.Meta.Id);
                 if (appletManifest.Meta.Hash != null)
+                {
                     RestOperationContext.Current.OutgoingResponse.AppendHeader(ExtendedHttpHeaderNames.PackageHashHeaderName, Convert.ToBase64String(appletManifest.Meta.Hash));
+                }
+
                 RestOperationContext.Current.OutgoingResponse.AppendHeader("Content-Type", "application/octet-stream");
                 RestOperationContext.Current.OutgoingResponse.ContentType = "application/octet-stream";
                 RestOperationContext.Current.OutgoingResponse.AppendHeader("Content-Disposition", $"attachment; filename=\"{appletManifest.Meta.Id}.pak.gz\"");

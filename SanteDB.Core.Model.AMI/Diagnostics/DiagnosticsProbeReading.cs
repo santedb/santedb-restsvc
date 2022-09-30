@@ -51,9 +51,13 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
             this.ReadingDate = DateTime.Now;
             this.ProbeKey = counter.Uuid;
             if (counter is ICompositeDiagnosticsProbe)
+            {
                 this.Value = (counter as ICompositeDiagnosticsProbe).Value.Select(o => new DiagnosticsProbeReading(o)).ToArray();
+            }
             else
+            {
                 this.Value = counter.Value;
+            }
         }
 
         /// <summary>

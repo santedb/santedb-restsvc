@@ -34,7 +34,7 @@ namespace SanteDB.Rest.AMI.Configuration
     /// </summary>
     [XmlType(nameof(AmiConfigurationSection), Namespace = "http://santedb.org/configuration")]
     public class AmiConfigurationSection : IConfigurationSection
-	{
+    {
         /// <summary>
         /// Ami configuration section
         /// </summary>
@@ -62,11 +62,11 @@ namespace SanteDB.Rest.AMI.Configuration
         [XmlArray("resources"), XmlArrayItem("add"), Browsable(false)]
         public List<String> ResourceHandlerXml { get; set; }
 
-		/// <summary>
-		/// Extra endpoints
-		/// </summary>
+        /// <summary>
+        /// Extra endpoints
+        /// </summary>
         [XmlArray("endpoints"), XmlArrayItem("add")]
         [DisplayName("API Endpoints"), Description("The API endpoints which can't be auto-detected by the default AMI (if you're running in a distributed deployment). NOTE: DO NOT MODIFY THIS SETTING IF YOU'RE RUNNING THE ENTIRE INFRASTRUCTURE ON ONE SERVER")]
-		public List<ServiceEndpointOptions> Endpoints { get; set; }
-	}
+        public List<ServiceEndpointOptions> Endpoints { get; set; }
+    }
 }

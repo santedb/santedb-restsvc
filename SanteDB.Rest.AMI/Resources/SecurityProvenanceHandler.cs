@@ -19,15 +19,12 @@
  * Date: 2022-5-30
  */
 using SanteDB.Core;
-using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
 {

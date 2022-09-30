@@ -23,17 +23,13 @@ using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Constants;
+using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Roles;
+using SanteDB.Core.Protocol;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using SanteDB.Core.Model;
-using SanteDB.Core.Model.Parameters;
-using SanteDB.Core.Protocol;
 
 namespace SanteDB.Rest.HDSI.Operation
 {
@@ -97,7 +93,7 @@ namespace SanteDB.Rest.HDSI.Operation
 
             // Get parameter for desired protocols
             IClinicalProtocol clinicalProtocol = null;
-            if(parameters.TryGet("protocol", out Guid protocolId))
+            if (parameters.TryGet("protocol", out Guid protocolId))
             {
                 clinicalProtocol = this.m_clinicalProtocolRepository.GetProtocol(protocolId);
             }
@@ -110,7 +106,10 @@ namespace SanteDB.Rest.HDSI.Operation
 
             // Expand the participation roles form the care planner
             foreach (var p in plan.Relationships.Where(o => o.RelationshipTypeKey == ActRelationshipTypeKeys.HasComponent).Select(o => o.TargetAct))
+            {
                 p.Participations.ForEach(o => o.ParticipationRoleKey = o.ParticipationRoleKey ?? this.m_conceptRepositoryService.GetConcept(o.ParticipationRole?.Mnemonic).Key);
+            }
+
             return Bundle.CreateBundle(plan);
         }
     }

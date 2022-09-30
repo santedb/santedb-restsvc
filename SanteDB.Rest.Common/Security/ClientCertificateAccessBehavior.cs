@@ -26,8 +26,6 @@ using SanteDB.Core.Model.Serialization;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
 using SanteDB.Core.Security.Configuration;
-using SanteDB.Core.Security.Principal;
-using SanteDB.Core.Security.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -35,7 +33,6 @@ using System.IO;
 using System.Linq;
 using System.Security;
 using System.Security.Authentication;
-using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.Text;
@@ -104,10 +101,14 @@ namespace SanteDB.Rest.Common.Security
         public ClientCertificateAccessBehavior(XElement xe)
         {
             if (xe == null)
+            {
                 throw new InvalidOperationException("Missing ClientCertificateAccessConfiguration");
-            using (var sr = new StringReader(xe.ToString()))
-                this.m_configuration = XmlModelSerializerFactory.Current.CreateSerializer(typeof(ClientCertificateAccessConfiguration)).Deserialize(sr) as ClientCertificateAccessConfiguration;
+            }
 
+            using (var sr = new StringReader(xe.ToString()))
+            {
+                this.m_configuration = XmlModelSerializerFactory.Current.CreateSerializer(typeof(ClientCertificateAccessConfiguration)).Deserialize(sr) as ClientCertificateAccessConfiguration;
+            }
         }
 
         /// <summary>
@@ -143,18 +144,18 @@ namespace SanteDB.Rest.Common.Security
         {
             try
             {
-                if(!request.Url.Scheme.Equals("https") || !request.IsSecure)
+                if (!request.Url.Scheme.Equals("https") || !request.IsSecure)
                 {
                     throw new SecurityException("Invalid Scheme - expected https");
                 }
-                else if(request.ClientCertificateError != 0)
+                else if (request.ClientCertificateError != 0)
                 {
                     throw new AuthenticationException($"Client Certificate Error {request.ClientCertificateError}");
                 }
 
                 IPrincipal authenticationPrincipal = null;
                 var certificateIdentityService = ApplicationServiceContext.Current.GetService<ICertificateIdentityProvider>();
-                if(certificateIdentityService == null)
+                if (certificateIdentityService == null)
                 {
                     throw new InvalidOperationException("In order to use node authentication with X509 certificates a CertificateIdentityProvider must be configured");
                 }
@@ -162,16 +163,17 @@ namespace SanteDB.Rest.Common.Security
                 var clientCertificate = request.ClientCertificate;
                 var headerPem = request.Headers[X_CLIENT_CERT_PEM];
 
-                if(!String.IsNullOrEmpty(headerPem) && this.m_configuration.AllowClientHeader)
+                if (!String.IsNullOrEmpty(headerPem) && this.m_configuration.AllowClientHeader)
                 {
                     clientCertificate = new X509Certificate2(Encoding.UTF8.GetBytes(headerPem));
                 }
-                
-                if(clientCertificate == null)
+
+                if (clientCertificate == null)
                 {
                     throw new AuthenticationException("Client certificate required");
                 }
-                else {
+                else
+                {
                     // Build the chain
                     using (var chain = new X509Chain())
                     {
@@ -194,7 +196,7 @@ namespace SanteDB.Rest.Common.Security
                                 // Validate that there has been no shift in principal if currently authenticated
                                 if (AuthenticationContext.Current.Principal is IClaimsPrincipal cp && authenticationPrincipal is IClaimsPrincipal ap)
                                 {
-                                    var existingIdentity = cp.Identities.FirstOrDefault(i=> i.FindFirst(SanteDBClaimTypes.Actor)?.Value == ap.FindFirst(SanteDBClaimTypes.Actor)?.Value); // find the first matching (if any) identity to validate
+                                    var existingIdentity = cp.Identities.FirstOrDefault(i => i.FindFirst(SanteDBClaimTypes.Actor)?.Value == ap.FindFirst(SanteDBClaimTypes.Actor)?.Value); // find the first matching (if any) identity to validate
                                     if (existingIdentity == null)
                                     {
                                         cp.AddIdentity(authenticationPrincipal.Identity);
@@ -217,8 +219,8 @@ namespace SanteDB.Rest.Common.Security
                     throw new AuthenticationException("No trusted issuer on client chain found");
                 }
             }
-            catch(SecurityException) { throw; }
-            catch(Exception e)
+            catch (SecurityException) { throw; }
+            catch (Exception e)
             {
                 this.m_tracer.TraceError("Error performing client node authentication - {0}", e);
                 throw new AuthenticationException($"Error performing client node authentication", e);

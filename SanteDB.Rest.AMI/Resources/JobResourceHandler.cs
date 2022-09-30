@@ -143,7 +143,10 @@ namespace SanteDB.Rest.AMI.Resources
             ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
             var jobs = this.m_jobManager.Jobs;
             if (queryParameters.TryGetValue("name", out var data))
+            {
                 jobs = jobs.Where(o => o.Name.Contains(data.First()));
+            }
+
             return new MemoryQueryResultSet(jobs.Select(o => new JobInfo(this.m_jobStateService.GetJobState(o), this.m_jobManager.GetJobSchedules(o))));
         }
 
@@ -164,13 +167,13 @@ namespace SanteDB.Rest.AMI.Resources
                     this.m_tracer.TraceError($"Could not find job with ID {jobInfo.Key}");
                     throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.ami.couldNotFindJob", new { param = jobInfo.Key }));
                 }
-                
-                if(jobInfo.Schedule != null)
+
+                if (jobInfo.Schedule != null)
                 {
                     this.m_tracer.TraceInfo("User setting job schedule for {0}", job.Name);
-                    foreach(var itm in jobInfo.Schedule)
+                    foreach (var itm in jobInfo.Schedule)
                     {
-                        if(itm.Type == Core.Configuration.JobScheduleType.Interval)
+                        if (itm.Type == Core.Configuration.JobScheduleType.Interval)
                         {
                             this.m_jobManager.SetJobSchedule(job, itm.Interval);
                         }
@@ -198,7 +201,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <inheritdoc/>
         public object InvokeOperation(object scopingEntityKey, string operationName, ParameterCollection parameters)
         {
-            if(this.TryGetOperation(operationName, scopingEntityKey != null ? ChildObjectScopeBinding.Instance : ChildObjectScopeBinding.Class, out var handler))
+            if (this.TryGetOperation(operationName, scopingEntityKey != null ? ChildObjectScopeBinding.Instance : ChildObjectScopeBinding.Class, out var handler))
             {
                 return handler.Invoke(typeof(JobInfo), scopingEntityKey, parameters);
             }
@@ -211,7 +214,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <inheritdoc/>
         public bool TryGetOperation(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildOperation operationHandler)
         {
-            if(this.m_operationHandlers.TryGetValue(propertyName, out operationHandler))
+            if (this.m_operationHandlers.TryGetValue(propertyName, out operationHandler))
             {
                 return operationHandler.ScopeBinding.HasFlag(bindingType);
             }

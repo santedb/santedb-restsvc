@@ -20,7 +20,6 @@
  */
 using SanteDB.Core.Configuration;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Xml.Serialization;
 
 namespace SanteDB.Rest.Common.Configuration

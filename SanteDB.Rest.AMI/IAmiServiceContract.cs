@@ -20,7 +20,6 @@
  */
 using RestSrvr.Attributes;
 using SanteDB.Core.Applets.Model;
-using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Mail;
 using SanteDB.Core.Model.AMI.Applet;
@@ -30,6 +29,7 @@ using SanteDB.Core.Model.AMI.Diagnostics;
 using SanteDB.Core.Model.AMI.Jobs;
 using SanteDB.Core.Model.AMI.Logging;
 using SanteDB.Core.Model.AMI.Security;
+using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Parameters;
@@ -41,7 +41,6 @@ using SanteDB.Core.Queue;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.IO;
 using System.Xml.Schema;
 
 namespace SanteDB.Rest.AMI
@@ -202,7 +201,7 @@ namespace SanteDB.Rest.AMI
         AmiCollection AssociationSearch(String resourceType, String id, String childResourceType);
 
         /// <summary>
-        /// Assigns the <paramref name="body"/> object with the resource at <paramref name="resourceType"/>/<paramref name="key"/>
+        /// Assigns the <paramref name="body"/> object with the resource at <paramref name="resourceType"/>/<paramref name="id"/>
         /// </summary>
         /// <param name="resourceType">The type of container resource</param>
         /// <param name="id">The identiifer of the container</param>
@@ -314,7 +313,7 @@ namespace SanteDB.Rest.AMI
         /// Invokes the specified operation
         /// </summary>
         /// <param name="resourceType">The type of operation being invoked</param>
-        /// <param name="id">The ID of the operation</param>
+        /// <param name="body">The parameters which should be used to execute the operation</param>
         /// <param name="operationName">The name of the operation</param>
         /// <returns>The result of the operation invokation</returns>
         [RestInvoke("POST", "/{resourceType}/${operationName}")]

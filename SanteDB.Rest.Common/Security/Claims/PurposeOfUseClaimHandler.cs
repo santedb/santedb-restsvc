@@ -23,7 +23,6 @@ using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Security.Claims;
 using SanteDB.Core.Services;
 using System;
-using System.Diagnostics;
 using System.Diagnostics.Tracing;
 using System.Security.Principal;
 

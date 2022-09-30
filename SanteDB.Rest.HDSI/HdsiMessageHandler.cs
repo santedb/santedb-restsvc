@@ -21,21 +21,17 @@
 using RestSrvr;
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
-using SanteDB.Core.Interfaces;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Services;
-using SanteDB.Rest.HDSI.Configuration;
 using SanteDB.Messaging.HDSI.Wcf;
 using SanteDB.Rest.Common;
-using SanteDB.Rest.HDSI;
-using SanteDB.Rest.HDSI.Resources;
+using SanteDB.Rest.Common.Behavior;
+using SanteDB.Rest.HDSI.Configuration;
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Reflection;
-using SanteDB.Rest.Common.Behavior;
 
 namespace SanteDB.Rest.HDSI
 {
@@ -152,7 +148,9 @@ namespace SanteDB.Rest.HDSI
         {
             // Don't start if we're in a test context
             if (!Assembly.GetEntryAssembly().GetName().Name.StartsWith("SanteDB"))
+            {
                 return true;
+            }
 
             try
             {
@@ -161,21 +159,27 @@ namespace SanteDB.Rest.HDSI
                 var serviceManager = ApplicationServiceContext.Current.GetService<IServiceManager>();
                 // Force startup
                 if (this.m_configuration?.ResourceHandlers.Count() > 0)
+                {
                     HdsiMessageHandler.ResourceHandler = new ResourceHandlerTool(this.m_configuration.ResourceHandlers.Select(o => o.Type), typeof(IHdsiServiceContract));
+                }
                 else
+                {
                     HdsiMessageHandler.ResourceHandler = new ResourceHandlerTool(
 
                         serviceManager.GetAllTypes()
                         .Where(t => !t.IsAbstract && !t.IsInterface && typeof(IApiResourceHandler).IsAssignableFrom(t))
                         .ToList(), typeof(IHdsiServiceContract)
                     );
+                }
 
                 this.m_webHost = ApplicationServiceContext.Current.GetService<IRestServiceFactory>().CreateService(ConfigurationName);
                 this.m_webHost.AddServiceBehavior(new ErrorServiceBehavior());
 
                 // Add service behaviors
                 foreach (ServiceEndpoint endpoint in this.m_webHost.Endpoints)
+                {
                     this.m_traceSource.TraceInfo("Starting HDSI on {0}...", endpoint.Description.ListenUri);
+                }
 
                 // Start the webhost
                 ApplicationServiceContext.Current.Started += (o, e) => this.m_webHost.Start();

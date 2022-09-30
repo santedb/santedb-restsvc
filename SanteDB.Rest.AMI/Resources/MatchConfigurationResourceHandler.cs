@@ -99,9 +99,13 @@ namespace SanteDB.Rest.AMI.Resources
         public object Create(object data, bool updateIfExists)
         {
             if (data is IRecordMatchingConfiguration configMatch)
+            {
                 return this.m_configurationService.SaveConfiguration(configMatch);
+            }
             else
+            {
                 throw new ArgumentException("Incorrect match configuration type");
+            }
         }
 
         /// <summary>
@@ -128,10 +132,14 @@ namespace SanteDB.Rest.AMI.Resources
         public IQueryResultSet Query(NameValueCollection queryParameters)
         {
             if (queryParameters.TryGetValue("name", out var values))
+            {
                 return new MemoryQueryResultSet(this.m_configurationService.Configurations
                     .Where(o => o.Id.Contains(values.First().Replace("~", ""))));
+            }
             else
+            {
                 return new MemoryQueryResultSet(this.m_configurationService.Configurations);
+            }
         }
 
         /// <summary>
@@ -141,9 +149,13 @@ namespace SanteDB.Rest.AMI.Resources
         public object Update(object data)
         {
             if (data is IRecordMatchingConfiguration configMatch)
+            {
                 return this.m_configurationService.SaveConfiguration(configMatch);
+            }
             else
+            {
                 throw new ArgumentException("Incorrect match configuration type");
+            }
         }
 
         /// <summary>

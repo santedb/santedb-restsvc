@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 
 namespace SanteDB.Rest.Common.Configuration.Interop
 {

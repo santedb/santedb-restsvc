@@ -16,7 +16,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.WWW
 {
@@ -57,7 +56,9 @@ namespace SanteDB.Rest.WWW
         private void ThrowIfNotRunning()
         {
             if (!ApplicationServiceContext.Current.IsRunning)
+            {
                 throw new DomainStateException();
+            }
         }
 
         /// <summary>
@@ -90,18 +91,24 @@ namespace SanteDB.Rest.WWW
             this.ThrowIfNotRunning();
 
             if (RestOperationContext.Current.Data.TryGetValue("lang", out object lang) && lang is String[] langList)
+            {
                 lang = langList[0];
+            }
             else if (AuthenticationContext.Current.Principal is IClaimsPrincipal icp)
+            {
                 lang = icp.GetClaimValue(SanteDBClaimTypes.Language);
+            }
             else
+            {
                 lang = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+            }
 
-            var etag = $"{String.Join(";", this.m_serviceApplet.Select(o=>o.Info.Version))}/{lang}";
+            var etag = $"{String.Join(";", this.m_serviceApplet.Select(o => o.Info.Version))}/{lang}";
             if (this.m_configuration.AllowClientCaching)
             {
                 if (RestOperationContext.Current.IncomingRequest.Headers["If-None-Match"] == etag)
                 {
-                    RestOperationContext.Current.OutgoingResponse.StatusCode = 304; /// not modified
+                    RestOperationContext.Current.OutgoingResponse.StatusCode = 304; // not modified
                     return null;
                 }
             }

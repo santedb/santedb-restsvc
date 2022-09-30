@@ -55,9 +55,6 @@ namespace SanteDB.Rest.Common
         /// <param name="scopingEntityKey">The container (scope) entity to which the sub entity belongs</param>
         /// <param name="propertyName">The name of the property/relationship to scope to</param>
         /// <param name="filter">The filter to apply</param>
-        /// <param name="offset">The offset of the first row to be retrieved </param>
-        /// <param name="count">The number of objects which should be returned from the query</param>
-        /// <param name="totalCount">The total matching results</param>
         /// <returns>The matching results</returns>
         IQueryResultSet QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter);
 

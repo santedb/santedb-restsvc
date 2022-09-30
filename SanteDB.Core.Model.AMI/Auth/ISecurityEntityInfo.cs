@@ -18,7 +18,6 @@
  * User: fyfej
  * Date: 2022-5-30
  */
-using SanteDB.Core.Model.Security;
 using System.Collections.Generic;
 
 namespace SanteDB.Core.Model.AMI.Auth

@@ -21,19 +21,14 @@
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Configuration.Features;
 using SanteDB.Core.Diagnostics;
-using SanteDB.Core.Interop;
 using SanteDB.Core.Services;
-using SanteDB.Rest.Common.Configuration;
 using SanteDB.Rest.Common.Configuration.Interop;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SanteDB.Rest.Common.Configuration.Features
 {
@@ -182,7 +177,9 @@ namespace SanteDB.Rest.Common.Configuration.Features
         {
             // First, is the REST service enabled?
             if (!configuration.SectionTypes.Any(o => typeof(SanteDB.Rest.Common.Configuration.RestConfigurationSection).IsAssignableFrom(o.Type)))
+            {
                 configuration.AddSection(new SanteDB.Rest.Common.Configuration.RestConfigurationSection());
+            }
 
             // Does the contract exist?
             var restConfiguration = configuration.GetSection<SanteDB.Rest.Common.Configuration.RestConfigurationSection>().Services.FirstOrDefault(s => s.ServiceType == this.m_behaviorType || s.Endpoints.Any(e => e.Contract == this.m_contractType));
@@ -197,7 +194,9 @@ namespace SanteDB.Rest.Common.Configuration.Features
             }
             // Create / add section type
             if (!configuration.SectionTypes.Any(t => t.Type == this.m_configurationType))
+            {
                 configuration.SectionTypes.Add(new TypeReferenceConfiguration(this.m_configurationType));
+            }
 
             // Does the section exist?
             var serviceConfiguration = configuration.GetSection(this.m_configurationType);
@@ -209,13 +208,18 @@ namespace SanteDB.Rest.Common.Configuration.Features
 
             // Do either exist?
             if (restConfiguration == null)
+            {
                 using (var s = this.m_configurationType.Assembly.GetManifestResourceStream(this.m_configurationType.Namespace + ".Default.xml"))
                 {
                     restConfiguration = RestServiceConfiguration.Load(s);
                     restConfiguration.ServiceType = this.m_behaviorType;
                 }
+            }
+
             if (serviceConfiguration == null)
+            {
                 serviceConfiguration = Activator.CreateInstance(this.m_configurationType);
+            }
 
             // Construct the
             GenericFeatureConfiguration genericConfig = new GenericFeatureConfiguration();

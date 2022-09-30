@@ -19,7 +19,6 @@
  * Date: 2022-5-30
  */
 using RestSrvr;
-using SanteDB.Rest.Common.Serialization;
 
 namespace SanteDB.Rest.Common.Behavior
 {

@@ -102,7 +102,9 @@ namespace SanteDB.Rest.AMI.ChildResources
         {
             var scope = this.m_roleRepository.Get((Guid)scopingKey);
             if (scope == null)
+            {
                 throw new KeyNotFoundException($"Could not find SecurityRole with identifier {scopingKey}");
+            }
 
             try
             {
@@ -111,13 +113,20 @@ namespace SanteDB.Rest.AMI.ChildResources
 
                 // Get user entity
                 if (item is SecurityUser su)
+                {
                     item = new SecurityUserInfo(su);
+                }
 
                 var rd = item as SecurityUserInfo;
                 if (!rd.Entity.Key.HasValue)
+                {
                     rd.Entity = this.m_securityRepository.GetUser(rd.Entity.UserName);
+                }
+
                 if (rd.Entity == null)
+                {
                     throw new KeyNotFoundException($"Could not find specified user");
+                }
 
                 this.m_roleProvider.AddUsersToRoles(new string[] { rd.Entity.UserName }, new string[] { scope.Name }, AuthenticationContext.Current.Principal);
                 AuditUtil.AuditSecurityAttributeAction(new object[] { scope }, true, $"add user={rd.Entity.UserName}");
@@ -156,11 +165,15 @@ namespace SanteDB.Rest.AMI.ChildResources
         {
             var scope = this.m_roleRepository.Get((Guid)scopingKey);
             if (scope == null)
+            {
                 throw new KeyNotFoundException($"Could not find SecurityRole with identifier {scopingKey}");
+            }
 
             var user = this.m_userRepository.Get(Guid.Parse(key.ToString()));
             if (user == null)
+            {
                 throw new KeyNotFoundException($"User {key} not found");
+            }
 
             try
             {

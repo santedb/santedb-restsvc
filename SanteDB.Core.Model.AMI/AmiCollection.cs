@@ -101,7 +101,7 @@ namespace SanteDB.Core.Model.AMI.Collections
         /// </summary>
         public AmiCollection(IEnumerable<Object> collectionItems)
         {
-            this.CollectionItem = new List<object>( collectionItems);
+            this.CollectionItem = new List<object>(collectionItems);
         }
 
         /// <summary>

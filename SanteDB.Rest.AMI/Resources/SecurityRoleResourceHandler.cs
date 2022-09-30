@@ -18,8 +18,6 @@
  * User: fyfej
  * Date: 2022-5-30
  */
-using SanteDB.Core;
-using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
@@ -27,7 +25,6 @@ using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Generic;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -60,7 +57,9 @@ namespace SanteDB.Rest.AMI.Resources
         public override object Create(object data, bool updateIfExists)
         {
             if (data is SecurityRole)
+            {
                 data = new SecurityRoleInfo(data as SecurityRole, this.m_policyInformationService);
+            }
 
             var retVal = base.Create(data, updateIfExists) as SecurityRoleInfo;
             var td = data as SecurityRoleInfo;
@@ -86,7 +85,10 @@ namespace SanteDB.Rest.AMI.Resources
         public override object Update(object data)
         {
             if (data is SecurityRole)
+            {
                 data = new SecurityRoleInfo(data as SecurityRole, this.m_policyInformationService);
+            }
+
             var td = data as SecurityRoleInfo;
 
             var retVal = base.Update(data) as SecurityRoleInfo;

@@ -123,7 +123,10 @@ namespace SanteDB.Rest.Common.Configuration
         public static RestServiceConfiguration Load(Stream stream)
         {
             if (s_serializer == null)
+            {
                 s_serializer = XmlModelSerializerFactory.Current.CreateSerializer(typeof(RestServiceConfiguration));
+            }
+
             return s_serializer.Deserialize(stream) as RestServiceConfiguration;
         }
 

@@ -41,6 +41,7 @@ namespace SanteDB.Rest.Common
         static ClaimsUtility()
         {
             foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+            {
                 try
                 {
                     foreach (var t in asm.GetTypes().Where(o => typeof(IClaimTypeHandler).IsAssignableFrom(o) && o.IsClass))
@@ -50,6 +51,7 @@ namespace SanteDB.Rest.Common
                     }
                 }
                 catch { }
+            }
         }
 
         /// <summary>
@@ -75,7 +77,9 @@ namespace SanteDB.Rest.Common
         {
             var claimsHeaders = headers[ExtendedHttpHeaderNames.BasicHttpClientClaimHeaderName];
             if (claimsHeaders == null)
+            {
                 return new List<IClaim>();
+            }
             else
             {
                 var data = Encoding.UTF8.GetString(Convert.FromBase64String(claimsHeaders));

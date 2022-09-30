@@ -18,7 +18,6 @@
  * User: fyfej
  * Date: 2022-5-30
  */
-using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Security;
@@ -67,7 +66,9 @@ namespace SanteDB.Rest.AMI.Resources
             var key = (data as IIdentifiedData).Key.Value;
             var policy = this.Get(key, Guid.Empty);
             if (policy == null || (policy as SecurityPolicy).IsPublic)
+            {
                 return base.Update(data);
+            }
             else if (policy == null)
             {
                 this.m_tracer.TraceError($"Policy {key} not found");
@@ -95,7 +96,9 @@ namespace SanteDB.Rest.AMI.Resources
         {
             var policy = this.Get(key, Guid.Empty);
             if (policy == null || (policy as SecurityPolicy).IsPublic)
+            {
                 return base.Delete(key);
+            }
             else if (policy == null)
             {
                 this.m_tracer.TraceError($"Policy {key} not found");

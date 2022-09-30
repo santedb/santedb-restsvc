@@ -26,7 +26,6 @@ using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 
 namespace SanteDB.Rest.HDSI.Resources
@@ -55,7 +54,9 @@ namespace SanteDB.Rest.HDSI.Resources
             {
                 var securityService = ApplicationServiceContext.Current.GetService<IRepositoryService<SecurityUser>>();
                 if (securityService.Get(userEntity.SecurityUserKey.GetValueOrDefault()) != null)
+                {
                     return base.Create(data, updateIfExists);
+                }
                 else
                 {
                     this.m_tracer.TraceWarning("Security user {0} doesn't exist here, ignoring update", userEntity.SecurityUserKey);
@@ -107,7 +108,9 @@ namespace SanteDB.Rest.HDSI.Resources
             {
                 var securityService = ApplicationServiceContext.Current.GetService<IRepositoryService<SecurityUser>>();
                 if (securityService.Get(userEntity.SecurityUserKey.GetValueOrDefault()) != null)
+                {
                     return base.Update(data);
+                }
                 else
                 {
                     this.m_tracer.TraceWarning("Security user {0} doesn't exist here, ignoring update", userEntity.SecurityUserKey);

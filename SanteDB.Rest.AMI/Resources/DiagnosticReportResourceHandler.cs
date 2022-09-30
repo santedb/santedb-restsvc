@@ -7,12 +7,10 @@ using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -49,7 +47,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// DI ctor
         /// </summary>
-        public DiagnosticReportResourceHandler(IAppletManagerService appletManager, IAppletSolutionManagerService solutionManager, IServiceManager serviceManager, 
+        public DiagnosticReportResourceHandler(IAppletManagerService appletManager, IAppletSolutionManagerService solutionManager, IServiceManager serviceManager,
             INetworkInformationService networkInformationService, IOperatingSystemInfoService operatingSystemInfoService, IDataPersistenceService<DiagnosticReport> persistenceService)
         {
             this.m_appletManager = appletManager;
@@ -66,7 +64,7 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.Login)]
         public object Create(object data, bool updateIfExists)
         {
-            if(data is DiagnosticReport dr)
+            if (data is DiagnosticReport dr)
             {
                 return this.m_persistenceService.Insert(dr, TransactionMode.Commit, AuthenticationContext.Current.Principal);
             }

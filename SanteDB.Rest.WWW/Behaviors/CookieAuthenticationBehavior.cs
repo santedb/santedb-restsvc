@@ -9,9 +9,7 @@ using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.WWW.Configuration;
 using System;
-using System.Collections.Generic;
 using System.Security;
-using System.Text;
 
 namespace SanteDB.Rest.WWW.Behaviors
 {
@@ -87,7 +85,7 @@ namespace SanteDB.Rest.WWW.Behaviors
             }
         }
 
-        /// <inheritdoc cref="IServiceBehavior.ApplyServiceBehavior(RestService, ServiceDispatcher)"
+        /// <inheritdoc cref="IServiceBehavior.ApplyServiceBehavior(RestService, ServiceDispatcher)"/>
         public void ApplyServiceBehavior(RestService service, ServiceDispatcher dispatcher)
         {
             dispatcher.AddServiceDispatcherPolicy(this);

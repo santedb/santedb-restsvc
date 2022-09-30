@@ -4,7 +4,6 @@ using RestSrvr.Exceptions;
 using SanteDB.Core;
 using SanteDB.Core.Http;
 using SanteDB.Core.Interop;
-using SanteDB.Core.Model;
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.AMI.Collections;
 using SanteDB.Core.Model.Collection;
@@ -15,9 +14,6 @@ using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.AMI
 {
@@ -59,14 +55,22 @@ namespace SanteDB.Rest.AMI
             {
                 if (data is Entity entity &&
                                    this.m_entityRepository?.Query(o => o.Key == entity.Key, AuthenticationContext.SystemPrincipal).Any() != true)
+                {
                     entity.AddTag("$upstream", "true");
+                }
                 else if (data is Act act &&
                     this.m_actRepository?.Query(o => o.Key == act.Key, AuthenticationContext.SystemPrincipal).Any() != true)
+                {
                     act.AddTag("$upstream", "true");
+                }
                 else if (data is Bundle bundle)
+                {
                     this.TagUpstream(bundle.Item.ToArray());
+                }
                 else if (data is AmiCollection coll)
+                {
                     this.TagUpstream(coll.CollectionItem.ToArray());
+                }
             }
         }
 
@@ -75,10 +79,11 @@ namespace SanteDB.Rest.AMI
         public override object Create(string resourceType, object data)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (this.m_networkInformationService.IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
@@ -90,8 +95,11 @@ namespace SanteDB.Rest.AMI
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
             }
             else
             {
@@ -104,10 +112,11 @@ namespace SanteDB.Rest.AMI
         public override object CreateUpdate(string resourceType, string key, object data)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (this.m_networkInformationService.IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
@@ -123,9 +132,11 @@ namespace SanteDB.Rest.AMI
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
-
+                }
             }
             else
             {
@@ -138,10 +149,11 @@ namespace SanteDB.Rest.AMI
         public override object Delete(string resourceType, string key)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (this.m_networkInformationService.IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
@@ -157,9 +169,11 @@ namespace SanteDB.Rest.AMI
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
-
+                }
             }
             else
             {
@@ -172,10 +186,11 @@ namespace SanteDB.Rest.AMI
         public override object Get(string resourceType, string key)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (this.m_networkInformationService.IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
@@ -187,9 +202,11 @@ namespace SanteDB.Rest.AMI
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
-
+                }
             }
             else
             {
@@ -202,10 +219,11 @@ namespace SanteDB.Rest.AMI
         public override object GetVersion(string resourceType, string key, string versionKey)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (this.m_networkInformationService.IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
@@ -217,9 +235,11 @@ namespace SanteDB.Rest.AMI
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
-
+                }
             }
             else
             {
@@ -232,10 +252,11 @@ namespace SanteDB.Rest.AMI
         public override AmiCollection History(string resourceType, string key)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (this.m_networkInformationService.IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
@@ -247,9 +268,11 @@ namespace SanteDB.Rest.AMI
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
-
+                }
             }
             else
             {
@@ -262,10 +285,11 @@ namespace SanteDB.Rest.AMI
         public override ServiceResourceOptions ResourceOptions(string resourceType)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (this.m_networkInformationService.IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
@@ -276,9 +300,11 @@ namespace SanteDB.Rest.AMI
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
-
+                }
             }
             else
             {
@@ -291,10 +317,11 @@ namespace SanteDB.Rest.AMI
         public override AmiCollection Search(string resourceType)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (this.m_networkInformationService.IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
@@ -305,9 +332,11 @@ namespace SanteDB.Rest.AMI
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
-
+                }
             }
             else
             {
@@ -320,10 +349,11 @@ namespace SanteDB.Rest.AMI
         public override object Update(string resourceType, string key, object data)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (this.m_networkInformationService.IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
@@ -339,9 +369,11 @@ namespace SanteDB.Rest.AMI
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
-
+                }
             }
             else
             {
@@ -354,10 +386,11 @@ namespace SanteDB.Rest.AMI
         public override object Lock(string resourceType, string key)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (this.m_networkInformationService.IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
@@ -369,9 +402,11 @@ namespace SanteDB.Rest.AMI
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
-
+                }
             }
             else
             {
@@ -384,10 +419,11 @@ namespace SanteDB.Rest.AMI
         public override object UnLock(string resourceType, string key)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (this.m_networkInformationService.IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
@@ -399,9 +435,11 @@ namespace SanteDB.Rest.AMI
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
-
+                }
             }
             else
             {
@@ -413,10 +451,11 @@ namespace SanteDB.Rest.AMI
         [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override object InvokeMethod(string resourceType, string operationName, ParameterCollection body)
         {
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (this.m_networkInformationService.IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
@@ -428,9 +467,11 @@ namespace SanteDB.Rest.AMI
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
-
+                }
             }
             else
             {
@@ -447,10 +488,11 @@ namespace SanteDB.Rest.AMI
                 throw new ArgumentNullException(nameof(body));
             }
 
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (this.m_networkInformationService.IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
@@ -466,9 +508,11 @@ namespace SanteDB.Rest.AMI
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
-
+                }
             }
             else
             {
@@ -481,10 +525,11 @@ namespace SanteDB.Rest.AMI
         public override AmiCollection AssociationSearch(string resourceType, string key, string childResourceType)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (this.m_networkInformationService.IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
@@ -501,9 +546,11 @@ namespace SanteDB.Rest.AMI
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
-
+                }
             }
             else
             {
@@ -516,10 +563,11 @@ namespace SanteDB.Rest.AMI
         public override object AssociationRemove(string resourceType, string key, string childResourceType, string scopedEntityKey)
         {
             // Only on the remote server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (this.m_networkInformationService.IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.AdministrationIntegrationService);
@@ -542,9 +590,11 @@ namespace SanteDB.Rest.AMI
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
-
+                }
             }
             else
             {
@@ -556,10 +606,11 @@ namespace SanteDB.Rest.AMI
         [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override object AssociationGet(string resourceType, string key, string childResourceType, string scopedEntityKey)
         {
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (this.m_networkInformationService.IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.AdministrationIntegrationService);
@@ -573,9 +624,11 @@ namespace SanteDB.Rest.AMI
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
-
+                }
             }
             else
             {
@@ -587,10 +640,11 @@ namespace SanteDB.Rest.AMI
         [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override object AssociationCreate(string resourceType, string key, string childResourceType, object body)
         {
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (this.m_networkInformationService.IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.AdministrationIntegrationService);
@@ -612,9 +666,11 @@ namespace SanteDB.Rest.AMI
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
-
+                }
             }
             else
             {

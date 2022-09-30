@@ -18,21 +18,8 @@
  * User: fyfej
  * Date: 2022-5-30
  */
-using RestSrvr;
-using SanteDB.Core;
-using SanteDB.Core.Diagnostics;
-using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Acts;
-using SanteDB.Core.Model.Collection;
-using SanteDB.Core.Model.Constants;
-using SanteDB.Core.Model.Query;
-using SanteDB.Core.Model.Roles;
 using SanteDB.Core.Services;
-using SanteDB.Rest.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 
 namespace SanteDB.Rest.HDSI.Resources
 {

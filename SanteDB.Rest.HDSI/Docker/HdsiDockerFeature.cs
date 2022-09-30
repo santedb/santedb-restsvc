@@ -21,7 +21,6 @@
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Exceptions;
 using SanteDB.Docker.Core;
-using SanteDB.Messaging.HDSI;
 using SanteDB.Rest.Common.Behavior;
 using SanteDB.Rest.Common.Configuration;
 using SanteDB.Rest.Common.Security;
@@ -29,7 +28,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.HDSI.Docker
 {
@@ -117,7 +115,7 @@ namespace SanteDB.Rest.HDSI.Docker
                 };
                 restConfiguration.Services.Add(hdsiRestConfiguration);
             }
-            
+
 
             // Listen address
             if (settings.TryGetValue(ListenUriSetting, out string listen))

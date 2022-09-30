@@ -9,7 +9,6 @@ using SanteDB.Rest.WWW.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.WWW.Docker
 {
@@ -146,16 +145,16 @@ namespace SanteDB.Rest.WWW.Docker
             }
 
             var wwwConfiguration = configuration.GetSection<WwwServiceConfigurationSection>();
-            if(wwwConfiguration == null)
+            if (wwwConfiguration == null)
             {
                 configuration.AddSection(new WwwServiceConfigurationSection());
             }
 
-            if(settings.TryGetValue(DefaultSolutionSetting, out var defaultApp))
+            if (settings.TryGetValue(DefaultSolutionSetting, out var defaultApp))
             {
                 wwwConfiguration.Solution = defaultApp;
             }
-            if(settings.TryGetValue(AllowClientCachingSetting, out var allowCachingString) && Boolean.TryParse(allowCachingString, out var allowCaching ))
+            if (settings.TryGetValue(AllowClientCachingSetting, out var allowCachingString) && Boolean.TryParse(allowCachingString, out var allowCaching))
             {
                 wwwConfiguration.AllowClientCaching = allowCaching;
             }

@@ -4,11 +4,9 @@ using RestSrvr.Message;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Rest.Common;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.WWW.Behaviors
 {
@@ -45,10 +43,10 @@ namespace SanteDB.Rest.WWW.Behaviors
         /// <inheritdoc cref="IServicePolicy.Apply(RestRequestMessage)"/>
         public void Apply(RestRequestMessage request)
         {
-            if(!request.Headers.TryGetValue(ExtendedHttpHeaderNames.ClientMagicNumberHeaderName, out var magicHeader) && magicHeader.Contains(Magic.HexEncode()) ||
+            if (!request.Headers.TryGetValue(ExtendedHttpHeaderNames.ClientMagicNumberHeaderName, out var magicHeader) && magicHeader.Contains(Magic.HexEncode()) ||
                 $"SanteDB-{Magic.HexEncode()}".Equals(request.UserAgent))
             {
-                
+
             }
             else
             {

@@ -18,37 +18,32 @@
  * User: fyfej
  * Date: 2022-5-30
  */
+using RestSrvr;
+using RestSrvr.Attributes;
+using RestSrvr.Exceptions;
 using SanteDB.Core;
-using SanteDB.Core.Diagnostics;
-using SanteDB.Core.Exceptions;
+using SanteDB.Core.Http;
+using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
-using SanteDB.Core.Model.Patch;
-using SanteDB.Core.Security;
-using SanteDB.Rest.Common;
-using SanteDB.Rest.HDSI;
-using System;
-using System.Diagnostics;
-using System.Security.Permissions;
-using SanteDB.Core.Services;
-using SanteDB.Core.Security.Services;
-using System.Collections.Specialized;
-using RestSrvr;
-using SanteDB.Core.Http;
-using SanteDB.Rest.HDSI.Model;
-using SanteDB.Core.Model.Interfaces;
-using System.Net;
-using System.Collections.Generic;
-using SanteDB.Core.i18n;
-using RestSrvr.Exceptions;
-using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Collection;
-using System.Linq;
-using SanteDB.Core.Model.Constants;
-using SanteDB.Core.Model.Roles;
+using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Parameters;
-using RestSrvr.Attributes;
+using SanteDB.Core.Model.Patch;
+using SanteDB.Core.Model.Roles;
+using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
+using SanteDB.Core.Services;
+using SanteDB.Rest.Common;
+using SanteDB.Rest.HDSI;
+using SanteDB.Rest.HDSI.Model;
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
+using System.Net;
 
 namespace SanteDB.Messaging.HDSI.Wcf
 {
@@ -107,10 +102,14 @@ namespace SanteDB.Messaging.HDSI.Wcf
         {
             if (data is Entity entity &&
                                this.m_entityPersistence?.Query(o => o.Key == data.Key, AuthenticationContext.SystemPrincipal).Any() != true)
+            {
                 entity.AddTag("$upstream", "true");
+            }
             else if (data is Act act &&
                 this.m_actPersistence?.Query(o => o.Key == data.Key, AuthenticationContext.SystemPrincipal).Any() != true)
+            {
                 act.AddTag("$upstream", "true");
+            }
             else if (data is Bundle bundle)
             {
                 bundle.Item
@@ -127,11 +126,12 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override void ResolvePointer(NameValueCollection parms)
         {
             // create only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
                 parms["_upstream"] == "true" ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.HealthDataService);
@@ -142,20 +142,29 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         {
                             RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.SeeOther;
                             if (result is IVersionedData versioned)
+                            {
                                 RestOperationContext.Current.OutgoingResponse.AddHeader("Location", this.CreateContentLocation(result.GetType().GetSerializationName(), versioned.Key.Value, "_history", versioned.VersionKey.Value) + "?_upstream=true");
+                            }
                             else
+                            {
                                 RestOperationContext.Current.OutgoingResponse.AddHeader("Location", this.CreateContentLocation(result.GetType().GetSerializationName(), result.Key.Value) + "?_upstream=true");
+                            }
                         }
                         else
+                        {
                             throw new KeyNotFoundException();
+                        }
                     }
                     catch (Exception e)
                     {
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
             }
             else
             {
@@ -168,10 +177,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override IdentifiedData Create(string resourceType, IdentifiedData body)
         {
             // create only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.HealthDataService);
@@ -184,8 +194,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
             }
             else
             {
@@ -198,10 +211,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override IdentifiedData CreateUpdate(string resourceType, string id, IdentifiedData body)
         {
             // create only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.HealthDataService);
@@ -219,8 +233,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
             }
             else
             {
@@ -233,10 +250,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override IdentifiedData Delete(string resourceType, string id)
         {
             // Only on the remote server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.HealthDataService);
@@ -256,8 +274,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
             }
             else
             {
@@ -270,11 +291,12 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override IdentifiedData Get(string resourceType, string id)
         {
             // Delete only on the external server
-            if ((Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr) &&
+            if ((Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr) &&
                 Guid.TryParse(id, out var idGuid))
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.HealthDataService);
@@ -295,8 +317,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw new Exception("Error performing online operation", e);
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
             }
             else
             {
@@ -311,6 +336,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
             if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable &&
                 this.m_upstreamIntegrationService.IsAvailable() &&
                 Guid.TryParse(id, out var idGuid))
+            {
                 try
                 {
                     var handler = this.GetResourceHandler(resourceType);
@@ -363,8 +389,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                     throw;
                 }
+            }
             else
+            {
                 throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+            }
         }
 
         /// <inheritdoc/>
@@ -372,10 +401,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override IdentifiedData GetVersion(string resourceType, string id, string versionId)
         {
             // Delete only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.HealthDataService);
@@ -387,8 +417,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
             }
             else
             {
@@ -401,10 +434,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override IdentifiedData History(string resourceType, string id)
         {
             // Delete only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.HealthDataService);
@@ -416,8 +450,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
             }
             else
             {
@@ -430,10 +467,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override ServiceOptions Options()
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.HealthDataService);
@@ -444,8 +482,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
             }
             else
             {
@@ -458,10 +499,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override void Patch(string resourceType, string id, Patch body)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.HealthDataService);
@@ -473,8 +515,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
             }
             else
             {
@@ -487,10 +532,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override ServiceResourceOptions ResourceOptions(string resourceType)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.HealthDataService);
@@ -501,8 +547,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
             }
             else
             {
@@ -515,10 +564,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override IdentifiedData Search(string resourceType)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.HealthDataService);
@@ -535,8 +585,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
             }
             else
             {
@@ -549,10 +602,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override IdentifiedData Update(string resourceType, string id, IdentifiedData body)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.HealthDataService);
@@ -570,8 +624,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
             }
             else
             {
@@ -584,10 +641,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override object AssociationSearch(string resourceType, string key, string childResourceType)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.HealthDataService);
@@ -604,8 +662,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
             }
             else
             {
@@ -618,10 +679,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override object AssociationRemove(string resourceType, string key, string childResourceType, string scopedEntityKey)
         {
             // Only on the remote server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.HealthDataService);
@@ -644,8 +706,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
             }
             else
             {
@@ -657,10 +722,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
         [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override object AssociationGet(string resourceType, string key, string childResourceType, string scopedEntityKey)
         {
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.HealthDataService);
@@ -674,8 +740,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
             }
             else
             {
@@ -687,10 +756,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
         [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override object AssociationCreate(string resourceType, string key, string childResourceType, object body)
         {
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.HealthDataService);
@@ -712,8 +782,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
             }
             else
             {
@@ -725,10 +798,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
         [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override object InvokeMethod(string resourceType, string operationName, ParameterCollection body)
         {
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.HealthDataService);
@@ -740,8 +814,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
             }
             else
             {
@@ -758,10 +835,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                 throw new ArgumentNullException(nameof(body));
             }
 
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName] , out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName] , out var upstreamHdr) && upstreamHdr)
+            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
+                {
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.HealthDataService);
@@ -779,8 +857,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
                         throw;
                     }
+                }
                 else
+                {
                     throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
             }
             else
             {
