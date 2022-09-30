@@ -83,6 +83,8 @@ namespace SanteDB.Rest.Common
                 case Newtonsoft.Json.JsonException je:
                 case System.Xml.XmlException xe:
                     return System.Net.HttpStatusCode.BadRequest;
+                case ArgumentException ae:
+                    return HttpStatusCode.BadRequest;
                 case DuplicateNameException dne:
                     return System.Net.HttpStatusCode.Conflict;
                 case FileNotFoundException fnf:
