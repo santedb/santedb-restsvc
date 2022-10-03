@@ -23,7 +23,6 @@ using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Principal;
 using SanteDB.Core.Services;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 
 namespace SanteDB.Rest.AMI.Resources
@@ -50,7 +49,9 @@ namespace SanteDB.Rest.AMI.Resources
             {
                 if (!(AuthenticationContext.Current.Principal.Identity is IDeviceIdentity ||
                     AuthenticationContext.Current.Principal.Identity is IApplicationIdentity))
+                {
                     message.From = AuthenticationContext.Current.Principal.Identity.Name;
+                }
             }
             return base.Create(data, updateIfExists);
         }
@@ -63,7 +64,7 @@ namespace SanteDB.Rest.AMI.Resources
             if (!queryParameters.TryGetValue("rcpt.userName", out _) && !queryParameters.TryGetValue("from", out _))
             {
                 queryParameters.Add("rcpt.userName", "SYSTEM");
-                queryParameters.Add("rcpt.userName", AuthenticationContext.Current.Principal.Identity.Name );
+                queryParameters.Add("rcpt.userName", AuthenticationContext.Current.Principal.Identity.Name);
             }
             return base.Query(queryParameters);
         }

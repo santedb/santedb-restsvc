@@ -1,9 +1,7 @@
 ﻿using SanteDB.Core.Model.Query;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.Common
 {
@@ -58,7 +56,10 @@ namespace SanteDB.Rest.Common
             {
                 me = me.Skip(offset);
             }
-            else offset = 0;
+            else
+            {
+                offset = 0;
+            }
 
             if (!query.TryGetValue(QueryControlParameterNames.HttpCountParameterName, out queryList) || !Int32.TryParse(queryList.First(), out int count))
             {

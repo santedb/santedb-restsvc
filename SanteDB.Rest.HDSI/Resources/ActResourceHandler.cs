@@ -24,7 +24,6 @@ using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 
 namespace SanteDB.Rest.HDSI.Resources
@@ -33,7 +32,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a resource handler for ACTs
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-	public class ActResourceHandler : HdsiResourceHandlerBase<Act>
+    public class ActResourceHandler : HdsiResourceHandlerBase<Act>
     {
         /// <summary>
         /// DI constructor

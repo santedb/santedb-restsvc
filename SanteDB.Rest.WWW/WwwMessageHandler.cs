@@ -21,20 +21,12 @@
 using RestSrvr;
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
-using SanteDB.Core.Interfaces;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Services;
-using SanteDB.Messaging.HDSI.Wcf;
-using SanteDB.Rest.Common;
-using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Diagnostics.Tracing;
-using System.Linq;
-using System.Reflection;
-using SanteDB.Rest.Common.Behavior;
-using SanteDB.Rest.WWW.Configuration;
 using SanteDB.Rest.WWW.Behaviors;
+using SanteDB.Rest.WWW.Configuration;
+using System;
+using System.Diagnostics.Tracing;
 
 namespace SanteDB.Rest.WWW
 {
@@ -60,7 +52,7 @@ namespace SanteDB.Rest.WWW
             this.m_serviceManager = serviceManager;
             this.m_restServiceFactory = restServiceFactory;
         }
-      
+
         // HDSI Trace host
         private readonly Tracer m_traceSource = Tracer.GetTracer(typeof(WwwMessageHandler));
         private readonly IServiceManager m_serviceManager;
@@ -112,8 +104,10 @@ namespace SanteDB.Rest.WWW
         public bool Start()
         {
             // Don't start if we're in a test context
-            if(ApplicationServiceContext.Current.HostType == SanteDBHostType.Test)
+            if (ApplicationServiceContext.Current.HostType == SanteDBHostType.Test)
+            {
                 return true;
+            }
 
             try
             {
@@ -124,7 +118,9 @@ namespace SanteDB.Rest.WWW
 
                 // Add service behaviors
                 foreach (ServiceEndpoint endpoint in this.m_webHost.Endpoints)
+                {
                     this.m_traceSource.TraceInfo("Starting HDSI on {0}...", endpoint.Description.ListenUri);
+                }
 
                 // Start the webhost
                 ApplicationServiceContext.Current.Started += (o, e) => this.m_webHost.Start();

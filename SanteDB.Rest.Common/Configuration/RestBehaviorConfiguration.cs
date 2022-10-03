@@ -68,9 +68,13 @@ namespace SanteDB.Rest.Common.Configuration
             get
             {
                 if (this.XmlType != null)
+                {
                     return Type.GetType(this.XmlType);
+                }
                 else
+                {
                     return null;
+                }
             }
             set
             {
@@ -98,9 +102,13 @@ namespace SanteDB.Rest.Common.Configuration
             set
             {
                 if (!String.IsNullOrEmpty(value))
+                {
                     this.Configuration = XElement.Parse(value);
+                }
                 else
+                {
                     this.Configuration = null;
+                }
             }
         }
 

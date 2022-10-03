@@ -18,7 +18,6 @@
  * User: fyfej
  * Date: 2022-5-30
  */
-using SanteDB.Core;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
@@ -60,7 +59,9 @@ namespace SanteDB.Rest.AMI.Resources
         public override object Create(object data, bool updateIfExists)
         {
             if (data is SecurityDevice)
+            {
                 data = new SecurityDeviceInfo(data as SecurityDevice, this.m_policyInformationService);
+            }
 
             var sde = data as SecurityDeviceInfo;
             // If no policies then assign the ones from DEVICE
@@ -69,7 +70,9 @@ namespace SanteDB.Rest.AMI.Resources
                 var role = this.m_securityRepository?.GetRole("DEVICE");
                 var policies = this.m_policyInformationService?.GetPolicies(role);
                 if (policies != null)
+                {
                     sde.Policies = policies.Select(o => new SecurityPolicyInfo(o)).ToList();
+                }
             }
 
             return base.Create(data, updateIfExists);
@@ -82,7 +85,10 @@ namespace SanteDB.Rest.AMI.Resources
         public override object Update(object data)
         {
             if (data is SecurityDevice)
+            {
                 data = new SecurityDeviceInfo(data as SecurityDevice, this.m_policyInformationService);
+            }
+
             return base.Update(data);
         }
 

@@ -19,27 +19,15 @@
  * Date: 2022-5-30
  */
 using RestSrvr;
-using RestSrvr.Exceptions;
 using RestSrvr.Message;
-using SanteDB.Core.Configuration;
+using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
-using SanteDB.Core.Exceptions;
-using SanteDB.Core.Model.Security;
-using SanteDB.Rest.Common.Security;
 using SanteDB.Core.Security.Audit;
-using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Fault;
+using SanteDB.Rest.Common.Serialization;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Security;
-using System.Security.Authentication;
-using SanteDB.Core;
-using SanteDB.Core.Security;
-using SanteDB.Rest.Common.Serialization;
 
 namespace SanteDB.Rest.Common.Behavior
 {

@@ -19,20 +19,15 @@
  * Date: 2022-5-30
  */
 using RestSrvr;
-using RestSrvr.Attributes;
 using RestSrvr.Bindings;
-using SanteDB.Core;
-using SanteDB.Core.Security;
-using SanteDB.Core.Configuration;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Behavior;
 using SanteDB.Rest.Common.Security;
 using System;
 using System.Linq;
-using System.Reflection;
-using SanteDB.Core.Interfaces;
 
 namespace SanteDB.Rest.Common
 {
@@ -43,7 +38,7 @@ namespace SanteDB.Rest.Common
     {
         // Configuration
         private SanteDB.Rest.Common.Configuration.RestConfigurationSection m_configuration;
-        
+
         // Service manager instance
         private IServiceManager m_serviceManager;
 
@@ -64,7 +59,10 @@ namespace SanteDB.Rest.Common
         /// <returns></returns>
         public RemoteEndpointInfo GetRemoteEndpointInfo()
         {
-            if (RestOperationContext.Current == null) return null;
+            if (RestOperationContext.Current == null)
+            {
+                return null;
+            }
             else
             {
                 var fwdHeader = RestOperationContext.Current?.IncomingRequest.Headers["X-Forwarded-For"];
@@ -87,15 +85,30 @@ namespace SanteDB.Rest.Common
             var retVal = ServiceEndpointCapabilities.None;
             // Any of the capabilities are for security?
             if (me.ServiceBehaviors.OfType<SanteDB.Rest.Common.Security.TokenAuthorizationAccessBehavior>().Any())
+            {
                 retVal |= ServiceEndpointCapabilities.BearerAuth;
+            }
+
             if (me.ServiceBehaviors.OfType<BasicAuthorizationAccessBehavior>().Any())
+            {
                 retVal |= ServiceEndpointCapabilities.BasicAuth;
+            }
+
             if (me.Endpoints.Any(e => e.Behaviors.OfType<MessageCompressionEndpointBehavior>().Any()))
+            {
                 retVal |= ServiceEndpointCapabilities.Compression;
+            }
+
             if (me.Endpoints.Any(e => e.Behaviors.OfType<CorsEndpointBehavior>().Any()))
+            {
                 retVal |= ServiceEndpointCapabilities.Cors;
+            }
+
             if (me.Endpoints.Any(e => e.Behaviors.OfType<MessageDispatchFormatterBehavior>().Any()))
+            {
                 retVal |= ServiceEndpointCapabilities.ViewModel;
+            }
+
             return (int)retVal;
         }
 
@@ -109,12 +122,18 @@ namespace SanteDB.Rest.Common
                 // Get the configuration
                 var config = this.m_configuration.Services.FirstOrDefault(o => o.ConfigurationName == serviceConfigurationName);
                 if (config == null)
+                {
                     throw new InvalidOperationException($"Cannot find configuration for {serviceConfigurationName}");
+                }
+
                 var retVal = new RestService(config.ServiceType);
                 foreach (var bhvr in config.Behaviors)
                 {
                     if (bhvr.Type == null)
+                    {
                         throw new InvalidOperationException($"Cannot find service behavior {bhvr.XmlType}");
+                    }
+
                     retVal.AddServiceBehavior(
                         bhvr.Configuration == null ?
                         Activator.CreateInstance(bhvr.Type) as IServiceBehavior :
@@ -128,7 +147,9 @@ namespace SanteDB.Rest.Common
                     foreach (var bhvr in ep.Behaviors)
                     {
                         if (bhvr.Type == null)
+                        {
                             throw new InvalidOperationException($"Cannot find endpoint behavior {bhvr.XmlType}");
+                        }
 
                         se.AddEndpointBehavior(
                             bhvr.Configuration == null ?
@@ -149,7 +170,7 @@ namespace SanteDB.Rest.Common
                 {
                     Tracer.GetTracer(typeof(RestServiceFactory)).TraceError("Could not start {0} : {1}", serviceConfigurationName, e);
                 }
-                    throw new Exception($"Could not start {serviceConfigurationName}", e);
+                throw new Exception($"Could not start {serviceConfigurationName}", e);
             }
         }
     }

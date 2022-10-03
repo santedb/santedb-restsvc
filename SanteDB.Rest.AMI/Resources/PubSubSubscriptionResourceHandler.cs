@@ -106,7 +106,10 @@ namespace SanteDB.Rest.AMI.Resources
                     // First , find the channel
                     var retVal = this.m_manager.RegisterSubscription(definition.ResourceType, definition.Name, definition.Description, definition.Event, definition.Filter.First(), definition.ChannelKey, definition.SupportContact, definition.NotBefore, definition.NotAfter);
                     if (definition.IsActive)
+                    {
                         this.m_manager.ActivateSubscription(retVal.Key.Value, true);
+                    }
+
                     return retVal;
                 }
                 catch (Exception e)

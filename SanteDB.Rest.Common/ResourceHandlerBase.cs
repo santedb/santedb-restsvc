@@ -18,7 +18,6 @@
  * User: fyfej
  * Date: 2022-5-30
  */
-using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
@@ -34,7 +33,6 @@ using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
 
@@ -140,7 +138,9 @@ namespace SanteDB.Rest.Common
             }
             else if ((this.Capabilities & ResourceCapabilityType.Create) == 0 &&
                 (this.Capabilities & ResourceCapabilityType.CreateOrUpdate) == 0)
+            {
                 throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
+            }
 
             var bundle = data as Bundle;
 
@@ -187,13 +187,18 @@ namespace SanteDB.Rest.Common
         {
             if ((this.Capabilities & ResourceCapabilityType.Get) == 0 &&
                 (this.Capabilities & ResourceCapabilityType.GetVersion) == 0)
+            {
                 throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
+            }
 
             try
             {
                 var retVal = this.m_repository.Get((Guid)id, (Guid)versionId);
                 if (retVal is Entity || retVal is Act)
+                { 
                     _AuditService.Audit().ForRead(OutcomeIndicator.Success, id.ToString(), retVal).Send();
+                }
+
                 return retVal;
             }
             catch (Exception e)
@@ -211,7 +216,9 @@ namespace SanteDB.Rest.Common
         public virtual Object Delete(object key)
         {
             if ((this.Capabilities & ResourceCapabilityType.Delete) == 0)
+            {
                 throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
+            }
 
             try
             {
@@ -234,7 +241,9 @@ namespace SanteDB.Rest.Common
         public virtual IQueryResultSet Query(NameValueCollection queryParameters)
         {
             if ((this.Capabilities & ResourceCapabilityType.Search) == 0)
+            {
                 throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
+            }
 
             try
             {
@@ -275,7 +284,9 @@ namespace SanteDB.Rest.Common
         public virtual Object Update(Object data)
         {
             if ((this.Capabilities & ResourceCapabilityType.Update) == 0)
+            {
                 throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
+            }
 
             Bundle bundleData = data as Bundle;
             bundleData?.Reconstitute();

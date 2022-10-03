@@ -20,7 +20,6 @@
  */
 using RestSrvr.Exceptions;
 using SanteDB.Core;
-using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
@@ -70,7 +69,10 @@ namespace SanteDB.Rest.AMI.Resources
         public override object Create(object data, bool updateIfExists)
         {
             if (data is SecurityUser)
+            {
                 data = new SecurityUserInfo(data as SecurityUser);
+            }
+
             var td = data as SecurityUserInfo;
 
             // Don't allow callers to overwrite expiration
@@ -121,7 +123,9 @@ namespace SanteDB.Rest.AMI.Resources
         public override object Update(object data)
         {
             if (data is SecurityUser)
+            {
                 data = new SecurityUserInfo(data as SecurityUser);
+            }
 
             var td = data as SecurityUserInfo;
             // Don't allow callers to overwrite expiration
@@ -146,9 +150,14 @@ namespace SanteDB.Rest.AMI.Resources
                 this.m_identityProvider.ChangePassword(td.Entity.UserName, td.Entity.Password, AuthenticationContext.Current.Principal);
 
                 if (user != null)
+                {
                     this.FireSecurityAttributesChanged(user, true, "Password");
+                }
                 else
+                {
                     this.FireSecurityAttributesChanged(td.Entity, true, "Password");
+                }
+
                 return null;
             }
             else

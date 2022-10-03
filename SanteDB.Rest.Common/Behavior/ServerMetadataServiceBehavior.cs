@@ -1,10 +1,7 @@
 ﻿using RestSrvr;
 using RestSrvr.Message;
 using SanteDB.Core;
-using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 namespace SanteDB.Rest.Common.Behavior
 {
@@ -23,7 +20,7 @@ namespace SanteDB.Rest.Common.Behavior
         {
             dispatcher.MessageInspectors.Add(this);
         }
-        
+
         /// <inheritdoc cref="IMessageInspector.BeforeSendResponse(RestResponseMessage)"/>
         public void BeforeSendResponse(RestResponseMessage response)
         {

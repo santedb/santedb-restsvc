@@ -18,19 +18,13 @@
  * User: fyfej
  * Date: 2022-5-30
  */
-using SanteDB.Core;
-using SanteDB.Core.Model;
-using SanteDB.Core.Model.Constants;
 using SanteDB.Core.Model.Entities;
-using SanteDB.Core.Model.EntityLoader;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 
 namespace SanteDB.Rest.HDSI.Resources
 {

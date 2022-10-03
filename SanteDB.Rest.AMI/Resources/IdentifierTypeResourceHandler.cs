@@ -22,9 +22,8 @@ using SanteDB.Core.Interop;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
-using SanteDB.Rest.Common.Attributes;
-using System.Collections.Generic;
 using SanteDB.Core.Services;
+using SanteDB.Rest.Common.Attributes;
 using System.Collections.Specialized;
 
 namespace SanteDB.Rest.AMI.Resources

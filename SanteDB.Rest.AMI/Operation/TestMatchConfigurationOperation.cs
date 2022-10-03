@@ -18,16 +18,11 @@
  * User: fyfej
  * Date: 2022-5-30
  */
-using RestSrvr;
 using SanteDB.Core;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Matching;
 using SanteDB.Core.Model;
-using SanteDB.Core.Model.Acts;
-using SanteDB.Core.Model.Collection;
-using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Parameters;
-using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;

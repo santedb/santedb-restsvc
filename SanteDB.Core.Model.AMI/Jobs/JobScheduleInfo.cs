@@ -28,7 +28,7 @@ using System.Xml.Serialization;
 namespace SanteDB.Core.Model.AMI.Jobs
 {
 
-   
+
     /// <summary>
     /// Job scheduling information
     /// </summary>

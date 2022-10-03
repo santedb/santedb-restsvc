@@ -19,11 +19,11 @@
  * Date: 2022-5-30
  */
 using Newtonsoft.Json;
+using SanteDB.Core.Model.Audit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
-using SanteDB.Core.Model.Audit;
 
 namespace SanteDB.Core.Model.AMI.Security
 {

@@ -23,7 +23,6 @@ using RestSrvr.Message;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
-using SanteDB.Rest.Common.Security;
 using System;
 using System.ComponentModel;
 using System.Globalization;
@@ -53,7 +52,9 @@ namespace SanteDB.Rest.Common.Behavior
                 RestOperationContext.Current.Data.Add("originalLanguage", Thread.CurrentThread.CurrentUICulture.Name);
                 var langPrincipal = AuthenticationContext.Current.Principal.GetClaimValue(SanteDBClaimTypes.Language);
                 if (langPrincipal != null)
+                {
                     Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(langPrincipal);
+                }
                 else if (RestOperationContext.Current.Data.TryGetValue("Session", out object dataSession) && dataSession is ISession session &&
                     session.Claims.Any(o => o.Type == SanteDBClaimTypes.Language))
                 {
@@ -96,7 +97,9 @@ namespace SanteDB.Rest.Common.Behavior
             {
                 response.Headers.Add("Content-Language", Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName);
                 if (RestOperationContext.Current.Data.TryGetValue("originalLanguage", out Object name))
+                {
                     Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(name.ToString());
+                }
             }
             catch (Exception e)
             {

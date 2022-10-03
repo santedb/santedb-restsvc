@@ -20,7 +20,6 @@
  */
 using RestSrvr;
 using RestSrvr.Message;
-using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Model.Serialization;
 using System;
@@ -71,9 +70,14 @@ namespace SanteDB.Rest.Common.Behavior
         public ServiceThrottlingEndpointBehavior(XElement xe)
         {
             if (xe == null)
+            {
                 throw new InvalidOperationException("Missing ServiceThrottlingConfiguration");
+            }
+
             using (var sr = new StringReader(xe.ToString()))
+            {
                 this.m_settings = XmlModelSerializerFactory.Current.CreateSerializer(typeof(ServiceThrottlingConfiguration)).Deserialize(sr) as ServiceThrottlingConfiguration;
+            }
         }
 
         /// <summary>
@@ -92,8 +96,9 @@ namespace SanteDB.Rest.Common.Behavior
 
             var cReq = Interlocked.Increment(ref this.m_requests);
             if (cReq > this.m_settings.Limit)
+            {
                 throw new LimitExceededException();
-
+            }
         }
 
         /// <summary>

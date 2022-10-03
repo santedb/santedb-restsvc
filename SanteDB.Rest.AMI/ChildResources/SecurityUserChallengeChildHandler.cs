@@ -85,7 +85,9 @@ namespace SanteDB.Rest.AMI.ChildResources
         {
             var securityUser = this.m_repositoryService.Get((Guid)scopingKey);
             if (securityUser == null)
+            {
                 throw new KeyNotFoundException($"User with key {scopingKey} not found");
+            }
 
             // Add the challenge
             var strongType = (SecurityUserChallengeInfo)item;
@@ -100,8 +102,13 @@ namespace SanteDB.Rest.AMI.ChildResources
         {
             var retVal = this.m_challengeService.Get((Guid)scopingKey, AuthenticationContext.Current.Principal).FirstOrDefault(o => o.Key.Value == (Guid)key);
             if (retVal == null)
+            {
                 throw new KeyNotFoundException($"Cannot find challenge {key}");
-            else return retVal;
+            }
+            else
+            {
+                return retVal;
+            }
         }
 
         /// <summary>
@@ -121,7 +128,9 @@ namespace SanteDB.Rest.AMI.ChildResources
         {
             var securityUser = this.m_repositoryService.Get((Guid)scopingKey);
             if (securityUser == null)
+            {
                 throw new KeyNotFoundException($"User with key {scopingKey} not found");
+            }
 
             // Add the challenge
             this.m_challengeService.Remove(securityUser.UserName, (Guid)key, AuthenticationContext.Current.Principal);

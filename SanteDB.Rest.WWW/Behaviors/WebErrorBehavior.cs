@@ -7,13 +7,13 @@ using SanteDB.Core.Diagnostics;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Services;
+using SanteDB.Rest.Common;
 using SanteDB.Rest.WWW.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using SanteDB.Rest.Common;
 using SanteDB.Core.Security;
 
 namespace SanteDB.Rest.WWW.Behaviors
@@ -38,11 +38,11 @@ namespace SanteDB.Rest.WWW.Behaviors
         {
             _AuditService = ApplicationServiceContext.Current.GetAuditService();
             var defaultSolution = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<WwwServiceConfigurationSection>()?.Solution;
-            if(!String.IsNullOrEmpty(defaultSolution))
+            if (!String.IsNullOrEmpty(defaultSolution))
             {
                 this.m_appletCollection = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().GetApplets(defaultSolution);
             }
-            if(defaultSolution == null)
+            if (defaultSolution == null)
             {
                 this.m_appletCollection = ApplicationServiceContext.Current.GetService<IAppletManagerService>().Applets;
             }
@@ -79,7 +79,7 @@ namespace SanteDB.Rest.WWW.Behaviors
                 };
 
                 Stream errorPageStream = null;
-                if(errorAsset != null)
+                if (errorAsset != null)
                 {
                     errorPageStream = new MemoryStream(this.m_appletCollection.RenderAssetContent(errorAsset, bindingParameters: errorVariables));
                 }
@@ -97,7 +97,7 @@ namespace SanteDB.Rest.WWW.Behaviors
                 _AuditService.Audit().ForNetworkRequestFailure(error, RestOperationContext.Current.IncomingRequest.Url, RestOperationContext.Current.IncomingRequest.Headers, RestOperationContext.Current.OutgoingResponse.Headers).Send();
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 this.m_tracer.TraceError("Could not provide web fault: {0}", e);
                 throw new InvalidOperationException(ErrorMessages.ERROR_PROVIDING_FAULT, e);

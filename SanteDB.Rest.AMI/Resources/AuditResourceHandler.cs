@@ -19,19 +19,17 @@
  * Date: 2022-5-30
  */
 using SanteDB.Core;
-using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
-using SanteDB.Core.Model;
 using SanteDB.Core.Model.AMI.Security;
+using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 
 namespace SanteDB.Rest.AMI.Resources
@@ -138,7 +136,10 @@ namespace SanteDB.Rest.AMI.Resources
         {
             var retVal = new AuditEventData();
             if (Guid.TryParse(id.ToString(), out Guid gid))
+            {
                 retVal.CopyObjectData(this.m_repository.Get(gid));
+            }
+
             return retVal;
         }
 

@@ -19,16 +19,13 @@
  * Date: 2022-5-30
  */
 using SanteDB.Core.Interop;
-using SanteDB.Core.Model;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.PubSub;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Model;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.AMI.Operation
 {

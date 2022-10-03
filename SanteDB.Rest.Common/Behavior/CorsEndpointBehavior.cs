@@ -45,9 +45,14 @@ namespace SanteDB.Rest.Common.Behavior
         public CorsEndpointBehavior(XElement xe)
         {
             if (xe == null)
+            {
                 throw new InvalidOperationException("Missing CorsEndpointBehaviorConfiguration");
+            }
+
             using (var sr = new StringReader(xe.ToString()))
+            {
                 this.m_settings = XmlModelSerializerFactory.Current.CreateSerializer(typeof(CorsEndpointBehaviorConfiguration)).Deserialize(sr) as CorsEndpointBehaviorConfiguration;
+            }
         }
         /// <summary>
         /// Creates a new CORS endpoint behavior

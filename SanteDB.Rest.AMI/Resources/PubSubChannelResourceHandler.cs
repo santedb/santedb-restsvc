@@ -27,7 +27,6 @@ using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 
@@ -117,7 +116,9 @@ namespace SanteDB.Rest.AMI.Resources
         public object Get(object id, object versionId)
         {
             if (id is Guid uuid)
+            {
                 return this.m_manager.GetChannel(uuid);
+            }
             else
             {
                 this.m_tracer.TraceError($"{id} is not a valid UUID");
@@ -132,7 +133,9 @@ namespace SanteDB.Rest.AMI.Resources
         public object Delete(object key)
         {
             if (key is Guid uuid)
+            {
                 return this.m_manager.RemoveChannel(uuid);
+            }
             else
             {
                 this.m_tracer.TraceError($"{key} is not a valid UUID");

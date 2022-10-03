@@ -29,7 +29,6 @@ using SanteDB.Core.Applets.ViewModel.Description;
 using SanteDB.Core.Applets.ViewModel.Json;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Model;
-using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Json.Formatter;
 using SanteDB.Core.Model.Serialization;
@@ -166,7 +165,9 @@ namespace SanteDB.Rest.Common.Serialization
                 var httpRequest = RestOperationContext.Current.IncomingRequest;
                 ContentType contentType = null;
                 if (!String.IsNullOrEmpty(httpRequest.Headers["Content-Type"]))
+                {
                     contentType = new ContentType(httpRequest.Headers["Content-Type"]);
+                }
 
                 for (int pNumber = 0; pNumber < parameters.Length; pNumber++)
                 {
@@ -185,12 +186,16 @@ namespace SanteDB.Rest.Common.Serialization
                                 using (XmlReader bodyReader = XmlReader.Create(request.Body))
                                 {
                                     while (bodyReader.NodeType != XmlNodeType.Element)
+                                    {
                                         bodyReader.Read();
+                                    }
 
                                     Type eType = s_knownTypes.FirstOrDefault(o => o.GetCustomAttribute<XmlRootAttribute>()?.ElementName == bodyReader.LocalName &&
                                         o.GetCustomAttribute<XmlRootAttribute>()?.Namespace == bodyReader.NamespaceURI);
                                     if (eType == null)
+                                    {
                                         eType = new ModelSerializationBinder().BindToType(null, bodyReader.LocalName); // Try to find by root element
+                                    }
 
                                     serializer = XmlModelSerializerFactory.Current.CreateSerializer(eType ?? parm.ParameterType);
                                     parameters[pNumber] = serializer.Deserialize(bodyReader);
@@ -215,7 +220,9 @@ namespace SanteDB.Rest.Common.Serialization
                                 }
 
                                 using (var sr = new StreamReader(request.Body))
+                                {
                                     parameters[pNumber] = viewModelSerializer.DeSerialize(sr, parm.ParameterType);
+                                }
 
                                 break;
 
@@ -302,7 +309,9 @@ namespace SanteDB.Rest.Common.Serialization
                 if (result == null)
                 {
                     if (response.StatusCode == HttpStatusCode.OK)
+                    {
                         response.StatusCode = HttpStatusCode.NoContent;
+                    }
                 }
                 else if (result?.GetType().GetCustomAttribute<XmlTypeAttribute>() != null ||
                     result?.GetType().GetCustomAttribute<JsonObjectAttribute>() != null)
@@ -393,7 +402,10 @@ namespace SanteDB.Rest.Common.Serialization
                                 try
                                 {
                                     if (xsz == null)
+                                    {
                                         xsz = XmlModelSerializerFactory.Current.CreateSerializer(result.GetType());
+                                    }
+
                                     xsz.Serialize(ms, result);
                                 }
                                 // No longer needed

@@ -123,7 +123,9 @@ namespace SanteDB.Rest.AMI.Resources
             ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().Install(pkg);
             X509Certificate2 cert = null;
             if (pkg.PublicKey != null)
+            {
                 cert = new X509Certificate2(pkg.PublicKey);
+            }
             else if (pkg.Meta.PublicKeyToken != null)
             {
                 X509Store store = new X509Store(StoreName.TrustedPublisher, StoreLocation.LocalMachine);
@@ -132,7 +134,9 @@ namespace SanteDB.Rest.AMI.Resources
                     store.Open(OpenFlags.ReadOnly);
                     var results = store.Certificates.Find(X509FindType.FindByThumbprint, pkg.Meta.PublicKeyToken, false);
                     if (results.Count > 0)
+                    {
                         cert = results[0];
+                    }
                 }
                 finally
                 {
@@ -176,7 +180,10 @@ namespace SanteDB.Rest.AMI.Resources
             RestOperationContext.Current.OutgoingResponse.SetETag(package.Version);
             RestOperationContext.Current.OutgoingResponse.Headers.Add(ExtendedHttpHeaderNames.PackageIdentifierHeaderName, package.Id);
             if (package.Hash != null)
+            {
                 RestOperationContext.Current.OutgoingResponse.AppendHeader(ExtendedHttpHeaderNames.PackageHashHeaderName, Convert.ToBase64String(package.Hash));
+            }
+
             RestOperationContext.Current.OutgoingResponse.AppendHeader("Content-Type", "application/octet-stream");
             RestOperationContext.Current.OutgoingResponse.ContentType = "application/octet-stream";
             RestOperationContext.Current.OutgoingResponse.AppendHeader("Content-Disposition", $"attachment; filename=\"{package.Id}.pak.gz\"");
@@ -231,7 +238,9 @@ namespace SanteDB.Rest.AMI.Resources
             appletMgr.Install(pkg, true);
             X509Certificate2 cert = null;
             if (pkg.PublicKey != null)
+            {
                 cert = new X509Certificate2(pkg.PublicKey);
+            }
             else if (pkg.Meta.PublicKeyToken != null)
             {
                 X509Store store = new X509Store(StoreName.TrustedPublisher, StoreLocation.LocalMachine);
@@ -240,7 +249,9 @@ namespace SanteDB.Rest.AMI.Resources
                     store.Open(OpenFlags.ReadOnly);
                     var results = store.Certificates.Find(X509FindType.FindByThumbprint, pkg.Meta.PublicKeyToken, false);
                     if (results.Count > 0)
+                    {
                         cert = results[0];
+                    }
                 }
                 finally
                 {

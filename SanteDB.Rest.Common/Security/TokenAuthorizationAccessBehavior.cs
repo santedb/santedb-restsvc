@@ -26,12 +26,10 @@ using SanteDB.Core.Exceptions;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Security.Services;
-using SanteDB.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Security;
 using System.Security.Principal;
 
 namespace SanteDB.Rest.Common.Security
@@ -62,7 +60,9 @@ namespace SanteDB.Rest.Common.Security
 
             IPrincipal principal = ApplicationServiceContext.Current.GetService<ISessionIdentityProviderService>().Authenticate(session);
             if (principal == null)
+            {
                 throw new SecuritySessionException(SessionExceptionType.Other, "Invalid bearer token", null);
+            }
 
             RestOperationContext.Current.Data.Add(RestPropertyNameSession, session);
 
@@ -91,7 +91,9 @@ namespace SanteDB.Rest.Common.Security
                         return;
                     }
                     else
+                    {
                         throw new SecuritySessionException(SessionExceptionType.NotEstablished, "Missing Authorization header", null);
+                    }
                 }
 
                 // Authorization method
@@ -150,7 +152,7 @@ namespace SanteDB.Rest.Common.Security
                     faultMessage.AddAuthenticateHeader("bearer", RestOperationContext.Current.IncomingRequest.Url.Host, "insufficient_scope", pve.PolicyId, pve.Message);
                     break;
                 case SecuritySessionException sse:
-                    switch(sse.Type)
+                    switch (sse.Type)
                     {
                         case SessionExceptionType.Scope:
                             faultMessage.AddAuthenticateHeader("bearer", RestOperationContext.Current.IncomingRequest.Url.Host, "invalid_scope", description: sse.Message);

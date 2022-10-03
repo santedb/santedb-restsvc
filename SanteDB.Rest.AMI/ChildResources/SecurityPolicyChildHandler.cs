@@ -151,14 +151,18 @@ namespace SanteDB.Rest.AMI.ChildResources
             // Get scope
             object scope = this.GetScope(scopingType, scopingKey);
             if (scope == null)
+            {
                 throw new KeyNotFoundException($"Could not find scoped object with identifier {scopingKey}");
+            }
 
             try
             {
                 this.DemandFor(scopingType);
                 // Get or create the scoped item
                 if (item is SecurityPolicy policy)
+                {
                     item = new SecurityPolicyInfo(policy);
+                }
 
                 var rd = item as SecurityPolicyInfo;
                 this.m_pip.AddPolicies(scope, rd.Grant, AuthenticationContext.Current.Principal, rd.Oid);
@@ -188,7 +192,9 @@ namespace SanteDB.Rest.AMI.ChildResources
             // Get scope
             object scope = this.GetScope(scopingType, scopingKey);
             if (scope == null)
+            {
                 throw new KeyNotFoundException($"Could not find scoped object with identifier {scopingKey}");
+            }
 
             var policies = this.m_pip.GetPolicies(scope).OrderBy(o => o.Policy.Oid).Select(o => o.ToPolicyInstance());
             var filterExpression = QueryExpressionParser.BuildLinqExpression<SecurityPolicy>(filter).Compile();
@@ -203,11 +209,15 @@ namespace SanteDB.Rest.AMI.ChildResources
             // Get scope
             object scope = this.GetScope(scopingType, scopingKey);
             if (scope == null)
+            {
                 throw new KeyNotFoundException($"Could not find scoped object with identifier {scopingKey}");
+            }
 
             var policy = this.m_pip.GetPolicies().FirstOrDefault(o => o.Key == (Guid)key);
             if (policy == null)
+            {
                 throw new KeyNotFoundException($"Policy {key} not found");
+            }
 
             try
             {

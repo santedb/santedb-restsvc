@@ -1,8 +1,5 @@
 ﻿using RestSrvr.Attributes;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace SanteDB.Rest.WWW
 {

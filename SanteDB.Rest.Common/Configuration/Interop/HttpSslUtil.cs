@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.Common.Configuration.Interop
 {
@@ -22,7 +21,7 @@ namespace SanteDB.Rest.Common.Configuration.Interop
         /// <returns></returns>
         public static ISslCertificateBinder GetCurrentPlatformCertificateBinder()
         {
-            if(s_binderDictionary.TryGetValue(Environment.OSVersion.Platform, out var binder))
+            if (s_binderDictionary.TryGetValue(Environment.OSVersion.Platform, out var binder))
             {
                 return binder;
             }

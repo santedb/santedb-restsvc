@@ -23,8 +23,6 @@ using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.PubSub;
 using SanteDB.Rest.Common;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SanteDB.Rest.AMI.Operation
 {

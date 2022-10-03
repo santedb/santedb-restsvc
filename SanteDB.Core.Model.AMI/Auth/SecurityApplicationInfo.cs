@@ -20,13 +20,11 @@
  */
 using Newtonsoft.Json;
 using SanteDB.Core.Model.Security;
+using SanteDB.Core.Security.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
-using Newtonsoft.Json;
-using SanteDB.Core.Model.Security;
-using SanteDB.Core.Security.Services;
 
 namespace SanteDB.Core.Model.AMI.Auth
 {

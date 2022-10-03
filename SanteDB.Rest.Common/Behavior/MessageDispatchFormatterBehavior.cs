@@ -37,7 +37,9 @@ namespace SanteDB.Rest.Common.Behavior
         public void ApplyEndpointBehavior(ServiceEndpoint endpoint, EndpointDispatcher dispatcher)
         {
             foreach (var op in endpoint.Description.Contract.Operations)
+            {
                 op.AddOperationBehavior(this);
+            }
         }
 
         /// <summary>

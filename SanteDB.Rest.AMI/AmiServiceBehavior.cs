@@ -29,8 +29,6 @@ using SanteDB.Core.Model;
 using SanteDB.Core.Model.AMI;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.AMI.Collections;
-using SanteDB.Core.Model.AMI.Diagnostics;
-using SanteDB.Core.Model.AMI.Logging;
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Patch;
@@ -38,11 +36,9 @@ using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
-using SanteDB.Rest.AMI;
 using SanteDB.Rest.AMI.Configuration;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
-using SanteDB.Rest.Common.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -107,7 +103,9 @@ namespace SanteDB.Rest.AMI
         private void AclCheck(Object handler, String action)
         {
             foreach (var dmn in this.GetDemands(handler, action))
+            {
                 ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(dmn);
+            }
         }
 
         /// <summary>
@@ -117,9 +115,13 @@ namespace SanteDB.Rest.AMI
         {
             var demands = handler.GetType().GetMethods().Where(o => o.Name == action).SelectMany(method => method.GetCustomAttributes<DemandAttribute>());
             if (demands.Any(o => o.Override))
+            {
                 return demands.Where(o => o.Override).Select(o => o.PolicyId).ToArray();
+            }
             else
+            {
                 return demands.Select(o => o.PolicyId).ToArray();
+            }
         }
 
         /// <summary>
@@ -137,7 +139,9 @@ namespace SanteDB.Rest.AMI
                 XmlSchemaExporter exporter = new XmlSchemaExporter(schemaCollection);
 
                 foreach (var cls in this.m_resourceHandler.Handlers.Select(o => o.Type))
+                {
                     exporter.ExportTypeMapping(importer.ImportTypeMapping(cls, "http://santedb.org/ami"));
+                }
 
                 if (schemaId > schemaCollection.Count)
                 {
@@ -168,7 +172,9 @@ namespace SanteDB.Rest.AMI
             this.ThrowIfNotReady();
 
             if (this.m_patchService != null)
+            {
                 RestOperationContext.Current.OutgoingResponse.Headers.Add("Accept-Patch", "application/xml+sdb-patch");
+            }
 
             // mex configuration
             var mexConfig = this.m_configurationManager.GetSection<SanteDB.Rest.Common.Configuration.RestConfigurationSection>();
@@ -203,7 +209,8 @@ namespace SanteDB.Rest.AMI
             }
 
             // Get the resources which are supported
-            if (null != m_resourceHandler?.Handlers) {
+            if (null != m_resourceHandler?.Handlers)
+            {
                 foreach (var itm in this.m_resourceHandler.Handlers)
                 {
                     var svc = this.ResourceOptions(itm.ResourceName);
@@ -229,12 +236,16 @@ namespace SanteDB.Rest.AMI
                 var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
 
                 if (handler == null)
+                {
                     throw new FileNotFoundException(resourceType);
+                }
 
                 // Validate
                 var match = RestOperationContext.Current.IncomingRequest.Headers["If-Match"];
                 if (match == null && typeof(IVersionedData).IsAssignableFrom(handler.Type))
+                {
                     throw new InvalidOperationException("Missing If-Match header for versioned objects");
+                }
 
                 // Next we get the current version
                 this.AclCheck(handler, nameof(IApiResourceHandler.Get));
@@ -244,12 +255,16 @@ namespace SanteDB.Rest.AMI
 
                 // Object cannot be patched
                 if (existing == null)
+                {
                     throw new NotSupportedException();
+                }
 
                 var force = Convert.ToBoolean(RestOperationContext.Current.IncomingRequest.Headers["X-Patch-Force"] ?? "false");
 
                 if (existing == null)
+                {
                     throw new FileNotFoundException($"/{resourceType}/{id}");
+                }
                 else if (!String.IsNullOrEmpty(match) && (existing as IdentifiedData)?.Tag != match && !force)
                 {
                     this.m_traceSource.TraceError("Object {0} ETAG is {1} but If-Match specified {2}", existing.Key, existing.Tag, match);
@@ -258,7 +273,9 @@ namespace SanteDB.Rest.AMI
                     return;
                 }
                 else if (body == null)
+                {
                     throw new ArgumentNullException(nameof(body));
+                }
                 else
                 {
                     // Force load all properties for existing
@@ -271,14 +288,18 @@ namespace SanteDB.Rest.AMI
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(applied.ModifiedOn.DateTime);
                     var versioned = (data as IVersionedData)?.VersionKey;
                     if (versioned != null)
+                    {
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/history/{2}",
                                 RestOperationContext.Current.IncomingRequest.Url,
                                 id,
                                 versioned));
+                    }
                     else
+                    {
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}",
                                 RestOperationContext.Current.IncomingRequest.Url,
                                 id));
+                    }
                 }
             }
             catch (PatchAssertionException e)
@@ -325,19 +346,26 @@ namespace SanteDB.Rest.AMI
                     RestOperationContext.Current.OutgoingResponse.StatusCode = retVal == null ? (int)HttpStatusCode.NoContent : (int)System.Net.HttpStatusCode.Created;
                     RestOperationContext.Current.OutgoingResponse.SetETag((retVal as IAmiIdentified)?.Tag ?? (retVal as IdentifiedData)?.Tag ?? Guid.NewGuid().ToString());
                     if (versioned != null)
+                    {
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/history/{2}",
                            RestOperationContext.Current.IncomingRequest.Url,
                            (retVal as IdentifiedData).Key,
                            versioned.Key));
+                    }
                     else
+                    {
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}",
                             RestOperationContext.Current.IncomingRequest.Url,
                             resourceType,
                             (retVal as IAmiIdentified)?.Key ?? (retVal as IdentifiedData)?.Key.ToString()));
+                    }
+
                     return retVal;
                 }
                 else
+                {
                     throw new FileNotFoundException(resourceType);
+                }
             }
             catch (Exception e)
             {
@@ -359,9 +387,13 @@ namespace SanteDB.Rest.AMI
                 if (handler != null)
                 {
                     if (data is IdentifiedData)
+                    {
                         (data as IdentifiedData).Key = Guid.Parse(key);
+                    }
                     else if (data is IAmiIdentified)
+                    {
                         (data as IAmiIdentified).Key = key;
+                    }
 
                     this.AclCheck(handler, nameof(IApiResourceHandler.Create));
                     var retVal = handler.Create(data, true);
@@ -369,22 +401,30 @@ namespace SanteDB.Rest.AMI
                     RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.Created;
 
                     if (retVal is IdentifiedData)
+                    {
                         RestOperationContext.Current.OutgoingResponse.SetETag((retVal as IdentifiedData).Tag);
+                    }
 
                     if (versioned != null)
+                    {
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/history/{2}",
                             RestOperationContext.Current.IncomingRequest.Url,
                             versioned.Key,
                             versioned.VersionKey));
+                    }
                     else
+                    {
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}",
                             RestOperationContext.Current.IncomingRequest.Url,
                             (retVal as IAmiIdentified)?.Key ?? (retVal as IdentifiedData)?.Key.ToString()));
+                    }
 
                     return retVal;
                 }
                 else
+                {
                     throw new FileNotFoundException(resourceType);
+                }
             }
             catch (Exception e)
             {
@@ -409,30 +449,42 @@ namespace SanteDB.Rest.AMI
 
                     object retVal = null;
                     if (Guid.TryParse(key, out Guid uuid))
+                    {
                         retVal = handler.Delete(uuid);
+                    }
                     else
+                    {
                         retVal = handler.Delete(key);
+                    }
 
                     var versioned = retVal as IVersionedData;
 
                     RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.Created;
                     if (retVal is IdentifiedData)
+                    {
                         RestOperationContext.Current.OutgoingResponse.SetETag((retVal as IdentifiedData).Tag);
+                    }
 
                     if (versioned != null)
+                    {
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/history/{2}",
                             RestOperationContext.Current.IncomingRequest.Url,
                             versioned.Key,
                             versioned.VersionKey));
+                    }
                     else
+                    {
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}",
                             RestOperationContext.Current.IncomingRequest.Url,
                             (retVal as IAmiIdentified)?.Key ?? (retVal as IdentifiedData)?.Key.ToString()));
+                    }
 
                     return retVal;
                 }
                 else
+                {
                     throw new FileNotFoundException(resourceType);
+                }
             }
             catch (Exception e)
             {
@@ -456,19 +508,26 @@ namespace SanteDB.Rest.AMI
                     object strongKey = key;
                     Guid guidKey = Guid.Empty;
                     if (Guid.TryParse(key, out guidKey))
+                    {
                         strongKey = guidKey;
+                    }
 
                     this.AclCheck(handler, nameof(IApiResourceHandler.Get));
                     var retVal = handler.Get(strongKey, Guid.Empty);
                     if (retVal == null)
+                    {
                         throw new FileNotFoundException(key);
+                    }
 
                     var idata = retVal as IdentifiedData;
                     var adata = retVal as IAmiIdentified;
 
                     var tag = idata?.Tag ?? adata?.Tag;
                     if (!String.IsNullOrEmpty(tag))
+                    {
                         RestOperationContext.Current.OutgoingResponse.SetETag(tag);
+                    }
+
                     RestOperationContext.Current.OutgoingResponse.SetLastModified((idata?.ModifiedOn.DateTime ?? adata?.ModifiedOn.DateTime ?? DateTime.Now));
 
                     // HTTP IF headers?
@@ -485,7 +544,9 @@ namespace SanteDB.Rest.AMI
                     }
                 }
                 else
+                {
                     throw new FileNotFoundException(resourceType);
+                }
             }
             catch (Exception e)
             {
@@ -509,20 +570,29 @@ namespace SanteDB.Rest.AMI
                     object strongKey = key, strongVersionKey = versionKey;
                     Guid guidKey = Guid.Empty;
                     if (Guid.TryParse(key, out guidKey))
+                    {
                         strongKey = guidKey;
+                    }
+
                     if (Guid.TryParse(versionKey, out guidKey))
+                    {
                         strongVersionKey = guidKey;
+                    }
 
                     this.AclCheck(handler, nameof(IApiResourceHandler.Get));
                     var retVal = handler.Get(strongKey, strongVersionKey) as IdentifiedData;
                     if (retVal == null)
+                    {
                         throw new FileNotFoundException(key);
+                    }
 
                     RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
                     return retVal;
                 }
                 else
+                {
                     throw new FileNotFoundException(resourceType);
+                }
             }
             catch (Exception e)
             {
@@ -555,17 +625,23 @@ namespace SanteDB.Rest.AMI
                     {
                         retVal = handler.Get(Guid.Parse(key), retVal.PreviousVersionKey.Value) as IVersionedData;
                         if (retVal != null)
+                        {
                             histItm.Add(retVal);
+                        }
                         // Should we stop fetching?
                         if (retVal?.VersionKey == sinceGuid)
+                        {
                             break;
+                        }
                     }
 
                     // Lock the item
                     return new AmiCollection(histItm, 0, histItm.Count);
                 }
                 else
+                {
                     throw new FileNotFoundException(resourceType);
+                }
             }
             catch (Exception e)
             {
@@ -582,7 +658,9 @@ namespace SanteDB.Rest.AMI
         {
             var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
             if (handler == null)
+            {
                 throw new FileNotFoundException(resourceType);
+            }
             else
             {
                 Func<ResourceCapabilityType, String[]> getCaps = (o) =>
@@ -618,7 +696,9 @@ namespace SanteDB.Rest.AMI
                 // Patching
                 if (ApplicationServiceContext.Current.GetService<IPatchService>() != null &&
                     handler.Capabilities.HasFlag(ResourceCapabilityType.Update))
+                {
                     caps.Add(new ServiceResourceCapability(ResourceCapabilityType.Patch, this.GetDemands(handler, nameof(IApiResourceHandler.Update))));
+                }
 
                 // To expose associated objects
                 var childResources = new List<ChildServiceResourceOptions>();
@@ -653,7 +733,9 @@ namespace SanteDB.Rest.AMI
 
                     // Modified on?
                     if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null)
+                    {
                         query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince()?.ToString("o"));
+                    }
 
                     // Query for results
                     var results = handler.Query(query);
@@ -677,7 +759,9 @@ namespace SanteDB.Rest.AMI
                     }
                 }
                 else
+                {
                     throw new FileNotFoundException(resourceType);
+                }
             }
             catch (Exception e)
             {
@@ -699,16 +783,22 @@ namespace SanteDB.Rest.AMI
                 if (handler != null)
                 {
                     // Get target of update and ensure
-                    switch(data)
+                    switch (data)
                     {
                         case IdentifiedData iddata:
-                            if (iddata.Key.HasValue && (!Guid.TryParse(key, out var guidKey) ||  iddata.Key != guidKey))
+                            if (iddata.Key.HasValue && (!Guid.TryParse(key, out var guidKey) || iddata.Key != guidKey))
+                            {
                                 throw new FaultException(HttpStatusCode.BadRequest, "Key mismatch");
+                            }
+
                             iddata.Key = guidKey;
                             break;
                         case IAmiIdentified amid:
                             if (!String.IsNullOrEmpty(amid.Key) && amid.Key != key)
+                            {
                                 throw new FaultException(HttpStatusCode.BadRequest, "Key mismatch");
+                            }
+
                             amid.Key = key;
                             break;
                     }
@@ -716,27 +806,37 @@ namespace SanteDB.Rest.AMI
                     this.AclCheck(handler, nameof(IApiResourceHandler.Update));
                     var retVal = handler.Update(data);
                     if (retVal == null)
+                    {
                         RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.NoContent;
+                    }
                     else
+                    {
                         RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.Created;
+                    }
 
                     var versioned = retVal as IVersionedData;
                     RestOperationContext.Current.OutgoingResponse.SetETag((retVal as IdentifiedData)?.Tag);
 
                     if (versioned != null)
+                    {
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}/history/{2}",
                             RestOperationContext.Current.IncomingRequest.Url,
                             (retVal as IIdentifiedData)?.Key?.ToString() ?? (retVal as IAmiIdentified)?.Key,
                             versioned.Key));
+                    }
                     else
+                    {
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, String.Format("{0}/{1}",
                             RestOperationContext.Current.IncomingRequest.Url,
                             (retVal as IIdentifiedData)?.Key?.ToString() ?? (retVal as IAmiIdentified)?.Key));
+                    }
 
                     return retVal;
                 }
                 else
+                {
                     throw new FileNotFoundException(resourceType);
+                }
             }
             catch (Exception e)
             {
@@ -762,7 +862,7 @@ namespace SanteDB.Rest.AMI
         /// </summary>
         protected void ThrowIfNotReady()
         {
-            if(!ApplicationServiceContext.Current.IsRunning)
+            if (!ApplicationServiceContext.Current.IsRunning)
             {
                 throw new DomainStateException();
             }
@@ -782,7 +882,9 @@ namespace SanteDB.Rest.AMI
                     this.AclCheck(handler, nameof(ILockableResourceHandler.Lock));
                     var retVal = (handler as ILockableResourceHandler).Lock(Guid.Parse(key));
                     if (retVal == null)
+                    {
                         throw new FileNotFoundException(key);
+                    }
 
                     var idata = retVal as IdentifiedData;
                     var adata = retVal as IAmiIdentified;
@@ -795,9 +897,13 @@ namespace SanteDB.Rest.AMI
                     return retVal;
                 }
                 else if (handler == null)
+                {
                     throw new FileNotFoundException(resourceType);
+                }
                 else
+                {
                     throw new NotSupportedException();
+                }
             }
             catch (Exception e)
             {
@@ -821,7 +927,9 @@ namespace SanteDB.Rest.AMI
                     this.AclCheck(handler, nameof(ILockableResourceHandler.Unlock));
                     var retVal = (handler as ILockableResourceHandler).Unlock(Guid.Parse(key));
                     if (retVal == null)
+                    {
                         throw new FileNotFoundException(key);
+                    }
 
                     var idata = retVal as IdentifiedData;
                     var adata = retVal as IAmiIdentified;
@@ -834,9 +942,13 @@ namespace SanteDB.Rest.AMI
                     return retVal;
                 }
                 else if (handler == null)
+                {
                     throw new FileNotFoundException(resourceType);
+                }
                 else
+                {
                     throw new NotSupportedException();
+                }
             }
             catch (Exception e)
             {
@@ -864,7 +976,9 @@ namespace SanteDB.Rest.AMI
 
                     // Modified on?
                     if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null)
+                    {
                         query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince()?.ToString("o"));
+                    }
 
                     // Query for results
                     IQueryResultSet results = null;
@@ -896,7 +1010,9 @@ namespace SanteDB.Rest.AMI
                     }
                 }
                 else
+                {
                     throw new FileNotFoundException(resourceType);
+                }
             }
             catch (Exception e)
             {
@@ -921,9 +1037,13 @@ namespace SanteDB.Rest.AMI
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.AddChildObject));
                     object retVal = null;
                     if (Guid.TryParse(key, out Guid uuid))
+                    {
                         retVal = handler.AddChildObject(uuid, childResourceType, body);
+                    }
                     else
+                    {
                         retVal = handler.AddChildObject(key, childResourceType, body);
+                    }
 
                     var versioned = retVal as IVersionedData;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = retVal == null ? (int)HttpStatusCode.NoContent : (int)System.Net.HttpStatusCode.Created;
@@ -937,7 +1057,9 @@ namespace SanteDB.Rest.AMI
                     return retVal;
                 }
                 else
+                {
                     throw new FileNotFoundException(resourceType);
+                }
             }
             catch (Exception e)
             {
@@ -963,9 +1085,13 @@ namespace SanteDB.Rest.AMI
 
                     object retVal = null;
                     if (Guid.TryParse(key, out Guid uuid) && Guid.TryParse(scopedEntityKey, out Guid scopedUuid))
+                    {
                         retVal = handler.RemoveChildObject(uuid, childResourceType, scopedUuid);
+                    }
                     else
+                    {
                         retVal = handler.RemoveChildObject(key, childResourceType, scopedEntityKey);
+                    }
 
                     var versioned = retVal as IVersionedData;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = (int)System.Net.HttpStatusCode.OK;
@@ -979,7 +1105,9 @@ namespace SanteDB.Rest.AMI
                     return retVal;
                 }
                 else
+                {
                     throw new FileNotFoundException(resourceType);
+                }
             }
             catch (Exception e)
             {
@@ -1005,9 +1133,13 @@ namespace SanteDB.Rest.AMI
 
                     object retVal = null;
                     if (Guid.TryParse(key, out Guid uuid) && Guid.TryParse(scopedEntityKey, out Guid scopedUuid))
+                    {
                         retVal = handler.GetChildObject(uuid, childResourceType, scopedUuid);
+                    }
                     else
+                    {
                         retVal = handler.GetChildObject(key, childResourceType, scopedEntityKey);
+                    }
 
                     var versioned = retVal as IVersionedData;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = (int)System.Net.HttpStatusCode.OK;
@@ -1021,7 +1153,9 @@ namespace SanteDB.Rest.AMI
                     return retVal;
                 }
                 else
+                {
                     throw new FileNotFoundException(resourceType);
+                }
             }
             catch (Exception e)
             {
@@ -1064,7 +1198,9 @@ namespace SanteDB.Rest.AMI
                     return retValRaw;
                 }
                 else
+                {
                     throw new FileNotFoundException(resourceType);
+                }
             }
             catch (Exception e)
             {
@@ -1090,7 +1226,9 @@ namespace SanteDB.Rest.AMI
                     return handler.CheckIn(Guid.Parse(key));
                 }
                 else
+                {
                     throw new FileNotFoundException(resourceType);
+                }
             }
             catch (Exception e)
             {
@@ -1116,7 +1254,9 @@ namespace SanteDB.Rest.AMI
                     return handler.CheckOut(Guid.Parse(key));
                 }
                 else
+                {
                     throw new FileNotFoundException(resourceType);
+                }
             }
             catch (Exception e)
             {
@@ -1159,7 +1299,9 @@ namespace SanteDB.Rest.AMI
                     return retValRaw;
                 }
                 else
+                {
                     throw new FileNotFoundException(resourceType);
+                }
             }
             catch (Exception e)
             {
