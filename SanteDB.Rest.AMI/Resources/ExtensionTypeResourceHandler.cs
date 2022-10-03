@@ -19,6 +19,7 @@
  * Date: 2022-5-30
  */
 using SanteDB.Core.Model.DataTypes;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.AMI.Resources
@@ -32,7 +33,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Extension type resource handler
         /// </summary>
-        public ExtensionTypeResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<ExtensionType> repositoryService) : base(localizationService, freetextSearchService, repositoryService)
+        public ExtensionTypeResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<ExtensionType> repositoryService, IAuditService auditService) : base(localizationService, freetextSearchService, repositoryService, auditService)
         {
         }
     }

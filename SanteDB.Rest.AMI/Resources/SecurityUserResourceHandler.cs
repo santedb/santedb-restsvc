@@ -51,7 +51,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Create security repository
         /// </summary>
-        public SecurityUserResourceHandler(IIdentityProviderService identityProvider, ILocalizationService localizationService, IRoleProviderService roleProvider, ISecurityRepositoryService securityRepository, IPolicyInformationService policyInformationService, IDataCachingService cachingService = null, IRepositoryService<SecurityUser> repository = null) : base(policyInformationService, localizationService, cachingService, repository)
+        public SecurityUserResourceHandler(IIdentityProviderService identityProvider, ILocalizationService localizationService, IRoleProviderService roleProvider, ISecurityRepositoryService securityRepository, IPolicyInformationService policyInformationService, IAuditService auditService, IDataCachingService cachingService = null, IRepositoryService<SecurityUser> repository = null) : base(auditService, policyInformationService, localizationService, cachingService, repository)
         {
             this.m_securityRepository = securityRepository;
             this.m_roleProvider = roleProvider;

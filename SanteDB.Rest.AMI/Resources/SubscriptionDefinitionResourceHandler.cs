@@ -20,6 +20,7 @@
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Subscription;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.AMI.Resources
@@ -33,7 +34,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Subscription definition
         /// </summary>
-        public SubscriptionDefinitionResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<SubscriptionDefinition> repositoryService) : base(localizationService, freetextSearchService, repositoryService)
+        public SubscriptionDefinitionResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<SubscriptionDefinition> repositoryService, IAuditService auditService) : base(localizationService, freetextSearchService, repositoryService, auditService)
         {
         }
 

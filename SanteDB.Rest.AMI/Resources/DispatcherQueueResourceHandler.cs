@@ -55,13 +55,16 @@ namespace SanteDB.Rest.AMI.Resources
         // Localization service
         private readonly ILocalizationService m_localizationService;
 
+        readonly IAuditService _AuditService;
+
         /// <summary>
         /// DI constructor for persistent queue
         /// </summary>
-        public DispatcherQueueResourceHandler(IDispatcherQueueManagerService queueService, ILocalizationService localization)
+        public DispatcherQueueResourceHandler(IDispatcherQueueManagerService queueService, ILocalizationService localization, IAuditService auditService)
         {
             this.m_queueService = queueService;
             this.m_localizationService = localization;
+            _AuditService = auditService;
         }
 
         /// <summary>
@@ -114,7 +117,7 @@ namespace SanteDB.Rest.AMI.Resources
         public object Delete(object key)
         {
             this.m_queueService.Purge((String)key);
-            AuditUtil.SendAudit(new Core.Model.Audit.AuditEventData()
+            _AuditService.Audit()
                 .WithLocalDevice()
                 .WithUser()
                 .WithAction(Core.Model.Audit.ActionType.Delete)
@@ -123,7 +126,8 @@ namespace SanteDB.Rest.AMI.Resources
                 .WithTimestamp(DateTimeOffset.Now)
                 .WithEventType("PurgeQueue")
                 .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
-                .WithSystemObjects(Core.Model.Audit.AuditableObjectRole.Resource, Core.Model.Audit.AuditableObjectLifecycle.PermanentErasure, new Uri($"urn:santedb:org:DispatcherQueueInfo/{key}/event")));
+                .WithSystemObjects(Core.Model.Audit.AuditableObjectRole.Resource, Core.Model.Audit.AuditableObjectLifecycle.PermanentErasure, new Uri($"urn:santedb:org:DispatcherQueueInfo/{key}/event"))
+                .Send();
             return null;
         }
 

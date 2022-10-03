@@ -23,6 +23,7 @@ using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Queue;
+using SanteDB.Core.Security;
 using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
@@ -51,14 +52,18 @@ namespace SanteDB.Rest.AMI.ChildResources
         // PEP service
         private readonly IPolicyEnforcementService m_policyEnforcementService;
 
+        //Audit Service
+        readonly IAuditService _AuditService;
+
         /// <summary>
         /// DI constructor for persistent queue
         /// </summary>
-        public DispatcherQueueEntryChildResource(IDispatcherQueueManagerService queueService, ILocalizationService localization, IPolicyEnforcementService pepService)
+        public DispatcherQueueEntryChildResource(IDispatcherQueueManagerService queueService, ILocalizationService localization, IPolicyEnforcementService pepService, IAuditService auditService)
         {
             this.m_queueService = queueService;
             this.m_localizationService = localization;
             this.m_policyEnforcementService = pepService;
+            _AuditService = auditService;
         }
 
         /// <summary>
@@ -94,18 +99,17 @@ namespace SanteDB.Rest.AMI.ChildResources
             if (item is DispatcherQueueEntry dqe)
             {
                 var retVal = this.m_queueService.Move(dqe, (string)scopingKey);
-                AuditUtil.SendAudit(new AuditEventData()
-               .WithLocalDevice()
-               .WithUser()
-               .WithAction(ActionType.Update)
-               .WithEventIdentifier(EventIdentifierType.Import)
-               .WithOutcome(OutcomeIndicator.Success)
-               .WithTimestamp(DateTimeOffset.Now)
-               .WithEventType("MoveQueueObject")
-               .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
-               .WithSystemObjects(AuditableObjectRole.Resource, AuditableObjectLifecycle.Archiving, new Uri($"urn:santedb:org:DispatcherQueueInfo/{dqe.SourceQueue}/entry/{dqe.CorrelationId}"))
-               .WithSystemObjects(AuditableObjectRole.Resource, AuditableObjectLifecycle.Creation, new Uri($"urn:santedb:org:DispatcherQueueInfo/{scopingKey}/entry/{retVal.CorrelationId}"))
-               );
+                _AuditService.Audit()
+                   .WithAction(ActionType.Update)
+                   .WithEventIdentifier(EventIdentifierType.Import)
+                   .WithOutcome(OutcomeIndicator.Success)
+                   .WithEventType("MoveQueueObject")
+                   .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                   .WithSystemObjects(AuditableObjectRole.Resource, AuditableObjectLifecycle.Archiving, new Uri($"urn:santedb:org:DispatcherQueueInfo/{dqe.SourceQueue}/entry/{dqe.CorrelationId}"))
+                   .WithSystemObjects(AuditableObjectRole.Resource, AuditableObjectLifecycle.Creation, new Uri($"urn:santedb:org:DispatcherQueueInfo/{scopingKey}/entry/{retVal.CorrelationId}"))
+                   .WithLocalDevice()
+                   .WithUser()
+                   .Send();
                 return retVal;
             }
             else
@@ -133,7 +137,7 @@ namespace SanteDB.Rest.AMI.ChildResources
                 entries = entries.Where(o => o.CorrelationId.Contains(values.First().Replace("*", "")));
             }
 
-            AuditUtil.SendAudit(new AuditEventData()
+            _AuditService.Audit()
                .WithLocalDevice()
                .WithUser()
                .WithAction(ActionType.Execute)
@@ -142,7 +146,8 @@ namespace SanteDB.Rest.AMI.ChildResources
                .WithTimestamp(DateTimeOffset.Now)
                .WithEventType("QueryQueueObject")
                .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
-               .WithSystemObjects(AuditableObjectRole.Resource, AuditableObjectLifecycle.PermanentErasure, entries.Select(o => new Uri($"urn:santedb:org:DispatcherQueueInfo/{scopingKey}/entry/{o.CorrelationId}")).ToArray()));
+               .WithSystemObjects(AuditableObjectRole.Resource, AuditableObjectLifecycle.PermanentErasure, entries.Select(o => new Uri($"urn:santedb:org:DispatcherQueueInfo/{scopingKey}/entry/{o.CorrelationId}")).ToArray())
+               .Send();
 
             return new MemoryQueryResultSet(entries);
         }
@@ -155,7 +160,7 @@ namespace SanteDB.Rest.AMI.ChildResources
             if (key == null || key.Equals("*"))
             {
                 this.m_queueService.Purge((String)scopingKey);
-                AuditUtil.SendAudit(new Core.Model.Audit.AuditEventData()
+                _AuditService.Audit()
                     .WithLocalDevice()
                     .WithUser()
                     .WithAction(Core.Model.Audit.ActionType.Delete)
@@ -164,12 +169,13 @@ namespace SanteDB.Rest.AMI.ChildResources
                     .WithTimestamp(DateTimeOffset.Now)
                     .WithEventType("PurgeQueue")
                     .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
-                    .WithSystemObjects(Core.Model.Audit.AuditableObjectRole.Resource, Core.Model.Audit.AuditableObjectLifecycle.PermanentErasure, new Uri($"urn:santedb:org:DispatcherQueueInfo/{scopingKey}/event/*")));
+                    .WithSystemObjects(Core.Model.Audit.AuditableObjectRole.Resource, Core.Model.Audit.AuditableObjectLifecycle.PermanentErasure, new Uri($"urn:santedb:org:DispatcherQueueInfo/{scopingKey}/event/*"))
+                    .Send();
             }
             else
             {
                 var data = this.m_queueService.DequeueById((String)scopingKey, (string)key);
-                AuditUtil.SendAudit(new Core.Model.Audit.AuditEventData()
+                _AuditService.Audit()
                     .WithLocalDevice()
                     .WithUser()
                     .WithAction(Core.Model.Audit.ActionType.Delete)
@@ -178,7 +184,8 @@ namespace SanteDB.Rest.AMI.ChildResources
                     .WithTimestamp(DateTimeOffset.Now)
                     .WithEventType("PurgeQueueObject")
                     .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
-                    .WithSystemObjects(Core.Model.Audit.AuditableObjectRole.Resource, Core.Model.Audit.AuditableObjectLifecycle.PermanentErasure, new Uri($"urn:santedb:org:DispatcherQueueInfo/{scopingKey}/event/{key}")));
+                    .WithSystemObjects(Core.Model.Audit.AuditableObjectRole.Resource, Core.Model.Audit.AuditableObjectLifecycle.PermanentErasure, new Uri($"urn:santedb:org:DispatcherQueueInfo/{scopingKey}/event/{key}"))
+                    .Send();
             }
             return null;
         }

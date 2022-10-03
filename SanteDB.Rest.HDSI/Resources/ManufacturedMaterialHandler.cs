@@ -43,7 +43,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        public ManufacturedMaterialHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<ManufacturedMaterial> repositoryService) : base(localizationService, freetextSearchService, repositoryService)
+        public ManufacturedMaterialHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<ManufacturedMaterial> repositoryService, IAuditService auditService) : base(localizationService, freetextSearchService, repositoryService, auditService)
         {
         }
 

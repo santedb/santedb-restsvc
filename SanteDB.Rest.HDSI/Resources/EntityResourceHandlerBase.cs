@@ -20,6 +20,7 @@
  */
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,7 +40,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <param name="localizationService"></param>
         /// <param name="freetextSearchService"></param>
         /// <param name="repositoryService"></param>
-        public EntityResourceHandlerBase(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<TData> repositoryService) : base(localizationService, freetextSearchService, repositoryService)
+        public EntityResourceHandlerBase(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<TData> repositoryService, IAuditService auditService) : base(localizationService, freetextSearchService, repositoryService, auditService)
         {
         }
 

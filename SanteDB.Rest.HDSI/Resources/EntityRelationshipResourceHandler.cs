@@ -40,7 +40,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        public EntityRelationshipResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<EntityRelationship> repositoryService) : base(localizationService, freetextSearchService, repositoryService)
+        public EntityRelationshipResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<EntityRelationship> repositoryService, IAuditService auditService) : base(localizationService, freetextSearchService, repositoryService, auditService)
         {
         }
 

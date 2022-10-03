@@ -19,6 +19,7 @@
  * Date: 2022-5-30
  */
 using SanteDB.Core.Model.Security;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.AMI.Resources
@@ -32,7 +33,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Security chalenge resource handler DI constructor
         /// </summary>
-        public SecurityChallengeResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<SecurityChallenge> repositoryService) : base(localizationService, freetextSearchService, repositoryService)
+        public SecurityChallengeResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<SecurityChallenge> repositoryService, IAuditService auditService) : base(localizationService, freetextSearchService, repositoryService, auditService)
         {
         }
     }
