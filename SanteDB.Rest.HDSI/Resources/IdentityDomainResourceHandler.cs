@@ -20,6 +20,7 @@
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.DataTypes;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.HDSI.Resources
@@ -33,7 +34,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// DI Constructor
         /// </summary>
-        public IdentityDomainResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<IdentityDomain> repositoryService) : base(localizationService, freetextSearchService, repositoryService)
+        public IdentityDomainResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<IdentityDomain> repositoryService, IAuditService auditService) : base(localizationService, freetextSearchService, repositoryService, auditService)
         {
         }
 

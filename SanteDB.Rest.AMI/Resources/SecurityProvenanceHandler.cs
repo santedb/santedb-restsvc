@@ -22,6 +22,7 @@ using SanteDB.Core;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Security;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using System;
 using System.Collections.Specialized;
@@ -37,7 +38,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        public SecurityProvenanceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<SecurityProvenance> repositoryService) : base(localizationService, freetextSearchService, repositoryService)
+        public SecurityProvenanceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<SecurityProvenance> repositoryService, IAuditService auditService) : base(localizationService, freetextSearchService, repositoryService, auditService)
         {
         }
 

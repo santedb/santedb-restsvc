@@ -19,6 +19,7 @@
  * Date: 2022-5-30
  */
 using SanteDB.Core.Model.Acts;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.HDSI.Resources
@@ -32,7 +33,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Create careplan resource handler
         /// </summary>
-        public CareplanResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<CarePlan> repositoryService) : base(localizationService, freetextSearchService, repositoryService)
+        public CareplanResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<CarePlan> repositoryService, IAuditService auditService) : base(localizationService, freetextSearchService, repositoryService, auditService)
         {
         }
     }

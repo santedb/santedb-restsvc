@@ -79,6 +79,8 @@ namespace SanteDB.Rest.AMI.ChildResources
         // Repository service
         private IRepositoryService<SecurityRole> m_roleRepository;
 
+        readonly IAuditService _AuditService;
+
         /// <summary>
         /// Security challenge child handler
         /// </summary>
@@ -86,13 +88,15 @@ namespace SanteDB.Rest.AMI.ChildResources
             IRepositoryService<SecurityUser> userRepository,
             ISecurityRepositoryService securityRepository,
             IRoleProviderService roleProvider,
-            IPolicyEnforcementService pepService)
+            IPolicyEnforcementService pepService,
+            IAuditService auditService)
         {
             this.m_userRepository = userRepository;
             this.m_pep = pepService;
             this.m_roleRepository = roleRepository;
             this.m_securityRepository = securityRepository;
             this.m_roleProvider = roleProvider;
+            _AuditService = auditService;   
         }
 
         /// <summary>
@@ -129,12 +133,12 @@ namespace SanteDB.Rest.AMI.ChildResources
                 }
 
                 this.m_roleProvider.AddUsersToRoles(new string[] { rd.Entity.UserName }, new string[] { scope.Name }, AuthenticationContext.Current.Principal);
-                AuditUtil.AuditSecurityAttributeAction(new object[] { scope }, true, $"add user={rd.Entity.UserName}");
+                _AuditService.Audit().ForSecurityAttributeAction(new object[] { scope }, true, $"add user={rd.Entity.UserName}").Send();
                 return rd.Entity;
             }
             catch
             {
-                AuditUtil.AuditSecurityAttributeAction(new object[] { scope }, false);
+                _AuditService.Audit().ForSecurityAttributeAction(new object[] { scope }, false).Send();
                 throw;
             }
         }
@@ -179,12 +183,12 @@ namespace SanteDB.Rest.AMI.ChildResources
             {
                 this.m_pep.Demand(PermissionPolicyIdentifiers.AlterRoles);
                 this.m_roleProvider.RemoveUsersFromRoles(new string[] { user.UserName }, new string[] { scope.Name }, AuthenticationContext.Current.Principal);
-                AuditUtil.AuditSecurityAttributeAction(new object[] { scope }, true, $"del user={user.UserName}");
+                _AuditService.Audit().ForSecurityAttributeAction(new object[] { scope }, true, $"del user={user.UserName}").Send();
                 return user;
             }
             catch
             {
-                AuditUtil.AuditSecurityAttributeAction(new object[] { scope }, false, $"del user={key}");
+                _AuditService.Audit().ForSecurityAttributeAction(new object[] { scope }, false, $"del user={key}").Send();
                 throw;
             }
         }

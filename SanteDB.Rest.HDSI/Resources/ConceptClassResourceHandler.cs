@@ -20,6 +20,7 @@
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.DataTypes;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.HDSI.Resources
@@ -34,7 +35,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// DI constructor
         /// </summary>
         /// <param name="localizationService"></param>
-        public ConceptClassResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<ConceptClass> repositoryService) : base(localizationService, freetextSearchService, repositoryService)
+        public ConceptClassResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<ConceptClass> repositoryService, IAuditService auditService) : base(localizationService, freetextSearchService, repositoryService, auditService)
         {
         }
 

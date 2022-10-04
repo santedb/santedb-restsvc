@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using SanteDB.Core.Security;
 
 namespace SanteDB.Rest.WWW.Behaviors
 {
@@ -28,11 +29,14 @@ namespace SanteDB.Rest.WWW.Behaviors
 
         private readonly ReadonlyAppletCollection m_appletCollection;
 
+        readonly IAuditService _AuditService;
+
         /// <summary>
         /// Applet collection
         /// </summary>
         public WebErrorBehavior()
         {
+            _AuditService = ApplicationServiceContext.Current.GetAuditService();
             var defaultSolution = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<WwwServiceConfigurationSection>()?.Solution;
             if (!String.IsNullOrEmpty(defaultSolution))
             {
@@ -90,7 +94,7 @@ namespace SanteDB.Rest.WWW.Behaviors
                 }
 
                 response.Body = errorPageStream;
-                AuditUtil.AuditNetworkRequestFailure(error, RestOperationContext.Current.IncomingRequest.Url, RestOperationContext.Current.IncomingRequest.Headers, RestOperationContext.Current.OutgoingResponse.Headers);
+                _AuditService.Audit().ForNetworkRequestFailure(error, RestOperationContext.Current.IncomingRequest.Url, RestOperationContext.Current.IncomingRequest.Headers, RestOperationContext.Current.OutgoingResponse.Headers).Send();
                 return true;
             }
             catch (Exception e)

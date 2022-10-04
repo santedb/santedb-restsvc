@@ -42,7 +42,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Create security repository
         /// </summary>
-        public SecurityDeviceResourceHandler(ISecurityRepositoryService securityRepository, IPolicyInformationService policyInformationService, ILocalizationService localizationService, IDataCachingService cachingService = null, IRepositoryService<SecurityDevice> repository = null) : base(policyInformationService, localizationService, cachingService, repository)
+        public SecurityDeviceResourceHandler(ISecurityRepositoryService securityRepository, IPolicyInformationService policyInformationService, ILocalizationService localizationService, IAuditService auditService, IDataCachingService cachingService = null, IRepositoryService<SecurityDevice> repository = null) : base(auditService, policyInformationService, localizationService, cachingService, repository)
         {
             this.m_securityRepository = securityRepository;
         }

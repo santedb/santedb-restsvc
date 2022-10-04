@@ -55,6 +55,8 @@ namespace SanteDB.Rest.AMI.ChildResources
         // Repository service
         private IRepositoryService<SecurityApplication> m_applicationRepository;
 
+        readonly IAuditService m_auditService;
+
         /// <summary>
         /// Binding for this operation
         /// </summary>
@@ -63,13 +65,14 @@ namespace SanteDB.Rest.AMI.ChildResources
         /// <summary>
         /// Security challenge child handler
         /// </summary>
-        public SecurityPolicyChildHandler(IRepositoryService<SecurityDevice> deviceRepository, IRepositoryService<SecurityApplication> applicationRepository, IRepositoryService<SecurityRole> roleRepository, IPolicyEnforcementService pepService, IPolicyInformationService pipService)
+        public SecurityPolicyChildHandler(IRepositoryService<SecurityDevice> deviceRepository, IRepositoryService<SecurityApplication> applicationRepository, IRepositoryService<SecurityRole> roleRepository, IPolicyEnforcementService pepService, IPolicyInformationService pipService, IAuditService auditService)
         {
             this.m_pip = pipService;
             this.m_pep = pepService;
             this.m_roleRepository = roleRepository;
             this.m_deviceRepository = deviceRepository;
             this.m_applicationRepository = applicationRepository;
+            m_auditService = auditService;  
         }
 
         /// <summary>
@@ -163,12 +166,12 @@ namespace SanteDB.Rest.AMI.ChildResources
 
                 var rd = item as SecurityPolicyInfo;
                 this.m_pip.AddPolicies(scope, rd.Grant, AuthenticationContext.Current.Principal, rd.Oid);
-                AuditUtil.AuditSecurityAttributeAction(new object[] { scope }, true, $"added policy={rd.Oid}:{rd.Policy}");
+                m_auditService.Audit().ForSecurityAttributeAction(new object[] { scope }, true, $"added policy={rd.Oid}:{rd.Policy}").Send();
                 return rd;
             }
             catch
             {
-                AuditUtil.AuditSecurityAttributeAction(new object[] { scope }, false);
+                m_auditService.Audit().ForSecurityAttributeAction(new object[] { scope }, false).Send();
                 throw;
             }
         }
@@ -220,12 +223,12 @@ namespace SanteDB.Rest.AMI.ChildResources
             {
                 this.DemandFor(scopingType);
                 this.m_pip.RemovePolicies(scope, AuthenticationContext.Current.Principal, policy.Oid);
-                AuditUtil.AuditSecurityAttributeAction(new object[] { scope }, true, $"removed policy={policy.Oid}");
+                m_auditService.Audit().ForSecurityAttributeAction(new object[] { scope }, true, $"removed policy={policy.Oid}").Send();
                 return null;
             }
             catch
             {
-                AuditUtil.AuditSecurityAttributeAction(new object[] { scope }, false, $"removed policy={policy.Oid}");
+                m_auditService.Audit().ForSecurityAttributeAction(new object[] { scope }, false, $"removed policy={policy.Oid}").Send();
                 throw;
             }
         }
