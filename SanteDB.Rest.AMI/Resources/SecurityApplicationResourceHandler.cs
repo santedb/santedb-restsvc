@@ -67,7 +67,7 @@ namespace SanteDB.Rest.AMI.Resources
             // If no policies then assign the ones from SYNCHRONIZERS
             if (sde.Policies?.Any() != true)
             {
-                var role = this.m_securityRepository.GetRole("SYNCHRONIZERS");
+                var role = this.m_securityRepository.GetRole("APPLICATIONS");
                 var policies = this.m_policyInformationService?.GetPolicies(role);
                 if (policies != null)
                 {

@@ -33,6 +33,7 @@ using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
@@ -215,6 +216,7 @@ namespace SanteDB.Rest.HDSI
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+
                 throw new Exception($"Error creating {body}", e);
             }
         }
@@ -721,7 +723,7 @@ namespace SanteDB.Rest.HDSI
                     if (RestOperationContext.Current.IncomingRequest.Headers.TryGetValue(ExtendedHttpHeaderNames.DeleteModeHeaderName, out var deleteModeHeader) &&
                         Enum.TryParse<DeleteMode>(deleteModeHeader[0], out var deleteMode))
                     {
-                        using (DataPersistenceControlContext.Create(LoadMode.SyncLoad, deleteMode))
+                        using (DataPersistenceControlContext.Create(LoadMode.SyncLoad, deleteMode, false))
                         {
                             retVal = handler.Delete(objectId) as IdentifiedData;
                         }
