@@ -45,6 +45,14 @@ namespace SanteDB.Core.Model.AMI.Auth
         }
 
         /// <summary>
+        /// Create new device info
+        /// </summary>
+        public SecurityDeviceInfo(SecurityDevice device) : this(device, ApplicationServiceContext.Current.GetService<IPolicyInformationService>())
+        {
+
+        }
+
+        /// <summary>
         /// Creates a new device info from the specified object
         /// </summary>
         public SecurityDeviceInfo(SecurityDevice device, IPolicyInformationService pipService)

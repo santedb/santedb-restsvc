@@ -44,6 +44,14 @@ namespace SanteDB.Core.Model.AMI.Auth
         }
 
         /// <summary>
+        /// Create new security role
+        /// </summary>
+        public SecurityRoleInfo(SecurityRole role) : this(role, ApplicationServiceContext.Current.GetService<IPolicyInformationService>())
+        {
+
+        }
+
+        /// <summary>
         /// Create new security role information from the specified role
         /// </summary>
         public SecurityRoleInfo(SecurityRole role, IPolicyInformationService pipService)
