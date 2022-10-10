@@ -25,5 +25,6 @@ namespace SanteDB.Rest.Common
     /// </summary>
     public interface IRestApiContractImplementation
     {
+
     }
 }
