@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -35,6 +35,8 @@
         <ProjectReference Include="..\..\restsrvr\RestSrvr\RestSrvr.csproj" />
         <ProjectReference Include="..\..\santedb-docker\SanteDB.Docker.Core\SanteDB.Docker.Core.csproj" />
         <ProjectReference Include="..\..\santedb-i18n\SanteDB.Core.i18n\SanteDB.Core.i18n.csproj" />
+        <ProjectReference Include="..\..\santedb-dc-core\SanteDB.Disconnected\SanteDB.Disconnected.csproj" />
+
       </ItemGroup>
     </When>
     <Otherwise>
@@ -44,6 +46,7 @@
         <PackageReference Include="SanteDB.Core.Api" Version="$(VersionNumber)" />
         <PackageReference Include="SanteDB.Core.i18n" Version="$(VersionNumber)" />
         <PackageReference Include="SanteDB.Docker.Core" Version="$(VersionNumber)" />
+        <PackageReference Include="SanteDB.Disconnected" Version="$(VersionNumber)" />
       </ItemGroup>
     </Otherwise>
   </Choose>

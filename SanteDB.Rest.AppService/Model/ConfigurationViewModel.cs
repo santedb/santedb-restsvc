@@ -23,7 +23,9 @@ using SanteDB.Core.Applets.Configuration;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Configuration.Data;
 using SanteDB.Core.Configuration.Http;
+using SanteDB.Core.Configuration.Upstream;
 using SanteDB.Core.Security.Configuration;
+using SanteDB.Disconnected.Data.Synchronization.Configuration;
 using SanteDB.Rest.Common.Configuration;
 using System;
 using System.Collections.Generic;
@@ -64,8 +66,7 @@ namespace SanteDB.Rest.AppService.Model
         public ConfigurationViewModel(SanteDBConfiguration config)
         {
             if (config == null) return;
-            this.Security = config.GetSection<SecurityConfigurationSection>();
-            this.Security.Signatures = new List<SecuritySignatureConfiguration>(this.Security.Signatures.Select(o => o.HideSecrets()));
+            this.Security = config.GetSection<SecurityConfigurationSection>().ForDisclosure();
             this.Data = config.GetSection<DataConfigurationSection>();
             this.Applet = config.GetSection<AppletConfigurationSection>();
             this.Application = config.GetSection<ApplicationServiceContextConfigurationSection>();

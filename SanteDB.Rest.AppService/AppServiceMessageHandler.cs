@@ -23,35 +23,32 @@ using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Services;
-using SanteDB.Messaging.HDSI.Wcf;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Behavior;
-using SanteDB.Rest.HDSI.Configuration;
 using System;
 using System.ComponentModel;
 using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Reflection;
 
-namespace SanteDB.Rest.HDSI
+namespace SanteDB.Rest.AppService
 {
     /// <summary>
-    /// Implementation of <see cref="IApiEndpointProvider"/> for the Health Data Services Interface REST service
+    /// Implementation of <see cref="IApiEndpointProvider"/> for the Application Service REST service
     /// </summary>
     /// <remarks>
-    /// <para>The HDSI message handler is responsible for the maintenance and lifecycle of SanteDB's 
-    /// <see href="https://help.santesuite.org/developers/service-apis/health-data-service-interface-hdsi">Health Data Service Interface</see>. The service
-    /// starts the necessary REST and query services on start and tears them down on system shutdown.</para>
+    /// <para>The application service manager is used for end-user facing CDR deployments and provides methods for manipulating 
+    /// the user environment</para>
     /// </remarks>
-    [Description("The primary iCDR Health Data Messaging Service (HDSI) allows sharing of RIM objects in XML or JSON over HTTP")]
-    [ApiServiceProvider("Health Data Services Interface", typeof(HdsiServiceBehavior), configurationType: typeof(HdsiConfigurationSection), required: true)]
+    [Description("Application Service")]
+    [ApiServiceProvider("Application Interaction Interface", typeof(AppServiceBehavior))]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // Model classes - ignored
-    public class AppServiceMessageHandler : IDaemonService, IApiEndpointProvider
+    public class AppServiceMessageHandler : IDaemonService
     {
         /// <summary>
         /// Gets the service name
         /// </summary>
-        public string ServiceName => "iCDR Primary Clinical Messaging Interface";
+        public string ServiceName => "App Service";
 
         /// <summary>
         /// Gets the contract type
@@ -61,7 +58,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Name of the service in the configuration file
         /// </summary>
-        internal const string ConfigurationName = "HDSI";
+        internal const string ConfigurationName = "APP";
 
         /// <summary>
         /// Resource handler tool
@@ -69,13 +66,22 @@ namespace SanteDB.Rest.HDSI
         internal static ResourceHandlerTool ResourceHandler { get; private set; }
 
         // HDSI Trace host
-        private readonly Tracer m_traceSource = new Tracer(HdsiConstants.TraceSourceName);
+        private readonly Tracer m_traceSource = Tracer.GetTracer(typeof(AppServiceMessageHandler));
+        private readonly IServiceManager m_serviceManager;
+        private readonly IRestServiceFactory m_restFactory;
 
-        // configuration
-        private HdsiConfigurationSection m_configuration = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<HdsiConfigurationSection>();
 
         // web host
         private RestService m_webHost;
+
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        public AppServiceMessageHandler(IServiceManager serviceManager, IRestServiceFactory restServiceFactory)
+        {
+            this.m_serviceManager = serviceManager;
+            this.m_restFactory = restServiceFactory;
+        }
 
         /// <summary>
         /// True if running
@@ -109,28 +115,6 @@ namespace SanteDB.Rest.HDSI
         public event EventHandler Stopping;
 
         /// <summary>
-        /// Gets the API type
-        /// </summary>
-        public ServiceEndpointType ApiType
-        {
-            get
-            {
-                return ServiceEndpointType.HealthDataService;
-            }
-        }
-
-        /// <summary>
-        /// URL of the service
-        /// </summary>
-        public string[] Url
-        {
-            get
-            {
-                return this.m_webHost.Endpoints.OfType<ServiceEndpoint>().Select(o => o.Description.ListenUri.ToString()).ToArray();
-            }
-        }
-
-        /// <summary>
         /// Capabilities
         /// </summary>
         public ServiceEndpointCapabilities Capabilities
@@ -147,7 +131,8 @@ namespace SanteDB.Rest.HDSI
         public bool Start()
         {
             // Don't start if we're in a test context
-            if (!Assembly.GetEntryAssembly().GetName().Name.StartsWith("SanteDB"))
+            if (ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ||
+                ApplicationServiceContext.Current.HostType == SanteDBHostType.Test)
             {
                 return true;
             }
@@ -156,29 +141,19 @@ namespace SanteDB.Rest.HDSI
             {
                 this.Starting?.Invoke(this, EventArgs.Empty);
 
-                var serviceManager = ApplicationServiceContext.Current.GetService<IServiceManager>();
-                // Force startup
-                if (this.m_configuration?.ResourceHandlers.Count() > 0)
-                {
-                    AppServiceMessageHandler.ResourceHandler = new ResourceHandlerTool(this.m_configuration.ResourceHandlers.Select(o => o.Type), typeof(IHdsiServiceContract));
-                }
-                else
-                {
-                    AppServiceMessageHandler.ResourceHandler = new ResourceHandlerTool(
+                AppServiceMessageHandler.ResourceHandler = new ResourceHandlerTool(
+                    this.m_serviceManager.GetAllTypes()
+                    .Where(t => !t.IsAbstract && !t.IsInterface && typeof(IApiResourceHandler).IsAssignableFrom(t))
+                    .ToList(), typeof(IAppServiceContract)
+                );
 
-                        serviceManager.GetAllTypes()
-                        .Where(t => !t.IsAbstract && !t.IsInterface && typeof(IApiResourceHandler).IsAssignableFrom(t))
-                        .ToList(), typeof(IHdsiServiceContract)
-                    );
-                }
-
-                this.m_webHost = ApplicationServiceContext.Current.GetService<IRestServiceFactory>().CreateService(ConfigurationName);
+                this.m_webHost = this.m_restFactory.CreateService(ConfigurationName);
                 this.m_webHost.AddServiceBehavior(new ErrorServiceBehavior());
 
                 // Add service behaviors
                 foreach (ServiceEndpoint endpoint in this.m_webHost.Endpoints)
                 {
-                    this.m_traceSource.TraceInfo("Starting HDSI on {0}...", endpoint.Description.ListenUri);
+                    this.m_traceSource.TraceInfo("Starting APP on {0}...", endpoint.Description.ListenUri);
                 }
 
                 // Start the webhost
