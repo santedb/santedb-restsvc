@@ -1,6 +1,7 @@
 ﻿using RestSrvr;
 using SanteDB.Core;
 using SanteDB.Core.Applets;
+using SanteDB.Core.Applets.Configuration;
 using SanteDB.Core.Applets.Model;
 using SanteDB.Core.Applets.Services;
 using SanteDB.Core.Exceptions;
@@ -9,7 +10,6 @@ using SanteDB.Core.Security.Claims;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Behaviors;
-using SanteDB.Rest.WWW.Configuration;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ namespace SanteDB.Rest.WWW
     {
         // Cached applets
         private readonly ConcurrentDictionary<String, AppletAsset> m_cacheApplets = new ConcurrentDictionary<string, AppletAsset>();
-        private readonly WwwServiceConfigurationSection m_configuration;
+        private readonly AppletConfigurationSection m_configuration;
         private readonly IPolicyEnforcementService m_policyEnforcementSerivce;
         private readonly ReadonlyAppletCollection m_serviceApplet;
 
@@ -35,15 +35,15 @@ namespace SanteDB.Rest.WWW
         /// </summary>
         public WwwServiceBehavior()
         {
-            this.m_configuration = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<WwwServiceConfigurationSection>();
+            this.m_configuration = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<AppletConfigurationSection>();
             this.m_policyEnforcementSerivce = ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>();
-            if (String.IsNullOrEmpty(this.m_configuration.Solution))
+            if (String.IsNullOrEmpty(this.m_configuration.DefaultApplet))
             {
                 this.m_serviceApplet = ApplicationServiceContext.Current.GetService<IAppletManagerService>().Applets;
             }
             else
             {
-                this.m_serviceApplet = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().GetApplets(this.m_configuration.Solution);
+                this.m_serviceApplet = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().GetApplets(this.m_configuration.DefaultSolution);
             }
 
             // Set the default 
@@ -104,13 +104,11 @@ namespace SanteDB.Rest.WWW
             }
 
             var etag = $"{String.Join(";", this.m_serviceApplet.Select(o => o.Info.Version))}/{lang}";
-            if (this.m_configuration.AllowClientCaching)
+
+            if (RestOperationContext.Current.IncomingRequest.Headers["If-None-Match"] == etag)
             {
-                if (RestOperationContext.Current.IncomingRequest.Headers["If-None-Match"] == etag)
-                {
-                    RestOperationContext.Current.OutgoingResponse.StatusCode = 304; // not modified
-                    return null;
-                }
+                RestOperationContext.Current.OutgoingResponse.StatusCode = 304; // not modified
+                return null;
             }
 
             // Navigate asset
@@ -139,10 +137,7 @@ namespace SanteDB.Rest.WWW
             navigateAsset.Policies?.ForEach(o => this.m_policyEnforcementSerivce.Demand(o, AuthenticationContext.Current.Principal));
 
             // Caching
-            if (this.m_configuration.AllowClientCaching)
-            {
-                RestOperationContext.Current.OutgoingResponse.AddHeader("ETag", etag);
-            }
+            RestOperationContext.Current.OutgoingResponse.AddHeader("ETag", etag);
             RestOperationContext.Current.OutgoingResponse.ContentType = navigateAsset.MimeType;
 
             // Write asset

@@ -1,11 +1,11 @@
-﻿using SanteDB.Core.Configuration;
+﻿using SanteDB.Core.Applets.Configuration;
+using SanteDB.Core.Configuration;
 using SanteDB.Core.Exceptions;
 using SanteDB.Docker.Core;
 using SanteDB.Rest.Common.Behavior;
 using SanteDB.Rest.Common.Configuration;
 using SanteDB.Rest.Common.Security;
 using SanteDB.Rest.WWW.Behaviors;
-using SanteDB.Rest.WWW.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +27,11 @@ namespace SanteDB.Rest.WWW.Docker
         /// Default solution to render pages from
         /// </summary>
         public const string DefaultSolutionSetting = "SOLUTION";
+
+        /// <summary>
+        /// Default applet to render pages from
+        /// </summary>
+        public const string DefaultAppletSetting = "APPLET";
 
         /// <summary>
         /// Whether to allow caching
@@ -144,20 +149,21 @@ namespace SanteDB.Rest.WWW.Docker
                 serviceConfiguration.Add(new TypeReferenceConfiguration(typeof(WwwMessageHandler)));
             }
 
-            var wwwConfiguration = configuration.GetSection<WwwServiceConfigurationSection>();
-            if (wwwConfiguration == null)
+            var appletConfiguration = configuration.GetSection<AppletConfigurationSection>();
+            if (appletConfiguration == null)
             {
-                configuration.AddSection(new WwwServiceConfigurationSection());
+                configuration.AddSection(new AppletConfigurationSection());
             }
 
             if (settings.TryGetValue(DefaultSolutionSetting, out var defaultApp))
             {
-                wwwConfiguration.Solution = defaultApp;
+                appletConfiguration.DefaultSolution = defaultApp;
             }
-            if (settings.TryGetValue(AllowClientCachingSetting, out var allowCachingString) && Boolean.TryParse(allowCachingString, out var allowCaching))
+            if (settings.TryGetValue(DefaultAppletSetting, out defaultApp))
             {
-                wwwConfiguration.AllowClientCaching = allowCaching;
+                appletConfiguration.DefaultApplet = defaultApp;
             }
+          
         }
     }
 }

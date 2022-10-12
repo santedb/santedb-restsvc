@@ -8,13 +8,13 @@ using SanteDB.Core.i18n;
 using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
-using SanteDB.Rest.WWW.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using SanteDB.Core.Security;
+using SanteDB.Core.Applets.Configuration;
 
 namespace SanteDB.Rest.WWW.Behaviors
 {
@@ -37,7 +37,7 @@ namespace SanteDB.Rest.WWW.Behaviors
         public WebErrorBehavior()
         {
             _AuditService = ApplicationServiceContext.Current.GetAuditService();
-            var defaultSolution = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<WwwServiceConfigurationSection>()?.Solution;
+            var defaultSolution = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<AppletConfigurationSection>()?.DefaultSolution;
             if (!String.IsNullOrEmpty(defaultSolution))
             {
                 this.m_appletCollection = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().GetApplets(defaultSolution);

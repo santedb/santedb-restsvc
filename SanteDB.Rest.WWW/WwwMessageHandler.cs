@@ -24,7 +24,6 @@ using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Services;
 using SanteDB.Rest.WWW.Behaviors;
-using SanteDB.Rest.WWW.Configuration;
 using System;
 using System.Diagnostics.Tracing;
 
@@ -36,7 +35,7 @@ namespace SanteDB.Rest.WWW
     /// <remarks>
     /// The world wide web message handler is responsible for serving HTTP requests for web pages 
     /// </remarks>
-    [ApiServiceProvider("WWW Interface", typeof(WwwServiceBehavior), configurationType: typeof(WwwServiceConfigurationSection), required: true)]
+    [ApiServiceProvider("WWW Interface", typeof(WwwServiceBehavior))]
     public class WwwMessageHandler : IDaemonService
     {
         /// <summary>

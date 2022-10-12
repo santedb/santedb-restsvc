@@ -2,12 +2,12 @@
 using RestSrvr.Message;
 using SanteDB.Core;
 using SanteDB.Core.Applets;
+using SanteDB.Core.Applets.Configuration;
 using SanteDB.Core.Applets.Services;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
-using SanteDB.Rest.WWW.Configuration;
 using System;
 using System.Security;
 
@@ -35,7 +35,7 @@ namespace SanteDB.Rest.WWW.Behaviors
         /// </summary>
         public CookieAuthenticationBehavior()
         {
-            var defaultSolution = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<WwwServiceConfigurationSection>()?.Solution;
+            var defaultSolution = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<AppletConfigurationSection>()?.DefaultSolution;
             if (!String.IsNullOrEmpty(defaultSolution))
             {
                 this.m_appletCollection = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().GetApplets(defaultSolution);
