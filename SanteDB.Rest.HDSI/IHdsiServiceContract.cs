@@ -277,11 +277,10 @@ namespace SanteDB.Rest.HDSI
         /// For complete specification see: https://help.santesuite.org/santedb/extending-santedb/service-apis/health-data-service-interface-hdsi/digitally-signed-visual-code-api</remarks>
         /// <param name="id">The identifier of the resource for which a VRP should be generated</param>
         /// <param name="resourceType">The type of resource for which the VRP should be generated</param>
-        /// <param name="authority">The authority of the VRP</param>
         /// <returns>The generated VRP code in PNG format</returns>
-        [Get("/{resourceType}/{id}/_code/{authority}")]
+        [Get("/{resourceType}/{id}/_code")]
         [ServiceProduces("image/png")]
-        Stream GetVrpCode(String resourceType, String id, String authority);
+        Stream GetBarcode(String resourceType, String id);
 
         /// <summary>
         /// Gets the digitally signed pointer (in JWS format) for the resource
@@ -294,10 +293,9 @@ namespace SanteDB.Rest.HDSI
         /// </remarks>
         /// <param name="id">The identifier of the object for which the pointer should be created</param>
         /// <param name="resourceType">The type of resource which should be generated</param>
-        /// <param name="authorityId">The authority of the identifier for which the VRP should be pointed</param>
         /// <returns>A JSON structure in JWS form</returns>
-        [Get("/{resourceType}/{id}/_ptr/{authorityId}")]
-        Stream GetVrpPointerData(String resourceType, String id, String authorityId);
+        [Get("/{resourceType}/{id}/_ptr")]
+        Stream GetVrpPointerData(String resourceType, String id);
 
         /// <summary>
         /// Resolve a code to a resource by posting a form-encoded search to the API

@@ -38,6 +38,7 @@ using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
+using SanteDB.Rest.HDSI.Vrp;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -1169,7 +1170,8 @@ namespace SanteDB.Rest.HDSI
         }
 
         /// <inheritdoc/>
-        public virtual Stream GetVrpCode(string resourceType, string id, string authority)
+        [UrlParameter("_format", typeof(String), "The format of the barcode (santedb-vrp, code39, etc.)")]
+        public virtual Stream GetBarcode(string resourceType, string id)
         {
             try
             {
@@ -1182,7 +1184,7 @@ namespace SanteDB.Rest.HDSI
                     }
 
                     Guid objectId = Guid.Parse(id);
-                    var data = handler.Get(objectId, Guid.Empty) as IdentifiedData;
+                    var data = handler.Get(objectId, Guid.Empty) as IHasIdentifiers;
                     if (data == null)
                     {
                         throw new KeyNotFoundException($"{resourceType} {id}");
@@ -1191,36 +1193,17 @@ namespace SanteDB.Rest.HDSI
                     {
                         RestOperationContext.Current.OutgoingResponse.ContentType = "image/png";
 
-                        // Specific ID
-                        if (Guid.TryParse(authority, out Guid authorityId))
+                        // Get the generator
+                        IBarcodeGenerator barcodeGenerator = this.m_barcodeService.GetBarcodeGenerator(
+                            RestOperationContext.Current.IncomingRequest.QueryString["_format"] ?? VrpBarcodeProvider.AlgorithmName);
+
+                        if (barcodeGenerator == null)
                         {
-                            if (data is Entity entity)
-                            {
-                                return this.m_barcodeService.Generate(entity.LoadProperty(o => o.Identifiers).Where(o => o.IdentityDomainKey == authorityId));
-                            }
-                            else if (data is Act act)
-                            {
-                                return this.m_barcodeService.Generate(act.LoadProperty(o => o.Identifiers).Where(o => o.IdentityDomainKey == authorityId));
-                            }
-                            else
-                            {
-                                return null;
-                            }
+                            throw new ArgumentException($"Barcode format unknown");
                         }
                         else
                         {
-                            if (data is Entity entity)
-                            {
-                                return this.m_barcodeService.Generate(entity.LoadProperty(o => o.Identifiers));
-                            }
-                            else if (data is Act act)
-                            {
-                                return this.m_barcodeService.Generate(act.LoadProperty(o => o.Identifiers));
-                            }
-                            else
-                            {
-                                return null;
-                            }
+                            return barcodeGenerator.Generate(data);
                         }
                     }
                 }
@@ -1326,7 +1309,7 @@ namespace SanteDB.Rest.HDSI
         }
 
         /// <inheritdoc/>
-        public virtual Stream GetVrpPointerData(string resourceType, string id, string authority)
+        public virtual Stream GetVrpPointerData(string resourceType, string id)
         {
             try
             {
@@ -1340,8 +1323,7 @@ namespace SanteDB.Rest.HDSI
 
                     Guid objectId = Guid.Parse(id);
 
-                    Guid authorityId = Guid.Parse(authority);
-                    var data = handler.Get(objectId, Guid.Empty) as IdentifiedData;
+                    var data = handler.Get(objectId, Guid.Empty) as IHasIdentifiers;
                     if (data == null)
                     {
                         throw new KeyNotFoundException($"{resourceType} {id}");
@@ -1349,18 +1331,7 @@ namespace SanteDB.Rest.HDSI
                     else
                     {
                         RestOperationContext.Current.OutgoingResponse.ContentType = "application/jose";
-                        if (data is Entity entity)
-                        {
-                            return new MemoryStream(Encoding.UTF8.GetBytes(this.m_resourcePointerService.GeneratePointer(entity.LoadProperty(o => o.Identifiers).Where(o => o.IdentityDomainKey == authorityId))));
-                        }
-                        else if (data is Act act)
-                        {
-                            return new MemoryStream(Encoding.UTF8.GetBytes(this.m_resourcePointerService.GeneratePointer(act.LoadProperty(o => o.Identifiers).Where(o => o.IdentityDomainKey == authorityId))));
-                        }
-                        else
-                        {
-                            return null;
-                        }
+                        return new MemoryStream(Encoding.UTF8.GetBytes(this.m_resourcePointerService.GeneratePointer(data)));
                     }
                 }
                 else
