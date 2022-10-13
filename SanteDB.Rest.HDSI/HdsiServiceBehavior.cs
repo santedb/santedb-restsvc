@@ -234,7 +234,8 @@ namespace SanteDB.Rest.HDSI
                     IdentifiedData retVal = null;
                     IVersionedData versioned = null;
 
-                    if (!string.IsNullOrEmpty(id) && handler is IChainedApiResourceHandler chainedHandler && chainedHandler.TryGetChainedResource(id, ChildObjectScopeBinding.Class, out var childHandler))
+                    if (!string.IsNullOrEmpty(id) && handler is IChainedApiResourceHandler chainedHandler && 
+                        chainedHandler.TryGetChainedResource(id, ChildObjectScopeBinding.Class, out var childHandler))
                     {
                         this.AclCheck(childHandler, nameof(IApiResourceHandler.Create));
                         retVal = childHandler.Add(handler.Type, null, body) as IdentifiedData;
