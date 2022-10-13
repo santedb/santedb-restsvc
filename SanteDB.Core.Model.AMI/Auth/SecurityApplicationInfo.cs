@@ -45,6 +45,15 @@ namespace SanteDB.Core.Model.AMI.Auth
         }
 
         /// <summary>
+        /// Create new application info
+        /// </summary>
+        public SecurityApplicationInfo(SecurityApplication application) : this(application, ApplicationServiceContext.Current.GetService<IPolicyInformationService>())
+        {
+
+        }
+
+
+        /// <summary>
         /// Creates a new app info from the specified object
         /// </summary>
         public SecurityApplicationInfo(SecurityApplication app, IPolicyInformationService pipService)

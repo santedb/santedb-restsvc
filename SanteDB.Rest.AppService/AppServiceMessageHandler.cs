@@ -23,48 +23,65 @@ using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Services;
-using SanteDB.Rest.WWW.Behaviors;
+using SanteDB.Rest.Common;
+using SanteDB.Rest.Common.Behavior;
 using System;
+using System.ComponentModel;
 using System.Diagnostics.Tracing;
+using System.Linq;
+using System.Reflection;
 
-namespace SanteDB.Rest.WWW
+namespace SanteDB.Rest.AppService
 {
     /// <summary>
-    /// Implementation of <see cref="IApiEndpointProvider"/> for the World Wide Web service
+    /// Implementation of <see cref="IApiEndpointProvider"/> for the Application Service REST service
     /// </summary>
     /// <remarks>
-    /// The world wide web message handler is responsible for serving HTTP requests for web pages 
+    /// <para>The application service manager is used for end-user facing CDR deployments and provides methods for manipulating 
+    /// the user environment</para>
     /// </remarks>
-    [ApiServiceProvider("WWW Interface", typeof(WwwServiceBehavior))]
-    public class WwwMessageHandler : IDaemonService
+    [Description("Application Service")]
+    [ApiServiceProvider("Application Interaction Interface", typeof(AppServiceBehavior))]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // Model classes - ignored
+    public class AppServiceMessageHandler : IDaemonService
     {
         /// <summary>
         /// Gets the service name
         /// </summary>
-        public string ServiceName => "World-Wide-Web Interface";
+        public string ServiceName => "App Service";
+
+        /// <summary>
+        /// Gets the contract type
+        /// </summary>
+        public Type BehaviorType => this.m_webHost.BehaviorType;
+
+        /// <summary>
+        /// Name of the service in the configuration file
+        /// </summary>
+        internal const string ConfigurationName = "APP";
+
+        /// <summary>
+        /// Resource handler tool
+        /// </summary>
+        internal static ResourceHandlerTool ResourceHandler { get; private set; }
+
+        // HDSI Trace host
+        private readonly Tracer m_traceSource = Tracer.GetTracer(typeof(AppServiceMessageHandler));
+        private readonly IServiceManager m_serviceManager;
+        private readonly IRestServiceFactory m_restFactory;
+
+
+        // web host
+        private RestService m_webHost;
 
         /// <summary>
         /// DI constructor
         /// </summary>
-        public WwwMessageHandler(IServiceManager serviceManager, IRestServiceFactory restServiceFactory)
+        public AppServiceMessageHandler(IServiceManager serviceManager, IRestServiceFactory restServiceFactory)
         {
             this.m_serviceManager = serviceManager;
-            this.m_restServiceFactory = restServiceFactory;
+            this.m_restFactory = restServiceFactory;
         }
-
-        // HDSI Trace host
-        private readonly Tracer m_traceSource = Tracer.GetTracer(typeof(WwwMessageHandler));
-        private readonly IServiceManager m_serviceManager;
-        private readonly IRestServiceFactory m_restServiceFactory;
-
-
-        /// <summary>
-        /// Configuration name
-        /// </summary>
-        public const string ConfigurationName = "WWW";
-
-        // web host
-        private RestService m_webHost;
 
         /// <summary>
         /// True if running
@@ -98,12 +115,24 @@ namespace SanteDB.Rest.WWW
         public event EventHandler Stopping;
 
         /// <summary>
+        /// Capabilities
+        /// </summary>
+        public ServiceEndpointCapabilities Capabilities
+        {
+            get
+            {
+                return (ServiceEndpointCapabilities)ApplicationServiceContext.Current.GetService<IRestServiceFactory>().GetServiceCapabilities(this.m_webHost);
+            }
+        }
+
+        /// <summary>
         /// Start the service
         /// </summary>
         public bool Start()
         {
             // Don't start if we're in a test context
-            if (ApplicationServiceContext.Current.HostType == SanteDBHostType.Test)
+            if (ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ||
+                ApplicationServiceContext.Current.HostType == SanteDBHostType.Test)
             {
                 return true;
             }
@@ -112,13 +141,19 @@ namespace SanteDB.Rest.WWW
             {
                 this.Starting?.Invoke(this, EventArgs.Empty);
 
-                this.m_webHost = this.m_restServiceFactory.CreateService(ConfigurationName);
-                this.m_webHost.AddServiceBehavior(new WebErrorBehavior());
+                AppServiceMessageHandler.ResourceHandler = new ResourceHandlerTool(
+                    this.m_serviceManager.GetAllTypes()
+                    .Where(t => !t.IsAbstract && !t.IsInterface && typeof(IApiResourceHandler).IsAssignableFrom(t))
+                    .ToList(), typeof(IAppServiceContract)
+                );
+
+                this.m_webHost = this.m_restFactory.CreateService(ConfigurationName);
+                this.m_webHost.AddServiceBehavior(new ErrorServiceBehavior());
 
                 // Add service behaviors
                 foreach (ServiceEndpoint endpoint in this.m_webHost.Endpoints)
                 {
-                    this.m_traceSource.TraceInfo("Starting HDSI on {0}...", endpoint.Description.ListenUri);
+                    this.m_traceSource.TraceInfo("Starting APP on {0}...", endpoint.Description.ListenUri);
                 }
 
                 // Start the webhost

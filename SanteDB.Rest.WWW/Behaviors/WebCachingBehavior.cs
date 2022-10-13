@@ -1,8 +1,8 @@
 ﻿using RestSrvr;
 using RestSrvr.Message;
 using SanteDB.Core;
+using SanteDB.Core.Applets.Configuration;
 using SanteDB.Core.Services;
-using SanteDB.Rest.WWW.Configuration;
 using System;
 using System.IO;
 using System.Linq;
@@ -17,7 +17,7 @@ namespace SanteDB.Rest.WWW.Behaviors
     {
         // Extensions which may be cached
         private readonly string[] m_cacheExtensions;
-        private readonly WwwServiceConfigurationSection m_configuration;
+        private readonly AppletConfigurationSection m_configuration;
 
         /// <summary>
         /// Default ctor with no configuration
@@ -43,7 +43,7 @@ namespace SanteDB.Rest.WWW.Behaviors
                 this.m_cacheExtensions = configurationElement.Elements((XNamespace)"http://santedb.org/configuration" + "extension").Select(o => o.Value).ToArray();
             }
 
-            this.m_configuration = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<WwwServiceConfigurationSection>();
+            this.m_configuration = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<AppletConfigurationSection>();
         }
 
         /// <inheritdoc cref="IMessageInspector.AfterReceiveRequest(RestRequestMessage)"/>
@@ -63,7 +63,7 @@ namespace SanteDB.Rest.WWW.Behaviors
         {
 
             var extension = Path.GetExtension(RestOperationContext.Current.IncomingRequest.Url.AbsolutePath);
-            if (this.m_cacheExtensions.Contains(extension) && this.m_configuration?.AllowClientCaching != false)
+            if (this.m_cacheExtensions.Contains(extension) )
             {
                 response.Headers.Add("Cache-Control", "public, max-age=120, must-revalidate"); // TODO: make this configurable
                 response.Headers.Add("Expires", DateTime.UtcNow.AddHours(1).ToString("ddd, dd MMM yyyy HH:mm:ss 'GMT'"));
