@@ -37,12 +37,13 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
+
 namespace SanteDB.Core.Model.AMI.Collections
 {
     /// <summary>
     /// Represents an administrative collection item.
     /// </summary>
-    [AddDependentSerializersAttribute]
+    [AddDependentSerializers]
     [XmlType(nameof(AmiCollection), Namespace = "http://santedb.org/ami")]
     [JsonObject(nameof(AmiCollection))]
     [XmlInclude(typeof(Entity))]
@@ -85,52 +86,18 @@ namespace SanteDB.Core.Model.AMI.Collections
     [XmlInclude(typeof(DiagnosticsProbe))]
     [XmlInclude(typeof(DiagnosticsProbeReading))]
     [XmlInclude(typeof(LogFileInfo))]
-    public class AmiCollection
+    public class AmiCollection : RestCollectionBase
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AmiCollection"/> class.
-        /// </summary>
         public AmiCollection()
         {
-            this.CollectionItem = new List<Object>();
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AmiCollection"/> class
-        /// with a specific list of collection items.
-        /// </summary>
-        public AmiCollection(IEnumerable<Object> collectionItems)
+        public AmiCollection(IEnumerable<object> collectionItems) : base(collectionItems)
         {
-            this.CollectionItem = new List<object>(collectionItems);
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AmiCollection"/> class
-        /// with a specific list of collection items.
-        /// </summary>
-        public AmiCollection(IEnumerable<Object> collectionItems, int offset, int totalCount)
+        public AmiCollection(IEnumerable<object> collectionItems, int offset, int totalCount) : base(collectionItems, offset, totalCount)
         {
-            this.CollectionItem = new List<Object>(collectionItems);
-            this.Offset = offset;
-            this.Size = totalCount;
         }
-
-        /// <summary>
-        /// Gets or sets a list of collection items.
-        /// </summary>
-        [XmlElement("resource"), JsonProperty("resource")]
-        public List<Object> CollectionItem { get; set; }
-
-        /// <summary>
-        /// Gets or sets the total offset.
-        /// </summary>
-        [XmlAttribute("offset"), JsonProperty("offset")]
-        public int Offset { get; set; }
-
-        /// <summary>
-        /// Gets or sets the total collection size.
-        /// </summary>
-        [XmlAttribute("size"), JsonProperty("size")]
-        public int Size { get; set; }
     }
 }

@@ -31,21 +31,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Serialization;
 
 namespace SanteDB.Rest.AppService.Model
 {
     /// <summary>
     /// Configuration view model
     /// </summary>
-    [JsonObject("Configuration")]
+    [JsonObject(SerializationTypeName)]
+    [XmlRoot(SerializationTypeName, Namespace ="http://santedb.org/appService")]
+    [XmlType(SerializationTypeName, Namespace = "http://santedb.org/appService")]
     public class ConfigurationViewModel
     {
+        private const string SerializationTypeName = "Configuration";
 
         /// <summary>
         /// Get the type
         /// </summary>
         [JsonProperty("$type")]
-        public String Type { get { return "Configuration"; } }
+        public String Type { get { return SerializationTypeName; } }
 
         /// <summary>
         /// Return true if configured

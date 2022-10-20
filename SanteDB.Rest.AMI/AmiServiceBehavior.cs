@@ -82,7 +82,6 @@ namespace SanteDB.Rest.AMI
                 ApplicationServiceContext.Current.GetService<IServiceManager>(),
                 ApplicationServiceContext.Current.GetService<IPatchService>())
         {
-            m_resourceHandler = AmiMessageHandler.ResourceHandler;
         }
 
         /// <summary>

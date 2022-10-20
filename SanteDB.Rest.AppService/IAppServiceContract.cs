@@ -24,6 +24,8 @@ using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using SanteDB.Core.Model.Parameters;
+using SanteDB.Rest.AppService.Model;
 
 namespace SanteDB.Rest.AppService
 {
@@ -35,7 +37,9 @@ namespace SanteDB.Rest.AppService
     [ServiceProduces("application/json+sdb-viewmodel")]
     [ServiceConsumes("application/json")]
     [ServiceConsumes("application/json+sdb-viewmodel")]
-    [ServiceKnownResource(typeof(MenuInformation))]
+    [ServiceKnownResource(typeof(ConfigurationViewModel))]
+    [ServiceKnownResource(typeof(Menu))]
+    [ServiceKnownResource(typeof(Core.Model.Tickles.Tickle))]
     [RestServiceFault(400, "The provided resource was in an incorrect format")]
     [RestServiceFault(401, "The principal is unauthorized and needs to either elevate or authenticate themselves")]
     [RestServiceFault(403, "The principal is not permitted (cannot elevate) to perform the operation")]

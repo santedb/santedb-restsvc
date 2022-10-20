@@ -17,6 +17,13 @@ namespace SanteDB.Rest.Common
         /// </summary>
         public static IQueryResultSet ApplyResultInstructions(this IQueryResultSet me, NameValueCollection query, out int offset, out int totalCount)
         {
+            if (null == me)
+            {
+                offset = 0;
+                totalCount = 0;
+                return null;
+            }
+
             // Next sort
             if (query.TryGetValue(QueryControlParameterNames.HttpOrderByParameterName, out var queryList) && me is IOrderableQueryResultSet orderable)
             {

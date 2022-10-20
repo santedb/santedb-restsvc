@@ -76,11 +76,6 @@ namespace SanteDB.Rest.AMI
         /// </summary>
         private readonly Tracer m_traceSource = Tracer.GetTracer(typeof(AmiMessageHandler));
 
-        /// <summary>
-        /// The internal reference to the AMI configuration.
-        /// </summary>
-        private AmiConfigurationSection configuration = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<AmiConfigurationSection>();
-
         // web host
         private RestService m_webHost;
 
@@ -166,7 +161,7 @@ namespace SanteDB.Rest.AMI
                 //Setup the res handler before the service is instantiated.
                 if (this.m_configuration?.ResourceHandlers.Count() > 0)
                 {
-                    AmiMessageHandler.ResourceHandler = new ResourceHandlerTool(this.configuration.ResourceHandlers, typeof(IAmiServiceContract));
+                    AmiMessageHandler.ResourceHandler = new ResourceHandlerTool(this.m_configuration.ResourceHandlers, typeof(IAmiServiceContract));
                 }
                 else
                 {
