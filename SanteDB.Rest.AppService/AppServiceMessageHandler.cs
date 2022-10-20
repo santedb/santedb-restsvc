@@ -43,7 +43,7 @@ namespace SanteDB.Rest.AppService
     [Description("Application Service")]
     [ApiServiceProvider("Application Interaction Interface", typeof(AppServiceBehavior))]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // Model classes - ignored
-    public class AppServiceMessageHandler : IDaemonService
+    public class AppServiceMessageHandler : IDaemonService, IApiEndpointProvider
     {
         /// <summary>
         /// Gets the service name
@@ -117,13 +117,17 @@ namespace SanteDB.Rest.AppService
         /// <summary>
         /// Capabilities
         /// </summary>
-        public ServiceEndpointCapabilities Capabilities
-        {
-            get
-            {
-                return (ServiceEndpointCapabilities)ApplicationServiceContext.Current.GetService<IRestServiceFactory>().GetServiceCapabilities(this.m_webHost);
-            }
-        }
+        public ServiceEndpointCapabilities Capabilities => (ServiceEndpointCapabilities)ApplicationServiceContext.Current.GetService<IRestServiceFactory>().GetServiceCapabilities(this.m_webHost);
+
+        /// <summary>
+        /// Get the API type
+        /// </summary>
+        public ServiceEndpointType ApiType => ServiceEndpointType.ApplicationControlService;
+
+        /// <summary>
+        /// The urls of the service
+        /// </summary>
+        public string[] Url => this.m_webHost.Endpoints.Select(o => o.Description.ListenUri.ToString()).ToArray();
 
         /// <summary>
         /// Start the service

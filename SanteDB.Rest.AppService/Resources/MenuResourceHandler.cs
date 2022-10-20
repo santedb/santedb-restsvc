@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SanteDB.Rest.AppService.Resources
 {
-    internal class MenuResourceHandler
+    public class MenuResourceHandler 
     {
     }
 }

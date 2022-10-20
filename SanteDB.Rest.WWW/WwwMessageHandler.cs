@@ -24,8 +24,10 @@ using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Services;
 using SanteDB.Rest.WWW.Behaviors;
+using SanteDB.Rest.WWW.Configuration;
 using System;
 using System.Diagnostics.Tracing;
+using System.Linq;
 
 namespace SanteDB.Rest.WWW
 {
@@ -35,8 +37,8 @@ namespace SanteDB.Rest.WWW
     /// <remarks>
     /// The world wide web message handler is responsible for serving HTTP requests for web pages 
     /// </remarks>
-    [ApiServiceProvider("WWW Interface", typeof(WwwServiceBehavior))]
-    public class WwwMessageHandler : IDaemonService
+    [ApiServiceProvider("WWW Interface", typeof(WwwServiceBehavior), Required = false, Configuration = typeof(WwwConfigurationSection))]
+    public class WwwMessageHandler : IDaemonService, IApiEndpointProvider
     {
         /// <summary>
         /// Gets the service name
@@ -76,6 +78,26 @@ namespace SanteDB.Rest.WWW
                 return this.m_webHost?.IsRunning == true;
             }
         }
+
+        /// <summary>
+        /// API type
+        /// </summary>
+        public ServiceEndpointType ApiType => ServiceEndpointType.Other;
+
+        /// <summary>
+        /// URLs
+        /// </summary>
+        public string[] Url => this.m_webHost.Endpoints.Select(o => o.Description.ListenUri.ToString()).ToArray();
+
+        /// <summary>
+        /// Capabilities
+        /// </summary>
+        public ServiceEndpointCapabilities Capabilities => (ServiceEndpointCapabilities)ApplicationServiceContext.Current.GetService<IRestServiceFactory>().GetServiceCapabilities(this.m_webHost);
+
+        /// <summary>
+        /// Behavior type
+        /// </summary>
+        public Type BehaviorType => typeof(WwwServiceBehavior);
 
         /// <summary>
         /// Fired when the object is starting up
