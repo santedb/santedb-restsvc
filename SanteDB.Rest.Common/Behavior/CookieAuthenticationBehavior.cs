@@ -11,7 +11,7 @@ using SanteDB.Core.Services;
 using System;
 using System.Security;
 
-namespace SanteDB.Rest.WWW.Behaviors
+namespace SanteDB.Rest.Common.Behavior
 {
     /// <summary>
     /// An authentication behavior which establishes a current session using cookies from the client
@@ -36,24 +36,24 @@ namespace SanteDB.Rest.WWW.Behaviors
         public CookieAuthenticationBehavior()
         {
             var defaultSolution = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<AppletConfigurationSection>()?.DefaultSolution;
-            if (!String.IsNullOrEmpty(defaultSolution))
+            if (!string.IsNullOrEmpty(defaultSolution))
             {
-                this.m_appletCollection = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().GetApplets(defaultSolution);
+                m_appletCollection = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().GetApplets(defaultSolution);
             }
             if (defaultSolution == null)
             {
-                this.m_appletCollection = ApplicationServiceContext.Current.GetService<IAppletManagerService>().Applets;
+                m_appletCollection = ApplicationServiceContext.Current.GetService<IAppletManagerService>().Applets;
             }
-            this.m_sessionTokenResolver = ApplicationServiceContext.Current.GetService<ISessionTokenResolverService>();
-            this.m_sessionIdentityProvider = ApplicationServiceContext.Current.GetService<ISessionIdentityProviderService>();
+            m_sessionTokenResolver = ApplicationServiceContext.Current.GetService<ISessionTokenResolverService>();
+            m_sessionIdentityProvider = ApplicationServiceContext.Current.GetService<ISessionIdentityProviderService>();
         }
 
         /// <inheritdoc cref="IAuthorizationServicePolicy.AddAuthenticateChallengeHeader(RestResponseMessage, Exception)"/>
         public void AddAuthenticateChallengeHeader(RestResponseMessage faultMessage, Exception error)
         {
             // We want to redirect to the login provider
-            var loginAsset = this.m_appletCollection.GetLoginAssetPath();
-            if (!String.IsNullOrEmpty(loginAsset))
+            var loginAsset = m_appletCollection.GetLoginAssetPath();
+            if (!string.IsNullOrEmpty(loginAsset))
             {
                 faultMessage.StatusCode = System.Net.HttpStatusCode.Redirect;
                 faultMessage.Headers.Add("Location", loginAsset);
@@ -68,8 +68,8 @@ namespace SanteDB.Rest.WWW.Behaviors
                 var authCookie = request.Cookies["_s"];
                 if (authCookie != null)
                 {
-                    var session = this.m_sessionTokenResolver.GetSessionFromIdToken(authCookie.Value);
-                    var authContext = AuthenticationContext.EnterContext(this.m_sessionIdentityProvider.Authenticate(session));
+                    var session = m_sessionTokenResolver.GetSessionFromIdToken(authCookie.Value);
+                    var authContext = AuthenticationContext.EnterContext(m_sessionIdentityProvider.Authenticate(session));
                     RestOperationContext.Current.Disposed += (o, e) => authContext.Dispose();
                 }
             }
