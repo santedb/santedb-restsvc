@@ -140,7 +140,7 @@ namespace SanteDB.Rest.WWW
                 // Add service behaviors
                 foreach (ServiceEndpoint endpoint in this.m_webHost.Endpoints)
                 {
-                    this.m_traceSource.TraceInfo("Starting HDSI on {0}...", endpoint.Description.ListenUri);
+                    this.m_traceSource.TraceInfo("Starting WWW on {0}...", endpoint.Description.ListenUri);
                 }
 
                 // Start the webhost

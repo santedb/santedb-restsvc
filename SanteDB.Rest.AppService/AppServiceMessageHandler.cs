@@ -135,8 +135,12 @@ namespace SanteDB.Rest.AppService
         public bool Start()
         {
             // Don't start if we're in a test context
-            if (ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ||
-                ApplicationServiceContext.Current.HostType == SanteDBHostType.Test)
+            if (
+#if !DEBUG
+                ApplicationServiceContext.Current.HostType == SanteDBHostType.Server
+#endif
+                ApplicationServiceContext.Current.HostType == SanteDBHostType.Test
+                )
             {
                 return true;
             }

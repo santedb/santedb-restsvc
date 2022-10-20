@@ -21,7 +21,7 @@
  -->
 <RestServiceConfiguration xmlns="http://santedb.org/configuration" name="WWW" >
   <behaviors>
-    <add type="SanteDB.Rest.WWW.Behaviors.CookieAuthenticationBehavior, SanteDB.Rest.WWW"/>
+    <add type="SanteDB.Rest.Common.Behavior.CookieAuthenticationBehavior, SanteDB.Rest.Common"/>
   </behaviors>
   <endpoint address="http://0.0.0.0:8080/" contract="SanteDB.Rest.WWW.IWwwServiceContract, SanteDB.Rest.WWW">
     <behaviors>
