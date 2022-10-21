@@ -18,6 +18,7 @@
  * User: fyfej
  * Date: 2022-5-30
  */
+using SanteDB.Core.Model.Interfaces;
 using System;
 
 namespace SanteDB.Core.Model.AMI
@@ -25,22 +26,12 @@ namespace SanteDB.Core.Model.AMI
     /// <summary>
     /// Represents an interface to extract the URL identifier path
     /// </summary>
-    public interface IAmiIdentified
+    public interface IAmiIdentified : IIdentifiedResource
     {
 
         /// <summary>
         /// Get the desired url resource key 
         /// </summary>
-        String Key { get; set; }
-
-        /// <summary>
-        /// Gets the tag for the resource
-        /// </summary>
-        string Tag { get; }
-
-        /// <summary>
-        /// Get the modified on
-        /// </summary>
-        DateTimeOffset ModifiedOn { get; }
+        new string Key { get; set; }
     }
 }
