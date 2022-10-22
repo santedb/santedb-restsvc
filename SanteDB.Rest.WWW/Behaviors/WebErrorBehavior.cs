@@ -40,9 +40,9 @@ namespace SanteDB.Rest.WWW.Behaviors
             var defaultSolution = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<AppletConfigurationSection>()?.DefaultSolution;
             if (!String.IsNullOrEmpty(defaultSolution))
             {
-                this.m_appletCollection = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().GetApplets(defaultSolution);
+                this.m_appletCollection = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>()?.GetApplets(defaultSolution);
             }
-            if (defaultSolution == null)
+            if (defaultSolution == null || this.m_appletCollection == null)
             {
                 this.m_appletCollection = ApplicationServiceContext.Current.GetService<IAppletManagerService>().Applets;
             }

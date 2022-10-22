@@ -28,6 +28,7 @@ namespace SanteDB.Rest.WWW
         private readonly ConcurrentDictionary<String, AppletAsset> m_cacheApplets = new ConcurrentDictionary<string, AppletAsset>();
         private readonly AppletConfigurationSection m_configuration;
         private readonly IPolicyEnforcementService m_policyEnforcementSerivce;
+        private readonly IAppletSolutionManagerService m_appletSolutionManager;
         private readonly ReadonlyAppletCollection m_serviceApplet;
 
         /// <summary>
@@ -37,13 +38,14 @@ namespace SanteDB.Rest.WWW
         {
             this.m_configuration = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<AppletConfigurationSection>();
             this.m_policyEnforcementSerivce = ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>();
-            if (String.IsNullOrEmpty(this.m_configuration.DefaultApplet))
+            this.m_appletSolutionManager = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>();
+            if (String.IsNullOrEmpty(this.m_configuration.DefaultApplet) || this.m_appletSolutionManager == null)
             {
                 this.m_serviceApplet = ApplicationServiceContext.Current.GetService<IAppletManagerService>().Applets;
             }
             else
             {
-                this.m_serviceApplet = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().GetApplets(this.m_configuration.DefaultSolution);
+                this.m_serviceApplet = this.m_appletSolutionManager.GetApplets(this.m_configuration.DefaultSolution);
             }
 
             // Set the default 

@@ -38,9 +38,9 @@ namespace SanteDB.Rest.Common.Behavior
             var defaultSolution = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<AppletConfigurationSection>()?.DefaultSolution;
             if (!string.IsNullOrEmpty(defaultSolution))
             {
-                m_appletCollection = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().GetApplets(defaultSolution);
+                m_appletCollection = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>()?.GetApplets(defaultSolution);
             }
-            if (defaultSolution == null)
+            if (defaultSolution == null || m_appletCollection == null) // No default solution - or there was no solution manager
             {
                 m_appletCollection = ApplicationServiceContext.Current.GetService<IAppletManagerService>().Applets;
             }
