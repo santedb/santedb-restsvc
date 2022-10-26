@@ -19,13 +19,12 @@
  * Date: 2021-8-27
  */
 using Newtonsoft.Json;
+using SanteDB.Client.Configuration.Upstream;
 using SanteDB.Core.Applets.Configuration;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Configuration.Data;
 using SanteDB.Core.Configuration.Http;
-using SanteDB.Core.Configuration.Upstream;
 using SanteDB.Core.Security.Configuration;
-using SanteDB.Disconnected.Data.Synchronization.Configuration;
 using SanteDB.Rest.Common.Configuration;
 using System;
 using System.Collections.Generic;
@@ -78,7 +77,7 @@ namespace SanteDB.Rest.AppService.Model
             this.RestClient = config.GetSection<RestClientConfigurationSection>();
             this.RestServer = config.GetSection<RestConfigurationSection>();
             this.Upstream = config.GetSection<UpstreamConfigurationSection>();
-            this.Synchronization = config.GetSection<SynchronizationConfigurationSection>();
+            //this.Synchronization = config.GetSection<SynchronizationConfigurationSection>();
             this.OtherSections = config.Sections.Where(o => !typeof(ConfigurationViewModel).GetRuntimeProperties().Any(p => p.PropertyType.IsAssignableFrom(o.GetType()))).ToList();
         }
         
@@ -132,11 +131,11 @@ namespace SanteDB.Rest.AppService.Model
         [JsonProperty("restClient")]
         public RestClientConfigurationSection RestClient { get; set; }
 
-        /// <summary>
-        /// Synchronization
-        /// </summary>
-        [JsonProperty("sync")]
-        public SynchronizationConfigurationSection Synchronization { get; set; }
+        ///// <summary>
+        ///// Synchronization
+        ///// </summary>
+        //[JsonProperty("sync")]
+        //public SynchronizationConfigurationSection Synchronization { get; set; }
 
         /// <summary>
         /// Upstream configuration section
