@@ -8,6 +8,9 @@ using System.Collections.Generic;
 
 namespace SanteDB.Rest.OAuth.TokenRequestHandlers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class DefaultRefreshTokenRequestHandler : ITokenRequestHandler
     {
         readonly ISessionTokenResolverService _SessionResolver;

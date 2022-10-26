@@ -11,6 +11,9 @@ using System.Linq;
 
 namespace SanteDB.Rest.OAuth.TokenRequestHandlers
 {
+    /// <summary>
+    /// Token request handler for the authorization_code grant. 
+    /// </summary>
     public class DefaultAuthorizationCodeTokenRequestHandler : ITokenRequestHandler
     {
         readonly Tracer _Tracer = new Tracer(nameof(DefaultAuthorizationCodeTokenRequestHandler));
@@ -23,6 +26,14 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
 
         readonly TimeSpan _AuthorizationCodeValidityPeriod = TimeSpan.FromMinutes(1);
 
+        /// <summary>
+        /// Constructs a new instance of the handler.
+        /// </summary>
+        /// <param name="policyEnforcementService"></param>
+        /// <param name="applicationIdentityProvider"></param>
+        /// <param name="deviceIdentityProvider"></param>
+        /// <param name="identityProvider"></param>
+        /// <param name="symmetricProvider"></param>
         public DefaultAuthorizationCodeTokenRequestHandler(IPolicyEnforcementService policyEnforcementService, IApplicationIdentityProviderService applicationIdentityProvider, IDeviceIdentityProviderService deviceIdentityProvider, IIdentityProviderService identityProvider, ISymmetricCryptographicProvider symmetricProvider)
         {
             _PolicyEnforcementService = policyEnforcementService;
@@ -32,10 +43,13 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
             _SymmetricProvider = symmetricProvider;
         }
 
+        /// <inheritdoc />
         public IEnumerable<string> SupportedGrantTypes => new[] { OAuthConstants.GrantNameAuthorizationCode };
 
+        /// <inheritdoc />
         public string ServiceName => "Default Authorization Code Token Request Handler";
 
+        /// <inheritdoc />
         public bool HandleRequest(OAuthTokenRequestContext context)
         {
             if (string.IsNullOrEmpty(context.AuthorizationCode))

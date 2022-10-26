@@ -1,6 +1,7 @@
 ﻿using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Security.Claims;
+using SanteDB.Core.Security.Principal;
 using SanteDB.Core.Security.Services;
 using SanteDB.Rest.OAuth.Abstractions;
 using SanteDB.Rest.OAuth.Model;
@@ -9,22 +10,34 @@ using System.Security.Authentication;
 
 namespace SanteDB.Rest.OAuth.TokenRequestHandlers
 {
+    /// <summary>
+    /// Token request handler for the password grant type. This handler will return a response with a user principal.
+    /// </summary>
     public class DefaultPasswordTokenRequestHandler : ITokenRequestHandler
     {
         readonly IPolicyEnforcementService _PolicyEnforcementService;
+        readonly IApplicationIdentityProviderService _ApplicationIdentityProviderService;
         readonly Tracer _Tracer;
 
-        public DefaultPasswordTokenRequestHandler(IPolicyEnforcementService policyEnforcementService)
+        /// <summary>
+        /// Constructs a new instance of the handler.
+        /// </summary>
+        /// <param name="policyEnforcementService"></param>
+        /// <param name="applicationIdentityProviderService"></param>
+        public DefaultPasswordTokenRequestHandler(IPolicyEnforcementService policyEnforcementService, IApplicationIdentityProviderService applicationIdentityProviderService)
         {
             _Tracer = new Tracer(nameof(DefaultPasswordTokenRequestHandler));
             _PolicyEnforcementService = policyEnforcementService;
+            _ApplicationIdentityProviderService = applicationIdentityProviderService;
 
         }
 
         /// <inheritdoc />
         public IEnumerable<string> SupportedGrantTypes => new[] { OAuthConstants.GrantNamePassword };
+
         /// <inheritdoc />
         public string ServiceName => "Default Password Token Request Handler";
+
         /// <inheritdoc />
         public bool HandleRequest(OAuthTokenRequestContext context)
         {
@@ -35,17 +48,6 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                 context.ErrorMessage = "missing username in the request";
                 return false;
                 //return CreateErrorCondition(OAuthErrorType.invalid_request, "missing username in the request.");
-            }
-
-            _PolicyEnforcementService?.Demand(OAuthConstants.OAuthPasswordFlowPolicy, context.ApplicationPrincipal);
-
-            if (null != context.DevicePrincipal)
-            {
-                _PolicyEnforcementService?.Demand(OAuthConstants.OAuthPasswordFlowPolicy, context.DevicePrincipal);
-            }
-            else
-            {
-                _PolicyEnforcementService?.Demand(OAuthConstants.OAuthPasswordFlowPolicyWithoutDevice, context.ApplicationPrincipal);
             }
 
             try
@@ -59,6 +61,39 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                 else
                 {
                     context.UserPrincipal = identityprovider.Authenticate(context.Username, context.Password) as IClaimsPrincipal;
+                }
+
+                if (null != context.UserPrincipal)
+                {
+                    _PolicyEnforcementService.Demand(OAuthConstants.OAuthPasswordFlowPolicy, context.UserPrincipal);
+
+                    if (null == context.DevicePrincipal)
+                    {
+                        _PolicyEnforcementService.Demand(OAuthConstants.OAuthPasswordFlowPolicyWithoutDevice, context.UserPrincipal);
+                    }
+
+                    //Try to on-behalf-of the application identity with our user principal.
+                    if (context.UserPrincipal?.Identity?.IsAuthenticated == true && null == context.ApplicationPrincipal)
+                    {
+                        var app = _ApplicationIdentityProviderService.Authenticate(context?.ClientId, context.UserPrincipal);
+
+                        if (null != app && app.Identity is IApplicationIdentity)
+                        {
+                            context.ApplicationIdentity = app.Identity as IClaimsIdentity;
+                            context.ApplicationPrincipal = app as IClaimsPrincipal;
+                        }
+                    }
+                } 
+
+                _PolicyEnforcementService?.Demand(OAuthConstants.OAuthPasswordFlowPolicy, context.ApplicationPrincipal);
+
+                if (null != context.DevicePrincipal)
+                {
+                    _PolicyEnforcementService?.Demand(OAuthConstants.OAuthPasswordFlowPolicy, context.DevicePrincipal);
+                }
+                else
+                {
+                    _PolicyEnforcementService?.Demand(OAuthConstants.OAuthPasswordFlowPolicyWithoutDevice, context.ApplicationPrincipal);
                 }
             }
             catch (AuthenticationException authnex)

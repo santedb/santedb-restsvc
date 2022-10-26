@@ -105,7 +105,7 @@ namespace SanteDB.Rest.AMI.ChildResources
                    .WithSystemObjects(AuditableObjectRole.Resource, AuditableObjectLifecycle.Archiving, new Uri($"urn:santedb:org:DispatcherQueueInfo/{dqe.SourceQueue}/entry/{dqe.CorrelationId}"))
                    .WithSystemObjects(AuditableObjectRole.Resource, AuditableObjectLifecycle.Creation, new Uri($"urn:santedb:org:DispatcherQueueInfo/{scopingKey}/entry/{retVal.CorrelationId}"))
                    .WithLocalDevice()
-                   .WithUser()
+                   .WithPrincipal()
                    .Send();
                 return retVal;
             }
@@ -136,7 +136,7 @@ namespace SanteDB.Rest.AMI.ChildResources
 
             _AuditService.Audit()
                .WithLocalDevice()
-               .WithUser()
+               .WithPrincipal()
                .WithAction(ActionType.Execute)
                .WithEventIdentifier(EventIdentifierType.Query)
                .WithOutcome(OutcomeIndicator.Success)
@@ -159,7 +159,7 @@ namespace SanteDB.Rest.AMI.ChildResources
                 this.m_queueService.Purge((String)scopingKey);
                 _AuditService.Audit()
                     .WithLocalDevice()
-                    .WithUser()
+                    .WithPrincipal()
                     .WithAction(Core.Model.Audit.ActionType.Delete)
                     .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.ApplicationActivity)
                     .WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
@@ -174,7 +174,7 @@ namespace SanteDB.Rest.AMI.ChildResources
                 var data = this.m_queueService.DequeueById((String)scopingKey, (string)key);
                 _AuditService.Audit()
                     .WithLocalDevice()
-                    .WithUser()
+                    .WithPrincipal()
                     .WithAction(Core.Model.Audit.ActionType.Delete)
                     .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.ApplicationActivity)
                     .WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)

@@ -11,7 +11,7 @@ namespace SanteDB.Rest.AppService
     [AddDependentSerializers]
     [XmlType(nameof(AppServiceCollection), Namespace = "http://santedb.org/appService")]
     [JsonObject(nameof(AppServiceCollection))]
-    [XmlInclude(typeof(Model.ConfigurationViewModel))]
+    //[XmlInclude(typeof(Model.ConfigurationViewModel))]
     [XmlInclude(typeof(AppServiceCollection))]
     [XmlInclude(typeof(Model.Menu))]
     [XmlInclude(typeof(Core.Model.Tickles.Tickle))]

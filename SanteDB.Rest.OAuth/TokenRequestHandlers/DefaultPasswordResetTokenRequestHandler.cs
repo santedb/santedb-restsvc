@@ -20,6 +20,11 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
         readonly IPolicyEnforcementService _PolicyService;
         readonly ISecurityChallengeIdentityService _SecurityChallengeService;
 
+        /// <summary>
+        /// Constructs a new instance of the handler.
+        /// </summary>
+        /// <param name="policyService"></param>
+        /// <param name="securityChallengeService"></param>
         public DefaultPasswordResetTokenRequestHandler(IPolicyEnforcementService policyService, ISecurityChallengeIdentityService securityChallengeService)
         {
             _Tracer = new Tracer(nameof(DefaultPasswordResetTokenRequestHandler));
@@ -27,10 +32,13 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
             _SecurityChallengeService = securityChallengeService;
         }
 
+        /// <inheritdoc />
         public IEnumerable<string> SupportedGrantTypes => new[] { OAuthConstants.GrantNameReset };
 
+        /// <inheritdoc />
         public string ServiceName => "Default Password Reset Token Request Handler";
 
+        /// <inheritdoc />
         public bool HandleRequest(OAuthTokenRequestContext context)
         {
             //Validate the request.

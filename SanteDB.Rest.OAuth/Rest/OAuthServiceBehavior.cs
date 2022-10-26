@@ -29,6 +29,7 @@ using SanteDB.Core;
 using SanteDB.Core.Applets.Services;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
+using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Security.Claims;
@@ -44,6 +45,7 @@ using SanteDB.Rest.OAuth.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Tracing;
 using System.IO;
@@ -304,11 +306,16 @@ namespace SanteDB.Rest.OAuth.Rest
         /// </summary>
         /// <param name="context">The context for the request.</param>
         /// <returns></returns>
-        protected bool TryGetApplicationIdentity(OAuthRequestContextBase context)
+        protected bool TryGetApplicationIdentity(OAuthTokenRequestContext context)
         {
             if (null == context)
             {
                 return false;
+            }
+
+            if (null != context.ApplicationPrincipal)
+            {
+                return context?.ApplicationPrincipal?.Identity?.IsAuthenticated == true;
             }
 
             if (null != context.AuthenticationContext?.Principal?.Identity && context.AuthenticationContext.Principal.Identity is IApplicationIdentity applicationIdentity)
@@ -336,22 +343,10 @@ namespace SanteDB.Rest.OAuth.Rest
                     m_traceSource.TraceInfo($"Application authentication unsuccessful. Client ID: {context.ClientId}");
                 }
             }
-            else if (string.IsNullOrEmpty(context.ClientId))
-            {
-                m_traceSource.TraceVerbose("Application provided without authentication. Adding application without authentication.");
-
-                var appidentity = m_AppIdentityProvider.GetIdentity(context.ClientId);
-
-                if (null != appidentity && appidentity is IClaimsIdentity claimsidentity)
-                {
-                    context.ApplicationIdentity = claimsidentity;
-                }
-
-            }
-               
 
             return false;
         }
+
 
         /// <summary>
         /// Checks if the grant type that was provided is allowed by this service. The default implementation checks for a TokenRequestHandler for the grant type.
@@ -534,10 +529,48 @@ namespace SanteDB.Rest.OAuth.Rest
             return context;
         }
 
+        protected ISession EstablishClientSession(IPrincipal clientPrincipal, IPrincipal devicePrincipal, List<string> scopes, IEnumerable<IClaim> additionalClaims)
+        {
+            SanteDBClaimsPrincipal claimsPrincipal = null;
+
+            if (!(clientPrincipal.Identity is IApplicationIdentity))
+            {
+                throw new ArgumentException("Client Principal must be an instance of IApplicationIdentity.", nameof(clientPrincipal));
+            }
+
+            if (clientPrincipal is IClaimsPrincipal client)
+            {
+                claimsPrincipal = new SanteDBClaimsPrincipal(client.Identities);
+            }
+            else
+            {
+                claimsPrincipal = new SanteDBClaimsPrincipal(clientPrincipal.Identity);
+            }
+
+            if (devicePrincipal is IClaimsPrincipal && !claimsPrincipal.Identities.OfType<IDeviceIdentity>().Any(o => o.Name == devicePrincipal.Identity.Name))
+            {
+                claimsPrincipal.AddIdentity(devicePrincipal.Identity as IClaimsIdentity);
+            }
+
+            _ = TryGetRemoteIp(RestOperationContext.Current.IncomingRequest, out var remoteIp);
+
+            // Establish the session
+
+            string purposeOfUse = additionalClaims?.FirstOrDefault(o => o.Type == SanteDBClaimTypes.PurposeOfUse)?.Value;
+
+            bool isOverride = additionalClaims?.Any(o => o.Type == SanteDBClaimTypes.SanteDBOverrideClaim) == true || scopes?.Any(o => o == PermissionPolicyIdentifiers.OverridePolicyPermission) == true;
+
+            var session = m_SessionProvider.Establish(claimsPrincipal, remoteIp, isOverride, purposeOfUse, scopes?.ToArray(), additionalClaims.FirstOrDefault(o => o.Type == SanteDBClaimTypes.Language)?.Value);
+
+            _AuditService.Audit().ForSessionStart(session, claimsPrincipal, true).Send();
+
+            return session;
+        }
+
         /// <summary>
         /// Create a token response
         /// </summary>
-        protected ISession EstablishSession(IPrincipal primaryPrincipal, IPrincipal clientPrincipal, IPrincipal devicePrincipal, List<string> scopes, IEnumerable<IClaim> additionalClaims)
+        protected ISession EstablishUserSession(IPrincipal primaryPrincipal, IClaimsIdentity clientIdentity, IClaimsIdentity deviceIdentity, List<string> scopes, IEnumerable<IClaim> additionalClaims)
         {
             SanteDBClaimsPrincipal claimsPrincipal = null;
 
@@ -549,14 +582,15 @@ namespace SanteDB.Rest.OAuth.Rest
             {
                 claimsPrincipal = new SanteDBClaimsPrincipal(primaryPrincipal.Identity);
             }
-            if (clientPrincipal is IClaimsPrincipal && !claimsPrincipal.Identities.OfType<IApplicationIdentity>().Any(o => o.Name == clientPrincipal.Identity.Name))
+
+            if (clientIdentity is IApplicationIdentity && !claimsPrincipal.Identities.OfType<IApplicationIdentity>().Any(o => o.Name == clientIdentity.Name))
             {
-                claimsPrincipal.AddIdentity(clientPrincipal.Identity as IClaimsIdentity);
+                claimsPrincipal.AddIdentity(clientIdentity);
             }
 
-            if (devicePrincipal is IClaimsPrincipal && !claimsPrincipal.Identities.OfType<IDeviceIdentity>().Any(o => o.Name == devicePrincipal.Identity.Name))
+            if (deviceIdentity is IDeviceIdentity && !claimsPrincipal.Identities.OfType<IDeviceIdentity>().Any(o => o.Name == deviceIdentity.Name))
             {
-                claimsPrincipal.AddIdentity(devicePrincipal.Identity as IClaimsIdentity);
+                claimsPrincipal.AddIdentity(deviceIdentity);
             }
 
             _ = TryGetRemoteIp(RestOperationContext.Current.IncomingRequest, out var remoteIp);
@@ -757,6 +791,7 @@ namespace SanteDB.Rest.OAuth.Rest
 
             _ = TryGetDeviceIdentity(context);
             _ = TryGetApplicationIdentity(context);
+            
 
             var clientClaims = context.IncomingRequest.Headers.ExtractClientClaims();
             // Set the language claim?
@@ -790,7 +825,19 @@ namespace SanteDB.Rest.OAuth.Rest
                 if (null == context.Session) //If the session is null, the handler is delegating session initialization back to us.
                 {
                     m_traceSource.TraceVerbose($"Establishing session in {nameof(OAuthServiceBehavior)}. This is expected when the handler does not initialize the session.");
-                    context.Session = EstablishSession(context.UserPrincipal ?? context.ApplicationPrincipal, context.ApplicationPrincipal, context.DevicePrincipal, context.Scopes, context.AdditionalClaims);
+
+                    if (null != context.UserPrincipal)
+                    {
+                        context.Session = EstablishUserSession(context.UserPrincipal, context.ApplicationIdentity, context.DeviceIdentity, context.Scopes, context.AdditionalClaims);
+                    }
+                    else if (null != context.ApplicationPrincipal)
+                    {
+                        context.Session = EstablishClientSession(context.ApplicationPrincipal, context.DevicePrincipal, context.Scopes, context.AdditionalClaims);
+                    }
+                    else
+                    {
+                        throw new NotSupportedException("Neither a user principal or application principal was returned. Authentication cannot occur.");
+                    }
 
                     _AuditService.Audit().ForSessionStart(context.Session, context.UserPrincipal ?? context.ApplicationPrincipal, context.Session != null).Send();
 

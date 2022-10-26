@@ -118,7 +118,7 @@ namespace SanteDB.Rest.AMI.Resources
             this.m_queueService.Purge((String)key);
             _AuditService.Audit()
                 .WithLocalDevice()
-                .WithUser()
+                .WithPrincipal()
                 .WithAction(Core.Model.Audit.ActionType.Delete)
                 .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.ApplicationActivity)
                 .WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
