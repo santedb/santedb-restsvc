@@ -2,7 +2,7 @@
 using SanteDB.Core;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
-using SanteDB.Core.Model.Tickles;
+using SanteDB.Client.Tickles;
 using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.AppService.Model;
@@ -21,10 +21,10 @@ namespace SanteDB.Rest.AppService.Resources
         readonly ITickleService _TickleService;
         readonly ISecurityRepositoryService _SecurityRepository;
 
-        public TickleResourceHandler()
+        public TickleResourceHandler(ITickleService tickleService, ISecurityRepositoryService securityRepository)
         {
-            _TickleService = ApplicationServiceContext.Current.GetService<ITickleService>();
-            _SecurityRepository = ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>();
+            _TickleService = tickleService;
+            _SecurityRepository = securityRepository;
         }
 
         public string ResourceName => nameof(Tickle);
