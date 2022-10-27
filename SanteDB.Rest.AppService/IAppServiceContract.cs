@@ -39,7 +39,7 @@ namespace SanteDB.Rest.AppService
     [ServiceConsumes("application/json+sdb-viewmodel")]
     [ServiceKnownResource(typeof(ConfigurationViewModel))]
     [ServiceKnownResource(typeof(Menu))]
-    [ServiceKnownResource(typeof(Core.Model.Tickles.Tickle))]
+    [ServiceKnownResource(typeof(Client.Tickles.Tickle))]
     [RestServiceFault(400, "The provided resource was in an incorrect format")]
     [RestServiceFault(401, "The principal is unauthorized and needs to either elevate or authenticate themselves")]
     [RestServiceFault(403, "The principal is not permitted (cannot elevate) to perform the operation")]

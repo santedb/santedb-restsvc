@@ -14,7 +14,7 @@ namespace SanteDB.Rest.AppService
     //[XmlInclude(typeof(Model.ConfigurationViewModel))]
     [XmlInclude(typeof(AppServiceCollection))]
     [XmlInclude(typeof(Model.Menu))]
-    [XmlInclude(typeof(Core.Model.Tickles.Tickle))]
+    [XmlInclude(typeof(Client.Tickles.Tickle))]
     public class AppServiceCollection : RestCollectionBase
     {
         public AppServiceCollection()
