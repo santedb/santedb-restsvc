@@ -27,6 +27,7 @@ using RestSrvr.Message;
 using SanteDB;
 using SanteDB.Core;
 using SanteDB.Core.Applets.Services;
+using SanteDB.Core.Configuration;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Entities;
@@ -34,6 +35,7 @@ using SanteDB.Core.Security;
 using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Security.Claims;
 using SanteDB.Core.Security.Configuration;
+using SanteDB.Core.Security.OAuth;
 using SanteDB.Core.Security.Principal;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
@@ -67,6 +69,8 @@ namespace SanteDB.Rest.OAuth.Rest
     [ExcludeFromCodeCoverage]
     public class OAuthServiceBehavior : IOAuthServiceContract
     {
+        private const string AUTHORIZATION_COOKIE_NAME = "_a";
+
         /// <summary>
         /// Trace Source
         /// </summary>
@@ -651,12 +655,14 @@ namespace SanteDB.Rest.OAuth.Rest
 
             bindingparameters.Add("error_message", context.ErrorMessage);
 
+            var restcontext = RestOperationContext.Current;
+
             EventHandler handler = (s, e) =>
             {
                 content?.Dispose();
             };
 
-            RestOperationContext.Current.Disposed += handler;
+            restcontext.Disposed += handler;
 
             try
             {
@@ -682,7 +688,7 @@ namespace SanteDB.Rest.OAuth.Rest
             }
             finally
             {
-                RestOperationContext.Current.Disposed -= handler;
+                restcontext.Disposed -= handler;
             }
         }
 
@@ -791,7 +797,7 @@ namespace SanteDB.Rest.OAuth.Rest
 
             _ = TryGetDeviceIdentity(context);
             _ = TryGetApplicationIdentity(context);
-            
+
 
             var clientClaims = context.IncomingRequest.Headers.ExtractClientClaims();
             // Set the language claim?
@@ -1023,6 +1029,8 @@ namespace SanteDB.Rest.OAuth.Rest
                     {
                         CreateAuthorizationCode(context);
 
+                        SetAuthorizationCookie(context);
+
                         var responsehandler = _AuthorizeResponseModeHandlers[context.ResponseMode];
 
                         return responsehandler(context);
@@ -1051,6 +1059,92 @@ namespace SanteDB.Rest.OAuth.Rest
 
             return RenderInternal(null, context);
         }
+
+        private Model.AuthorizationCookie GetAuthorizationCookie(OAuthRequestContextBase context)
+        {
+            if (null == context || null == context.IncomingRequest)
+            {
+                return null;
+            }
+
+            var cookie = context.IncomingRequest.Cookies?[AUTHORIZATION_COOKIE_NAME];
+
+            if (!string.IsNullOrEmpty(cookie?.Value) && !(cookie?.Expired == true))
+            {
+                try
+                {
+                    return JsonConvert.DeserializeObject<Model.AuthorizationCookie>(_SymmetricProvider.DecryptString(cookie.Value));
+                }
+                catch (Exception ex) when (!(ex is StackOverflowException || ex is OutOfMemoryException))
+                {
+                    m_traceSource.TraceWarning("Received invalid authorization cookie value in request. This could be an attempt to circumvent security.");
+                }
+            }
+
+            return null;
+        }
+
+        private void SetAuthorizationCookie(OAuthRequestContextBase context)
+        {
+            if (null == context?.UserPrincipal || null == context.IncomingRequest || null == context.OutgoingResponse || context.UserPrincipal?.Identity?.IsAuthenticated != true)
+            {
+                return;
+            }
+
+            var cookie = context.IncomingRequest.Cookies?[AUTHORIZATION_COOKIE_NAME];
+
+            if (null == cookie)
+            {
+                cookie = new Cookie(AUTHORIZATION_COOKIE_NAME, null);
+            }
+
+            cookie.Expires = GetCookieExpirationDate();
+
+            Model.AuthorizationCookie cookievalue = null;
+
+            if (!string.IsNullOrEmpty(cookie.Value))
+            {
+                try
+                {
+                    cookievalue = JsonConvert.DeserializeObject<Model.AuthorizationCookie>(_SymmetricProvider.DecryptString(cookie.Value));
+                }
+                catch (Exception ex) when (!(ex is StackOverflowException || ex is OutOfMemoryException))
+                {
+                    m_traceSource.TraceWarning("Received invalid authorization cookie value in request. This could be an attempt to circumvent security.");
+                }
+            }
+
+            if (null == cookievalue)
+            {
+                cookievalue = new AuthorizationCookie();
+            }
+
+            if (null == cookievalue.Users)
+            {
+                cookievalue.Users = new List<string>();
+            }
+
+            var user = context.UserPrincipal.Identity.Name;
+
+            if (!cookievalue.Users.Contains(user))
+            {
+                cookievalue.Users.Add(user);
+                cookievalue.CreatedAt = DateTimeOffset.UtcNow;
+            }
+
+            cookie.Value = _SymmetricProvider.EncryptString(JsonConvert.SerializeObject(cookievalue));
+
+            context.OutgoingResponse.SetCookie(cookie);
+        }
+
+        private DateTime GetCookieExpirationDate()
+        {
+            var duration = m_masterConfig.GetSecurityPolicy<TimeSpan>(SecurityPolicyIdentification.AuthenticationCookieValidityLength, TimeSpan.FromHours(1));
+
+            return DateTime.Now.Add(duration);
+        }
+
+
 
         /// <summary>
         /// Makes an authorization code and adds it to the context.
@@ -1246,14 +1340,14 @@ namespace SanteDB.Rest.OAuth.Rest
         /// <summary>
         /// Gets the discovery object
         /// </summary>
-        public OpenIdConfiguration Discovery()
+        public OpenIdConnectDiscoveryDocument Discovery()
         {
             try
             {
                 RestOperationContext.Current.OutgoingResponse.ContentType = "application/json";
                 var authDiscovery = ApplicationServiceContext.Current.GetService<OAuthMessageHandler>() as IApiEndpointProvider;
                 var securityConfiguration = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<SecurityConfigurationSection>();
-                var retVal = new OpenIdConfiguration();
+                var retVal = new OpenIdConnectDiscoveryDocument();
 
                 // mex configuration
                 var mexConfig = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<Common.Configuration.RestConfigurationSection>();
@@ -1276,6 +1370,7 @@ namespace SanteDB.Rest.OAuth.Rest
                 retVal.ScopesSupported = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetPolicies().Select(o => o.Oid).ToList();
                 retVal.SigningKeyEndpoint = $"{boundHostPort}/jwks";
                 retVal.SubjectTypesSupported = new List<string>() { "public" };
+                retVal.SignoutEndpoint = $"{boundHostPort}/signout";
                 return retVal;
             }
             catch (Exception e)
@@ -1399,6 +1494,70 @@ namespace SanteDB.Rest.OAuth.Rest
 
             return new Model.Jwks.KeySet(keyset);
         }
+        #endregion
+
+        #region Signout Endpoint
+
+        [return: MessageFormat(MessageFormatType.Json)]
+        public object Signout(NameValueCollection form)
+        {
+            if (null == form)
+            {
+                return null;
+            }
+
+            var context = new OAuthSignoutRequestContext(RestOperationContext.Current, form);
+
+            var authcookie = GetAuthorizationCookie(context);
+
+            if (null == authcookie)
+            {
+                context.OutgoingResponse.StatusCode = (int)HttpStatusCode.Unauthorized;
+                return null;
+            }
+
+            if (context.IdTokenHint != null)
+            {
+                
+                //TODO: Decode ID_token and only sign out the session
+            }
+            else
+            {
+                if (authcookie.Users != null)
+                {
+                    var identityservice = ApplicationServiceContext.Current.GetService<IIdentityProviderService>();
+
+                    if (null != identityservice)
+                    {
+                        foreach (var user in authcookie.Users)
+                        {
+                            m_traceSource.TraceVerbose("Abandoning sessions for {0}", user);
+                            //Sign the users out of any sessions
+                            try
+                            {
+                                var userid = identityservice.GetSid(user);
+
+                                var sessions = m_SessionProvider.GetUserSessions(userid);
+
+                                foreach(var session in sessions)
+                                {
+                                    m_SessionProvider.Abandon(session);
+                                }
+                            }
+                            catch (Exception ex) when (!(ex is StackOverflowException || ex is OutOfMemoryException))
+                            {
+                                m_traceSource.TraceError("Exception abandoning session for user {0}", ex.ToString());
+                            }
+                        }
+                    }
+                    
+                }
+            }
+
+            return "Under construction.";
+
+        }
+
         #endregion
     }
 }

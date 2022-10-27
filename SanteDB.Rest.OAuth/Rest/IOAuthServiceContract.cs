@@ -19,6 +19,7 @@
  * Date: 2022-5-30
  */
 using RestSrvr.Attributes;
+using SanteDB.Core.Security.OAuth;
 using SanteDB.Rest.OAuth.Model;
 using System.Collections.Specialized;
 using System.IO;
@@ -39,7 +40,7 @@ namespace SanteDB.Rest.OAuth.Rest
         /// </summary>
         [Get("/.well-known/openid-configuration")]
         [return: MessageFormat(MessageFormatType.Json)]
-        OpenIdConfiguration Discovery();
+        OpenIdConnectDiscoveryDocument Discovery();
 
         /// <summary>
         /// OAuth2 Token Endpoint. Issues access tokens and/or id tokens and accepts a grant from the resource owner.
@@ -120,6 +121,15 @@ namespace SanteDB.Rest.OAuth.Rest
         [Get("/{*assetPath}")]
         [return: MessageFormat(MessageFormatType.Json)]
         Stream Content(string assetPath);
+
+        /// <summary>
+        /// Signs the current session out and optionally redirects the user agent back to the resource.
+        /// </summary>
+        /// <param name="form"></param>
+        /// <returns></returns>
+        [Post("/signout")]
+        [return: MessageFormat(MessageFormatType.Json)]
+        object Signout(NameValueCollection form);
 
     }
 }

@@ -179,5 +179,10 @@ namespace SanteDB.Rest.OAuth
         public const string AuthorizeParameter_ResponseMode = "response_mode";
         public const string AuthorizeParameter_RedirectUri = "redirect_uri";
 
+
+        //Signout endpoint.
+        public const string FormField_IdTokenHint = "id_token_hint";
+        public const string FormField_LogoutHint = "logout_hint";
+        public const string FormField_PostLogoutRedirectUri = "post_logout_redirect_uri";
     }
 }

@@ -1,6 +1,7 @@
 ﻿using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
+using SanteDB.Core.Security.Principal;
 using SanteDB.Core.Security.Services;
 using SanteDB.Rest.OAuth.Abstractions;
 using SanteDB.Rest.OAuth.Model;
@@ -19,17 +20,19 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
         readonly Tracer _Tracer;
         readonly IPolicyEnforcementService _PolicyService;
         readonly ISecurityChallengeIdentityService _SecurityChallengeService;
+        readonly IApplicationIdentityProviderService _ApplicationIdentityProviderService;
 
         /// <summary>
         /// Constructs a new instance of the handler.
         /// </summary>
         /// <param name="policyService"></param>
         /// <param name="securityChallengeService"></param>
-        public DefaultPasswordResetTokenRequestHandler(IPolicyEnforcementService policyService, ISecurityChallengeIdentityService securityChallengeService)
+        public DefaultPasswordResetTokenRequestHandler(IPolicyEnforcementService policyService, ISecurityChallengeIdentityService securityChallengeService, IApplicationIdentityProviderService applicationIdentityProviderService)
         {
             _Tracer = new Tracer(nameof(DefaultPasswordResetTokenRequestHandler));
             _PolicyService = policyService;
             _SecurityChallengeService = securityChallengeService;
+            _ApplicationIdentityProviderService = applicationIdentityProviderService;   
         }
 
         /// <inheritdoc />
@@ -68,20 +71,41 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
             context.Scopes.Clear();
             context.Scopes.Add(PermissionPolicyIdentifiers.LoginPasswordOnly);
 
-            _PolicyService?.Demand(OAuthConstants.OAuthResetFlowPolicy, context.ApplicationPrincipal);
-
-            if (null != context.DevicePrincipal)
-            {
-                _PolicyService?.Demand(OAuthConstants.OAuthResetFlowPolicy, context.DevicePrincipal);
-            }
-            else
-            {
-                _PolicyService?.Demand(OAuthConstants.OAuthResetFlowPolicyWithoutDevice, context.ApplicationPrincipal);
-            }
-
             try
             {
                 context.UserPrincipal = _SecurityChallengeService.Authenticate(context.Username, securitychallengeguid, context.SecurityChallengeResponse, context.TfaSecret) as IClaimsPrincipal;
+
+                if (null != context.UserPrincipal)
+                {
+                    _PolicyService.Demand(OAuthConstants.OAuthResetFlowPolicy, context.UserPrincipal);
+
+                    if (null == context.DevicePrincipal)
+                    {
+                        _PolicyService.Demand(OAuthConstants.OAuthResetFlowPolicyWithoutDevice, context.UserPrincipal);
+                    }
+
+                    if (context.UserPrincipal?.Identity?.IsAuthenticated == true && null == context.ApplicationPrincipal)
+                    {
+                        var app = _ApplicationIdentityProviderService.Authenticate(context.ClientId, context.UserPrincipal);
+
+                        if (null != app && app.Identity is IApplicationIdentity)
+                        {
+                            context.ApplicationIdentity = app.Identity as IClaimsIdentity;
+                            context.ApplicationPrincipal = app as IClaimsPrincipal;
+                        }
+                    }
+
+                    _PolicyService?.Demand(OAuthConstants.OAuthResetFlowPolicy, context.ApplicationPrincipal);
+
+                    if (null != context.DevicePrincipal)
+                    {
+                        _PolicyService?.Demand(OAuthConstants.OAuthResetFlowPolicy, context.DevicePrincipal);
+                    }
+                    else
+                    {
+                        _PolicyService?.Demand(OAuthConstants.OAuthResetFlowPolicyWithoutDevice, context.ApplicationPrincipal);
+                    }
+                }
             }
             catch (AuthenticationException authnex)
             {
@@ -98,6 +122,7 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                 context.ErrorMessage = "invalid challenge response";
                 return false;
             }
+            
 
             context.Session = null; //Setting this to null will let the OAuthTokenBehavior establish the session for us.
             return true;
