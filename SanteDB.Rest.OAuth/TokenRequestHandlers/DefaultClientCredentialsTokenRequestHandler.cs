@@ -6,11 +6,18 @@ using System.Collections.Generic;
 
 namespace SanteDB.Rest.OAuth.TokenRequestHandlers
 {
+    /// <summary>
+    /// Handles client_credentials grants from the token endpoint. This will process requests for applications when a user is not present.
+    /// </summary>
     public class DefaultClientCredentialsTokenRequestHandler : ITokenRequestHandler
     {
         readonly Tracer _Tracer;
         readonly IPolicyEnforcementService _PolicyEnforcementService;
 
+        /// <summary>
+        /// Creates a new instance of the handler.
+        /// </summary>
+        /// <param name="policyEnforcementService">The policy enforcement service to use for demanding permission grants.</param>
         public DefaultClientCredentialsTokenRequestHandler(IPolicyEnforcementService policyEnforcementService)
         {
             _Tracer = new Tracer(nameof(DefaultClientCredentialsTokenRequestHandler));
@@ -22,10 +29,13 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
             }
         }
 
+        /// <inheritdoc />
         public IEnumerable<string> SupportedGrantTypes => new[] { OAuthConstants.GrantNameClientCredentials };
 
+        /// <inheritdoc />
         public string ServiceName => "Default Client Credentials Token Request Handler";
 
+        /// <inheritdoc />
         public bool HandleRequest(OAuthTokenRequestContext context)
         {
             if (string.IsNullOrEmpty(context?.ClientId))
@@ -34,7 +44,6 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                 context.ErrorType = OAuthErrorType.invalid_grant;
                 context.ErrorMessage = "invalid client_id";
                 return false;
-                //return this.CreateErrorCondition(OAuthErrorType.invalid_grant, "invalid client id");
             }
 
             if (null == context.ApplicationPrincipal)
@@ -43,7 +52,6 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                 context.ErrorType = OAuthErrorType.invalid_client;
                 context.ErrorMessage = "invalid client_secret";
                 return false;
-                //return this.CreateErrorCondition(OAuthErrorType.invalid_client, "invalid client secret");
             }
 
             _PolicyEnforcementService?.Demand(OAuthConstants.OAuthClientCredentialFlowPolicy, context.ApplicationPrincipal);
@@ -63,7 +71,6 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                 context.ErrorType = OAuthErrorType.unauthorized_client;
                 context.ErrorMessage = $"{OAuthConstants.GrantNameClientCredentials} grant type requires device authentication either using X509 or X-Device-Authorization or enabling the DeviceAuthorizationAccessBehavior in the configuration.";
                 return false;
-                //return this.CreateErrorCondition(OAuthErrorType.unauthorized_client, $"{OAuthConstants.GrantNameClientCredentials} grant type requires device authentication either using X509 or X-Device-Authorization or enabling the DeviceAuthorizationAccessBehavior in the configuration.");
             }
 
             context.Session = null; //Setting this to null will let the OAuthTokenBehavior establish the session for us.

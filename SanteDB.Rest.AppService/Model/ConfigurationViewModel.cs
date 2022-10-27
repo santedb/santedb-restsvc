@@ -80,6 +80,14 @@ namespace SanteDB.Rest.AppService.Model
             //this.Synchronization = config.GetSection<SynchronizationConfigurationSection>();
             this.OtherSections = config.Sections.Where(o => !typeof(ConfigurationViewModel).GetRuntimeProperties().Any(p => p.PropertyType.IsAssignableFrom(o.GetType()))).ToList();
         }
+        
+        /// <summary>
+        /// Parameterless ctor for serialization support.
+        /// </summary>
+        public ConfigurationViewModel()
+        {
+
+        }
 
         /// <summary>
         /// Security section
