@@ -85,5 +85,11 @@ namespace SanteDB.Rest.OAuth.Configuration
         /// </summary>
         [XmlElement("assetSolution"), DisplayName("Login Assets Solution"), Description("When set, this solution's applet assets will be used to construct any pages related to authorization by the OAuth service. The LoginAssetDir setting overrides this. LEAVE BLANK TO USE THE DEFAULT ASSETS PROVIDED BY SANTEDB.")]
         public string LoginAssetSolution { get; set; }
+
+        /// <summary>
+        /// When true, scopes will be encoded with a ua. prefix to reduce the overall size of the issued JWT. Set this to false to provide the full unencoded oid in the scope.
+        /// </summary>
+        [XmlElement("encodeScopes"), DisplayName("Encode Scopes"), Description("When true, scopes will be encoded with a ua. prefix to reduce the overall size of the issued JWT. Set this to false to provide the full unencoded oid in the scope.")]
+        public bool EncodeScopes { get; set; }
     }
 }

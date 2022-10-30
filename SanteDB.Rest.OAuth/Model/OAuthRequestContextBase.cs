@@ -97,7 +97,7 @@ namespace SanteDB.Rest.OAuth.Model
         /// <summary>
         /// The authenticated user identity.
         /// </summary>
-        public IIdentity UserIdentity { get; set; }
+        public IClaimsIdentity UserIdentity { get; set; }
         /// <summary>
         /// The authenticated user principal.
         /// </summary>

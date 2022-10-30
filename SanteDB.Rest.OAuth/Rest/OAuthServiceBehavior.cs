@@ -55,6 +55,7 @@ using System.Linq;
 using System.Net;
 using System.Security;
 using System.Security.Authentication;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using System.Xml;
@@ -136,11 +137,28 @@ namespace SanteDB.Rest.OAuth.Rest
         readonly IAuditService _AuditService;
 
 
+
         // XHTML
         private const string XS_HTML = "http://www.w3.org/1999/xhtml";
 
         protected readonly Dictionary<string, ITokenRequestHandler> _TokenRequestHandlers;
         private readonly Dictionary<string, Func<OAuthAuthorizeRequestContext, object>> _AuthorizeResponseModeHandlers;
+
+        /// <summary>
+        /// Mapping information to map to kmnown jwt claim names
+        /// </summary>
+        private static Dictionary<string, string> s_ClaimTypeMapping = new Dictionary<string, string>()
+        {
+            { ClaimTypes.Sid, "sid" },
+            { ClaimTypes.Email, "email" },
+            { SanteDBClaimTypes.DefaultRoleClaimType, "role" },
+            { SanteDBClaimTypes.DefaultNameClaimType, "name" },
+            { SanteDBClaimTypes.Realm, "realm" },
+            { SanteDBClaimTypes.Telephone, "phone_number" },
+            { SanteDBClaimTypes.Actor, "actor" }
+        };
+
+
 
 
         /// <summary>
@@ -400,6 +418,16 @@ namespace SanteDB.Rest.OAuth.Rest
             return !string.IsNullOrEmpty(remoteIp);
         }
 
+        private string EncodeScope(string oid)
+        {
+            if (oid.StartsWith(PermissionPolicyIdentifiers.UnrestrictedAll))
+            {
+                return $"ua{oid.Remove(0, PermissionPolicyIdentifiers.UnrestrictedAll.Length)}";
+            }
+
+            return oid;
+        }
+
         /// <summary>
         /// Create a descriptor that can be serialized into a JWT or other token format.
         /// </summary>
@@ -409,60 +437,120 @@ namespace SanteDB.Rest.OAuth.Rest
 
             var claimsPrincipal = m_SessionIdentityProvider.Authenticate(context.Session) as IClaimsPrincipal;
 
+            if (null == context.DeviceIdentity)
+            {
+                context.DeviceIdentity = claimsPrincipal?.Identities?.OfType<IDeviceIdentity>()?.FirstOrDefault() as IClaimsIdentity;
+            }
+
+            if (null == context.ApplicationIdentity)
+            {
+                context.ApplicationIdentity = claimsPrincipal?.Identities?.OfType<IApplicationIdentity>()?.FirstOrDefault() as IClaimsIdentity;
+            }
+
+            if (null == context.UserIdentity)
+            {
+                context.UserIdentity = claimsPrincipal?.Identities?.Where(i => i != context.ApplicationIdentity && i != context.DeviceIdentity)?.FirstOrDefault();
+            }
+
+
             // System claims
             var claims = new Dictionary<string, object>();
 
             foreach (var claim in claimsPrincipal.Claims)
             {
-                if (!m_configuration.AllowedClientClaims.Contains(claim.Type))
+                var claimtype = claim.Type;
+
+                if (s_ClaimTypeMapping.TryGetValue(claimtype, out var newclaimtype))
+                {
+                    claimtype = newclaimtype;
+                }
+
+                if (!m_configuration.AllowedClientClaims.Contains(claimtype))
                 {
                     continue;
                 }
 
-                if (null != claim?.Value)
-                {
-                    if (claims.ContainsKey(claim.Type))
-                    {
-                        var val = claims[claim.Type];
+                claims.AddClaim(claimtype, claim.Value);
+            }
 
-                        if (val is string originalstr)
-                        {
-                            if (claim.Value != originalstr)
-                            {
-                                claims[claim.Type] = new List<string> { originalstr, claim.Value };
-                            }
-                        }
-                        else if (val is List<string> lst)
-                        {
-                            if (!lst.Contains(claim.Value))
-                            {
-                                lst.Add(claim.Value);
-                            }
-                        }
-                        else
-                        {
-                            m_traceSource.TraceWarning($"Claim harmonization error: existing claims type is {val.GetType().Name} which is unrecognized.");
-                        }
-                    }
-                    else
+            //Name
+            claims.Remove("name");
+            claims.Remove("actor");
+
+            var primaryidentity = context.GetPrimaryIdentity();
+            var useridentity = context.GetUserIdentity();
+            var appidentity = context.GetApplicationIdentity();
+            var deviceidentity = context.GetDeviceIdentity();
+
+            var rawjtibuilder = new StringBuilder();
+
+            if (null != primaryidentity)
+            {
+                claims.AddClaim("name", primaryidentity.Name);
+                claims.AddClaim("actor", primaryidentity.FindFirst(SanteDBClaimTypes.Actor)?.Value);
+                claims.AddClaim("sub", primaryidentity.FindFirst(SanteDBClaimTypes.Sid)?.Value);
+                rawjtibuilder.Append(primaryidentity.Name);
+            }
+
+            if (null != useridentity)
+            {
+                claims.AddClaim("usrid", useridentity.FindFirst(SanteDBClaimTypes.NameIdentifier)?.Value);
+                rawjtibuilder.Append(useridentity.Name);
+            }
+
+            if (null != appidentity)
+            {
+                claims.AddClaim(SanteDBClaimTypes.SanteDBApplicationIdentifierClaim, appidentity.FindFirst(SanteDBClaimTypes.NameIdentifier)?.Value);
+                rawjtibuilder.Append(appidentity.Name);
+            }
+
+            if (null != deviceidentity)
+            {
+                claims.AddClaim(SanteDBClaimTypes.SanteDBDeviceIdentifierClaim, deviceidentity.FindFirst(SanteDBClaimTypes.NameIdentifier)?.Value);
+                rawjtibuilder.Append(deviceidentity.Name);
+            }
+
+            claims.Remove("sid");
+            var sessionid = context.GetSessionId();
+            claims.AddClaim("sid", sessionid);
+            rawjtibuilder.Append(sessionid);
+            claims.AddClaim("nonce", context.Nonce);
+            rawjtibuilder.Append(context.Nonce);
+
+            rawjtibuilder.Append(DateTimeOffset.UtcNow.ToString("O"));
+            rawjtibuilder.Append(context.IncomingRequest.RequestTraceIdentifier);
+
+            if (m_configuration.EncodeScopes && claims.ContainsKey("scope"))
+            {
+                var scope = claims["scope"];
+
+                if (scope is string s)
+                {
+                    claims["scope"] = EncodeScope(s);
+                }
+                else if (scope is List<string> scopes)
+                {
+                    for (int i = 0; i < scopes.Count; i++)
                     {
-                        claims.Add(claim.Type, claim.Value);
+                        scopes[i] = EncodeScope(scopes[i]);
                     }
                 }
             }
 
+            var halg = System.Security.Cryptography.SHA256.Create();
+            var encodedsession = m_SessionResolver.GetEncodedIdToken(context.Session);
 
+            claims.Add("at_hash", halg.ComputeHash(encodedsession));
+            claims.Add("jti", halg.ComputeHash(rawjtibuilder.ToString()));
 
             descriptor.Claims = claims;
-
-            // Add JTI
-            descriptor.Claims.Add("jti", m_SessionResolver.GetEncodedIdToken(context.Session));
 
             descriptor.NotBefore = context.Session.NotBefore.UtcDateTime;
             descriptor.Expires = context.Session.NotAfter.UtcDateTime;
             descriptor.IssuedAt = descriptor.NotBefore;
-            descriptor.Claims.Add("sub", claimsPrincipal?.Claims?.FirstOrDefault(c => c.Type == SanteDBClaimTypes.Sid)?.Value);
             descriptor.Claims.Remove(SanteDBClaimTypes.Sid);
+
+            descriptor.CompressionAlgorithm = CompressionAlgorithms.Deflate;
 
             // Creates signing credentials for the specified application key
             var appid = claimsPrincipal?.Claims?.FirstOrDefault(o => o.Type == SanteDBClaimTypes.SanteDBApplicationIdentifierClaim)?.Value;
@@ -1518,7 +1606,7 @@ namespace SanteDB.Rest.OAuth.Rest
 
             if (context.IdTokenHint != null)
             {
-                
+
                 //TODO: Decode ID_token and only sign out the session
             }
             else
@@ -1539,7 +1627,7 @@ namespace SanteDB.Rest.OAuth.Rest
 
                                 var sessions = m_SessionProvider.GetUserSessions(userid);
 
-                                foreach(var session in sessions)
+                                foreach (var session in sessions)
                                 {
                                     m_SessionProvider.Abandon(session);
                                 }
@@ -1550,7 +1638,7 @@ namespace SanteDB.Rest.OAuth.Rest
                             }
                         }
                     }
-                    
+
                 }
             }
 
