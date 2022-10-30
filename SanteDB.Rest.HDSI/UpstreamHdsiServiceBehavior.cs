@@ -334,7 +334,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override IdentifiedData Copy(string resourceType, string id)
         {
             if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable &&
-                this.m_upstreamIntegrationService.IsAvailable() &&
+                this.m_upstreamIntegrationService.IsAvailable(ServiceEndpointType.HealthDataService) &&
                 Guid.TryParse(id, out var idGuid))
             {
                 try

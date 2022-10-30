@@ -13,8 +13,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using SanteDB.Core.Security;
 using SanteDB.Core.Applets.Configuration;
+using SanteDB.Core.Security.Services;
 
 namespace SanteDB.Rest.WWW.Behaviors
 {

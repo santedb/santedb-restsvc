@@ -20,7 +20,7 @@
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Subscription;
-using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.AMI.Resources

@@ -55,7 +55,7 @@ namespace SanteDB.Rest.HDSI
     /// Health Data Service Interface (HDSI)
     /// </summary>
     /// <remarks>Represents generic implementation of the the Health Data Service Interface (HDSI) contract</remarks>
-    [ServiceBehavior(Name = "HDSI", InstanceMode = ServiceInstanceMode.Singleton)]
+    [ServiceBehavior(Name = HdsiMessageHandler.ConfigurationName, InstanceMode = ServiceInstanceMode.Singleton)]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class HdsiServiceBehavior : IHdsiServiceContract
     {

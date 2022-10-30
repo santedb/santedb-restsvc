@@ -73,7 +73,6 @@ namespace SanteDB.Rest.OAuth.Configuration
         [XmlElement("inetpub")]
         public string LoginAssetPath { get; set; }
 
-
         /// <summary>
         /// When true, allows login using client_credentials without any node authentication
         /// </summary>

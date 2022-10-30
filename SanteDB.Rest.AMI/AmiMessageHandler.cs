@@ -45,7 +45,7 @@ namespace SanteDB.Rest.AMI
     /// <para>This service is responsible for starting up and shutting down the REST services for the AMI, as well as </para>
     /// </remarks>
     [Description("The AMI provides administrative operations for SanteDB over HTTP")]
-    [ApiServiceProvider("Administrative Management Interface", typeof(AmiServiceBehavior), configurationType: typeof(AmiConfigurationSection), required: true)]
+    [ApiServiceProvider("Administrative Management Interface", typeof(AmiServiceBehavior), ServiceEndpointType.AdministrationIntegrationService, configurationType: typeof(AmiConfigurationSection), required: true)]
     public class AmiMessageHandler : IDaemonService, IApiEndpointProvider
     {
         /// <summary>
@@ -149,7 +149,7 @@ namespace SanteDB.Rest.AMI
         public bool Start()
         {
             // Don't startup unless in SanteDB
-            if (!Assembly.GetEntryAssembly().GetName().Name.StartsWith("SanteDB"))
+            if (ApplicationServiceContext.Current.HostType == SanteDBHostType.Test)
             {
                 return true;
             }

@@ -26,6 +26,14 @@ using System.Collections.Generic;
 using System.IO;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Rest.AppService.Model;
+using SanteDB.Client.Tickles;
+using SanteDB.Core.Applets.Model;
+using SanteDB.Client.Disconnected.Data.Synchronization;
+using SanteDB.Core.Model;
+using SanteDB.Core.Model.Patch;
+using SanteDB.Core.Configuration;
+using Newtonsoft.Json.Linq;
+using SanteDB.Core.Model.AMI.Diagnostics;
 
 namespace SanteDB.Rest.AppService
 {
@@ -54,138 +62,216 @@ namespace SanteDB.Rest.AppService
     {
 
         /// <summary>
-        /// Creates the specified resource
+        /// Gets the routes
         /// </summary>
-        /// <param name="resourceType">The type of resource to be created</param>
-        /// <param name="data">The resource data to be created</param>
-        /// <returns>The stored resource</returns>
-        [Post("/{resourceType}")]
-        Object Create(String resourceType, Object data);
+        [Get("/routes.js")]
+        Stream GetRoutes();
 
         /// <summary>
-        /// Creates the specified resource if it does not exist, otherwise updates it
+        /// Get the configuration
         /// </summary>
-        /// <param name="resourceType">The type of resource to be created</param>
-        /// <param name="key">The key of the resource </param>
-        /// <param name="data">The resource itself</param>
-        /// <returns>The updated or created resource</returns>
-        [Post("/{resourceType}/{key}")]
-        Object CreateUpdate(String resourceType, String key, Object data);
+        [Get("/Configuration")]
+        ConfigurationViewModel GetConfiguration();
 
         /// <summary>
-        /// Updates the specified resource
+        /// Update configuration
         /// </summary>
-        /// <param name="resourceType">The type of resource to be updated</param>
-        /// <param name="key">The key of the resource</param>
-        /// <param name="data">The resource data to be updated</param>
-        /// <returns>The updated resource</returns>
-        [Put("/{resourceType}/{key}")]
-        [RestServiceFault(409, "The provided update has a conflict with the current state of the object in the server")]
-        Object Update(String resourceType, String key, Object data);
+        [Post("/Configuration")]
+        ConfigurationViewModel UpdateConfiguration(ConfigurationViewModel configuration);
 
         /// <summary>
-        /// Deletes the specified resource
+        /// Update configuration
         /// </summary>
-        /// <param name="resourceType">The type of resource being deleted</param>
-        /// <param name="key">The key of the resource being deleted</param>
-        /// <returns>The last version of the deleted resource</returns>
-        [Delete("/{resourceType}/{key}")]
-        [RestServiceFault(409, "The provided delete cannot occur due to a conflicted If- header")]
-        Object Delete(String resourceType, String key);
+        [Get("/Configuration/{scope}/setting")]
+        List<AppSettingKeyValuePair> GetAppSetting(String scope);
 
         /// <summary>
-        /// Gets the specified resource from the service
+        /// Update configuration
         /// </summary>
-        /// <param name="resourceType">The type of resource to be fetched</param>
-        /// <param name="key">The key of the resource</param>
-        /// <returns>The retrieved resource</returns>
-        [Get("/{resourceType}/{key}")]
-        Object Get(String resourceType, String key);
+        [Post("/Configuration/{scope}/setting")]
+        ConfigurationViewModel SetAppSetting(String scope, List<AppSettingKeyValuePair> settings);
 
         /// <summary>
-        /// Performs a linked or chained search on a sub-property
+        /// Get the data storage providers
         /// </summary>
-        /// <param name="resourceType">The type of resource which should be searched</param>
-        /// <param name="id">The key of the hosting (container object)</param>
-        /// <param name="childKey">The key of the sub-item to fetch</param>
-        /// <param name="childResourceType">The property to search</param>
-        /// <returns>The search for the specified resource type limited to the specified object</returns>
-        [Get("/{resourceType}/{id}/{childResourceType}/{childKey}")]
-        Object AssociationGet(String resourceType, String id, String childResourceType, String childKey);
+        [Get("/DataProviders")]
+        List<StorageProviderViewModel> GetDataStorageProviders();
 
         /// <summary>
-        /// Performs a linked or chained search on a sub-property
+        /// Get locale assets
         /// </summary>
-        /// <param name="resourceType">The type of resource which should be searched</param>
-        /// <param name="id">The key of the hosting (container object)</param>
-        /// <param name="childResourceType">The property to search</param>
-        /// <returns>The search for the specified resource type limited to the specified object</returns>
-        [Get("/{resourceType}/{id}/{childResourceType}")]
-        Object AssociationSearch(String resourceType, String id, String childResourceType);
+        [Get("/Locale")]
+        Dictionary<String, String[]> GetLocaleAssets();
 
         /// <summary>
-        /// Assigns the <paramref name="body"/> object with the resource at <paramref name="resourceType"/>/<paramref name="id"/>
+        /// Join the realm
         /// </summary>
-        /// <param name="resourceType">The type of container resource</param>
-        /// <param name="id">The identiifer of the container</param>
-        /// <param name="childResourceType">The property which is the association to be added</param>
-        /// <param name="body">The object to be added to the collection</param>
-        [Post("/{resourceType}/{id}/{childResourceType}")]
-        object AssociationCreate(String resourceType, String id, String childResourceType, Object body);
+        [Post("/Realm/$join")]
+        ParameterCollection JoinRealm(ParameterCollection parameters);
 
         /// <summary>
-        /// Removes an association
+        /// Join the realm
         /// </summary>
-        /// <param name="resourceType">The type of resource which is the container</param>
-        /// <param name="id">The key of the container</param>
-        /// <param name="childResourceType">The property on which the sub-key resides</param>
-        /// <param name="childKey">The actual value of the sub-key</param>
-        /// <returns>The removed object</returns>
-        [Delete("/{resourceType}/{id}/{childResourceType}/{childKey}")]
-        Object AssociationRemove(String resourceType, String id, String childResourceType, String childKey);
+        [Post("/Realm/$unjoin")]
+        ParameterCollection UnJoinRealm(ParameterCollection parameters);
 
         /// <summary>
-        /// Searches the specified resource type for matches
+        /// Gets menus
         /// </summary>
-        /// <param name="resourceType">The resource type to be searched</param>
-        /// <returns>The results of the search</returns>
-        [Get("/{resourceType}")]
-        Object Search(String resourceType);
+        [Get("/Menu")]
+        List<Menu> GetMenus();
 
         /// <summary>
-        /// Releases an edit lock on the specified object
+        /// Gets a new UUID 
         /// </summary>
-        [RestInvoke("CHECKIN", "/{resourceType}")]
-        [RestInvoke("CHECKIN", "/{resourceType}/{id}")]
-        object CheckIn(String resourceType, String id);
+        /// <remarks>TODO: Generate sequential UUIDS</remarks>
+        [Get("/Uuid")]
+        Guid GetUuid();
 
         /// <summary>
-        /// Acquires an edit lock on the specified object
+        /// Gets the tickles/reminders which are alerts in the application
         /// </summary>
-        [RestInvoke("CHECKOUT", "/{resourceType}/{id}")]
-        [RestInvoke("CHECKOUT", "/{resourceType}")]
-        object CheckOut(String resourceType, String id);
+        [Get("/Tickle")]
+        List<Tickle> GetTickles();
 
         /// <summary>
-        /// Invokes the specified operation
+        /// Creates a tickle on the service
         /// </summary>
-        /// <param name="resourceType">The type of operation being invoked</param>
-        /// <param name="body">The parameters which should be used to execute the operation</param>
-        /// <param name="operationName">The name of the operation</param>
-        /// <returns>The result of the operation invokation</returns>
-        [RestInvoke("POST", "/{resourceType}/${operationName}")]
-        object InvokeMethod(String resourceType, String operationName, ParameterCollection body);
+        [Post("/Tickle")]
+        void CreateTickle(Tickle data);
 
         /// <summary>
-        /// Invokes the specified operation
+        /// Delete the specified tickle
         /// </summary>
-        /// <param name="resourceType">The type of operation being invoked</param>
-        /// <param name="id">The ID of the operation</param>
-        /// <param name="operationName">The name of the operation</param>
-        /// <param name="body">The parameters to send to the operation</param>
-        /// <returns>The result of the operation invokation</returns>
-        [RestInvoke("POST", "/{resourceType}/{id}/${operationName}")]
-        object InvokeMethod(String resourceType, String id, String operationName, ParameterCollection body);
+        [Delete("/Tickle/{id}")]
+        void DismissTickle(Guid id);
+
+        /// <summary>
+        /// Instruct the service to do an update
+        /// </summary>
+        [Post("/$update")]
+        ParameterCollection PerformUpdate(ParameterCollection parameters);
+        
+        /// <summary>
+        /// Gets the widgets 
+        /// </summary>
+        [Get("/Widgets")]
+        List<AppletWidget> GetWidgets();
+
+        /// <summary>
+        /// Get a widget
+        /// </summary>
+        [Get("/Widgets/{widgetId}")]
+        Stream GetWidget(String widgetId);
+
+        /// <summary>
+        /// Get synchronization logs
+        /// </summary>
+        /// <returns></returns>
+        [Get("/Sync")]
+        List<ISynchronizationLogEntry> GetSynchronizationLogs();
+
+        /// <summary>
+        /// Synchronize the system immediately
+        /// </summary>
+        [Post("/Sync/$retry")]
+        void SynchronizeNow(ParameterCollection parameters);
+
+        /// <summary>
+        /// Reset the synchornization status
+        /// </summary>
+        [Post("/Sync/$reset")]
+        void ResetSynchronizationStatus(ParameterCollection parameters);
+
+        /// <summary>
+        /// Get content of all the queues
+        /// </summary>
+        [Get("/Queue")]
+        Dictionary<String, int> GetQueue();
+
+        /// <summary>
+        /// Gets the queue entries
+        /// </summary>
+        [Get("/Queue/{queueName}")]
+        List<ISynchronizationQueueEntry> GetQueue(String queueName);
+
+        /// <summary>
+        /// Get the specific queue entry
+        /// </summary>
+        [Get("/Queue/{queueName}/{id}")]
+        IdentifiedData GetQueueData(String queueName, int id);
+
+        /// <summary>
+        /// Gets the conflict data a patch representing the difference between the server version and the local version being 
+        /// </summary>
+        [Get("/Queue/dead/{id}/conflict")]
+        Patch GetQueueConflict(int id);
+
+        /// <summary>
+        /// Force a retry on the conflicted queue item
+        /// </summary>
+        [Post("/Queue/dead/{id}/$retry")]
+        void RetryQueueEntry(int id, ParameterCollection parameters);
+
+        /// <summary>
+        /// Perform a patch / resolution
+        /// </summary>
+        [RestInvoke("PATCH", "/Queue/dead/{id}")]
+        IdentifiedData ResolveQueueConflict(int id, Patch resolution);
+
+        /// <summary>
+        /// Remove a queue item
+        /// </summary>
+        [Delete("/Queue/{queueName}/{id}")]
+        void DeleteQueueItem(String queueName, int id);
+
+        /// <summary>
+        /// Get DCG online state
+        /// </summary>
+        [Get("/Online")]
+        Dictionary<String, bool> GetOnlineState();
+
+        /// <summary>
+        /// Disable the specified service
+        /// </summary>
+        [Get("/Configuration/Service")]
+        List<DiagnosticServiceInfo> GetServices();
+
+        /// <summary>
+        /// Disable the specified service
+        /// </summary>
+        [Delete("/Configuration/Service/{serviceType}")]
+        void DisableService(String serviceType);
+
+        /// <summary>
+        /// Enable the specified service
+        /// </summary>
+        [Post("/Configuration/Service/{serviceType}")]
+        void EnableService(String serviceType);
+
+        /// <summary>
+        /// Get all templates
+        /// </summary>
+        [Get("/Template")]
+        List<AppletTemplateDefinition> GetTemplates();
+
+        /// <summary>
+        /// Gets the specified template identifier
+        /// </summary>
+        [Get("/Template/{templateId}")]
+        IdentifiedData GetTemplateDefinition(String templateId);
+
+        /// <summary>
+        /// Get the view for the specified template
+        /// </summary>
+        [Get("/Template/{templateId}/ui/view.html")]
+        void GetTemplateView(String templateId);
+
+        /// <summary>
+        /// Get the form for the specified template
+        /// </summary>
+        [Get("/Template/{templateId}/ui/form.html")]
+        void GetTemplateForm(String templateId);
 
 
     }

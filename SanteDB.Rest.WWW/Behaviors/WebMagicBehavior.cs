@@ -1,6 +1,7 @@
 ﻿using RestSrvr;
 using RestSrvr.Exceptions;
 using RestSrvr.Message;
+using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Rest.Common;
 using System;
@@ -37,13 +38,13 @@ namespace SanteDB.Rest.WWW.Behaviors
         /// </summary>
         static WebMagicBehavior()
         {
-            Magic = Guid.NewGuid().ToByteArray();
+            Magic = ApplicationServiceContext.Current.ActivityUuid.ToByteArray();
         }
 
         /// <inheritdoc cref="IServicePolicy.Apply(RestRequestMessage)"/>
         public void Apply(RestRequestMessage request)
         {
-            if (!request.Headers.TryGetValue(ExtendedHttpHeaderNames.ClientMagicNumberHeaderName, out var magicHeader) && magicHeader.Contains(Magic.HexEncode()) ||
+            if (request.Headers.TryGetValue(ExtendedHttpHeaderNames.ClientMagicNumberHeaderName, out var magicHeader) && magicHeader.Contains(Magic.HexEncode()) ||
                 $"SanteDB-{Magic.HexEncode()}".Equals(request.UserAgent))
             {
 

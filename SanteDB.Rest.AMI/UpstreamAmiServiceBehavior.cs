@@ -314,7 +314,7 @@ namespace SanteDB.Rest.AMI
 
         /// <inheritdoc/>
         [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
-        public override object Search(string resourceType)
+        public override AmiCollection Search(string resourceType)
         {
             // Perform only on the external server
             if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
@@ -522,7 +522,7 @@ namespace SanteDB.Rest.AMI
 
         /// <inheritdoc/>
         [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
-        public override object AssociationSearch(string resourceType, string key, string childResourceType)
+        public override AmiCollection AssociationSearch(string resourceType, string key, string childResourceType)
         {
             // Perform only on the external server
             if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||

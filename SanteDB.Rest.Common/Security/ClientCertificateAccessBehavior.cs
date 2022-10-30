@@ -26,11 +26,14 @@ using SanteDB.Core.Model.Serialization;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
 using SanteDB.Core.Security.Configuration;
+using SanteDB.Core.Security.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Security;
 using System.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
@@ -232,6 +235,29 @@ namespace SanteDB.Rest.Common.Security
         /// </summary>
         public void ApplyServiceBehavior(RestService service, ServiceDispatcher dispatcher)
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            ServicePointManager.ServerCertificateValidationCallback += (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) =>
+            {
+                if (certificate == null || chain == null)
+                {
+                    return this.m_configuration.AllowClientHeader; // they might be using the client header so let it pass
+                }
+                else
+                {
+                    bool isValid = chain.ChainElements.OfType<X509ChainElement>().Any(cer => this.m_configuration.TrustedIssuers.Any(ca => ca.Certificate.Thumbprint == cer.Certificate.Thumbprint));
+                    if (!isValid)
+                    {
+                        this.m_tracer.TraceError("Certification authority from the supplied certificate doesn't match the expected thumbprint of the CA");
+                    }
+
+                    foreach (var stat in chain.ChainStatus)
+                    {
+                        this.m_tracer.TraceWarning("Certificate chain validation error: {0}", stat.StatusInformation);
+                    }
+                    //isValid &= chain.ChainStatus.Length == 0;
+                    return isValid;
+                }
+            };
             dispatcher.AddServiceDispatcherPolicy(this);
         }
     }

@@ -41,7 +41,7 @@ namespace SanteDB.Rest.AppService
     /// the user environment</para>
     /// </remarks>
     [Description("Application Service")]
-    [ApiServiceProvider("Application Interaction Interface", typeof(AppServiceBehavior))]
+    [ApiServiceProvider("Application Interaction Interface", typeof(AppServiceBehavior), ServiceEndpointType.ApplicationControlService)]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // Model classes - ignored
     public class AppServiceMessageHandler : IDaemonService, IApiEndpointProvider
     {
@@ -58,7 +58,7 @@ namespace SanteDB.Rest.AppService
         /// <summary>
         /// Name of the service in the configuration file
         /// </summary>
-        internal const string ConfigurationName = "APP";
+        public const string ConfigurationName = "APP";
 
         /// <summary>
         /// Resource handler tool
@@ -160,7 +160,7 @@ namespace SanteDB.Rest.AppService
                 }
 
                 // Start the webhost
-                ApplicationServiceContext.Current.Started += (o, e) => this.m_webHost.Start();
+                this.m_webHost.Start();
 
                 this.Started?.Invoke(this, EventArgs.Empty);
                 return true;

@@ -73,10 +73,10 @@ namespace SanteDB.Rest.Common.Configuration
         /// <summary>
         /// Creates a service configuration from the specified type
         /// </summary>
-        internal RestServiceConfiguration(Type type) : this()
+        public RestServiceConfiguration(Type implementationType) : this()
         {
-            this.ConfigurationName = type.GetCustomAttribute<ServiceBehaviorAttribute>()?.Name ?? type.FullName;
-            this.ServiceType = type;
+            this.ConfigurationName = implementationType.GetCustomAttribute<ServiceBehaviorAttribute>()?.Name ?? implementationType.FullName;
+            this.ServiceType = implementationType;
         }
 
         /// <summary>

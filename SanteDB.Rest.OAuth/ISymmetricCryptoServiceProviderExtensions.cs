@@ -1,5 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using System;
 using System.Text;
 

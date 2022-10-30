@@ -36,6 +36,7 @@
         <ProjectReference Include="..\..\santedb-docker\SanteDB.Docker.Core\SanteDB.Docker.Core.csproj" />
         <ProjectReference Include="..\..\santedb-i18n\SanteDB.Core.i18n\SanteDB.Core.i18n.csproj" />
         <ProjectReference Include="..\..\santedb-dc-core\SanteDB.Client\SanteDB.Client.csproj" />
+        <ProjectReference Include="..\SanteDB.Rest.Common\SanteDB.Rest.Common.csproj" />
 
       </ItemGroup>
     </When>
@@ -43,6 +44,7 @@
       <ItemGroup>
         <PackageReference Include="RestSrvr" Version="$(VersionNumber)" />
         <PackageReference Include="SanteDB.Core.Applets" Version="$(VersionNumber)" />
+        <PackageReference Include="SanteDB.Rest.Common" Version="$(VersionNumber)" />
         <PackageReference Include="SanteDB.Core.Api" Version="$(VersionNumber)" />
         <PackageReference Include="SanteDB.Core.i18n" Version="$(VersionNumber)" />
         <PackageReference Include="SanteDB.Docker.Core" Version="$(VersionNumber)" />
@@ -52,6 +54,7 @@
   </Choose>
 
   <ItemGroup>
-    <ProjectReference Include="..\SanteDB.Rest.Common\SanteDB.Rest.Common.csproj" />
+    <ProjectReference Include="..\..\santedb-dc-core\SanteDB.Client.Disconnected\SanteDB.Client.Disconnected.csproj" />
   </ItemGroup>
+
 </Project>

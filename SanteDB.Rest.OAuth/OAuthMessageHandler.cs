@@ -41,8 +41,8 @@ namespace SanteDB.Rest.OAuth
     /// <para>This service is responsible for starting and maintaining the <see cref="OAuthServiceBehavior"/> REST service which 
     /// is responsible for supporting SanteDB's <see href="https://help.santesuite.org/developers/service-apis/openid-connect">OpenID Connect</see> interface</para>
     /// </remarks>
-    [ServiceProvider("OAuth 2.0 Messaging Service")]
     [ExcludeFromCodeCoverage]
+    [ApiServiceProvider("OAuth 2.0 Messaging Provider", typeof(OAuthServiceBehavior), ServiceEndpointType.AuthenticationService)]
     public class OAuthMessageHandler : IDaemonService, IApiEndpointProvider
     {
 
@@ -143,7 +143,7 @@ namespace SanteDB.Rest.OAuth
         public bool Start()
         {
             // Don't startup unless in SanteDB
-            if (!Assembly.GetEntryAssembly().GetName().Name.StartsWith("SanteDB"))
+            if (ApplicationServiceContext.Current.HostType == SanteDBHostType.Test)
             {
                 return true;
             }

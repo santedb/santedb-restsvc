@@ -37,7 +37,7 @@ namespace SanteDB.Rest.WWW
     /// <remarks>
     /// The world wide web message handler is responsible for serving HTTP requests for web pages 
     /// </remarks>
-    [ApiServiceProvider("WWW Interface", typeof(WwwServiceBehavior), Required = false, Configuration = typeof(WwwConfigurationSection))]
+    [ApiServiceProvider("WWW Interface", typeof(WwwServiceBehavior), ServiceEndpointType.WebUserInterfaceService, Required = false, Configuration = typeof(WwwConfigurationSection))]
     public class WwwMessageHandler : IDaemonService, IApiEndpointProvider
     {
         /// <summary>
@@ -144,7 +144,7 @@ namespace SanteDB.Rest.WWW
                 }
 
                 // Start the webhost
-                ApplicationServiceContext.Current.Started += (o, e) => this.m_webHost.Start();
+                this.m_webHost.Start();
 
                 this.Started?.Invoke(this, EventArgs.Empty);
                 return true;

@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using SanteDB.Core.Diagnostics;
-using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
 using SanteDB.Core.Security.Services;
 using SanteDB.Rest.OAuth.Abstractions;

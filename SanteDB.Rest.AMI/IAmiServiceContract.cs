@@ -22,7 +22,6 @@ using RestSrvr.Attributes;
 using SanteDB.Core.Applets.Model;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Mail;
-using SanteDB.Core.Model;
 using SanteDB.Core.Model.AMI.Applet;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.AMI.Collections;
@@ -199,7 +198,7 @@ namespace SanteDB.Rest.AMI
         /// <param name="childResourceType">The property to search</param>
         /// <returns>The search for the specified resource type limited to the specified object</returns>
         [Get("/{resourceType}/{id}/{childResourceType}")]
-        object AssociationSearch(String resourceType, String id, String childResourceType);
+        AmiCollection AssociationSearch(String resourceType, String id, String childResourceType);
 
         /// <summary>
         /// Assigns the <paramref name="body"/> object with the resource at <paramref name="resourceType"/>/<paramref name="id"/>
@@ -274,7 +273,7 @@ namespace SanteDB.Rest.AMI
         /// <param name="resourceType">The resource type to be searched</param>
         /// <returns>The results of the search</returns>
         [Get("/{resourceType}")]
-        object Search(String resourceType);
+        AmiCollection Search(String resourceType);
 
         /// <summary>
         /// Get the service options

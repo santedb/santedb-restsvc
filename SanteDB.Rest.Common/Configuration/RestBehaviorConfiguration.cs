@@ -20,6 +20,7 @@
  */
 using Newtonsoft.Json;
 using RestSrvr;
+using SanteDB.Core.i18n;
 using SanteDB.Core.Model.Attributes;
 using System;
 using System.ComponentModel;
@@ -48,7 +49,7 @@ namespace SanteDB.Rest.Common.Configuration
         /// <summary>
         /// AGS Behavior Configuration
         /// </summary>
-        public RestBehaviorConfiguration(Type behaviorType)
+        protected RestBehaviorConfiguration(Type behaviorType)
         {
             this.Type = behaviorType;
         }
@@ -140,9 +141,12 @@ namespace SanteDB.Rest.Common.Configuration
         /// <summary>
         /// Create a new behavior configuration with specified type
         /// </summary>
-        public RestServiceBehaviorConfiguration(Type behaviorType) : base(behaviorType)
+        public RestServiceBehaviorConfiguration(Type type) : base(type)
         {
-
+            if (!typeof(IServiceBehavior).IsAssignableFrom(type))
+            {
+                throw new ArgumentOutOfRangeException(nameof(type), String.Format(ErrorMessages.ARGUMENT_INCOMPATIBLE_TYPE, type.GetType(), typeof(IServiceBehavior)));
+            }
         }
 
         /// <summary>
@@ -194,6 +198,10 @@ namespace SanteDB.Rest.Common.Configuration
         /// </summary>
         public RestEndpointBehaviorConfiguration(Type type) : base(type)
         {
+            if(!typeof(IEndpointBehavior).IsAssignableFrom(type))
+            {
+                throw new ArgumentOutOfRangeException(nameof(type), String.Format(ErrorMessages.ARGUMENT_INCOMPATIBLE_TYPE, type.GetType(), typeof(IEndpointBehavior)));
+            }
         }
 
         /// <summary>

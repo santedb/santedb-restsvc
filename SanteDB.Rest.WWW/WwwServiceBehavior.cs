@@ -1,4 +1,5 @@
 ﻿using RestSrvr;
+using RestSrvr.Attributes;
 using SanteDB.Core;
 using SanteDB.Core.Applets;
 using SanteDB.Core.Applets.Configuration;
@@ -22,6 +23,7 @@ namespace SanteDB.Rest.WWW
     /// <summary>
     /// Service behavior which renders WWW content from the the applets installed on the server
     /// </summary>
+    [ServiceBehavior(Name = WwwMessageHandler.ConfigurationName)]
     public class WwwServiceBehavior : IWwwServiceContract
     {
         // Cached applets
@@ -39,7 +41,7 @@ namespace SanteDB.Rest.WWW
             this.m_configuration = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<AppletConfigurationSection>();
             this.m_policyEnforcementSerivce = ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>();
             this.m_appletSolutionManager = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>();
-            if (String.IsNullOrEmpty(this.m_configuration.DefaultApplet) || this.m_appletSolutionManager == null)
+            if (this.m_appletSolutionManager == null || String.IsNullOrEmpty(this.m_configuration.DefaultApplet))
             {
                 this.m_serviceApplet = ApplicationServiceContext.Current.GetService<IAppletManagerService>().Applets;
             }
@@ -49,7 +51,7 @@ namespace SanteDB.Rest.WWW
             }
 
             // Set the default 
-            this.m_serviceApplet.DefaultApplet = this.m_serviceApplet.FirstOrDefault(o => o.Info.Id == (this.m_configuration.DefaultApplet ?? "org.santedb.uicore"));
+            this.m_serviceApplet.DefaultApplet = this.m_serviceApplet.FirstOrDefault(o => o.Info.Id == (this.m_configuration?.DefaultApplet ?? "org.santedb.uicore"));
         }
 
         /// <summary>
@@ -105,7 +107,7 @@ namespace SanteDB.Rest.WWW
                 lang = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
             }
 
-            var etag = $"{String.Join(";", this.m_serviceApplet.Select(o => o.Info.Version))}/{lang}";
+            var etag = $"{String.Join(";", this.m_serviceApplet.Select(o => o.Info.Version))};{ApplicationServiceContext.Current.ActivityUuid}/{lang}";
 
             if (RestOperationContext.Current.IncomingRequest.Headers["If-None-Match"] == etag)
             {
