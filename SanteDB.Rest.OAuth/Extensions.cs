@@ -82,11 +82,18 @@ namespace SanteDB.Rest.OAuth
             return Convert.ToBase64String(context.Session.Id);
         }
 
-        public static string ComputeHash(this HashAlgorithm algorithm, string input)
+        public static string ComputeHash(this HashAlgorithm algorithm, string input, int? numberOfBits = null)
         {
             var hashtext = ComputeHashInternal(algorithm, input);
 
-            return Base64UrlEncoder.Encode(hashtext);
+            if (numberOfBits != null)
+            {
+                return Base64UrlEncoder.Encode(hashtext, 0, numberOfBits.Value / 8);
+            }
+            else
+            {
+                return Base64UrlEncoder.Encode(hashtext);
+            }
         }
 
         public static bool VerifyHash(this HashAlgorithm algorithm, string input, string hash)

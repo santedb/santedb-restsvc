@@ -19,6 +19,7 @@
  * Date: 2022-5-30
  */
 using SanteDB.Core.Security;
+using System.Data;
 
 namespace SanteDB.Rest.OAuth
 {
@@ -184,5 +185,17 @@ namespace SanteDB.Rest.OAuth
         public const string FormField_IdTokenHint = "id_token_hint";
         public const string FormField_LogoutHint = "logout_hint";
         public const string FormField_PostLogoutRedirectUri = "post_logout_redirect_uri";
+
+        public const string ClaimType_Name = "name";
+        public const string ClaimType_Actor = "actor";
+        public const string ClaimType_Subject = "sub";
+        public const string ClaimType_Sid = "sid";
+        public const string ClaimType_Nonce = "nonce";
+        public const string ClaimType_AtHash = "at_hash";
+        public const string ClaimType_Jti = "jti";
+        public const string ClaimType_Role = "role";
+        public const string ClaimType_Email = "email";
+        public const string ClaimType_Realm = "realm";
+        public const string ClaimType_Telephone = "phone_number";
     }
 }

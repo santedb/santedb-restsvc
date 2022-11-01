@@ -136,6 +136,8 @@ namespace SanteDB.Rest.OAuth.Rest
 
         readonly IAuditService _AuditService;
 
+        readonly IRoleProviderService _RoleProvider;
+
 
 
         // XHTML
@@ -149,13 +151,13 @@ namespace SanteDB.Rest.OAuth.Rest
         /// </summary>
         private static Dictionary<string, string> s_ClaimTypeMapping = new Dictionary<string, string>()
         {
-            { ClaimTypes.Sid, "sid" },
-            { ClaimTypes.Email, "email" },
-            { SanteDBClaimTypes.DefaultRoleClaimType, "role" },
-            { SanteDBClaimTypes.DefaultNameClaimType, "name" },
-            { SanteDBClaimTypes.Realm, "realm" },
-            { SanteDBClaimTypes.Telephone, "phone_number" },
-            { SanteDBClaimTypes.Actor, "actor" }
+            { ClaimTypes.Sid, OAuthConstants.ClaimType_Sid },
+            { ClaimTypes.Email, OAuthConstants.ClaimType_Email },
+            { SanteDBClaimTypes.DefaultRoleClaimType, OAuthConstants.ClaimType_Role },
+            { SanteDBClaimTypes.DefaultNameClaimType, OAuthConstants.ClaimType_Name },
+            { SanteDBClaimTypes.Realm, OAuthConstants.ClaimType_Realm },
+            { SanteDBClaimTypes.Telephone, OAuthConstants.ClaimType_Telephone },
+            { SanteDBClaimTypes.Actor, OAuthConstants.ClaimType_Actor }
         };
 
 
@@ -178,6 +180,7 @@ namespace SanteDB.Rest.OAuth.Rest
             m_AppIdentityProvider = ApplicationServiceContext.Current.GetService<IApplicationIdentityProviderService>() ?? throw new ApplicationException($"Cannot find instance of {nameof(IApplicationIdentityProviderService)} in {nameof(ApplicationServiceContext)}.");
             m_DeviceIdentityProvider = ApplicationServiceContext.Current.GetService<IDeviceIdentityProviderService>();
             _SymmetricProvider = ApplicationServiceContext.Current.GetService<ISymmetricCryptographicProvider>() ?? throw new ApplicationException($"Cannot find instance of {nameof(ISymmetricCryptographicProvider)} in {nameof(ApplicationServiceContext)}.");
+            _RoleProvider = ApplicationServiceContext.Current.GetService<IRoleProviderService>() ?? throw new ApplicationException($"Cannot find instance of {nameof(IRoleProviderService)} in {nameof(ApplicationServiceContext)}.");
 
             //Optimization - try to resolve from the same session provider. 
             m_SessionIdentityProvider = m_SessionProvider as ISessionIdentityProviderService;
@@ -474,8 +477,8 @@ namespace SanteDB.Rest.OAuth.Rest
             }
 
             //Name
-            claims.Remove("name");
-            claims.Remove("actor");
+            claims.Remove(OAuthConstants.ClaimType_Name);
+            claims.Remove(OAuthConstants.ClaimType_Actor);
 
             var primaryidentity = context.GetPrimaryIdentity();
             var useridentity = context.GetUserIdentity();
@@ -486,15 +489,15 @@ namespace SanteDB.Rest.OAuth.Rest
 
             if (null != primaryidentity)
             {
-                claims.AddClaim("name", primaryidentity.Name);
-                claims.AddClaim("actor", primaryidentity.FindFirst(SanteDBClaimTypes.Actor)?.Value);
-                claims.AddClaim("sub", primaryidentity.FindFirst(SanteDBClaimTypes.Sid)?.Value);
+                claims.AddClaim(OAuthConstants.ClaimType_Name, primaryidentity.Name);
+                claims.AddClaim(OAuthConstants.ClaimType_Actor, primaryidentity.FindFirst(SanteDBClaimTypes.Actor)?.Value);
+                claims.AddClaim(OAuthConstants.ClaimType_Subject, primaryidentity.FindFirst(SanteDBClaimTypes.Sid)?.Value);
                 rawjtibuilder.Append(primaryidentity.Name);
             }
 
             if (null != useridentity)
             {
-                claims.AddClaim("usrid", useridentity.FindFirst(SanteDBClaimTypes.NameIdentifier)?.Value);
+                claims.AddClaim(SanteDBClaimTypes.SanteDBUserIdentifierClaim, useridentity.FindFirst(SanteDBClaimTypes.NameIdentifier)?.Value);
                 rawjtibuilder.Append(useridentity.Name);
             }
 
@@ -510,23 +513,23 @@ namespace SanteDB.Rest.OAuth.Rest
                 rawjtibuilder.Append(deviceidentity.Name);
             }
 
-            claims.Remove("sid");
+            claims.Remove(OAuthConstants.ClaimType_Sid);
             var sessionid = context.GetSessionId();
-            claims.AddClaim("sid", sessionid);
+            claims.AddClaim(OAuthConstants.ClaimType_Sid, sessionid);
             rawjtibuilder.Append(sessionid);
-            claims.AddClaim("nonce", context.Nonce);
+            claims.AddClaim(OAuthConstants.ClaimType_Nonce, context.Nonce);
             rawjtibuilder.Append(context.Nonce);
 
             rawjtibuilder.Append(DateTimeOffset.UtcNow.ToString("O"));
             rawjtibuilder.Append(context.IncomingRequest.RequestTraceIdentifier);
 
-            if (m_configuration.EncodeScopes && claims.ContainsKey("scope"))
+            if (m_configuration.EncodeScopes && claims.ContainsKey(SanteDBClaimTypes.SanteDBScopeClaim))
             {
-                var scope = claims["scope"];
+                var scope = claims[SanteDBClaimTypes.SanteDBScopeClaim];
 
                 if (scope is string s)
                 {
-                    claims["scope"] = EncodeScope(s);
+                    claims[SanteDBClaimTypes.SanteDBScopeClaim] = EncodeScope(s);
                 }
                 else if (scope is List<string> scopes)
                 {
@@ -540,8 +543,18 @@ namespace SanteDB.Rest.OAuth.Rest
             var halg = System.Security.Cryptography.SHA256.Create();
             var encodedsession = m_SessionResolver.GetEncodedIdToken(context.Session);
 
-            claims.Add("at_hash", halg.ComputeHash(encodedsession));
-            claims.Add("jti", halg.ComputeHash(rawjtibuilder.ToString()));
+            claims.Add(OAuthConstants.ClaimType_AtHash, halg.ComputeHash(encodedsession, 128));
+            claims.Add(OAuthConstants.ClaimType_Jti, halg.ComputeHash(rawjtibuilder.ToString()));
+
+            if (null != useridentity)
+            {
+                var roles = _RoleProvider.GetAllRoles(useridentity.Name);
+
+                foreach (var role in roles)
+                {
+                    claims.AddClaim(OAuthConstants.ClaimType_Role, role);
+                }
+            }
 
             descriptor.Claims = claims;
 
@@ -998,7 +1011,8 @@ namespace SanteDB.Rest.OAuth.Rest
         public object Session()
         {
             // If the user calls this with no session - we just return no session
-            if (!String.IsNullOrEmpty(RestOperationContext.Current.IncomingRequest.Headers["Authorization"])) { 
+            if (!String.IsNullOrEmpty(RestOperationContext.Current.IncomingRequest.Headers["Authorization"]))
+            {
                 new TokenAuthorizationAccessBehavior().Apply(new RestRequestMessage(RestOperationContext.Current.IncomingRequest));
             }
 
