@@ -997,7 +997,10 @@ namespace SanteDB.Rest.OAuth.Rest
         /// </summary>
         public object Session()
         {
-            new TokenAuthorizationAccessBehavior().Apply(new RestRequestMessage(RestOperationContext.Current.IncomingRequest));
+            // If the user calls this with no session - we just return no session
+            if (!String.IsNullOrEmpty(RestOperationContext.Current.IncomingRequest.Headers["Authorization"])) { 
+                new TokenAuthorizationAccessBehavior().Apply(new RestRequestMessage(RestOperationContext.Current.IncomingRequest));
+            }
 
             if (RestOperationContext.Current.Data.TryGetValue(TokenAuthorizationAccessBehavior.RestPropertyNameSession, out var sessobj))
             {

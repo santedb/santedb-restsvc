@@ -4,6 +4,7 @@ using SanteDB.Core.Configuration.Data;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Model.AMI.Diagnostics;
 using SanteDB.Core.Services;
+using SanteDB.Rest.AppService.Configuration;
 using SanteDB.Rest.AppService.Model;
 using System;
 using System.Collections.Generic;
@@ -70,7 +71,7 @@ namespace SanteDB.Rest.AppService
         /// <inheritdoc/>
         public ConfigurationViewModel GetConfiguration()
         {
-            throw new NotImplementedException();
+            return new ConfigurationViewModel(this.m_configurationFeatures);
         }
 
         /// <inheritdoc/>

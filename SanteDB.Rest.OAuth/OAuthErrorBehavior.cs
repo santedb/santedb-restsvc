@@ -22,6 +22,7 @@ using Newtonsoft.Json;
 using RestSrvr;
 using RestSrvr.Message;
 using SanteDB.Core.Diagnostics;
+using SanteDB.Rest.Common;
 using SanteDB.Rest.OAuth.Model;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -78,7 +79,7 @@ namespace SanteDB.Rest.OAuth
                 serializer.Serialize(stw, err);
                 response.Body = new MemoryStream(Encoding.UTF8.GetBytes(stw.ToString()));
             }
-
+            response.StatusCode = error.GetHttpStatusCode();
             return true;
         }
     }

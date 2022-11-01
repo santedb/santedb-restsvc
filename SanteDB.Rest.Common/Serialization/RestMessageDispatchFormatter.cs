@@ -313,8 +313,20 @@ namespace SanteDB.Rest.Common.Serialization
                         response.StatusCode = HttpStatusCode.NoContent;
                     }
                 }
-                else if (result?.GetType().GetCustomAttribute<XmlTypeAttribute>() != null ||
-                    result?.GetType().GetCustomAttribute<JsonObjectAttribute>() != null)
+                else if (result is XmlSchema xs)
+                {
+                    MemoryStream ms = new MemoryStream();
+                    xs.Write(ms);
+                    ms.Seek(0, SeekOrigin.Begin);
+                    contentType = "text/xml";
+                    response.Body = ms;
+                }
+                else if (result is Stream str) // TODO: This is messy, clean it up
+                {
+                    contentType = "application/octet-stream";
+                    response.Body = str;
+                }
+                else 
                 {
                     switch (contentTypeMime.MediaType)
                     {
@@ -395,7 +407,7 @@ namespace SanteDB.Rest.Common.Serialization
                                 contentType = "application/json";
                                 break;
                             }
-                        default:
+                        case "application/xml":
                             {
                                 XmlSerializer xsz = XmlModelSerializerFactory.Current.CreateSerializer(result.GetType());
                                 MemoryStream ms = new MemoryStream();
@@ -426,26 +438,13 @@ namespace SanteDB.Rest.Common.Serialization
                                 response.Body = ms;
                                 break;
                             }
+                        default:
+                            contentType = "text/plain";
+                            response.Body = new MemoryStream(Encoding.UTF8.GetBytes(result.ToString()));
+                            break;
                     }
                 }
-                else if (result is XmlSchema)
-                {
-                    MemoryStream ms = new MemoryStream();
-                    (result as XmlSchema).Write(ms);
-                    ms.Seek(0, SeekOrigin.Begin);
-                    contentType = "text/xml";
-                    response.Body = ms;
-                }
-                else if (result is Stream) // TODO: This is messy, clean it up
-                {
-                    contentType = "application/octet-stream";
-                    response.Body = result as Stream;
-                }
-                else
-                {
-                    contentType = "text/plain";
-                    response.Body = new MemoryStream(Encoding.UTF8.GetBytes(result.ToString()));
-                }
+                
 
 #if DEBUG
                 this.m_traceSource.TraceVerbose("Setting response headers");

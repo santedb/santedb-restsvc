@@ -147,9 +147,11 @@ namespace SanteDB.Rest.Common.Security
         {
             try
             {
-                if (!request.Url.Scheme.Equals("https") || !request.IsSecure)
+                var headerPem = request.Headers[X_CLIENT_CERT_PEM];
+
+                if (!request.Url.Scheme.Equals("https") || !request.IsSecure && String.IsNullOrEmpty(headerPem))
                 {
-                    throw new SecurityException("Invalid Scheme - expected https");
+                    throw new SecurityException($"Expected https or {X_CLIENT_CERT_PEM} header");
                 }
                 else if (request.ClientCertificateError != 0)
                 {
@@ -164,7 +166,6 @@ namespace SanteDB.Rest.Common.Security
                 }
 
                 var clientCertificate = request.ClientCertificate;
-                var headerPem = request.Headers[X_CLIENT_CERT_PEM];
 
                 if (!String.IsNullOrEmpty(headerPem) && this.m_configuration.AllowClientHeader)
                 {

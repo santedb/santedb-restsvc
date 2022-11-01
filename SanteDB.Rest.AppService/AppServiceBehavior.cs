@@ -20,6 +20,7 @@ using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
+using SanteDB.Rest.AppService.Configuration;
 using SanteDB.Rest.AppService.Model;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
@@ -57,6 +58,7 @@ namespace SanteDB.Rest.AppService
         private readonly ISecurityRepositoryService m_securityRepositoryService;
         private readonly Tracer m_tracer = Tracer.GetTracer(typeof(AppServiceBehavior));
         private readonly Timer m_onlineStateTimer;
+        private readonly IEnumerable<IRestConfigurationFeature> m_configurationFeatures;
         private bool m_onlineState;
         private bool m_hdsiState;
         private bool m_amiState;
@@ -132,6 +134,7 @@ namespace SanteDB.Rest.AppService
                 catch { }
             }, null, 0, 10000);
 
+            this.m_configurationFeatures = this.m_serviceManager.CreateInjectedOfAll<IRestConfigurationFeature>().ToList();
         }
 
         /// <summary>

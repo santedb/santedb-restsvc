@@ -19,12 +19,16 @@
  * Date: 2021-8-27
  */
 using Newtonsoft.Json;
+using SanteDB.Client.Configuration;
 using SanteDB.Client.Configuration.Upstream;
+using SanteDB.Core;
 using SanteDB.Core.Applets.Configuration;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Configuration.Data;
 using SanteDB.Core.Configuration.Http;
 using SanteDB.Core.Security.Configuration;
+using SanteDB.Core.Services;
+using SanteDB.Rest.AppService.Configuration;
 using SanteDB.Rest.Common.Configuration;
 using System;
 using System.Collections.Generic;
@@ -38,8 +42,6 @@ namespace SanteDB.Rest.AppService.Model
     /// Configuration view model
     /// </summary>
     [JsonObject(SerializationTypeName)]
-    [XmlRoot(SerializationTypeName, Namespace ="http://santedb.org/appService")]
-    [XmlType(SerializationTypeName, Namespace = "http://santedb.org/appService")]
     public class ConfigurationViewModel
     {
         private const string SerializationTypeName = "Configuration";
@@ -54,7 +56,7 @@ namespace SanteDB.Rest.AppService.Model
         /// Return true if configured
         /// </summary>
         [JsonProperty("isConfigured")]
-        public bool IsConfigured { get => this.Upstream != null; }
+        public bool IsConfigured { get; }
 
         /// <summary>
         /// When true the system should automatically restart
@@ -63,96 +65,27 @@ namespace SanteDB.Rest.AppService.Model
         public bool AutoRestart { get; set; }
 
         /// <summary>
-        /// Configuation
-        /// </summary>
-        /// <param name="config"></param>
-        public ConfigurationViewModel(SanteDBConfiguration config)
-        {
-            if (config == null) return;
-            this.Security = config.GetSection<SecurityConfigurationSection>().ForDisclosure();
-            this.Data = config.GetSection<DataConfigurationSection>();
-            this.Applet = config.GetSection<AppletConfigurationSection>();
-            this.Application = config.GetSection<ApplicationServiceContextConfigurationSection>();
-            this.Log = config.GetSection<DiagnosticsConfigurationSection>();
-            this.RestClient = config.GetSection<RestClientConfigurationSection>();
-            this.RestServer = config.GetSection<RestConfigurationSection>();
-            this.Upstream = config.GetSection<UpstreamConfigurationSection>();
-            //this.Synchronization = config.GetSection<SynchronizationConfigurationSection>();
-            this.OtherSections = config.Sections.Where(o => !typeof(ConfigurationViewModel).GetRuntimeProperties().Any(p => p.PropertyType.IsAssignableFrom(o.GetType()))).ToList();
-        }
-        
-        /// <summary>
-        /// Parameterless ctor for serialization support.
+        /// Default ctor for serialization
         /// </summary>
         public ConfigurationViewModel()
         {
-
+            this.Configuration = new Dictionary<String, Dictionary<String, Object>>();
         }
 
         /// <summary>
-        /// Security section
+        /// Configuation
         /// </summary>
-        [JsonProperty("security")]
-        public SecurityConfigurationSection Security { get; set; }
+        public ConfigurationViewModel(IEnumerable<IRestConfigurationFeature> features)
+        {
+            this.IsConfigured = !(ApplicationServiceContext.Current.GetService<IConfigurationManager>() is InitialConfigurationManager);
+            this.Configuration = features.OrderBy(o=>o.Order).ToDictionary(f => f.Name, f => f.Configuration.ToDictionary(o=>o.Key, o=>o.Value));
+        }
 
         /// <summary>
-        /// Realm name
+        /// Gets or sets the configuration dictionary
         /// </summary>
-        [JsonProperty("realmName")]
-        public String RealmName { get; set; }
+        [JsonProperty("values", TypeNameHandling = TypeNameHandling.None, NullValueHandling = NullValueHandling.Include), XmlIgnore]
+        public Dictionary<String, Dictionary<String, Object>> Configuration { get; set; }
 
-        /// <summary>
-        /// Data config
-        /// </summary>
-        [JsonProperty("data")]
-        public DataConfigurationSection Data { get; set; }
-
-        /// <summary>
-        /// Gets or sets applet
-        /// </summary>
-        [JsonProperty("applet")]
-        public AppletConfigurationSection Applet { get; set; }
-
-        /// <summary>
-        /// Gets or sets application
-        /// </summary>
-        [JsonProperty("application")]
-        public ApplicationServiceContextConfigurationSection Application { get; set; }
-
-        /// <summary>
-        /// Log
-        /// </summary>
-        [JsonProperty("log")]
-        public DiagnosticsConfigurationSection Log { get; set; }
-
-        /// <summary>
-        /// Gets or sets the network
-        /// </summary>
-        [JsonProperty("restClient")]
-        public RestClientConfigurationSection RestClient { get; set; }
-
-        ///// <summary>
-        ///// Synchronization
-        ///// </summary>
-        //[JsonProperty("sync")]
-        //public SynchronizationConfigurationSection Synchronization { get; set; }
-
-        /// <summary>
-        /// Upstream configuration section
-        /// </summary>
-        [JsonProperty("upstream")]
-        public UpstreamConfigurationSection Upstream { get; set; }
-
-        /// <summary>
-        /// Synchronization
-        /// </summary>
-        [JsonProperty("server")]
-        public RestConfigurationSection RestServer { get; set; }
-
-        /// <summary>
-        /// Represents other sections
-        /// </summary>
-        [JsonProperty("others")]
-        public List<object> OtherSections { get; set; }
     }
 }
