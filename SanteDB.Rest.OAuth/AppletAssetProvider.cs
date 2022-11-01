@@ -1,4 +1,5 @@
 ﻿using SanteDB.Core.Applets;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -28,6 +29,12 @@ namespace SanteDB.Rest.OAuth
                 {
                     break;
                 }
+            }
+
+            if (string.IsNullOrEmpty(_LoginAssetPath))
+            {
+                return;
+                //throw new ArgumentNullException("Cannot locate an applet or solution with login assets configured. Ensure that one applet has the oauth2.login setting configured.");
             }
 
             if (!_LoginAssetPath.EndsWith("/"))
