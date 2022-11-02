@@ -53,7 +53,7 @@ namespace SanteDB.Rest.AMI.Resources
         public override Type Type => typeof(SecurityApplicationInfo);
 
         /// <summary>
-        /// Create device
+        /// Create application
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.CreateApplication)]
         public override object Create(object data, bool updateIfExists)
@@ -79,21 +79,23 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <summary>
-        /// Update the device
+        /// Update the application.
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.CreateApplication)]
         public override object Update(object data)
         {
-            if (data is SecurityApplication)
+            if (data is SecurityApplication app)
             {
-                data = new SecurityApplicationInfo(data as SecurityApplication, this.m_policyInformationService);
+                data = new SecurityApplicationInfo(app, this.m_policyInformationService);
             }
+
+            //Secret changes are handled by the downstream identity provider on save. This is different to how the user service is built up.
 
             return base.Update(data);
         }
 
         /// <summary>
-        /// Obolete the device
+        /// Obolete the application
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.CreateApplication)]
         public override object Delete(object key)
@@ -114,7 +116,7 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <summary>
-        /// Unlock user
+        /// Unlock the application.
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.CreateApplication)]
         public object Unlock(object key)
