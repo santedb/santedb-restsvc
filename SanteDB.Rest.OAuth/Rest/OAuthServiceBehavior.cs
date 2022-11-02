@@ -883,6 +883,8 @@ namespace SanteDB.Rest.OAuth.Rest
             context.AuthenticationContext = AuthenticationContext.Current;
             context.Configuration = m_configuration;
 
+            context.Nonce = formFields[OAuthConstants.FormField_Nonce];
+
             if (!IsGrantTypePermitted(context.GrantType))
             {
                 m_traceSource.TraceInfo("Request has unsupported grant type {0}", context.GrantType);
@@ -993,6 +995,8 @@ namespace SanteDB.Rest.OAuth.Rest
             response.ExpiresIn = unchecked((int)Math.Floor(context.ExpiresIn.TotalSeconds));
             response.TokenType = m_configuration.TokenType;
             response.AccessToken = context.AccessToken;
+
+            response.Nonce = context.Nonce;
 
             if (null != context.Session.RefreshToken)
             {

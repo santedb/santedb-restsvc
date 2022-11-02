@@ -164,6 +164,8 @@ namespace SanteDB.Rest.OAuth
         /// </summary>
         public const string FormField_ChallengeResponse = "response";
 
+        public const string FormField_Nonce = "nonce";
+
         public const string DataKey_SymmetricSecret = "symm_secret";
 
         public const string ResponseMode_Query = "query";
