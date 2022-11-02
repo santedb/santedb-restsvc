@@ -1,6 +1,7 @@
 ﻿using RestSrvr;
 using RestSrvr.Exceptions;
 using SanteDB.Core.Exceptions;
+using SanteDB.Core.Http;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
 using System;
@@ -96,6 +97,8 @@ namespace SanteDB.Rest.Common
                     return HttpStatusCode.MethodNotAllowed;
                 case PatchException pe:
                     return HttpStatusCode.Conflict;
+                case RestClientException<Object> rco:
+                    return rco.HttpStatus;
                 default:
                     return System.Net.HttpStatusCode.InternalServerError;
             }

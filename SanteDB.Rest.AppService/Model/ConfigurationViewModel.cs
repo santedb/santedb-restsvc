@@ -41,7 +41,7 @@ namespace SanteDB.Rest.AppService.Model
     /// <summary>
     /// Configuration view model
     /// </summary>
-    [JsonObject(SerializationTypeName)]
+    [JsonObject(SerializationTypeName, MemberSerialization = MemberSerialization.OptIn, ItemTypeNameHandling = TypeNameHandling.None )]
     public class ConfigurationViewModel
     {
         private const string SerializationTypeName = "Configuration";

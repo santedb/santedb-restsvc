@@ -66,7 +66,7 @@ namespace SanteDB.Rest.AppService.Configuration
                 configSection = new SynchronizationConfigurationSection()
                 {
                     SubscribedObjects = new List<SubscribedObjectConfiguration>(),
-                    Subscriptions = new List<Guid>()
+                    Subscriptions = new List<String>()
                 };
                 configuration.AddSection(configSection);
             }
@@ -76,7 +76,7 @@ namespace SanteDB.Rest.AppService.Configuration
             configSection.BigBundles = (bool?)featureConfiguration[BIG_BUNDLES_SETTING] ?? configSection.BigBundles;
             configSection.Mode = (SynchronizationMode?)featureConfiguration[MODE_SETTING] ?? configSection.Mode;
             configSection.PollIntervalXml = featureConfiguration[POLL_SETTING]?.ToString() ?? configSection.PollIntervalXml;
-            configSection.Subscriptions = ((IEnumerable)featureConfiguration[ENABLED_SUBSCRIPTIONS_SETTING])?.OfType<String>().Select(o => Guid.Parse(o)).ToList();
+            configSection.Subscriptions = ((IEnumerable)featureConfiguration[ENABLED_SUBSCRIPTIONS_SETTING])?.OfType<String>().ToList();
             configSection.SubscribedObjects = ((IEnumerable)featureConfiguration[SUBSCRIBED_OBJECTS_SETTING])?.OfType<dynamic>()
                 .Select(o => new SubscribedObjectConfiguration()
                 {

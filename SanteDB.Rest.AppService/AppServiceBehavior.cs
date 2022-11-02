@@ -56,6 +56,7 @@ namespace SanteDB.Rest.AppService
         private readonly IUpdateManager m_updateManager;
         private readonly IIdentityProviderService m_identityProvider;
         private readonly ISecurityRepositoryService m_securityRepositoryService;
+        private readonly IUserPreferencesManager m_userPreferenceManager;
         private readonly Tracer m_tracer = Tracer.GetTracer(typeof(AppServiceBehavior));
         private readonly Timer m_onlineStateTimer;
         private readonly IEnumerable<IRestConfigurationFeature> m_configurationFeatures;
@@ -76,6 +77,7 @@ namespace SanteDB.Rest.AppService
                   ApplicationServiceContext.Current.GetService<IAppletManagerService>(),
                   ApplicationServiceContext.Current.GetService<ILocalizationService>(),
                   ApplicationServiceContext.Current.GetService<IUpdateManager>(),
+                  ApplicationServiceContext.Current.GetService<IUserPreferencesManager>(),
                   ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>(),
                   ApplicationServiceContext.Current.GetService<ISynchronizationQueueManager>(),
                   ApplicationServiceContext.Current.GetService<ISynchronizationService>(),
@@ -97,6 +99,7 @@ namespace SanteDB.Rest.AppService
             IAppletManagerService appletManagerService,
             ILocalizationService localizationService,
             IUpdateManager updateManager,
+            IUserPreferencesManager userPreferencesManager = null,
             ISecurityRepositoryService securityRepositoryService = null,
             ISynchronizationQueueManager synchronizationQueueManager = null,
             ISynchronizationService synchronizationService = null,
@@ -118,14 +121,14 @@ namespace SanteDB.Rest.AppService
             this.m_updateManager = updateManager;
             this.m_identityProvider = identityProvider;
             this.m_securityRepositoryService = securityRepositoryService;
-
+            this.m_userPreferenceManager = userPreferencesManager;
             // The online status timer refresh
             this.m_onlineStateTimer = new Timer((e) =>
             {
                 try
                 {
                     var netService = ApplicationServiceContext.Current.GetService<INetworkInformationService>();
-                    var upstreamService = ApplicationServiceContext.Current.GetService<IUpstreamIntegrationService>(); // This can change when we join a realm
+                    var upstreamService = ApplicationServiceContext.Current.GetService<IUpstreamAvailabilityProvider>(); // This can change when we join a realm
 
                     this.m_onlineState = netService.IsNetworkAvailable && netService.IsNetworkConnected;
                     this.m_hdsiState = upstreamService?.IsAvailable(ServiceEndpointType.HealthDataService) == true;

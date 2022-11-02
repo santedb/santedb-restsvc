@@ -3,9 +3,11 @@ using SanteDB.Core.Configuration;
 using SanteDB.Core.Configuration.Data;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Model.AMI.Diagnostics;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.AppService.Configuration;
 using SanteDB.Rest.AppService.Model;
+using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,9 +65,15 @@ namespace SanteDB.Rest.AppService
         }
 
         /// <inheritdoc/>
-        public List<AppSettingKeyValuePair> GetAppSetting(string scope)
+        [Demand(PermissionPolicyIdentifiers.Login)]
+        public List<AppSettingKeyValuePair> GetAppSettings(string scope)
         {
-            throw new NotImplementedException();
+            if(scope != AuthenticationContext.Current.Principal.Identity.Name)
+            {
+                this.m_policyEnforcementService.Demand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
+            }
+
+            return this.m_userPreferenceManager?.GetUserSettings(scope);
         }
 
         /// <inheritdoc/>
@@ -78,7 +86,7 @@ namespace SanteDB.Rest.AppService
         public List<StorageProviderViewModel> GetDataStorageProviders() => DataConfigurationSection.GetDataConfigurationProviders().Select(o => new StorageProviderViewModel(o)).ToList();
 
         /// <inheritdoc/>
-        public ConfigurationViewModel SetAppSetting(string scope, List<AppSettingKeyValuePair> settings)
+        public void SetAppSettings(string scope, List<AppSettingKeyValuePair> settings)
         {
             throw new NotImplementedException();
         }

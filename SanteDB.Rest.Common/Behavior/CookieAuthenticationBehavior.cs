@@ -58,6 +58,10 @@ namespace SanteDB.Rest.Common.Behavior
                 faultMessage.StatusCode = System.Net.HttpStatusCode.Redirect;
                 faultMessage.Headers.Add("Location", loginAsset);
             }
+            else
+            {
+                faultMessage.AddAuthenticateHeader("cookie", RestOperationContext.Current.IncomingRequest.Url.Host);
+            }
         }
 
         /// <inheritdoc cref="IServicePolicy.Apply(RestRequestMessage)"/>

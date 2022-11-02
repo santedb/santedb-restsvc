@@ -20,6 +20,7 @@
  */
 using Newtonsoft.Json;
 using SanteDB.Core.Jobs;
+using SanteDB.Core.Model.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace SanteDB.Core.Model.AMI.Jobs
     [XmlType(nameof(JobInfo), Namespace = "http://santedb.org/ami")]
     [XmlRoot(nameof(JobInfo), Namespace = "http://santedb.org/ami")]
     [JsonObject(nameof(JobInfo))]
-    public class JobInfo : IAmiIdentified
+    public class JobInfo : IAmiIdentified, IIdentifiedResource
     {
         /// <summary>
         /// Serialization info
@@ -47,15 +48,15 @@ namespace SanteDB.Core.Model.AMI.Jobs
         /// </summary>
         public JobInfo(IJobState job, IEnumerable<IJobSchedule> schedule)
         {
-            if (job is IAmiIdentified ident)
+            if(job is IIdentifiedResource iir)
             {
-                this.Key = ident.Key;
-                this.Tag = ident.Tag;
-                this.ModifiedOn = ident.ModifiedOn;
+                this.Key = iir.Key;
+                this.Tag = iir.Tag;
+                this.ModifiedOn = iir.ModifiedOn;
             }
             else
             {
-                this.Key = job.Job.Id.ToString();
+                this.Key = job.Job.Id;
                 this.Tag = job.GetType().Assembly.GetName().Version.ToString();
                 this.ModifiedOn = ApplicationServiceContext.Current.StartTime;
             }
@@ -72,11 +73,24 @@ namespace SanteDB.Core.Model.AMI.Jobs
             this.StatusText = job.StatusText;
         }
 
+
         /// <summary>
-        /// Gets or sets the key for the object
+        /// Get the key for the object
         /// </summary>
-        [XmlElement("id"), JsonProperty("id")]
-        public string Key { get; set; }
+        [JsonProperty("id"), XmlElement("id")]
+        public Guid? Key
+        {
+            get;
+            set;
+        }
+
+        /// <inheritdoc/>
+        [XmlIgnore, JsonIgnore]
+        Object IAmiIdentified.Key
+        {
+            get => this.Key;
+            set => this.Key = Guid.Parse(value.ToString());
+        }
 
         /// <summary>
         /// Gets or sets the key for the object

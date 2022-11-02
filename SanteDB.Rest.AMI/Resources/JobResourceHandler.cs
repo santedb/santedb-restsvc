@@ -161,7 +161,7 @@ namespace SanteDB.Rest.AMI.Resources
                 ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
 
                 var jobInfo = data as JobInfo;
-                var job = this.m_jobManager.GetJobInstance(Guid.Parse(jobInfo.Key));
+                var job = this.m_jobManager.GetJobInstance(jobInfo.Key.GetValueOrDefault());
                 if (job == null)
                 {
                     this.m_tracer.TraceError($"Could not find job with ID {jobInfo.Key}");

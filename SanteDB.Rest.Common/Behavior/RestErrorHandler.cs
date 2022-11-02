@@ -79,7 +79,14 @@ namespace SanteDB.Rest.Common.Behavior
                     break;
             }
 
-            RestMessageDispatchFormatter.CreateFormatter(RestOperationContext.Current.ServiceEndpoint.Description.Contract.Type).SerializeResponse(faultMessage, null, fault);
+            if (RestOperationContext.Current.ServiceEndpoint != null)
+            {
+                RestMessageDispatchFormatter.CreateFormatter(RestOperationContext.Current.ServiceEndpoint.Description.Contract.Type).SerializeResponse(faultMessage, null, fault);
+            }
+            else
+            {
+                RestMessageDispatchFormatter.CreateFormatter(typeof(IRestApiContractImplementation)).SerializeResponse(faultMessage, null, fault);
+            }
             ApplicationServiceContext.Current.GetAuditService().Audit().ForNetworkRequestFailure(error, uriMatched, RestOperationContext.Current.IncomingRequest.Headers.AllKeys.ToDictionary(o => o, o => RestOperationContext.Current.IncomingRequest.Headers[o]), RestOperationContext.Current.OutgoingResponse.Headers.AllKeys.ToDictionary(o => o, o => RestOperationContext.Current.OutgoingResponse.Headers[o])).Send();
             return true;
         }

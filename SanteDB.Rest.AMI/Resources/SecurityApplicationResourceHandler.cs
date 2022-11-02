@@ -58,9 +58,9 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.CreateApplication)]
         public override object Create(object data, bool updateIfExists)
         {
-            if (data is SecurityApplication)
+            if (data is SecurityApplication sa)
             {
-                data = new SecurityApplicationInfo(data as SecurityApplication, this.m_policyInformationService);
+                data = new SecurityApplicationInfo(sa, this.m_policyInformationService);
             }
 
             var sde = data as SecurityApplicationInfo;

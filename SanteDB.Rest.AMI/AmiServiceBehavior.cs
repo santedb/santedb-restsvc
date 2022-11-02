@@ -106,8 +106,6 @@ namespace SanteDB.Rest.AMI
                     return $"{RestOperationContext.Current.IncomingRequest.Url}/{versioned.Key}/history/{versioned.VersionKey}";
                 case IIdentifiedResource idr:
                     return $"{RestOperationContext.Current.IncomingRequest.Url}/{idr.Key}";
-                case IdentifiedData id:
-                    return $"{RestOperationContext.Current.IncomingRequest.Url}/{id.Key}";
             }
             return null;
         }
@@ -138,8 +136,7 @@ namespace SanteDB.Rest.AMI
             {
                 case IIdentifiedResource resource:
                     return resource.Tag;
-                case IdentifiedData identifiedData:
-                    return identifiedData.Tag;
+                
                 default:
                     return null;
             }
@@ -175,9 +172,7 @@ namespace SanteDB.Rest.AMI
                 case IIdentifiedResource idr:
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(idr.ModifiedOn.DateTime);
                     return idr.ModifiedOn.DateTime;
-                case IdentifiedData id:
-                    RestOperationContext.Current.OutgoingResponse.SetLastModified(id.ModifiedOn.DateTime);
-                    return id.ModifiedOn.DateTime;
+               
                 default:
                     if (useCurrentTime)
                     {
@@ -402,8 +397,10 @@ namespace SanteDB.Rest.AMI
                 boundHostPort = $"{tUrl.Scheme}://{tUrl.Host}:{tUrl.Port}";
             }
 
-            var serviceOptions = new ServiceOptions
+            var serviceOptions = new ServiceOptions()
             {
+                Key = ApplicationServiceContext.Current.ActivityUuid,
+                ServerVersion = $"{Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyProductAttribute>()?.Product} v{Assembly.GetEntryAssembly().GetName().Version} ({Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion})",
                 InterfaceVersion = typeof(AmiServiceBehavior).Assembly.GetName().Version.ToString(),
                 Endpoints = this.m_serviceManager.GetServices().OfType<IApiEndpointProvider>().Select(o =>
                     new ServiceEndpointOptions(o)
@@ -411,7 +408,14 @@ namespace SanteDB.Rest.AMI
                         BaseUrl = o.Url.Select(url =>
                         {
                             var turi = new Uri(url);
-                            return $"{boundHostPort}{turi.AbsolutePath}";
+                            if (turi.Scheme.StartsWith("http"))
+                            {
+                                return $"{boundHostPort}{turi.AbsolutePath}";
+                            }
+                            else
+                            {
+                                return turi.ToString();
+                            }
                         }).ToArray()
                     }
                 ).ToList()
@@ -921,8 +925,15 @@ namespace SanteDB.Rest.AMI
 
                             iddata.Key = guidKey;
                             break;
+                        case IIdentifiedResource iir:
+                            if(iir.Key.HasValue && (!Guid.TryParse(key, out var guidKey2) || iir.Key != guidKey2))
+                            {
+                                throw new FaultException(HttpStatusCode.BadRequest, "Key mismatch");
+                            }
+                            iir.Key = guidKey2;
+                            break;
                         case IAmiIdentified amid:
-                            if (!String.IsNullOrEmpty(amid.Key) && amid.Key != key)
+                            if (!String.IsNullOrEmpty(amid.Key?.ToString()) && amid.Key.Equals(key))
                             {
                                 throw new FaultException(HttpStatusCode.BadRequest, "Key mismatch");
                             }

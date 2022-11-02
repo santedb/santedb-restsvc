@@ -59,7 +59,7 @@ namespace SanteDB.Core.Model.AMI.Logging
         /// Get the requested key
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        public string Key
+        public object Key
         {
             get => this.Name;
             set {; }

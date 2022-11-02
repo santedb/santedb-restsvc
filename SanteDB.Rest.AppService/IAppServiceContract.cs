@@ -81,14 +81,14 @@ namespace SanteDB.Rest.AppService
         /// <summary>
         /// Update configuration
         /// </summary>
-        [Get("/Configuration/{scope}/setting")]
-        List<AppSettingKeyValuePair> GetAppSetting(String scope);
+        [Get("/Configuration/{userName}/settings")]
+        List<AppSettingKeyValuePair> GetAppSettings(String userName);
 
         /// <summary>
         /// Update configuration
         /// </summary>
-        [Post("/Configuration/{scope}/setting")]
-        ConfigurationViewModel SetAppSetting(String scope, List<AppSettingKeyValuePair> settings);
+        [Post("/Configuration/{userName}/settings")]
+        void SetAppSettings(String userName, List<AppSettingKeyValuePair> settings);
 
         /// <summary>
         /// Get the data storage providers

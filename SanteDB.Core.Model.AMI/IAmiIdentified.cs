@@ -24,14 +24,13 @@ using System;
 namespace SanteDB.Core.Model.AMI
 {
     /// <summary>
-    /// Represents an interface to extract the URL identifier path
+    /// Represents an object which has a key which may be any object (integer, string, guid) for the AMI service behavior to populat
     /// </summary>
-    public interface IAmiIdentified : IIdentifiedResource
+    public interface IAmiIdentified
     {
-
         /// <summary>
-        /// Get the desired url resource key 
+        /// The key for the object
         /// </summary>
-        new string Key { get; set; }
+        Object Key { get; set; }
     }
 }

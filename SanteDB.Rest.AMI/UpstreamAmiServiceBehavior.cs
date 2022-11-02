@@ -325,7 +325,7 @@ namespace SanteDB.Rest.AMI
                     try
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
-                        return restClient.Get<AmiCollection>($"{resourceType}", RestOperationContext.Current.IncomingRequest.QueryString.ToList().ToArray());
+                        return restClient.Get<AmiCollection>($"{resourceType}", RestOperationContext.Current.IncomingRequest.QueryString);
                     }
                     catch (Exception e)
                     {
@@ -536,7 +536,7 @@ namespace SanteDB.Rest.AMI
                         restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
                         // This NVC is UTF8 compliant
                         var nvc = RestOperationContext.Current.IncomingRequest.Url.Query.ParseQueryString();
-                        var retVal = restClient.Get<object>($"/{resourceType}/{key}/{childResourceType}", nvc.ToArray());
+                        var retVal = restClient.Get<object>($"/{resourceType}/{key}/{childResourceType}", nvc);
 
                         this.TagUpstream(retVal);
                         return retVal as AmiCollection;

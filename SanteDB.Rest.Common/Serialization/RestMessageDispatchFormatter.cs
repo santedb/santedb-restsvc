@@ -33,6 +33,7 @@ using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Json.Formatter;
 using SanteDB.Core.Model.Serialization;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics.Tracing;
@@ -395,7 +396,15 @@ namespace SanteDB.Rest.Common.Serialization
                                     jsz.DateFormatHandling = DateFormatHandling.IsoDateFormat;
                                     jsz.NullValueHandling = NullValueHandling.Ignore;
                                     jsz.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                                    jsz.TypeNameHandling = TypeNameHandling.Auto;
+
+                                    if (result is IDictionary)
+                                    {
+                                        jsz.TypeNameHandling = TypeNameHandling.None;
+                                    }
+                                    else
+                                    {
+                                        jsz.TypeNameHandling = result.GetType().GetCustomAttribute<JsonObjectAttribute>()?.ItemTypeNameHandling ?? TypeNameHandling.Auto;
+                                    }
                                     jsz.Converters.Add(new StringEnumConverter());
                                     jsz.Serialize(jsw, result);
                                     jsw.Flush();

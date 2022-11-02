@@ -88,6 +88,10 @@ namespace SanteDB.Rest.Common
             {
                 retVal |= ServiceEndpointCapabilities.BearerAuth;
             }
+            if(me.ServiceBehaviors.OfType<ClientCertificateAccessBehavior>().Any())
+            {
+                retVal |= ServiceEndpointCapabilities.CertificateAuth;
+            }
 
             if (me.ServiceBehaviors.OfType<BasicAuthorizationAccessBehavior>().Any())
             {

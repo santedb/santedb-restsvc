@@ -59,6 +59,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         private readonly IDataPersistenceService<Entity> m_entityPersistence;
         private readonly IDataPersistenceService<Act> m_actPersistence;
         private readonly IUpstreamIntegrationService m_upstreamIntegrationService;
+        private readonly IUpstreamAvailabilityProvider m_availabilityProvider;
 
         /// <summary>
         /// Fired when progress changes
@@ -78,6 +79,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                 ApplicationServiceContext.Current.GetService<IServiceManager>(),
                 ApplicationServiceContext.Current.GetService<IRestClientFactory>(),
                 ApplicationServiceContext.Current.GetService<IUpstreamIntegrationService>(),
+                ApplicationServiceContext.Current.GetService<IUpstreamAvailabilityProvider>(),
                 ApplicationServiceContext.Current.GetService<IDataPersistenceService<Entity>>(),
                 ApplicationServiceContext.Current.GetService<IDataPersistenceService<Act>>()
                 )
@@ -86,12 +88,13 @@ namespace SanteDB.Messaging.HDSI.Wcf
         }
 
         /// <inheritdoc/>
-        public UpstreamHdsiServiceBehavior(IDataCachingService dataCache, ILocalizationService localeService, IPatchService patchService, IPolicyEnforcementService pepService, IBarcodeProviderService barcodeService, IResourcePointerService resourcePointerService, IServiceManager serviceManager, IRestClientFactory restClientResolver, IUpstreamIntegrationService upstreamIntegrationService, IDataPersistenceService<Entity> entityRepository = null, IDataPersistenceService<Act> actRepository = null) : base(dataCache, localeService, patchService, pepService, barcodeService, resourcePointerService, serviceManager)
+        public UpstreamHdsiServiceBehavior(IDataCachingService dataCache, ILocalizationService localeService, IPatchService patchService, IPolicyEnforcementService pepService, IBarcodeProviderService barcodeService, IResourcePointerService resourcePointerService, IServiceManager serviceManager, IRestClientFactory restClientResolver, IUpstreamIntegrationService upstreamIntegrationService, IUpstreamAvailabilityProvider availabilityProvider, IDataPersistenceService<Entity> entityRepository = null, IDataPersistenceService<Act> actRepository = null) : base(dataCache, localeService, patchService, pepService, barcodeService, resourcePointerService, serviceManager)
         {
             this.m_restClientResolver = restClientResolver;
             this.m_entityPersistence = entityRepository;
             this.m_actPersistence = actRepository;
             this.m_upstreamIntegrationService = upstreamIntegrationService;
+            this.m_availabilityProvider = availabilityProvider;
         }
 
 
@@ -308,7 +311,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         }
 
                         restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                        var retVal = restClient.Get<IdentifiedData>($"{resourceType}/{id}", RestOperationContext.Current.IncomingRequest.QueryString.ToArray());
+                        var retVal = restClient.Get<IdentifiedData>($"{resourceType}/{id}", RestOperationContext.Current.IncomingRequest.QueryString);
                         this.TagUpstream(retVal);
                         return retVal;
                     }
@@ -334,7 +337,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override IdentifiedData Copy(string resourceType, string id)
         {
             if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable &&
-                this.m_upstreamIntegrationService.IsAvailable(ServiceEndpointType.HealthDataService) &&
+                this.m_availabilityProvider.IsAvailable(ServiceEndpointType.HealthDataService) &&
                 Guid.TryParse(id, out var idGuid))
             {
                 try
@@ -575,7 +578,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
                         // This NVC is UTF8 compliant
                         var nvc = RestOperationContext.Current.IncomingRequest.Url.Query.ParseQueryString();
-                        var retVal = restClient.Get<IdentifiedData>($"/{resourceType}", nvc.ToArray());
+                        var retVal = restClient.Get<IdentifiedData>($"/{resourceType}", nvc);
                         this.TagUpstream(retVal);
 
                         return retVal;
@@ -652,7 +655,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
                         // This NVC is UTF8 compliant
                         var nvc = RestOperationContext.Current.IncomingRequest.Url.Query.ParseQueryString();
-                        var retVal = restClient.Get<Object>($"/{resourceType}/{key}/{childResourceType}", nvc.ToArray()) as IdentifiedData;
+                        var retVal = restClient.Get<Object>($"/{resourceType}/{key}/{childResourceType}", nvc) as IdentifiedData;
                         this.TagUpstream(retVal);
 
                         return retVal;
@@ -731,7 +734,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     {
                         var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.HealthDataService);
                         restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                        var retVal = restClient.Get<IdentifiedData>($"{resourceType}/{key}/{childResourceType}/{scopedEntityKey}", RestOperationContext.Current.IncomingRequest.QueryString.ToList().ToArray());
+                        var retVal = restClient.Get<IdentifiedData>($"{resourceType}/{key}/{childResourceType}/{scopedEntityKey}", RestOperationContext.Current.IncomingRequest.QueryString);
                         this.TagUpstream(retVal);
                         return retVal;
                     }

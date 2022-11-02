@@ -22,6 +22,7 @@ namespace SanteDB.Rest.AppService.Configuration
         public const string CLIENT_NAME = "client";
         public const string CLIENT_SECRET = "secret";
         public const string OVERRIDE_NAME = "override";
+        public const string IS_JOINED = "joined";
 
         private readonly IConfigurationManager m_configurationManager;
         private readonly IUpstreamManagementService m_upstreamManager;
@@ -37,6 +38,7 @@ namespace SanteDB.Rest.AppService.Configuration
             var rawConfiguration = configurationManager.GetSection<UpstreamConfigurationSection>();
             this.Configuration = new RestConfigurationDictionary<String, Object>();
 
+            this.Configuration.Add(IS_JOINED, this.m_upstreamManager.GetSettings() != null);
             this.Configuration.Add(PORT_NUMBER, rawConfiguration.Realm?.PortNumber ?? 8080);
             this.Configuration.Add(REALM_NAME, rawConfiguration.Realm?.DomainName);
             this.Configuration.Add(USE_TLS, rawConfiguration.Realm?.UseTls ?? false);
@@ -98,8 +100,6 @@ namespace SanteDB.Rest.AppService.Configuration
             applicationConfig.CredentialName = featureConfiguration[CLIENT_NAME]?.ToString() ?? applicationConfig.CredentialName;
             applicationConfig.CredentialSecret = featureConfiguration[CLIENT_SECRET]?.ToString() ?? applicationConfig.CredentialSecret;
 
-            // Join the realm
-            this.m_upstreamManager.Join(new ConfiguredUpstreamRealmSettings(section), overide);
             return true;
         }
     }

@@ -19,6 +19,8 @@
  * Date: 2022-5-30
  */
 using Newtonsoft.Json;
+using SanteDB.Core.Security.Claims;
+using System.Security.Principal;
 using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Security
@@ -31,6 +33,30 @@ namespace SanteDB.Core.Model.AMI.Security
     [JsonObject(nameof(SubmissionRequest))]
     public class SubmissionRequest
     {
+
+        /// <summary>
+        /// Serialization ctor
+        /// </summary>
+        public SubmissionRequest()
+        {
+
+        }
+        
+        /// <summary>
+        /// Create submission request
+        /// </summary>
+        /// <param name="cmcRequest">The request for the certificate</param>
+        /// <param name="createdBy">The creation time</param>
+        public SubmissionRequest(byte[] cmcRequest, IPrincipal createdBy)
+        {
+            this.CmcRequest = cmcRequest;
+            if(createdBy is IClaimsPrincipal cp)
+            {
+                this.AdminAddress = cp.GetClaimValue(SanteDBClaimTypes.Email);
+                this.AdminContactName = cp.Identity.Name;
+            }
+        }
+
         /// <summary>
         /// Gets or sets the admin address
         /// </summary>
@@ -50,6 +76,6 @@ namespace SanteDB.Core.Model.AMI.Security
         /// </summary>
         [XmlElement("cmc")]
         [JsonProperty("cmc")]
-        public string CmcRequest { get; set; }
+        public byte[] CmcRequest { get; set; }
     }
 }

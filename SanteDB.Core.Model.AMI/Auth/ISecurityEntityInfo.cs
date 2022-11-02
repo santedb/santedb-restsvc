@@ -18,6 +18,7 @@
  * User: fyfej
  * Date: 2022-5-30
  */
+using SanteDB.Core.Model.Interfaces;
 using System.Collections.Generic;
 
 namespace SanteDB.Core.Model.AMI.Auth
@@ -37,7 +38,7 @@ namespace SanteDB.Core.Model.AMI.Auth
     /// <summary>
     /// Represents an object that provide a wrapper for a security info
     /// </summary>
-    public interface ISecurityEntityInfo<TSecurityObject> : IAmiIdentified, ISecurityEntityInfo
+    public interface ISecurityEntityInfo<TSecurityObject> : IAmiIdentified, IIdentifiedResource, ISecurityEntityInfo
         where TSecurityObject : NonVersionedEntityData
     {
 

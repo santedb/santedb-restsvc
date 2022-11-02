@@ -882,7 +882,8 @@ namespace SanteDB.Rest.HDSI
                 // Service options
                 var retVal = new ServiceOptions()
                 {
-                    InterfaceVersion = "1.0.0.0",
+                    InterfaceVersion = typeof(HdsiServiceBehavior).Assembly.GetName().Version.ToString(),
+                    ServerVersion = $"{Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyProductAttribute>()?.Product} v{Assembly.GetEntryAssembly().GetName().Version} ({Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion})",
                     Resources = new List<ServiceResourceOptions>()
                 };
 
