@@ -7,7 +7,7 @@ namespace SanteDB.Rest.Common.Configuration.Interop
     /// <summary>
     /// A utility for binding HTTP certificates 
     /// </summary>
-    internal static class HttpSslUtil
+    public static class HttpSslUtil
     {
 
         /// <summary>

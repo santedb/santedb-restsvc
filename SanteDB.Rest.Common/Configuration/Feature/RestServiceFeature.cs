@@ -616,11 +616,11 @@ namespace SanteDB.Rest.Common.Configuration.Features
                         if (address.HostNameType == UriHostNameType.Dns)
                         {
                             var ipAddresses = Dns.GetHostAddresses(address.Host);
-                            HttpSslUtil.GetCurrentPlatformCertificateBinder().BindCertificate(ipAddresses[0], address.Port, ep.CertificateBinding.Certificate.GetCertHash(), ep.CertificateBinding.StoreName, ep.CertificateBinding.StoreLocation);
+                            HttpSslUtil.GetCurrentPlatformCertificateBinder().BindCertificate(ipAddresses[0], address.Port, ep.CertificateBinding.Certificate.GetCertHash(), ep.ClientCertNegotiation, ep.CertificateBinding.StoreName, ep.CertificateBinding.StoreLocation);
                         }
                         else
                         {
-                            HttpSslUtil.GetCurrentPlatformCertificateBinder().BindCertificate(IPAddress.Parse(address.Host), address.Port, ep.CertificateBinding.Certificate.GetCertHash(), ep.CertificateBinding.StoreName, ep.CertificateBinding.StoreLocation);
+                            HttpSslUtil.GetCurrentPlatformCertificateBinder().BindCertificate(IPAddress.Parse(address.Host), address.Port, ep.CertificateBinding.Certificate.GetCertHash(), ep.ClientCertNegotiation, ep.CertificateBinding.StoreName, ep.CertificateBinding.StoreLocation);
                         }
                     }
                     catch (Exception e)

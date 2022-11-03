@@ -1015,10 +1015,12 @@ namespace SanteDB.Rest.OAuth.Rest
         public object Session()
         {
             // If the user calls this with no session - we just return no session
-            if (!String.IsNullOrEmpty(RestOperationContext.Current.IncomingRequest.Headers["Authorization"]))
+            if (String.IsNullOrEmpty(RestOperationContext.Current.IncomingRequest.Headers["Authorization"]))
             {
-                new TokenAuthorizationAccessBehavior().Apply(new RestRequestMessage(RestOperationContext.Current.IncomingRequest));
+                return null; // There is no way to try to load the session
             }
+
+            new TokenAuthorizationAccessBehavior().Apply(new RestRequestMessage(RestOperationContext.Current.IncomingRequest));
 
             if (RestOperationContext.Current.Data.TryGetValue(TokenAuthorizationAccessBehavior.RestPropertyNameSession, out var sessobj))
             {

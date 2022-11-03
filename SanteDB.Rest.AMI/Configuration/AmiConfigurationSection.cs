@@ -63,6 +63,14 @@ namespace SanteDB.Rest.AMI.Configuration
         public List<String> ResourceHandlerXml { get; set; }
 
         /// <summary>
+        /// Gets or sets the public settings
+        /// </summary>
+        [XmlArray("publicSettings"), XmlArrayItem("add")]
+        [DisplayName("Public Settings"), Description("Settings which are to be disclosed to clients which they can use for configuration")]
+        public List<AppSettingKeyValuePair> PublicSettings { get; set; }
+
+
+        /// <summary>
         /// Extra endpoints
         /// </summary>
         [XmlArray("endpoints"), XmlArrayItem("add")]

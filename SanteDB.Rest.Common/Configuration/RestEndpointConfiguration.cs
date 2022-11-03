@@ -125,6 +125,13 @@ namespace SanteDB.Rest.Common.Configuration
         public X509ConfigurationElement CertificateBinding { get; set; }
 
         /// <summary>
+        /// Client certificate negotiation
+        /// </summary>
+        [XmlElement("clientCerts"), JsonProperty("clientCerts")]
+        [DisplayName("Client Certificates"), Description("When enabled, negotiate client certificates with the endpoint")]
+        public bool ClientCertNegotiation { get; set; }
+
+        /// <summary>
         /// Endpoint configuration
         /// </summary>
         public override string ToString() => this.Address;

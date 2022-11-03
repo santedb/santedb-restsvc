@@ -32,7 +32,8 @@ namespace SanteDB.Rest.Common.Configuration.Interop
         /// <param name="port">The port of the binding</param>
         /// <param name="hash">The certificate to bind</param>
         /// <param name="storeLocation">The location of the certificate store</param>
+        /// <param name="negoatiateClientCert">True if client certs are negotiated</param>
         /// <param name="storeName">The name of the certificate store</param>
-        void BindCertificate(IPAddress ipAddress, int port, byte[] hash, StoreName storeName, StoreLocation storeLocation);
+        void BindCertificate(IPAddress ipAddress, int port, byte[] hash, bool negoatiateClientCert, StoreName storeName, StoreLocation storeLocation);
     }
 }

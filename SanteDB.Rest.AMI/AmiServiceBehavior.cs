@@ -438,7 +438,7 @@ namespace SanteDB.Rest.AMI
                     serviceOptions.Resources.Add(svc);
                 }
             }
-
+            serviceOptions.Settings = config.PublicSettings.ToList();
             return serviceOptions;
         }
 
