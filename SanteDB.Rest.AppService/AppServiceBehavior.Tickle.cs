@@ -6,6 +6,7 @@ using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Net;
 
 namespace SanteDB.Rest.AppService
 {
@@ -20,7 +21,7 @@ namespace SanteDB.Rest.AppService
         public void CreateTickle(Tickle data)
         {
             this.m_tickleService?.SendTickle(data);
-            RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
+            RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.Created;
         }
 
         /// <inheritdoc/>
