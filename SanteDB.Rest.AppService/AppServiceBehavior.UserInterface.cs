@@ -157,6 +157,7 @@ namespace SanteDB.Rest.AppService
         /// <inheritdoc/>
         public List<AppletWidget> GetWidgets()
         {
+            
             var httpq = RestOperationContext.Current.IncomingRequest.Url.Query.ParseQueryString();
             var queryExpression = QueryExpressionParser.BuildLinqExpression<AppletWidget>(httpq).Compile();
             return this.m_appletManagerService.Applets.WidgetAssets
@@ -241,9 +242,10 @@ namespace SanteDB.Rest.AppService
                 retVal.Add("nbf", ses.NotBefore);
 
                 var userEntity = this.m_securityRepositoryService?.GetUserEntity(identity);
+
                 retVal.Add("entity", userEntity);
                 retVal.Add("user", this.m_securityRepositoryService?.GetUser(identity));
-                retVal.Add("displayName", userEntity.Names.FirstOrDefault()?.ToString() ?? identity.Name);
+                retVal.Add("displayName", userEntity?.Names?.FirstOrDefault()?.ToString() ?? identity.Name);
                 retVal.Add("username", identity.Name);
                 retVal.Add("authType", identity.AuthenticationType);
                 return retVal;

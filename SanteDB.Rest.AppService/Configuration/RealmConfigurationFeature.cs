@@ -38,14 +38,21 @@ namespace SanteDB.Rest.AppService.Configuration
             var rawConfiguration = configurationManager.GetSection<UpstreamConfigurationSection>();
             this.Configuration = new RestConfigurationDictionary<String, Object>();
 
-            this.Configuration.Add(IS_JOINED, this.m_upstreamManager.GetSettings() != null);
-            this.Configuration.Add(PORT_NUMBER, rawConfiguration.Realm?.PortNumber ?? 8080);
-            this.Configuration.Add(REALM_NAME, rawConfiguration.Realm?.DomainName);
-            this.Configuration.Add(USE_TLS, rawConfiguration.Realm?.UseTls ?? false);
-            this.Configuration.Add(DEVICE_NAME, rawConfiguration.Credentials.Find(o => o.CredentialType == UpstreamCredentialType.Device)?.CredentialName);
-            var applicationCredential = rawConfiguration.Credentials.Find(o => o.CredentialType == UpstreamCredentialType.Application);
-            this.Configuration.Add(CLIENT_NAME, applicationCredential?.CredentialName);
-            this.Configuration.Add(CLIENT_SECRET, null);
+            bool isjoined = this.m_upstreamManager.GetSettings() != null;
+
+            this.Configuration.Add(IS_JOINED, isjoined);
+            if (isjoined)
+            {
+                this.Configuration.Add(PORT_NUMBER, rawConfiguration.Realm?.PortNumber ?? 8080);
+                this.Configuration.Add(REALM_NAME, rawConfiguration.Realm?.DomainName);
+                this.Configuration.Add(USE_TLS, rawConfiguration.Realm?.UseTls ?? false);
+                this.Configuration.Add(DEVICE_NAME, rawConfiguration.Credentials.Find(o => o.CredentialType == UpstreamCredentialType.Device)?.CredentialName);
+                var applicationCredential = rawConfiguration.Credentials.Find(o => o.CredentialType == UpstreamCredentialType.Application);
+                this.Configuration.Add(CLIENT_NAME, applicationCredential?.CredentialName);
+                this.Configuration.Add(CLIENT_SECRET, null);
+            }
+
+            
         }
 
         /// <inheritdoc/>

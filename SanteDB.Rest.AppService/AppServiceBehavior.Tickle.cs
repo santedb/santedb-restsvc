@@ -20,7 +20,13 @@ namespace SanteDB.Rest.AppService
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public void CreateTickle(Tickle data)
         {
-            this.m_tickleService?.SendTickle(data);
+            if (null == this.m_tickleService)
+            {
+                RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.NotImplemented;
+                return;
+            }
+
+            this.m_tickleService.SendTickle(data);
             RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.Created;
         }
 
@@ -28,13 +34,25 @@ namespace SanteDB.Rest.AppService
         [Demand(PermissionPolicyIdentifiers.Login)]
         public void DismissTickle(Guid id)
         {
-            this.m_tickleService?.DismissTickle(id);
+            if (null == this.m_tickleService)
+            {
+                RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.NotImplemented;
+                return;
+            }
+
+            this.m_tickleService.DismissTickle(id);
         }
 
         /// <inheritdoc/>
         [Demand(PermissionPolicyIdentifiers.Login)]
         public List<Tickle> GetTickles()
         {
+            if (null == this.m_tickleService)
+            {
+                RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.NotImplemented;
+                return null;
+            }
+
             var userSid = this.m_identityProvider.GetSid(AuthenticationContext.Current.Principal.Identity.Name);
             return this.m_tickleService.GetTickles(o => o.Expiry > DateTime.Now && (o.Target == userSid || o.Target == null)).OrderByDescending(o => o.Created).Take(10).ToList();
         }
