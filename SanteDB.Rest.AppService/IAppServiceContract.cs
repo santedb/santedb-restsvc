@@ -227,8 +227,8 @@ namespace SanteDB.Rest.AppService
         /// <summary>
         /// Get DCG online state
         /// </summary>
-        [Get("/Online")]
-        Dictionary<String, bool> GetOnlineState();
+        [Get("/State")]
+        Dictionary<String, object> GetState();
 
         /// <summary>
         /// Disable the specified service
@@ -272,6 +272,11 @@ namespace SanteDB.Rest.AppService
         [Get("/Template/{templateId}/ui/form.html")]
         void GetTemplateForm(String templateId);
 
+        /// <summary>
+        /// Get current user information
+        /// </summary>
+        [Get("/SessionInfo")]
+        Dictionary<String, Object> GetCurrentSessionInfo();
 
     }
 }

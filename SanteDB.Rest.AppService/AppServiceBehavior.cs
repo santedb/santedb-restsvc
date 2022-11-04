@@ -63,6 +63,7 @@ namespace SanteDB.Rest.AppService
         private bool m_onlineState;
         private bool m_hdsiState;
         private bool m_amiState;
+        private IUpstreamRealmSettings m_upstreamSettings;
 
         /// <summary>
         /// Instantiates a new instance of the behavior.
@@ -122,6 +123,7 @@ namespace SanteDB.Rest.AppService
             this.m_identityProvider = identityProvider;
             this.m_securityRepositoryService = securityRepositoryService;
             this.m_userPreferenceManager = userPreferencesManager;
+
             // The online status timer refresh
             this.m_onlineStateTimer = new Timer((e) =>
             {
@@ -138,6 +140,8 @@ namespace SanteDB.Rest.AppService
             }, null, 0, 10000);
 
             this.m_configurationFeatures = this.m_serviceManager.CreateInjectedOfAll<IRestConfigurationFeature>().ToList();
+            this.m_upstreamSettings = this.m_upstreamManagementService.GetSettings();
+            this.m_upstreamManagementService.RealmChanging += (o, e) => this.m_upstreamSettings = e.UpstreamRealmSettings;
         }
 
         /// <summary>

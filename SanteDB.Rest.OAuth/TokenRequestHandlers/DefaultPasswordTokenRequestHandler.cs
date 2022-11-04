@@ -63,7 +63,15 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                     context.UserPrincipal = identityprovider.Authenticate(context.Username, context.Password) as IClaimsPrincipal;
                 }
 
-                if (null != context.UserPrincipal)
+                // The principal is already a token based principal - so we may have gotten it from an upstream - we just have to relay this token back to the caller 
+                if(context.UserPrincipal is ITokenPrincipal itp)
+                {
+                    context.IdToken = itp.IdentityToken;
+                    context.AccessToken = itp.AccessToken;
+                    context.TokenType = itp.TokenType;
+                    return true;
+                }
+                else if (null != context.UserPrincipal)
                 {
                     _PolicyEnforcementService.Demand(OAuthConstants.OAuthPasswordFlowPolicy, context.UserPrincipal);
 

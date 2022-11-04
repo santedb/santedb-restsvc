@@ -148,6 +148,7 @@ namespace SanteDB.Rest.Common
                 foreach (var ep in config.Endpoints)
                 {
                     var se = retVal.AddServiceEndpoint(new Uri(ep.Address), ep.Contract, new RestHttpBinding());
+                    se.AddEndpointBehavior(demandPolicy);
                     foreach (var bhvr in ep.Behaviors)
                     {
                         if (bhvr.Type == null)
@@ -159,7 +160,6 @@ namespace SanteDB.Rest.Common
                             bhvr.Configuration == null ?
                             Activator.CreateInstance(bhvr.Type) as IEndpointBehavior :
                             Activator.CreateInstance(bhvr.Type, bhvr.Configuration) as IEndpointBehavior);
-                        se.AddEndpointBehavior(demandPolicy);
                     }
                 }
                 return retVal;

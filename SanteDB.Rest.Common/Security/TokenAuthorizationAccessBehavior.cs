@@ -86,14 +86,7 @@ namespace SanteDB.Rest.Common.Security
                 String authorization = httpMessage.Headers["Authorization"];
                 if (authorization == null)
                 {
-                    if (httpMessage.HttpMethod == "OPTIONS" || httpMessage.HttpMethod == "PING")
-                    {
-                        return;
-                    }
-                    else
-                    {
-                        throw new SecuritySessionException(SessionExceptionType.NotEstablished, "Missing Authorization header", null);
-                    }
+                    return;
                 }
 
                 // Authorization method

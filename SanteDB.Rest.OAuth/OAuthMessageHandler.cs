@@ -24,6 +24,7 @@ using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Services;
+using SanteDB.Rest.Common.Security;
 using SanteDB.Rest.OAuth.Rest;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -154,6 +155,18 @@ namespace SanteDB.Rest.OAuth
 
                 m_serviceHost = ApplicationServiceContext.Current.GetService<IRestServiceFactory>().CreateService(ConfigurationName);
                 m_serviceHost.AddServiceBehavior(new OAuthErrorBehavior());
+
+                // Handles BASIC and X-SanteDB-DeviceAuthorization
+                if (!m_serviceHost.ServiceBehaviors.OfType<ClientAuthorizationAccessBehavior>().Any())
+                {
+                    m_serviceHost.AddServiceBehavior(new ClientAuthorizationAccessBehavior());
+                }
+                // Handles when the user calls with a bearer token
+                if(!m_serviceHost.ServiceBehaviors.OfType<TokenAuthorizationAccessBehavior>().Any())
+                {
+                    m_serviceHost.AddServiceBehavior(new TokenAuthorizationAccessBehavior());
+                }
+
                 // Start the webhost
                 m_serviceHost.Start();
                 m_traceSource.TraceInfo("OAUTH2 On: {0}", m_serviceHost.Endpoints.First().Description.ListenUri);

@@ -277,6 +277,11 @@ namespace SanteDB.Rest.OAuth.Rest
                 context.DeviceIdentity = deviceIdentity as IClaimsIdentity;
                 return true;
             }
+            else if(context.AuthenticationContext.Principal is IClaimsPrincipal cp && cp.Identities.OfType<IDeviceIdentity>().Any())
+            {
+                context.DeviceIdentity = cp.Identities.OfType<IDeviceIdentity>().First() as IClaimsIdentity;
+                return true;
+            }
             else if (!string.IsNullOrWhiteSpace(context.XDeviceAuthorizationHeader))
             {
                 if (AuthorizationHeader.TryParse(context.XDeviceAuthorizationHeader, out var header))
@@ -346,6 +351,11 @@ namespace SanteDB.Rest.OAuth.Rest
             if (null != context.AuthenticationContext?.Principal?.Identity && context.AuthenticationContext.Principal.Identity is IApplicationIdentity applicationIdentity)
             {
                 context.ApplicationIdentity = applicationIdentity as IClaimsIdentity;
+                return true;
+            }
+            else if(context.AuthenticationContext?.Principal is IClaimsPrincipal cp && cp.Identities.OfType<IApplicationIdentity>().Any())
+            {
+                context.ApplicationIdentity = cp.Identities.OfType<IApplicationIdentity>().First() as IClaimsIdentity;
                 return true;
             }
             else if (!string.IsNullOrWhiteSpace(context.ClientId) && !string.IsNullOrWhiteSpace(context.ClientSecret))
@@ -548,11 +558,20 @@ namespace SanteDB.Rest.OAuth.Rest
 
             if (null != useridentity)
             {
-                var roles = _RoleProvider.GetAllRoles(useridentity.Name);
-
-                foreach (var role in roles)
+                // JF - Copy roles from upstream if they are avialble
+                var existingRoleClaims = useridentity.Claims.Where(o => o.Type == SanteDBClaimTypes.DefaultRoleClaimType);
+                if (existingRoleClaims.Any())
                 {
-                    claims.AddClaim(OAuthConstants.ClaimType_Role, role);
+                    existingRoleClaims.ToList().ForEach(o => claims.Add(OAuthConstants.ClaimType_Role, o.Value));
+                }
+                else
+                {
+                    var roles = _RoleProvider.GetAllRoles(useridentity.Name);
+
+                    foreach (var role in roles)
+                    {
+                        claims.AddClaim(OAuthConstants.ClaimType_Role, role);
+                    }
                 }
             }
 
@@ -565,8 +584,8 @@ namespace SanteDB.Rest.OAuth.Rest
 
             descriptor.CompressionAlgorithm = CompressionAlgorithms.Deflate;
 
-            // Creates signing credentials for the specified application key
-            var appid = claimsPrincipal?.Claims?.FirstOrDefault(o => o.Type == SanteDBClaimTypes.SanteDBApplicationIdentifierClaim)?.Value;
+            // Creates signing credentials for the specified application key - the client will be requesting with client_id of the name rather than key
+            var appid = claimsPrincipal.Identities.OfType<IApplicationIdentity>().FirstOrDefault()?.Name ?? context.ClientId; // claimsPrincipal?.Claims?.FirstOrDefault(o => o.Type == SanteDBClaimTypes.SanteDBApplicationIdentifierClaim)?.Value;
             descriptor.Audience = appid; //Audience should be the client id of the app.
 
             descriptor.Issuer = m_configuration.IssuerName;
@@ -677,25 +696,37 @@ namespace SanteDB.Rest.OAuth.Rest
         /// </summary>
         protected ISession EstablishUserSession(IPrincipal primaryPrincipal, IClaimsIdentity clientIdentity, IClaimsIdentity deviceIdentity, List<string> scopes, IEnumerable<IClaim> additionalClaims)
         {
-            SanteDBClaimsPrincipal claimsPrincipal = null;
+            IClaimsPrincipal claimsPrincipal = null;
 
-            if (primaryPrincipal is IClaimsPrincipal oizcp)
+            // JF - Special case - if the upstream principal is already a token principal - there is no need to establish a new session or principal since the 
+            //      issuer of the token has already done this and we just need to store it and reliably load it from our session provider - by forwarding the 
+            //      ITokenPrincipal down (rather than creating a new principal) we allow the downstream session providers to store access tokens, expiration
+            //      and other information on the original principal
+            if (primaryPrincipal is IClaimsPrincipal cp && primaryPrincipal is ITokenPrincipal tokenPrincipal)
             {
-                claimsPrincipal = new SanteDBClaimsPrincipal(oizcp.Identities);
+                claimsPrincipal = cp;
             }
             else
             {
-                claimsPrincipal = new SanteDBClaimsPrincipal(primaryPrincipal.Identity);
-            }
+                // JF - We may need to add other identities to the principal which some  principals might not  like
+                if (primaryPrincipal is IClaimsPrincipal oizcp)
+                {
+                    claimsPrincipal = new SanteDBClaimsPrincipal(oizcp.Identities);
+                }
+                else
+                {
+                    claimsPrincipal = new SanteDBClaimsPrincipal(primaryPrincipal.Identity);
+                }
 
-            if (clientIdentity is IApplicationIdentity && !claimsPrincipal.Identities.OfType<IApplicationIdentity>().Any(o => o.Name == clientIdentity.Name))
-            {
-                claimsPrincipal.AddIdentity(clientIdentity);
-            }
+                if (clientIdentity is IApplicationIdentity && !claimsPrincipal.Identities.OfType<IApplicationIdentity>().Any(o => o.Name == clientIdentity.Name))
+                {
+                    claimsPrincipal.AddIdentity(clientIdentity);
+                }
 
-            if (deviceIdentity is IDeviceIdentity && !claimsPrincipal.Identities.OfType<IDeviceIdentity>().Any(o => o.Name == deviceIdentity.Name))
-            {
-                claimsPrincipal.AddIdentity(deviceIdentity);
+                if (deviceIdentity is IDeviceIdentity && !claimsPrincipal.Identities.OfType<IDeviceIdentity>().Any(o => o.Name == deviceIdentity.Name))
+                {
+                    claimsPrincipal.AddIdentity(deviceIdentity);
+                }
             }
 
             _ = TryGetRemoteIp(RestOperationContext.Current.IncomingRequest, out var remoteIp);
@@ -869,7 +900,7 @@ namespace SanteDB.Rest.OAuth.Rest
         /// <summary>
         /// OAuth token request
         /// </summary>
-        public object Token(NameValueCollection formFields)
+        public virtual object Token(NameValueCollection formFields)
         {
             m_traceSource.TraceVerbose("Processing token request.");
 
@@ -1012,7 +1043,7 @@ namespace SanteDB.Rest.OAuth.Rest
         /// <summary>
         /// Get the specified session information
         /// </summary>
-        public object Session()
+        public virtual object Session()
         {
             // If the user calls this with no session - we just return no session
             if (String.IsNullOrEmpty(RestOperationContext.Current.IncomingRequest.Headers["Authorization"]))
@@ -1184,7 +1215,7 @@ namespace SanteDB.Rest.OAuth.Rest
             {
                 try
                 {
-                    return JsonConvert.DeserializeObject<Model.AuthorizationCookie>(_SymmetricProvider.DecryptString(cookie.Value));
+                    return JsonConvert.DeserializeObject<Model.AuthorizationCookie>(_SymmetricProvider.Decrypt(cookie.Value));
                 }
                 catch (Exception ex) when (!(ex is StackOverflowException || ex is OutOfMemoryException))
                 {
@@ -1217,7 +1248,7 @@ namespace SanteDB.Rest.OAuth.Rest
             {
                 try
                 {
-                    cookievalue = JsonConvert.DeserializeObject<Model.AuthorizationCookie>(_SymmetricProvider.DecryptString(cookie.Value));
+                    cookievalue = JsonConvert.DeserializeObject<Model.AuthorizationCookie>(_SymmetricProvider.Decrypt(cookie.Value));
                 }
                 catch (Exception ex) when (!(ex is StackOverflowException || ex is OutOfMemoryException))
                 {
@@ -1243,7 +1274,7 @@ namespace SanteDB.Rest.OAuth.Rest
                 cookievalue.CreatedAt = DateTimeOffset.UtcNow;
             }
 
-            cookie.Value = _SymmetricProvider.EncryptString(JsonConvert.SerializeObject(cookievalue));
+            cookie.Value = _SymmetricProvider.Encrypt(JsonConvert.SerializeObject(cookievalue));
 
             context.OutgoingResponse.SetCookie(cookie);
         }
@@ -1274,7 +1305,7 @@ namespace SanteDB.Rest.OAuth.Rest
 
             var codejson = JsonConvert.SerializeObject(authcode);
 
-            context.Code = _SymmetricProvider.EncryptString(codejson);
+            context.Code = _SymmetricProvider.Encrypt(codejson);
 
             return context;
         }
@@ -1610,7 +1641,7 @@ namespace SanteDB.Rest.OAuth.Rest
         #region Signout Endpoint
 
         [return: MessageFormat(MessageFormatType.Json)]
-        public object Signout(NameValueCollection form)
+        public virtual object Signout(NameValueCollection form)
         {
             if (null == form)
             {
@@ -1667,6 +1698,13 @@ namespace SanteDB.Rest.OAuth.Rest
 
             return "Under construction.";
 
+        }
+
+        /// <inheritdoc/>
+        /// TODO: Temporary so the UI can post something to abandon its sessions
+        public virtual object Signout()
+        {
+            return this.Signout(RestOperationContext.Current.IncomingRequest.QueryString);
         }
 
         #endregion

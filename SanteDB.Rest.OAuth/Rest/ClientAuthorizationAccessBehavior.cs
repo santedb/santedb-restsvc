@@ -27,20 +27,29 @@ using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
+using SanteDB.Rest.Common;
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Tracing;
 using System.Security;
 using System.Security.Authentication;
-
+using System.Security.Principal;
 using System.Text;
 
 namespace SanteDB.Rest.OAuth.Rest
 {
     /// <summary>
-    /// Basic authorization policy
+    /// Authorization policy on the OAUTH service 
     /// </summary>
+    /// <remarks>
+    /// Provides authentication contexts to the <see cref="OAuthServiceBehavior"/>
+    /// based on the following sources of identity in the request:
+    /// <list type="bullet">
+    ///     <item>From the Authorization header for HTTP Basic credentials (application identity)</item>
+    ///     <item>From the X-SanteDB-DeviceAuthorization header Basic credentials (device identity on non HTTPS)</item>
+    /// </list>
+    /// </remarks>
     [DisplayName("OAUTH: HTTP BASIC Client-Credentials")]
     [ExcludeFromCodeCoverage]
     public class ClientAuthorizationAccessBehavior : IServicePolicy, IServiceBehavior
@@ -61,49 +70,80 @@ namespace SanteDB.Rest.OAuth.Rest
                 m_traceSource.TraceInfo("Entering OAuth BasicAuthorizationAccessPolicy");
 
                 // Role service
-                var identityService = ApplicationServiceContext.Current.GetService<IApplicationIdentityProviderService>();
+                var appIdentityService = ApplicationServiceContext.Current.GetService<IApplicationIdentityProviderService>();
+                var deviceIdentityService = ApplicationServiceContext.Current.GetService<IDeviceIdentityProviderService>();
 
-                var httpRequest = RestOperationContext.Current.IncomingRequest;
-
-                var authHeader = httpRequest.Headers["Authorization"];
-                if (string.IsNullOrEmpty(authHeader) ||
-                    !authHeader.ToLowerInvariant().StartsWith("basic"))
+                var authHeader = request.Headers["Authorization"];
+                if (!String.IsNullOrEmpty(authHeader))
                 {
-                    throw new AuthenticationException("Invalid authentication scheme");
+                    this.ExtractBasicAuthorizationData(authHeader, out var identifier, out var secret);
+                    var principal = appIdentityService.Authenticate(identifier, secret);
+                    if (principal == null)
+                    {
+                        throw new AuthenticationException("Invalid client credentials");
+                    }
+
+                    this.AppendPrincipalToAuthContext(principal);
                 }
 
-                authHeader = authHeader.Substring(6);
-                var b64Data = Encoding.UTF8.GetString(Convert.FromBase64String(authHeader)).Split(':');
-                if (b64Data.Length != 2)
+                authHeader = request.Headers[ExtendedHttpHeaderNames.HttpDeviceCredentialHeaderName];
+                if(!String.IsNullOrEmpty(authHeader))
                 {
-                    throw new SecurityException("Malformed HTTP Basic Header");
-                }
+                    this.ExtractBasicAuthorizationData(authHeader, out var identifier, out var secret);
+                    var principal = deviceIdentityService.Authenticate(identifier, secret);
+                    if (principal == null)
+                    {
+                        throw new AuthenticationException("Invalid device credentials");
+                    }
+                    // Client secret
+                    RestOperationContext.Current.Data.Add("symm_secret", secret);
 
-                var principal = identityService.Authenticate(b64Data[0], b64Data[1]);
-                if (principal == null)
-                {
-                    throw new AuthenticationException("Invalid client credentials");
+                    this.AppendPrincipalToAuthContext(principal);
                 }
-
-                // Client secret
-                RestOperationContext.Current.Data.Add("symm_secret", b64Data[1]);
-
-                // If the current principal is set-up then add the identity if not then don't
-                if (AuthenticationContext.Current.Principal == AuthenticationContext.AnonymousPrincipal)
-                {
-                    var contextToken = AuthenticationContext.EnterContext(principal);
-                    RestOperationContext.Current.Disposed += (o, e) => contextToken.Dispose();
-                }
-                else
-                {
-                    (AuthenticationContext.Current.Principal as IClaimsPrincipal).AddIdentity(principal.Identity);
-                }
-
                 // Disposed context so reset the auth
             }
             catch (Exception e)
             {
                 m_traceSource.TraceEvent(EventLevel.Error, e.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Extract from HTTP basic header
+        /// </summary>
+        private void ExtractBasicAuthorizationData(string authHeader, out string identifier, out string secret)
+        {
+
+            if (string.IsNullOrEmpty(authHeader) ||
+                !authHeader.ToLowerInvariant().StartsWith("basic"))
+            {
+                throw new AuthenticationException("Invalid authentication scheme");
+            }
+
+            authHeader = authHeader.Substring(6);
+            var b64Data = Encoding.UTF8.GetString(Convert.FromBase64String(authHeader)).Split(':');
+            if (b64Data.Length != 2)
+            {
+                throw new SecurityException("Malformed HTTP Basic Header");
+            }
+            identifier = b64Data[0];
+            secret = b64Data[1];
+        }
+
+        /// <summary>
+        /// Append principal
+        /// </summary>
+        private void AppendPrincipalToAuthContext(IPrincipal principal)
+        {
+            // If the current principal is set-up then add the identity if not then don't
+            if (AuthenticationContext.Current.Principal == AuthenticationContext.AnonymousPrincipal)
+            {
+                var contextToken = AuthenticationContext.EnterContext(principal);
+                RestOperationContext.Current.Disposed += (o, e) => contextToken.Dispose();
+            }
+            else
+            {
+                (AuthenticationContext.Current.Principal as IClaimsPrincipal).AddIdentity(principal.Identity);
             }
         }
 

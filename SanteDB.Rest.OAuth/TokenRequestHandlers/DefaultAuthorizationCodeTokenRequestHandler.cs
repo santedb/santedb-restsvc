@@ -163,7 +163,7 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
 
             try
             {
-                var json = _SymmetricProvider.DecryptString(authorizationCode);
+                var json = _SymmetricProvider.Decrypt(authorizationCode);
 
                 return JsonConvert.DeserializeObject<AuthorizationCode>(json);
             }

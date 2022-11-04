@@ -35,6 +35,7 @@ namespace SanteDB.Rest.OAuth.Rest
     public interface IOAuthServiceContract
     {
 
+
         /// <summary>
         /// Get discovery exchange 
         /// </summary>
@@ -130,6 +131,13 @@ namespace SanteDB.Rest.OAuth.Rest
         [Post("/signout")]
         [return: MessageFormat(MessageFormatType.Json)]
         object Signout(NameValueCollection form);
+
+        /// <summary>
+        /// The GET version of <see cref="Signout(NameValueCollection)"/>
+        /// </summary>
+        [Get("/signout")]
+        [return: MessageFormat(MessageFormatType.Json)]
+        object Signout();
 
     }
 }

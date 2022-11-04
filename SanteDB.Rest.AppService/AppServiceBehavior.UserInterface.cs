@@ -5,6 +5,7 @@ using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
 using SanteDB.Rest.AppService.Model;
 using SanteDB.Rest.Common.Attributes;
+using SanteDB.Rest.Common.Behavior;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -59,13 +60,16 @@ namespace SanteDB.Rest.AppService
         }
 
         /// <inheritdoc/>
-        public Dictionary<string, bool> GetOnlineState()
+        public Dictionary<string, object> GetState()
         {
-            return new Dictionary<String, bool>()
+            return new Dictionary<String, object>()
                     {
                         { "online", this.m_onlineState },
                         { "hdsi", this.m_hdsiState },
-                        { "ami", this.m_amiState }
+                        { "ami", this.m_amiState },
+                        { "client_id", this.m_upstreamSettings?.LocalClientName },
+                        { "device_id", this.m_upstreamSettings?.LocalDeviceName },
+                        { "realm", this.m_upstreamSettings?.Realm.Host }
                     };
         }
 
@@ -222,5 +226,29 @@ namespace SanteDB.Rest.AppService
             return menu;
         }
 
+        /// <inheritdoc/>
+        public Dictionary<String, Object> GetCurrentSessionInfo()
+        {
+            var retVal = new Dictionary<string, object>();
+            var identity = AuthenticationContext.Current.Principal.Identity;
+            if (RestOperationContext.Current.Data.TryGetValue(CookieAuthenticationBehavior.RestPropertyNameSession, out var sessionObject) && sessionObject is ISession ses)
+            {
+                retVal.Add("lang", ses.Claims.FirstOrDefault(o => o.Type == SanteDBClaimTypes.Language)?.Value);
+                retVal.Add("scope", ses.Claims.Where(o => o.Type == SanteDBClaimTypes.SanteDBGrantedPolicyClaim).Select(o => o.Value).ToArray());
+                retVal.Add("method", ses.Claims.FirstOrDefault(o => o.Type == SanteDBClaimTypes.AuthenticationMethod)?.Value);
+                retVal.Add("claims", ses.Claims.GroupBy(o => o.Type).ToDictionary(o => o.Key, o => o.Select(a => a.Value).ToArray()));
+                retVal.Add("exp", ses.NotAfter);
+                retVal.Add("nbf", ses.NotBefore);
+
+                var userEntity = this.m_securityRepositoryService?.GetUserEntity(identity);
+                retVal.Add("entity", userEntity);
+                retVal.Add("user", this.m_securityRepositoryService?.GetUser(identity));
+                retVal.Add("displayName", userEntity.Names.FirstOrDefault()?.ToString() ?? identity.Name);
+                retVal.Add("username", identity.Name);
+                retVal.Add("authType", identity.AuthenticationType);
+                return retVal;
+            }
+            return null;
+        }
     }
 }

@@ -19,6 +19,7 @@ namespace SanteDB.Rest.Common.Behavior
     public class CookieAuthenticationBehavior : IServiceBehavior, IAuthorizationServicePolicy
     {
 
+        public const string RestPropertyNameSession = "Session";
 
         // Tracer
         private readonly Tracer m_tracer = Tracer.GetTracer(typeof(CookieAuthenticationBehavior));
@@ -29,6 +30,7 @@ namespace SanteDB.Rest.Common.Behavior
         // Session token resolver
         private readonly ISessionTokenResolverService m_sessionTokenResolver;
         private readonly ISessionIdentityProviderService m_sessionIdentityProvider;
+        private readonly ISymmetricCryptographicProvider m_symmetricProvider;
 
         /// <summary>
         /// Applet collection
@@ -46,6 +48,7 @@ namespace SanteDB.Rest.Common.Behavior
             }
             m_sessionTokenResolver = ApplicationServiceContext.Current.GetService<ISessionTokenResolverService>();
             m_sessionIdentityProvider = ApplicationServiceContext.Current.GetService<ISessionIdentityProviderService>();
+            m_symmetricProvider = ApplicationServiceContext.Current.GetService<ISymmetricCryptographicProvider>();
         }
 
         /// <inheritdoc cref="IAuthorizationServicePolicy.AddAuthenticateChallengeHeader(RestResponseMessage, Exception)"/>
@@ -70,14 +73,21 @@ namespace SanteDB.Rest.Common.Behavior
             try
             {
                 var authCookie = request.Cookies["_s"];
-                if (authCookie != null)
+                if (AuthenticationContext.Current.Principal.Identity.Name == AuthenticationContext.AnonymousPrincipal.Identity.Name &&
+                    authCookie != null)
                 {
-                    var session = m_sessionTokenResolver.GetSessionFromIdToken(authCookie.Value);
-                    var authContext = AuthenticationContext.EnterContext(m_sessionIdentityProvider.Authenticate(session));
-                    RestOperationContext.Current.Disposed += (o, e) => authContext.Dispose();
+                    var session = m_sessionTokenResolver.GetSessionFromIdToken(m_symmetricProvider.Decrypt(authCookie.Value));
+                    if (session != null)
+                    {
+
+                        RestOperationContext.Current.Data.Add(RestPropertyNameSession, session);
+
+                        var authContext = AuthenticationContext.EnterContext(m_sessionIdentityProvider.Authenticate(session));
+                        RestOperationContext.Current.Disposed += (o, e) => authContext.Dispose();
+                    }
                 }
             }
-            catch (SecurityException)
+            catch (Exception)
             {
                 RestOperationContext.Current.OutgoingResponse.SetCookie(new System.Net.Cookie("_s", "")
                 {
