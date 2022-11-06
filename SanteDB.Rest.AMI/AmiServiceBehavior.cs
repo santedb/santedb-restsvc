@@ -34,6 +34,7 @@ using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Configuration;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.AMI.Configuration;
@@ -67,6 +68,7 @@ namespace SanteDB.Rest.AMI
         private readonly IConfigurationManager m_configurationManager;
         private readonly IServiceManager m_serviceManager;
         private readonly IDataCachingService m_dataCachingService;
+        private readonly IPolicyEnforcementService m_pepService;
 
         /// <summary>
         /// The resource handler tool for executing operations
@@ -81,6 +83,7 @@ namespace SanteDB.Rest.AMI
                 ApplicationServiceContext.Current.GetService<ILocalizationService>(),
                 ApplicationServiceContext.Current.GetService<IConfigurationManager>(),
                 ApplicationServiceContext.Current.GetService<IServiceManager>(),
+                ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>(),
                 ApplicationServiceContext.Current.GetService<IPatchService>(),
                 ApplicationServiceContext.Current.GetService<IDataCachingService>())
         {
@@ -299,13 +302,14 @@ namespace SanteDB.Rest.AMI
         /// <summary>
         /// AMI Service Behavior constructor
         /// </summary>
-        public AmiServiceBehavior(ILocalizationService localizationService, IConfigurationManager configurationManager, IServiceManager serviceManager, IPatchService patchService = null, IDataCachingService cachingService = null)
+        public AmiServiceBehavior(ILocalizationService localizationService, IConfigurationManager configurationManager, IServiceManager serviceManager, IPolicyEnforcementService pepService, IPatchService patchService = null, IDataCachingService cachingService = null)
         {
             this.m_localizationService = localizationService;
             this.m_patchService = patchService;
             this.m_configurationManager = configurationManager;
             this.m_serviceManager = serviceManager;
             this.m_dataCachingService = cachingService;
+            this.m_pepService = pepService;
             m_resourceHandler = AmiMessageHandler.ResourceHandler;
         }
 
@@ -439,6 +443,11 @@ namespace SanteDB.Rest.AMI
                 }
             }
             serviceOptions.Settings = config.PublicSettings.ToList();
+
+            if(this.m_pepService.SoftDemand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction, AuthenticationContext.Current.Principal))
+            {
+                serviceOptions.Settings.AddRange(this.m_configurationManager.GetSection<SecurityConfigurationSection>().ForDisclosure());
+            }
             return serviceOptions;
         }
 

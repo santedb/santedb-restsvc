@@ -102,7 +102,9 @@ namespace SanteDB.Rest.AppService
                 var settings = new ParameterRealmSettings(parameters, defaultClientSettings.CredentialSecret);
 
                 _ = parameters.TryGet(RealmConfigurationFeature.OVERRIDE_NAME, out bool overwrite);
-                this.m_upstreamManagementService.Join(settings, overwrite);
+                this.m_upstreamManagementService.Join(settings, overwrite, out var welcomeMessage);
+                parameters.Set("joined", true);
+                parameters.Set("welcome", welcomeMessage);
                 return parameters;
             }
             catch(UpstreamIntegrationException e)

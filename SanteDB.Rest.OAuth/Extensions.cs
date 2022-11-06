@@ -18,7 +18,8 @@ namespace SanteDB.Rest.OAuth
     /// </summary>
     internal static class Extensions
     {
-        public static void AddClaim(this Dictionary<string, object> claims, string type, string value)
+
+        public static void AddClaim(this Dictionary<string, object> claims, string type, object value)
         {
             if (null != value)
             {
@@ -26,24 +27,18 @@ namespace SanteDB.Rest.OAuth
                 {
                     var val = claims[type];
 
-                    if (val is string originalstr)
-                    {
-                        if (value != originalstr)
-                        {
-                            claims[type] = new List<string> { originalstr, value };
-                        }
-                    }
-                    else if (val is List<string> lst)
+                    if (val is List<object> lst)
                     {
                         if (!lst.Contains(value))
                         {
                             lst.Add(value);
                         }
                     }
-                    else
+                    else if (!val.Equals(value))
                     {
-                        throw new InvalidOperationException($"Claim harmonization error: existing claims type is {val.GetType().Name} which is unrecognized.");
+                            claims[type] = new List<Object> { val, value };
                     }
+                    
                 }
                 else
                 {

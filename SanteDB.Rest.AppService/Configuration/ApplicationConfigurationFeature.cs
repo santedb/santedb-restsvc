@@ -1,4 +1,5 @@
 ﻿using SanteDB.Core.Configuration;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using System;
 using System.Collections;
@@ -17,19 +18,15 @@ namespace SanteDB.Rest.AppService.Configuration
         public const string SERVICES_SETTING = "service";
         public const string APPSETTING_SETTING = "setting";
         public const string INSTANCE_NAME_SETTING = "instance";
+        private readonly ApplicationServiceContextConfigurationSection m_configurationSection;
 
         /// <summary>
         /// DI constructor
         /// </summary>
         public ApplicationConfigurationFeature(IConfigurationManager configurationManager)
         {
-            var section = configurationManager.GetSection<ApplicationServiceContextConfigurationSection>();
-            this.Configuration = new RestConfigurationDictionary<string, object>()
-            {
-                { SERVICES_SETTING, section.ServiceProviders.Select(o=> o.TypeXml).ToArray() },
-                { APPSETTING_SETTING, section.AppSettings },
-                { INSTANCE_NAME_SETTING, section.InstanceName }
-            };
+            this.m_configurationSection = configurationManager.GetSection<ApplicationServiceContextConfigurationSection>();
+            
         }
 
         /// <inheritdoc/>
@@ -39,7 +36,23 @@ namespace SanteDB.Rest.AppService.Configuration
         public string Name => "application";
 
         /// <inheritdoc/>
-        public RestConfigurationDictionary<string, object> Configuration { get; }
+        public RestConfigurationDictionary<string, object> Configuration => this.Refresh();
+
+        /// <inheritdoc/>
+        public String ReadPolicy => PermissionPolicyIdentifiers.Login;
+
+        /// <inheritdoc/>
+        public String WritePolicy => PermissionPolicyIdentifiers.AccessClientAdministrativeFunction;
+
+        /// <summary>
+        /// Refresh the configuration
+        /// </summary>
+        private RestConfigurationDictionary<string, object> Refresh() => new RestConfigurationDictionary<string, object>()
+            {
+                { SERVICES_SETTING, m_configurationSection.ServiceProviders.Select(o=> o.TypeXml).ToArray() },
+                { APPSETTING_SETTING, m_configurationSection.AppSettings },
+                { INSTANCE_NAME_SETTING, m_configurationSection.InstanceName }
+            };
 
         /// <inheritdoc/>
         public bool Configure(SanteDBConfiguration configuration, IDictionary<string, object> featureConfiguration)

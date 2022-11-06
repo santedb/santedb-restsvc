@@ -86,7 +86,7 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                     return false;
                 }
 
-                if (!authcode.dev.Equals(context.DeviceIdentity.Claims?.FirstOrDefault(c => c.Type == SanteDBClaimTypes.Sid)?.Value))
+                if (!authcode.dev.Equals(context.DeviceIdentity.Claims?.FirstOrDefault(c => c.Type == SanteDBClaimTypes.SecurityId)?.Value))
                 {
                     context.ErrorType = OAuthErrorType.invalid_grant;
                     context.ErrorMessage = "mismatch device identity";
@@ -114,7 +114,7 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                     return false;
                 }
 
-                if (!authcode.app.Equals(context.ApplicationIdentity.Claims?.FirstOrDefault(c => c.Type == SanteDBClaimTypes.Sid)?.Value))
+                if (!authcode.app.Equals(context.ApplicationIdentity.Claims?.FirstOrDefault(c => c.Type == SanteDBClaimTypes.SecurityId)?.Value))
                 {
                     context.ErrorType = OAuthErrorType.invalid_grant;
                     context.ErrorMessage = "mismatch client identity";

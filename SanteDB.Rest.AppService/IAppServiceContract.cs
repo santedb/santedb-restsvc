@@ -34,6 +34,8 @@ using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Configuration;
 using Newtonsoft.Json.Linq;
 using SanteDB.Core.Model.AMI.Diagnostics;
+using SanteDB.Core.Security.Configuration;
+using SanteDB.Core.Model.AMI.Security;
 
 namespace SanteDB.Rest.AppService
 {

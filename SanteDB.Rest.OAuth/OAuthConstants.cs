@@ -199,5 +199,14 @@ namespace SanteDB.Rest.OAuth
         public const string ClaimType_Email = "email";
         public const string ClaimType_Realm = "realm";
         public const string ClaimType_Telephone = "phone_number";
+
+        // Claims from https://profiles.ihe.net/ITI/IUA/index.html#3714221-json-web-token-option
+        public const string IUA_Claim_SubjectName = "subject_name";
+        public const string IUA_Claim_SubjectOrganizationId = "subject_organization_id";
+        public const string IUA_Claim_SubjectOrganization = "subject_organization";
+        public const string IUA_Claim_SubjectRole = "subject_role";
+        public const string IUA_Claim_PurposeOfUse = "purpose_of_use";
+        public const string IUA_Claim_NationalProviderId = "national_provider_identifier";
+        public const string IUA_Claim_PersonId = "person_id";
     }
 }

@@ -38,7 +38,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        public PersonResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<Person> repositoryService, IAuditService auditService) : base(localizationService, freetextSearchService, repositoryService, auditService)
+        public PersonResourceHandler(ILocalizationService localizationService, IRepositoryService<Person> repositoryService, IAuditService auditService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, auditService, freetextSearchService)
         {
         }
 

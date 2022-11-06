@@ -35,7 +35,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// DI constructor
         /// </summary>
         /// <param name="localizationService"></param>
-        public BundleResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<Bundle> repositoryService, IAuditService auditService) : base(localizationService, freetextSearchService, repositoryService, auditService)
+        public BundleResourceHandler(ILocalizationService localizationService, IRepositoryService<Bundle> repositoryService, IAuditService auditService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, auditService, freetextSearchService)
         {
         }
 

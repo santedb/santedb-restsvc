@@ -57,7 +57,10 @@ namespace SanteDB.Rest.Common.Security
         {
 
             var session = ApplicationServiceContext.Current.GetService<ISessionTokenResolverService>().GetSessionFromIdToken(authorizationToken);
-
+            if(session == null)
+            {
+                throw new SecuritySessionException(SessionExceptionType.Other, "Invalid bearer token", null);
+            }
             IPrincipal principal = ApplicationServiceContext.Current.GetService<ISessionIdentityProviderService>().Authenticate(session);
             if (principal == null)
             {
@@ -99,7 +102,7 @@ namespace SanteDB.Rest.Common.Security
                         break;
 
                     default:
-                        throw new SecuritySessionException(SessionExceptionType.TokenType, "Invalid authentication scheme", null);
+                        return;
                 }
             }
             catch (SecuritySessionException e)

@@ -3,6 +3,7 @@ using SanteDB.Client.Configuration.Upstream;
 using SanteDB.Client.Upstream;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.i18n;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,15 @@ namespace SanteDB.Rest.AppService.Configuration
 
         private readonly IConfigurationManager m_configurationManager;
         private readonly IUpstreamManagementService m_upstreamManager;
+        private readonly UpstreamConfigurationSection m_configuration;
+
+
+        /// <inheritdoc/>
+        public String ReadPolicy => PermissionPolicyIdentifiers.AlterSystemConfiguration;
+
+        /// <inheritdoc/>
+        public String WritePolicy => PermissionPolicyIdentifiers.AlterSystemConfiguration;
+
 
         /// <summary>
         /// DI constructor
@@ -35,17 +45,25 @@ namespace SanteDB.Rest.AppService.Configuration
         {
             this.m_configurationManager = configurationManager;
             this.m_upstreamManager = upstreamManagement;
-            var rawConfiguration = configurationManager.GetSection<UpstreamConfigurationSection>();
-            this.Configuration = new RestConfigurationDictionary<String, Object>();
+            this.m_configuration = configurationManager.GetSection<UpstreamConfigurationSection>();
+        }
 
-            this.Configuration.Add(IS_JOINED, this.m_upstreamManager.GetSettings() != null);
-            this.Configuration.Add(PORT_NUMBER, rawConfiguration.Realm?.PortNumber ?? 8080);
-            this.Configuration.Add(REALM_NAME, rawConfiguration.Realm?.DomainName);
-            this.Configuration.Add(USE_TLS, rawConfiguration.Realm?.UseTls ?? false);
-            this.Configuration.Add(DEVICE_NAME, rawConfiguration.Credentials.Find(o => o.CredentialType == UpstreamCredentialType.Device)?.CredentialName);
-            var applicationCredential = rawConfiguration.Credentials.Find(o => o.CredentialType == UpstreamCredentialType.Application);
-            this.Configuration.Add(CLIENT_NAME, applicationCredential?.CredentialName);
-            this.Configuration.Add(CLIENT_SECRET, null);
+
+        /// <summary>
+        /// Refresh the configuration
+        /// </summary>
+        private RestConfigurationDictionary<String, Object> Refresh()
+        {
+            var config = new RestConfigurationDictionary<String, Object>();
+            config.Add(IS_JOINED, this.m_upstreamManager.GetSettings() != null);
+            config.Add(PORT_NUMBER, this.m_configuration.Realm?.PortNumber ?? 8080);
+            config.Add(REALM_NAME, this.m_configuration.Realm?.DomainName);
+            config.Add(USE_TLS, this.m_configuration.Realm?.UseTls ?? false);
+            config.Add(DEVICE_NAME, this.m_configuration.Credentials.Find(o => o.CredentialType == UpstreamCredentialType.Device)?.CredentialName);
+            var applicationCredential = this.m_configuration.Credentials.Find(o => o.CredentialType == UpstreamCredentialType.Application);
+            config.Add(CLIENT_NAME, applicationCredential?.CredentialName);
+            config.Add(CLIENT_SECRET, null);
+            return config;
         }
 
         /// <inheritdoc/>
@@ -55,7 +73,7 @@ namespace SanteDB.Rest.AppService.Configuration
         public string Name => "realm";
 
         /// <inheritdoc/>
-        public RestConfigurationDictionary<String, Object> Configuration { get; }
+        public RestConfigurationDictionary<String, Object> Configuration => this.Refresh();
 
         /// <inheritdoc/>
         public bool Configure(SanteDBConfiguration configuration, IDictionary<String, Object> featureConfiguration)

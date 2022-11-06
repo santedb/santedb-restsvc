@@ -33,7 +33,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// DI Constructor
         /// </summary>
-        public IdentityDomainResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<IdentityDomain> repositoryService, IAuditService auditService) : base(localizationService, freetextSearchService, repositoryService, auditService)
+        public IdentityDomainResourceHandler(ILocalizationService localizationService, IRepositoryService<IdentityDomain> repositoryService, IAuditService auditService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, auditService, freetextSearchService)
         {
         }
     }

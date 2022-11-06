@@ -131,17 +131,14 @@ namespace SanteDB.Rest.Common.Security
 
                 if (this.m_configuration?.RequireClientAuth == true)
                 {
-                    var clientAuth = httpRequest.Headers[ExtendedHttpHeaderNames.BasicHttpClientCredentialHeaderName];
-                    if (clientAuth == null ||
-                        !clientAuth.StartsWith("basic", StringComparison.InvariantCultureIgnoreCase))
+                    var clientId = httpRequest.Headers[ExtendedHttpHeaderNames.BasicHttpClientIdHeaderName];
+                    if (clientId == null)
                     {
-                        throw new SecurityException("Client credentials invalid");
+                        throw new SecurityException("Missing ClientId");
                     }
                     else
                     {
-                        String clientAuthString = clientAuth.Substring(clientAuth.IndexOf("basic", StringComparison.InvariantCultureIgnoreCase) + 5).Trim();
-                        String[] authComps = Encoding.UTF8.GetString(Convert.FromBase64String(clientAuthString)).Split(':');
-                        var applicationPrincipal = ApplicationServiceContext.Current.GetService<IApplicationIdentityProviderService>().Authenticate(authComps[0], authComps[1]);
+                        var applicationPrincipal = ApplicationServiceContext.Current.GetService<IApplicationIdentityProviderService>().Authenticate(clientId, claimsPrincipal);
                         claimsPrincipal.AddIdentity(applicationPrincipal.Identity as IClaimsIdentity);
                     }
                 }

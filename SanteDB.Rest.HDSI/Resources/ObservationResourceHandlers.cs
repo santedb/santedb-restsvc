@@ -39,7 +39,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// DI constructor
         /// </summary>
         /// <param name="localizationService"></param>
-        public QuantityObservationResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<QuantityObservation> repositoryService, IAuditService auditService) : base(localizationService, freetextSearchService, repositoryService, auditService)
+        public QuantityObservationResourceHandler(ILocalizationService localizationService, IRepositoryService<QuantityObservation> repositoryService, IAuditService auditService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, auditService, freetextSearchService)
         {
         }
     }
@@ -54,7 +54,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// DI constructor
         /// </summary>
         /// <param name="localizationService"></param>
-        public CodedObservationResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<CodedObservation> repositoryService, IAuditService auditService) : base(localizationService, freetextSearchService, repositoryService, auditService)
+        public CodedObservationResourceHandler(ILocalizationService localizationService, IRepositoryService<CodedObservation> repositoryService, IAuditService auditService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, auditService, freetextSearchService)
         {
         }
     }
@@ -69,7 +69,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// DI constructor
         /// </summary>
         /// <param name="localizationService"></param>
-        public TextObservationResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<TextObservation> repositoryService, IAuditService auditService) : base(localizationService, freetextSearchService, repositoryService, auditService)
+        public TextObservationResourceHandler(ILocalizationService localizationService, IRepositoryService<TextObservation> repositoryService, IAuditService auditService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, auditService, freetextSearchService)
         {
         }
     }
@@ -84,7 +84,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// DI constructor
         /// </summary>
         /// <param name="localizationService"></param>
-        public ObservationResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<TObservation> repositoryService, IAuditService auditService) : base(localizationService, freetextSearchService, repositoryService, auditService)
+        public ObservationResourceHandler(ILocalizationService localizationService, IRepositoryService<TObservation> repositoryService, IAuditService auditService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, auditService, freetextSearchService)
         {
         }
 

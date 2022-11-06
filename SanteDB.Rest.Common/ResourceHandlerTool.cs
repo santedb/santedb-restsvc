@@ -84,7 +84,7 @@ namespace SanteDB.Rest.Common
                 }
                 catch (Exception e)
                 {
-                    this.m_traceSource.TraceWarning("Error binding: {0} due to {1}", t.FullName, e);
+                    this.m_traceSource.TraceWarning("Error binding: {0} due to {1}", t.FullName, e.Message);
                 }
             }
         }

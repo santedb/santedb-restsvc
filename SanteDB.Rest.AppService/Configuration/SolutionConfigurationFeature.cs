@@ -1,5 +1,6 @@
 ﻿using SanteDB.Client.Configuration;
 using SanteDB.Core.Configuration;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -21,19 +22,14 @@ namespace SanteDB.Rest.AppService.Configuration
         /// Auto update configuration
         /// </summary>
         public const string AUTO_UPDATE_CONFG = "autoUpdate";
+        private readonly ClientConfigurationSection m_configuration;
 
         /// <summary>
         /// DI constructor
         /// </summary>
         public SolutionConfigurationFeature(IConfigurationManager configurationManager)
         {
-            var config = configurationManager.GetSection<ClientConfigurationSection>();
-            this.Configuration = new RestConfigurationDictionary<string, object>()
-            {
-                { SOLUTION_NAME_CONFIG, config?.UiSolution },
-                { AUTO_UPDATE_CONFG, config?.AutoUpdateApplets }
-            };
-
+            this.m_configuration = configurationManager.GetSection<ClientConfigurationSection>();
         }
 
         /// <summary>
@@ -45,7 +41,23 @@ namespace SanteDB.Rest.AppService.Configuration
         public string Name => "applet";
 
         /// <inheritdoc/>
-        public RestConfigurationDictionary<string, object> Configuration { get; }
+        public RestConfigurationDictionary<string, object> Configuration => this.GetConfiguration();
+
+        /// <summary>
+        /// Get configuration
+        /// </summary>
+        private RestConfigurationDictionary<string, object> GetConfiguration() => new RestConfigurationDictionary<string, object>()
+            {
+                { SOLUTION_NAME_CONFIG, this.m_configuration?.UiSolution },
+                { AUTO_UPDATE_CONFG, this.m_configuration?.AutoUpdateApplets }
+            };
+
+
+        /// <inheritdoc/>
+        public String ReadPolicy => PermissionPolicyIdentifiers.AccessClientAdministrativeFunction;
+
+        /// <inheritdoc/>
+        public String WritePolicy => PermissionPolicyIdentifiers.AccessClientAdministrativeFunction;
 
         /// <inheritdoc/>
         public bool Configure(SanteDBConfiguration configuration, IDictionary<string, object> featureConfiguration)

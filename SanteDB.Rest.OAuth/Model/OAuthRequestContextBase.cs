@@ -42,10 +42,7 @@ namespace SanteDB.Rest.OAuth.Model
         /// </summary>
         [Obsolete("Use of this is discouraged.")]
         public string TfaSecret => IncomingRequest?.Headers?[ExtendedHttpHeaderNames.TfaSecret];
-        /// <summary>
-        /// The X-Device-Authorization header value if present. This is a custom header in SanteDb as part of a proxy configuration.
-        /// </summary>
-        public string XDeviceAuthorizationHeader => IncomingRequest?.Headers?[ExtendedHttpHeaderNames.HttpDeviceCredentialHeaderName];
+       
         #endregion
 
         #region Common Request Elements

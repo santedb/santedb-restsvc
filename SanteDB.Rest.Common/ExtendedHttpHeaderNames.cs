@@ -31,9 +31,9 @@ namespace SanteDB.Rest.Common
         /// </summary>
         public const string BasicHttpClientClaimHeaderName = "X-SanteDBClient-Claim";
         /// <summary>
-        /// Extended authentication header used by HTTP BASIC to identify the client
+        /// Allows to convey client id on HTTP basic
         /// </summary>
-        public const string BasicHttpClientCredentialHeaderName = "X-SanteDBClient-Authorization";
+        public const string BasicHttpClientIdHeaderName = "X-SanteDBClient-Id";
         /// <summary>
         /// When serializing in view model JSON the name of the view model definition to use
         /// </summary>
@@ -62,10 +62,10 @@ namespace SanteDB.Rest.Common
         /// Force the application of patches - ignoring conflicts
         /// </summary>
         public const string ForceApplyPatchHeaderName = "X-Patch-Force";
-        /// <summary>
-        /// Device authorization when using HTTP basic auth
-        /// </summary>
-        public const string HttpDeviceCredentialHeaderName = "X-Device-Authorization";
+        ///// <summary>
+        ///// Device authorization when using HTTP basic auth
+        ///// </summary>
+        //public const string HttpDeviceCredentialHeaderName = "X-Device-Authorization";
         /// <summary>
         /// Two-factor authentication secret value in HTTP header.
         /// </summary>

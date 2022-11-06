@@ -22,6 +22,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Security
@@ -39,6 +40,20 @@ namespace SanteDB.Core.Model.AMI.Security
         /// </summary>
         public X509Certificate2Info()
         {
+        }
+
+        /// <summary>
+        /// Creates a certificate info structure
+        /// </summary>
+        public X509Certificate2Info(X509Certificate certificate)
+        {
+            var cert = new X509Certificate2(certificate);
+            this.Issuer = cert.Issuer;
+            this.NotBefore = cert.NotBefore;
+            this.NotAfter = cert.NotAfter;
+            this.Subject = cert.SubjectName.Name;
+            this.Thumbprint = cert.Thumbprint;
+            this.HasPrivateKey = cert.HasPrivateKey;
         }
 
         /// <summary>
@@ -113,6 +128,13 @@ namespace SanteDB.Core.Model.AMI.Security
         [XmlElement("thumbprint")]
         [JsonProperty("thumbprint")]
         public string Thumbprint { get; set; }
+
+        /// <summary>
+        /// True if the certificate has a private key
+        /// </summary>
+        [XmlElement("hasPrivateKey")]
+        [JsonProperty("hasPrivateKey")]
+        public bool HasPrivateKey { get; set; }
 
 
 #pragma warning disable CS1591

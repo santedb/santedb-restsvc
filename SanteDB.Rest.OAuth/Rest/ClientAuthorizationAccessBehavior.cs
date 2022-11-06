@@ -76,30 +76,19 @@ namespace SanteDB.Rest.OAuth.Rest
                 var authHeader = request.Headers["Authorization"];
                 if (!String.IsNullOrEmpty(authHeader))
                 {
-                    this.ExtractBasicAuthorizationData(authHeader, out var identifier, out var secret);
-                    var principal = appIdentityService.Authenticate(identifier, secret);
-                    if (principal == null)
+                    if (this.ExtractBasicAuthorizationData(authHeader, out var identifier, out var secret))
                     {
-                        throw new AuthenticationException("Invalid client credentials");
-                    }
+                        var principal = deviceIdentityService.Authenticate(identifier, secret);
+                        if (principal == null)
+                        {
+                            throw new AuthenticationException("Invalid device credentials");
+                        }
 
-                    this.AppendPrincipalToAuthContext(principal);
+                        this.AppendPrincipalToAuthContext(principal);
+                        RestOperationContext.Current.Data.Add("symm_secret", secret);
+                    }
                 }
 
-                authHeader = request.Headers[ExtendedHttpHeaderNames.HttpDeviceCredentialHeaderName];
-                if(!String.IsNullOrEmpty(authHeader))
-                {
-                    this.ExtractBasicAuthorizationData(authHeader, out var identifier, out var secret);
-                    var principal = deviceIdentityService.Authenticate(identifier, secret);
-                    if (principal == null)
-                    {
-                        throw new AuthenticationException("Invalid device credentials");
-                    }
-                    // Client secret
-                    RestOperationContext.Current.Data.Add("symm_secret", secret);
-
-                    this.AppendPrincipalToAuthContext(principal);
-                }
                 // Disposed context so reset the auth
             }
             catch (Exception e)
@@ -111,13 +100,14 @@ namespace SanteDB.Rest.OAuth.Rest
         /// <summary>
         /// Extract from HTTP basic header
         /// </summary>
-        private void ExtractBasicAuthorizationData(string authHeader, out string identifier, out string secret)
+        private bool ExtractBasicAuthorizationData(string authHeader, out string identifier, out string secret)
         {
 
             if (string.IsNullOrEmpty(authHeader) ||
                 !authHeader.ToLowerInvariant().StartsWith("basic"))
             {
-                throw new AuthenticationException("Invalid authentication scheme");
+                identifier = secret = null;
+                return false;
             }
 
             authHeader = authHeader.Substring(6);
@@ -128,6 +118,7 @@ namespace SanteDB.Rest.OAuth.Rest
             }
             identifier = b64Data[0];
             secret = b64Data[1];
+            return true;
         }
 
         /// <summary>

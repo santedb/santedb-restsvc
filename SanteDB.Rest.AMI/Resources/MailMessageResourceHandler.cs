@@ -37,7 +37,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// DI Constructor
         /// </summary>
-        public MailMessageResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<MailMessage> repositoryService, IAuditService auditService) : base(localizationService, freetextSearchService, repositoryService, auditService)
+        public MailMessageResourceHandler(ILocalizationService localizationService, IRepositoryService<MailMessage> repositoryService, IAuditService auditService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, auditService, freetextSearchService)
         {
         }
 

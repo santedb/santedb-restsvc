@@ -118,7 +118,8 @@ namespace SanteDB.Rest.AMI.Resources
         {
             this.m_queueService.Purge((String)key);
             _AuditService.Audit()
-                .WithLocalDevice()
+                .WithLocalDestination()
+                   .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient())
                 .WithPrincipal()
                 .WithAction(Core.Model.Audit.ActionType.Delete)
                 .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.ApplicationActivity)

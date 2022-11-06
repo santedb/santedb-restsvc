@@ -68,7 +68,7 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Constructs the resource handler base
         /// </summary>
-        public ResourceHandlerBase(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<TResource> repositoryService, IAuditService auditService)
+        public ResourceHandlerBase(ILocalizationService localizationService, IRepositoryService<TResource> repositoryService, IAuditService auditService, IFreetextSearchService freetextSearchService = null)
         {
             this.m_localizationService = localizationService;
             this.m_repository = repositoryService;
@@ -248,10 +248,7 @@ namespace SanteDB.Rest.Common
 
             try
             {
-                if ((this.Capabilities & ResourceCapabilityType.Search) == 0)
-                {
-                    throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
-                }
+
 
                 if (queryParameters.TryGetValue("_any", out var terms))
                 {

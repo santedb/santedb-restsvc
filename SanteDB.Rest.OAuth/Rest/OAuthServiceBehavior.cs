@@ -146,19 +146,6 @@ namespace SanteDB.Rest.OAuth.Rest
         protected readonly Dictionary<string, ITokenRequestHandler> _TokenRequestHandlers;
         private readonly Dictionary<string, Func<OAuthAuthorizeRequestContext, object>> _AuthorizeResponseModeHandlers;
 
-        /// <summary>
-        /// Mapping information to map to kmnown jwt claim names
-        /// </summary>
-        private static Dictionary<string, string> s_ClaimTypeMapping = new Dictionary<string, string>()
-        {
-            { ClaimTypes.Sid, OAuthConstants.ClaimType_Sid },
-            { ClaimTypes.Email, OAuthConstants.ClaimType_Email },
-            { SanteDBClaimTypes.DefaultRoleClaimType, OAuthConstants.ClaimType_Role },
-            { SanteDBClaimTypes.DefaultNameClaimType, OAuthConstants.ClaimType_Name },
-            { SanteDBClaimTypes.Realm, OAuthConstants.ClaimType_Realm },
-            { SanteDBClaimTypes.Telephone, OAuthConstants.ClaimType_Telephone },
-            { SanteDBClaimTypes.Actor, OAuthConstants.ClaimType_Actor }
-        };
 
 
 
@@ -275,57 +262,59 @@ namespace SanteDB.Rest.OAuth.Rest
             if (null != context.AuthenticationContext?.Principal?.Identity && context.AuthenticationContext.Principal.Identity is IDeviceIdentity deviceIdentity)
             {
                 context.DeviceIdentity = deviceIdentity as IClaimsIdentity;
+                context.DevicePrincipal = context.AuthenticationContext.Principal as IClaimsPrincipal;
                 return true;
             }
-            else if(context.AuthenticationContext.Principal is IClaimsPrincipal cp && cp.Identities.OfType<IDeviceIdentity>().Any())
+            else if (context.AuthenticationContext.Principal is IClaimsPrincipal cp && cp.Identities.OfType<IDeviceIdentity>().Any())
             {
                 context.DeviceIdentity = cp.Identities.OfType<IDeviceIdentity>().First() as IClaimsIdentity;
                 return true;
             }
-            else if (!string.IsNullOrWhiteSpace(context.XDeviceAuthorizationHeader))
-            {
-                if (AuthorizationHeader.TryParse(context.XDeviceAuthorizationHeader, out var header))
-                {
-                    if (header.IsScheme(AuthorizationHeader.Scheme_Basic))
-                    {
-                        var basiccredentials = Encoding.UTF8.GetString(Convert.FromBase64String(header.Value)).Split(new[] { ":" }, 2, StringSplitOptions.RemoveEmptyEntries);
+            // This header is no longer needed - non HTTPS comes through the Authorization header since HTTP basic auth of client_id is not required
+            //else if (!string.IsNullOrWhiteSpace(context.XDeviceAuthorizationHeader))
+            //{
+            //    if (AuthorizationHeader.TryParse(context.XDeviceAuthorizationHeader, out var header))
+            //    {
+            //        if (header.IsScheme(AuthorizationHeader.Scheme_Basic))
+            //        {
+            //            var basiccredentials = Encoding.UTF8.GetString(Convert.FromBase64String(header.Value)).Split(new[] { ":" }, 2, StringSplitOptions.RemoveEmptyEntries);
 
-                        if (basiccredentials.Length == 2)
-                        {
-                            m_traceSource.TraceVerbose($"Attempting to Authenticate with credentials in {ExtendedHttpHeaderNames.HttpDeviceCredentialHeaderName}.");
+            //            if (basiccredentials.Length == 2)
+            //            {
+            //                m_traceSource.TraceVerbose($"Attempting to Authenticate with credentials in {ExtendedHttpHeaderNames.HttpDeviceCredentialHeaderName}.");
 
-                            var principal = m_DeviceIdentityProvider.Authenticate(basiccredentials[0], basiccredentials[1]);
+            //                var principal = m_DeviceIdentityProvider.Authenticate(basiccredentials[0], basiccredentials[1]);
 
-                            if (principal?.Identity is IDeviceIdentity devid)
-                            {
-                                context.DeviceIdentity = devid as IClaimsIdentity;
-                                context.DevicePrincipal = principal as IClaimsPrincipal;
-                                return true;
-                            }
-                            else if (null != principal)
-                            {
-                                m_traceSource.TraceWarning($"Device authentication successful but identity was not {nameof(IDeviceIdentity)}.");
-                            }
-                            else
-                            {
-                                m_traceSource.TraceInfo($"Unsuccessful device authentication.");
-                            }
-                        }
-                        else
-                        {
-                            m_traceSource.TraceVerbose($"Malformed basic credentials in {ExtendedHttpHeaderNames.HttpDeviceCredentialHeaderName} header.");
-                        }
-                    }
-                    else
-                    {
-                        m_traceSource.TraceVerbose($"Unsupported scheme {header.Scheme} in {ExtendedHttpHeaderNames.HttpDeviceCredentialHeaderName} header.");
-                    }
-                }
-                else
-                {
-                    m_traceSource.TraceVerbose($"Invalid {ExtendedHttpHeaderNames.HttpDeviceCredentialHeaderName} format. Expecting {{Scheme}} {{Value}}");
-                }
-            }
+            //                if (principal?.Identity is IDeviceIdentity devid)
+            //                {
+            //                    context.DeviceIdentity = devid as IClaimsIdentity;
+            //                    context.DevicePrincipal = principal as IClaimsPrincipal;
+            //                    return true;
+            //                }
+            //                else if (null != principal)
+            //                {
+            //                    m_traceSource.TraceWarning($"Device authentication successful but identity was not {nameof(IDeviceIdentity)}.");
+            //                }
+            //                else
+            //                {
+            //                    m_traceSource.TraceInfo($"Unsuccessful device authentication.");
+            //                }
+            //            }
+            //            else
+            //            {
+            //                m_traceSource.TraceVerbose($"Malformed basic credentials in {ExtendedHttpHeaderNames.HttpDeviceCredentialHeaderName} header.");
+            //            }
+            //        }
+            //        else
+            //        {
+            //            m_traceSource.TraceVerbose($"Unsupported scheme {header.Scheme} in {ExtendedHttpHeaderNames.HttpDeviceCredentialHeaderName} header.");
+            //        }
+            //    }
+            //    else
+            //    {
+            //        m_traceSource.TraceVerbose($"Invalid {ExtendedHttpHeaderNames.HttpDeviceCredentialHeaderName} format. Expecting {{Scheme}} {{Value}}");
+            //    }
+            //}
 
             return false;
 
@@ -353,7 +342,7 @@ namespace SanteDB.Rest.OAuth.Rest
                 context.ApplicationIdentity = applicationIdentity as IClaimsIdentity;
                 return true;
             }
-            else if(context.AuthenticationContext?.Principal is IClaimsPrincipal cp && cp.Identities.OfType<IApplicationIdentity>().Any())
+            else if (context.AuthenticationContext?.Principal is IClaimsPrincipal cp && cp.Identities.OfType<IApplicationIdentity>().Any())
             {
                 context.ApplicationIdentity = cp.Identities.OfType<IApplicationIdentity>().First() as IClaimsIdentity;
                 return true;
@@ -376,6 +365,18 @@ namespace SanteDB.Rest.OAuth.Rest
                 else
                 {
                     m_traceSource.TraceInfo($"Application authentication unsuccessful. Client ID: {context.ClientId}");
+                }
+            }
+            else if(!String.IsNullOrEmpty(context.ClientId) && null != context.DevicePrincipal)
+            {
+                m_traceSource.TraceVerbose("Attempting to authenticate application with other context.");
+                var principal = m_AppIdentityProvider.Authenticate(context.ClientId, context.DevicePrincipal);
+
+                if (null != principal && principal.Identity is IApplicationIdentity appidentity)
+                {
+                    context.ApplicationIdentity = appidentity as IClaimsIdentity;
+                    context.ApplicationPrincipal = principal as IClaimsPrincipal;
+                    return true;
                 }
             }
 
@@ -468,22 +469,12 @@ namespace SanteDB.Rest.OAuth.Rest
 
             // System claims
             var claims = new Dictionary<string, object>();
-
-            foreach (var claim in claimsPrincipal.Claims)
+            if (ClaimMapper.Current.TryGetMapper(ClaimMapper.ExternalTokenTypeJwt, out var mappers))
             {
-                var claimtype = claim.Type;
-
-                if (s_ClaimTypeMapping.TryGetValue(claimtype, out var newclaimtype))
+                foreach (var mappedClaim in mappers.SelectMany(o => o.MapToExternalIdentityClaims(claimsPrincipal.Claims)))
                 {
-                    claimtype = newclaimtype;
+                    claims.AddClaim(mappedClaim.Key, mappedClaim.Value);
                 }
-
-                if (!m_configuration.AllowedClientClaims.Contains(claimtype))
-                {
-                    continue;
-                }
-
-                claims.AddClaim(claimtype, claim.Value);
             }
 
             //Name
@@ -501,7 +492,7 @@ namespace SanteDB.Rest.OAuth.Rest
             {
                 claims.AddClaim(OAuthConstants.ClaimType_Name, primaryidentity.Name);
                 claims.AddClaim(OAuthConstants.ClaimType_Actor, primaryidentity.FindFirst(SanteDBClaimTypes.Actor)?.Value);
-                claims.AddClaim(OAuthConstants.ClaimType_Subject, primaryidentity.FindFirst(SanteDBClaimTypes.Sid)?.Value);
+                claims.AddClaim(OAuthConstants.ClaimType_Subject, primaryidentity.FindFirst(SanteDBClaimTypes.SecurityId)?.Value);
                 rawjtibuilder.Append(primaryidentity.Name);
             }
 
@@ -556,22 +547,13 @@ namespace SanteDB.Rest.OAuth.Rest
             claims.Add(OAuthConstants.ClaimType_AtHash, halg.ComputeHash(encodedsession, 128));
             claims.Add(OAuthConstants.ClaimType_Jti, halg.ComputeHash(rawjtibuilder.ToString()));
 
-            if (null != useridentity)
+            if (null != useridentity && !claims.ContainsKey(OAuthConstants.ClaimType_Role))
             {
-                // JF - Copy roles from upstream if they are avialble
-                var existingRoleClaims = useridentity.Claims.Where(o => o.Type == SanteDBClaimTypes.DefaultRoleClaimType);
-                if (existingRoleClaims.Any())
-                {
-                    existingRoleClaims.ToList().ForEach(o => claims.Add(OAuthConstants.ClaimType_Role, o.Value));
-                }
-                else
-                {
-                    var roles = _RoleProvider.GetAllRoles(useridentity.Name);
+                var roles = _RoleProvider.GetAllRoles(useridentity.Name);
 
-                    foreach (var role in roles)
-                    {
-                        claims.AddClaim(OAuthConstants.ClaimType_Role, role);
-                    }
+                foreach (var role in roles)
+                {
+                    claims.AddClaim(OAuthConstants.ClaimType_Role, role);
                 }
             }
 
@@ -580,7 +562,7 @@ namespace SanteDB.Rest.OAuth.Rest
             descriptor.NotBefore = context.Session.NotBefore.UtcDateTime;
             descriptor.Expires = context.Session.NotAfter.UtcDateTime;
             descriptor.IssuedAt = descriptor.NotBefore;
-            descriptor.Claims.Remove(SanteDBClaimTypes.Sid);
+            descriptor.Claims.Remove(SanteDBClaimTypes.SecurityId);
 
             descriptor.CompressionAlgorithm = CompressionAlgorithms.Deflate;
 
@@ -589,6 +571,8 @@ namespace SanteDB.Rest.OAuth.Rest
             descriptor.Audience = appid; //Audience should be the client id of the app.
 
             descriptor.Issuer = m_configuration.IssuerName;
+
+
 
             // Signing credentials for the application
             // TODO: Expose this as a configuration option - which key to use other than default
@@ -1152,7 +1136,7 @@ namespace SanteDB.Rest.OAuth.Rest
 
             context.ApplicationIdentity = m_AppIdentityProvider.GetIdentity(context.ClientId) as IClaimsIdentity;
 
-            if (null == context.ApplicationIdentity || context.ApplicationIdentity.Claims.FirstOrDefault(c => c.Type == SanteDBClaimTypes.Sid)?.Value == AuthenticationContext.SystemApplicationSid)
+            if (null == context.ApplicationIdentity || context.ApplicationIdentity.Claims.FirstOrDefault(c => c.Type == SanteDBClaimTypes.SecurityId)?.Value == AuthenticationContext.SystemApplicationSid)
             {
                 error = CreateErrorResponse(OAuthErrorType.invalid_client, $"unrecognized client: {context.ClientId}", context.State);
                 return false;
@@ -1298,9 +1282,9 @@ namespace SanteDB.Rest.OAuth.Rest
             var authcode = new AuthorizationCode();
             authcode.iat = DateTimeOffset.UtcNow;
             authcode.scp = context.Scope;
-            authcode.usr = context.UserPrincipal.GetClaimValue(SanteDBClaimTypes.Sid);
-            authcode.app = context.ApplicationIdentity?.Claims?.FirstOrDefault(c => c.Type == SanteDBClaimTypes.Sid)?.Value;
-            authcode.dev = context.DeviceIdentity?.Claims?.FirstOrDefault(c => c.Type == SanteDBClaimTypes.Sid)?.Value;
+            authcode.usr = context.UserPrincipal.GetClaimValue(SanteDBClaimTypes.SecurityId);
+            authcode.app = context.ApplicationIdentity?.Claims?.FirstOrDefault(c => c.Type == SanteDBClaimTypes.SecurityId)?.Value;
+            authcode.dev = context.DeviceIdentity?.Claims?.FirstOrDefault(c => c.Type == SanteDBClaimTypes.SecurityId)?.Value;
             authcode.nonce = context.Nonce;
 
             var codejson = JsonConvert.SerializeObject(authcode);

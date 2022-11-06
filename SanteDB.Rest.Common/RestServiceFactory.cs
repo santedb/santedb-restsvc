@@ -130,7 +130,7 @@ namespace SanteDB.Rest.Common
                     throw new InvalidOperationException($"Cannot find configuration for {serviceConfigurationName}");
                 }
 
-                var retVal = new RestService(config.ServiceType);
+                RestService retVal = new RestService(config.ServiceType);
                 foreach (var bhvr in config.Behaviors)
                 {
                     if (bhvr.Type == null)

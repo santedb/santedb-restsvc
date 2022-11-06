@@ -38,7 +38,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Material resource handler
         /// </summary>
-        public MaterialResourceHandler(ILocalizationService localizationService, IFreetextSearchService freetextSearchService, IRepositoryService<Material> repositoryService, IAuditService auditService) : base(localizationService, freetextSearchService, repositoryService, auditService)
+        public MaterialResourceHandler(ILocalizationService localizationService, IRepositoryService<Material> repositoryService, IAuditService auditService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, auditService, freetextSearchService)
         {
         }
 

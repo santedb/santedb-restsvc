@@ -47,8 +47,8 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// DI ctor
         /// </summary>
-        public DiagnosticReportResourceHandler(IAppletManagerService appletManager, IAppletSolutionManagerService solutionManager, IServiceManager serviceManager,
-            INetworkInformationService networkInformationService, IOperatingSystemInfoService operatingSystemInfoService, IDataPersistenceService<DiagnosticReport> persistenceService)
+        public DiagnosticReportResourceHandler(IAppletManagerService appletManager,  IServiceManager serviceManager,
+            INetworkInformationService networkInformationService, IOperatingSystemInfoService operatingSystemInfoService, IDataPersistenceService<DiagnosticReport> persistenceService = null, IAppletSolutionManagerService solutionManager = null)
         {
             this.m_appletManager = appletManager;
             this.m_solutionManager = solutionManager;
@@ -97,7 +97,7 @@ namespace SanteDB.Rest.AMI.Resources
                     TaskInfo = o.ThreadState == ThreadState.Wait ? o.WaitReason.ToString() : "N/A"
                 }).ToList()
             };
-            retVal.ApplicationInfo.Solutions = this.m_solutionManager.Solutions.Select(o => o.Meta).ToList();
+            retVal.ApplicationInfo.Solutions = this.m_solutionManager?.Solutions.Select(o => o.Meta).ToList();
             retVal.ApplicationInfo.Applets = this.m_appletManager.Applets.Select(o => o.Info).ToList();
             retVal.ApplicationInfo.EnvironmentInfo = new DiagnosticEnvironmentInfo()
             {

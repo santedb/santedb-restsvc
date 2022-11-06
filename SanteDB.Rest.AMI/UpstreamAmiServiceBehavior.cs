@@ -27,7 +27,7 @@ namespace SanteDB.Rest.AMI
 
         // Upstream service
         private readonly IUpstreamIntegrationService m_upstreamService;
-        private readonly INetworkInformationService m_networkInformationService;
+        private readonly IUpstreamAvailabilityProvider m_upstreamAvailabilityProvider;
         private readonly IDataCachingService m_dataCachingService;
         private readonly IDataPersistenceService<Entity> m_entityRepository;
         private readonly IDataPersistenceService<Act> m_actRepository;
@@ -39,7 +39,7 @@ namespace SanteDB.Rest.AMI
         {
             this.m_restClientResolver = ApplicationServiceContext.Current.GetService<IRestClientFactory>();
             this.m_upstreamService = ApplicationServiceContext.Current.GetService<IUpstreamIntegrationService>();
-            this.m_networkInformationService = ApplicationServiceContext.Current.GetService<INetworkInformationService>();
+            this.m_upstreamAvailabilityProvider = ApplicationServiceContext.Current.GetService<IUpstreamAvailabilityProvider>();
             this.m_dataCachingService = ApplicationServiceContext.Current.GetService<IDataCachingService>();
             this.m_entityRepository = ApplicationServiceContext.Current.GetService<IDataPersistenceService<Entity>>();
             this.m_actRepository = ApplicationServiceContext.Current.GetService<IDataPersistenceService<Act>>();
@@ -82,13 +82,15 @@ namespace SanteDB.Rest.AMI
             if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
                 Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
-                if (this.m_networkInformationService.IsNetworkAvailable)
+                if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
                     try
                     {
-                        var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                        return restClient.Post<Object, Object>($"{resourceType}", data);
+                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        {
+                            restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                            return restClient.Post<Object, Object>($"{resourceType}", data);
+                        }
                     }
                     catch (Exception e)
                     {
@@ -115,17 +117,19 @@ namespace SanteDB.Rest.AMI
             if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
                 Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
-                if (this.m_networkInformationService.IsNetworkAvailable)
+                if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
                     try
                     {
-                        var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                        if (Guid.TryParse(key, out Guid uuid))
+                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                         {
-                            this.m_dataCachingService.Remove(uuid);
+                            restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                            if (Guid.TryParse(key, out Guid uuid))
+                            {
+                                this.m_dataCachingService.Remove(uuid);
+                            }
+                            return restClient.Post<Object, Object>($"{resourceType}/{key}", data);
                         }
-                        return restClient.Post<Object, Object>($"{resourceType}/{key}", data);
                     }
                     catch (Exception e)
                     {
@@ -152,17 +156,19 @@ namespace SanteDB.Rest.AMI
             if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
                 Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
-                if (this.m_networkInformationService.IsNetworkAvailable)
+                if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
                     try
                     {
-                        var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                        if (Guid.TryParse(key, out Guid uuid))
+                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                         {
-                            this.m_dataCachingService.Remove(uuid);
+                            restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                            if (Guid.TryParse(key, out Guid uuid))
+                            {
+                                this.m_dataCachingService.Remove(uuid);
+                            }
+                            return restClient.Delete<Object>($"{resourceType}/{key}");
                         }
-                        return restClient.Delete<Object>($"{resourceType}/{key}");
                     }
                     catch (Exception e)
                     {
@@ -189,13 +195,17 @@ namespace SanteDB.Rest.AMI
             if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
                 Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
-                if (this.m_networkInformationService.IsNetworkAvailable)
+                if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
                     try
                     {
-                        var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                        return restClient.Get<Object>($"{resourceType}/{key}");
+                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        {
+                            restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                            var retVal = restClient.Get<Object>($"{resourceType}/{key}");
+                            this.TagUpstream(retVal);
+                            return retVal;
+                        }
                     }
                     catch (Exception e)
                     {
@@ -222,13 +232,15 @@ namespace SanteDB.Rest.AMI
             if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
                 Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
-                if (this.m_networkInformationService.IsNetworkAvailable)
+                if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
                     try
                     {
-                        var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                        return restClient.Get<Object>($"{resourceType}/{key}/history/{versionKey}");
+                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        {
+                            restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                            return restClient.Get<Object>($"{resourceType}/{key}/history/{versionKey}");
+                        }
                     }
                     catch (Exception e)
                     {
@@ -255,13 +267,15 @@ namespace SanteDB.Rest.AMI
             if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
                 Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
-                if (this.m_networkInformationService.IsNetworkAvailable)
+                if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
                     try
                     {
-                        var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                        return restClient.Get<AmiCollection>($"{resourceType}/{key}/history");
+                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        {
+                            restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                            return restClient.Get<AmiCollection>($"{resourceType}/{key}/history");
+                        }
                     }
                     catch (Exception e)
                     {
@@ -288,12 +302,14 @@ namespace SanteDB.Rest.AMI
             if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
                 Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
-                if (this.m_networkInformationService.IsNetworkAvailable)
+                if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
                     try
                     {
-                        var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
-                        return restClient.Options<ServiceResourceOptions>($"{resourceType}");
+                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        {
+                            return restClient.Options<ServiceResourceOptions>($"{resourceType}");
+                        }
                     }
                     catch (Exception e)
                     {
@@ -320,12 +336,16 @@ namespace SanteDB.Rest.AMI
             if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
                 Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
-                if (this.m_networkInformationService.IsNetworkAvailable)
+                if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
                     try
                     {
-                        var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
-                        return restClient.Get<AmiCollection>($"{resourceType}", RestOperationContext.Current.IncomingRequest.QueryString);
+                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        {
+                            var retVal =  restClient.Get<AmiCollection>($"{resourceType}", RestOperationContext.Current.IncomingRequest.QueryString);
+                            this.TagUpstream(retVal);
+                            return retVal;
+                        }
                     }
                     catch (Exception e)
                     {
@@ -352,17 +372,19 @@ namespace SanteDB.Rest.AMI
             if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
                 Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
-                if (this.m_networkInformationService.IsNetworkAvailable)
+                if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
                     try
                     {
-                        var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                        if (Guid.TryParse(key, out Guid uuid))
+                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                         {
-                            this.m_dataCachingService.Remove(uuid);
+                            restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                            if (Guid.TryParse(key, out Guid uuid))
+                            {
+                                this.m_dataCachingService.Remove(uuid);
+                            }
+                            return restClient.Put<Object, Object>($"{resourceType}/{key}", data);
                         }
-                        return restClient.Put<Object, Object>($"{resourceType}/{key}", data);
                     }
                     catch (Exception e)
                     {
@@ -389,13 +411,15 @@ namespace SanteDB.Rest.AMI
             if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
                 Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
-                if (this.m_networkInformationService.IsNetworkAvailable)
+                if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
                     try
                     {
-                        var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                        return restClient.Lock<Object>($"{resourceType}/{key}");
+                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        {
+                            restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                            return restClient.Lock<Object>($"{resourceType}/{key}");
+                        }
                     }
                     catch (Exception e)
                     {
@@ -422,13 +446,15 @@ namespace SanteDB.Rest.AMI
             if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
                 Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
-                if (this.m_networkInformationService.IsNetworkAvailable)
+                if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
                     try
                     {
-                        var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                        return restClient.Unlock<Object>($"{resourceType}/{key}");
+                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        {
+                            restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                            return restClient.Unlock<Object>($"{resourceType}/{key}");
+                        }
                     }
                     catch (Exception e)
                     {
@@ -454,13 +480,15 @@ namespace SanteDB.Rest.AMI
             if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
                 Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
-                if (this.m_networkInformationService.IsNetworkAvailable)
+                if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
                     try
                     {
-                        var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                        return restClient.Post<object, object>($"{resourceType}/${operationName}", body);
+                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        {
+                            restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                            return restClient.Post<object, object>($"{resourceType}/${operationName}", body);
+                        }
                     }
                     catch (Exception e)
                     {
@@ -491,17 +519,19 @@ namespace SanteDB.Rest.AMI
             if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
                 Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
-                if (this.m_networkInformationService.IsNetworkAvailable)
+                if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
                     try
                     {
-                        var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                        if (Guid.TryParse(id, out Guid uuid))
+                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                         {
-                            this.m_dataCachingService.Remove(uuid);
+                            restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                            if (Guid.TryParse(id, out Guid uuid))
+                            {
+                                this.m_dataCachingService.Remove(uuid);
+                            }
+                            return restClient.Post<object, object>($"{resourceType}/{id}/${operationName}", body);
                         }
-                        return restClient.Post<object, object>($"{resourceType}/{id}/${operationName}", body);
                     }
                     catch (Exception e)
                     {
@@ -528,18 +558,20 @@ namespace SanteDB.Rest.AMI
             if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
                 Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
-                if (this.m_networkInformationService.IsNetworkAvailable)
+                if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
                     try
                     {
-                        var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService);
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                        // This NVC is UTF8 compliant
-                        var nvc = RestOperationContext.Current.IncomingRequest.Url.Query.ParseQueryString();
-                        var retVal = restClient.Get<object>($"/{resourceType}/{key}/{childResourceType}", nvc);
+                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        {
+                            restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                            // This NVC is UTF8 compliant
+                            var nvc = RestOperationContext.Current.IncomingRequest.Url.Query.ParseQueryString();
+                            var retVal = restClient.Get<object>($"/{resourceType}/{key}/{childResourceType}", nvc);
 
-                        this.TagUpstream(retVal);
-                        return retVal as AmiCollection;
+                            this.TagUpstream(retVal);
+                            return retVal as AmiCollection;
+                        }
                     }
                     catch (Exception e)
                     {
@@ -566,24 +598,26 @@ namespace SanteDB.Rest.AMI
             if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
                 Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
-                if (this.m_networkInformationService.IsNetworkAvailable)
+                if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
                     try
                     {
-                        var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.AdministrationIntegrationService);
-                        restClient.Requesting += (o, e) => e.AdditionalHeaders.Add("X-Delete-Mode", RestOperationContext.Current.IncomingRequest.Headers["X-Delete-Mode"] ?? "OBSOLETE");
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-
-                        if (Guid.TryParse(key, out Guid uuid))
+                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                         {
-                            this.m_dataCachingService.Remove(uuid);
-                        }
-                        if (Guid.TryParse(scopedEntityKey, out uuid))
-                        {
-                            this.m_dataCachingService.Remove(uuid);
-                        }
+                            restClient.Requesting += (o, e) => e.AdditionalHeaders.Add("X-Delete-Mode", RestOperationContext.Current.IncomingRequest.Headers["X-Delete-Mode"] ?? "OBSOLETE");
+                            restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
 
-                        return restClient.Delete<object>($"{resourceType}/{key}/{childResourceType}/{scopedEntityKey}");
+                            if (Guid.TryParse(key, out Guid uuid))
+                            {
+                                this.m_dataCachingService.Remove(uuid);
+                            }
+                            if (Guid.TryParse(scopedEntityKey, out uuid))
+                            {
+                                this.m_dataCachingService.Remove(uuid);
+                            }
+
+                            return restClient.Delete<object>($"{resourceType}/{key}/{childResourceType}/{scopedEntityKey}");
+                        }
                     }
                     catch (Exception e)
                     {
@@ -609,15 +643,17 @@ namespace SanteDB.Rest.AMI
             if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
                 Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
-                if (this.m_networkInformationService.IsNetworkAvailable)
+                if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
                     try
                     {
-                        var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.AdministrationIntegrationService);
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                        var retVal = restClient.Get<object>($"{resourceType}/{key}/{childResourceType}/{scopedEntityKey}");
-                        this.TagUpstream(retVal);
-                        return retVal;
+                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        {
+                            restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                            var retVal = restClient.Get<object>($"{resourceType}/{key}/{childResourceType}/{scopedEntityKey}");
+                            this.TagUpstream(retVal);
+                            return retVal;
+                        }
                     }
                     catch (Exception e)
                     {
@@ -643,23 +679,25 @@ namespace SanteDB.Rest.AMI
             if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
                 Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
             {
-                if (this.m_networkInformationService.IsNetworkAvailable)
+                if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
                     try
                     {
-                        var restClient = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.AdministrationIntegrationService);
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-
-                        if (Guid.TryParse(key, out Guid uuid))
+                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                         {
-                            this.m_dataCachingService.Remove(uuid);
-                        }
-                        if (body is IIdentifiedData ide)
-                        {
-                            this.m_dataCachingService.Remove(ide.Key.Value);
-                        }
+                            restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
 
-                        return restClient.Post<object, object>($"{resourceType}/{key}/{childResourceType}", body);
+                            if (Guid.TryParse(key, out Guid uuid))
+                            {
+                                this.m_dataCachingService.Remove(uuid);
+                            }
+                            if (body is IIdentifiedData ide)
+                            {
+                                this.m_dataCachingService.Remove(ide.Key.Value);
+                            }
+
+                            return restClient.Post<object, object>($"{resourceType}/{key}/{childResourceType}", body);
+                        }
                     }
                     catch (Exception e)
                     {

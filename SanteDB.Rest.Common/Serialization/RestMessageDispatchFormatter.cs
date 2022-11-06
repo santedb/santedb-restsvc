@@ -127,23 +127,23 @@ namespace SanteDB.Rest.Common.Serialization
                     throw;
                 }
 
-                this.m_traceSource.TraceVerbose("Will generate serializer for {0} ({1} types)...", typeof(TContract).FullName, s_knownTypes.Length);
+                //this.m_traceSource.TraceVerbose("Will generate serializer for {0} ({1} types)...", typeof(TContract).FullName, s_knownTypes.Length);
 
-                foreach (var s in s_knownTypes)
-                {
-                    this.m_traceSource.TraceVerbose("Generating serializer for {0}...", s.Name);
-                    try
-                    {
-                        // Force creation of .NET Serializer
-                        XmlModelSerializerFactory.Current.CreateSerializer(s);
-                        ModelSerializationBinder.RegisterModelType(s);
-                    }
-                    catch (Exception e)
-                    {
-                        this.m_traceSource.TraceError("Error generating for {0} : {1}", s.Name, e.ToString());
-                        //throw;
-                    }
-                }
+                //foreach (var s in s_knownTypes)
+                //{
+                //    this.m_traceSource.TraceVerbose("Generating serializer for {0}...", s.Name);
+                //    try
+                //    {
+                //        // Force creation of .NET Serializer
+                //        XmlModelSerializerFactory.Current.CreateSerializer(s);
+                //        ModelSerializationBinder.RegisterModelType(s);
+                //    }
+                //    catch (Exception e)
+                //    {
+                //        this.m_traceSource.TraceError("Error generating for {0} : {1}", s.Name, e.ToString());
+                //        //throw;
+                //    }
+                //}
             }
             catch (Exception e)
             {

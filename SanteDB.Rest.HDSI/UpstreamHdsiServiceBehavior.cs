@@ -55,11 +55,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
     {
 
 
-        private readonly IRestClientFactory m_restClientResolver;
         private readonly IDataPersistenceService<Entity> m_entityPersistence;
         private readonly IDataPersistenceService<Act> m_actPersistence;
         private readonly IUpstreamIntegrationService m_upstreamIntegrationService;
         private readonly IUpstreamAvailabilityProvider m_availabilityProvider;
+        private readonly IRestClientFactory m_restClientResolver;
 
         /// <summary>
         /// Fired when progress changes

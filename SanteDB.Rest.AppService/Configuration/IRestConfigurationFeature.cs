@@ -28,6 +28,16 @@ namespace SanteDB.Rest.AppService.Configuration
         RestConfigurationDictionary<String, Object> Configuration { get; }
 
         /// <summary>
+        /// Get the policy a user must have to read this configuration
+        /// </summary>
+        string ReadPolicy { get; }
+
+        /// <summary>
+        /// Get the policy a user must have to write this configuration
+        /// </summary>
+        string WritePolicy { get; }
+
+        /// <summary>
         /// Configure this feature with the specified <paramref name="featureConfiguration"/>
         /// </summary>
         /// <param name="configuration">The configuration to which the configuration option is a target</param>

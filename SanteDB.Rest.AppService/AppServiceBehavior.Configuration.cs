@@ -1,9 +1,13 @@
-﻿using SanteDB.Core;
+﻿using RestSrvr;
+using RestSrvr.Attributes;
+using SanteDB.Client.Configuration;
+using SanteDB.Core;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Configuration.Data;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Model.AMI.Diagnostics;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Configuration;
 using SanteDB.Core.Services;
 using SanteDB.Rest.AppService.Configuration;
 using SanteDB.Rest.AppService.Model;
@@ -11,6 +15,7 @@ using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace SanteDB.Rest.AppService
@@ -27,6 +32,7 @@ namespace SanteDB.Rest.AppService
         }
 
         /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.AlterSystemConfiguration)]
         public void DisableService(string serviceType)
         {
             try
@@ -59,6 +65,7 @@ namespace SanteDB.Rest.AppService
         }
 
         /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.AlterSystemConfiguration)]
         public void EnableService(string serviceType)
         {
             throw new NotImplementedException();
@@ -79,7 +86,17 @@ namespace SanteDB.Rest.AppService
         /// <inheritdoc/>
         public ConfigurationViewModel GetConfiguration()
         {
-            return new ConfigurationViewModel(this.m_configurationFeatures);
+            // If we're not configured then we don't need to demand - if we are configured - we need to get some demands
+            if (this.m_upstreamManagementService.IsConfigured() ||
+                !(this.m_configurationManager is InitialConfigurationManager))
+            {
+                this.m_policyEnforcementService.Demand(PermissionPolicyIdentifiers.Login);
+                return new ConfigurationViewModel(this.m_configurationFeatures.Where(o => this.m_policyEnforcementService.SoftDemand(o.ReadPolicy, AuthenticationContext.Current.Principal)));
+            }
+            else
+            {
+                return new ConfigurationViewModel(this.m_configurationFeatures);
+            }
         }
 
         /// <inheritdoc/>
@@ -96,5 +113,6 @@ namespace SanteDB.Rest.AppService
         {
             throw new NotImplementedException();
         }
+
     }
 }

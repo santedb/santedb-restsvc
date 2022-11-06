@@ -23,6 +23,7 @@ using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Queue;
+using SanteDB.Core.Security;
 using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
@@ -103,7 +104,8 @@ namespace SanteDB.Rest.AMI.ChildResources
                    .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
                    .WithSystemObjects(AuditableObjectRole.Resource, AuditableObjectLifecycle.Archiving, new Uri($"urn:santedb:org:DispatcherQueueInfo/{dqe.SourceQueue}/entry/{dqe.CorrelationId}"))
                    .WithSystemObjects(AuditableObjectRole.Resource, AuditableObjectLifecycle.Creation, new Uri($"urn:santedb:org:DispatcherQueueInfo/{scopingKey}/entry/{retVal.CorrelationId}"))
-                   .WithLocalDevice()
+                   .WithLocalDestination()
+                   .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient())
                    .WithPrincipal()
                    .Send();
                 return retVal;
@@ -134,7 +136,8 @@ namespace SanteDB.Rest.AMI.ChildResources
             }
 
             _AuditService.Audit()
-               .WithLocalDevice()
+               .WithLocalDestination()
+                   .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient())
                .WithPrincipal()
                .WithAction(ActionType.Execute)
                .WithEventIdentifier(EventIdentifierType.Query)
@@ -157,7 +160,8 @@ namespace SanteDB.Rest.AMI.ChildResources
             {
                 this.m_queueService.Purge((String)scopingKey);
                 _AuditService.Audit()
-                    .WithLocalDevice()
+                    .WithLocalDestination()
+                   .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient())
                     .WithPrincipal()
                     .WithAction(Core.Model.Audit.ActionType.Delete)
                     .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.ApplicationActivity)
@@ -172,7 +176,8 @@ namespace SanteDB.Rest.AMI.ChildResources
             {
                 var data = this.m_queueService.DequeueById((String)scopingKey, (string)key);
                 _AuditService.Audit()
-                    .WithLocalDevice()
+                    .WithLocalDestination()
+                   .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient())
                     .WithPrincipal()
                     .WithAction(Core.Model.Audit.ActionType.Delete)
                     .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.ApplicationActivity)
