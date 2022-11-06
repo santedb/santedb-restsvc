@@ -22,8 +22,7 @@ namespace SanteDB.Rest.AppService
         {
             if (null == this.m_tickleService)
             {
-                RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.NotImplemented;
-                return;
+                throw new NotSupportedException();
             }
 
             this.m_tickleService.SendTickle(data);
@@ -36,8 +35,7 @@ namespace SanteDB.Rest.AppService
         {
             if (null == this.m_tickleService)
             {
-                RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.NotImplemented;
-                return;
+                throw new NotSupportedException();
             }
 
             this.m_tickleService.DismissTickle(id);
@@ -49,8 +47,7 @@ namespace SanteDB.Rest.AppService
         {
             if (null == this.m_tickleService)
             {
-                RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.NotImplemented;
-                return null;
+                throw new NotSupportedException();
             }
 
             var userSid = this.m_identityProvider.GetSid(AuthenticationContext.Current.Principal.Identity.Name);

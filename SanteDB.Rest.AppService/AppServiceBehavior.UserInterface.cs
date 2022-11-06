@@ -228,6 +228,7 @@ namespace SanteDB.Rest.AppService
         }
 
         /// <inheritdoc/>
+        [Obsolete("Consider using the id_token extensions instead of calling this method")]
         public Dictionary<String, Object> GetCurrentSessionInfo()
         {
             var retVal = new Dictionary<string, object>();
