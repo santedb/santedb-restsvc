@@ -61,13 +61,7 @@ namespace SanteDB.Rest.AppService
     [RestServiceFault(503, "The service is not available (starting up or shutting down)")]
     public interface IAppServiceContract
     {
-
-        /// <summary>
-        /// Gets the routes
-        /// </summary>
-        [Get("/routes.js")]
-        Stream GetRoutes();
-
+        #region Configuration
         /// <summary>
         /// Get the configuration
         /// </summary>
@@ -93,97 +87,31 @@ namespace SanteDB.Rest.AppService
         void SetAppSettings(String userName, List<AppSettingKeyValuePair> settings);
 
         /// <summary>
+        /// Disable the specified service
+        /// </summary>
+        [Get("/Configuration/Service")]
+        List<DiagnosticServiceInfo> GetServices();
+
+        /// <summary>
+        /// Disable the specified service
+        /// </summary>
+        [Delete("/Configuration/Service/{serviceType}")]
+        void DisableService(String serviceType);
+
+        /// <summary>
+        /// Enable the specified service
+        /// </summary>
+        [Post("/Configuration/Service/{serviceType}")]
+        void EnableService(String serviceType);
+
+        /// <summary>
         /// Get the data storage providers
         /// </summary>
         [Get("/DataProviders")]
         List<StorageProviderViewModel> GetDataStorageProviders();
+        #endregion
 
-        /// <summary>
-        /// Get locale assets
-        /// </summary>
-        [Get("/Locale")]
-        Dictionary<String, String[]> GetLocaleAssets();
-
-        /// <summary>
-        /// Join the realm
-        /// </summary>
-        [Post("/Realm/$join")]
-        ParameterCollection JoinRealm(ParameterCollection parameters);
-
-        /// <summary>
-        /// Join the realm
-        /// </summary>
-        [Post("/Realm/$unjoin")]
-        ParameterCollection UnJoinRealm(ParameterCollection parameters);
-
-        /// <summary>
-        /// Gets menus
-        /// </summary>
-        [Get("/Menu")]
-        List<Menu> GetMenus();
-
-        /// <summary>
-        /// Gets a new UUID 
-        /// </summary>
-        /// <remarks>TODO: Generate sequential UUIDS</remarks>
-        [Get("/Uuid")]
-        Guid GetUuid();
-
-        /// <summary>
-        /// Gets the tickles/reminders which are alerts in the application
-        /// </summary>
-        [Get("/Tickle")]
-        List<Tickle> GetTickles();
-
-        /// <summary>
-        /// Creates a tickle on the service
-        /// </summary>
-        [Post("/Tickle")]
-        void CreateTickle(Tickle data);
-
-        /// <summary>
-        /// Delete the specified tickle
-        /// </summary>
-        [Delete("/Tickle/{id}")]
-        void DismissTickle(Guid id);
-
-        /// <summary>
-        /// Instruct the service to do an update
-        /// </summary>
-        [Post("/$update")]
-        ParameterCollection PerformUpdate(ParameterCollection parameters);
-        
-        /// <summary>
-        /// Gets the widgets 
-        /// </summary>
-        [Get("/Widgets")]
-        List<AppletWidget> GetWidgets();
-
-        /// <summary>
-        /// Get a widget
-        /// </summary>
-        [Get("/Widgets/{widgetId}")]
-        Stream GetWidget(String widgetId);
-
-        /// <summary>
-        /// Get synchronization logs
-        /// </summary>
-        /// <returns></returns>
-        [Get("/Sync")]
-        List<ISynchronizationLogEntry> GetSynchronizationLogs();
-
-        /// <summary>
-        /// Synchronize the system immediately
-        /// </summary>
-        [Post("/Sync/$retry")]
-        void SynchronizeNow(ParameterCollection parameters);
-
-        /// <summary>
-        /// Reset the synchornization status
-        /// </summary>
-        [Post("/Sync/$reset")]
-        void ResetSynchronizationStatus(ParameterCollection parameters);
-
+        #region Queue
         /// <summary>
         /// Get content of all the queues
         /// </summary>
@@ -225,31 +153,50 @@ namespace SanteDB.Rest.AppService
         /// </summary>
         [Delete("/Queue/{queueName}/{id}")]
         void DeleteQueueItem(String queueName, int id);
+        #endregion
+
+        #region Realm
+        /// <summary>
+        /// Join the realm
+        /// </summary>
+        [Post("/Realm/$join")]
+        ParameterCollection JoinRealm(ParameterCollection parameters);
 
         /// <summary>
-        /// Get DCG online state
+        /// Join the realm
         /// </summary>
-        [Get("/State")]
-        Dictionary<String, object> GetState();
+        [Post("/Realm/$unjoin")]
+        ParameterCollection UnJoinRealm(ParameterCollection parameters);
 
         /// <summary>
-        /// Disable the specified service
+        /// Instruct the service to do an update
         /// </summary>
-        [Get("/Configuration/Service")]
-        List<DiagnosticServiceInfo> GetServices();
+        [Post("/$update")]
+        ParameterCollection PerformUpdate(ParameterCollection parameters);
+        #endregion
+
+        #region Synchronization
+        /// <summary>
+        /// Get synchronization logs
+        /// </summary>
+        /// <returns></returns>
+        [Get("/Sync")]
+        List<ISynchronizationLogEntry> GetSynchronizationLogs();
 
         /// <summary>
-        /// Disable the specified service
+        /// Synchronize the system immediately
         /// </summary>
-        [Delete("/Configuration/Service/{serviceType}")]
-        void DisableService(String serviceType);
+        [Post("/Sync/$retry")]
+        void SynchronizeNow(ParameterCollection parameters);
 
         /// <summary>
-        /// Enable the specified service
+        /// Reset the synchornization status
         /// </summary>
-        [Post("/Configuration/Service/{serviceType}")]
-        void EnableService(String serviceType);
+        [Post("/Sync/$reset")]
+        void ResetSynchronizationStatus(ParameterCollection parameters);
+        #endregion
 
+        #region Templates
         /// <summary>
         /// Get all templates
         /// </summary>
@@ -273,12 +220,78 @@ namespace SanteDB.Rest.AppService
         /// </summary>
         [Get("/Template/{templateId}/ui/form.html")]
         void GetTemplateForm(String templateId);
+        #endregion
+
+        #region Tickle
+        /// <summary>
+        /// Gets the tickles/reminders which are alerts in the application
+        /// </summary>
+        [Get("/Tickle")]
+        List<Tickle> GetTickles();
+
+        /// <summary>
+        /// Creates a tickle on the service
+        /// </summary>
+        [Post("/Tickle")]
+        void CreateTickle(Tickle data);
+
+        /// <summary>
+        /// Delete the specified tickle
+        /// </summary>
+        [Delete("/Tickle/{id}")]
+        void DismissTickle(Guid id);
+        #endregion
+
+        #region User Interface
+        /// <summary>
+        /// Gets the routes
+        /// </summary>
+        [Get("/routes.js")]
+        Stream GetRoutes();
+
+        /// <summary>
+        /// Get locale assets
+        /// </summary>
+        [Get("/Locale")]
+        Dictionary<String, String[]> GetLocaleAssets();
+
+        /// <summary>
+        /// Gets menus
+        /// </summary>
+        [Get("/Menu")]
+        List<Menu> GetMenus();
+
+        /// <summary>
+        /// Gets a new UUID 
+        /// </summary>
+        /// <remarks>TODO: Generate sequential UUIDS</remarks>
+        [Get("/Uuid")]
+        Guid GetUuid();
+
+        /// <summary>
+        /// Gets the widgets 
+        /// </summary>
+        [Get("/Widgets")]
+        List<AppletWidget> GetWidgets();
+
+        /// <summary>
+        /// Get a widget
+        /// </summary>
+        [Get("/Widgets/{widgetId}")]
+        Stream GetWidget(String widgetId);
+
+        /// <summary>
+        /// Get DCG online state
+        /// </summary>
+        [Get("/State")]
+        Dictionary<String, object> GetState();
 
         /// <summary>
         /// Get current user information
         /// </summary>
         [Get("/SessionInfo")]
         Dictionary<String, Object> GetCurrentSessionInfo();
+        #endregion
 
     }
 }

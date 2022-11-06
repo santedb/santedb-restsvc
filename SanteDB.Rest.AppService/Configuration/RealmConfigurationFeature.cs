@@ -66,6 +66,9 @@ namespace SanteDB.Rest.AppService.Configuration
             return config;
         }
 
+            
+        }
+
         /// <inheritdoc/>
         public int Order => Int32.MinValue;
 
