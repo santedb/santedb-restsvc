@@ -1,4 +1,5 @@
-﻿using SanteDB.Core.Configuration;
+﻿using Newtonsoft.Json.Linq;
+using SanteDB.Core.Configuration;
 using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using System;
@@ -68,8 +69,8 @@ namespace SanteDB.Rest.AppService.Configuration
                 configuration.AddSection(section);
             }
 
-            section.AppSettings = ((IDictionary<String, Object>)featureConfiguration[APPSETTING_SETTING])?.Select(o => new AppSettingKeyValuePair(o.Key, o.Value?.ToString())).ToList();
-            section.ServiceProviders = ((IEnumerable)featureConfiguration[SERVICES_SETTING])?.OfType<String>().Select(o => new TypeReferenceConfiguration(o)).ToList();
+            section.AppSettings = ((IEnumerable)featureConfiguration[APPSETTING_SETTING])?.OfType<JObject>().Select(o => new AppSettingKeyValuePair(o["key"].ToString(), o["value"]?.ToString())).ToList();
+            //section.ServiceProviders = ((IEnumerable)featureConfiguration[SERVICES_SETTING])?.OfType<JObject>().Select(o => new TypeReferenceConfiguration(o["type"].ToString())).ToList();
             return true;
 
         }

@@ -55,13 +55,13 @@ namespace SanteDB.Rest.AppService.Model
         /// <summary>
         /// Return true if configured
         /// </summary>
-        [JsonProperty("isConfigured")]
+        [JsonProperty("_isConfigured")]
         public bool IsConfigured { get; }
 
         /// <summary>
         /// When true the system should automatically restart
         /// </summary>
-        [JsonProperty("autoRestart")]
+        [JsonProperty("_autoRestart")]
         public bool AutoRestart { get; set; }
 
         /// <summary>

@@ -1,9 +1,11 @@
 ﻿using RestSrvr;
 using RestSrvr.Attributes;
+using RestSrvr.Exceptions;
 using SanteDB.Client.Configuration;
 using SanteDB.Core;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Configuration.Data;
+using SanteDB.Core.Exceptions;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Model.AMI.Diagnostics;
 using SanteDB.Core.Security;
@@ -109,9 +111,36 @@ namespace SanteDB.Rest.AppService
         }
 
         /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction)]
         public ConfigurationViewModel UpdateConfiguration(ConfigurationViewModel configuration)
         {
-            throw new NotImplementedException();
+            // Run through the configuration model and configure the objects
+            try
+            {
+                var currentConfiguration = this.m_configurationManager.Configuration;
+                foreach(var configHandler in this.m_configurationFeatures.OrderBy(o=>o.Order))
+                {
+                    if(configuration.Configuration.TryGetValue(configHandler.Name, out var settings))
+                    {
+                        this.m_policyEnforcementService.Demand(configHandler.WritePolicy);
+                        if(!configHandler.Configure(currentConfiguration, settings))
+                        {
+                            throw new ConfigurationException($"Error applying configuration {configHandler.Name}", currentConfiguration);
+                        }
+                    }
+                }
+
+                if (this.m_configurationManager is IRequestRestarts irr)
+                {
+                    irr.RestartRequested += (o,e) => configuration.AutoRestart = true;
+                }
+                this.m_configurationManager.SaveConfiguration();
+                return configuration;
+            }
+            catch(Exception e)
+            {
+                throw new FaultException(System.Net.HttpStatusCode.InternalServerError, "Error saving configuration", e);
+            }
         }
 
     }

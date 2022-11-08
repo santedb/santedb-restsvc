@@ -114,6 +114,7 @@ namespace SanteDB.Rest.AppService
         /// </summary>
         public event EventHandler Stopping;
 
+
         /// <summary>
         /// Capabilities
         /// </summary>

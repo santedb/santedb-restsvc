@@ -48,6 +48,11 @@ namespace SanteDB.Rest.AMI.Resources
         private IIdentityProviderService m_identityProvider;
 
         /// <summary>
+        /// Wrapper type
+        /// </summary>
+        protected override Type WrapperType => typeof(SecurityUserInfo);
+
+        /// <summary>
         /// Create security repository
         /// </summary>
         public SecurityUserResourceHandler(IIdentityProviderService identityProvider, ILocalizationService localizationService, IRoleProviderService roleProvider, ISecurityRepositoryService securityRepository, IPolicyInformationService policyInformationService, IAuditService auditService, IDataCachingService cachingService = null, IRepositoryService<SecurityUser> repository = null) : base(auditService, policyInformationService, localizationService, cachingService, repository)
@@ -56,11 +61,6 @@ namespace SanteDB.Rest.AMI.Resources
             this.m_roleProvider = roleProvider;
             this.m_identityProvider = identityProvider;
         }
-
-        /// <summary>
-        /// Gets the type of object that is expected
-        /// </summary>
-        public override Type Type => typeof(SecurityUserInfo);
 
         /// <summary>
         /// Creates the specified user

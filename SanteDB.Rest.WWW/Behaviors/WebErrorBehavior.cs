@@ -94,6 +94,7 @@ namespace SanteDB.Rest.WWW.Behaviors
                 }
 
                 response.Body = errorPageStream;
+                response.ContentType = "text/html";
                 _AuditService.Audit().ForNetworkRequestFailure(error, RestOperationContext.Current.IncomingRequest.Url, RestOperationContext.Current.IncomingRequest.Headers, RestOperationContext.Current.OutgoingResponse.Headers).Send();
                 return true;
             }

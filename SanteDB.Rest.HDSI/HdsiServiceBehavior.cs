@@ -20,6 +20,7 @@
  */
 using RestSrvr;
 using RestSrvr.Attributes;
+using RestSrvr.Exceptions;
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
@@ -333,6 +334,8 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
+            catch(PreconditionFailedException) { throw; }
+            catch(FaultException) { throw; }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
@@ -350,6 +353,10 @@ namespace SanteDB.Rest.HDSI
             }
             else
             {
+                if(headerString.StartsWith("W/")) // weak references - but we'll still use it
+                {
+                    headerString = headerString.Substring(2);
+                }
                 var headerParts = headerString.Split('.');
                 if (resourceType.IsAssignableFrom(this.GetResourceHandler(headerParts[0]).Type))
                 {
@@ -378,7 +385,7 @@ namespace SanteDB.Rest.HDSI
                 var cacheResult = this.m_dataCachingService.GetCacheItem(objectId);
 
                 if (cacheResult != null && (ifNoneMatchHeader?.Contains(cacheResult.Tag) == true ||
-                    !ifMatchHeader.Contains(cacheResult.Tag) == true ||
+                    ifMatchHeader?.Contains(cacheResult.Tag) != true ||
                         ifModifiedHeader.HasValue && cacheResult.ModifiedOn <= ifModifiedHeader ||
                         ifUnmodifiedHeader.HasValue && cacheResult.ModifiedOn >= ifUnmodifiedHeader))
                 {
@@ -410,8 +417,8 @@ namespace SanteDB.Rest.HDSI
                     if (ifNoneMatchHeader?.Any() == true ||
                         ifMatchHeader?.Any() == true)
                     {
-                        checkQuery.Add("tag", ifNoneMatchHeader?.Where(c => Guid.TryParse(c, out _)).Select(o => $"{o}").ToArray());
-                        checkQuery.Add("tag", ifMatchHeader?.Where(c => Guid.TryParse(c, out _)).Select(o => $"{o}").ToArray());
+                        checkQuery.Add("etag", ifNoneMatchHeader?.Where(c => Guid.TryParse(c, out _)).Select(o => $"{o}").ToArray());
+                        checkQuery.Add("etag", ifMatchHeader?.Where(c => Guid.TryParse(c, out _)).Select(o => $"{o}").ToArray());
                         if (typeof(IVersionedData).IsAssignableFrom(handler.Type))
                         {
                             checkQuery.Add("obsoletionTime", "null", "!null");
@@ -571,6 +578,8 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
@@ -708,6 +717,8 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
@@ -763,6 +774,8 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
@@ -852,6 +865,8 @@ namespace SanteDB.Rest.HDSI
                     }
                 }
             }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (PatchAssertionException e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
@@ -1081,6 +1096,8 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
@@ -1119,6 +1136,8 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
@@ -1174,6 +1193,8 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
@@ -1272,6 +1293,8 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
@@ -1400,6 +1423,8 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
@@ -1428,6 +1453,8 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
@@ -1456,6 +1483,8 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
@@ -1543,6 +1572,8 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
@@ -1581,6 +1612,8 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
@@ -1616,12 +1649,13 @@ namespace SanteDB.Rest.HDSI
                     }
 
                     // Query for results
-                    var results = handler.QueryChildObjects(null, childResourceType, query);
+                    var results = handler.QueryChildObjects(null, childResourceType, query) as IOrderableQueryResultSet;
 
                     // Now apply controls
                     var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<IdentifiedData>();
 
-                    RestOperationContext.Current.OutgoingResponse.SetLastModified((retVal.OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now));
+                    var modifiedOnSelector = QueryExpressionParser.BuildPropertySelector(handler.Type, "modifiedOn", convertReturn: typeof(object));
+                    var lastModified = (DateTime)results.OrderByDescending(modifiedOnSelector).Select<DateTimeOffset>(modifiedOnSelector).FirstOrDefault().DateTime;
 
                     // Last modification time and not modified conditions
                     if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||

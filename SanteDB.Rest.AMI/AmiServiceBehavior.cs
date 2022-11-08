@@ -228,7 +228,7 @@ namespace SanteDB.Rest.AMI
                 }
 
                 if (cacheResult != null && (ifNoneMatchHeader?.Contains(cacheResult.Tag) == true ||
-                    !ifMatchHeader.Contains(cacheResult.Tag) == true ||
+                    ifMatchHeader?.Contains(cacheResult.Tag) != true ||
                         ifModifiedHeader.HasValue && cacheResult.ModifiedOn <= ifModifiedHeader ||
                         ifUnmodifiedHeader.HasValue && cacheResult.ModifiedOn >= ifUnmodifiedHeader))
                 {
@@ -260,8 +260,8 @@ namespace SanteDB.Rest.AMI
                     if (ifNoneMatchHeader?.Any() == true ||
                         ifMatchHeader?.Any() == true)
                     {
-                        checkQuery.Add("tag", ifNoneMatchHeader?.Where(c => Guid.TryParse(c, out _)).Select(o => $"{o}").ToArray());
-                        checkQuery.Add("tag", ifMatchHeader?.Where(c => Guid.TryParse(c, out _)).Select(o => $"{o}").ToArray());
+                        checkQuery.Add("etag", ifNoneMatchHeader?.Where(c => Guid.TryParse(c, out _)).Select(o => $"{o}").ToArray());
+                        checkQuery.Add("etag", ifMatchHeader?.Where(c => Guid.TryParse(c, out _)).Select(o => $"{o}").ToArray());
                         if (typeof(IVersionedData).IsAssignableFrom(handler.Type))
                         {
                             checkQuery.Add("obsoletionTime", "null", "!null");
@@ -879,12 +879,16 @@ namespace SanteDB.Rest.AMI
                     }
 
                     // Query for results
-                    var results = handler.Query(query);
+                    var results = handler.Query(query) as IOrderableQueryResultSet;
 
                     // Now apply controls
                     var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<Object>();
 
-                    RestOperationContext.Current.OutgoingResponse.SetLastModified((retVal.OfType<IdentifiedData>().OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now));
+                    if (typeof(IdentifiedData).IsAssignableFrom(handler.Type))
+                    {
+                        var modifiedOnSelector = QueryExpressionParser.BuildPropertySelector(handler.Type, "modifiedOn", convertReturn: typeof(object));
+                        var lastModified = (DateTime)results.OrderByDescending(modifiedOnSelector).Select<DateTimeOffset>(modifiedOnSelector).FirstOrDefault().DateTime;
+                    }
 
                     // Last modification time and not modified conditions
                     if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||

@@ -38,17 +38,17 @@ namespace SanteDB.Rest.AMI.Resources
         private IRoleProviderService m_roleProvider;
 
         /// <summary>
+        /// Wrapper type
+        /// </summary>
+        protected override Type WrapperType => typeof(SecurityRoleInfo);
+
+        /// <summary>
         /// Create security repository
         /// </summary>
         public SecurityRoleResourceHandler(IRoleProviderService roleProvider, IPolicyInformationService policyInformationService, ILocalizationService localizationService, IAuditService auditService, IDataCachingService cachingService = null, IRepositoryService<SecurityRole> repository = null) : base(auditService, policyInformationService, localizationService, cachingService, repository)
         {
             this.m_roleProvider = roleProvider;
         }
-
-        /// <summary>
-        /// Get the type
-        /// </summary>
-        public override Type Type => typeof(SecurityRoleInfo);
 
         /// <summary>
         /// Create the specified security role

@@ -109,12 +109,12 @@ namespace SanteDB.Rest.AppService
             }
             catch(UpstreamIntegrationException e)
             {
-                this.m_tracer.TraceError("Error joining realm: {0}", e);
+                this.m_tracer.TraceError("{0}: {1}", e.Message,  e.InnerException?.Message);
                 throw;
             }
             catch (Exception e)
             {
-                this.m_tracer.TraceError("Error joining realm: {0}", e);
+                this.m_tracer.TraceError("Error joining realm: {0}", e.Message);
                 throw new UpstreamIntegrationException(this.m_localizationService.GetString(ErrorMessageStrings.UPSTREAM_JOIN_ERR), e);
             }
 

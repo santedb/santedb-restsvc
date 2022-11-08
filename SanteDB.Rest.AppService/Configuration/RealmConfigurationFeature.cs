@@ -89,7 +89,7 @@ namespace SanteDB.Rest.AppService.Configuration
             section.Realm = new UpstreamRealmConfiguration()
             {
                 DomainName = featureConfiguration[REALM_NAME]?.ToString(),
-                PortNumber = (int?)featureConfiguration[PORT_NUMBER] ?? 8080,
+                PortNumber = (int)((long?)featureConfiguration[PORT_NUMBER] ?? 8080),
                 UseTls = (bool?)featureConfiguration[USE_TLS] ?? false
             };
 

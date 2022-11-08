@@ -1,6 +1,11 @@
-﻿using SanteDB.Client.Disconnected.Data.Synchronization.Configuration;
+﻿using SanteDB.Client.Disconnected.Data.Synchronization;
+using SanteDB.Client.Disconnected.Data.Synchronization.Configuration;
+using SanteDB.Client.Repositories;
+using SanteDB.Client.Upstream.Repositories;
+using SanteDB.Client.Upstream.Security;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using System;
 using System.Collections;
@@ -18,12 +23,14 @@ namespace SanteDB.Rest.AppService.Configuration
     {
         private readonly IConfigurationManager m_configurationManager;
         private readonly SynchronizationConfigurationSection m_configuration;
+
         public const string MODE_SETTING = "mode";
         public const string OVERWRITE_SERVER_SETTING = "overwriteServer";
         public const string POLL_SETTING = "pollInterval";
         public const string BIG_BUNDLES_SETTING = "bigBundles";
         public const string ENABLED_SUBSCRIPTIONS_SETTING = "subscription";
-        public const string SUBSCRIBED_OBJECTS_SETTING = "objects";
+        public const string SUBSCRIBED_OBJECT_TYPE_SETTING = "subscribeTo";
+        public const string SUBSCRIBED_OBJECTS_SETTING = "subscribeObjects";
         public const string USE_PATCHES_SETTING = "usePatch";
         public const string FORBID_SYNC_SETTING = "forbidSync";
 
@@ -37,7 +44,7 @@ namespace SanteDB.Rest.AppService.Configuration
         }
 
         /// <inheritdoc/>
-        public int Order => 0;
+        public int Order => 100;
 
         /// <inheritdoc/>
         public string Name => "sync";
@@ -61,7 +68,8 @@ namespace SanteDB.Rest.AppService.Configuration
                 { POLL_SETTING, this.m_configuration?.PollIntervalXml ?? "PT15M" },
                 { BIG_BUNDLES_SETTING, this.m_configuration?.BigBundles ?? false },
                 { ENABLED_SUBSCRIPTIONS_SETTING, this.m_configuration?.Subscriptions?.ToList() },
-                { SUBSCRIBED_OBJECTS_SETTING, this.m_configuration?.SubscribedObjects?.Select(o => new { typ = o.TypeXml, id = o.Identifier }).ToList()  },
+                { SUBSCRIBED_OBJECT_TYPE_SETTING, this.m_configuration?.SubscribeToResource?.TypeXml },
+                { SUBSCRIBED_OBJECTS_SETTING, this.m_configuration?.SubscribedObjects?.ToList()  },
                 { USE_PATCHES_SETTING, this.m_configuration?.UsePatches ?? false },
                 { FORBID_SYNC_SETTING, this.m_configuration?.ForbidSending?.Select(o => o.TypeXml).ToList() }
             };
@@ -70,12 +78,14 @@ namespace SanteDB.Rest.AppService.Configuration
         public bool Configure(SanteDBConfiguration configuration, IDictionary<string, object> featureConfiguration)
         {
             var configSection = configuration.GetSection<SynchronizationConfigurationSection>();
+            var appSection = configuration.GetSection<ApplicationServiceContextConfigurationSection>();
+
             if (configSection == null)
             {
                 configSection = new SynchronizationConfigurationSection()
                 {
-                    SubscribedObjects = new List<SubscribedObjectConfiguration>(),
-                    Subscriptions = new List<String>()
+                    SubscribedObjects = new List<Guid>(),
+                    Subscriptions = new List<Guid>()
                 };
                 configuration.AddSection(configSection);
             }
@@ -83,17 +93,63 @@ namespace SanteDB.Rest.AppService.Configuration
             // Copy subscription settings over
             configSection.OverwriteServer = (bool?)featureConfiguration[OVERWRITE_SERVER_SETTING] ?? configSection.OverwriteServer;
             configSection.BigBundles = (bool?)featureConfiguration[BIG_BUNDLES_SETTING] ?? configSection.BigBundles;
-            configSection.Mode = (SynchronizationMode?)featureConfiguration[MODE_SETTING] ?? configSection.Mode;
-            configSection.PollIntervalXml = featureConfiguration[POLL_SETTING]?.ToString() ?? configSection.PollIntervalXml;
-            configSection.Subscriptions = ((IEnumerable)featureConfiguration[ENABLED_SUBSCRIPTIONS_SETTING])?.OfType<String>().ToList();
-            configSection.SubscribedObjects = ((IEnumerable)featureConfiguration[SUBSCRIBED_OBJECTS_SETTING])?.OfType<dynamic>()
-                .Select(o => new SubscribedObjectConfiguration()
-                {
-                    TypeXml = (String)o.typ,
-                    Identifier = Guid.Parse((String)o.id)
-                }).ToList();
 
+            if(Enum.TryParse<SynchronizationMode>(featureConfiguration[MODE_SETTING]?.ToString(), out var syncMode))
+            {
+                configSection.Mode = syncMode;
+            }
+            configSection.PollIntervalXml = featureConfiguration[POLL_SETTING]?.ToString() ?? configSection.PollIntervalXml;
+            configSection.Subscriptions = ((IEnumerable)featureConfiguration[ENABLED_SUBSCRIPTIONS_SETTING])?.OfType<String>().Select(o=>Guid.Parse(o)).ToList();
+            configSection.SubscribedObjects = ((IEnumerable)featureConfiguration[SUBSCRIBED_OBJECTS_SETTING])?.OfType<String>().Select(o => Guid.Parse(o)).ToList();
             configSection.ForbidSending = ((IEnumerable)featureConfiguration[FORBID_SYNC_SETTING])?.OfType<String>().Select(o => new ResourceTypeReferenceConfiguration(o)).ToList();
+
+            // TODO: Change the services for those in the modes - ALL - ONLINE - SUBSCRIBE
+            appSection.ServiceProviders.RemoveAll(o =>
+                {
+                    try
+                    {
+                        return o.Type.Implements(typeof(IRepositoryService)) ||
+                        o.Type.Implements(typeof(IIdentityProviderService)) ||
+                        o.Type.Implements(typeof(IDeviceIdentityProviderService)) ||
+                        o.Type.Implements(typeof(IApplicationIdentityProviderService)) ||
+                        o.Type.Implements(typeof(ISynchronizationQueueManager)) ||
+                        o.Type.Implements(typeof(IAliasProvider)) ||
+                        o.Type.Implements(typeof(IDataPersistenceService)) ||
+                        o.Type.Implements(typeof(ISynchronizationLogService)) ||
+                        o.Type.Implements(typeof(ISynchronizationService)) ||
+                        o.Type.Implements(typeof(ITagPersistenceService)) ||
+                        o.Type.Implements(typeof(IAuditDispatchService)) ||
+                        o.Type.Implements(typeof(IMailMessageService)) ||
+                        o.Type.Implements(typeof(IFreetextSearchService)) ||
+                        o.Type.Implements(typeof(IPolicyInformationService)) ||
+                        o.Type.Implements(typeof(IRoleProviderService)) ||
+                        o.Type.Implements(typeof(ISecurityRepositoryService)) ||
+                        typeof(UpstreamRepositoryFactory).IsAssignableFrom(o.Type) ||
+                        o.Type.Implements(typeof(ISecurityChallengeIdentityService));
+                    }
+                    catch (Exception e)
+                    {
+                        throw new InvalidOperationException($"Error determining service validity for {o.TypeXml}", e);
+                    }
+                });
+
+            switch (configSection.Mode)
+            {
+                case SynchronizationMode.Online:
+                    appSection.ServiceProviders.AddRange(new TypeReferenceConfiguration[]
+                    {
+                        new TypeReferenceConfiguration(typeof(UpstreamRepositoryFactory)),
+                        new TypeReferenceConfiguration(typeof(UpstreamIdentityProvider)),
+                        new TypeReferenceConfiguration(typeof(UpstreamApplicationIdentityProvider)),
+                        new TypeReferenceConfiguration(typeof(UpstreamPolicyInformationService)),
+                        new TypeReferenceConfiguration(typeof(UpstreamRoleProviderService)),
+                        new TypeReferenceConfiguration(typeof(UpstreamSecurityRepository)),
+                        new TypeReferenceConfiguration(typeof(UpstreamSecurityChallengeProvider))
+                    });
+                    break;
+                default:
+                    throw new NotSupportedException();
+            }
             return true;
         }
     }

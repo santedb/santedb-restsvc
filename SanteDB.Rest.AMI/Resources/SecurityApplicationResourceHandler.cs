@@ -40,17 +40,17 @@ namespace SanteDB.Rest.AMI.Resources
         private readonly ISecurityRepositoryService m_securityRepository;
 
         /// <summary>
+        /// Wrapper type
+        /// </summary>
+        protected override Type WrapperType => typeof(SecurityApplicationInfo);
+
+        /// <summary>
         /// Create security repository
         /// </summary>
         public SecurityApplicationResourceHandler(ISecurityRepositoryService securityRepository, IPolicyInformationService policyInformationService, ILocalizationService localizationService, IAuditService auditService, IDataCachingService cachingService = null, IRepositoryService<SecurityApplication> repository = null) : base(auditService, policyInformationService, localizationService, cachingService, repository)
         {
             this.m_securityRepository = securityRepository;
         }
-
-        /// <summary>
-        /// Get the type of results
-        /// </summary>
-        public override Type Type => typeof(SecurityApplicationInfo);
 
         /// <summary>
         /// Create application

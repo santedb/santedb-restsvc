@@ -1,4 +1,5 @@
-﻿using SanteDB.Client;
+﻿using Newtonsoft.Json.Linq;
+using SanteDB.Client;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Diagnostics.Tracing;
@@ -88,18 +89,22 @@ namespace SanteDB.Rest.AppService.Configuration
 
             if (featureConfiguration[LOG_WRITER_SETTING] is IEnumerable enu)
             {
-                foreach(IDictionary itm in enu)
+                foreach(JObject itm in enu)
                 {
-                    if(!Enum.TryParse<EventLevel>(itm[LOG_DETAIL_SETTING]?.ToString(), out var logMode))
-                    {
-                        continue;
-                    }
-
                     var logWriter = itm["aqn"];
 
                     var logWriterType = Type.GetType(logWriter.ToString());
                     var existingConfig = section.TraceWriter.Find(o => o.TraceWriter == logWriterType);
-                    if(existingConfig == null)
+
+                    if (!Enum.TryParse<EventLevel>(itm[LOG_DETAIL_SETTING]?.ToString(), out var logMode))
+                    {
+                        if (existingConfig != null)
+                        {
+                            section.TraceWriter.Remove(existingConfig);
+                        }
+                        continue;
+                    }
+                    else if(existingConfig == null)
                     {
                         existingConfig = new TraceWriterConfiguration()
                         {
@@ -108,6 +113,11 @@ namespace SanteDB.Rest.AppService.Configuration
                             WriterName = logWriterType.Name,
                             TraceWriter = logWriterType
                         };
+                    }
+                    else
+                    {
+                        existingConfig.Filter = logMode;
+
                     }
 
                 }

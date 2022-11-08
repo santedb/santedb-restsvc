@@ -96,7 +96,12 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Gets the type that this handles
         /// </summary>
-        public virtual Type Type => typeof(ISecurityEntityInfo<TSecurityEntity>);
+        public virtual Type Type => typeof(TSecurityEntity);
+
+        /// <summary>
+        /// Get the wrapped type
+        /// </summary>
+        protected abstract Type WrapperType { get; }
 
         /// <summary>
         /// Gets the scope of the object
@@ -190,7 +195,7 @@ namespace SanteDB.Rest.AMI.Resources
             // Get the object
             var data = this.GetRepository().Get((Guid)id, (Guid)versionId);
 
-            var retVal = Activator.CreateInstance(this.Type, data) as ISecurityEntityInfo<TSecurityEntity>;
+            var retVal = Activator.CreateInstance(this.WrapperType, data) as ISecurityEntityInfo<TSecurityEntity>;
             retVal.Policies = this.m_policyInformationService.GetPolicies(data).Select(o => new SecurityPolicyInfo(o)).ToList();
             return retVal;
         }
@@ -203,7 +208,7 @@ namespace SanteDB.Rest.AMI.Resources
         {
             try
             {
-                var retVal = Activator.CreateInstance(this.Type, this.GetRepository().Delete((Guid)key));
+                var retVal = Activator.CreateInstance(this.WrapperType, this.GetRepository().Delete((Guid)key));
                 _AuditService.Audit().ForEventDataAction(EventTypeCodes.SecurityObjectChanged, Core.Model.Audit.ActionType.Delete, Core.Model.Audit.AuditableObjectLifecycle.LogicalDeletion, Core.Model.Audit.EventIdentifierType.SecurityAlert, Core.Model.Audit.OutcomeIndicator.Success, key.ToString(), retVal).Send();
 
                 // Special case for security entity wrappers, we want to load them from DB from fresh
@@ -230,7 +235,7 @@ namespace SanteDB.Rest.AMI.Resources
             {
                 return new NestedQueryResultSet(this.m_repository.Find(query), (o) =>
                 {
-                    var r = Activator.CreateInstance(this.Type, o) as ISecurityEntityInfo<TSecurityEntity>;
+                    var r = Activator.CreateInstance(this.WrapperType, o) as ISecurityEntityInfo<TSecurityEntity>;
                     r.Policies = this.m_policyInformationService.GetPolicies(o).Select(p => new SecurityPolicyInfo(p)).ToList();
                     return r;
                 });

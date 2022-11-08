@@ -127,21 +127,25 @@ namespace SanteDB.Rest.Common.Serialization
                     throw;
                 }
 
-                //this.m_traceSource.TraceVerbose("Will generate serializer for {0} ({1} types)...", typeof(TContract).FullName, s_knownTypes.Length);
-
-                //foreach (var s in s_knownTypes)
+                //if (ApplicationServiceContext.Current.HostType == SanteDBHostType.Server) // This can take a while on .NET framework where the Xml serializers are compiled - 
+                //                                                                          // however in an environment like a server it is useful to do this
                 //{
-                //    this.m_traceSource.TraceVerbose("Generating serializer for {0}...", s.Name);
-                //    try
+                //    this.m_traceSource.TraceVerbose("Will generate serializer for {0} ({1} types)...", typeof(TContract).FullName, s_knownTypes.Length);
+
+                //    foreach (var s in s_knownTypes)
                 //    {
-                //        // Force creation of .NET Serializer
-                //        XmlModelSerializerFactory.Current.CreateSerializer(s);
-                //        ModelSerializationBinder.RegisterModelType(s);
-                //    }
-                //    catch (Exception e)
-                //    {
-                //        this.m_traceSource.TraceError("Error generating for {0} : {1}", s.Name, e.ToString());
-                //        //throw;
+                //        this.m_traceSource.TraceVerbose("Generating serializer for {0}...", s.Name);
+                //        try
+                //        {
+                //            // Force creation of .NET Serializer
+                //            XmlModelSerializerFactory.Current.CreateSerializer(s);
+                //            ModelSerializationBinder.RegisterModelType(s);
+                //        }
+                //        catch (Exception e)
+                //        {
+                //            this.m_traceSource.TraceError("Error generating for {0} : {1}", s.Name, e.ToString());
+                //            //throw;
+                //        }
                 //    }
                 //}
             }
@@ -327,7 +331,7 @@ namespace SanteDB.Rest.Common.Serialization
                     contentType = "application/octet-stream";
                     response.Body = str;
                 }
-                else 
+                else
                 {
                     switch (contentTypeMime.MediaType)
                     {
@@ -453,7 +457,7 @@ namespace SanteDB.Rest.Common.Serialization
                             break;
                     }
                 }
-                
+
 
 #if DEBUG
                 this.m_traceSource.TraceVerbose("Setting response headers");
