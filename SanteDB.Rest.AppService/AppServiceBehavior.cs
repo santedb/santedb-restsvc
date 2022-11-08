@@ -137,7 +137,7 @@ namespace SanteDB.Rest.AppService
                     this.m_amiState = upstreamService?.IsAvailable(ServiceEndpointType.AdministrationIntegrationService) == true;
                 }
                 catch { }
-            }, null, 0, 60000);
+            }, null, 0, 60000); //TODO: Config setting or constant defined elsewhere with a semantic name?
 
             this.m_configurationFeatures = this.m_serviceManager.CreateInjectedOfAll<IRestConfigurationFeature>().ToList();
             this.m_upstreamSettings = this.m_upstreamManagementService.GetSettings();
