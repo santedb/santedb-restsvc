@@ -306,7 +306,7 @@ namespace SanteDB.Rest.Common.Serialization
 
                 if (String.IsNullOrEmpty(accepts) && String.IsNullOrEmpty(contentType))
                 {
-                    accepts = "application/xml";
+                    accepts = "application/json";
                 }
                 var contentTypeMime = (accepts ?? contentType).Split(',').Select(o => new ContentType(o)).First();
 

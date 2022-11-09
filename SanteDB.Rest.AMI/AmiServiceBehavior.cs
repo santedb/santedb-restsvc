@@ -76,6 +76,11 @@ namespace SanteDB.Rest.AMI
         private ResourceHandlerTool m_resourceHandler;
 
         /// <summary>
+        /// Configuration
+        /// </summary>
+        protected readonly AmiConfigurationSection m_configuration;
+
+        /// <summary>
         /// Default CTOR for rest creation
         /// </summary>
         public AmiServiceBehavior() :
@@ -311,6 +316,7 @@ namespace SanteDB.Rest.AMI
             this.m_dataCachingService = cachingService;
             this.m_pepService = pepService;
             m_resourceHandler = AmiMessageHandler.ResourceHandler;
+            this.m_configuration = configurationManager.GetSection<AmiConfigurationSection>();
         }
 
         /// <summary>
@@ -884,10 +890,10 @@ namespace SanteDB.Rest.AMI
                     // Now apply controls
                     var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<Object>();
 
-                    if (typeof(IdentifiedData).IsAssignableFrom(handler.Type))
+                    if (typeof(IdentifiedData).IsAssignableFrom(handler.Type) && this.m_configuration.IncludeMetadataHeadersOnSearch)
                     {
                         var modifiedOnSelector = QueryExpressionParser.BuildPropertySelector(handler.Type, "modifiedOn", convertReturn: typeof(object));
-                        var lastModified = (DateTime)results.OrderByDescending(modifiedOnSelector).Select<DateTimeOffset>(modifiedOnSelector).FirstOrDefault().DateTime;
+                        var lastModified = (DateTime)results.OrderByDescending(modifiedOnSelector).Select<DateTimeOffset>(modifiedOnSelector).AsResultSet().FirstOrDefault().DateTime;
                     }
 
                     // Last modification time and not modified conditions
@@ -1129,7 +1135,10 @@ namespace SanteDB.Rest.AMI
                     // Now apply controls
                     var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<Object>();
 
-                    RestOperationContext.Current.OutgoingResponse.SetLastModified((retVal.OfType<IdentifiedData>().OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now));
+                    if (this.m_configuration.IncludeMetadataHeadersOnSearch)
+                    {
+                        RestOperationContext.Current.OutgoingResponse.SetLastModified((retVal.OfType<IdentifiedData>().OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now));
+                    }
 
                     // Last modification time and not modified conditions
                     if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||

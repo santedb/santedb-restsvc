@@ -77,6 +77,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                 ApplicationServiceContext.Current.GetService<IBarcodeProviderService>(),
                 ApplicationServiceContext.Current.GetService<IResourcePointerService>(),
                 ApplicationServiceContext.Current.GetService<IServiceManager>(),
+                ApplicationServiceContext.Current.GetService<IConfigurationManager>(),
                 ApplicationServiceContext.Current.GetService<IRestClientFactory>(),
                 ApplicationServiceContext.Current.GetService<IUpstreamIntegrationService>(),
                 ApplicationServiceContext.Current.GetService<IUpstreamAvailabilityProvider>(),
@@ -88,7 +89,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         }
 
         /// <inheritdoc/>
-        public UpstreamHdsiServiceBehavior(IDataCachingService dataCache, ILocalizationService localeService, IPatchService patchService, IPolicyEnforcementService pepService, IBarcodeProviderService barcodeService, IResourcePointerService resourcePointerService, IServiceManager serviceManager, IRestClientFactory restClientResolver, IUpstreamIntegrationService upstreamIntegrationService, IUpstreamAvailabilityProvider availabilityProvider, IDataPersistenceService<Entity> entityRepository = null, IDataPersistenceService<Act> actRepository = null) : base(dataCache, localeService, patchService, pepService, barcodeService, resourcePointerService, serviceManager)
+        public UpstreamHdsiServiceBehavior(IDataCachingService dataCache, ILocalizationService localeService, IPatchService patchService, IPolicyEnforcementService pepService, IBarcodeProviderService barcodeService, IResourcePointerService resourcePointerService, IServiceManager serviceManager, IConfigurationManager configurationManager, IRestClientFactory restClientResolver, IUpstreamIntegrationService upstreamIntegrationService, IUpstreamAvailabilityProvider availabilityProvider, IDataPersistenceService<Entity> entityRepository = null, IDataPersistenceService<Act> actRepository = null) : base(dataCache, localeService, patchService, pepService, barcodeService, resourcePointerService, serviceManager, configurationManager)
         {
             this.m_restClientResolver = restClientResolver;
             this.m_entityPersistence = entityRepository;
@@ -129,9 +130,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override void ResolvePointer(NameValueCollection parms)
         {
             // create only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                parms["_upstream"] == "true" ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                 {
@@ -180,8 +179,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override IdentifiedData Create(string resourceType, IdentifiedData body)
         {
             // create only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                 {
@@ -214,8 +212,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override IdentifiedData CreateUpdate(string resourceType, string id, IdentifiedData body)
         {
             // create only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                 {
@@ -253,8 +250,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override IdentifiedData Delete(string resourceType, string id)
         {
             // Only on the remote server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                 {
@@ -294,9 +290,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override IdentifiedData Get(string resourceType, string id)
         {
             // Delete only on the external server
-            if ((Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr) &&
-                Guid.TryParse(id, out var idGuid))
+            if (this.ShouldForwardRequest() && Guid.TryParse(id, out var idGuid))
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                 {
@@ -404,8 +398,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override IdentifiedData GetVersion(string resourceType, string id, string versionId)
         {
             // Delete only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                 {
@@ -437,8 +430,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override IdentifiedData History(string resourceType, string id)
         {
             // Delete only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                 {
@@ -470,8 +462,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override ServiceOptions Options()
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if(this.ShouldForwardRequest())
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                 {
@@ -502,8 +493,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override void Patch(string resourceType, string id, Patch body)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                 {
@@ -530,13 +520,20 @@ namespace SanteDB.Messaging.HDSI.Wcf
             }
         }
 
+        /// <summary>
+        /// Returns true if the request should be forwarded
+        /// </summary>
+        private bool ShouldForwardRequest() =>
+            Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr ||
+            this.m_configuration?.AutomaticallyForwardRequests == true;
+
         /// <inheritdoc/>
         [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override ServiceResourceOptions ResourceOptions(string resourceType)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                 {
@@ -567,8 +564,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override IdentifiedData Search(string resourceType)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                 {
@@ -605,8 +601,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override IdentifiedData Update(string resourceType, string id, IdentifiedData body)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                 {
@@ -644,8 +639,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override object AssociationSearch(string resourceType, string key, string childResourceType)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                 {
@@ -682,8 +676,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override object AssociationRemove(string resourceType, string key, string childResourceType, string scopedEntityKey)
         {
             // Only on the remote server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                 {
@@ -725,8 +718,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override object AssociationGet(string resourceType, string key, string childResourceType, string scopedEntityKey)
         {
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                 {
@@ -759,8 +751,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override object AssociationCreate(string resourceType, string key, string childResourceType, object body)
         {
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                 {
@@ -801,8 +792,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override object InvokeMethod(string resourceType, string operationName, ParameterCollection body)
         {
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                 {
@@ -838,8 +828,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                 throw new ArgumentNullException(nameof(body));
             }
 
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                 {

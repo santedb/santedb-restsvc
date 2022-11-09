@@ -233,7 +233,7 @@ namespace SanteDB.Rest.AMI.Resources
 
             try
             {
-                return new NestedQueryResultSet(this.m_repository.Find(query), (o) =>
+                return new TransformQueryResultSet<TSecurityEntity, ISecurityEntityInfo<TSecurityEntity>>(this.m_repository.Find(query), (o) =>
                 {
                     var r = Activator.CreateInstance(this.WrapperType, o) as ISecurityEntityInfo<TSecurityEntity>;
                     r.Policies = this.m_policyInformationService.GetPolicies(o).Select(p => new SecurityPolicyInfo(p)).ToList();

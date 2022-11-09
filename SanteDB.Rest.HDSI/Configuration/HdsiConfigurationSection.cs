@@ -53,6 +53,18 @@ namespace SanteDB.Rest.HDSI.Configuration
             get; set;
         }
 
+        /// <summary>
+        /// When set to true in the configuration the service should include metadata headers
+        /// </summary>
+        [XmlAttribute("includeMetadataHeadersInSearch")]
+        [DisplayName("Include Metadata in Search Results"), Description("When set to true, instructs the HDSI to perform a query for LastModifiedTime headers. This can provide additional information to callers, however can introduce additional overhead")]
+        public bool IncludeMetadataHeadersOnSearch { get; set; }
 
+        /// <summary>
+        /// Auto forward requests to upstream
+        /// </summary>
+        [XmlAttribute("autoforwardToUpstream")]
+        [DisplayName("Auto-Forward Requests"), Description("When true, automatically forwards all requests to the upstream")]
+        public bool AutomaticallyForwardRequests { get; set; }
     }
 }

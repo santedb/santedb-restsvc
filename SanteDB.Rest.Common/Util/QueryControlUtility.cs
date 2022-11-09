@@ -71,9 +71,7 @@ namespace SanteDB.Rest.Common
             if (!query.TryGetValue(QueryControlParameterNames.HttpCountParameterName, out queryList) || !Int32.TryParse(queryList.First(), out int count))
             {
                 count = 100;
-
             }
-
             return me.Take(count);
         }
     }

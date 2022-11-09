@@ -39,6 +39,7 @@ using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
+using SanteDB.Rest.HDSI.Configuration;
 using SanteDB.Rest.HDSI.Vrp;
 using System;
 using System.Collections.Generic;
@@ -73,6 +74,9 @@ namespace SanteDB.Rest.HDSI
         /// </summary>
         protected readonly IDataCachingService m_dataCachingService;
 
+        // Configuration settings
+        protected readonly HdsiConfigurationSection m_configuration;
+
         /// <summary>
         /// Locale service
         /// </summary>
@@ -97,7 +101,9 @@ namespace SanteDB.Rest.HDSI
                 ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>(),
                 ApplicationServiceContext.Current.GetService<IBarcodeProviderService>(),
                 ApplicationServiceContext.Current.GetService<IResourcePointerService>(),
-                ApplicationServiceContext.Current.GetService<IServiceManager>()
+                ApplicationServiceContext.Current.GetService<IServiceManager>(),
+                ApplicationServiceContext.Current.GetService<IConfigurationManager>()
+
                 )
         {
 
@@ -105,8 +111,9 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// HDSI Service Behavior
         /// </summary>
-        public HdsiServiceBehavior(IDataCachingService dataCache, ILocalizationService localeService, IPatchService patchService, IPolicyEnforcementService pepService, IBarcodeProviderService barcodeService, IResourcePointerService resourcePointerService, IServiceManager serviceManager)
+        public HdsiServiceBehavior(IDataCachingService dataCache, ILocalizationService localeService, IPatchService patchService, IPolicyEnforcementService pepService, IBarcodeProviderService barcodeService, IResourcePointerService resourcePointerService, IServiceManager serviceManager, IConfigurationManager configurationManager)
         {
+            this.m_configuration = configurationManager.GetSection<HdsiConfigurationSection>();
             this.m_dataCachingService = dataCache;
             this.m_localeService = localeService;
             this.m_pepService = pepService;
@@ -621,12 +628,15 @@ namespace SanteDB.Rest.HDSI
                     var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<IdentifiedData>();
 
                     // Last modified object
-                    var modifiedOnSelector = QueryExpressionParser.BuildPropertySelector(handler.Type, "modifiedOn", convertReturn: typeof(object));
-                    var lastModified = (DateTime)results.OrderByDescending(modifiedOnSelector).Select<DateTimeOffset>(modifiedOnSelector).FirstOrDefault().DateTime;
-
-                    if (lastModified != default(DateTime))
+                    if (this.m_configuration?.IncludeMetadataHeadersOnSearch == true)
                     {
-                        RestOperationContext.Current.OutgoingResponse.SetLastModified(lastModified);
+                        var modifiedOnSelector = QueryExpressionParser.BuildPropertySelector(handler.Type, "modifiedOn", convertReturn: typeof(object));
+                        var lastModified = (DateTime)results.OrderByDescending(modifiedOnSelector).Select<DateTimeOffset>(modifiedOnSelector).AsResultSet().FirstOrDefault().DateTime;
+
+                        if (lastModified != default(DateTime))
+                        {
+                            RestOperationContext.Current.OutgoingResponse.SetLastModified(lastModified);
+                        }
                     }
 
                     // Last modification time and not modified conditions
@@ -1034,7 +1044,10 @@ namespace SanteDB.Rest.HDSI
                     // Now apply controls
                     var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<IdentifiedData>();
 
-                    RestOperationContext.Current.OutgoingResponse.SetLastModified((retVal.OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now));
+                    if (this.m_configuration?.IncludeMetadataHeadersOnSearch == true)
+                    {
+                        RestOperationContext.Current.OutgoingResponse.SetLastModified((retVal.OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now));
+                    }
 
                     // Last modification time and not modified conditions
                     if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||

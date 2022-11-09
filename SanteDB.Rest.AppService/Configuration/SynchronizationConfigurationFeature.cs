@@ -7,6 +7,9 @@ using SanteDB.Core.Configuration;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
+using SanteDB.Rest.AMI.Configuration;
+using SanteDB.Rest.BIS.Configuration;
+using SanteDB.Rest.HDSI.Configuration;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -146,6 +149,12 @@ namespace SanteDB.Rest.AppService.Configuration
                         new TypeReferenceConfiguration(typeof(UpstreamSecurityRepository)),
                         new TypeReferenceConfiguration(typeof(UpstreamSecurityChallengeProvider))
                     });
+                    var hdsiConfigurationSection = configuration.GetSection<HdsiConfigurationSection>() ?? configuration.AddSection(new HdsiConfigurationSection());
+                    var amiConfigurationSection = configuration.GetSection<AmiConfigurationSection>() ?? configuration.AddSection(new AmiConfigurationSection());
+                    var bisConfigurationSection = configuration.GetSection<BisServiceConfigurationSection>() ?? configuration.AddSection(new BisServiceConfigurationSection());
+                    hdsiConfigurationSection.AutomaticallyForwardRequests = true;
+                    amiConfigurationSection.AutomaticallyForwardRequests = true;
+                    bisConfigurationSection.AutomaticallyForwardRequests = true;
                     break;
                 default:
                     throw new NotSupportedException();

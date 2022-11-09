@@ -45,6 +45,13 @@ namespace SanteDB.Rest.AMI
             this.m_actRepository = ApplicationServiceContext.Current.GetService<IDataPersistenceService<Act>>();
         }
 
+        /// <summary>
+        /// Returns true if the request should be forwarded
+        /// </summary>
+        private bool ShouldForwardRequest() =>
+            Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
+                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr ||
+            this.m_configuration?.AutomaticallyForwardRequests == true;
 
         /// <summary>
         /// Tag the object if it is only upstream or if it exists locally 
@@ -79,8 +86,7 @@ namespace SanteDB.Rest.AMI
         public override object Create(string resourceType, object data)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
@@ -114,8 +120,7 @@ namespace SanteDB.Rest.AMI
         public override object CreateUpdate(string resourceType, string key, object data)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
@@ -153,8 +158,7 @@ namespace SanteDB.Rest.AMI
         public override object Delete(string resourceType, string key)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
@@ -192,8 +196,7 @@ namespace SanteDB.Rest.AMI
         public override object Get(string resourceType, string key)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
@@ -229,8 +232,7 @@ namespace SanteDB.Rest.AMI
         public override object GetVersion(string resourceType, string key, string versionKey)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
@@ -264,8 +266,7 @@ namespace SanteDB.Rest.AMI
         public override AmiCollection History(string resourceType, string key)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
@@ -299,8 +300,7 @@ namespace SanteDB.Rest.AMI
         public override ServiceResourceOptions ResourceOptions(string resourceType)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
@@ -333,8 +333,7 @@ namespace SanteDB.Rest.AMI
         public override AmiCollection Search(string resourceType)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
@@ -369,8 +368,7 @@ namespace SanteDB.Rest.AMI
         public override object Update(string resourceType, string key, object data)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
@@ -408,8 +406,7 @@ namespace SanteDB.Rest.AMI
         public override object Lock(string resourceType, string key)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
@@ -443,8 +440,7 @@ namespace SanteDB.Rest.AMI
         public override object UnLock(string resourceType, string key)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
@@ -477,8 +473,7 @@ namespace SanteDB.Rest.AMI
         [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override object InvokeMethod(string resourceType, string operationName, ParameterCollection body)
         {
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
@@ -516,8 +511,7 @@ namespace SanteDB.Rest.AMI
                 throw new ArgumentNullException(nameof(body));
             }
 
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
@@ -555,8 +549,7 @@ namespace SanteDB.Rest.AMI
         public override AmiCollection AssociationSearch(string resourceType, string key, string childResourceType)
         {
             // Perform only on the external server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
@@ -595,8 +588,7 @@ namespace SanteDB.Rest.AMI
         public override object AssociationRemove(string resourceType, string key, string childResourceType, string scopedEntityKey)
         {
             // Only on the remote server
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
@@ -640,8 +632,7 @@ namespace SanteDB.Rest.AMI
         [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override object AssociationGet(string resourceType, string key, string childResourceType, string scopedEntityKey)
         {
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
@@ -676,8 +667,7 @@ namespace SanteDB.Rest.AMI
         [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override object AssociationCreate(string resourceType, string key, string childResourceType, object body)
         {
-            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr)
+            if (this.ShouldForwardRequest())
             {
                 if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                 {
