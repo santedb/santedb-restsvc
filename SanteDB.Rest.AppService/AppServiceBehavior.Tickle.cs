@@ -50,7 +50,7 @@ namespace SanteDB.Rest.AppService
                 throw new NotSupportedException();
             }
 
-            var userSid = this.m_identityProvider.GetSid(AuthenticationContext.Current.Principal.Identity.Name);
+            var userSid = this.m_securityRepositoryService.GetSid(AuthenticationContext.Current.Principal.Identity);
             return this.m_tickleService.GetTickles(o => o.Expiry > DateTime.Now && (o.Target == userSid || o.Target == null)).OrderByDescending(o => o.Created).Take(10).ToList();
         }
 

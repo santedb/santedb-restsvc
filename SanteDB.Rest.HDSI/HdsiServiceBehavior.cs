@@ -650,6 +650,8 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
@@ -911,6 +913,8 @@ namespace SanteDB.Rest.HDSI
 
                 return retVal;
             }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
@@ -1053,6 +1057,8 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
@@ -1246,6 +1252,8 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (Exception e)
             {
                 this.m_traceSource.TraceError("Error generating barcode for {0} - {1}", resourceType, e);
@@ -1336,6 +1344,8 @@ namespace SanteDB.Rest.HDSI
                     throw new KeyNotFoundException($"Object not found");
                 }
             }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
@@ -1375,6 +1385,8 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (Exception e)
             {
                 this.m_traceSource.TraceError("Error fetching pointer for {0} - {1}", resourceType, e);
@@ -1525,6 +1537,8 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
@@ -1675,6 +1689,8 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;

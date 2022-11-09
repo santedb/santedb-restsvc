@@ -94,15 +94,16 @@ namespace SanteDB.Rest.WWW
         {
             this.ThrowIfNotRunning();
 
-            if (RestOperationContext.Current.Data.TryGetValue("lang", out object lang) && lang is String[] langList)
+            String lang = null;
+            if (RestOperationContext.Current.Data.TryGetValue("lang", out object langRaw) && langRaw is String langStr)
             {
-                lang = langList[0];
+                lang = langStr;
             }
             else if (AuthenticationContext.Current.Principal is IClaimsPrincipal icp)
             {
                 lang = icp.GetClaimValue(SanteDBClaimTypes.Language);
             }
-            else
+            if(String.IsNullOrEmpty(lang))
             {
                 lang = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
             }

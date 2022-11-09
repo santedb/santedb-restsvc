@@ -19,9 +19,11 @@
  * Date: 2022-5-30
  */
 using RestSrvr;
+using RestSrvr.Exceptions;
 using RestSrvr.Message;
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
+using SanteDB.Core.Exceptions;
 using SanteDB.Core.Security.Audit;
 using SanteDB.Rest.Common.Fault;
 using SanteDB.Rest.Common.Serialization;
@@ -67,16 +69,21 @@ namespace SanteDB.Rest.Common.Behavior
                     authService.AddAuthenticateChallengeHeader(faultMessage, error);
                     break;
                 case (HttpStatusCode)429:
-                    faultMessage.Headers.Add("Retry-After", "3600");
+                    if (error is LimitExceededException lee)
+                    {
+                        faultMessage.Headers.Add("Retry-After", lee.RetryAfter.ToString());
+
+                    }
+                    else
+                    {
+                        faultMessage.Headers.Add("Retry-After", "3600");
+                    }
                     break;
-                case HttpStatusCode.Forbidden:
-                case HttpStatusCode.NotImplemented:
-                case HttpStatusCode.MethodNotAllowed:
-                    this.m_traceSource.TraceWarning("Warning on REST pipeline: {0}", error);
-                    break;
-                default:
-                    this.m_traceSource.TraceError("Error on REST pipeline: {0}", error);
-                    break;
+            }
+
+            if(error is FaultException fe)
+            {
+                faultMessage.Headers.Add(fe.Headers);
             }
 
             if (RestOperationContext.Current.ServiceEndpoint != null)
@@ -87,7 +94,18 @@ namespace SanteDB.Rest.Common.Behavior
             {
                 RestMessageDispatchFormatter.CreateFormatter(typeof(IRestApiContractImplementation)).SerializeResponse(faultMessage, null, fault);
             }
-            ApplicationServiceContext.Current.GetAuditService().Audit().ForNetworkRequestFailure(error, uriMatched, RestOperationContext.Current.IncomingRequest.Headers.AllKeys.ToDictionary(o => o, o => RestOperationContext.Current.IncomingRequest.Headers[o]), RestOperationContext.Current.OutgoingResponse.Headers.AllKeys.ToDictionary(o => o, o => RestOperationContext.Current.OutgoingResponse.Headers[o])).Send();
+
+            if((int)faultMessage.StatusCode >= 500)
+            {
+                this.m_traceSource.TraceWarning("Server Error on REST pipeline: {0}", error);
+                ApplicationServiceContext.Current.GetAuditService().Audit().ForNetworkRequestFailure(error, uriMatched, RestOperationContext.Current.IncomingRequest.Headers.AllKeys.ToDictionary(o => o, o => RestOperationContext.Current.IncomingRequest.Headers[o]), RestOperationContext.Current.OutgoingResponse.Headers.AllKeys.ToDictionary(o => o, o => RestOperationContext.Current.OutgoingResponse.Headers[o])).Send();
+
+            }
+            else if ((int)faultMessage.StatusCode >= 400)
+            {
+                this.m_traceSource.TraceWarning("Client Error on REST pipeline: {0}", error);
+                ApplicationServiceContext.Current.GetAuditService().Audit().ForNetworkRequestFailure(error, uriMatched, RestOperationContext.Current.IncomingRequest.Headers.AllKeys.ToDictionary(o => o, o => RestOperationContext.Current.IncomingRequest.Headers[o]), RestOperationContext.Current.OutgoingResponse.Headers.AllKeys.ToDictionary(o => o, o => RestOperationContext.Current.OutgoingResponse.Headers[o])).Send();
+            }
             return true;
         }
     }

@@ -200,7 +200,7 @@ namespace SanteDB.Rest.Common.Security
                                 // Validate that there has been no shift in principal if currently authenticated
                                 if (AuthenticationContext.Current.Principal is IClaimsPrincipal cp && authenticationPrincipal is IClaimsPrincipal ap)
                                 {
-                                    var existingIdentity = cp.Identities.FirstOrDefault(i => i.FindFirst(SanteDBClaimTypes.Actor)?.Value == ap.FindFirst(SanteDBClaimTypes.Actor)?.Value); // find the first matching (if any) identity to validate
+                                    var existingIdentity = cp.Identities.FirstOrDefault(i => i.FindFirst(SanteDBClaimTypes.SecurityId)?.Value == ap.FindFirst(SanteDBClaimTypes.SecurityId)?.Value); // find the first matching (if any) identity to validate
                                     if (existingIdentity == null)
                                     {
                                         cp.AddIdentity(authenticationPrincipal.Identity);
