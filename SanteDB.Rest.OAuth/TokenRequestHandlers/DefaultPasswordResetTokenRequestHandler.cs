@@ -47,6 +47,7 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
             //Validate the request.
             if (string.IsNullOrEmpty(context?.Username))
             {
+                _Tracer.TraceInfo("{0}: Null username in request.", context.IncomingRequest.RequestTraceIdentifier);
                 context.ErrorType = OAuthErrorType.invalid_request;
                 context.ErrorMessage = "invalid username";
                 return false;
@@ -54,6 +55,7 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
 
             if (string.IsNullOrEmpty(context?.SecurityChallenge) || !Guid.TryParse(context?.SecurityChallenge, out var securitychallengeguid))
             {
+                _Tracer.TraceInfo("{0}: Null or invalid format for security challenge in request.", context.IncomingRequest.RequestTraceIdentifier);
                 context.ErrorType = OAuthErrorType.invalid_request;
                 context.ErrorMessage = "invalid challenge";
                 return false;
@@ -61,6 +63,7 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
 
             if (string.IsNullOrEmpty(context?.SecurityChallengeResponse))
             {
+                _Tracer.TraceInfo("{0}: Null security challenge response in request.", context.IncomingRequest.RequestTraceIdentifier);
                 context.ErrorType = OAuthErrorType.invalid_request;
                 context.ErrorMessage = "invalid response";
                 return false;
@@ -77,10 +80,12 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
 
                 if (null != context.UserPrincipal)
                 {
+                    _Tracer.TracePolicyDemand(context.IncomingRequest.RequestTraceIdentifier, OAuthConstants.OAuthResetFlowPolicy, context.UserPrincipal);
                     _PolicyService.Demand(OAuthConstants.OAuthResetFlowPolicy, context.UserPrincipal);
 
                     if (null == context.DevicePrincipal)
                     {
+                        _Tracer.TracePolicyDemand(context.IncomingRequest.RequestTraceIdentifier, OAuthConstants.OAuthResetFlowPolicyWithoutDevice, context.UserPrincipal);
                         _PolicyService.Demand(OAuthConstants.OAuthResetFlowPolicyWithoutDevice, context.UserPrincipal);
                     }
 
@@ -95,6 +100,7 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                         }
                     }
 
+                    //_Tracer.TracePolicyDemand
                     _PolicyService?.Demand(OAuthConstants.OAuthResetFlowPolicy, context.ApplicationPrincipal);
 
                     if (null != context.DevicePrincipal)

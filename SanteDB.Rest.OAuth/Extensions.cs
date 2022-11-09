@@ -1,4 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
 using SanteDB.Core.Security.Services;
@@ -111,5 +112,9 @@ namespace SanteDB.Rest.OAuth
             return algorithm.ComputeHash(plaintext);
         }
 
+        public static void TracePolicyDemand(this Tracer tracer, Guid requestIdentifier, string permission, object securable)
+        {
+            tracer.TraceVerbose("{0}: Demand {1} from {2}", requestIdentifier, permission, securable.ToString());
+        }
     }
 }
