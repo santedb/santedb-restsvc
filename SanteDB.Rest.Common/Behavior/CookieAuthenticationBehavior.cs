@@ -30,7 +30,6 @@ namespace SanteDB.Rest.Common.Behavior
         // Session token resolver
         private readonly ISessionTokenResolverService m_sessionTokenResolver;
         private readonly ISessionIdentityProviderService m_sessionIdentityProvider;
-        private readonly ISymmetricCryptographicProvider m_symmetricProvider;
 
         /// <summary>
         /// Applet collection
@@ -48,7 +47,6 @@ namespace SanteDB.Rest.Common.Behavior
             }
             m_sessionTokenResolver = ApplicationServiceContext.Current.GetService<ISessionTokenResolverService>();
             m_sessionIdentityProvider = ApplicationServiceContext.Current.GetService<ISessionIdentityProviderService>();
-            m_symmetricProvider = ApplicationServiceContext.Current.GetService<ISymmetricCryptographicProvider>();
         }
 
         /// <inheritdoc cref="IAuthorizationServicePolicy.AddAuthenticateChallengeHeader(RestResponseMessage, Exception)"/>
@@ -76,7 +74,7 @@ namespace SanteDB.Rest.Common.Behavior
                 if (AuthenticationContext.Current.Principal.Identity.Name == AuthenticationContext.AnonymousPrincipal.Identity.Name &&
                     authCookie != null)
                 {
-                    var session = m_sessionTokenResolver.GetSessionFromIdToken(m_symmetricProvider.Decrypt(authCookie.Value));
+                    var session = m_sessionTokenResolver.GetSessionFromIdToken(authCookie.Value);
                     if (session != null)
                     {
 

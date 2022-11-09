@@ -54,7 +54,6 @@ namespace SanteDB.Rest.AppService
         private readonly IAppletManagerService m_appletManagerService;
         private readonly ILocalizationService m_localizationService;
         private readonly IUpdateManager m_updateManager;
-        private readonly IIdentityProviderService m_identityProvider;
         private readonly ISecurityRepositoryService m_securityRepositoryService;
         private readonly IUserPreferencesManager m_userPreferenceManager;
         private readonly Tracer m_tracer = Tracer.GetTracer(typeof(AppServiceBehavior));
@@ -120,7 +119,6 @@ namespace SanteDB.Rest.AppService
             this.m_appletManagerService = appletManagerService;
             this.m_localizationService = localizationService;
             this.m_updateManager = updateManager;
-            this.m_identityProvider = identityProvider;
             this.m_securityRepositoryService = securityRepositoryService;
             this.m_userPreferenceManager = userPreferencesManager;
 

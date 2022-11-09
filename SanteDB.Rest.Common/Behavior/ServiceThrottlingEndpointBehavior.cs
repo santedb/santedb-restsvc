@@ -47,6 +47,11 @@ namespace SanteDB.Rest.Common.Behavior
         [XmlElement("limit")]
         public Int32 Limit { get; set; }
 
+        /// <summary>
+        /// Get the cooldown time
+        /// </summary>
+        [XmlElement("cooldown")]
+        public Int32 CooldownTime { get; set; }
     }
 
     /// <summary>
@@ -93,11 +98,10 @@ namespace SanteDB.Rest.Common.Behavior
         /// </summary>
         public void AfterReceiveRequest(RestRequestMessage request)
         {
-
-            var cReq = Interlocked.Increment(ref this.m_requests);
-            if (cReq > this.m_settings.Limit)
+            if (Interlocked.Increment(ref this.m_requests) > this.m_settings.Limit)
             {
-                throw new LimitExceededException();
+                Interlocked.Decrement(ref this.m_requests);
+                throw new LimitExceededException(this.m_settings.CooldownTime);
             }
         }
 

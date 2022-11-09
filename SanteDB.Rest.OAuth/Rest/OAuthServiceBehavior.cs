@@ -469,6 +469,7 @@ namespace SanteDB.Rest.OAuth.Rest
 
             // System claims
             var claims = new Dictionary<string, object>();
+            
             if (ClaimMapper.Current.TryGetMapper(ClaimMapper.ExternalTokenTypeJwt, out var mappers))
             {
                 foreach (var mappedClaim in mappers.SelectMany(o => o.MapToExternalIdentityClaims(claimsPrincipal.Claims)))
@@ -665,9 +666,7 @@ namespace SanteDB.Rest.OAuth.Rest
             // Establish the session
 
             string purposeOfUse = additionalClaims?.FirstOrDefault(o => o.Type == SanteDBClaimTypes.PurposeOfUse)?.Value;
-
             bool isOverride = additionalClaims?.Any(o => o.Type == SanteDBClaimTypes.SanteDBOverrideClaim) == true || scopes?.Any(o => o == PermissionPolicyIdentifiers.OverridePolicyPermission) == true;
-
             var session = m_SessionProvider.Establish(claimsPrincipal, remoteIp, isOverride, purposeOfUse, scopes?.ToArray(), additionalClaims.FirstOrDefault(o => o.Type == SanteDBClaimTypes.Language)?.Value);
 
             _AuditService.Audit().ForSessionStart(session, claimsPrincipal, true).Send();
@@ -718,7 +717,6 @@ namespace SanteDB.Rest.OAuth.Rest
             // Establish the session
 
             string purposeOfUse = additionalClaims?.FirstOrDefault(o => o.Type == SanteDBClaimTypes.PurposeOfUse)?.Value;
-
             bool isOverride = additionalClaims?.Any(o => o.Type == SanteDBClaimTypes.SanteDBOverrideClaim) == true || scopes?.Any(o => o == PermissionPolicyIdentifiers.OverridePolicyPermission) == true;
 
             var session = m_SessionProvider.Establish(claimsPrincipal, remoteIp, isOverride, purposeOfUse, scopes?.ToArray(), additionalClaims.FirstOrDefault(o => o.Type == SanteDBClaimTypes.Language)?.Value);

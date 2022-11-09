@@ -198,7 +198,7 @@ namespace SanteDB.Rest.AppService
         /// </summary>
         private Model.Menu ProcessMenu(AppletMenu appletMenu, string context)
         {
-            if (null == appletMenu)
+            if (null == appletMenu || appletMenu.Context != context)
             {
                 return null;
             }
@@ -206,9 +206,9 @@ namespace SanteDB.Rest.AppService
             var asset = this.m_appletManagerService.Applets.ResolveAsset(appletMenu.Asset, appletMenu.Manifest);
             var principal = AuthenticationContext.Current.Principal;
 
-            //TODO: Why are we doing this?
+            // Restricts the menu context based on policy and whether the menu points to an asset that does not exist
             //if (appletMenu.Context != context || null != appletMenu.Asset && 
-            if (asset?.Policies?.Any(p => this.m_policyEnforcementService.SoftDemand(p, principal)) == true)
+            if (asset?.Policies?.All(p => this.m_policyEnforcementService.SoftDemand(p, principal)) != true) 
             {
                 return null;
             }
