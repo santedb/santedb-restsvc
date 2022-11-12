@@ -162,7 +162,7 @@ namespace SanteDB.Rest.AppService
             var queryExpression = QueryExpressionParser.BuildLinqExpression<AppletWidget>(httpq).Compile();
             return this.m_appletManagerService.Applets.WidgetAssets
                 .ToList()
-                .Where(o => o.Policies?.Any(p => this.m_policyEnforcementService.SoftDemand(p, AuthenticationContext.Current.Principal)) != true)
+                .Where(o => o.Policies?.All(p => this.m_policyEnforcementService.SoftDemand(p, AuthenticationContext.Current.Principal)) == true)
                 .Select(o => (o.Content ?? this.m_appletManagerService.Applets.Resolver(o)) as AppletWidget)
                 .Where(queryExpression)
                 .GroupBy(o => o.Name)

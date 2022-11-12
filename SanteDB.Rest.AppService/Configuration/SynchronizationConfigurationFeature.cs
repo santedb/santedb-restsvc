@@ -2,6 +2,7 @@
 using SanteDB.Client.Disconnected.Data.Synchronization;
 using SanteDB.Client.Disconnected.Data.Synchronization.Configuration;
 using SanteDB.Client.Repositories;
+using SanteDB.Client.Upstream.Management;
 using SanteDB.Client.Upstream.Repositories;
 using SanteDB.Client.Upstream.Security;
 using SanteDB.Core.Configuration;
@@ -145,6 +146,7 @@ namespace SanteDB.Rest.AppService.Configuration
                 case SynchronizationMode.Online:
                     appSection.ServiceProviders.AddRange(new TypeReferenceConfiguration[]
                     {
+                        new TypeReferenceConfiguration(typeof(UpstreamJobManager)),
                         new TypeReferenceConfiguration(typeof(UpstreamRepositoryFactory)),
                         new TypeReferenceConfiguration(typeof(UpstreamIdentityProvider)),
                         new TypeReferenceConfiguration(typeof(UpstreamApplicationIdentityProvider)),
@@ -166,7 +168,7 @@ namespace SanteDB.Rest.AppService.Configuration
                     configSection.Subscriptions = m_subscriptionRepository.Find(o => true).Where(d => d.ClientDefinitions.Any(c => c.Mode.HasFlag(Core.Model.Subscription.SubscriptionModeType.All))).Select(o => o.Uuid).ToList();
                     goto case SynchronizationMode.Subscription;
                 case SynchronizationMode.Subscription:
-                    if(featureConfiguration.TryGetValue(ENABLED_SUBSCRIPTIONS_SETTING, out var subscriptionValueRaw) && subscriptionValueRaw is JArray subscriptionValueJarray)
+                    if (featureConfiguration.TryGetValue(ENABLED_SUBSCRIPTIONS_SETTING, out var subscriptionValueRaw) && subscriptionValueRaw is JArray subscriptionValueJarray)
                     {
                         configSection.Subscriptions = subscriptionValueJarray.Select(o => Guid.Parse(o.ToString())).ToList();
                         configSection.SubscribeToResource = new ResourceTypeReferenceConfiguration(featureConfiguration[SUBSCRIBED_OBJECT_TYPE_SETTING].ToString());
@@ -176,14 +178,16 @@ namespace SanteDB.Rest.AppService.Configuration
                     // Add synchronization services
                     appSection.ServiceProviders.AddRange(new TypeReferenceConfiguration[]
                     {
-                                            new TypeReferenceConfiguration(typeof(UpstreamSynchronizationService)),
-                                            new TypeReferenceConfiguration(typeof(UpstreamIdentityProvider)),
-                                            new TypeReferenceConfiguration(typeof(UpstreamApplicationIdentityProvider)),
-                                            new TypeReferenceConfiguration(typeof(UpstreamPolicyInformationService)),
-                                            new TypeReferenceConfiguration(typeof(UpstreamRoleProviderService)),
-                                            new TypeReferenceConfiguration(typeof(UpstreamSecurityRepository)),
-                                            new TypeReferenceConfiguration(typeof(UpstreamSecurityChallengeProvider)),
-                                            new TypeReferenceConfiguration(typeof(RepositoryEntitySource))
+                        new TypeReferenceConfiguration(typeof(UpstreamSynchronizationService)),
+                        new TypeReferenceConfiguration(typeof(UpstreamIdentityProvider)),
+                        new TypeReferenceConfiguration(typeof(UpstreamApplicationIdentityProvider)),
+                        new TypeReferenceConfiguration(typeof(UpstreamPolicyInformationService)),
+                        new TypeReferenceConfiguration(typeof(UpstreamRoleProviderService)),
+                        new TypeReferenceConfiguration(typeof(UpstreamSecurityRepository)),
+                        new TypeReferenceConfiguration(typeof(UpstreamSecurityChallengeProvider)),
+                        new TypeReferenceConfiguration(typeof(RepositoryEntitySource)),
+                        new TypeReferenceConfiguration(typeof(DefaultSynchronizationLogService)),
+                        new TypeReferenceConfiguration(typeof(DefaultSynchronizationQueueManager))
                     });
                     break;
 

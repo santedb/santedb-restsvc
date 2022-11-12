@@ -77,8 +77,10 @@ namespace SanteDB.Rest.AMI.Resources
                 RestOperationContext.Current.OutgoingResponse.ContentType = "text/plain";
             }
 
-            if (Int32.TryParse(RestOperationContext.Current.IncomingRequest.QueryString["_offset"], out var offset) &&
-                Int32.TryParse(RestOperationContext.Current.IncomingRequest.QueryString["_count"], out var count))
+            RestOperationContext.Current.OutgoingResponse.ContentType = "text/plain";
+            _ = Int32.TryParse(RestOperationContext.Current.IncomingRequest.QueryString["_offset"], out var offset);
+            _ = Int32.TryParse(RestOperationContext.Current.IncomingRequest.QueryString["_count"], out var count);
+            if (offset > 0 || count > 0)
             {
                 using (var fs = logFile.OpenRead())
                 {
@@ -92,7 +94,8 @@ namespace SanteDB.Rest.AMI.Resources
                     {
                         buffer = new byte[count];
                     }
-                    fs.Read(buffer, offset, buffer.Length);
+                    fs.Seek(offset, SeekOrigin.Begin);
+                    fs.Read(buffer, 0, buffer.Length);
                     retVal.Write(buffer, 0, buffer.Length);
                     retVal.Seek(0, SeekOrigin.Begin);
                     return retVal;
@@ -110,6 +113,7 @@ namespace SanteDB.Rest.AMI.Resources
         {
             return this.m_logManagerService.GetLogFiles().Select(o => new LogFileInfo()
             {
+                Name = o.Name,
                 Key = o.Name,
                 LastWrite = o.LastWriteTime,
                 Size = o.Length
