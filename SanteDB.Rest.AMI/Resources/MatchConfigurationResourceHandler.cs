@@ -38,7 +38,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// Represents a resource handler which serves out match metadata
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class MatchConfigurationResourceHandler : IApiResourceHandler, IOperationalApiResourceHandler, IChainedApiResourceHandler
+    public class MatchConfigurationResourceHandler : ChainedResourceHandlerBase, IApiResourceHandler, IOperationalApiResourceHandler
     {
         // Configuration service
         private readonly IRecordMatchingConfigurationService m_configurationService;
@@ -46,31 +46,25 @@ namespace SanteDB.Rest.AMI.Resources
         // Property providers
         private readonly ConcurrentDictionary<String, IApiChildOperation> m_childOperations = new ConcurrentDictionary<string, IApiChildOperation>();
 
-        // Child resources
-        private readonly ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
-
-        // Localization service
-        private readonly ILocalizationService m_localizationService;
-
         /// <summary>
         /// Gets the resource name
         /// </summary>
-        public string ResourceName => "MatchConfiguration";
+        public override string ResourceName => "MatchConfiguration";
 
         /// <summary>
         /// Gets the type that this returns
         /// </summary>
-        public Type Type => typeof(IRecordMatchingConfiguration);
+        public override Type Type => typeof(IRecordMatchingConfiguration);
 
         /// <summary>
         /// Gets the scope
         /// </summary>
-        public Type Scope => typeof(IAmiServiceContract);
+        public override Type Scope => typeof(IAmiServiceContract);
 
         /// <summary>
         /// Gets the capabilities of this service
         /// </summary>
-        public ResourceCapabilityType Capabilities => ResourceCapabilityType.Search | ResourceCapabilityType.Get | ResourceCapabilityType.Create | ResourceCapabilityType.Update | ResourceCapabilityType.Delete;
+        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Search | ResourceCapabilityType.Get | ResourceCapabilityType.Create | ResourceCapabilityType.Update | ResourceCapabilityType.Delete;
 
         /// <summary>
         /// Gets the operations
@@ -78,25 +72,20 @@ namespace SanteDB.Rest.AMI.Resources
         public IEnumerable<IApiChildOperation> Operations => this.m_childOperations.Values;
 
         /// <summary>
-        /// Get the child resources
-        /// </summary>
-        public IEnumerable<IApiChildResourceHandler> ChildResources => this.m_propertyProviders.Values;
-
-        /// <summary>
         /// Match configuration resource handler
         /// </summary>
-        public MatchConfigurationResourceHandler(ILocalizationService localizationService, IRecordMatchingConfigurationService configurationService = null)
+        public MatchConfigurationResourceHandler(ILocalizationService localizationService, IRecordMatchingConfigurationService configurationService = null) :
+            base(localizationService)
         {
             // TODO: Throw method not support exception if someone calls this
             this.m_configurationService = configurationService;
-            this.m_localizationService = localizationService;
         }
 
         /// <summary>
         /// Create a match configuration
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.AlterMatchConfiguration)]
-        public object Create(object data, bool updateIfExists)
+        public override object Create(object data, bool updateIfExists)
         {
             if (data is IRecordMatchingConfiguration configMatch)
             {
@@ -112,7 +101,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Get the specified match configuration identifier
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.UnrestrictedMetadata)]
-        public object Get(object id, object versionId)
+        public override object Get(object id, object versionId)
         {
             return this.m_configurationService.GetConfiguration(id.ToString());
         }
@@ -121,7 +110,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Delete a match configuration
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.AlterMatchConfiguration)]
-        public object Delete(object key)
+        public override object Delete(object key)
         {
             return this.m_configurationService.DeleteConfiguration(key.ToString());
         }
@@ -129,7 +118,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Query for match configurations
         /// </summary>
-        public IQueryResultSet Query(NameValueCollection queryParameters)
+        public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             if (queryParameters.TryGetValue("name", out var values))
             {
@@ -146,7 +135,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Update a match configuration
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.AlterMatchConfiguration)]
-        public object Update(object data)
+        public override object Update(object data)
         {
             if (data is IRecordMatchingConfiguration configMatch)
             {
@@ -178,7 +167,7 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException.operation", new
+                throw new NotSupportedException(this.LocalizationService.GetString("error.type.NotSupportedException.operation", new
                 {
                     param = operationName
                 }));
@@ -199,103 +188,41 @@ namespace SanteDB.Rest.AMI.Resources
             return retVal;
         }
 
-        /// <summary>
-        /// Try to get a chained resource
-        /// </summary>
-        public bool TryGetChainedResource(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildResourceHandler childHandler)
-        {
-            var retVal = this.m_propertyProviders.TryGetValue(propertyName, out childHandler) &&
-                childHandler.ScopeBinding.HasFlag(bindingType);
-            if (!retVal)
-            {
-                childHandler = null;//clear in case of lazy programmers like me
-            }
-            return retVal;
-        }
-
-        /// <summary>
-        /// Add the property handler to this handler
-        /// </summary>
-        public void AddChildResource(IApiChildResourceHandler property)
-        {
-            this.m_propertyProviders.TryAdd(property.Name, property);
-        }
 
         /// <summary>
         /// Query for associated entities
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual IQueryResultSet QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter)
+        public override IQueryResultSet QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter)
         {
-            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Query(typeof(IRecordMatchingConfiguration), scopingEntityKey, filter);
-            }
-            else
-            {
-                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
-                {
-                    param = propertyName
-                }));
-            }
+            return base.QueryChildObjects(scopingEntityKey, propertyName, filter);
         }
 
         /// <summary>
         /// Remove an associated entity
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.AlterMatchConfiguration)]
-        public virtual object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
+        public override object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
         {
-            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Remove(typeof(IRecordMatchingConfiguration), scopingEntityKey, subItemKey);
-            }
-            else
-            {
-                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
-                {
-                    param = propertyName
-                }));
-            }
+            return base.RemoveChildObject(scopingEntityKey, propertyName, subItemKey);
         }
 
         /// <summary>
         /// Add an associated entity
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.AlterMatchConfiguration)]
-        public virtual object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
+        public override object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
         {
-            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Add(typeof(IRecordMatchingConfiguration), scopingEntityKey, scopedItem);
-            }
-            else
-            {
-                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
-                {
-                    param = propertyName
-                }));
-            }
+            return base.AddChildObject(scopingEntityKey, propertyName, scopedItem);
         }
 
         /// <summary>
         /// Get associated entity
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.AlterMatchConfiguration)]
-        public virtual object GetChildObject(object scopingEntity, string propertyName, object subItem)
+        public override object GetChildObject(object scopingEntity, string propertyName, object subItem)
         {
-            Guid objectKey = (Guid)scopingEntity, subItemKey = (Guid)subItem;
-            if (this.TryGetChainedResource(propertyName, scopingEntity == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Get(typeof(IRecordMatchingConfiguration), objectKey, subItemKey);
-            }
-            else
-            {
-                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
-                {
-                    param = propertyName
-                }));
-            }
+            return base.GetChildObject(scopingEntity, propertyName, subItem);
         }
     }
 }

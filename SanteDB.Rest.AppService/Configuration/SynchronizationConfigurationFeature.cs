@@ -1,9 +1,11 @@
-﻿using SanteDB.Client.Disconnected.Data.Synchronization;
+﻿using Newtonsoft.Json.Linq;
+using SanteDB.Client.Disconnected.Data.Synchronization;
 using SanteDB.Client.Disconnected.Data.Synchronization.Configuration;
 using SanteDB.Client.Repositories;
 using SanteDB.Client.Upstream.Repositories;
 using SanteDB.Client.Upstream.Security;
 using SanteDB.Core.Configuration;
+using SanteDB.Core.Data;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
@@ -25,6 +27,7 @@ namespace SanteDB.Rest.AppService.Configuration
     public class SynchronizationConfigurationFeature : IRestConfigurationFeature
     {
         private readonly IConfigurationManager m_configurationManager;
+        private readonly ISubscriptionRepository m_subscriptionRepository;
         private readonly SynchronizationConfigurationSection m_configuration;
 
         public const string MODE_SETTING = "mode";
@@ -40,9 +43,10 @@ namespace SanteDB.Rest.AppService.Configuration
         /// <summary>
         /// DI ctor
         /// </summary>
-        public SynchronizationConfigurationFeature(IConfigurationManager configurationManager)
+        public SynchronizationConfigurationFeature(IConfigurationManager configurationManager, ISubscriptionRepository subscriptionRepository)
         {
             this.m_configurationManager = configurationManager;
+            this.m_subscriptionRepository = subscriptionRepository;
             this.m_configuration = this.m_configurationManager.GetSection<SynchronizationConfigurationSection>();
         }
 
@@ -97,12 +101,12 @@ namespace SanteDB.Rest.AppService.Configuration
             configSection.OverwriteServer = (bool?)featureConfiguration[OVERWRITE_SERVER_SETTING] ?? configSection.OverwriteServer;
             configSection.BigBundles = (bool?)featureConfiguration[BIG_BUNDLES_SETTING] ?? configSection.BigBundles;
 
-            if(Enum.TryParse<SynchronizationMode>(featureConfiguration[MODE_SETTING]?.ToString(), out var syncMode))
+            if (Enum.TryParse<SynchronizationMode>(featureConfiguration[MODE_SETTING]?.ToString(), out var syncMode))
             {
                 configSection.Mode = syncMode;
             }
             configSection.PollIntervalXml = featureConfiguration[POLL_SETTING]?.ToString() ?? configSection.PollIntervalXml;
-            configSection.Subscriptions = ((IEnumerable)featureConfiguration[ENABLED_SUBSCRIPTIONS_SETTING])?.OfType<String>().Select(o=>Guid.Parse(o)).ToList();
+            configSection.Subscriptions = ((IEnumerable)featureConfiguration[ENABLED_SUBSCRIPTIONS_SETTING])?.OfType<String>().Select(o => Guid.Parse(o)).ToList();
             configSection.SubscribedObjects = ((IEnumerable)featureConfiguration[SUBSCRIBED_OBJECTS_SETTING])?.OfType<String>().Select(o => Guid.Parse(o)).ToList();
             configSection.ForbidSending = ((IEnumerable)featureConfiguration[FORBID_SYNC_SETTING])?.OfType<String>().Select(o => new ResourceTypeReferenceConfiguration(o)).ToList();
 
@@ -147,15 +151,42 @@ namespace SanteDB.Rest.AppService.Configuration
                         new TypeReferenceConfiguration(typeof(UpstreamPolicyInformationService)),
                         new TypeReferenceConfiguration(typeof(UpstreamRoleProviderService)),
                         new TypeReferenceConfiguration(typeof(UpstreamSecurityRepository)),
-                        new TypeReferenceConfiguration(typeof(UpstreamSecurityChallengeProvider))
+                        new TypeReferenceConfiguration(typeof(UpstreamSecurityChallengeProvider)),
+                        new TypeReferenceConfiguration(typeof(RepositoryEntitySource))
                     });
                     var hdsiConfigurationSection = configuration.GetSection<HdsiConfigurationSection>() ?? configuration.AddSection(new HdsiConfigurationSection());
                     var amiConfigurationSection = configuration.GetSection<AmiConfigurationSection>() ?? configuration.AddSection(new AmiConfigurationSection());
                     var bisConfigurationSection = configuration.GetSection<BisServiceConfigurationSection>() ?? configuration.AddSection(new BisServiceConfigurationSection());
                     hdsiConfigurationSection.AutomaticallyForwardRequests = true;
-                    amiConfigurationSection.AutomaticallyForwardRequests = true;
+                    amiConfigurationSection.AutomaticallyForwardRequests = false;
                     bisConfigurationSection.AutomaticallyForwardRequests = true;
                     break;
+                case SynchronizationMode.All:
+                    // Add a subscription for the all type 
+                    configSection.Subscriptions = m_subscriptionRepository.Find(o => true).Where(d => d.ClientDefinitions.Any(c => c.Mode.HasFlag(Core.Model.Subscription.SubscriptionModeType.All))).Select(o => o.Uuid).ToList();
+                    goto case SynchronizationMode.Subscription;
+                case SynchronizationMode.Subscription:
+                    if(featureConfiguration.TryGetValue(ENABLED_SUBSCRIPTIONS_SETTING, out var subscriptionValueRaw) && subscriptionValueRaw is JArray subscriptionValueJarray)
+                    {
+                        configSection.Subscriptions = subscriptionValueJarray.Select(o => Guid.Parse(o.ToString())).ToList();
+                        configSection.SubscribeToResource = new ResourceTypeReferenceConfiguration(featureConfiguration[SUBSCRIBED_OBJECT_TYPE_SETTING].ToString());
+                        configSection.SubscribedObjects = ((JArray)featureConfiguration[SUBSCRIBED_OBJECTS_SETTING])?.Select(o => Guid.Parse(o.ToString())).ToList();
+                    }
+
+                    // Add synchronization services
+                    appSection.ServiceProviders.AddRange(new TypeReferenceConfiguration[]
+                    {
+                                            new TypeReferenceConfiguration(typeof(UpstreamSynchronizationService)),
+                                            new TypeReferenceConfiguration(typeof(UpstreamIdentityProvider)),
+                                            new TypeReferenceConfiguration(typeof(UpstreamApplicationIdentityProvider)),
+                                            new TypeReferenceConfiguration(typeof(UpstreamPolicyInformationService)),
+                                            new TypeReferenceConfiguration(typeof(UpstreamRoleProviderService)),
+                                            new TypeReferenceConfiguration(typeof(UpstreamSecurityRepository)),
+                                            new TypeReferenceConfiguration(typeof(UpstreamSecurityChallengeProvider)),
+                                            new TypeReferenceConfiguration(typeof(RepositoryEntitySource))
+                    });
+                    break;
+
                 default:
                     throw new NotSupportedException();
             }

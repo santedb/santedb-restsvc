@@ -40,7 +40,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        public SecurityPolicyResourceHandler(ILocalizationService localizationService, IRepositoryService<SecurityPolicy> repositoryService, IAuditService auditService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, auditService, freetextSearchService)
+        public SecurityPolicyResourceHandler(ILocalizationService localizationService, IRepositoryService<SecurityPolicy> repositoryService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, freetextSearchService)
         {
         }
 

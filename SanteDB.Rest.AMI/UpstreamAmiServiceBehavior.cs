@@ -61,7 +61,7 @@ namespace SanteDB.Rest.AMI
             foreach (var data in dataObjects)
             {
                 if (data is Entity entity &&
-                                   this.m_entityRepository?.Query(o => o.Key == entity.Key, AuthenticationContext.SystemPrincipal).Any() != true)
+                        this.m_entityRepository?.Query(o => o.Key == entity.Key, AuthenticationContext.SystemPrincipal).Any() != true)
                 {
                     entity.AddTag("$upstream", "true");
                 }
@@ -341,7 +341,7 @@ namespace SanteDB.Rest.AMI
                     {
                         using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
                         {
-                            var retVal =  restClient.Get<AmiCollection>($"{resourceType}", RestOperationContext.Current.IncomingRequest.QueryString);
+                            var retVal = restClient.Get<AmiCollection>($"{resourceType}", RestOperationContext.Current.IncomingRequest.QueryString);
                             this.TagUpstream(retVal);
                             return retVal;
                         }

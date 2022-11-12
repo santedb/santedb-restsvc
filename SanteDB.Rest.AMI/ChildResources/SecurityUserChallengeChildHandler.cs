@@ -57,7 +57,7 @@ namespace SanteDB.Rest.AMI.ChildResources
         /// <summary>
         /// Gets the types this child can be attached to
         /// </summary>
-        public Type[] ParentTypes => new Type[] { typeof(SecurityUserInfo) };
+        public Type[] ParentTypes => new Type[] { typeof(SecurityUser) };
 
         /// <summary>
         /// The name of the property

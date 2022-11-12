@@ -54,6 +54,17 @@ namespace SanteDB.Core.Model.AMI.Auth
         /// <summary>
         /// Constructs this policy information object from an IMS policy instane
         /// </summary>
+        public SecurityPolicyInfo(IPolicy o)
+        {
+            this.Name = o.Name;
+            this.Oid = o.Oid;
+            this.CanOverride = o.CanOverride;
+            this.Policy = new SecurityPolicy(o.Name, o.Oid, o.IsActive, o.CanOverride);
+        }
+
+        /// <summary>
+        /// Constructs this policy information object from an IMS policy instane
+        /// </summary>
         public SecurityPolicyInfo(IPolicyInstance o)
         {
             this.Name = o.Policy.Name;

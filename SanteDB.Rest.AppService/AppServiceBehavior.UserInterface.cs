@@ -161,6 +161,7 @@ namespace SanteDB.Rest.AppService
             var httpq = RestOperationContext.Current.IncomingRequest.Url.Query.ParseQueryString();
             var queryExpression = QueryExpressionParser.BuildLinqExpression<AppletWidget>(httpq).Compile();
             return this.m_appletManagerService.Applets.WidgetAssets
+                .ToList()
                 .Where(o => o.Policies?.Any(p => this.m_policyEnforcementService.SoftDemand(p, AuthenticationContext.Current.Principal)) != true)
                 .Select(o => (o.Content ?? this.m_appletManagerService.Applets.Resolver(o)) as AppletWidget)
                 .Where(queryExpression)
@@ -208,7 +209,7 @@ namespace SanteDB.Rest.AppService
 
             // Restricts the menu context based on policy and whether the menu points to an asset that does not exist
             //if (appletMenu.Context != context || null != appletMenu.Asset && 
-            if (asset?.Policies?.All(p => this.m_policyEnforcementService.SoftDemand(p, principal)) != true) 
+            if (asset?.Policies?.Any() == true && asset?.Policies?.All(p => this.m_policyEnforcementService.SoftDemand(p, principal)) != true) 
             {
                 return null;
             }

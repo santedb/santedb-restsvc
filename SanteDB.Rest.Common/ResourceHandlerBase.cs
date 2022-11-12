@@ -63,17 +63,14 @@ namespace SanteDB.Rest.Common
         /// </summary>
         protected readonly IFreetextSearchService m_freetextSearch;
 
-        readonly IAuditService _AuditService;
-
         /// <summary>
         /// Constructs the resource handler base
         /// </summary>
-        public ResourceHandlerBase(ILocalizationService localizationService, IRepositoryService<TResource> repositoryService, IAuditService auditService, IFreetextSearchService freetextSearchService = null)
+        public ResourceHandlerBase(ILocalizationService localizationService, IRepositoryService<TResource> repositoryService, IFreetextSearchService freetextSearchService = null)
         {
             this.m_localizationService = localizationService;
             this.m_repository = repositoryService;
             this.m_freetextSearch = freetextSearchService;
-            _AuditService = auditService;
         }
 
         /// <summary>
@@ -165,14 +162,11 @@ namespace SanteDB.Rest.Common
                     var resourceData = processData as TResource;
                     resourceData = updateIfExists ? this.m_repository.Save(resourceData) : this.m_repository.Insert(resourceData);
 
-                    _AuditService.Audit().ForCreate(OutcomeIndicator.Success, null, resourceData).Send();
-
                     return resourceData;
                 }
             }
             catch (Exception e)
             {
-                _AuditService.Audit().ForCreate(OutcomeIndicator.MinorFail, null, data).Send();
                 this.m_tracer.TraceError($"Error creating {data}");
                 throw new Exception(this.m_localizationService.GetString("error.rest.common.errorCreatingParam", new { param = nameof(data) }), e);
             }
@@ -195,16 +189,10 @@ namespace SanteDB.Rest.Common
             try
             {
                 var retVal = this.m_repository.Get((Guid)id, (Guid)versionId);
-                if (retVal is Entity || retVal is Act)
-                { 
-                    _AuditService.Audit().ForRead(OutcomeIndicator.Success, id.ToString(), retVal).Send();
-                }
-
                 return retVal;
             }
             catch (Exception e)
             {
-                _AuditService.Audit().ForRead<TResource>(OutcomeIndicator.MinorFail, id.ToString()).Send();
                 this.m_tracer.TraceError($"Error getting resource {id}");
                 throw new Exception(this.m_localizationService.GetString("error.rest.common.gettingResource", new { param = nameof(id) }), e);
             }
@@ -224,12 +212,10 @@ namespace SanteDB.Rest.Common
             try
             {
                 var retVal = this.m_repository.Delete((Guid)key);
-                _AuditService.Audit().ForDelete(OutcomeIndicator.Success, key.ToString(), retVal).Send();
                 return retVal;
             }
             catch (Exception e)
             {
-                _AuditService.Audit().ForDelete<TResource>(OutcomeIndicator.MinorFail, key.ToString()).Send();
                 this.m_tracer.TraceError($"Error obsoleting resource {key}");
                 throw new Exception(this.m_localizationService.GetString("error.rest.common.obsoletingResource", new { param = nameof(key) }), e);
             }
@@ -306,7 +292,6 @@ namespace SanteDB.Rest.Common
                     var entityData = processData as TResource;
 
                     var retVal = this.m_repository.Save(entityData);
-                    _AuditService.Audit().ForUpdate(OutcomeIndicator.Success, null, retVal).Send();
                     return retVal;
                 }
                 else
@@ -317,7 +302,6 @@ namespace SanteDB.Rest.Common
             }
             catch (Exception e)
             {
-                _AuditService.Audit().ForUpdate(OutcomeIndicator.MinorFail, null, data).Send();
                 this.m_tracer.TraceError("Error updating resource");
                 throw new Exception(this.m_localizationService.GetString("error.rest.common.updatingResource"), e);
             }

@@ -41,62 +41,49 @@ namespace SanteDB.Rest.AMI.Resources
     /// Represents the primary queue resource handler
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class DispatcherQueueResourceHandler : IApiResourceHandler, IChainedApiResourceHandler
+    public class DispatcherQueueResourceHandler : ChainedResourceHandlerBase
     {
-        // Tracer
-        private Tracer m_tracer = Tracer.GetTracer(typeof(DispatcherQueueResourceHandler));
 
-        // Property providers
-        private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
 
         // Queue service
         private readonly IDispatcherQueueManagerService m_queueService;
-
-        // Localization service
-        private readonly ILocalizationService m_localizationService;
 
         readonly IAuditService _AuditService;
 
         /// <summary>
         /// DI constructor for persistent queue
         /// </summary>
-        public DispatcherQueueResourceHandler(IDispatcherQueueManagerService queueService, ILocalizationService localization, IAuditService auditService)
+        public DispatcherQueueResourceHandler(IDispatcherQueueManagerService queueService, ILocalizationService localization, IAuditService auditService) : base(localization)
         {
             this.m_queueService = queueService;
-            this.m_localizationService = localization;
             _AuditService = auditService;
         }
 
         /// <summary>
         /// Get the name of the resource
         /// </summary>
-        public string ResourceName => nameof(DispatcherQueueInfo);
+        public override string ResourceName => nameof(DispatcherQueueInfo);
 
         /// <summary>
         /// Gets the type
         /// </summary>
-        public Type Type => typeof(DispatcherQueueInfo);
+        public override Type Type => typeof(DispatcherQueueInfo);
 
         /// <summary>
         /// Gets the scope of the resource
         /// </summary>
-        public Type Scope => typeof(IAmiServiceContract);
+        public override Type Scope => typeof(IAmiServiceContract);
 
         /// <summary>
         /// Gets the capabilities of the object
         /// </summary>
-        public ResourceCapabilityType Capabilities => ResourceCapabilityType.Search | ResourceCapabilityType.Delete | ResourceCapabilityType.Get | ResourceCapabilityType.Update;
-
-        /// <summary>
-        /// Get all child resources
-        /// </summary>
-        public IEnumerable<IApiChildResourceHandler> ChildResources => this.m_propertyProviders.Values;
+        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Search | ResourceCapabilityType.Delete | ResourceCapabilityType.Get | ResourceCapabilityType.Update;
 
         /// <summary>
         /// Create not supported
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ManageDispatcherQueues)]
-        public object Create(object data, bool updateIfExists)
+        public override object Create(object data, bool updateIfExists)
         {
             throw new NotSupportedException();
         }
@@ -105,7 +92,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Get a specific queue entry
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ManageDispatcherQueues)]
-        public object Get(object id, object versionId)
+        public override object Get(object id, object versionId)
         {
             throw new NotSupportedException();
         }
@@ -114,7 +101,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Obsolete the specified queue - not supported
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ManageDispatcherQueues)]
-        public object Delete(object key)
+        public override object Delete(object key)
         {
             this.m_queueService.Purge((String)key);
             _AuditService.Audit()
@@ -138,7 +125,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <param name="queryParameters"></param>
         /// <returns></returns>
         [Demand(PermissionPolicyIdentifiers.ManageDispatcherQueues)]
-        public IQueryResultSet Query(NameValueCollection queryParameters)
+        public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             var queues = this.m_queueService.GetQueues();
 
@@ -152,7 +139,8 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Update the queue (not supported)
         /// </summary>
-        public object Update(object data)
+        [Demand(PermissionPolicyIdentifiers.ManageDispatcherQueues)]
+        public override object Update(object data)
         {
             if (data is DispatcherQueueInfo dqe)
             {
@@ -172,106 +160,40 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <summary>
-        /// Add a child resource
-        /// </summary>
-        public void AddChildResource(IApiChildResourceHandler property)
-        {
-            this.m_propertyProviders.TryAdd(property.Name, property);
-        }
-
-        /// <summary>
         /// Remove a child object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ManageDispatcherQueues)]
-        public object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
+        public override object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
         {
-            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Remove(typeof(DispatcherQueueInfo), scopingEntityKey, subItemKey);
-            }
-            else
-            {
-                this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
-                {
-                    param = propertyName
-                }));
-            }
+            return base.RemoveChildObject(scopingEntityKey, propertyName, subItemKey);
         }
 
         /// <summary>
         /// Query child objects
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ManageDispatcherQueues)]
-        public IQueryResultSet QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter)
+        public override IQueryResultSet QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter)
         {
-            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Query(typeof(DispatcherQueueInfo), scopingEntityKey, filter);
-            }
-            else
-            {
-                this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
-                {
-                    param = propertyName
-                }));
-            }
+            return base.QueryChildObjects(scopingEntityKey, propertyName, filter);
         }
 
         /// <summary>
         /// Add a child object instance
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ManageDispatcherQueues)]
-        public object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
+        public override object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
         {
-            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Add(typeof(DispatcherQueueInfo), scopingEntityKey, scopedItem);
-            }
-            else
-            {
-                this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
-                {
-                    param = propertyName
-                }));
-            }
+            return base.AddChildObject(scopingEntityKey, propertyName, scopedItem);
         }
 
         /// <summary>
         /// Get a child object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ManageDispatcherQueues)]
-        public object GetChildObject(object scopingEntity, string propertyName, object subItemKey)
+        public override object GetChildObject(object scopingEntity, string propertyName, object subItemKey)
         {
-            if (this.TryGetChainedResource(propertyName, scopingEntity == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Get(typeof(DispatcherQueueInfo), scopingEntity, subItemKey);
-            }
-            else
-            {
-                this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
-                {
-                    param = propertyName
-                }));
-            }
+            return this.GetChildObject(scopingEntity, propertyName, subItemKey);
         }
 
-        /// <summary>
-        /// Try to get a chained resource
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.ManageDispatcherQueues)]
-        public bool TryGetChainedResource(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildResourceHandler childHandler)
-        {
-            var retVal = this.m_propertyProviders.TryGetValue(propertyName, out childHandler) &&
-                childHandler.ScopeBinding.HasFlag(bindingType);
-            if (!retVal)
-            {
-                childHandler = null;//clear in case of lazy programmers like me
-            }
-            return retVal;
-        }
     }
 }

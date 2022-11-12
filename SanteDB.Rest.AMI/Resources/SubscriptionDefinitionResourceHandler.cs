@@ -34,7 +34,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Subscription definition
         /// </summary>
-        public SubscriptionDefinitionResourceHandler(ILocalizationService localizationService, IRepositoryService<SubscriptionDefinition> repositoryService, IAuditService auditService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, auditService, freetextSearchService)
+        public SubscriptionDefinitionResourceHandler(ILocalizationService localizationService, IRepositoryService<SubscriptionDefinition> repositoryService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, freetextSearchService)
         {
         }
 

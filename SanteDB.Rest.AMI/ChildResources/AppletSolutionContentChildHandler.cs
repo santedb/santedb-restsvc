@@ -55,14 +55,16 @@ namespace SanteDB.Rest.AMI.ChildResources
 
         // Solution Manager
         private IAppletSolutionManagerService m_solutionManager;
+        private readonly IAppletManagerService m_appletManager;
 
         /// <summary>
         /// Creates a new content child handler
         /// </summary>
         /// <param name="solutionManager">The solution manager</param>
-        public AppletSolutionContentChildHandler(IAppletSolutionManagerService solutionManager)
+        public AppletSolutionContentChildHandler(IAppletSolutionManagerService solutionManager, IAppletManagerService appletManager)
         {
             this.m_solutionManager = solutionManager;
+            this.m_appletManager = appletManager;
         }
 
         /// <summary>
@@ -73,7 +75,7 @@ namespace SanteDB.Rest.AMI.ChildResources
         /// <summary>
         /// Binding
         /// </summary>
-        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Instance;
+        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Instance | ChildObjectScopeBinding.Class;
 
         /// <summary>
         /// Adding applets is not yet supported
@@ -88,7 +90,17 @@ namespace SanteDB.Rest.AMI.ChildResources
         /// </summary>
         public object Get(Type scopingType, object scopingKey, object key)
         {
-            var appletData = this.m_solutionManager.GetPackage(scopingKey.ToString(), key.ToString());
+            var solutionId = scopingKey.ToString();
+            byte[] appletData = null;
+
+            if (String.IsNullOrEmpty(solutionId))
+            {
+                appletData = this.m_appletManager.GetPackage(key.ToString());
+            }
+            else
+            {
+                appletData = this.m_solutionManager.GetPackage(solutionId, key.ToString());
+            }
 
             if (appletData == null)
             {

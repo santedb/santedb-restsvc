@@ -44,23 +44,14 @@ namespace SanteDB.Rest.AMI.Resources
     /// Represents a resource handler that wraps a security based entity
     /// </summary>
     /// <typeparam name="TSecurityEntity">The type of security entity being wrapped</typeparam>
-    public abstract class SecurityEntityResourceHandler<TSecurityEntity> : IApiResourceHandler, IChainedApiResourceHandler
+    public abstract class SecurityEntityResourceHandler<TSecurityEntity> : ChainedResourceHandlerBase
         where TSecurityEntity : NonVersionedEntityData
     {
-        // Localization Service
-        protected readonly ILocalizationService m_localizationService;
-
-        // Property providers
-        private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
-
         // The repository for the entity
         private IRepositoryService<TSecurityEntity> m_repository;
 
         // CAche Service
         private IDataCachingService m_cacheService;
-
-        // Get the tracer
-        protected readonly Tracer m_tracer = Tracer.GetTracer(typeof(SecurityEntityResourceHandler<TSecurityEntity>));
 
         // Policy information service
         protected IPolicyInformationService m_policyInformationService;
@@ -71,12 +62,12 @@ namespace SanteDB.Rest.AMI.Resources
         /// Create a new instance of the respository handler
         /// </summary>
         public SecurityEntityResourceHandler(IAuditService auditService, IPolicyInformationService policyInformationService, ILocalizationService localizationService, IDataCachingService cachingService = null, IRepositoryService<TSecurityEntity> repository = null)
+            : base(localizationService)
 
         {
             this.m_cacheService = cachingService;
             this.m_repository = repository;
             this.m_policyInformationService = policyInformationService;
-            this.m_localizationService = localizationService;
             _AuditService = auditService;
         }
 
@@ -91,12 +82,12 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Gets the name of the resource
         /// </summary>
-        public string ResourceName => typeof(TSecurityEntity).GetCustomAttribute<XmlRootAttribute>().ElementName;
+        public override string ResourceName => typeof(TSecurityEntity).GetCustomAttribute<XmlRootAttribute>().ElementName;
 
         /// <summary>
         /// Gets the type that this handles
         /// </summary>
-        public virtual Type Type => typeof(TSecurityEntity);
+        public override Type Type => typeof(TSecurityEntity);
 
         /// <summary>
         /// Get the wrapped type
@@ -106,19 +97,12 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Gets the scope of the object
         /// </summary>
-        public Type Scope => typeof(IAmiServiceContract);
+        public override Type Scope => typeof(IAmiServiceContract);
 
         /// <summary>
         /// Gets the capabilities of the resource
         /// </summary>
-        public ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.CreateOrUpdate | ResourceCapabilityType.Delete | ResourceCapabilityType.Get | ResourceCapabilityType.Search | ResourceCapabilityType.Update;
-
-        /// <summary>
-        /// Get the child resources
-        /// </summary>
-        public IEnumerable<IApiChildResourceHandler> ChildResources => this.m_propertyProviders.Values;
-
-        public string ServiceName => "Security Entity Resource Service";
+        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.CreateOrUpdate | ResourceCapabilityType.Delete | ResourceCapabilityType.Get | ResourceCapabilityType.Search | ResourceCapabilityType.Update;
 
         /// <summary>
         /// Gets the repository
@@ -140,14 +124,14 @@ namespace SanteDB.Rest.AMI.Resources
         /// <param name="updateIfExists">True if the data should be updated if it already exists</param>
         /// <returns>The created object</returns>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual object Create(object data, bool updateIfExists)
+        public override object Create(object data, bool updateIfExists)
         {
             // First, we want to copy over the roles
             var td = data as ISecurityEntityInfo<TSecurityEntity>;
             if (td is null)
             {
                 this.m_tracer.TraceError($"Invalid type {nameof(data)}");
-                throw new ArgumentException(this.m_localizationService.GetString("error.type.ArgumentException", new
+                throw new ArgumentException(this.LocalizationService.GetString("error.type.ArgumentException", new
                 {
                     param = nameof(data)
                 }));
@@ -190,7 +174,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Get the specified object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual object Get(object id, object versionId)
+        public override object Get(object id, object versionId)
         {
             // Get the object
             var data = this.GetRepository().Get((Guid)id, (Guid)versionId);
@@ -204,7 +188,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Obsolete the specified object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual object Delete(object key)
+        public override object Delete(object key)
         {
             try
             {
@@ -227,7 +211,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Query for the specified object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual IQueryResultSet Query(NameValueCollection queryParameters)
+        public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             var query = QueryExpressionParser.BuildLinqExpression<TSecurityEntity>(queryParameters);
 
@@ -243,7 +227,7 @@ namespace SanteDB.Rest.AMI.Resources
             catch (Exception e)
             {
                 this.m_tracer.TraceError("Error querying security resource {0} - {1}", typeof(TSecurityEntity), e);
-                throw new Exception(this.m_localizationService.GetString("error.rest.ami.subscriptionQuery"), e);
+                throw new Exception(this.LocalizationService.GetString("error.rest.ami.subscriptionQuery"), e);
             }
         }
 
@@ -251,14 +235,14 @@ namespace SanteDB.Rest.AMI.Resources
         /// Update the specified object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual object Update(object data)
+        public override object Update(object data)
         {
             // First, we want to copy over the roles
             var td = data as ISecurityEntityInfo<TSecurityEntity>;
             if (td is null)
             {
                 this.m_tracer.TraceError($"Invalid type {nameof(data)}");
-                throw new ArgumentException(this.m_localizationService.GetString("error.type.ArgumentException", new
+                throw new ArgumentException(this.LocalizationService.GetString("error.type.ArgumentException", new
                 {
                     param = nameof(data)
                 }));
@@ -292,111 +276,42 @@ namespace SanteDB.Rest.AMI.Resources
             }
         }
 
-        /// <summary>
-        /// Add a child resource
-        /// </summary>
-        public virtual void AddChildResource(IApiChildResourceHandler property)
-        {
-            this.m_propertyProviders.TryAdd(property.Name, property);
-        }
 
         /// <summary>
         /// Remove a child object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
+        public override object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
         {
-            Guid objectKey = (Guid)scopingEntityKey;
-
-            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Remove(typeof(TSecurityEntity), objectKey, subItemKey);
-            }
-            else
-            {
-                this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
-                {
-                    param = propertyName
-                }));
-            }
+            return base.RemoveChildObject(scopingEntityKey, propertyName, subItemKey);
         }
 
         /// <summary>
         /// Query child objects
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public IQueryResultSet QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter)
+        public override IQueryResultSet QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter)
         {
-            Guid objectKey = (Guid)scopingEntityKey;
-            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Query(typeof(TSecurityEntity), objectKey, filter);
-            }
-            else
-            {
-                this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
-                {
-                    param = propertyName
-                }));
-            }
+            return base.QueryChildObjects(scopingEntityKey, propertyName, filter);
         }
 
         /// <summary>
         /// Add a child object instance
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
+        public override object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
         {
-            Guid objectKey = (Guid)scopingEntityKey;
-            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Add(typeof(TSecurityEntity), scopingEntityKey, scopedItem);
-            }
-            else
-            {
-                this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
-                {
-                    param = propertyName
-                }));
-            }
+            return base.AddChildObject(scopingEntityKey, propertyName, scopedItem);
         }
 
         /// <summary>
         /// Get a child object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual object GetChildObject(object scopingEntity, string propertyName, object subItemKey)
+        public override object GetChildObject(object scopingEntity, string propertyName, object subItemKey)
         {
-            Guid objectKey = (Guid)scopingEntity;
-            if (this.TryGetChainedResource(propertyName, scopingEntity == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Get(typeof(TSecurityEntity), objectKey, subItemKey);
-            }
-            else
-            {
-                this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
-                {
-                    param = propertyName
-                }));
-            }
+            return base.GetChildObject(scopingEntity, propertyName, subItemKey);
         }
 
-        /// <summary>
-        /// Try to get a chained resource
-        /// </summary>
-        public virtual bool TryGetChainedResource(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildResourceHandler childHandler)
-        {
-            var retVal = this.m_propertyProviders.TryGetValue(propertyName, out childHandler) &&
-                childHandler.ScopeBinding.HasFlag(bindingType);
-            if (!retVal)
-            {
-                childHandler = null;//clear in case of lazy programmers like me
-            }
-            return retVal;
-        }
     }
 }

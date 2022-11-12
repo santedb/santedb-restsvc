@@ -41,7 +41,7 @@ namespace SanteDB.Rest.WWW
             this.m_configuration = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<AppletConfigurationSection>();
             this.m_policyEnforcementSerivce = ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>();
             this.m_appletSolutionManager = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>();
-            if (this.m_appletSolutionManager == null || String.IsNullOrEmpty(this.m_configuration.DefaultApplet))
+            if (this.m_appletSolutionManager == null || String.IsNullOrEmpty(this.m_configuration?.DefaultApplet))
             {
                 this.m_serviceApplet = ApplicationServiceContext.Current.GetService<IAppletManagerService>().Applets;
             }

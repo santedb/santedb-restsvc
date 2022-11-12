@@ -34,6 +34,17 @@ namespace SanteDB.Rest.Common
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class ResourceHandlerTool
     {
+
+        private static readonly IServiceManager s_serviceManager = ApplicationServiceContext.Current.GetService<IServiceManager>();
+        private static readonly IEnumerable<IApiChildResourceHandler> s_childResourceHandlers;
+        private static readonly IEnumerable<IApiChildOperation> s_operationHandlers;
+
+        static ResourceHandlerTool()
+        {
+            s_childResourceHandlers = s_serviceManager.CreateInjectedOfAll<IApiChildResourceHandler>().ToList();
+            s_operationHandlers = s_serviceManager.CreateInjectedOfAll<IApiChildOperation>().ToList();
+        }
+
         // Common trace
         private readonly Tracer m_traceSource = Tracer.GetTracer(typeof(ResourceHandlerTool));
 
@@ -52,15 +63,12 @@ namespace SanteDB.Rest.Common
         /// <param name="scope">The scope in which the handler types operate</param>
         public ResourceHandlerTool(IEnumerable<Type> resourceHandlerTypes, Type scope)
         {
-            var serviceManager = ApplicationServiceContext.Current.GetService<IServiceManager>();
-            var tPropertyProviders = serviceManager.CreateInjectedOfAll<IApiChildResourceHandler>();
-            var tOperationProviders = serviceManager.CreateInjectedOfAll<IApiChildOperation>();
-
+            
             foreach (var t in resourceHandlerTypes.Where(t => !t.ContainsGenericParameters && !t.IsAbstract && !t.IsInterface))
             {
                 try
                 {
-                    IApiResourceHandler rh = serviceManager.CreateInjected(t) as IApiResourceHandler;
+                    IApiResourceHandler rh = s_serviceManager.CreateInjected(t) as IApiResourceHandler;
                     if (rh == null)
                     {
                         continue; // TODO: Emit a warning
@@ -74,11 +82,11 @@ namespace SanteDB.Rest.Common
                         // Associated prop handler
                         if (rh is IChainedApiResourceHandler assoc)
                         {
-                            tPropertyProviders.Where(p => p.ParentTypes.Contains(rh.Type) || p.ParentTypes == Type.EmptyTypes).ToList().ForEach(p => assoc.AddChildResource(p));
+                            s_childResourceHandlers.Where(p => p.ParentTypes.Contains(rh.Type) || p.ParentTypes == Type.EmptyTypes).ToList().ForEach(p => assoc.AddChildResource(p));
                         }
                         if (rh is IOperationalApiResourceHandler oper)
                         {
-                            tOperationProviders.Where(p => p.ParentTypes.Contains(rh.Type) || p.ParentTypes == Type.EmptyTypes).ToList().ForEach(p => oper.AddOperation(p));
+                            s_operationHandlers.Where(p => p.ParentTypes.Contains(rh.Type) || p.ParentTypes == Type.EmptyTypes).ToList().ForEach(p => oper.AddOperation(p));
                         }
                     }
                 }

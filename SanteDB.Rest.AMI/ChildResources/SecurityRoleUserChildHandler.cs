@@ -42,7 +42,7 @@ namespace SanteDB.Rest.AMI.ChildResources
         /// <summary>
         /// Parent types to which this child applies
         /// </summary>
-        public Type[] ParentTypes => new Type[] { typeof(SecurityRoleInfo) };
+        public Type[] ParentTypes => new Type[] { typeof(SecurityRole) };
 
         /// <summary>
         /// Gets the resource name

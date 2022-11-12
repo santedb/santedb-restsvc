@@ -28,6 +28,7 @@ using SanteDB.Rest.Common.Behavior;
 using SanteDB.Rest.Common.Security;
 using System;
 using System.Linq;
+using System.Net;
 
 namespace SanteDB.Rest.Common
 {
@@ -67,9 +68,10 @@ namespace SanteDB.Rest.Common
             {
                 var fwdHeader = RestOperationContext.Current?.IncomingRequest.Headers["X-Forwarded-For"];
                 var realIp = RestOperationContext.Current.IncomingRequest.Headers["X-Real-IP"];
+                var requestUrl = RestOperationContext.Current?.IncomingRequest.Url;
                 return new RemoteEndpointInfo()
                 {
-                    OriginalRequestUrl = RestOperationContext.Current?.IncomingRequest.Url.ToString(),
+                    OriginalRequestUrl = requestUrl.ToString(),
                     RemoteAddress = realIp ?? RestOperationContext.Current?.IncomingRequest.RemoteEndPoint.Address.ToString(),
                     ForwardInformation = fwdHeader,
                     CorrelationToken = RestOperationContext.Current?.Data["uuid"]?.ToString()

@@ -140,7 +140,7 @@ namespace SanteDB.Rest.AMI.Resources
                 if (user != null && user.UserName?.ToLowerInvariant() != td.Entity.UserName.ToLowerInvariant())
                 {
                     this.m_tracer.TraceError($"Username mismatch expect {user.UserName.ToLowerInvariant()} but got {td.Entity.UserName.ToLowerInvariant()}", 403);
-                    throw new FaultException(System.Net.HttpStatusCode.Forbidden, this.m_localizationService.GetString("error.rest.ami.mismatchUsername", new
+                    throw new FaultException(System.Net.HttpStatusCode.Forbidden, this.LocalizationService.GetString("error.rest.ami.mismatchUsername", new
                     {
                         param = user.UserName.ToLowerInvariant(),
                         param2 = td.Entity.UserName.ToLowerInvariant()

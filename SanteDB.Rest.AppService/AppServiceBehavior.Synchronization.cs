@@ -20,7 +20,7 @@ namespace SanteDB.Rest.AppService
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public List<ISynchronizationLogEntry> GetSynchronizationLogs()
         {
-            return m_synchronizationLogService?.GetAll();
+            return m_synchronizationLogService?.GetAll().ToList();
         }
 
         /// <inheritdoc />
