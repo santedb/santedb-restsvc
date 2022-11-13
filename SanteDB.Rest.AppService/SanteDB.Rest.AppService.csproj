@@ -57,9 +57,4 @@
     <ProjectReference Include="..\..\santedb-dc-core\SanteDB.Client.Disconnected\SanteDB.Client.Disconnected.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ChildResources\" />
-    <Folder Include="Operation\" />
-  </ItemGroup>
-
 </Project>

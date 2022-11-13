@@ -11,7 +11,7 @@ namespace SanteDB.Rest.AppService.Configuration
     /// <summary>
     /// Solution configuration feature
     /// </summary>
-    public class SolutionConfigurationFeature : IRestConfigurationFeature
+    public class SolutionConfigurationFeature : IClientConfigurationFeature
     {
 
         /// <summary>
@@ -41,12 +41,12 @@ namespace SanteDB.Rest.AppService.Configuration
         public string Name => "applet";
 
         /// <inheritdoc/>
-        public RestConfigurationDictionary<string, object> Configuration => this.GetConfiguration();
+        public ConfigurationDictionary<string, object> Configuration => this.GetConfiguration();
 
         /// <summary>
         /// Get configuration
         /// </summary>
-        private RestConfigurationDictionary<string, object> GetConfiguration() => new RestConfigurationDictionary<string, object>()
+        private ConfigurationDictionary<string, object> GetConfiguration() => new ConfigurationDictionary<string, object>()
             {
                 { SOLUTION_NAME_CONFIG, this.m_configuration?.UiSolution },
                 { AUTO_UPDATE_CONFG, this.m_configuration?.AutoUpdateApplets }

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using SanteDB.Client.Configuration;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Security;
 using SanteDB.Core.Services;
@@ -13,7 +14,7 @@ namespace SanteDB.Rest.AppService.Configuration
     /// <summary>
     /// The application service configuration feature
     /// </summary>
-    public class ApplicationConfigurationFeature : IRestConfigurationFeature
+    public class ApplicationConfigurationFeature : IClientConfigurationFeature
     {
 
         public const string SERVICES_SETTING = "service";
@@ -37,7 +38,7 @@ namespace SanteDB.Rest.AppService.Configuration
         public string Name => "application";
 
         /// <inheritdoc/>
-        public RestConfigurationDictionary<string, object> Configuration => this.Refresh();
+        public ConfigurationDictionary<string, object> Configuration => this.Refresh();
 
         /// <inheritdoc/>
         public String ReadPolicy => PermissionPolicyIdentifiers.Login;
@@ -48,7 +49,7 @@ namespace SanteDB.Rest.AppService.Configuration
         /// <summary>
         /// Refresh the configuration
         /// </summary>
-        private RestConfigurationDictionary<string, object> Refresh() => new RestConfigurationDictionary<string, object>()
+        private ConfigurationDictionary<string, object> Refresh() => new ConfigurationDictionary<string, object>()
             {
                 { SERVICES_SETTING, m_configurationSection.ServiceProviders.Select(o=> o.TypeXml).ToArray() },
                 { APPSETTING_SETTING, m_configurationSection.AppSettings },

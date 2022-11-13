@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using SanteDB.Client.Configuration;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Configuration.Http;
 using SanteDB.Core.Http;
@@ -16,7 +17,7 @@ namespace SanteDB.Rest.AppService.Configuration
     /// <summary>
     /// Client connectivity configuration feature
     /// </summary>
-    public class ClientRestConfigurationFeature : IRestConfigurationFeature
+    public class ClientRestConfigurationFeature : IClientConfigurationFeature
     {
         public const string REST_CLIENT_SETTING = "clients";
         public const string REST_CLIENT_OPTIMIZE_SETTING = "optimize";
@@ -40,12 +41,12 @@ namespace SanteDB.Rest.AppService.Configuration
         public string Name => "client";
 
         /// <inheritdoc/>
-        public RestConfigurationDictionary<string, object> Configuration => this.GetConfiguration();
+        public ConfigurationDictionary<string, object> Configuration => this.GetConfiguration();
 
         /// <summary>
         /// Regenerate or refresh the configuration
         /// </summary>
-        private RestConfigurationDictionary<string, object> GetConfiguration() => new RestConfigurationDictionary<string, object>()
+        private ConfigurationDictionary<string, object> GetConfiguration() => new ConfigurationDictionary<string, object>()
         {
             { REST_CLIENT_SETTING, this.m_configuration?.Client?.Select(c => new Dictionary<String, Object>() {
                 { REST_CLIENT_SETTING,  c.Name },

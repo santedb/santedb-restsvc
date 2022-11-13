@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using SanteDB.Client.Configuration;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Http;
 using SanteDB.Core.Model.Audit;
@@ -17,7 +18,7 @@ namespace SanteDB.Rest.AppService.Configuration
     /// <summary>
     /// Configuration feature for security configuration
     /// </summary>
-    public class SecurityRestConfigurationFeature : IRestConfigurationFeature
+    public class SecurityRestConfigurationFeature : IClientConfigurationFeature
     {
         private readonly SecurityConfigurationSection m_configurationSection;
         private readonly IRestClientFactory m_restClientFactory;
@@ -45,13 +46,13 @@ namespace SanteDB.Rest.AppService.Configuration
         public string Name => "security";
 
         /// <inheritdoc/>
-        public RestConfigurationDictionary<string, object> Configuration => this.GetConfiguration();
+        public ConfigurationDictionary<string, object> Configuration => this.GetConfiguration();
 
         /// <summary>
         /// Get configuration
         /// </summary>
-        private RestConfigurationDictionary<string, object> GetConfiguration() =>
-            new RestConfigurationDictionary<string, object>()
+        private ConfigurationDictionary<string, object> GetConfiguration() =>
+            new ConfigurationDictionary<string, object>()
             {
                 { AUDIT_RETENTION_SETTING, this.m_configurationSection.GetSecurityPolicy(SecurityPolicyIdentification.AuditRetentionTime, new TimeSpan(30, 0, 0, 0)) },
                 { ALLOW_OFFLINE_LOGIN_SETTING, this.m_configurationSection.GetSecurityPolicy(SecurityPolicyIdentification.AllowCachingOfUserCredentials, true) },

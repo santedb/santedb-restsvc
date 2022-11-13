@@ -75,7 +75,7 @@ namespace SanteDB.Rest.AppService.Model
         /// <summary>
         /// Configuation
         /// </summary>
-        public ConfigurationViewModel(IEnumerable<IRestConfigurationFeature> features)
+        public ConfigurationViewModel(IEnumerable<IClientConfigurationFeature> features)
         {
             this.IsConfigured = !(ApplicationServiceContext.Current.GetService<IConfigurationManager>() is InitialConfigurationManager);
             this.Configuration = features.OrderBy(o=>o.Order).ToDictionary(f => f.Name, f => f.Configuration.ToDictionary(o=>o.Key, o=>o.Value));

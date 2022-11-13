@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using SanteDB.Client;
+using SanteDB.Client.Configuration;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Diagnostics.Tracing;
@@ -18,7 +19,7 @@ namespace SanteDB.Rest.AppService.Configuration
     /// <summary>
     /// Diagnostics configuration
     /// </summary>
-    public class DiagnosticsRestConfigurationFeature : IRestConfigurationFeature
+    public class DiagnosticsRestConfigurationFeature : IClientConfigurationFeature
     {
         private readonly DiagnosticsConfigurationSection m_configurationSection;
 
@@ -42,11 +43,11 @@ namespace SanteDB.Rest.AppService.Configuration
         public string Name => "log";
 
         /// <inheritdoc/>
-        public RestConfigurationDictionary<string, object> Configuration => this.GetConfiguration();
+        public ConfigurationDictionary<string, object> Configuration => this.GetConfiguration();
 
         /// <inheritdoc/>
-        private RestConfigurationDictionary<String, Object> GetConfiguration() =>
-            new RestConfigurationDictionary<string, object>()
+        private ConfigurationDictionary<String, Object> GetConfiguration() =>
+            new ConfigurationDictionary<string, object>()
             {
                 { LOG_DETAIL_SETTING, this.m_configurationSection?.Mode ?? System.Diagnostics.Tracing.EventLevel.Warning },
                 { LOG_WRITER_SETTING, Tracer

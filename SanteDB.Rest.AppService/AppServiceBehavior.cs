@@ -2,6 +2,7 @@
 using RestSrvr;
 using RestSrvr.Attributes;
 using RestSrvr.Exceptions;
+using SanteDB.Client.Configuration;
 using SanteDB.Client.Disconnected.Data.Synchronization;
 using SanteDB.Client.Services;
 using SanteDB.Client.Tickles;
@@ -58,7 +59,7 @@ namespace SanteDB.Rest.AppService
         private readonly IUserPreferencesManager m_userPreferenceManager;
         private readonly Tracer m_tracer = Tracer.GetTracer(typeof(AppServiceBehavior));
         private readonly Timer m_onlineStateTimer;
-        private readonly IEnumerable<IRestConfigurationFeature> m_configurationFeatures;
+        private readonly IEnumerable<IClientConfigurationFeature> m_configurationFeatures;
         private bool m_onlineState;
         private bool m_hdsiState;
         private bool m_amiState;
@@ -137,7 +138,7 @@ namespace SanteDB.Rest.AppService
                 catch { }
             }, null, 0, 60000); //TODO: Config setting or constant defined elsewhere with a semantic name?
 
-            this.m_configurationFeatures = this.m_serviceManager.CreateInjectedOfAll<IRestConfigurationFeature>().ToList();
+            this.m_configurationFeatures = this.m_serviceManager.CreateInjectedOfAll<IClientConfigurationFeature>().ToList();
             this.m_upstreamSettings = this.m_upstreamManagementService.GetSettings();
             this.m_upstreamManagementService.RealmChanging += (o, e) => this.m_upstreamSettings = e.UpstreamRealmSettings;
         }

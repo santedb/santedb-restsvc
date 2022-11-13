@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using SanteDB.Client.Configuration;
 using SanteDB.Client.Disconnected.Data.Synchronization;
 using SanteDB.Client.Disconnected.Data.Synchronization.Configuration;
 using SanteDB.Client.Repositories;
@@ -25,7 +26,7 @@ namespace SanteDB.Rest.AppService.Configuration
     /// <summary>
     /// Synchronization configuration feature
     /// </summary>
-    public class SynchronizationConfigurationFeature : IRestConfigurationFeature
+    public class SynchronizationConfigurationFeature : IClientConfigurationFeature
     {
         private readonly IConfigurationManager m_configurationManager;
         private readonly ISubscriptionRepository m_subscriptionRepository;
@@ -58,7 +59,7 @@ namespace SanteDB.Rest.AppService.Configuration
         public string Name => "sync";
 
         /// <inheritdoc/>
-        public RestConfigurationDictionary<string, object> Configuration => this.GetConfiguration();
+        public ConfigurationDictionary<string, object> Configuration => this.GetConfiguration();
 
         /// <inheritdoc/>
         public String ReadPolicy => PermissionPolicyIdentifiers.Login;
@@ -69,7 +70,7 @@ namespace SanteDB.Rest.AppService.Configuration
         /// <summary>
         /// Get configuration
         /// </summary>
-        private RestConfigurationDictionary<string, object> GetConfiguration() => new RestConfigurationDictionary<string, object>()
+        private ConfigurationDictionary<string, object> GetConfiguration() => new ConfigurationDictionary<string, object>()
             {
                 { MODE_SETTING, this.m_configuration?.Mode ?? SynchronizationMode.Online },
                 { OVERWRITE_SERVER_SETTING, this.m_configuration?.OverwriteServer ?? false },

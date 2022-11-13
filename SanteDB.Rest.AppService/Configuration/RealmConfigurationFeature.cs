@@ -14,7 +14,7 @@ namespace SanteDB.Rest.AppService.Configuration
     /// <summary>
     /// Configuration for saving REALM configuration
     /// </summary>
-    public class RealmConfigurationFeature : IRestConfigurationFeature
+    public class RealmConfigurationFeature : IClientConfigurationFeature
     {
         public const string REALM_NAME = "address";
         public const string PORT_NUMBER = "port";
@@ -52,9 +52,9 @@ namespace SanteDB.Rest.AppService.Configuration
         /// <summary>
         /// Refresh the configuration
         /// </summary>
-        private RestConfigurationDictionary<String, Object> Refresh()
+        private ConfigurationDictionary<String, Object> Refresh()
         {
-            var config = new RestConfigurationDictionary<String, Object>();
+            var config = new ConfigurationDictionary<String, Object>();
             config.Add(IS_JOINED, this.m_upstreamManager.GetSettings() != null);
             config.Add(PORT_NUMBER, this.m_configuration.Realm?.PortNumber ?? 8080);
             config.Add(REALM_NAME, this.m_configuration.Realm?.DomainName);
@@ -74,7 +74,7 @@ namespace SanteDB.Rest.AppService.Configuration
         public string Name => "realm";
 
         /// <inheritdoc/>
-        public RestConfigurationDictionary<String, Object> Configuration => this.Refresh();
+        public ConfigurationDictionary<String, Object> Configuration => this.Refresh();
 
         /// <inheritdoc/>
         public bool Configure(SanteDBConfiguration configuration, IDictionary<String, Object> featureConfiguration)
