@@ -102,7 +102,7 @@ namespace SanteDB.Rest.AppService
         }
 
         /// <inheritdoc/>
-        public List<StorageProviderViewModel> GetDataStorageProviders() => DataConfigurationSection.GetDataConfigurationProviders().Select(o => new StorageProviderViewModel(o)).ToList();
+        public List<StorageProviderViewModel> GetDataStorageProviders() => DataConfigurationSection.GetDataConfigurationProviders().Where(o=>o.HostType.HasFlag(ApplicationServiceContext.Current.HostType)).Select(o => new StorageProviderViewModel(o)).ToList();
 
         /// <inheritdoc/>
         public void SetAppSettings(string scope, List<AppSettingKeyValuePair> settings)

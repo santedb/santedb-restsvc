@@ -11,6 +11,7 @@ using SanteDB.Core.Data;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
+using SanteDB.Core.Services.Impl.Repository;
 using SanteDB.Rest.AMI.Configuration;
 using SanteDB.Rest.BIS.Configuration;
 using SanteDB.Rest.HDSI.Configuration;
@@ -167,9 +168,11 @@ namespace SanteDB.Rest.AppService.Configuration
                 case SynchronizationMode.All:
                     // Add a subscription for the all type 
                     configSection.Subscriptions = m_subscriptionRepository.Find(o => true).Where(d => d.ClientDefinitions.Any(c => c.Mode.HasFlag(Core.Model.Subscription.SubscriptionModeType.All))).Select(o => o.Uuid).ToList();
+                    configSection.SubscribedObjects = null;
+                    configSection.SubscribeToResource = null;
                     goto case SynchronizationMode.Subscription;
                 case SynchronizationMode.Subscription:
-                    if (featureConfiguration.TryGetValue(ENABLED_SUBSCRIPTIONS_SETTING, out var subscriptionValueRaw) && subscriptionValueRaw is JArray subscriptionValueJarray)
+                    if (featureConfiguration.TryGetValue(ENABLED_SUBSCRIPTIONS_SETTING, out var subscriptionValueRaw) && subscriptionValueRaw is JArray subscriptionValueJarray && subscriptionValueJarray.Count > 0)
                     {
                         configSection.Subscriptions = subscriptionValueJarray.Select(o => Guid.Parse(o.ToString())).ToList();
                         configSection.SubscribeToResource = new ResourceTypeReferenceConfiguration(featureConfiguration[SUBSCRIBED_OBJECT_TYPE_SETTING].ToString());
@@ -188,7 +191,8 @@ namespace SanteDB.Rest.AppService.Configuration
                         new TypeReferenceConfiguration(typeof(UpstreamSecurityChallengeProvider)),
                         new TypeReferenceConfiguration(typeof(RepositoryEntitySource)),
                         new TypeReferenceConfiguration(typeof(DefaultSynchronizationLogService)),
-                        new TypeReferenceConfiguration(typeof(DefaultSynchronizationQueueManager))
+                        new TypeReferenceConfiguration(typeof(DefaultSynchronizationQueueManager)),
+                        new TypeReferenceConfiguration(typeof(LocalRepositoryFactory))
                     });
                     break;
 
