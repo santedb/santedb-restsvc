@@ -53,8 +53,4 @@
     </Otherwise>
   </Choose>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\santedb-dc-core\SanteDB.Client.Disconnected\SanteDB.Client.Disconnected.csproj" />
-  </ItemGroup>
-
 </Project>
