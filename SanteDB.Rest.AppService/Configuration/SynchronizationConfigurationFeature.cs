@@ -190,7 +190,7 @@ namespace SanteDB.Rest.AppService.Configuration
                         new TypeReferenceConfiguration(typeof(UpstreamSecurityRepository)),
                         new TypeReferenceConfiguration(typeof(UpstreamSecurityChallengeProvider)),
                         new TypeReferenceConfiguration(typeof(RepositoryEntitySource)),
-                        new TypeReferenceConfiguration(typeof(DefaultSynchronizationLogService)),
+                        //new TypeReferenceConfiguration(typeof(DefaultSynchronizationLogService)),
                         new TypeReferenceConfiguration(typeof(DefaultSynchronizationQueueManager)),
                         new TypeReferenceConfiguration(typeof(LocalRepositoryFactory))
                     });

@@ -28,11 +28,6 @@ namespace SanteDB.Rest.AppService
         //this.m_synchronizationLogService
 
         /// <summary>
-        /// The queue name for the dead queue that is used by <see cref="GetQueueConflict(int)"/>, <see cref="ResolveQueueConflict(int, Patch)"/> and <see cref="RetryQueueEntry(int, ParameterCollection)"/>.
-        /// </summary>
-        private const string DeadletterQueueName = "dead"; //TODO: Is this right or can it be defined on ISynchronizationQueueService somewhere?
-
-        /// <summary>
         /// Uses the <see cref="ILocalizationService"/> to create an error message with the <paramref name="queueName"/>.
         /// </summary>
         /// <param name="queueName">The name of the queue that was not found.</param>
@@ -69,6 +64,14 @@ namespace SanteDB.Rest.AppService
         private ISynchronizationQueue GetQueueByName(string queueName)
             => m_synchronizationQueueManager?.Get(queueName) ?? throw new KeyNotFoundException(ErrorMessage_QueueNotFound(queueName));
 
+        /// <summary>
+        /// Gets the queue that serves as the dead letter queue. If there are multiple queues that match the profile, only the first queue is returned.
+        /// </summary>
+        /// <returns>An instance of <see cref="ISynchronizationQueue"/> for dead letter entries, or <c>default</c> if there is no dead letter queue.</returns>
+        [DebuggerHidden]
+        private ISynchronizationQueue GetDeadLetterQueue()
+            => m_synchronizationQueueManager?.GetAll(SynchronizationPattern.DeadLetter)?.FirstOrDefault();
+
         /// <inheritdoc />
         [Demand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction)]
         public void DeleteQueueItem(string queueName, int id)
@@ -87,7 +90,7 @@ namespace SanteDB.Rest.AppService
         {
             ThrowIfNoPatchService();
 
-            var queue = GetQueueByName(DeadletterQueueName);
+            var queue = GetDeadLetterQueue() ?? throw new NotImplementedException(ErrorMessage_QueueNotFound("DeadLetter"));
 
             var item = queue?.Get(id) ?? throw new KeyNotFoundException(ErrorMessage_QueueEntryNotFound(id));
 
@@ -186,7 +189,7 @@ namespace SanteDB.Rest.AppService
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public void RetryQueueEntry(int id, ParameterCollection parameters)
         {
-            var queue = GetQueueByName(DeadletterQueueName);
+            var queue = GetDeadLetterQueue() ?? throw new NotImplementedException(ErrorMessage_QueueNotFound("DeadLetter"));
             var item = (queue?.Get(id) as ISynchronizationDeadLetterQueueEntry) ?? throw new KeyNotFoundException(ErrorMessage_QueueEntryNotFound(id));
 
             queue?.Retry(item);

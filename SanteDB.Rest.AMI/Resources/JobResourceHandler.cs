@@ -183,6 +183,11 @@ namespace SanteDB.Rest.AMI.Resources
                         }
                     }
                 }
+                else
+                {
+                    this.m_tracer.TraceInfo("User clearing job schedule for {0}", job.Name);
+                    this.m_jobManager.ClearJobSchedule(job);
+                }
                 return jobInfo;
             }
             else
