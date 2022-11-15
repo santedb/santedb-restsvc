@@ -3,7 +3,6 @@ using RestSrvr;
 using RestSrvr.Attributes;
 using RestSrvr.Exceptions;
 using SanteDB.Client.Configuration;
-using SanteDB.Client.Disconnected.Data.Synchronization;
 using SanteDB.Client.Services;
 using SanteDB.Client.Tickles;
 using SanteDB.Core;
@@ -43,20 +42,18 @@ namespace SanteDB.Rest.AppService
     [ServiceBehavior(Name = AppServiceMessageHandler.ConfigurationName, InstanceMode = ServiceInstanceMode.Singleton)]
     public partial class AppServiceBehavior : IAppServiceContract, IDisposable
     {
-        private readonly IConfigurationManager m_configurationManager;
-        private readonly IServiceManager m_serviceManager;
-        private readonly IPolicyEnforcementService m_policyEnforcementService;
-        private readonly IUpstreamManagementService m_upstreamManagementService;
-        private readonly ISynchronizationQueueManager m_synchronizationQueueManager;
-        private readonly ISynchronizationService m_synchronizationService;
-        private readonly ISynchronizationLogService m_synchronizationLogService;
-        private readonly ITickleService m_tickleService;
-        private readonly IPatchService m_patchService;
-        private readonly IAppletManagerService m_appletManagerService;
-        private readonly ILocalizationService m_localizationService;
-        private readonly IUpdateManager m_updateManager;
-        private readonly ISecurityRepositoryService m_securityRepositoryService;
-        private readonly IUserPreferencesManager m_userPreferenceManager;
+        protected readonly IConfigurationManager m_configurationManager;
+        protected readonly IServiceManager m_serviceManager;
+        protected readonly IPolicyEnforcementService m_policyEnforcementService;
+        protected readonly IUpstreamManagementService m_upstreamManagementService;
+        protected readonly ITickleService m_tickleService;
+        protected readonly IPatchService m_patchService;
+        protected readonly IAppletManagerService m_appletManagerService;
+        protected readonly ILocalizationService m_localizationService;
+        protected readonly IUpdateManager m_updateManager;
+        protected readonly ISecurityRepositoryService m_securityRepositoryService;
+        protected readonly IUserPreferencesManager m_userPreferenceManager;
+        private readonly IEnumerable<IUpstreamIntegrationPattern> m_integrationPatterns;
         private readonly Tracer m_tracer = Tracer.GetTracer(typeof(AppServiceBehavior));
         private readonly Timer m_onlineStateTimer;
         private readonly IEnumerable<IClientConfigurationFeature> m_configurationFeatures;
@@ -80,9 +77,6 @@ namespace SanteDB.Rest.AppService
                   ApplicationServiceContext.Current.GetService<IUpdateManager>(),
                   ApplicationServiceContext.Current.GetService<IUserPreferencesManager>(),
                   ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>(),
-                  ApplicationServiceContext.Current.GetService<ISynchronizationQueueManager>(),
-                  ApplicationServiceContext.Current.GetService<ISynchronizationService>(),
-                  ApplicationServiceContext.Current.GetService<ISynchronizationLogService>(),
                   ApplicationServiceContext.Current.GetService<ITickleService>(),
                   ApplicationServiceContext.Current.GetService<IPatchService>()
                   )
@@ -102,9 +96,6 @@ namespace SanteDB.Rest.AppService
             IUpdateManager updateManager,
             IUserPreferencesManager userPreferencesManager = null,
             ISecurityRepositoryService securityRepositoryService = null,
-            ISynchronizationQueueManager synchronizationQueueManager = null,
-            ISynchronizationService synchronizationService = null,
-            ISynchronizationLogService synchronizationLogService = null,
             ITickleService tickleService = null,
             IPatchService patchService = null)
         {
@@ -112,9 +103,6 @@ namespace SanteDB.Rest.AppService
             this.m_serviceManager = serviceManager;
             this.m_policyEnforcementService = policyEnforcementService;
             this.m_upstreamManagementService = upstreamManagementService;
-            this.m_synchronizationQueueManager = synchronizationQueueManager;
-            this.m_synchronizationService = synchronizationService;
-            this.m_synchronizationLogService = synchronizationLogService;
             this.m_tickleService = tickleService;
             this.m_patchService = patchService;
             this.m_appletManagerService = appletManagerService;
@@ -122,7 +110,7 @@ namespace SanteDB.Rest.AppService
             this.m_updateManager = updateManager;
             this.m_securityRepositoryService = securityRepositoryService;
             this.m_userPreferenceManager = userPreferencesManager;
-
+            this.m_integrationPatterns = serviceManager.CreateInjectedOfAll<IUpstreamIntegrationPattern>();
             // The online status timer refresh
             this.m_onlineStateTimer = new Timer((e) =>
             {

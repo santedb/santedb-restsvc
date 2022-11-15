@@ -28,7 +28,6 @@ using SanteDB.Core.Model.Parameters;
 using SanteDB.Rest.AppService.Model;
 using SanteDB.Client.Tickles;
 using SanteDB.Core.Applets.Model;
-using SanteDB.Client.Disconnected.Data.Synchronization;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Configuration;
@@ -109,50 +108,13 @@ namespace SanteDB.Rest.AppService
         /// </summary>
         [Get("/DataProviders")]
         List<StorageProviderViewModel> GetDataStorageProviders();
-        #endregion
-
-        #region Queue
-        /// <summary>
-        /// Get content of all the queues
-        /// </summary>
-        [Get("/Queue")]
-        Dictionary<String, int> GetQueue();
 
         /// <summary>
-        /// Gets the queue entries
+        /// Get the data storage providers
         /// </summary>
-        [Get("/Queue/{queueName}")]
-        List<ISynchronizationQueueEntry> GetQueue(String queueName);
+        [Get("/IntegrationPatterns")]
+        List<String> GetIntegrationPatterns();
 
-        /// <summary>
-        /// Get the specific queue entry
-        /// </summary>
-        [Get("/Queue/{queueName}/{id}")]
-        IdentifiedData GetQueueData(String queueName, int id);
-
-        /// <summary>
-        /// Gets the conflict data a patch representing the difference between the server version and the local version being 
-        /// </summary>
-        [Get("/Queue/dead/{id}/conflict")]
-        Patch GetQueueConflict(int id);
-
-        /// <summary>
-        /// Force a retry on the conflicted queue item
-        /// </summary>
-        [Post("/Queue/dead/{id}/$retry")]
-        void RetryQueueEntry(int id, ParameterCollection parameters);
-
-        /// <summary>
-        /// Perform a patch / resolution
-        /// </summary>
-        [RestInvoke("PATCH", "/Queue/dead/{id}")]
-        IdentifiedData ResolveQueueConflict(int id, Patch resolution);
-
-        /// <summary>
-        /// Remove a queue item
-        /// </summary>
-        [Delete("/Queue/{queueName}/{id}")]
-        void DeleteQueueItem(String queueName, int id);
         #endregion
 
         #region Realm
@@ -173,27 +135,6 @@ namespace SanteDB.Rest.AppService
         /// </summary>
         [Post("/$update")]
         ParameterCollection PerformUpdate(ParameterCollection parameters);
-        #endregion
-
-        #region Synchronization
-        /// <summary>
-        /// Get synchronization logs
-        /// </summary>
-        /// <returns></returns>
-        [Get("/Sync")]
-        List<ISynchronizationLogEntry> GetSynchronizationLogs();
-
-        /// <summary>
-        /// Synchronize the system immediately
-        /// </summary>
-        [Post("/Sync/$retry")]
-        void SynchronizeNow(ParameterCollection parameters);
-
-        /// <summary>
-        /// Reset the synchornization status
-        /// </summary>
-        [Post("/Sync/$reset")]
-        void ResetSynchronizationStatus(ParameterCollection parameters);
         #endregion
 
         #region Templates
