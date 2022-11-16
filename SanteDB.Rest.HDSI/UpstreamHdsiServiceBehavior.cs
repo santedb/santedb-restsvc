@@ -462,7 +462,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         public override ServiceOptions Options()
         {
             // Perform only on the external server
-            if(this.ShouldForwardRequest())
+            if (this.ShouldForwardRequest())
             {
                 if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
                 {
@@ -523,10 +523,12 @@ namespace SanteDB.Messaging.HDSI.Wcf
         /// <summary>
         /// Returns true if the request should be forwarded
         /// </summary>
-        private bool ShouldForwardRequest() =>
-            Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr ||
-            this.m_configuration?.AutomaticallyForwardRequests == true;
+        private bool ShouldForwardRequest()
+        {
+            var hasUpstreamParam = Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry);
+            var hasUpstreamHeader = Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr);
+            return upstreamHdr || upstreamQry || this.m_configuration?.AutomaticallyForwardRequests == true && !hasUpstreamHeader && !hasUpstreamParam;
+        }
 
         /// <inheritdoc/>
         [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]

@@ -84,6 +84,8 @@ namespace SanteDB.Rest.AppService.Configuration
                 {
                     appSetting.ServiceProviders.AddRange(newMode.Select(o => new TypeReferenceConfiguration(o)));
                 }
+
+                appSetting.AddAppSetting("integration-mode", modeRaw.ToString());
             }
             return true;
         }

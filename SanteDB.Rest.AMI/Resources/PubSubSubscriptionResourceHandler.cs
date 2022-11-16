@@ -65,7 +65,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Gets the name of the resource
         /// </summary>
-        public string ResourceName => "PubSubSubscription";
+        public string ResourceName => typeof(PubSubSubscriptionDefinition).GetSerializationName();
 
         /// <summary>
         /// Gets the type this handles

@@ -48,10 +48,12 @@ namespace SanteDB.Rest.AMI
         /// <summary>
         /// Returns true if the request should be forwarded
         /// </summary>
-        private bool ShouldForwardRequest() =>
-            Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry) && upstreamQry ||
-                Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr) && upstreamHdr ||
-            this.m_configuration?.AutomaticallyForwardRequests == true;
+        private bool ShouldForwardRequest()
+        {
+            var hasUpstreamParam = Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpUpstreamParameterName], out var upstreamQry);
+            var hasUpstreamHeader = Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.UpstreamHeaderName], out var upstreamHdr);
+            return upstreamHdr || upstreamQry || this.m_configuration?.AutomaticallyForwardRequests == true && !hasUpstreamHeader && !hasUpstreamParam;
+        }
 
         /// <summary>
         /// Tag the object if it is only upstream or if it exists locally 

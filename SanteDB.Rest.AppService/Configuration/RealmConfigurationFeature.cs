@@ -31,10 +31,10 @@ namespace SanteDB.Rest.AppService.Configuration
 
 
         /// <inheritdoc/>
-        public String ReadPolicy => PermissionPolicyIdentifiers.AlterSystemConfiguration;
+        public String ReadPolicy => PermissionPolicyIdentifiers.Login;
 
         /// <inheritdoc/>
-        public String WritePolicy => PermissionPolicyIdentifiers.AlterSystemConfiguration;
+        public String WritePolicy => PermissionPolicyIdentifiers.AccessClientAdministrativeFunction;
 
 
         /// <summary>

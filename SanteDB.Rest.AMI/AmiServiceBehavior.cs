@@ -937,7 +937,7 @@ namespace SanteDB.Rest.AMI
                     switch (data)
                     {
                         case IdentifiedData iddata:
-                            if (iddata.Key.HasValue && (!Guid.TryParse(key, out var guidKey) || iddata.Key != guidKey))
+                            if ((!Guid.TryParse(key, out var guidKey) || iddata.Key != guidKey) && iddata.Key.HasValue)
                             {
                                 throw new FaultException(HttpStatusCode.BadRequest, "Key mismatch");
                             }
