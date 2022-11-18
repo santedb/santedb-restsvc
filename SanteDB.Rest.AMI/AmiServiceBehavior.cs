@@ -890,7 +890,7 @@ namespace SanteDB.Rest.AMI
                     // Now apply controls
                     var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<Object>();
 
-                    if (typeof(IdentifiedData).IsAssignableFrom(handler.Type) && this.m_configuration.IncludeMetadataHeadersOnSearch)
+                    if (typeof(IdentifiedData).IsAssignableFrom(handler.Type) && (this.m_configuration?.IncludeMetadataHeadersOnSearch != false))
                     {
                         var modifiedOnSelector = QueryExpressionParser.BuildPropertySelector(handler.Type, "modifiedOn", convertReturn: typeof(object));
                         var lastModified = (DateTime)results.OrderByDescending(modifiedOnSelector).Select<DateTimeOffset>(modifiedOnSelector).AsResultSet().FirstOrDefault().DateTime;
