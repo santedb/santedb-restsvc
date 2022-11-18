@@ -945,7 +945,7 @@ namespace SanteDB.Rest.AMI
                             iddata.Key = guidKey;
                             break;
                         case IIdentifiedResource iir:
-                            if(iir.Key.HasValue && (!Guid.TryParse(key, out var guidKey2) || iir.Key != guidKey2))
+                            if((!Guid.TryParse(key, out var guidKey2) || iir.Key != guidKey2) && iir.Key.HasValue)
                             {
                                 throw new FaultException(HttpStatusCode.BadRequest, "Key mismatch");
                             }

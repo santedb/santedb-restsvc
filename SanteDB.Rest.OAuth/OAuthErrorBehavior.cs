@@ -22,6 +22,7 @@ using Newtonsoft.Json;
 using RestSrvr;
 using RestSrvr.Message;
 using SanteDB.Core.Diagnostics;
+using SanteDB.Core.Http;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.OAuth.Model;
 using System;
@@ -64,19 +65,30 @@ namespace SanteDB.Rest.OAuth
         {
             m_tracer.TraceEvent(EventLevel.Error, "Error on OAUTH Pipeline: {0}", error);
 
-            // Error
-            OAuthError err = new OAuthError()
-            {
-                Error = OAuthErrorType.unspecified_error,
-                ErrorDescription = error.Message
-            };
+            var rootCause = error;
+            while (rootCause.InnerException != null) rootCause = rootCause.InnerException;
 
-            JsonSerializer serializer = new JsonSerializer();
+            // Error
+            object result = null;
+            if (rootCause is RestClientException<Object> rco)
+            {
+                result = rco.Result;
+            }
+            else
+            {
+                result = new OAuthError()
+                {
+                    Error = OAuthErrorType.unspecified_error,
+                    ErrorDescription = error.Message
+                };
+            }
+
+            JsonSerializer serializer = new JsonSerializer() {  NullValueHandling = NullValueHandling.Ignore };
 
             response.ContentType = "application/json";
             using (var stw = new StringWriter())
             {
-                serializer.Serialize(stw, err);
+                serializer.Serialize(stw, result);
                 response.Body = new MemoryStream(Encoding.UTF8.GetBytes(stw.ToString()));
             }
             response.StatusCode = error.GetHttpStatusCode();

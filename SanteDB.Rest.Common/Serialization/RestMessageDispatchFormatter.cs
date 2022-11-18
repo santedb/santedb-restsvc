@@ -187,6 +187,7 @@ namespace SanteDB.Rest.Common.Serialization
                         switch (contentType.MediaType)
                         {
                             case "application/xml":
+                            case "application/xml+sdb-patch":
                                 XmlSerializer serializer = null;
                                 using (XmlReader bodyReader = XmlReader.Create(request.Body))
                                 {
@@ -232,6 +233,7 @@ namespace SanteDB.Rest.Common.Serialization
                                 break;
 
                             case "application/json":
+                            case "application/json+sdb-patch":
                                 using (var sr = new StreamReader(request.Body))
                                 {
                                     JsonSerializer jsz = new JsonSerializer()

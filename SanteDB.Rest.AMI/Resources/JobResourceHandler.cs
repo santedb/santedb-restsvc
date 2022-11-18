@@ -19,6 +19,7 @@
  * Date: 2022-5-30
  */
 using SanteDB.Core;
+using SanteDB.Core.Configuration;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Jobs;
@@ -51,18 +52,28 @@ namespace SanteDB.Rest.AMI.Resources
         // State service
         private readonly IJobStateManagerService m_jobStateService;
 
+        // Tracer
+        private readonly Tracer m_tracer = Tracer.GetTracer(typeof(JobResourceHandler));
+
+        // Localization service
+        private readonly ILocalizationService m_localizationService;
+        private readonly IJobScheduleManager m_jobScheduleManager;
+
         // Property providers
         private ConcurrentDictionary<String, IApiChildOperation> m_operationHandlers = new ConcurrentDictionary<string, IApiChildOperation>();
 
         /// <summary>
         /// DI constructor
         /// </summary>
-        public JobResourceHandler(ILocalizationService localizationService, IJobManagerService jobManagerService, IJobStateManagerService jobStateManagerService)
+        public JobResourceHandler(ILocalizationService localizationService, 
+            IJobManagerService jobManagerService, 
+            IJobStateManagerService jobStateManagerService,
+            IJobScheduleManager jobScheduleManager)
         {
             this.m_jobManager = jobManagerService;
             this.m_jobStateService = jobStateManagerService;
             this.m_localizationService = localizationService;
-
+            this.m_jobScheduleManager = jobScheduleManager;
         }
 
         /// <summary>
@@ -97,11 +108,6 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public IEnumerable<IApiChildOperation> Operations => this.m_operationHandlers.Values;
 
-        // Tracer
-        private readonly Tracer m_tracer = Tracer.GetTracer(typeof(JobResourceHandler));
-
-        // Localization service
-        private readonly ILocalizationService m_localizationService;
 
         /// <summary>
         /// Create a new job instance
@@ -124,7 +130,7 @@ namespace SanteDB.Rest.AMI.Resources
                 throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.ami.noIJobType", new { param = id.ToString() }));
             }
 
-            return new JobInfo(this.m_jobStateService.GetJobState(job), this.m_jobManager.GetJobSchedules(job));
+            return new JobInfo(this.m_jobStateService.GetJobState(job), this.m_jobScheduleManager.Get(job));
         }
 
         /// <summary>
@@ -147,7 +153,7 @@ namespace SanteDB.Rest.AMI.Resources
                 jobs = jobs.Where(o => o.Name.Contains(data.First()));
             }
 
-            return new MemoryQueryResultSet(jobs.Select(o => new JobInfo(this.m_jobStateService.GetJobState(o), this.m_jobManager.GetJobSchedules(o))));
+            return new MemoryQueryResultSet(jobs.Select(o => new JobInfo(this.m_jobStateService.GetJobState(o), this.m_jobScheduleManager.Get(o))));
         }
 
         /// <summary>
@@ -170,23 +176,24 @@ namespace SanteDB.Rest.AMI.Resources
 
                 if (jobInfo.Schedule != null)
                 {
+                    this.m_jobScheduleManager.Clear(job);
                     this.m_tracer.TraceInfo("User setting job schedule for {0}", job.Name);
                     foreach (var itm in jobInfo.Schedule)
                     {
                         if (itm.Type == Core.Configuration.JobScheduleType.Interval)
                         {
-                            this.m_jobManager.SetJobSchedule(job, itm.Interval);
+                            this.m_jobScheduleManager.Add(job, itm.Interval, itm.StopDateSpecified ? (DateTime?)itm.StopDate : null);
                         }
                         else
                         {
-                            this.m_jobManager.SetJobSchedule(job, itm.RepeatOn, itm.StartDate);
+                            this.m_jobScheduleManager.Add(job, itm.RepeatOn, itm.StartDate, itm.StopDateSpecified ? (DateTime?)itm.StopDate : null);
                         }
                     }
                 }
                 else
                 {
                     this.m_tracer.TraceInfo("User clearing job schedule for {0}", job.Name);
-                    this.m_jobManager.ClearJobSchedule(job);
+                    this.m_jobScheduleManager.Clear(job);
                 }
                 return jobInfo;
             }

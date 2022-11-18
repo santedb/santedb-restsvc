@@ -24,6 +24,7 @@ using RestSrvr.Message;
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
+using SanteDB.Core.Http;
 using SanteDB.Core.Security.Audit;
 using SanteDB.Rest.Common.Fault;
 using SanteDB.Rest.Common.Serialization;
@@ -56,7 +57,24 @@ namespace SanteDB.Rest.Common.Behavior
         {
             var uriMatched = RestOperationContext.Current.IncomingRequest.Url;
 
-            var fault = new RestServiceFault(error);
+            // Root cause 
+            var rootCause = error;
+            while (rootCause.InnerException != null) rootCause = rootCause.InnerException;
+
+            RestServiceFault fault = null;
+            if (rootCause is DetectedIssueException dte) // Relay the detected issue first 
+            {
+                fault = new RestServiceFault(dte);
+            }
+            else if(rootCause is RestClientException<Object> rco && rco.Result is RestServiceFault rcf)
+            {
+                fault = rcf;
+            }
+            else
+            {
+                fault = new RestServiceFault(error);
+            }
+
             faultMessage.StatusCode = error.GetHttpStatusCode();
             switch (faultMessage.StatusCode)
             {
@@ -81,6 +99,8 @@ namespace SanteDB.Rest.Common.Behavior
                     break;
             }
 
+            // Get the root cause / fault for the user 
+
             if(error is FaultException fe)
             {
                 faultMessage.Headers.Add(fe.Headers);
@@ -88,7 +108,8 @@ namespace SanteDB.Rest.Common.Behavior
 
             if (RestOperationContext.Current.ServiceEndpoint != null)
             {
-                RestMessageDispatchFormatter.CreateFormatter(RestOperationContext.Current.ServiceEndpoint.Description.Contract.Type).SerializeResponse(faultMessage, null, fault);
+                
+                    RestMessageDispatchFormatter.CreateFormatter(RestOperationContext.Current.ServiceEndpoint.Description.Contract.Type).SerializeResponse(faultMessage, null, fault);
             }
             else
             {

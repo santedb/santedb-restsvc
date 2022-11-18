@@ -306,8 +306,16 @@ namespace SanteDB.Messaging.HDSI.Wcf
 
                         restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
                         var retVal = restClient.Get<IdentifiedData>($"{resourceType}/{id}", RestOperationContext.Current.IncomingRequest.QueryString);
-                        this.TagUpstream(retVal);
-                        return retVal;
+                        if (retVal == null)
+                        {
+                            return cache;
+                        }
+                        else
+                        {
+                            this.m_dataCachingService.Add(retVal);
+                            this.TagUpstream(retVal);
+                            return retVal;
+                        }
                     }
                     catch (Exception e)
                     {

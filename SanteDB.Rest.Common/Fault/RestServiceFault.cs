@@ -21,6 +21,7 @@
 using Newtonsoft.Json;
 using SanteDB.Core.BusinessRules;
 using SanteDB.Core.Exceptions;
+using SanteDB.Core.Http;
 using SanteDB.Core.Model.Security;
 using System;
 using System.Collections.Generic;
@@ -51,36 +52,61 @@ namespace SanteDB.Rest.Common.Fault
         /// <param name="ex"></param>
         public RestServiceFault(Exception ex)
         {
-            this.Type = ex.GetType().Name;
-            this.Message = ex.Message;
-#if DEBUG
-            this.StackTrace = ex.StackTrace;
-            this.Detail = ex.ToString();
-#endif
-
-            if (ex is PolicyViolationException polViolation)
+            if (ex is RestClientException<RestServiceFault> rce)
             {
-                this.PolicyId = polViolation.PolicyId;
-                this.PolicyOutcome = polViolation.PolicyDecision;
+                this.Type = rce.Result.Type;
+                this.CausedBy = rce.Result.CausedBy;
+                this.Detail = rce.Result.Detail;
+                this.Message = rce.Result.Message;
+                this.PolicyId = rce.Result.PolicyId;
+                this.PolicyOutcome = rce.Result.PolicyOutcome;
+                this.Rules = rce.Result.Rules;
+                this.StackTrace = rce.Result.StackTrace;
             }
-
-            if (ex is DetectedIssueException dte)
+            else if (ex is RestClientException<Object> rco && rco.Result is RestServiceFault rcf)
             {
-                this.Rules = new List<DetectedIssue>(dte.Issues);
-            }
-
-            if (ex.InnerException != null)
-            {
-                this.CausedBy = new RestServiceFault(ex.InnerException);
-            }
-
-            if (ex.Data.Count > 0)
-            {
-                this.Data = ex.Data.Values.OfType<object>().Select(o => o.ToString()).ToList();
+                this.Type = rcf.Type;
+                this.CausedBy = rcf.CausedBy;
+                this.Detail = rcf.Detail;
+                this.Message = rcf.Message;
+                this.PolicyId = rcf.PolicyId;
+                this.PolicyOutcome = rcf.PolicyOutcome;
+                this.Rules = rcf.Rules;
+                this.StackTrace = rcf.StackTrace;
             }
             else
             {
-                this.Data = new List<string>();
+                this.Type = ex.GetType().Name;
+                this.Message = ex.Message;
+#if DEBUG
+                this.StackTrace = ex.StackTrace;
+                this.Detail = ex.ToString();
+#endif
+
+                if (ex is PolicyViolationException polViolation)
+                {
+                    this.PolicyId = polViolation.PolicyId;
+                    this.PolicyOutcome = polViolation.PolicyDecision;
+                }
+
+                if (ex is DetectedIssueException dte)
+                {
+                    this.Rules = new List<DetectedIssue>(dte.Issues);
+                }
+
+                if (ex.InnerException != null)
+                {
+                    this.CausedBy = new RestServiceFault(ex.InnerException);
+                }
+
+                if (ex.Data.Count > 0)
+                {
+                    this.Data = ex.Data.Values.OfType<object>().Select(o => o.ToString()).ToList();
+                }
+                else
+                {
+                    this.Data = new List<string>();
+                }
             }
         }
 

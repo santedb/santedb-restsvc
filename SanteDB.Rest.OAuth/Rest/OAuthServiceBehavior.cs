@@ -981,7 +981,8 @@ namespace SanteDB.Rest.OAuth.Rest
             catch (Exception ex) when (!(ex is StackOverflowException || ex is OutOfMemoryException))
             {
                 m_traceSource.TraceError("Unhandled exception from token request handler: {0}", ex.ToString());
-                return CreateErrorResponse(OAuthErrorType.unspecified_error, ex.Message);
+                // Allow the error behavior to create an appropriate error
+                throw; //  return CreateErrorResponse(OAuthErrorType.unspecified_error, ex.Message);
             }
         }
 

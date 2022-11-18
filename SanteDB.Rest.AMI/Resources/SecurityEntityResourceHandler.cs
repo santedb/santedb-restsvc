@@ -253,12 +253,20 @@ namespace SanteDB.Rest.AMI.Resources
                 td.Entity = this.GetRepository().Save(td.Entity);
 
                 // Add policies
-                if (td.Policies?.Any() == true)
+                if (td.Policies != null)
                 {
-                    this.m_policyInformationService.RemovePolicies(td.Entity, AuthenticationContext.Current.Principal, td.Policies.Select(o => o.Policy.Oid).ToArray());
-                    foreach (var pol in td.Policies.GroupBy(o => o.Grant))
+                    var currentPolicies = this.m_policyInformationService.GetPolicies(td.Entity).Select(o => new { rule = o.Rule, pol = o.Policy.Oid });
+                    var newPolicies = td.Policies.Select(p => new { rule = p.Grant, pol = p.Oid });
+                    var addedPolicies = newPolicies.Except(currentPolicies);
+                    var removedPolicies = currentPolicies.Except(newPolicies);
+
+                    if (addedPolicies.Any() || removedPolicies.Any())
                     {
-                        this.m_policyInformationService.AddPolicies(td.Entity, pol.Key, AuthenticationContext.Current.Principal, pol.Select(o => o.Oid).ToArray());
+                        this.m_policyInformationService.RemovePolicies(td.Entity, AuthenticationContext.Current.Principal, removedPolicies.Select(o => o.pol).ToArray());
+                        foreach (var pol in addedPolicies.GroupBy(o => o.rule))
+                        {
+                            this.m_policyInformationService.AddPolicies(td.Entity, pol.Key, AuthenticationContext.Current.Principal, pol.Select(o => o.pol).ToArray());
+                        }
                     }
                 }
 

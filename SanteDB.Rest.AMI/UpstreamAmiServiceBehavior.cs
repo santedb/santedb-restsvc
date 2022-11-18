@@ -4,6 +4,7 @@ using RestSrvr.Exceptions;
 using SanteDB.Core;
 using SanteDB.Core.Http;
 using SanteDB.Core.Interop;
+using SanteDB.Core.Model;
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.AMI.Collections;
 using SanteDB.Core.Model.Collection;
@@ -683,7 +684,7 @@ namespace SanteDB.Rest.AMI
                             {
                                 this.m_dataCachingService.Remove(uuid);
                             }
-                            if (body is IIdentifiedData ide)
+                            if (body is IIdentifiedData ide && ide.Key.HasValue)
                             {
                                 this.m_dataCachingService.Remove(ide.Key.Value);
                             }

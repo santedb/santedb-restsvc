@@ -18,8 +18,10 @@
  * User: fyfej
  * Date: 2022-5-30
  */
+using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Auth;
+using SanteDB.Core.Model.AMI.Collections;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
@@ -30,6 +32,7 @@ using SanteDB.Rest.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 
 namespace SanteDB.Rest.AMI.ChildResources
 {
@@ -115,26 +118,26 @@ namespace SanteDB.Rest.AMI.ChildResources
                 this.m_pep.Demand(PermissionPolicyIdentifiers.AlterRoles);
                 this.m_pep.Demand(PermissionPolicyIdentifiers.AlterIdentity);
 
+                var userNames = new List<string>();
                 // Get user entity
-                if (item is SecurityUser su)
+                switch(item )
                 {
-                    item = new SecurityUserInfo(su);
+                    case SecurityUser su:
+                    userNames.Add(su.UserName);
+                        break;
+                    case SecurityUserInfo sui:
+                        userNames.Add(sui.Entity.UserName);
+                        break;
+                    case AmiCollection amic:
+                        userNames.AddRange(amic.CollectionItem.OfType<SecurityUser>().Select(r => r.UserName).Union(amic.CollectionItem.OfType<SecurityUserInfo>().Select(r => r.Entity.UserName)));
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(item), String.Format(ErrorMessages.ARGUMENT_INCOMPATIBLE_TYPE, typeof(SecurityUser), item.GetType()));
                 }
 
-                var rd = item as SecurityUserInfo;
-                if (!rd.Entity.Key.HasValue)
-                {
-                    rd.Entity = this.m_securityRepository.GetUser(rd.Entity.UserName);
-                }
-
-                if (rd.Entity == null)
-                {
-                    throw new KeyNotFoundException($"Could not find specified user");
-                }
-
-                this.m_roleProvider.AddUsersToRoles(new string[] { rd.Entity.UserName }, new string[] { scope.Name }, AuthenticationContext.Current.Principal);
-                _AuditService.Audit().ForSecurityAttributeAction(new object[] { scope }, true, $"add user={rd.Entity.UserName}").Send();
-                return rd.Entity;
+                this.m_roleProvider.AddUsersToRoles(userNames.ToArray(), new string[] { scope.Name }, AuthenticationContext.Current.Principal);
+                _AuditService.Audit().ForSecurityAttributeAction(new object[] { scope }, true, $"add user={String.Join(",", userNames)}").Send();
+                return scope;
             }
             catch
             {
@@ -173,18 +176,25 @@ namespace SanteDB.Rest.AMI.ChildResources
                 throw new KeyNotFoundException($"Could not find SecurityRole with identifier {scopingKey}");
             }
 
-            var user = this.m_userRepository.Get(Guid.Parse(key.ToString()));
-            if (user == null)
-            {
-                throw new KeyNotFoundException($"User {key} not found");
-            }
 
             try
             {
                 this.m_pep.Demand(PermissionPolicyIdentifiers.AlterRoles);
-                this.m_roleProvider.RemoveUsersFromRoles(new string[] { user.UserName }, new string[] { scope.Name }, AuthenticationContext.Current.Principal);
-                _AuditService.Audit().ForSecurityAttributeAction(new object[] { scope }, true, $"del user={user.UserName}").Send();
-                return user;
+
+
+                if (key is Guid keyGuid)
+                {
+                    var user = this.m_userRepository.Get(keyGuid);
+                    if (user == null)
+                    {
+                        throw new KeyNotFoundException($"User {key} not found");
+                    }
+                    key = user.UserName;
+                }
+
+                this.m_roleProvider.RemoveUsersFromRoles(new string[] { key.ToString() }, new string[] { scope.Name }, AuthenticationContext.Current.Principal);
+                _AuditService.Audit().ForSecurityAttributeAction(new object[] { scope }, true, $"del user={key}").Send();
+                return scope;
             }
             catch
             {
