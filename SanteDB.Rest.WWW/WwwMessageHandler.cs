@@ -82,7 +82,7 @@ namespace SanteDB.Rest.WWW
         /// <summary>
         /// API type
         /// </summary>
-        public ServiceEndpointType ApiType => ServiceEndpointType.Other;
+        public ServiceEndpointType ApiType => ServiceEndpointType.WebUserInterfaceService;
 
         /// <summary>
         /// URLs
