@@ -774,7 +774,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         {
                             this.m_dataCachingService.Remove(uuid);
                         }
-                        if (body is IIdentifiedData ide)
+                        if (body is IAnnotatedResource ide)
                         {
                             this.m_dataCachingService.Remove(ide.Key.Value);
                         }

@@ -684,7 +684,7 @@ namespace SanteDB.Rest.AMI
                             {
                                 this.m_dataCachingService.Remove(uuid);
                             }
-                            if (body is IIdentifiedData ide && ide.Key.HasValue)
+                            if (body is IAnnotatedResource ide && ide.Key.HasValue)
                             {
                                 this.m_dataCachingService.Remove(ide.Key.Value);
                             }

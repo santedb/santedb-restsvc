@@ -279,7 +279,7 @@ namespace SanteDB.Rest.Common.Serialization
                                 irc.AddAnnotationToAll(SanteDBModelConstants.NoDynamicLoadAnnotation);
                                 break;
 
-                            case IIdentifiedData ide:
+                            case IAnnotatedResource ide:
                                 ide.AddAnnotation(SanteDBModelConstants.NoDynamicLoadAnnotation);
                                 break;
                         }
