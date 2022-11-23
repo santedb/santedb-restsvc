@@ -1,4 +1,5 @@
 ﻿using RestSrvr;
+using SanteDB.Core.Security;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -28,5 +29,14 @@ namespace SanteDB.Rest.OAuth.Model
         /// Where to redirect the user agent after a signout is complete.
         /// </summary>
         public string PostLogoutRedirectUri => FormFields[OAuthConstants.FormField_PostLogoutRedirectUri];
+
+        /// <summary>
+        /// A list of sessions that were abandoned. This allows derived implementations to do their own cleanup.
+        /// </summary>
+        public List<ISession> AbandonedSessions => new List<ISession>();
+        /// <summary>
+        /// The authorization cookie that exists as part of the user/app's authenticated context.
+        /// </summary>
+        public AuthorizationCookie AuthCookie { get; set; }
     }
 }

@@ -45,6 +45,7 @@ using SanteDB.Rest.OAuth.Abstractions;
 using SanteDB.Rest.OAuth.Configuration;
 using SanteDB.Rest.OAuth.Model;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -976,7 +977,11 @@ namespace SanteDB.Rest.OAuth.Rest
 
                 AddTokensToContext(context);
 
-                return CreateTokenResponse(context);
+                var response = CreateTokenResponse(context);
+
+                BeforeSendTokenResponse(context, response);
+
+                return response;
             }
             catch (Exception ex) when (!(ex is StackOverflowException || ex is OutOfMemoryException))
             {
@@ -984,6 +989,16 @@ namespace SanteDB.Rest.OAuth.Rest
                 // Allow the error behavior to create an appropriate error
                 throw; //  return CreateErrorResponse(OAuthErrorType.unspecified_error, ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Optional override method that is executed just before a token response is sent. Allows a derived class to override the response.
+        /// </summary>
+        /// <param name="context">The request context</param>
+        /// <param name="response">The response object that is sent back to the clinet.</param>
+        protected virtual void BeforeSendTokenResponse(OAuthTokenRequestContext context, OAuthTokenResponse response)
+        {
+
         }
 
         /// <summary>
@@ -1633,11 +1648,18 @@ namespace SanteDB.Rest.OAuth.Rest
 
             var context = new OAuthSignoutRequestContext(RestOperationContext.Current, form);
 
-            var authcookie = GetAuthorizationCookie(context);
+            context.AuthCookie = GetAuthorizationCookie(context);
 
-            if (null == authcookie)
+            if (null == context.AuthCookie)
             {
                 context.OutgoingResponse.StatusCode = (int)HttpStatusCode.Unauthorized;
+                return null;
+            }
+
+            var cont = OnBeforeSignOut(context);
+
+            if (!cont)
+            {
                 return null;
             }
 
@@ -1648,13 +1670,13 @@ namespace SanteDB.Rest.OAuth.Rest
             }
             else
             {
-                if (authcookie.Users != null)
+                if (context.AuthCookie.Users != null)
                 {
                     var identityservice = ApplicationServiceContext.Current.GetService<IIdentityProviderService>();
 
                     if (null != identityservice)
                     {
-                        foreach (var user in authcookie.Users)
+                        foreach (var user in context.AuthCookie.Users)
                         {
                             m_traceSource.TraceVerbose("Abandoning sessions for {0}", user);
                             //Sign the users out of any sessions
@@ -1662,11 +1684,17 @@ namespace SanteDB.Rest.OAuth.Rest
                             {
                                 var userid = identityservice.GetSid(user);
 
+                                var identity = identityservice.GetIdentity(user) as IClaimsIdentity;
+                                var principal = new SanteDBClaimsPrincipal(identity);
+
+
                                 var sessions = m_SessionProvider.GetUserSessions(userid);
 
                                 foreach (var session in sessions)
                                 {
                                     m_SessionProvider.Abandon(session);
+                                    _AuditService.Audit().ForSessionStop(session, principal, true).Send();
+                                    context.AbandonedSessions.Add(session);
                                 }
                             }
                             catch (Exception ex) when (!(ex is StackOverflowException || ex is OutOfMemoryException))
@@ -1679,7 +1707,25 @@ namespace SanteDB.Rest.OAuth.Rest
                 }
             }
 
-            return "Under construction.";
+            OnAfterSignOut(context);
+
+            return null;
+
+        }
+
+        /// <summary>
+        /// Invoked before the signout operation is executed.
+        /// </summary>
+        /// <param name="context">The context for the operation.</param>
+        /// <returns><c>false</c> to abort the signout operation. <c>true</c> to continue.</returns>
+        protected virtual bool OnBeforeSignOut(OAuthSignoutRequestContext context) => true;
+
+        /// <summary>
+        /// Invoked after the signout operation is executed. <see cref="OAuthSignoutRequestContext.AbandonedSessions"/> contains the sessions that were abandoned.
+        /// </summary>
+        /// <param name="context">The context for the operation.</param>
+        protected virtual void OnAfterSignOut(OAuthSignoutRequestContext context)
+        {
 
         }
 

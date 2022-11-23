@@ -34,6 +34,20 @@ namespace SanteDB.Rest.OAuth.Token
         public string ExternalTokenFormat => ClaimMapper.ExternalTokenTypeJwt;
 
         /// <inheritdoc/>
+        public string MapToExternalClaimType(string internalClaimType)
+        {
+            if (m_claimTypeMapping.TryGetValue(internalClaimType, out var newclaimtype))
+            {
+                return newclaimtype;
+            }
+
+            return internalClaimType;
+        }
+
+        /// <inheritdoc/>
+        public string MapToInternalClaimType(string externalClaimType) => m_claimTypeMapping.FirstOrDefault(kvp => kvp.Value == externalClaimType).Value ?? externalClaimType;
+
+        /// <inheritdoc/>
         public IDictionary<string, object> MapToExternalIdentityClaims(IEnumerable<IClaim> internalClaims)
         {
             var mappedClaims = new Dictionary<String, Object>();
@@ -49,6 +63,7 @@ namespace SanteDB.Rest.OAuth.Token
 
             return mappedClaims;
         }
+
 
         /// <inheritdoc/>
         public IEnumerable<IClaim> MapToInternalIdentityClaims(IDictionary<string, object> externalClaims)
