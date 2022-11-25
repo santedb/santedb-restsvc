@@ -45,7 +45,7 @@ namespace SanteDB.Rest.OAuth.Token
         }
 
         /// <inheritdoc/>
-        public string MapToInternalClaimType(string externalClaimType) => m_claimTypeMapping.FirstOrDefault(kvp => kvp.Value == externalClaimType).Value ?? externalClaimType;
+        public string MapToInternalClaimType(string externalClaimType) => m_claimTypeMapping.FirstOrDefault(kvp => kvp.Value == externalClaimType).Key ?? externalClaimType;
 
         /// <inheritdoc/>
         public IDictionary<string, object> MapToExternalIdentityClaims(IEnumerable<IClaim> internalClaims)
