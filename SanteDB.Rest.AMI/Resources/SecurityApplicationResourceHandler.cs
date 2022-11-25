@@ -65,15 +65,16 @@ namespace SanteDB.Rest.AMI.Resources
 
             var sde = data as SecurityApplicationInfo;
             // If no policies then assign the ones from SYNCHRONIZERS
-            if (sde.Policies?.Any() != true)
-            {
-                var role = this.m_securityRepository.GetRole("APPLICATIONS");
-                var policies = this.m_policyInformationService?.GetPolicies(role);
-                if (policies != null)
-                {
-                    sde.Policies = policies.Select(o => new SecurityPolicyInfo(o)).ToList();
-                }
-            }
+            //if (sde.Policies?.Any() != true)
+            //{
+            //    var role = this.m_securityRepository.GetRole("APPLICATIONS");
+            //    var policies = this.m_policyInformationService?.GetPolicies(role);
+            //    if (policies != null)
+            //    {
+            //        sde.Policies = policies.Select(o => new SecurityPolicyInfo(o)).ToList();
+            //    }
+            //}
+            //Policies now always copy from APPLICATIONS in AdoApplicationIdentityProvider
 
             return base.Create(data, updateIfExists);
         }

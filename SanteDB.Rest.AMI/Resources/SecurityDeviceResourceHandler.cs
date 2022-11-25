@@ -65,15 +65,16 @@ namespace SanteDB.Rest.AMI.Resources
 
             var sde = data as SecurityDeviceInfo;
             // If no policies then assign the ones from DEVICE
-            if (sde.Policies?.Any() != null)
-            {
-                var role = this.m_securityRepository?.GetRole("DEVICE");
-                var policies = this.m_policyInformationService?.GetPolicies(role);
-                if (policies != null)
-                {
-                    sde.Policies = policies.Select(o => new SecurityPolicyInfo(o)).ToList();
-                }
-            }
+            //if (sde.Policies?.Any() != true)
+            //{
+            //    var role = this.m_securityRepository?.GetRole("DEVICE");
+            //    var policies = this.m_policyInformationService?.GetPolicies(role);
+            //    if (policies != null)
+            //    {
+            //        sde.Policies = policies.Select(o => new SecurityPolicyInfo(o)).ToList();
+            //    }
+            //}
+            //Policies now always copy from DEVICE automatically by the AdoDeviceIdentityProvider.
 
             return base.Create(data, updateIfExists);
         }

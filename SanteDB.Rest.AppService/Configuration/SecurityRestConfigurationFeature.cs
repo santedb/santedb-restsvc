@@ -154,9 +154,13 @@ namespace SanteDB.Rest.AppService.Configuration
                 if(existingKey.Algorithm == SignatureAlgorithm.HS256 && !HS256_MASK.Equals(itm["value"].ToString()))
                 {
                     existingKey.HmacSecret = itm["value"].ToString();
+                    existingKey.StoreLocationSpecified = false;
+                    existingKey.FindTypeSpecified = false;
+                    existingKey.FindValue = null;
                 }
                 else if(existingKey.Algorithm == SignatureAlgorithm.RS256)
                 {
+                    existingKey.HmacSecret = null;
                     existingKey.StoreLocation = System.Security.Cryptography.X509Certificates.StoreLocation.CurrentUser;
                     existingKey.StoreName = System.Security.Cryptography.X509Certificates.StoreName.My;
                     existingKey.FindType = System.Security.Cryptography.X509Certificates.X509FindType.FindByThumbprint;
