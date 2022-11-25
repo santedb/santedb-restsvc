@@ -21,6 +21,7 @@
 using RestSrvr.Exceptions;
 using SanteDB.Core;
 using SanteDB.Core.Model.AMI.Auth;
+using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
@@ -28,6 +29,7 @@ using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
+using System.Collections.Specialized;
 using System.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
@@ -90,6 +92,31 @@ namespace SanteDB.Rest.AMI.Resources
             {
                 Roles = td.Roles
             };
+        }
+
+        /// <summary>
+        /// Get the user information
+        /// </summary>
+        public override object Get(object id, object versionId)
+        {
+            var retVal = base.Get(id, versionId) as SecurityUserInfo;
+            retVal.Roles = this.m_roleProvider.GetAllRoles(retVal.Entity.UserName).ToList();
+            return retVal;
+        }
+
+        /// <summary>
+        /// Query result set which loads user roles
+        /// </summary>
+        public override IQueryResultSet Query(NameValueCollection queryParameters)
+        {
+            return new NestedQueryResultSet(base.Query(queryParameters), o =>
+            {
+                if (o is SecurityUserInfo si)
+                {
+                    si.Roles = this.m_roleProvider.GetAllRoles(si.Entity.UserName).ToList();
+                }
+                return o;
+            });
         }
 
         /// <summary>
