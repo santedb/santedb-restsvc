@@ -4,11 +4,13 @@ using SanteDB.Core.Security.Claims;
 using SanteDB.Core.TestFramework;
 using SanteDB.Rest.OAuth.Token;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SanteDB.Rest.OAuth.Test
 {
@@ -62,6 +64,55 @@ namespace SanteDB.Rest.OAuth.Test
             Assert.DoesNotThrow(() => dut.MapToInternalClaimType(string.Empty));
             Assert.DoesNotThrow(() => dut.MapToInternalClaimType("\0"));
             Assert.DoesNotThrow(() => dut.MapToInternalClaimType("name"));
+        }
+
+        [Test]
+        public void TestMapToExternal_ListGrouping()
+        {
+            var dut = new JwtClaimMapper();
+
+            var claims = new List<IClaim>();
+
+            claims.Add(new SanteDBClaim(SanteDBClaimTypes.DefaultNameClaimType, "name"));
+            claims.Add(new SanteDBClaim(SanteDBClaimTypes.DefaultNameClaimType, "name2"));
+
+            var result = dut.MapToExternalIdentityClaims(claims);
+
+            Assert.NotNull(result);
+            Assert.AreEqual(1, result.Count);
+
+            var val = result[OAuthConstants.ClaimType_Name];
+
+            Assert.IsTrue(val is IList);
+
+            var lst = val as IList;
+
+            Assert.AreEqual(2, lst.Count);
+        }
+
+        [Test]
+        public void TestMapToInternal_Degrouping()
+        {
+            var group = new List<string>();
+            group.Add("name");
+            group.Add("name2");
+
+            var dut = new JwtClaimMapper();
+
+            var input = new Dictionary<string, object>();
+            input.Add(OAuthConstants.ClaimType_Name, group);
+
+            var result = dut.MapToInternalIdentityClaims(input);
+
+            Assert.NotNull(result);
+
+            Assert.AreEqual(2, result.Count());
+
+            foreach(var claim in result)
+            {
+                Assert.NotNull(claim);
+                Assert.AreEqual(SanteDBClaimTypes.Name, claim.Type, "The claim type does not match the expected claim type. Claim {0}", claim);
+            }
         }
     }
 }
