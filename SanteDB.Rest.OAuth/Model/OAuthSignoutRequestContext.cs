@@ -1,4 +1,5 @@
-﻿using RestSrvr;
+﻿using Microsoft.IdentityModel.Tokens;
+using RestSrvr;
 using SanteDB.Core.Security;
 using System;
 using System.Collections.Generic;
@@ -38,5 +39,10 @@ namespace SanteDB.Rest.OAuth.Model
         /// The authorization cookie that exists as part of the user/app's authenticated context.
         /// </summary>
         public AuthorizationCookie AuthCookie { get; set; }
+
+        /// <summary>
+        /// Token validation parameters when an ID token is specified.
+        /// </summary>
+        public TokenValidationParameters TokenValidationParameters { get; set; }
     }
 }

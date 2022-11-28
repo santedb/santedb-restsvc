@@ -129,6 +129,6 @@ namespace SanteDB.Rest.OAuth.Model
         /// <summary>
         /// A nonce value that was part of a flow.
         /// </summary>
-        public string Nonce { get; set; }
+        public virtual string Nonce { get; set; }
     }
 }

@@ -20,7 +20,13 @@ namespace SanteDB.Rest.OAuth.Model
 
         public override string ClientId => GetValue(OAuthConstants.AuthorizeParameter_ClientId);
         public string LoginHint => GetValue(OAuthConstants.AuthorizeParameter_LoginHint);
-        public string Nonce => GetValue(OAuthConstants.AuthorizeParameter_Nonce);
+
+        public override string Nonce
+        {
+            get => base.Nonce ?? GetValue(OAuthConstants.AuthorizeParameter_Nonce); 
+            set => base.Nonce = value;
+        }
+
         public string Scope => GetValue(OAuthConstants.AuthorizeParameter_Scope);
         public string Prompt => GetValue(OAuthConstants.AuthorizeParameter_Prompt);
         public string State => GetValue(OAuthConstants.AuthorizeParameter_State);

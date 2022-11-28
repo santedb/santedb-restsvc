@@ -83,7 +83,7 @@ namespace SanteDB.Rest.Common
             else
             {
                 var data = Encoding.UTF8.GetString(Convert.FromBase64String(claimsHeaders));
-                return data.Split(';').Select(o => o.Split('=')).Select(c => new SanteDBClaim(c[0], c[1])).OfType<IClaim>().ToList();
+                return data.Split(';').Select(o => o.Split('=')).Select(strsplit => new SanteDBClaim(strsplit[0], strsplit[1])).OfType<IClaim>().ToList();
             }
         }
     }

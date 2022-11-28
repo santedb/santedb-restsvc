@@ -49,6 +49,7 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Tracing;
 using System.IO;
@@ -228,21 +229,26 @@ namespace SanteDB.Rest.OAuth.Rest
             //We have to wait for stage 2 otherwise we cannot guarantee that the applets will be loaded.
             if (!string.IsNullOrEmpty(m_configuration.LoginAssetPath))
             {
+                m_traceSource.TraceVerbose("Using configuration LoginAssetPath \"{0}\"", m_configuration.LoginAssetPath);
                 _AssetProvider = new LocalFolderAssetProvider(m_configuration.LoginAssetPath);
             }
             else if (!string.IsNullOrEmpty(m_configuration.LoginAssetSolution))
             {
+                m_traceSource.TraceVerbose("Using configuration asset solution {0}", m_configuration.LoginAssetSolution);
+
                 var applets = _AppletSolutionManager.GetApplets(m_configuration.LoginAssetSolution);
 
                 _AssetProvider = new AppletAssetProvider(applets);
             }
             else if (_AppletSolutionManager != null)
             {
+                m_traceSource.TraceVerbose("Using default solution \"santedb.core.sln\"");
                 var applets = _AppletSolutionManager.GetApplets("santedb.core.sln");
                 _AssetProvider = new AppletAssetProvider(applets);
             }
             else
             {
+                m_traceSource.TraceVerbose("No solutions are present. OAuth will search in any loaded applets for login assets.");
                 _AssetProvider = new AppletAssetProvider(_AppletManager.Applets);
             }
         }
@@ -257,6 +263,7 @@ namespace SanteDB.Rest.OAuth.Rest
         {
             if (null == context)
             {
+                m_traceSource.TraceInfo("Call to {0} with null context", nameof(TryGetDeviceIdentity));
                 return false;
             }
 
@@ -264,59 +271,17 @@ namespace SanteDB.Rest.OAuth.Rest
             {
                 context.DeviceIdentity = deviceIdentity as IClaimsIdentity;
                 context.DevicePrincipal = context.AuthenticationContext.Principal as IClaimsPrincipal;
+                m_traceSource.TraceVerbose("Found device identity from {1}: {0}", context.DeviceIdentity, nameof(AuthenticationContext));
                 return true;
             }
             else if (context.AuthenticationContext.Principal is IClaimsPrincipal cp && cp.Identities.OfType<IDeviceIdentity>().Any())
             {
                 context.DeviceIdentity = cp.Identities.OfType<IDeviceIdentity>().First() as IClaimsIdentity;
+                m_traceSource.TraceVerbose("Found device identity in {1} (composite identity): {0}", context.DeviceIdentity, nameof(AuthenticationContext));
                 return true;
             }
-            // This header is no longer needed - non HTTPS comes through the Authorization header since HTTP basic auth of client_id is not required
-            //else if (!string.IsNullOrWhiteSpace(context.XDeviceAuthorizationHeader))
-            //{
-            //    if (AuthorizationHeader.TryParse(context.XDeviceAuthorizationHeader, out var header))
-            //    {
-            //        if (header.IsScheme(AuthorizationHeader.Scheme_Basic))
-            //        {
-            //            var basiccredentials = Encoding.UTF8.GetString(Convert.FromBase64String(header.Value)).Split(new[] { ":" }, 2, StringSplitOptions.RemoveEmptyEntries);
 
-            //            if (basiccredentials.Length == 2)
-            //            {
-            //                m_traceSource.TraceVerbose($"Attempting to Authenticate with credentials in {ExtendedHttpHeaderNames.HttpDeviceCredentialHeaderName}.");
-
-            //                var principal = m_DeviceIdentityProvider.Authenticate(basiccredentials[0], basiccredentials[1]);
-
-            //                if (principal?.Identity is IDeviceIdentity devid)
-            //                {
-            //                    context.DeviceIdentity = devid as IClaimsIdentity;
-            //                    context.DevicePrincipal = principal as IClaimsPrincipal;
-            //                    return true;
-            //                }
-            //                else if (null != principal)
-            //                {
-            //                    m_traceSource.TraceWarning($"Device authentication successful but identity was not {nameof(IDeviceIdentity)}.");
-            //                }
-            //                else
-            //                {
-            //                    m_traceSource.TraceInfo($"Unsuccessful device authentication.");
-            //                }
-            //            }
-            //            else
-            //            {
-            //                m_traceSource.TraceVerbose($"Malformed basic credentials in {ExtendedHttpHeaderNames.HttpDeviceCredentialHeaderName} header.");
-            //            }
-            //        }
-            //        else
-            //        {
-            //            m_traceSource.TraceVerbose($"Unsupported scheme {header.Scheme} in {ExtendedHttpHeaderNames.HttpDeviceCredentialHeaderName} header.");
-            //        }
-            //    }
-            //    else
-            //    {
-            //        m_traceSource.TraceVerbose($"Invalid {ExtendedHttpHeaderNames.HttpDeviceCredentialHeaderName} format. Expecting {{Scheme}} {{Value}}");
-            //    }
-            //}
-
+            m_traceSource.TraceVerbose("No device identity found in request.");
             return false;
 
         }
@@ -330,22 +295,26 @@ namespace SanteDB.Rest.OAuth.Rest
         {
             if (null == context)
             {
+                m_traceSource.TraceInfo("Call to {0} with null context", nameof(TryGetApplicationIdentity));
                 return false;
             }
 
             if (null != context.ApplicationPrincipal)
             {
+                m_traceSource.TraceVerbose("Existing application principal found in the context.");
                 return context?.ApplicationPrincipal?.Identity?.IsAuthenticated == true;
             }
 
             if (null != context.AuthenticationContext?.Principal?.Identity && context.AuthenticationContext.Principal.Identity is IApplicationIdentity applicationIdentity)
             {
                 context.ApplicationIdentity = applicationIdentity as IClaimsIdentity;
+                m_traceSource.TraceVerbose("Found application identity from {1}: {0}.", context.ApplicationIdentity, nameof(AuthenticationContext));
                 return true;
             }
             else if (context.AuthenticationContext?.Principal is IClaimsPrincipal cp && cp.Identities.OfType<IApplicationIdentity>().Any())
             {
                 context.ApplicationIdentity = cp.Identities.OfType<IApplicationIdentity>().First() as IClaimsIdentity;
+                m_traceSource.TraceVerbose("Found application identity from {1} (composite identity): {0}.", context.ApplicationIdentity, nameof(AuthenticationContext));
                 return true;
             }
             else if (!string.IsNullOrWhiteSpace(context.ClientId) && !string.IsNullOrWhiteSpace(context.ClientSecret))
@@ -357,6 +326,7 @@ namespace SanteDB.Rest.OAuth.Rest
                 {
                     context.ApplicationIdentity = appidentity as IClaimsIdentity;
                     context.ApplicationPrincipal = principal as IClaimsPrincipal;
+                    m_traceSource.TraceVerbose("Application authentication successful. Identity: {0}", context.ApplicationIdentity);
                     return true;
                 }
                 else if (null != principal)
@@ -368,19 +338,21 @@ namespace SanteDB.Rest.OAuth.Rest
                     m_traceSource.TraceInfo($"Application authentication unsuccessful. Client ID: {context.ClientId}");
                 }
             }
-            else if(!String.IsNullOrEmpty(context.ClientId) && null != context.DevicePrincipal)
+            else if (!String.IsNullOrEmpty(context.ClientId) && null != context.DevicePrincipal)
             {
-                m_traceSource.TraceVerbose("Attempting to authenticate application with other context.");
+                m_traceSource.TraceVerbose("Attempting to authenticate application with device principal.");
                 var principal = m_AppIdentityProvider.Authenticate(context.ClientId, context.DevicePrincipal);
 
                 if (null != principal && principal.Identity is IApplicationIdentity appidentity)
                 {
                     context.ApplicationIdentity = appidentity as IClaimsIdentity;
                     context.ApplicationPrincipal = principal as IClaimsPrincipal;
+                    m_traceSource.TraceVerbose("Application authentication successful. Identity: {0}", context.ApplicationIdentity);
                     return true;
                 }
             }
 
+            m_traceSource.TraceVerbose("No application identity found in request.");
             return false;
         }
 
@@ -470,13 +442,17 @@ namespace SanteDB.Rest.OAuth.Rest
 
             // System claims
             var claims = new Dictionary<string, object>();
-            
+
             if (ClaimMapper.Current.TryGetMapper(ClaimMapper.ExternalTokenTypeJwt, out var mappers))
             {
                 foreach (var mappedClaim in mappers.SelectMany(o => o.MapToExternalIdentityClaims(claimsPrincipal.Claims)))
                 {
                     claims.AddClaim(mappedClaim.Key, mappedClaim.Value);
                 }
+            }
+            else
+            {
+                m_traceSource.TraceInfo("No claim mapper found for claim type {0}. This may indicate an issue with the system configuration.", ClaimMapper.ExternalTokenTypeJwt);
             }
 
             //Name
@@ -666,9 +642,9 @@ namespace SanteDB.Rest.OAuth.Rest
 
             // Establish the session
 
-            string purposeOfUse = additionalClaims?.FirstOrDefault(o => o.Type == SanteDBClaimTypes.PurposeOfUse)?.Value;
-            bool isOverride = additionalClaims?.Any(o => o.Type == SanteDBClaimTypes.SanteDBOverrideClaim) == true || scopes?.Any(o => o == PermissionPolicyIdentifiers.OverridePolicyPermission) == true;
-            var session = m_SessionProvider.Establish(claimsPrincipal, remoteIp, isOverride, purposeOfUse, scopes?.ToArray(), additionalClaims.FirstOrDefault(o => o.Type == SanteDBClaimTypes.Language)?.Value);
+            string purposeOfUse = additionalClaims?.GetPurposeOfUse();
+            bool isOverride = additionalClaims.HasOverrideClaim() || scopes.HasOverrideScope();
+            var session = m_SessionProvider.Establish(claimsPrincipal, remoteIp, isOverride, purposeOfUse, scopes?.ToArray(), additionalClaims.GetLanguage());
 
             _AuditService.Audit().ForSessionStart(session, claimsPrincipal, true).Send();
 
@@ -693,9 +669,9 @@ namespace SanteDB.Rest.OAuth.Rest
             else
             {
                 // JF - We may need to add other identities to the principal which some  principals might not  like
-                if (primaryPrincipal is IClaimsPrincipal oizcp)
+                if (primaryPrincipal is IClaimsPrincipal userprincipal)
                 {
-                    claimsPrincipal = new SanteDBClaimsPrincipal(oizcp.Identities);
+                    claimsPrincipal = new SanteDBClaimsPrincipal(userprincipal.Identities);
                 }
                 else
                 {
@@ -717,10 +693,10 @@ namespace SanteDB.Rest.OAuth.Rest
 
             // Establish the session
 
-            string purposeOfUse = additionalClaims?.FirstOrDefault(o => o.Type == SanteDBClaimTypes.PurposeOfUse)?.Value;
-            bool isOverride = additionalClaims?.Any(o => o.Type == SanteDBClaimTypes.SanteDBOverrideClaim) == true || scopes?.Any(o => o == PermissionPolicyIdentifiers.OverridePolicyPermission) == true;
+            string purposeOfUse = additionalClaims.GetPurposeOfUse();
+            bool isOverride = additionalClaims.HasOverrideClaim() || scopes.HasOverrideScope();
 
-            var session = m_SessionProvider.Establish(claimsPrincipal, remoteIp, isOverride, purposeOfUse, scopes?.ToArray(), additionalClaims.FirstOrDefault(o => o.Type == SanteDBClaimTypes.Language)?.Value);
+            var session = m_SessionProvider.Establish(claimsPrincipal, remoteIp, isOverride, purposeOfUse, scopes?.ToArray(), additionalClaims.GetLanguage());
 
             _AuditService.Audit().ForSessionStart(session, claimsPrincipal, true).Send();
 
@@ -732,7 +708,7 @@ namespace SanteDB.Rest.OAuth.Rest
         /// </summary>
         private OAuthError CreateErrorResponse(OAuthErrorType errorType, string message, string state = null)
         {
-            m_traceSource.TraceEvent(EventLevel.Error, message);
+            m_traceSource.TraceInfo("Returning OAuthError: Type: {0} , Message: {1}, State: {2}", errorType.ToString(), message, state ?? "(null)");
             RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.BadRequest;
             return new OAuthError()
             {
@@ -750,7 +726,7 @@ namespace SanteDB.Rest.OAuth.Rest
         /// <returns></returns>
         private Stream RenderInternal(string assetPath, OAuthAuthorizeRequestContext context)
         {
-            var locale = RestOperationContext.Current.IncomingRequest.QueryString["ui_locale"];
+            var locale = context.IncomingRequest.QueryString["ui_locale"];
 
             Stream content = null;
             string mimetype = null;
@@ -797,6 +773,7 @@ namespace SanteDB.Rest.OAuth.Rest
             }
             catch (FileNotFoundException)
             {
+                m_traceSource.TraceVerbose("Asset not found: \"{0}\"", assetPath);
                 RestOperationContext.Current.OutgoingResponse.StatusCode = 404;
                 RestOperationContext.Current.OutgoingResponse.StatusDescription = "NOT FOUND";
                 return Stream.Null;
@@ -918,10 +895,10 @@ namespace SanteDB.Rest.OAuth.Rest
 
             var clientClaims = context.IncomingRequest.Headers.ExtractClientClaims();
             // Set the language claim?
-            if (!string.IsNullOrEmpty(formFields["ui_locales"]) &&
+            if (!string.IsNullOrEmpty(formFields[OAuthConstants.FormField_UILocales]) &&
                 !clientClaims.Any(o => o.Type == SanteDBClaimTypes.Language))
             {
-                clientClaims.Add(new SanteDBClaim(SanteDBClaimTypes.Language, formFields["ui_locales"]));
+                clientClaims.Add(new SanteDBClaim(SanteDBClaimTypes.Language, formFields[OAuthConstants.FormField_UILocales]));
             }
 
             context.AdditionalClaims = clientClaims;
@@ -1565,6 +1542,11 @@ namespace SanteDB.Rest.OAuth.Rest
         /// <returns></returns>
         public virtual object JsonWebKeySet()
         {
+            return new Model.Jwks.KeySet(GetJsonWebKeySet());
+        }
+
+        private JsonWebKeySet GetJsonWebKeySet()
+        {
             var keyset = new JsonWebKeySet();
 
             keyset.SkipUnresolvedJsonWebKeys = true;
@@ -1631,8 +1613,7 @@ namespace SanteDB.Rest.OAuth.Rest
                 }
             }
 
-
-            return new Model.Jwks.KeySet(keyset);
+            return keyset;
         }
         #endregion
 
@@ -1647,14 +1628,15 @@ namespace SanteDB.Rest.OAuth.Rest
             }
 
             var context = new OAuthSignoutRequestContext(RestOperationContext.Current, form);
+            context.AuthenticationContext = AuthenticationContext.Current;
 
             context.AuthCookie = GetAuthorizationCookie(context);
 
-            if (null == context.AuthCookie)
-            {
-                context.OutgoingResponse.StatusCode = (int)HttpStatusCode.Unauthorized;
-                return null;
-            }
+            //if (null == context.AuthCookie)
+            //{
+            //    context.OutgoingResponse.StatusCode = (int)HttpStatusCode.Unauthorized;
+            //    return null;
+            //}
 
             var cont = OnBeforeSignOut(context);
 
@@ -1665,8 +1647,54 @@ namespace SanteDB.Rest.OAuth.Rest
 
             if (context.IdTokenHint != null)
             {
+                context.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = m_configuration.IssuerName,
+                    ValidateAudience = false,
+                    ValidateIssuer = true,
+                    ValidateLifetime = true,
+                    TryAllIssuerSigningKeys = true,
+                    IssuerSigningKeys = GetJsonWebKeySet()?.GetSigningKeys(),
+                    NameClaimType = OAuthConstants.ClaimType_Name,
+                    ValidAlgorithms = new[] { SignatureAlgorithm.HS256.ToString(), SignatureAlgorithm.RS256.ToString(), SignatureAlgorithm.RS512.ToString() },
+                    ValidateIssuerSigningKey = true
+                };
 
-                //TODO: Decode ID_token and only sign out the session
+                var validationresult = m_JwtHandler.ValidateToken(context.IdTokenHint, context.TokenValidationParameters);
+
+                if (validationresult?.IsValid == true)
+                {
+                    var sessionobj = validationresult.Claims.FirstOrDefault(c => c.Key == OAuthConstants.ClaimType_Sid).Value?.ToString();
+
+                    if (null != sessionobj)
+                    {
+                        ISession session = null;
+
+                        if (Guid.TryParse(sessionobj, out var sessionidguid))
+                        {
+                            session = m_SessionProvider.Get(sessionidguid.ToByteArray(), allowExpired: false);
+                        }
+                        else
+                        {
+                            session = m_SessionProvider.Get(sessionobj.ParseBase64UrlEncode(), allowExpired: false);
+                        }
+
+                        if (null != session)
+                        {
+                            var principal = m_SessionIdentityProvider.Authenticate(session);
+
+                            _AuditService.Audit().ForSessionStop(session, principal, true).Send();
+                            m_SessionProvider.Abandon(session);
+                            OnAfterSignOut(context);
+                            return null;
+                        }
+
+                        return CreateErrorResponse(OAuthErrorType.invalid_request, "invalid session");
+                    }
+                }
+
+
+                return CreateErrorResponse(OAuthErrorType.invalid_request, "invalid token");
             }
             else
             {

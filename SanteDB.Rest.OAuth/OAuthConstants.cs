@@ -124,6 +124,10 @@ namespace SanteDB.Rest.OAuth
         public const string OAuthResetFlowPolicyWithoutDevice = OAuthResetFlowPolicy + ".0";
 
         /// <summary>
+        /// The locale form field
+        /// </summary>
+        public const string FormField_UILocales = "ui_locales";
+        /// <summary>
         /// In a token request, this is the grant type field key
         /// </summary>
         public const string FormField_GrantType = "grant_type";
@@ -163,13 +167,33 @@ namespace SanteDB.Rest.OAuth
         /// In a token request with a grant type of x_challenge, this is the response to the challenge.
         /// </summary>
         public const string FormField_ChallengeResponse = "response";
-
+        /// <summary>
+        /// In many requests, the nonce (number once) is used to verify that a request has not been sent more than once or tampered with.
+        /// </summary>
         public const string FormField_Nonce = "nonce";
 
+        /// <summary>
+        /// Santedb request data key for the symmetric secret that is configured for a particular application.
+        /// </summary>
         public const string DataKey_SymmetricSecret = "symm_secret";
 
+        /// <summary>
+        /// Returns the response parameters in a querystring to the return url. 
+        /// <code>
+        /// ...?code=12345&amp;state=0F1A&amp;nonce=12345
+        /// </code>
+        /// </summary>
         public const string ResponseMode_Query = "query";
+        /// <summary>
+        /// Returns the response parameters in a url fragment. 
+        /// <code>
+        /// ...#code=12345&amp;state=0F1A&amp;nonce=12345
+        /// </code>
+        /// </summary>
         public const string ResponseMode_Fragment = "fragment";
+        /// <summary>
+        /// Returns the response parameters in a standard form post.
+        /// </summary>
         public const string ResponseMode_FormPost = "form_post";
 
         public const string AuthorizeParameter_ClientId = "client_id";

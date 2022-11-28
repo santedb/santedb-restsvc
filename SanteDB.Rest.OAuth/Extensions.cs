@@ -116,5 +116,17 @@ namespace SanteDB.Rest.OAuth
         {
             tracer.TraceVerbose("{0}: Demand {1} from {2}", requestIdentifier, permission, securable.ToString());
         }
+
+        public static string GetPurposeOfUse(this IEnumerable<IClaim> claims)
+            => claims?.FirstOrDefault(c => c.Type == SanteDBClaimTypes.PurposeOfUse)?.Value;
+
+        public static bool HasOverrideClaim(this IEnumerable<IClaim> claims)
+            => claims?.Any(o => o.Type == SanteDBClaimTypes.SanteDBOverrideClaim) == true;
+
+        public static bool HasOverrideScope(this IEnumerable<string> scopes)
+            => scopes?.Any(o => o == PermissionPolicyIdentifiers.OverridePolicyPermission) == true;
+
+        public static string GetLanguage(this IEnumerable<IClaim> claims, string defaultLanguage = null)
+            => claims?.FirstOrDefault(c => c.Type == SanteDBClaimTypes.Language)?.Value ?? defaultLanguage;
     }
 }
