@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -128,5 +130,20 @@ namespace SanteDB.Rest.OAuth
 
         public static string GetLanguage(this IEnumerable<IClaim> claims, string defaultLanguage = null)
             => claims?.FirstOrDefault(c => c.Type == SanteDBClaimTypes.Language)?.Value ?? defaultLanguage;
+
+        public static void SetCacheControl(this HttpListenerResponse renamed, bool noStore=true)
+        {
+            if (null == renamed)
+            {
+                return;
+            }
+
+            CacheControlHeaderValue v = new CacheControlHeaderValue();
+            v.NoStore = noStore;
+
+            renamed.Headers?.Remove(HttpResponseHeader.CacheControl);
+            renamed.Headers?.Add(HttpResponseHeader.CacheControl, v.ToString());
+        }
+            
     }
 }

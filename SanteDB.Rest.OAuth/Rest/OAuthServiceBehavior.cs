@@ -748,6 +748,8 @@ namespace SanteDB.Rest.OAuth.Rest
 
             var restcontext = RestOperationContext.Current;
 
+            restcontext.OutgoingResponse.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+
             EventHandler handler = (s, e) =>
             {
                 content?.Dispose();
@@ -1632,6 +1634,8 @@ namespace SanteDB.Rest.OAuth.Rest
 
             context.AuthCookie = GetAuthorizationCookie(context);
 
+            context.OutgoingResponse?.SetCacheControl(noStore: true);
+
             //if (null == context.AuthCookie)
             //{
             //    context.OutgoingResponse.StatusCode = (int)HttpStatusCode.Unauthorized;
@@ -1647,6 +1651,8 @@ namespace SanteDB.Rest.OAuth.Rest
 
             if (context.IdTokenHint != null)
             {
+                
+
                 context.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidIssuer = m_configuration.IssuerName,
@@ -1659,6 +1665,12 @@ namespace SanteDB.Rest.OAuth.Rest
                     ValidAlgorithms = new[] { SignatureAlgorithm.HS256.ToString(), SignatureAlgorithm.RS256.ToString(), SignatureAlgorithm.RS512.ToString() },
                     ValidateIssuerSigningKey = true
                 };
+
+                if (!string.IsNullOrEmpty(context.ClientId))
+                {
+                    context.TokenValidationParameters.ValidAudience = context.ClientId;
+                    context.TokenValidationParameters.ValidateAudience = true;
+                }
 
                 var validationresult = m_JwtHandler.ValidateToken(context.IdTokenHint, context.TokenValidationParameters);
 

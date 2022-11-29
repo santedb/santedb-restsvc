@@ -77,7 +77,7 @@ namespace SanteDB.Rest.OAuth.Model
         /// <summary>
         /// Gets or sets the error
         /// </summary>
-        [JsonProperty("error")]
+        [JsonProperty("error"), JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public OAuthErrorType Error { get; set; }
 
         /// <summary>
