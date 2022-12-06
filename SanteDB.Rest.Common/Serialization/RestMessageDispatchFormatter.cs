@@ -18,6 +18,7 @@
  * User: fyfej
  * Date: 2022-5-30
  */
+using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using RestSrvr;
@@ -266,6 +267,34 @@ namespace SanteDB.Rest.Common.Serialization
                                     }
                                 }
                                 parameters[pNumber] = nvc;
+                                break;
+
+                            case "multipart/form-data":
+                                var multipartReader = new MultipartReader(contentType.Boundary, request.Body);
+                                var parmValue = Activator.CreateInstance(parm.ParameterType) as IDictionary<String, Object>;
+                                while (true)
+                                {
+                                    var nextSection = multipartReader.ReadNextSectionAsync().Result;
+                                    if (nextSection == null)
+                                    {
+                                        break;
+                                    }
+
+                                    switch (nextSection.GetContentDispositionHeader().DispositionType.Value)
+                                    {
+                                        case "form-data":
+                                            using (var sr = new StreamReader(nextSection.Body))
+                                            {
+                                                parmValue.Add(nextSection.GetContentDispositionHeader().Name.Value, sr.ReadToEnd());
+                                            }
+                                            break;
+                                        default:
+                                            parmValue.Add(nextSection.GetContentDispositionHeader().Name.Value, nextSection.Body);
+                                            break;
+                                    }
+                                }
+                                parameters[pNumber] = parmValue;
+
                                 break;
 
                             default:

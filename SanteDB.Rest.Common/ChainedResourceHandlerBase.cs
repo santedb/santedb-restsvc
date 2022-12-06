@@ -20,6 +20,7 @@
  */
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
+using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Services;
 using System;
@@ -32,10 +33,11 @@ namespace SanteDB.Rest.Common
     /// <summary>
     /// Chained resource handler base
     /// </summary>
-    public abstract class ChainedResourceHandlerBase : IChainedApiResourceHandler
+    public abstract class ChainedResourceHandlerBase : IChainedApiResourceHandler, IOperationalApiResourceHandler
     {
         // Property providers
         private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
+        private ConcurrentDictionary<String, IApiChildOperation> m_operationProviders = new ConcurrentDictionary<string, IApiChildOperation>();
         private readonly ILocalizationService m_localizationService;
 
         /// <summary>
@@ -68,6 +70,9 @@ namespace SanteDB.Rest.Common
         public abstract Type Scope { get; }
         /// <inheritdoc/>
         public abstract ResourceCapabilityType Capabilities { get; }
+
+        /// <inheritdoc/>
+        public IEnumerable<IApiChildOperation> Operations => this.m_operationProviders.Values;
 
         /// <summary>
         /// Add a child resource
@@ -177,5 +182,40 @@ namespace SanteDB.Rest.Common
         public abstract IQueryResultSet Query(NameValueCollection queryParameters);
         /// <inheritdoc/>
         public abstract object Update(object data);
+
+        /// <inheritdoc/>
+        public void AddOperation(IApiChildOperation operation)
+        {
+            this.m_operationProviders.TryAdd(operation.Name, operation);
+        }
+
+        /// <inheritdoc/>
+        public object InvokeOperation(object scopingEntityKey, string operationName, ParameterCollection parameters)
+        {
+            if (this.TryGetOperation(operationName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out var operationProvider))
+            {
+                return operationProvider.Invoke(this.Type, scopingEntityKey, parameters);
+            }
+            else
+            {
+                this.m_tracer.TraceError($"{operationName} not found");
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
+                {
+                    param = operationName
+                }));
+            }
+        }
+
+        /// <inheritdoc/>
+        public bool TryGetOperation(string operationName, ChildObjectScopeBinding bindingType, out IApiChildOperation operationHandler)
+        {
+            var retVal = this.m_operationProviders.TryGetValue(operationName, out operationHandler) &&
+                operationHandler.ScopeBinding.HasFlag(bindingType);
+            if (!retVal)
+            {
+                operationHandler = null;//clear in case of lazy programmers like me
+            }
+            return retVal;
+        }
     }
 }
