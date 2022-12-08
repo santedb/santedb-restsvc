@@ -30,7 +30,7 @@ namespace SanteDB.Rest.Common
                 foreach (var itm in queryList)
                 {
                     var sortParts = itm.Split(':');
-                    var sortExpr = QueryExpressionParser.BuildPropertySelector(me.GetType().GetGenericArguments()[0], sortParts[0], false, typeof(Object));
+                    var sortExpr = QueryExpressionParser.BuildPropertySelector(me.ElementType, sortParts[0], false, typeof(Object));
                     if (sortParts.Length == 1 || sortParts[1].Equals("ASC", StringComparison.OrdinalIgnoreCase))
                     {
                         me = orderable.OrderBy(sortExpr);

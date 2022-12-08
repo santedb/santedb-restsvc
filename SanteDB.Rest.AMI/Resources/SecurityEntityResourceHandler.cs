@@ -161,6 +161,8 @@ namespace SanteDB.Rest.AMI.Resources
 
                 // Special case for security entity wrappers, we want to load them from DB from fresh
                 this.m_cacheService?.Remove(td.Entity.Key.Value);
+
+                td.Policies = this.m_policyInformationService.GetPolicies(td.Entity).Select(o => new SecurityPolicyInfo(o)).ToList();
                 return td;
             }
             catch
@@ -274,6 +276,8 @@ namespace SanteDB.Rest.AMI.Resources
 
                 // Special case for security entity wrappers, we want to load them from DB from fresh
                 this.m_cacheService?.Remove(td.Entity.Key.Value);
+
+                td.Policies = this.m_policyInformationService.GetPolicies(td.Entity).Select(o => new SecurityPolicyInfo(o)).ToList();
 
                 return td;
             }

@@ -851,7 +851,7 @@ namespace SanteDB.Rest.OAuth.Rest
                     }
 
 
-                    return new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256);
+                    return new SigningCredentials(key, SecurityAlgorithms.HmacSha256) ;
                 default:
                     throw new SecurityException("Invalid signing configuration");
             }
@@ -1710,7 +1710,7 @@ namespace SanteDB.Rest.OAuth.Rest
             }
             else
             {
-                if (context.AuthCookie.Users != null)
+                if (context.AuthCookie?.Users != null)
                 {
                     var identityservice = ApplicationServiceContext.Current.GetService<IIdentityProviderService>();
 
