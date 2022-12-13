@@ -255,7 +255,7 @@ namespace SanteDB.Rest.AMI.Resources
                 td.Entity = this.GetRepository().Save(td.Entity);
 
                 // Add policies
-                if (td.Policies != null)
+                if (td.Policies?.Any() == true)
                 {
                     var currentPolicies = this.m_policyInformationService.GetPolicies(td.Entity).Select(o => new { rule = o.Rule, pol = o.Policy.Oid });
                     var newPolicies = td.Policies.Select(p => new { rule = p.Grant, pol = p.Oid });
