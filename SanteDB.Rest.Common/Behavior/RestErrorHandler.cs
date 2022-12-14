@@ -86,6 +86,8 @@ namespace SanteDB.Rest.Common.Behavior
                     var authService = RestOperationContext.Current.AppliedPolicies.OfType<IAuthorizationServicePolicy>().FirstOrDefault();
                     authService.AddAuthenticateChallengeHeader(faultMessage, error);
                     break;
+                case HttpStatusCode.NotModified:
+                    return true;
                 case (HttpStatusCode)429:
                     if (error is LimitExceededException lee)
                     {

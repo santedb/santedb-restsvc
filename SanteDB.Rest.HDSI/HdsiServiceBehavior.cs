@@ -371,7 +371,7 @@ namespace SanteDB.Rest.HDSI
                 }
                 else
                 {
-                    throw new PreconditionFailedException();
+                    return null;
                 }
             }
         }
@@ -383,8 +383,8 @@ namespace SanteDB.Rest.HDSI
 
             var ifModifiedHeader = RestOperationContext.Current.IncomingRequest.GetIfModifiedSince();
             var ifUnmodifiedHeader = RestOperationContext.Current.IncomingRequest.GetIfUnmodifiedSince();
-            var ifNoneMatchHeader = RestOperationContext.Current.IncomingRequest.GetIfNoneMatch()?.Select(o => this.ExtractValidateMatchHeader(handler.Type, o));
-            var ifMatchHeader = RestOperationContext.Current.IncomingRequest.GetIfMatch()?.Select(o => this.ExtractValidateMatchHeader(handler.Type, o));
+            var ifNoneMatchHeader = RestOperationContext.Current.IncomingRequest.GetIfNoneMatch()?.Select(o => this.ExtractValidateMatchHeader(handler.Type, o)).Where(o=>!String.IsNullOrEmpty(o));
+            var ifMatchHeader = RestOperationContext.Current.IncomingRequest.GetIfMatch()?.Select(o => this.ExtractValidateMatchHeader(handler.Type, o)).Where(o => !String.IsNullOrEmpty(o));
 
             // HTTP IF headers? - before we go to the DB lets check the cache for them
             if (ifNoneMatchHeader?.Any() == true || ifMatchHeader?.Any() == true || ifModifiedHeader.HasValue || ifUnmodifiedHeader.HasValue)
