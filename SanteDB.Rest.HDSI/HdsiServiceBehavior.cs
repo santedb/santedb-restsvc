@@ -414,7 +414,7 @@ namespace SanteDB.Rest.HDSI
                 }
                 else
                 {
-                    var checkQuery = $"id={objectId}".ParseQueryString();
+                    var checkQuery = $"id={objectId}&_head=true".ParseQueryString();
                     if (!handler.Query(checkQuery).Any()) // Object doesn't exist
                     {
                         throw new KeyNotFoundException();
@@ -424,15 +424,14 @@ namespace SanteDB.Rest.HDSI
                     if (ifNoneMatchHeader?.Any() == true ||
                         ifMatchHeader?.Any() == true)
                     {
-                        checkQuery.Add("etag", ifNoneMatchHeader?.Where(c => Guid.TryParse(c, out _)).Select(o => $"{o}").ToArray());
+                        checkQuery.Add("etag", ifNoneMatchHeader?.Where(c => Guid.TryParse(c, out _)).Select(o => $"!{o}").ToArray());
                         checkQuery.Add("etag", ifMatchHeader?.Where(c => Guid.TryParse(c, out _)).Select(o => $"{o}").ToArray());
                         if (typeof(IVersionedData).IsAssignableFrom(handler.Type))
                         {
                             checkQuery.Add("obsoletionTime", "null", "!null");
                         }
                         var matchingTags = handler.Query(checkQuery).Any();
-                        if ((ifNoneMatchHeader?.Any() == true && matchingTags) ^
-                            (ifMatchHeader?.Any() == true && !matchingTags))
+                        if (!matchingTags)
                         {
                             throw new PreconditionFailedException();
                         }

@@ -59,13 +59,14 @@ namespace SanteDB.Rest.HDSI.Vrp
                 Format = BarcodeFormat.QR_CODE,
                 Options = new ZXing.Common.EncodingOptions()
                 {
-                    Height = 380,
-                    Width = 380,
+                    Height = 432,
+                    Width = 432,
                     PureBarcode = true
-                }
+                },
+                Renderer = new ZXing.Windows.Compatibility.BitmapRenderer()
             };
 
-            using (var bmp = writer.Write($"svrp://{rawData.HexEncode()}"))
+            using (var bmp = writer.Write($"svrp://{rawData.Base64UrlEncode()}"))
             {
                 var retVal = new MemoryStream();
                 bmp.Save(retVal, ImageFormat.Png);
