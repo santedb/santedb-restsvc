@@ -16,7 +16,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary>
     public class TfaMechanismResourceHandler : IApiResourceHandler
     {
-        private readonly ITfaRelayService m_tfaRelayService;
+        private readonly ITfaService m_tfaRelayService;
 
         /// <summary>
         /// Gets the resource name
@@ -41,7 +41,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// DI CTOR
         /// </summary>
-        public TfaMechanismResourceHandler(ITfaRelayService tfaRelay)
+        public TfaMechanismResourceHandler(ITfaService tfaRelay)
         {
             this.m_tfaRelayService = tfaRelay;
         }
