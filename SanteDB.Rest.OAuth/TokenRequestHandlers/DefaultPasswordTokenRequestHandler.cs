@@ -1,5 +1,6 @@
 ﻿using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
+using SanteDB.Core.Exceptions;
 using SanteDB.Core.Security.Claims;
 using SanteDB.Core.Security.Principal;
 using SanteDB.Core.Security.Services;
@@ -103,6 +104,13 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                 {
                     _PolicyEnforcementService?.Demand(OAuthConstants.OAuthPasswordFlowPolicyWithoutDevice, context.ApplicationPrincipal);
                 }
+            }
+            catch(TfaRequiredAuthenticationException tfareqex)
+            {
+                _Tracer.TraceVerbose("Authentication failed due to Tfa configured on account.");
+                context.ErrorMessage = "mfa_required";
+                context.ErrorType = OAuthErrorType.invalid_request;
+                return false;
             }
             catch (AuthenticationException authnex)
             {

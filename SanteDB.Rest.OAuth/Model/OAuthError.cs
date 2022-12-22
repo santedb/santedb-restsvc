@@ -63,7 +63,11 @@ namespace SanteDB.Rest.OAuth.Model
         /// <summary>
         /// The response mode request is not supported by this service.
         /// </summary>
-        unsupported_response_mode
+        unsupported_response_mode,
+        /// <summary>
+        /// The requested resource requires mfa.
+        /// </summary>
+        mfa_required
     }
 
     /// <summary>
