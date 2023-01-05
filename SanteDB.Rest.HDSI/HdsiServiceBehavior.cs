@@ -243,7 +243,7 @@ namespace SanteDB.Rest.HDSI
                     IdentifiedData retVal = null;
                     IVersionedData versioned = null;
 
-                    if (!string.IsNullOrEmpty(id) && handler is IChainedApiResourceHandler chainedHandler && 
+                    if (!string.IsNullOrEmpty(id) && handler is IChainedApiResourceHandler chainedHandler &&
                         chainedHandler.TryGetChainedResource(id, ChildObjectScopeBinding.Class, out var childHandler))
                     {
                         this.AclCheck(childHandler, nameof(IApiResourceHandler.Create));
@@ -341,8 +341,8 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch(PreconditionFailedException) { throw; }
-            catch(FaultException) { throw; }
+            catch (PreconditionFailedException) { throw; }
+            catch (FaultException) { throw; }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
@@ -360,7 +360,7 @@ namespace SanteDB.Rest.HDSI
             }
             else
             {
-                if(headerString.StartsWith("W/")) // weak references - but we'll still use it
+                if (headerString.StartsWith("W/")) // weak references - but we'll still use it
                 {
                     headerString = headerString.Substring(2);
                 }
@@ -383,7 +383,7 @@ namespace SanteDB.Rest.HDSI
 
             var ifModifiedHeader = RestOperationContext.Current.IncomingRequest.GetIfModifiedSince();
             var ifUnmodifiedHeader = RestOperationContext.Current.IncomingRequest.GetIfUnmodifiedSince();
-            var ifNoneMatchHeader = RestOperationContext.Current.IncomingRequest.GetIfNoneMatch()?.Select(o => this.ExtractValidateMatchHeader(handler.Type, o)).Where(o=>!String.IsNullOrEmpty(o));
+            var ifNoneMatchHeader = RestOperationContext.Current.IncomingRequest.GetIfNoneMatch()?.Select(o => this.ExtractValidateMatchHeader(handler.Type, o)).Where(o => !String.IsNullOrEmpty(o));
             var ifMatchHeader = RestOperationContext.Current.IncomingRequest.GetIfMatch()?.Select(o => this.ExtractValidateMatchHeader(handler.Type, o)).Where(o => !String.IsNullOrEmpty(o));
 
             // HTTP IF headers? - before we go to the DB lets check the cache for them
@@ -391,70 +391,53 @@ namespace SanteDB.Rest.HDSI
             {
                 var cacheResult = this.m_dataCachingService.GetCacheItem(objectId);
 
-                if (cacheResult != null && (ifNoneMatchHeader?.Contains(cacheResult.Tag) == true ||
-                    ifMatchHeader?.Contains(cacheResult.Tag) != true ||
-                        ifModifiedHeader.HasValue && cacheResult.ModifiedOn <= ifModifiedHeader ||
-                        ifUnmodifiedHeader.HasValue && cacheResult.ModifiedOn >= ifUnmodifiedHeader))
+                if (cacheResult != null)
                 {
-                    if (cacheResult is ITaggable tagged)
+                    var cacheHeader = this.ExtractValidateMatchHeader(cacheResult.GetType(), cacheResult.Tag);
+
+                    if (cacheResult is ITaggable tagged && tagged.GetTag(SanteDBModelConstants.DcdrRefetchTag) != null)
                     {
-                        if (tagged.GetTag(SanteDBModelConstants.DcdrRefetchTag) == null)
-                        {
-                            throw new PreconditionFailedException();
-                        }
-                        else
-                        {
-                            tagged.RemoveTag(SanteDBModelConstants.DcdrRefetchTag);
-                        }
+                        tagged.RemoveTag(SanteDBModelConstants.DcdrRefetchTag);
                     }
-                    else
+                    else if (ifNoneMatchHeader?.Contains(cacheHeader) == true ||
+                        ifMatchHeader?.Contains(cacheHeader) != true ||
+                        cacheResult.ModifiedOn <= ifModifiedHeader.GetValueOrDefault() ||
+                        ifUnmodifiedHeader.GetValueOrDefault() >= cacheResult.ModifiedOn)
                     {
                         throw new PreconditionFailedException();
                     }
                 }
                 else
                 {
-                    var checkQuery = $"id={objectId}&_head=true".ParseQueryString();
-                    if (!handler.Query(checkQuery).Any()) // Object doesn't exist
+                    // Load from cache so that future calls will work with the cache
+                    using (DataPersistenceControlContext.Create(LoadMode.QuickLoad))
                     {
-                        throw new KeyNotFoundException();
-                    }
-
-                    // If-None-Match when used with If-Modified-Since then If-None-Match has priority
-                    if (ifNoneMatchHeader?.Any() == true ||
-                        ifMatchHeader?.Any() == true)
-                    {
-                        checkQuery.Add("etag", ifNoneMatchHeader?.Where(c => Guid.TryParse(c, out _)).Select(o => $"!{o}").ToArray());
-                        checkQuery.Add("etag", ifMatchHeader?.Where(c => Guid.TryParse(c, out _)).Select(o => $"{o}").ToArray());
-                        if (typeof(IVersionedData).IsAssignableFrom(handler.Type))
+                        IdentifiedData rawObject = null;
+                        if (handler is IApiResourceHandlerRepository iarhr)
                         {
-                            checkQuery.Add("obsoletionTime", "null", "!null");
+                            rawObject = iarhr.Repository.Get(objectId) as IdentifiedData;
                         }
-                        var matchingTags = handler.Query(checkQuery).Any();
-                        if (!matchingTags)
+                        else
                         {
-                            throw new PreconditionFailedException();
+                            rawObject = handler.Get(objectId, null) as IdentifiedData;
                         }
-                    }
 
-                    if (ifModifiedHeader.HasValue)
-                    {
-                        checkQuery.Remove("tag");
-                        checkQuery.Add("modifiedOn", $"<{ifModifiedHeader:o}");
-                        if (handler.Query(checkQuery).Any())
+                        if(rawObject == null)
                         {
-                            throw new PreconditionFailedException();
+                            throw new KeyNotFoundException();
                         }
-                    }
-
-                    if (ifUnmodifiedHeader.HasValue)
-                    {
-                        checkQuery.Remove("tag");
-                        checkQuery.Remove("modifiedOn");
-                        checkQuery.Add("modifiedOn", $">{ifUnmodifiedHeader:o}");
-                        if (handler.Query(checkQuery).Any())
+                        else if (ifNoneMatchHeader?.Contains(rawObject.Tag) == true)
                         {
-                            throw new PreconditionFailedException();
+                            throw new PreconditionFailedException(); // if-none-match contains the tag
+                        }
+                        else if(ifMatchHeader?.Contains(rawObject.Tag) != true)
+                        {
+                            throw new PreconditionFailedException(); // if-match does not contain the tag
+                        }
+                        else if(rawObject.ModifiedOn <= ifModifiedHeader.GetValueOrDefault() ||
+                            ifUnmodifiedHeader.GetValueOrDefault() >= rawObject.ModifiedOn)
+                        {
+                            throw new PreconditionFailedException(); // modification
                         }
                     }
                 }
@@ -1680,8 +1663,13 @@ namespace SanteDB.Rest.HDSI
                     // Now apply controls
                     var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<IdentifiedData>();
 
-                    var modifiedOnSelector = QueryExpressionParser.BuildPropertySelector(handler.Type, "modifiedOn", convertReturn: typeof(object));
-                    var lastModified = (DateTime)results.OrderByDescending(modifiedOnSelector).Select<DateTimeOffset>(modifiedOnSelector).FirstOrDefault().DateTime;
+                    try
+                    {
+                        var modifiedOnSelector = QueryExpressionParser.BuildPropertySelector(handler.Type, "modifiedOn", convertReturn: typeof(object));
+                        var lastModified = (DateTime)results.OrderByDescending(modifiedOnSelector).Select<DateTimeOffset>(modifiedOnSelector).FirstOrDefault().DateTime;
+                        RestOperationContext.Current.OutgoingResponse.SetLastModified(lastModified);
+                    }
+                    catch { }
 
                     // Last modification time and not modified conditions
                     if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||

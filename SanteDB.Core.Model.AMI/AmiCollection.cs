@@ -20,8 +20,10 @@
  */
 using Newtonsoft.Json;
 using SanteDB.Core.Applets.Model;
+using SanteDB.Core.Data.Import.Definition;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Mail;
+using SanteDB.Core.Model.AMI.Alien;
 using SanteDB.Core.Model.AMI.Applet;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.AMI.Diagnostics;
@@ -53,6 +55,8 @@ namespace SanteDB.Core.Model.AMI.Collections
     [XmlInclude(typeof(SecurityApplicationInfo))]
     [XmlInclude(typeof(SecurityDeviceInfo))]
     [XmlInclude(typeof(SecurityPolicyInfo))]
+    [XmlInclude(typeof(ForeignDataMap))]
+    [XmlInclude(typeof(ForeignDataInfo))]
     [XmlInclude(typeof(SecurityRoleInfo))]
     [XmlInclude(typeof(SecurityUser))]
     [XmlInclude(typeof(SecurityRole))]

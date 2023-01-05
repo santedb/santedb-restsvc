@@ -20,6 +20,7 @@
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
+using SanteDB.Core.Services;
 using System;
 using System.Collections.Specialized;
 
@@ -30,6 +31,8 @@ namespace SanteDB.Rest.Common
     /// </summary>
     public interface IApiResourceHandler
     {
+
+
         /// <summary>
         /// Gets the name of the resource which the resource handler supports.
         /// </summary>

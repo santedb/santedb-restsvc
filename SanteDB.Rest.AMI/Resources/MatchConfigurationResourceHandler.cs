@@ -43,9 +43,6 @@ namespace SanteDB.Rest.AMI.Resources
         // Configuration service
         private readonly IRecordMatchingConfigurationService m_configurationService;
 
-        // Property providers
-        private readonly ConcurrentDictionary<String, IApiChildOperation> m_childOperations = new ConcurrentDictionary<string, IApiChildOperation>();
-
         /// <summary>
         /// Gets the resource name
         /// </summary>
@@ -65,11 +62,6 @@ namespace SanteDB.Rest.AMI.Resources
         /// Gets the capabilities of this service
         /// </summary>
         public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Search | ResourceCapabilityType.Get | ResourceCapabilityType.Create | ResourceCapabilityType.Update | ResourceCapabilityType.Delete;
-
-        /// <summary>
-        /// Gets the operations
-        /// </summary>
-        public IEnumerable<IApiChildOperation> Operations => this.m_childOperations.Values;
 
         /// <summary>
         /// Match configuration resource handler
@@ -123,11 +115,11 @@ namespace SanteDB.Rest.AMI.Resources
             if (queryParameters.TryGetValue("name", out var values))
             {
                 return new MemoryQueryResultSet(this.m_configurationService.Configurations
-                    .Where(o => o.Id.Contains(values.First().Replace("~", ""))));
+                    .Where(o => o.Id.Contains(values.First().Replace("~", "")) && !o.Id.StartsWith("$")));
             }
             else
             {
-                return new MemoryQueryResultSet(this.m_configurationService.Configurations);
+                return new MemoryQueryResultSet(this.m_configurationService.Configurations.Where(o=>!o.Id.StartsWith("$"))); // hide the $ystem configuration
             }
         }
 
@@ -148,44 +140,12 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <summary>
-        /// Add an operation
-        /// </summary>
-        public void AddOperation(IApiChildOperation property)
-        {
-            this.m_childOperations.TryAdd(property.Name, property);
-        }
-
-        /// <summary>
         /// Invoke the specified operation
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.AlterMatchConfiguration)]
-        public object InvokeOperation(object scopingEntityKey, string operationName, ParameterCollection parameters)
+        public override object InvokeOperation(object scopingEntityKey, string operationName, ParameterCollection parameters)
         {
-            if (this.TryGetOperation(operationName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildOperation handler))
-            {
-                return handler.Invoke(typeof(IRecordMatchingConfiguration), scopingEntityKey, parameters);
-            }
-            else
-            {
-                throw new NotSupportedException(this.LocalizationService.GetString("error.type.NotSupportedException.operation", new
-                {
-                    param = operationName
-                }));
-            }
-        }
-
-        /// <summary>
-        /// Try to get operation
-        /// </summary>
-        public bool TryGetOperation(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildOperation operationHandler)
-        {
-            var retVal = this.m_childOperations.TryGetValue(propertyName, out operationHandler) &&
-                operationHandler.ScopeBinding.HasFlag(bindingType);
-            if (!retVal)
-            {
-                operationHandler = null;//clear in case of lazy programmers like me
-            }
-            return retVal;
+            return base.InvokeOperation(scopingEntityKey, operationName, parameters);
         }
 
 

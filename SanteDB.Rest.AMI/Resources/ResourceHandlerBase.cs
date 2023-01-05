@@ -20,6 +20,7 @@
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
+using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using System;
@@ -30,7 +31,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// Represents a resource handler base type that is always bound to AMI.
     /// </summary>
     /// <typeparam name="TData">The data which the resource handler is bound to</typeparam>
-    public class ResourceHandlerBase<TData> : Common.ResourceHandlerBase<TData> where TData : IdentifiedData, new()
+    public class ResourceHandlerBase<TData> : Common.ResourceHandlerBase<TData> where TData : class, IIdentifiedResource, new()
     {
         /// <summary>
         /// DI Constructor

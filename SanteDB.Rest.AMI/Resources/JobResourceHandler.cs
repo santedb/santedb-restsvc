@@ -153,7 +153,7 @@ namespace SanteDB.Rest.AMI.Resources
                 jobs = jobs.Where(o => o.Name.Contains(data.First()));
             }
 
-            return new MemoryQueryResultSet(jobs.Select(o => new JobInfo(this.m_jobStateService.GetJobState(o), this.m_jobScheduleManager.Get(o))));
+            return new MemoryQueryResultSet(jobs.Select(o => new JobInfo(this.m_jobStateService.GetJobState(o), this.m_jobScheduleManager.Get(o))).ToArray());
         }
 
         /// <summary>

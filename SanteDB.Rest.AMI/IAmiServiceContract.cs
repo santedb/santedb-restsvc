@@ -22,6 +22,7 @@ using RestSrvr.Attributes;
 using SanteDB.Core.Applets.Model;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Mail;
+using SanteDB.Core.Model.AMI.Alien;
 using SanteDB.Core.Model.AMI.Applet;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.AMI.Collections;
@@ -94,6 +95,7 @@ namespace SanteDB.Rest.AMI
     [ServiceKnownResource(typeof(LogFileInfo))]
     [ServiceKnownResource(typeof(DispatcherQueueInfo))]
     [ServiceKnownResource(typeof(DispatcherQueueEntry))]
+    [ServiceKnownResource(typeof(ForeignDataInfo))]
     [ServiceKnownResource(typeof(PubSubSubscriptionDefinition))]
     [ServiceKnownResource(typeof(PubSubChannelDefinition))]
     [ServiceProduces("application/json")]

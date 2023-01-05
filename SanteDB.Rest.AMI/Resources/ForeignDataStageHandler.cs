@@ -1,4 +1,5 @@
 ﻿using SanteDB.Core.Data.Import;
+using SanteDB.Core.Http;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Alien;
 using SanteDB.Core.Model.Query;
@@ -10,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace SanteDB.Rest.AMI.Resources
@@ -30,7 +32,7 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <inheritdoc/>
-        public override string ResourceName => "alien";
+        public override string ResourceName => "ForeignData";
 
         /// <inheritdoc/>
         public override Type Type => typeof(IForeignDataSubmission);
@@ -46,14 +48,15 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.ManageForeignData)]
         public override object Create(object data, bool updateIfExists)
         {
-            if(data is IDictionary<String, Object> multiPartData)
+            if(data is IEnumerable<MultiPartFormData> multiPartData)
             {
-                if(multiPartData.TryGetValue("name", out var name) &&
-                    multiPartData.TryGetValue("map", out var map) &&
-                    multiPartData.TryGetValue("source", out var source) &&
-                    source is Stream sourceStream)
+                var description = multiPartData.FirstOrDefault(o => o.Name == "description");
+                var map = multiPartData.FirstOrDefault(o => o.Name == "map");
+                var source = multiPartData.FirstOrDefault(o => o.Name == "source");
+
+                if(map != null && source != null && source.IsFile)
                 {
-                    return new ForeignDataInfo(this.m_foreignDataService.Stage(sourceStream, name.ToString(), Guid.Parse(map.ToString())));
+                    return new ForeignDataInfo(this.m_foreignDataService.Stage(new MemoryStream(source.Data), source.FileName, description.ToString(), Guid.Parse(map.ToString())));
                 }
                 else
                 {
@@ -67,6 +70,7 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.ManageForeignData)]
         public override object Delete(object key)
         {
             if(key is Guid guidKey)
@@ -80,6 +84,7 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.ManageForeignData)]
         public override object Get(object id, object versionId)
         {
             if(id is Guid guidId)
@@ -93,18 +98,25 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.ManageForeignData)]
         public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             var query = QueryExpressionParser.BuildLinqExpression<IForeignDataSubmission>(queryParameters);
-            return this.m_foreignDataService.Find(query);
+            return new TransformQueryResultSet<IForeignDataSubmission, ForeignDataInfo>(this.m_foreignDataService.Find(query), (a)=> new ForeignDataInfo(a));
         }
 
         /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.ManageForeignData)]
         public override object Update(object data)
         {
-            if (data is IDictionary<String, Object> multiPartData)
+            if (data is IEnumerable<MultiPartFormData> multiPartData)
             {
-                if(multiPartData.TryGetValue("id", out var oldId) && Guid.TryParse(oldId.ToString(), out var idGuid))
+                var description = multiPartData.FirstOrDefault(o => o.Name == "description");
+                var map = multiPartData.FirstOrDefault(o => o.Name == "map");
+                var source = multiPartData.FirstOrDefault(o => o.Name == "source");
+                var id = multiPartData.FirstOrDefault(o => o.Name == "id");
+
+                if (Guid.TryParse(id?.ToString(), out var idGuid))
                 {
                     this.Delete(idGuid);
                 }
@@ -113,12 +125,9 @@ namespace SanteDB.Rest.AMI.Resources
                     throw new ArgumentNullException("Need id for update", nameof(data));
                 }
 
-                if (multiPartData.TryGetValue("name", out var name) &&
-                    multiPartData.TryGetValue("map", out var map) &&
-                    multiPartData.TryGetValue("source", out var source) &&
-                    source is Stream sourceStream)
+                if (map != null && source != null && source.IsFile)
                 {
-                    return new ForeignDataInfo(this.m_foreignDataService.Stage(sourceStream, name.ToString(), Guid.Parse(map.ToString())));
+                    return new ForeignDataInfo(this.m_foreignDataService.Stage(new MemoryStream(source.Data), source.FileName, description.ToString(), Guid.Parse(map.ToString())));
                 }
                 else
                 {

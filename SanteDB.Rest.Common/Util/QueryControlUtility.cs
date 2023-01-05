@@ -72,7 +72,15 @@ namespace SanteDB.Rest.Common
             {
                 count = 100;
             }
-            return me.Take(count);
+
+            if (count == 0) // HACK: no need to re-query the user was just looking for a quick count
+            {
+                return new MemoryQueryResultSet(new object[0]);
+            }
+            else
+            {
+                return me.Take(count);
+            }
         }
     }
 }

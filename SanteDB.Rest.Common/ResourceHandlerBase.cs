@@ -25,6 +25,7 @@ using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Audit;
@@ -43,7 +44,10 @@ namespace SanteDB.Rest.Common
     /// Resource handler base
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
-    public abstract class ResourceHandlerBase<TResource> : IServiceImplementation, IApiResourceHandler where TResource : IdentifiedData, new()
+    public abstract class ResourceHandlerBase<TResource> : 
+        IServiceImplementation, 
+        IApiResourceHandlerRepository,
+        IApiResourceHandler where TResource : class, IIdentifiedResource, new()
     {
         // Tracer
         protected readonly Tracer m_tracer = Tracer.GetTracer(typeof(ResourceHandlerBase<TResource>));
@@ -72,6 +76,11 @@ namespace SanteDB.Rest.Common
             this.m_repository = repositoryService;
             this.m_freetextSearch = freetextSearchService;
         }
+
+        /// <summary>
+        /// Get the respository
+        /// </summary>
+        public virtual IRepositoryService Repository => this.m_repository as IRepositoryService;
 
         /// <summary>
         /// Gets the scope of the resource handler

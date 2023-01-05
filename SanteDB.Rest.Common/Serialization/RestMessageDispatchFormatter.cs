@@ -29,6 +29,7 @@ using SanteDB.Core.Applets.Services;
 using SanteDB.Core.Applets.ViewModel.Description;
 using SanteDB.Core.Applets.ViewModel.Json;
 using SanteDB.Core.Diagnostics;
+using SanteDB.Core.Http;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Json.Formatter;
@@ -271,7 +272,7 @@ namespace SanteDB.Rest.Common.Serialization
 
                             case "multipart/form-data":
                                 var multipartReader = new MultipartReader(contentType.Boundary, request.Body);
-                                var parmValue = Activator.CreateInstance(parm.ParameterType) as IDictionary<String, Object>;
+                                var parmValue = new List<MultiPartFormData>();
                                 while (true)
                                 {
                                     var nextSection = multipartReader.ReadNextSectionAsync().Result;
@@ -280,17 +281,21 @@ namespace SanteDB.Rest.Common.Serialization
                                         break;
                                     }
 
-                                    switch (nextSection.GetContentDispositionHeader().DispositionType.Value)
+                                    var contentDisposition = nextSection.GetContentDispositionHeader();
+                                    if(String.IsNullOrEmpty(contentDisposition.FileName.Value))
                                     {
-                                        case "form-data":
-                                            using (var sr = new StreamReader(nextSection.Body))
-                                            {
-                                                parmValue.Add(nextSection.GetContentDispositionHeader().Name.Value, sr.ReadToEnd());
-                                            }
-                                            break;
-                                        default:
-                                            parmValue.Add(nextSection.GetContentDispositionHeader().Name.Value, nextSection.Body);
-                                            break;
+                                        using (var sr = new StreamReader(nextSection.Body))
+                                        {
+                                            parmValue.Add(new MultiPartFormData(contentDisposition.Name.Value, sr.ReadToEnd()));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        using (var buffer = new MemoryStream())
+                                        {
+                                            nextSection.Body.CopyTo(buffer); 
+                                            parmValue.Add(new MultiPartFormData(contentDisposition.Name.Value, buffer.ToArray(), nextSection.ContentType, contentDisposition.FileName.Value, false));
+                                        }
                                     }
                                 }
                                 parameters[pNumber] = parmValue;
@@ -386,7 +391,7 @@ namespace SanteDB.Rest.Common.Serialization
                                 if (!String.IsNullOrEmpty(viewModel))
                                 {
                                     var viewModelDescription = ApplicationServiceContext.Current.GetService<IAppletManagerService>()?.Applets.GetViewModelDescription(viewModel);
-                                    viewModelSerializer.ViewModel = viewModelDescription;
+                                    viewModelSerializer.ViewModel = viewModelDescription ?? viewModelSerializer.ViewModel;
                                 }
                                 else
                                 {

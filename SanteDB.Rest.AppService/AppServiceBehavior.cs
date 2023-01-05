@@ -129,6 +129,7 @@ namespace SanteDB.Rest.AppService
             this.m_configurationFeatures = this.m_serviceManager.CreateInjectedOfAll<IClientConfigurationFeature>().ToList();
             this.m_upstreamSettings = this.m_upstreamManagementService.GetSettings();
             this.m_upstreamManagementService.RealmChanging += (o, e) => this.m_upstreamSettings = e.UpstreamRealmSettings;
+            this.m_appletManagerService.Changed += (o, e) => this.m_routes = null;
         }
 
         /// <summary>

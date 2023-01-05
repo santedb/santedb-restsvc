@@ -21,6 +21,7 @@
 using SanteDB.Core;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
+using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;

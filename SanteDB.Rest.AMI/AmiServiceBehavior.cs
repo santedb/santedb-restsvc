@@ -255,7 +255,7 @@ namespace SanteDB.Rest.AMI
                 }
                 else
                 {
-                    var checkQuery = $"id={objectId}".ParseQueryString();
+                    var checkQuery = $"_id={objectId}".ParseQueryString();
                     if (!handler.Query(checkQuery).Any()) // Object doesn't exist
                     {
                         throw new KeyNotFoundException();

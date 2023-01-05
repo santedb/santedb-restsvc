@@ -156,6 +156,7 @@ namespace SanteDB.Rest.WWW
 #endif
                 { "host_type", ApplicationServiceContext.Current.HostType.ToString() }
             });
+
             return new MemoryStream(content);
 
         }

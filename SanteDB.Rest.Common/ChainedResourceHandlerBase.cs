@@ -190,7 +190,7 @@ namespace SanteDB.Rest.Common
         }
 
         /// <inheritdoc/>
-        public object InvokeOperation(object scopingEntityKey, string operationName, ParameterCollection parameters)
+        public virtual object InvokeOperation(object scopingEntityKey, string operationName, ParameterCollection parameters)
         {
             if (this.TryGetOperation(operationName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out var operationProvider))
             {
