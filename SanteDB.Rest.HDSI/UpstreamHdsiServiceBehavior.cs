@@ -321,7 +321,6 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
                         //restClient.Accept = String.Join(",", RestOperationContext.Current.IncomingRequest.AcceptTypes);
                         var retVal = restClient.Get<IdentifiedData>($"{resourceType}/{id}", RestOperationContext.Current.IncomingRequest.QueryString);
-                        this.m_adhocCache?.Add(retVal.Tag, DateTime.Now, new TimeSpan(0, 1, 00));
 
                         if (retVal == null)
                         {
@@ -329,6 +328,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         }
                         else
                         {
+                            this.m_adhocCache?.Add(retVal.Tag, DateTime.Now, new TimeSpan(0, 1, 00));
                             this.m_dataCachingService.Add(retVal);
                             this.TagUpstream(retVal);
                             return retVal;
