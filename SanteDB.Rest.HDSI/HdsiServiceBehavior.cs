@@ -85,7 +85,7 @@ namespace SanteDB.Rest.HDSI
         private readonly IPatchService m_patchService;
         private readonly IBarcodeProviderService m_barcodeService;
         private readonly IResourcePointerService m_resourcePointerService;
-        private readonly IAuditBuilder m_auditBuilder;
+        private readonly IAuditService m_auditService;
 
         /// <summary>
         /// Get the resource handler for the named resource
@@ -104,7 +104,7 @@ namespace SanteDB.Rest.HDSI
                 ApplicationServiceContext.Current.GetService<IResourcePointerService>(),
                 ApplicationServiceContext.Current.GetService<IServiceManager>(),
                 ApplicationServiceContext.Current.GetService<IConfigurationManager>(),
-                ApplicationServiceContext.Current.GetService<IAuditBuilder>()
+                ApplicationServiceContext.Current.GetService<IAuditService>()
 
                 )
         {
@@ -113,9 +113,9 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// HDSI Service Behavior
         /// </summary>
-        public HdsiServiceBehavior(IDataCachingService dataCache, ILocalizationService localeService, IPatchService patchService, IPolicyEnforcementService pepService, IBarcodeProviderService barcodeService, IResourcePointerService resourcePointerService, IServiceManager serviceManager, IConfigurationManager configurationManager, IAuditBuilder auditBuilder)
+        public HdsiServiceBehavior(IDataCachingService dataCache, ILocalizationService localeService, IPatchService patchService, IPolicyEnforcementService pepService, IBarcodeProviderService barcodeService, IResourcePointerService resourcePointerService, IServiceManager serviceManager, IConfigurationManager configurationManager, IAuditService auditBuilder)
         {
-            this.m_auditBuilder = auditBuilder;
+            this.m_auditService = auditBuilder;
             this.m_configuration = configurationManager.GetSection<HdsiConfigurationSection>();
             this.m_dataCachingService = dataCache;
             this.m_localeService = localeService;
@@ -190,7 +190,7 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
                 .WithAction(Core.Model.Audit.ActionType.Create)
                 .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
                .WithEventType("CREATE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Create")
@@ -255,7 +255,7 @@ namespace SanteDB.Rest.HDSI
         public virtual IdentifiedData CreateUpdate(string resourceType, string id, IdentifiedData body)
         {
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
                 .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
                .WithEventType("CREATE_UPDATE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Create or Update")
                 .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
@@ -337,7 +337,7 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
                .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Export)
                .WithAction(Core.Model.Audit.ActionType.Read)
                .WithEventType("READ", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Read (Current Version)")
@@ -517,7 +517,7 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
                .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Export)
                .WithAction(Core.Model.Audit.ActionType.Read)
                .WithQueryPerformed($"{resourceType}/{id}/_history/{versionId}")
@@ -614,7 +614,7 @@ namespace SanteDB.Rest.HDSI
         public virtual IdentifiedData History(string resourceType, string id)
         {
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
                .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Query)
                .WithAction(Core.Model.Audit.ActionType.Execute)
                .WithQueryPerformed($"{resourceType}/{id}/_history")
@@ -699,7 +699,7 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
                .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Query)
                .WithAction(Core.Model.Audit.ActionType.Execute)
                .WithQueryPerformed($"{resourceType}?{RestOperationContext.Current.IncomingRequest.QueryString.ToHttpString()}")
@@ -811,7 +811,7 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
               .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
               .WithAction(Core.Model.Audit.ActionType.Update)
               .WithEventType("UPDATE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Update")
@@ -896,7 +896,7 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
               .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
               .WithAction(Core.Model.Audit.ActionType.Delete)
               .WithEventType("DELETE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Delete")
@@ -997,7 +997,7 @@ namespace SanteDB.Rest.HDSI
                 throw new ArgumentNullException(nameof(body));
             }
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
              .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
              .WithAction(Core.Model.Audit.ActionType.Update)
              .WithEventType("PATCH", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Patch")
@@ -1217,7 +1217,7 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
              .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Query)
              .WithAction(Core.Model.Audit.ActionType.Execute)
              .WithEventType("ASSOC_SEARCH", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Association Search")
@@ -1309,7 +1309,7 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
                  .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
                  .WithAction(Core.Model.Audit.ActionType.Create)
                  .WithEventType("ASSOC_CREATE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Association Create")
@@ -1379,7 +1379,7 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
              .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
              .WithAction(Core.Model.Audit.ActionType.Delete)
              .WithEventType("ASSOC_DELETE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Association Delete")
@@ -1444,7 +1444,7 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
              .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Query)
              .WithAction(Core.Model.Audit.ActionType.Read)
              .WithEventType("ASSOC_READ", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Association Read")
@@ -1524,7 +1524,7 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
              .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Query)
              .WithAction(Core.Model.Audit.ActionType.Execute)
              .WithEventType("BARCODE_GEN", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Generate Barcode")
@@ -1605,7 +1605,7 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
              .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.ApplicationActivity)
              .WithAction(Core.Model.Audit.ActionType.Update)
              .WithEventType("TOUCH", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Touch Resource")
@@ -1712,7 +1712,7 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
                 .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Query)
                 .WithAction(Core.Model.Audit.ActionType.Execute)
                 .WithEventType("VRP_GEN", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Generate VRP Data")
@@ -1788,7 +1788,7 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
                 .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.ApplicationActivity)
                 .WithAction(Core.Model.Audit.ActionType.Execute)
                 .WithQueryPerformed($"{resourceType}/{id}/${operationName}")
@@ -1856,7 +1856,7 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
                 .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.ApplicationActivity)
                 .WithAction(Core.Model.Audit.ActionType.Execute)
                 .WithEventType("CHECKIN", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Release Object Edit Lock")
@@ -1908,7 +1908,7 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
                .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.ApplicationActivity)
                .WithAction(Core.Model.Audit.ActionType.Execute)
                .WithEventType("CHECKOUT", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Obtain Object Edit Lock")
@@ -1964,7 +1964,7 @@ namespace SanteDB.Rest.HDSI
             this.ThrowIfNotReady();
 
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
                 .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.ApplicationActivity)
                 .WithAction(Core.Model.Audit.ActionType.Execute)
                 .WithQueryPerformed($"{resourceType}/${operationName}")
@@ -2033,7 +2033,7 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
                 .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Query)
                 .WithAction(Core.Model.Audit.ActionType.Read)
                 .WithQueryPerformed($"{resourceType}/{childResourceType}/{childResourceKey}")
@@ -2105,7 +2105,7 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
                 .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
                 .WithAction(Core.Model.Audit.ActionType.Delete)
                 .WithEventType("ASSOC_DELETE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Association Delete")
@@ -2176,7 +2176,7 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
-            var audit = this.m_auditBuilder
+            var audit = this.m_auditService.Audit()
                .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
                .WithAction(Core.Model.Audit.ActionType.Delete)
                .WithEventType("ASSOC_SEARCH", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Association Search")

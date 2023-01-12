@@ -86,7 +86,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                 ApplicationServiceContext.Current.GetService<IDataPersistenceService<Entity>>(),
                 ApplicationServiceContext.Current.GetService<IDataPersistenceService<Act>>(),
                 ApplicationServiceContext.Current.GetService<IAdhocCacheService>(),
-                ApplicationServiceContext.Current.GetService<IAuditBuilder>()
+                ApplicationServiceContext.Current.GetService<IAuditService>()
 
                 )
         {
@@ -94,8 +94,8 @@ namespace SanteDB.Messaging.HDSI.Wcf
         }
 
         /// <inheritdoc/>
-        public UpstreamHdsiServiceBehavior(IDataCachingService dataCache, ILocalizationService localeService, IPatchService patchService, IPolicyEnforcementService pepService, IBarcodeProviderService barcodeService, IResourcePointerService resourcePointerService, IServiceManager serviceManager, IConfigurationManager configurationManager, IRestClientFactory restClientResolver, IUpstreamIntegrationService upstreamIntegrationService, IUpstreamAvailabilityProvider availabilityProvider, IDataPersistenceService<Entity> entityRepository = null, IDataPersistenceService<Act> actRepository = null, IAdhocCacheService adhocCacheService = null, IAuditBuilder auditBuilder = null) 
-            : base(dataCache, localeService, patchService, pepService, barcodeService, resourcePointerService, serviceManager, configurationManager, auditBuilder)
+        public UpstreamHdsiServiceBehavior(IDataCachingService dataCache, ILocalizationService localeService, IPatchService patchService, IPolicyEnforcementService pepService, IBarcodeProviderService barcodeService, IResourcePointerService resourcePointerService, IServiceManager serviceManager, IConfigurationManager configurationManager, IRestClientFactory restClientResolver, IUpstreamIntegrationService upstreamIntegrationService, IUpstreamAvailabilityProvider availabilityProvider, IDataPersistenceService<Entity> entityRepository = null, IDataPersistenceService<Act> actRepository = null, IAdhocCacheService adhocCacheService = null, IAuditService auditService = null) 
+            : base(dataCache, localeService, patchService, pepService, barcodeService, resourcePointerService, serviceManager, configurationManager, auditService)
         {
             this.m_restClientFactory = restClientResolver;
             this.m_adhocCache = adhocCacheService;
