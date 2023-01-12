@@ -4,6 +4,7 @@ using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Alien;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
@@ -26,7 +27,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        public ForeignDataStageHandler(ILocalizationService localizationService, IForeignDataManagerService foreignDataManagerService) : base(localizationService)
+        public ForeignDataStageHandler(IAuditBuilder auditBuilderService, ILocalizationService localizationService, IForeignDataManagerService foreignDataManagerService) : base(localizationService)
         {
             this.m_foreignDataService = foreignDataManagerService;
         }

@@ -85,6 +85,7 @@ namespace SanteDB.Rest.HDSI
         private readonly IPatchService m_patchService;
         private readonly IBarcodeProviderService m_barcodeService;
         private readonly IResourcePointerService m_resourcePointerService;
+        private readonly IAuditBuilder m_auditBuilder;
 
         /// <summary>
         /// Get the resource handler for the named resource
@@ -102,7 +103,8 @@ namespace SanteDB.Rest.HDSI
                 ApplicationServiceContext.Current.GetService<IBarcodeProviderService>(),
                 ApplicationServiceContext.Current.GetService<IResourcePointerService>(),
                 ApplicationServiceContext.Current.GetService<IServiceManager>(),
-                ApplicationServiceContext.Current.GetService<IConfigurationManager>()
+                ApplicationServiceContext.Current.GetService<IConfigurationManager>(),
+                ApplicationServiceContext.Current.GetService<IAuditBuilder>()
 
                 )
         {
@@ -111,8 +113,9 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// HDSI Service Behavior
         /// </summary>
-        public HdsiServiceBehavior(IDataCachingService dataCache, ILocalizationService localeService, IPatchService patchService, IPolicyEnforcementService pepService, IBarcodeProviderService barcodeService, IResourcePointerService resourcePointerService, IServiceManager serviceManager, IConfigurationManager configurationManager)
+        public HdsiServiceBehavior(IDataCachingService dataCache, ILocalizationService localeService, IPatchService patchService, IPolicyEnforcementService pepService, IBarcodeProviderService barcodeService, IResourcePointerService resourcePointerService, IServiceManager serviceManager, IConfigurationManager configurationManager, IAuditBuilder auditBuilder)
         {
+            this.m_auditBuilder = auditBuilder;
             this.m_configuration = configurationManager.GetSection<HdsiConfigurationSection>();
             this.m_dataCachingService = dataCache;
             this.m_localeService = localeService;
@@ -187,6 +190,14 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
+            var audit = this.m_auditBuilder
+                .WithAction(Core.Model.Audit.ActionType.Create)
+                .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
+               .WithEventType("CREATE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Create")
+                .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithLocalDestination()
+                .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
+
             try
             {
                 var handler = this.GetResourceHandler(resourceType);
@@ -213,6 +224,10 @@ namespace SanteDB.Rest.HDSI
                             RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, retVal.Key));
                         }
 
+                        audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
+                            .WithObjects(retVal.BatchOperation == Core.Model.DataTypes.BatchOperationType.Update ? Core.Model.Audit.AuditableObjectLifecycle.Amendment : Core.Model.Audit.AuditableObjectLifecycle.Creation, retVal)
+                            .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retVal);
+
                         return retVal;
                     }
                 }
@@ -225,8 +240,13 @@ namespace SanteDB.Rest.HDSI
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
-
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 throw new Exception($"Error creating {body}", e);
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
+
             }
         }
 
@@ -234,6 +254,14 @@ namespace SanteDB.Rest.HDSI
         [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual IdentifiedData CreateUpdate(string resourceType, string id, IdentifiedData body)
         {
+
+            var audit = this.m_auditBuilder
+                .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
+               .WithEventType("CREATE_UPDATE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Create or Update")
+                .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithLocalDestination()
+                .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
+
             this.ThrowIfNotReady();
             try
             {
@@ -274,6 +302,12 @@ namespace SanteDB.Rest.HDSI
                             RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id));
                         }
 
+                        audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
+                            .WithAction(retVal.BatchOperation == Core.Model.DataTypes.BatchOperationType.Update ? Core.Model.Audit.ActionType.Update : Core.Model.Audit.ActionType.Create)
+                            .WithObjects(retVal.BatchOperation == Core.Model.DataTypes.BatchOperationType.Update ? Core.Model.Audit.AuditableObjectLifecycle.Amendment : Core.Model.Audit.AuditableObjectLifecycle.Creation, retVal)
+                            .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retVal);
+
+
                         return retVal;
                     }
                 }
@@ -286,7 +320,13 @@ namespace SanteDB.Rest.HDSI
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 throw new Exception($"Error creating/updating {body}", e);
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
+
             }
         }
 
@@ -296,6 +336,15 @@ namespace SanteDB.Rest.HDSI
         public virtual IdentifiedData Get(string resourceType, string id)
         {
             this.ThrowIfNotReady();
+
+            var audit = this.m_auditBuilder
+               .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Export)
+               .WithAction(Core.Model.Audit.ActionType.Read)
+               .WithEventType("READ", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Read (Current Version)")
+               .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+               .WithLocalDestination()
+               .WithQueryPerformed($"{resourceType}/{id}")
+               .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
             try
             {
@@ -326,6 +375,12 @@ namespace SanteDB.Rest.HDSI
                     RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.ModifiedOn.DateTime);
 
+                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success);
+                    if(!RestOperationContext.Current.IncomingRequest.HttpMethod.Equals("head", StringComparison.OrdinalIgnoreCase))
+                    {
+                        audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retVal);
+                    }
+
                     if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[QueryControlParameterNames.HttpBundleRelatedParameterName], out var bundle)
                         && bundle)
                     {
@@ -341,13 +396,25 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) { throw; }
-            catch (FaultException) { throw; }
+            catch (PreconditionFailedException) {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw; 
+            }
+            catch (FaultException) { 
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw; 
+            }
             catch (Exception e)
             {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
                 throw new Exception($"Error getting {resourceType}/{id}", e);
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
+
             }
         }
 
@@ -449,6 +516,16 @@ namespace SanteDB.Rest.HDSI
         public virtual IdentifiedData GetVersion(string resourceType, string id, string versionId)
         {
             this.ThrowIfNotReady();
+
+            var audit = this.m_auditBuilder
+               .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Export)
+               .WithAction(Core.Model.Audit.ActionType.Read)
+               .WithQueryPerformed($"{resourceType}/{id}/_history/{versionId}")
+                .WithEventType("VREAD", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Version Read")
+               .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+               .WithLocalDestination()
+               .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
+
             try
             {
                 var handler = this.GetResourceHandler(resourceType);
@@ -461,6 +538,9 @@ namespace SanteDB.Rest.HDSI
                     {
                         throw new FileNotFoundException(id);
                     }
+
+                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
+                        .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retVal);
 
                     if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpBundleRelatedParameterName], out var bundle) && bundle)
                     {
@@ -481,7 +561,13 @@ namespace SanteDB.Rest.HDSI
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 throw new Exception($"Error getting version {resourceType}/{id}/history/{versionId}", e);
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
+
             }
         }
 
@@ -527,6 +613,16 @@ namespace SanteDB.Rest.HDSI
         [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual IdentifiedData History(string resourceType, string id)
         {
+
+            var audit = this.m_auditBuilder
+               .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Query)
+               .WithAction(Core.Model.Audit.ActionType.Execute)
+               .WithQueryPerformed($"{resourceType}/{id}/_history")
+               .WithEventType("HISTORY", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "History Read")
+               .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+               .WithLocalDestination()
+               .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
+
             this.ThrowIfNotReady();
             try
             {
@@ -560,20 +656,35 @@ namespace SanteDB.Rest.HDSI
                     }
 
                     // Lock the item
-                    return new Bundle(histItm.OfType<IdentifiedData>(), 0, histItm.Count);
+                    var retBundle = new Bundle(histItm.OfType<IdentifiedData>(), 0, histItm.Count);
+                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
+                        .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retBundle);
+                    return retBundle;
                 }
                 else
                 {
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) { throw; }
-            catch (FaultException) { throw; }
+            catch (PreconditionFailedException) {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw; 
+            }
+            catch (FaultException) { 
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw; 
+            }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 throw new Exception($"Error getting history for {resourceType}/{id}");
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
+
             }
         }
 
@@ -587,6 +698,17 @@ namespace SanteDB.Rest.HDSI
         public virtual IdentifiedData Search(string resourceType)
         {
             this.ThrowIfNotReady();
+
+            var audit = this.m_auditBuilder
+               .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Query)
+               .WithAction(Core.Model.Audit.ActionType.Execute)
+               .WithQueryPerformed($"{resourceType}?{RestOperationContext.Current.IncomingRequest.QueryString.ToHttpString()}")
+               .WithEventType("SEARCH", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Search")
+               .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+               .WithLocalDestination()
+               .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
+
+
             try
             {
                 var handler = this.GetResourceHandler(resourceType);
@@ -621,6 +743,7 @@ namespace SanteDB.Rest.HDSI
                         }
                     }
 
+                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success);
                     // Last modification time and not modified conditions
                     if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||
                         RestOperationContext.Current.IncomingRequest.GetIfNoneMatch() != null) &&
@@ -633,7 +756,16 @@ namespace SanteDB.Rest.HDSI
                     {
                         using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
                         {
-                            return new Bundle(retVal, offset, totalCount);
+                            if (RestOperationContext.Current.IncomingRequest.HttpMethod.Equals("head", StringComparison.OrdinalIgnoreCase))
+                            {
+                                return null;
+                            }
+                            else
+                            {
+                                var retBundle = new Bundle(retVal, offset, totalCount);
+                                audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retBundle);
+                                return retBundle;
+                            }
                         }
                     }
                 }
@@ -642,13 +774,25 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) { throw; }
-            catch (FaultException) { throw; }
+            catch (PreconditionFailedException) {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw; 
+            }
+            catch (FaultException) {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw; 
+            }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 throw new Exception($"Error searching {resourceType}", e);
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
+
             }
         }
 
@@ -666,6 +810,15 @@ namespace SanteDB.Rest.HDSI
         public virtual IdentifiedData Update(string resourceType, string id, IdentifiedData body)
         {
             this.ThrowIfNotReady();
+
+            var audit = this.m_auditBuilder
+              .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
+              .WithAction(Core.Model.Audit.ActionType.Update)
+              .WithEventType("UPDATE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Update")
+              .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+              .WithLocalDestination()
+              .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
+
             try
             {
                 var handler = this.GetResourceHandler(resourceType);
@@ -703,6 +856,10 @@ namespace SanteDB.Rest.HDSI
                             RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id));
                         }
 
+                        audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
+                            .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Amendment, retVal)
+                            .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retVal);
+
                         return retVal;
                     }
                 }
@@ -711,13 +868,25 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) { throw; }
-            catch (FaultException) { throw; }
+            catch (PreconditionFailedException) {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw; 
+            }
+            catch (FaultException) {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw; 
+            }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 throw new Exception($"Error updating {resourceType}/{id}", e);
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
+
             }
         }
 
@@ -726,6 +895,15 @@ namespace SanteDB.Rest.HDSI
         public virtual IdentifiedData Delete(string resourceType, string id)
         {
             this.ThrowIfNotReady();
+
+            var audit = this.m_auditBuilder
+              .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
+              .WithAction(Core.Model.Audit.ActionType.Delete)
+              .WithEventType("DELETE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Delete")
+              .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+              .WithLocalDestination()
+              .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
+
             try
             {
                 var handler = this.GetResourceHandler(resourceType);
@@ -761,6 +939,8 @@ namespace SanteDB.Rest.HDSI
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id));
                     }
 
+                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
+                        .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.LogicalDeletion, retVal);
                     return retVal;
                 }
                 else
@@ -768,13 +948,25 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) { throw; }
-            catch (FaultException) { throw; }
+            catch (PreconditionFailedException) {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw; 
+            }
+            catch (FaultException) {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw; 
+            }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 throw new Exception($"Error deleting {resourceType}/{id}", e);
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
+
             }
         }
 
@@ -805,6 +997,14 @@ namespace SanteDB.Rest.HDSI
                 throw new ArgumentNullException(nameof(body));
             }
 
+            var audit = this.m_auditBuilder
+             .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
+             .WithAction(Core.Model.Audit.ActionType.Update)
+             .WithEventType("PATCH", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Patch")
+             .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+             .WithLocalDestination()
+             .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
+
             try
             {
                 // Validate
@@ -834,6 +1034,7 @@ namespace SanteDB.Rest.HDSI
                 {
                     var existing = handler.Get(objectId, Guid.Empty) as IdentifiedData;
 
+                    audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Amendment, existing);
                     if (existing == null)
                     {
                         throw new FileNotFoundException($"/{resourceType}/{id}");
@@ -858,20 +1059,36 @@ namespace SanteDB.Rest.HDSI
                         }
                     }
                 }
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success);
             }
-            catch (PreconditionFailedException) { throw; }
-            catch (FaultException) { throw; }
+            catch (PreconditionFailedException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw;
+            }
+            catch (FaultException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw;
+            }
             catch (PatchAssertionException e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceWarning(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
                 throw new Exception($"Assertion failed while patching {resourceType}/{id}", e);
             }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 throw new Exception($"Error patching {resourceType}/{id}", e);
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
+
             }
         }
 
@@ -999,6 +1216,16 @@ namespace SanteDB.Rest.HDSI
         public virtual Object AssociationSearch(string resourceType, string key, string childResourceType)
         {
             this.ThrowIfNotReady();
+
+            var audit = this.m_auditBuilder
+             .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Query)
+             .WithAction(Core.Model.Audit.ActionType.Execute)
+             .WithEventType("ASSOC_SEARCH", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Association Search")
+             .WithQueryPerformed($"{resourceType}/{key}/{childResourceType}?{RestOperationContext.Current.IncomingRequest.QueryString.ToHttpString()}")
+             .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+             .WithLocalDestination()
+             .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
+
             try
             {
                 if (!Guid.TryParse(key, out Guid keyGuid))
@@ -1031,6 +1258,7 @@ namespace SanteDB.Rest.HDSI
                         RestOperationContext.Current.OutgoingResponse.SetLastModified((retVal.OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now));
                     }
 
+                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success);
                     // Last modification time and not modified conditions
                     if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||
                         RestOperationContext.Current.IncomingRequest.GetIfNoneMatch() != null) &&
@@ -1043,7 +1271,9 @@ namespace SanteDB.Rest.HDSI
                     {
                         using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
                         {
-                            return new Bundle(retVal, offset, totalCount);
+                            var retBundle = new Bundle(retVal, offset, totalCount);
+                            audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retBundle);
+                            return retBundle;
                         }
                     }
                 }
@@ -1052,13 +1282,24 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) { throw; }
-            catch (FaultException) { throw; }
+            catch (PreconditionFailedException) {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw; 
+            }
+            catch (FaultException) {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw; 
+            }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 throw;
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
             }
         }
 
@@ -1067,6 +1308,14 @@ namespace SanteDB.Rest.HDSI
         public virtual object AssociationCreate(string resourceType, string key, string childResourceType, object body)
         {
             this.ThrowIfNotReady();
+
+            var audit = this.m_auditBuilder
+                 .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
+                 .WithAction(Core.Model.Audit.ActionType.Create)
+                 .WithEventType("ASSOC_CREATE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Association Create")
+                 .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                 .WithLocalDestination()
+                 .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
             try
             {
@@ -1090,6 +1339,10 @@ namespace SanteDB.Rest.HDSI
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, key, childResourceType, retVal.Key));
                     }
 
+                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
+                        .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Amendment, retVal)
+                        .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retVal);
+
                     return retVal;
                 }
                 else
@@ -1097,13 +1350,26 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) { throw; }
-            catch (FaultException) { throw; }
+            catch (PreconditionFailedException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw;
+            }
+            catch (FaultException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw;
+            }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 throw;
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
             }
         }
 
@@ -1112,6 +1378,15 @@ namespace SanteDB.Rest.HDSI
         public virtual object AssociationRemove(string resourceType, string key, string childResourceType, string scopedEntityKey)
         {
             this.ThrowIfNotReady();
+
+            var audit = this.m_auditBuilder
+             .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
+             .WithAction(Core.Model.Audit.ActionType.Delete)
+             .WithEventType("ASSOC_DELETE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Association Delete")
+             .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+             .WithLocalDestination()
+             .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
+
 
             try
             {
@@ -1130,6 +1405,8 @@ namespace SanteDB.Rest.HDSI
 
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
                     RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, key, childResourceType, retVal.Key));
+                    audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.LogicalDeletion, retVal)
+                        .WithOutcome(Core.Model.Audit.OutcomeIndicator.Success);
                     return retVal;
                 }
                 else
@@ -1137,13 +1414,26 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) { throw; }
-            catch (FaultException) { throw; }
+            catch (PreconditionFailedException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw;
+            }
+            catch (FaultException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw;
+            }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 throw;
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
             }
         }
 
@@ -1153,6 +1443,15 @@ namespace SanteDB.Rest.HDSI
         public virtual object AssociationGet(string resourceType, string key, string childResourceType, string scopedEntityKey)
         {
             this.ThrowIfNotReady();
+
+            var audit = this.m_auditBuilder
+             .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Query)
+             .WithAction(Core.Model.Audit.ActionType.Read)
+             .WithEventType("ASSOC_READ", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Association Read")
+             .WithQueryPerformed($"{resourceType}/{key}/{childResourceType}/{scopedEntityKey}?{RestOperationContext.Current.IncomingRequest.QueryString.ToHttpString()}")
+             .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+             .WithLocalDestination()
+             .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
             try
             {
@@ -1170,6 +1469,8 @@ namespace SanteDB.Rest.HDSI
                         retVal = handler.GetChildObject(Guid.Parse(key), childResourceType, objectId);
                     }
 
+                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
+                        .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retVal);
                     if (retVal is IdentifiedData idData)
                     {
                         RestOperationContext.Current.OutgoingResponse.SetETag(idData.Tag);
@@ -1194,13 +1495,26 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) { throw; }
-            catch (FaultException) { throw; }
+            catch (PreconditionFailedException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw;
+            }
+            catch (FaultException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw;
+            }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 throw;
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
             }
         }
 
@@ -1208,6 +1522,17 @@ namespace SanteDB.Rest.HDSI
         [UrlParameter("_format", typeof(String), "The format of the barcode (santedb-vrp, code39, etc.)")]
         public virtual Stream GetBarcode(string resourceType, string id)
         {
+            this.ThrowIfNotReady();
+
+            var audit = this.m_auditBuilder
+             .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Query)
+             .WithAction(Core.Model.Audit.ActionType.Execute)
+             .WithEventType("BARCODE_GEN", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Generate Barcode")
+             .WithQueryPerformed($"{resourceType}/{id}?{RestOperationContext.Current.IncomingRequest.QueryString.ToHttpString()}")
+             .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+             .WithLocalDestination()
+             .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
+
             try
             {
                 var handler = this.GetResourceHandler(resourceType);
@@ -1219,6 +1544,9 @@ namespace SanteDB.Rest.HDSI
                     }
 
                     Guid objectId = Guid.Parse(id);
+
+                    this.ThrowIfPreConditionFails(handler, objectId);
+
                     var data = handler.Get(objectId, Guid.Empty) as IHasIdentifiers;
                     if (data == null)
                     {
@@ -1238,6 +1566,8 @@ namespace SanteDB.Rest.HDSI
                         }
                         else
                         {
+                            audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
+                                .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Access, data);
                             return barcodeGenerator.Generate(data);
                         }
                     }
@@ -1247,12 +1577,25 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) { throw; }
-            catch (FaultException) { throw; }
+            catch (PreconditionFailedException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw;
+            }
+            catch (FaultException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw;
+            }
             catch (Exception e)
             {
                 this.m_traceSource.TraceError("Error generating barcode for {0} - {1}", resourceType, e);
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 throw new Exception($"Could not generate visual code for {resourceType}/{id}", e);
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
             }
         }
 
@@ -1261,6 +1604,15 @@ namespace SanteDB.Rest.HDSI
         public virtual IdentifiedData Touch(string resourceType, string id)
         {
             this.ThrowIfNotReady();
+
+            var audit = this.m_auditBuilder
+             .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.ApplicationActivity)
+             .WithAction(Core.Model.Audit.ActionType.Update)
+             .WithEventType("TOUCH", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Touch Resource")
+             .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+             .WithLocalDestination()
+             .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
+
             try
             {
                 var handler = this.GetResourceHandler(resourceType);
@@ -1289,6 +1641,10 @@ namespace SanteDB.Rest.HDSI
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id));
                     }
 
+                    audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
+                        .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Amendment, retVal)
+                        .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retVal);
+
                     return retVal;
                 }
                 else
@@ -1309,6 +1665,8 @@ namespace SanteDB.Rest.HDSI
         /// <inheritdoc/>
         public virtual void ResolvePointer(System.Collections.Specialized.NameValueCollection parms)
         {
+            this.ThrowIfNotReady();
+
             try
             {
                 if (this.m_resourcePointerService == null)
@@ -1352,6 +1710,16 @@ namespace SanteDB.Rest.HDSI
         /// <inheritdoc/>
         public virtual Stream GetVrpPointerData(string resourceType, string id)
         {
+            this.ThrowIfNotReady();
+
+            var audit = this.m_auditBuilder
+                .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Query)
+                .WithAction(Core.Model.Audit.ActionType.Execute)
+                .WithEventType("VRP_GEN", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Generate VRP Data")
+                .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithLocalDestination()
+                .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
+
             try
             {
                 var handler = this.GetResourceHandler(resourceType);
@@ -1363,6 +1731,7 @@ namespace SanteDB.Rest.HDSI
                     }
 
                     Guid objectId = Guid.Parse(id);
+                    this.ThrowIfPreConditionFails(handler, objectId);
 
                     var data = handler.Get(objectId, Guid.Empty) as IHasIdentifiers;
                     if (data == null)
@@ -1372,6 +1741,10 @@ namespace SanteDB.Rest.HDSI
                     else
                     {
                         RestOperationContext.Current.OutgoingResponse.ContentType = "application/jose";
+
+                        audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
+                            .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, data);
+
                         return new MemoryStream(Encoding.UTF8.GetBytes(this.m_resourcePointerService.GeneratePointer(data)));
                     }
                 }
@@ -1380,12 +1753,25 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) { throw; }
-            catch (FaultException) { throw; }
+            catch (PreconditionFailedException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw;
+            }
+            catch (FaultException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw;
+            }
             catch (Exception e)
             {
                 this.m_traceSource.TraceError("Error fetching pointer for {0} - {1}", resourceType, e);
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 throw new Exception($"Could fetching pointer code for {resourceType}/{id}", e);
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
             }
         }
 
@@ -1401,6 +1787,15 @@ namespace SanteDB.Rest.HDSI
         public virtual object InvokeMethod(string resourceType, string id, string operationName, ParameterCollection body)
         {
             this.ThrowIfNotReady();
+
+            var audit = this.m_auditBuilder
+                .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.ApplicationActivity)
+                .WithAction(Core.Model.Audit.ActionType.Execute)
+                .WithQueryPerformed($"{resourceType}/{id}/${operationName}")
+                .WithEventType("INSTANCE_INVOKE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Invoke REST procedure on instance of resource")
+                .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithLocalDestination()
+                .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
             try
             {
@@ -1423,6 +1818,9 @@ namespace SanteDB.Rest.HDSI
                         RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.ModifiedOn.DateTime);
 
                     }
+
+                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
+                        .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retValRaw);
                     return retValRaw;
                 }
                 else
@@ -1430,13 +1828,26 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) { throw; }
-            catch (FaultException) { throw; }
+            catch (PreconditionFailedException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw;
+            }
+            catch (FaultException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw;
+            }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 throw;
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
             }
         }
 
@@ -1445,6 +1856,14 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
+            var audit = this.m_auditBuilder
+                .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.ApplicationActivity)
+                .WithAction(Core.Model.Audit.ActionType.Execute)
+                .WithEventType("CHECKIN", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Release Object Edit Lock")
+                .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithLocalDestination()
+                .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
+
             try
             {
                 var handler = this.GetResourceHandler(resourceType) as ICheckoutResourceHandler;
@@ -1453,20 +1872,34 @@ namespace SanteDB.Rest.HDSI
                     this.AclCheck(handler, nameof(ICheckoutResourceHandler.CheckIn));
                     var objectId = Guid.Parse(key);
                     this.ThrowIfPreConditionFails(handler, objectId);
-                    return handler.CheckIn(objectId);
+                    var retVal = handler.CheckIn(objectId);
+                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
+                        .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.PermanentErasure, retVal);
+                    return retVal;
                 }
                 else
                 {
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) { throw; }
-            catch (FaultException) { throw; }
+            catch (PreconditionFailedException) {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw; 
+            }
+            catch (FaultException) {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw; 
+            }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 throw;
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
             }
         }
 
@@ -1475,6 +1908,14 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
+            var audit = this.m_auditBuilder
+               .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.ApplicationActivity)
+               .WithAction(Core.Model.Audit.ActionType.Execute)
+               .WithEventType("CHECKOUT", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Obtain Object Edit Lock")
+               .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+               .WithLocalDestination()
+               .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
+
             try
             {
                 var handler = this.GetResourceHandler(resourceType) as ICheckoutResourceHandler;
@@ -1483,20 +1924,36 @@ namespace SanteDB.Rest.HDSI
                     this.AclCheck(handler, nameof(ICheckoutResourceHandler.CheckIn));
                     var objectId = Guid.Parse(key);
                     this.ThrowIfPreConditionFails(handler, objectId);
-                    return handler.CheckOut(objectId);
+                    var retVal = handler.CheckOut(objectId);
+                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
+                        .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Creation, retVal);
+                    return retVal;
                 }
                 else
                 {
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) { throw; }
-            catch (FaultException) { throw; }
+            catch (PreconditionFailedException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw;
+            }
+            catch (FaultException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw;
+            }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 throw;
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
             }
         }
 
@@ -1505,6 +1962,17 @@ namespace SanteDB.Rest.HDSI
         public virtual object InvokeMethod(string resourceType, string operationName, ParameterCollection body)
         {
             this.ThrowIfNotReady();
+
+
+            var audit = this.m_auditBuilder
+                .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.ApplicationActivity)
+                .WithAction(Core.Model.Audit.ActionType.Execute)
+                .WithQueryPerformed($"{resourceType}/${operationName}")
+                .WithEventType("CLASS_INVOKE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Invoke REST operation on class of resource")
+                .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithLocalDestination()
+                .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
+
 
             try
             {
@@ -1525,6 +1993,9 @@ namespace SanteDB.Rest.HDSI
                         RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.ModifiedOn.DateTime);
 
                     }
+
+                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
+                        .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retValRaw);
                     return retValRaw;
                 }
                 else
@@ -1532,13 +2003,26 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) { throw; }
-            catch (FaultException) { throw; }
+            catch (PreconditionFailedException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw;
+            }
+            catch (FaultException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw;
+            }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 throw;
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
             }
         }
 
@@ -1548,6 +2032,15 @@ namespace SanteDB.Rest.HDSI
         public virtual object AssociationGet(string resourceType, string childResourceType, string childResourceKey)
         {
             this.ThrowIfNotReady();
+
+            var audit = this.m_auditBuilder
+                .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Query)
+                .WithAction(Core.Model.Audit.ActionType.Read)
+                .WithQueryPerformed($"{resourceType}/{childResourceType}/{childResourceKey}")
+                .WithEventType("ASSOC_READ", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Association Read")
+                .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithLocalDestination()
+                .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
             try
             {
@@ -1567,6 +2060,8 @@ namespace SanteDB.Rest.HDSI
                     RestOperationContext.Current.OutgoingResponse.SetETag(retVal.Tag);
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.ModifiedOn.DateTime);
 
+                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
+                        .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retVal);
                     if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[QueryControlParameterNames.HttpBundleRelatedParameterName], out var bundle) && bundle)
                     {
                         return Bundle.CreateBundle(retVal);
@@ -1581,13 +2076,26 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) { throw; }
-            catch (FaultException) { throw; }
+            catch (PreconditionFailedException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw;
+            }
+            catch (FaultException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw;
+            }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 throw;
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
             }
         }
 
@@ -1596,6 +2104,14 @@ namespace SanteDB.Rest.HDSI
         public virtual object AssociationRemove(string resourceType, string childResourceType, string childResourceKey)
         {
             this.ThrowIfNotReady();
+
+            var audit = this.m_auditBuilder
+                .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
+                .WithAction(Core.Model.Audit.ActionType.Delete)
+                .WithEventType("ASSOC_DELETE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Association Delete")
+                .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithLocalDestination()
+                .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
             try
             {
@@ -1614,6 +2130,11 @@ namespace SanteDB.Rest.HDSI
 
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
                     RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, childResourceType, retVal.Key));
+
+                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
+                        .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.LogicalDeletion, retVal)
+                        .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retVal);
+
                     return retVal;
                 }
                 else
@@ -1621,13 +2142,26 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) { throw; }
-            catch (FaultException) { throw; }
+            catch (PreconditionFailedException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw;
+            }
+            catch (FaultException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw;
+            }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 throw;
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
             }
         }
 
@@ -1641,6 +2175,16 @@ namespace SanteDB.Rest.HDSI
         public virtual Object AssociationSearch(string resourceType, string childResourceType)
         {
             this.ThrowIfNotReady();
+
+            var audit = this.m_auditBuilder
+               .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
+               .WithAction(Core.Model.Audit.ActionType.Delete)
+               .WithEventType("ASSOC_SEARCH", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Association Search")
+               .WithQueryPerformed($"{resourceType}/{childResourceType}?{RestOperationContext.Current.IncomingRequest.QueryString.ToHttpString()}")
+               .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+               .WithLocalDestination()
+               .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
+
             try
             {
                 var handler = this.GetResourceHandler(resourceType) as IChainedApiResourceHandler;
@@ -1671,6 +2215,7 @@ namespace SanteDB.Rest.HDSI
                     }
                     catch { }
 
+                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success);
                     // Last modification time and not modified conditions
                     if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||
                         RestOperationContext.Current.IncomingRequest.GetIfNoneMatch() != null) &&
@@ -1681,7 +2226,9 @@ namespace SanteDB.Rest.HDSI
                     }
                     else
                     {
-                        return new Bundle(retVal, offset, totalCount);
+                        var retBundle = new Bundle(retVal, offset, totalCount);
+                        audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retBundle);
+                        return retBundle;
                     }
                 }
                 else
@@ -1689,13 +2236,26 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) { throw; }
-            catch (FaultException) { throw; }
+            catch (PreconditionFailedException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw;
+            }
+            catch (FaultException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw;
+            }
             catch (Exception e)
             {
                 var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
                 this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
                 throw;
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
             }
         }
     }
