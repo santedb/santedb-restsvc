@@ -5,6 +5,7 @@ using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security.Audit;
+using SanteDB.Core.Security.Services;
 using SanteDB.Rest.Common;
 using System;
 using System.Collections.Generic;
@@ -20,12 +21,12 @@ namespace SanteDB.Rest.AMI.ChildResources
     public class ForeignDataSourceChildHandler : IApiChildResourceHandler
     {
         private readonly IForeignDataManagerService m_foreignDataManager;
-        private readonly IAuditBuilder m_auditBuilder;
+        private readonly IAuditService m_auditBuilder;
 
         /// <summary>
         /// DI constructor
         /// </summary>
-        public ForeignDataSourceChildHandler(IForeignDataManagerService foreignDataManagerService, IAuditBuilder auditBuilder)
+        public ForeignDataSourceChildHandler(IForeignDataManagerService foreignDataManagerService, IAuditService auditBuilder)
         {
             this.m_foreignDataManager = foreignDataManagerService;
             this.m_auditBuilder = auditBuilder;
@@ -64,7 +65,7 @@ namespace SanteDB.Rest.AMI.ChildResources
                 }
                 else
                 {
-                    var audit = this.m_auditBuilder.ForEventDataAction(EventTypeCodes.Export,
+                    var audit = this.m_auditBuilder.Audit().ForEventDataAction(EventTypeCodes.Export,
                         Core.Model.Audit.ActionType.Read,
                         Core.Model.Audit.AuditableObjectLifecycle.Access,
                         Core.Model.Audit.EventIdentifierType.Export,

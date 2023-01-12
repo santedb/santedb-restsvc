@@ -27,7 +27,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        public ForeignDataStageHandler(IAuditBuilder auditBuilderService, ILocalizationService localizationService, IForeignDataManagerService foreignDataManagerService) : base(localizationService)
+        public ForeignDataStageHandler(ILocalizationService localizationService, IForeignDataManagerService foreignDataManagerService) : base(localizationService)
         {
             this.m_foreignDataService = foreignDataManagerService;
         }
