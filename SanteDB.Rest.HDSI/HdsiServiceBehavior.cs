@@ -28,11 +28,13 @@ using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Collection;
+using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Model.Query;
+using SanteDB.Core.Model.Roles;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Security.Services;
@@ -61,6 +63,22 @@ namespace SanteDB.Rest.HDSI
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class HdsiServiceBehavior : IHdsiServiceContract
     {
+
+        private readonly String[] m_nonDisclosureAuditableResourceTypes =
+        {
+            nameof(ReferenceTerm),
+            nameof(ConceptSet),
+            nameof(Concept),
+            nameof(DeviceEntity),
+            nameof(ApplicationEntity),
+            nameof(ConceptName),
+            nameof(ConceptRelationship),
+            nameof(Place),
+            nameof(Material),
+            nameof(ManufacturedMaterial),
+            nameof(Organization)
+        };
+
         /// <summary>
         /// The trace source for HDSI based implementations
         /// </summary>
@@ -413,8 +431,10 @@ namespace SanteDB.Rest.HDSI
             }
             finally
             {
-                audit.WithTimestamp().Send();
-
+                if (!this.m_nonDisclosureAuditableResourceTypes.Contains(resourceType))
+                {
+                    audit.WithTimestamp().Send();
+                }
             }
         }
 
@@ -791,8 +811,10 @@ namespace SanteDB.Rest.HDSI
             }
             finally
             {
-                audit.WithTimestamp().Send();
-
+                if (!this.m_nonDisclosureAuditableResourceTypes.Contains(resourceType))
+                {
+                    audit.WithTimestamp().Send();
+                }
             }
         }
 
@@ -1299,7 +1321,10 @@ namespace SanteDB.Rest.HDSI
             }
             finally
             {
-                audit.WithTimestamp().Send();
+                if (!this.m_nonDisclosureAuditableResourceTypes.Contains(resourceType))
+                {
+                    audit.WithTimestamp().Send();
+                }
             }
         }
 
@@ -1595,7 +1620,10 @@ namespace SanteDB.Rest.HDSI
             }
             finally
             {
-                audit.WithTimestamp().Send();
+                if (!this.m_nonDisclosureAuditableResourceTypes.Contains(resourceType))
+                {
+                    audit.WithTimestamp().Send();
+                }
             }
         }
 
@@ -2255,7 +2283,11 @@ namespace SanteDB.Rest.HDSI
             }
             finally
             {
-                audit.WithTimestamp().Send();
+                // Only audit queries for things that are sensitive (codes and whatnot don't need to be audited)
+                if (!this.m_nonDisclosureAuditableResourceTypes.Contains(resourceType))
+                {
+                    audit.WithTimestamp().Send();
+                }
             }
         }
     }
