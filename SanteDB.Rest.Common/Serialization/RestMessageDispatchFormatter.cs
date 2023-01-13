@@ -334,7 +334,7 @@ namespace SanteDB.Rest.Common.Serialization
         {
             try
             {
-                this.m_traceSource.TraceInfo("Serializing {0}", result?.GetType());
+                this.m_traceSource.TraceVerbose("Serializing {0}", result?.GetType());
                 // Outbound control
                 var httpRequest = RestOperationContext.Current.IncomingRequest;
                 string accepts = httpRequest.Headers["Accept"],
@@ -376,7 +376,7 @@ namespace SanteDB.Rest.Common.Serialization
                             if (result is IdentifiedData id)
                             {
 #if DEBUG
-                                this.m_traceSource.TraceInfo("Serializing {0} as view model result", result);
+                                this.m_traceSource.TraceVerbose("Serializing {0} as view model result", result);
 #endif
                                 var viewModel = httpRequest.Headers[ExtendedHttpHeaderNames.ViewModelHeaderName] ?? httpRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName];
 
@@ -384,7 +384,7 @@ namespace SanteDB.Rest.Common.Serialization
                                 var viewModelSerializer = new JsonViewModelSerializer();
 
 #if DEBUG
-                                this.m_traceSource.TraceInfo("Will load serialization assembly {0}", typeof(ActExtensionViewModelSerializer).Assembly);
+                                this.m_traceSource.TraceVerbose("Will load serialization assembly {0}", typeof(ActExtensionViewModelSerializer).Assembly);
 #endif
                                 viewModelSerializer.LoadSerializerAssembly(typeof(ActExtensionViewModelSerializer).Assembly);
 
@@ -399,7 +399,7 @@ namespace SanteDB.Rest.Common.Serialization
                                 }
 
 #if DEBUG
-                                this.m_traceSource.TraceInfo("Using view model {0}", viewModelSerializer.ViewModel?.Name);
+                                this.m_traceSource.TraceVerbose("Using view model {0}", viewModelSerializer.ViewModel?.Name);
 #endif
                                 using (var tms = new MemoryStream())
                                 using (StreamWriter sw = new StreamWriter(tms, new UTF8Encoding(false)))
@@ -412,7 +412,7 @@ namespace SanteDB.Rest.Common.Serialization
                                 }
 
 #if DEBUG
-                                this.m_traceSource.TraceInfo("Serialized body of  {0}", result);
+                                this.m_traceSource.TraceVerbose("Serialized body of  {0}", result);
 #endif
                                 contentType = "application/json+sdb-viewmodel";
                             }
