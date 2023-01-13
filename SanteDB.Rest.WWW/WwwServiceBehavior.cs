@@ -108,14 +108,7 @@ namespace SanteDB.Rest.WWW
                 lang = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
             }
 
-            var etag = $"{String.Join(";", this.m_serviceApplet.Select(o => o.Info.Version))};{ApplicationServiceContext.Current.ActivityUuid}/{lang}";
-
-            if (RestOperationContext.Current.IncomingRequest.Headers["If-None-Match"] == etag)
-            {
-                RestOperationContext.Current.OutgoingResponse.StatusCode = 304; // not modified
-                return null;
-            }
-
+           
             // Navigate asset
 
             String appletPath = RestOperationContext.Current.IncomingRequest.Url.AbsolutePath.ToLower();
@@ -136,10 +129,20 @@ namespace SanteDB.Rest.WWW
                 {
                     this.m_cacheApplets.TryAdd(appletPath, navigateAsset);
                 }
+
+                
             }
 
             // Navigate policy?
             navigateAsset.Policies?.ForEach(o => this.m_policyEnforcementSerivce.Demand(o, AuthenticationContext.Current.Principal));
+
+            var etag = $"W/{navigateAsset.Manifest.Info.Id}v{navigateAsset.Manifest.Info.Version};{ApplicationServiceContext.Current.ActivityUuid}/{lang}";
+
+            if (RestOperationContext.Current.IncomingRequest.Headers["If-None-Match"] == etag)
+            {
+                RestOperationContext.Current.OutgoingResponse.StatusCode = 304; // not modified
+                return null;
+            }
 
             // Caching
             RestOperationContext.Current.OutgoingResponse.AddHeader("ETag", etag);
