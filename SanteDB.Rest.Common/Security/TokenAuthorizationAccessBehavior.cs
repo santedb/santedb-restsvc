@@ -69,7 +69,7 @@ namespace SanteDB.Rest.Common.Security
 
             RestOperationContext.Current.Data.Add(RestPropertyNameSession, session);
 
-            this.m_traceSource.TraceInfo("User {0} authenticated via SESSION BEARER", principal.Identity.Name);
+            this.m_traceSource.TraceVerbose("User {0} authenticated via SESSION BEARER", principal.Identity.Name);
             return AuthenticationContext.EnterContext(principal);
         }
 
@@ -80,7 +80,6 @@ namespace SanteDB.Rest.Common.Security
         {
             try
             {
-                this.m_traceSource.TraceInfo("CheckAccess");
 
                 // Http message inbound
                 var httpMessage = RestOperationContext.Current.IncomingRequest;

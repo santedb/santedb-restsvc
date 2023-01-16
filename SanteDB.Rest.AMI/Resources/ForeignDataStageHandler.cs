@@ -4,6 +4,7 @@ using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Alien;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;

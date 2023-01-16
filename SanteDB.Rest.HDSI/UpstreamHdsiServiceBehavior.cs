@@ -34,6 +34,7 @@ using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Model.Roles;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
@@ -84,7 +85,8 @@ namespace SanteDB.Messaging.HDSI.Wcf
                 ApplicationServiceContext.Current.GetService<IUpstreamAvailabilityProvider>(),
                 ApplicationServiceContext.Current.GetService<IDataPersistenceService<Entity>>(),
                 ApplicationServiceContext.Current.GetService<IDataPersistenceService<Act>>(),
-                ApplicationServiceContext.Current.GetService<IAdhocCacheService>()
+                ApplicationServiceContext.Current.GetService<IAdhocCacheService>(),
+                ApplicationServiceContext.Current.GetService<IAuditService>()
 
                 )
         {
@@ -92,8 +94,8 @@ namespace SanteDB.Messaging.HDSI.Wcf
         }
 
         /// <inheritdoc/>
-        public UpstreamHdsiServiceBehavior(IDataCachingService dataCache, ILocalizationService localeService, IPatchService patchService, IPolicyEnforcementService pepService, IBarcodeProviderService barcodeService, IResourcePointerService resourcePointerService, IServiceManager serviceManager, IConfigurationManager configurationManager, IRestClientFactory restClientResolver, IUpstreamIntegrationService upstreamIntegrationService, IUpstreamAvailabilityProvider availabilityProvider, IDataPersistenceService<Entity> entityRepository = null, IDataPersistenceService<Act> actRepository = null, IAdhocCacheService adhocCacheService = null) 
-            : base(dataCache, localeService, patchService, pepService, barcodeService, resourcePointerService, serviceManager, configurationManager)
+        public UpstreamHdsiServiceBehavior(IDataCachingService dataCache, ILocalizationService localeService, IPatchService patchService, IPolicyEnforcementService pepService, IBarcodeProviderService barcodeService, IResourcePointerService resourcePointerService, IServiceManager serviceManager, IConfigurationManager configurationManager, IRestClientFactory restClientResolver, IUpstreamIntegrationService upstreamIntegrationService, IUpstreamAvailabilityProvider availabilityProvider, IDataPersistenceService<Entity> entityRepository = null, IDataPersistenceService<Act> actRepository = null, IAdhocCacheService adhocCacheService = null, IAuditService auditService = null) 
+            : base(dataCache, localeService, patchService, pepService, barcodeService, resourcePointerService, serviceManager, configurationManager, auditService)
         {
             this.m_restClientFactory = restClientResolver;
             this.m_adhocCache = adhocCacheService;
@@ -147,14 +149,15 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         var result = restClient.Invoke<CodeSearchRequest, IdentifiedData>("SEARCH", "_ptr", "application/x-www-form-urlencoded", new CodeSearchRequest(parms));
                         if (result != null)
                         {
+                            this.m_dataCachingService?.Add(result);
                             RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.SeeOther;
                             if (result is IVersionedData versioned)
                             {
-                                RestOperationContext.Current.OutgoingResponse.AddHeader("Location", this.CreateContentLocation(result.GetType().GetSerializationName(), versioned.Key.Value, "_history", versioned.VersionKey.Value) + "?_upstream=true");
+                                RestOperationContext.Current.OutgoingResponse.AddHeader("Location", this.CreateContentLocation(result.GetType().GetSerializationName(), versioned.Key.Value, "_history", versioned.VersionKey.Value) + $"?_upstream=true&_format={Uri.EscapeDataString(restClient.Accept)}");
                             }
                             else
                             {
-                                RestOperationContext.Current.OutgoingResponse.AddHeader("Location", this.CreateContentLocation(result.GetType().GetSerializationName(), result.Key.Value) + "?_upstream=true");
+                                RestOperationContext.Current.OutgoingResponse.AddHeader("Location", this.CreateContentLocation(result.GetType().GetSerializationName(), result.Key.Value) + $"?_upstream=true&_format={Uri.EscapeDataString(restClient.Accept)}");
                             }
                         }
                         else
@@ -307,7 +310,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         if (Guid.TryParse(id, out var idGuid))
                         {
                             cache = this.m_dataCachingService.GetCacheItem(idGuid);
-                            if (cache != null)
+                            if (cache != null && cache.Type == resourceType)
                             {
                                 // Only do a head if the ad-hoc cache for excessive HEAD checks is null
                                 if (this.m_adhocCache?.TryGet<DateTime>(cache.Tag, out var lastTimeChecked) == true)
@@ -321,7 +324,6 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
                         //restClient.Accept = String.Join(",", RestOperationContext.Current.IncomingRequest.AcceptTypes);
                         var retVal = restClient.Get<IdentifiedData>($"{resourceType}/{id}", RestOperationContext.Current.IncomingRequest.QueryString);
-                        this.m_adhocCache?.Add(retVal.Tag, DateTime.Now, new TimeSpan(0, 1, 00));
 
                         if (retVal == null)
                         {
@@ -329,6 +331,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         }
                         else
                         {
+                            this.m_adhocCache?.Add(retVal.Tag, DateTime.Now, new TimeSpan(0, 1, 00));
                             this.m_dataCachingService.Add(retVal);
                             this.TagUpstream(retVal);
                             return retVal;
@@ -357,7 +360,16 @@ namespace SanteDB.Messaging.HDSI.Wcf
         private IRestClient CreateProxyClient()
         {
             var retVal = this.m_restClientFactory.GetRestClientFor(ServiceEndpointType.HealthDataService);
-            retVal.Accept = String.Join(",", RestOperationContext.Current.IncomingRequest.AcceptTypes);
+
+            if (RestOperationContext.Current.IncomingRequest.QueryString["_format"] != null)
+            {
+                retVal.Accept = RestOperationContext.Current.IncomingRequest.QueryString["_format"];
+            }
+            else
+            {
+                retVal.Accept = RestOperationContext.Current.IncomingRequest.AcceptTypes.First();
+            }
+
             retVal.Requesting += (o, e) =>
             {
                 var inboundHeaders = RestOperationContext.Current.IncomingRequest.Headers;
@@ -543,7 +555,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     try
                     {
                         var restClient = this.CreateProxyClient();
-                        var patchId = restClient.Patch<Patch>($"/{resourceType}/{id}", "application/xml+sdb-patch", RestOperationContext.Current.IncomingRequest.Headers["If -Match"], body);
+                        var patchId = restClient.Patch<Patch>($"/{resourceType}/{id}", "application/xml+sdb-patch", RestOperationContext.Current.IncomingRequest.Headers["If-Match"], body);
                         RestOperationContext.Current.OutgoingResponse.SetETag(patchId);
                     }
                     catch (Exception e)

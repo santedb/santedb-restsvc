@@ -145,9 +145,9 @@ namespace SanteDB.Rest.AppService
         /// <inheritdoc/>
         public Stream GetWidget(string widgetId)
         {
-            var widget = this.m_appletManagerService.Applets.WidgetAssets.Select(o => new { W = (o.Content ?? this.m_appletManagerService.Applets.Resolver(o)) as AppletWidget, A = o }).Where(o => o.W.Name == widgetId);
+            var widget = this.m_appletManagerService.Applets.WidgetAssets.Select(o => new { W = (o.Content ?? this.m_appletManagerService.Applets.Resolver(o)) as AppletWidget, A = o }).Where(o => o.W.Name == widgetId).ToArray();
 
-            if (widget.Count() == 0)
+            if (widget.Length == 0)
                 throw new KeyNotFoundException(widgetId.ToString());
             else
                 return new MemoryStream(this.m_appletManagerService.Applets.RenderAssetContent(widget.OrderByDescending(o => o.W.Priority).First().A, AuthenticationContext.Current.Principal.GetClaimValue(SanteDBClaimTypes.Language) ?? CultureInfo.CurrentUICulture.TwoLetterISOLanguageName));
