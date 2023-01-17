@@ -2237,7 +2237,7 @@ namespace SanteDB.Rest.HDSI
 
                     try
                     {
-                        var modifiedOnSelector = QueryExpressionParser.BuildPropertySelector(handler.Type, "modifiedOn", convertReturn: typeof(object));
+                        var modifiedOnSelector = QueryExpressionParser.BuildPropertySelector(results.ElementType, "modifiedOn", convertReturn: typeof(object));
                         var lastModified = (DateTime)results.OrderByDescending(modifiedOnSelector).Select<DateTimeOffset>(modifiedOnSelector).FirstOrDefault().DateTime;
                         RestOperationContext.Current.OutgoingResponse.SetLastModified(lastModified);
                     }
