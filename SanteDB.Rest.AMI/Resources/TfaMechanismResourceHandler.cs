@@ -6,7 +6,9 @@ using SanteDB.Core.Security.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
@@ -36,7 +38,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Get the capabilities
         /// </summary>
-        public ResourceCapabilityType Capabilities => ResourceCapabilityType.Search;
+        public ResourceCapabilityType Capabilities => ResourceCapabilityType.Search | ResourceCapabilityType.Get;
 
         /// <summary>
         /// DI CTOR
@@ -68,7 +70,14 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.Login)]
         public IQueryResultSet Query(NameValueCollection queryParameters)
         {
-            return this.m_tfaRelayService.Mechanisms.Select(o => new TfaMechanismInfo(o)).AsResultSet();
+            IQueryable<TfaMechanismInfo> query = this.m_tfaRelayService.Mechanisms.Select(o => new TfaMechanismInfo(o)).AsQueryable();
+
+            if (queryParameters?.Count > 0)
+            {
+                query = query.Where(QueryExpressionParser.BuildLinqExpression<TfaMechanismInfo>(queryParameters, null, false));
+            }
+
+            return query.AsResultSet();
         }
 
         /// <inheritdoc/>
