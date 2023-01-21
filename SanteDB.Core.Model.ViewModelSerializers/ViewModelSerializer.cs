@@ -360,6 +360,13 @@ namespace SanteDB.Core.Model.Json.Formatter {
             if (context.ShouldSerialize("modifiedOn")) {
                 context.JsonContext.WritePropertyUtil(w, "modifiedOn", _strong.ModifiedOn, context);
             }
+            if (context.ShouldSerialize("name")) {
+                if ((_strong.Name == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "name", _strong.Name, context);
+                }
+            }
             if (context.ShouldSerialize("definitions")) {
                 if (((_strong.ClientDefinitions == null) 
                             || (_strong.ClientDefinitions.Count == 0))) {
@@ -415,24 +422,33 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                 }
                             }
                             else {
-                                if ("uuid".Equals(r.Value)) {
+                                if ("name".Equals(r.Value)) {
                                     r.Read();
-                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Guid), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("uuid", context.JsonContext, _retVal, context));
+                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("name", context.JsonContext, _retVal, context));
                                     if ((_instance != null)) {
-                                        _retVal.Uuid = ((System.Guid)(_instance));
+                                        _retVal.Name = ((string)(_instance));
                                     }
                                 }
                                 else {
-                                    if ("$type".Equals(r.Value)) {
-                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
-                                        if ((_type != typeof(SanteDB.Core.Model.Subscription.SubscriptionDefinition))) {
-                                            SanteDB.Core.Model.Subscription.SubscriptionDefinition _nretVal = ((SanteDB.Core.Model.Subscription.SubscriptionDefinition)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
-                                            _nretVal.CopyObjectData(_retVal);
-                                            return _nretVal;
+                                    if ("uuid".Equals(r.Value)) {
+                                        r.Read();
+                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Guid), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("uuid", context.JsonContext, _retVal, context));
+                                        if ((_instance != null)) {
+                                            _retVal.Uuid = ((System.Guid)(_instance));
                                         }
                                     }
                                     else {
-                                        r.Skip();
+                                        if ("$type".Equals(r.Value)) {
+                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                            if ((_type != typeof(SanteDB.Core.Model.Subscription.SubscriptionDefinition))) {
+                                                SanteDB.Core.Model.Subscription.SubscriptionDefinition _nretVal = ((SanteDB.Core.Model.Subscription.SubscriptionDefinition)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
+                                                _nretVal.CopyObjectData(_retVal);
+                                                return _nretVal;
+                                            }
+                                        }
+                                        else {
+                                            r.Skip();
+                                        }
                                     }
                                 }
                             }
@@ -3789,46 +3805,11 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Roles.Patient)));
             }
-            if (context.ShouldSerialize("deceasedDate")) {
-                if ((_strong.DeceasedDateXml == null)) {
-                }
-                else {
-                    context.JsonContext.WritePropertyUtil(w, "deceasedDate", _strong.DeceasedDateXml, context);
-                }
-            }
-            if (context.ShouldSerialize("deceasedDatePrecision")) {
-                if ((_strong.DeceasedDatePrecision == null)) {
-                }
-                else {
-                    context.JsonContext.WritePropertyUtil(w, "deceasedDatePrecision", _strong.DeceasedDatePrecision, context);
-                }
-            }
             if (context.ShouldSerialize("multipleBirthOrder")) {
                 if ((_strong.MultipleBirthOrder == null)) {
                 }
                 else {
                     context.JsonContext.WritePropertyUtil(w, "multipleBirthOrder", _strong.MultipleBirthOrder, context);
-                }
-            }
-            if (context.ShouldSerialize("vipStatus")) {
-                if ((_strong.VipStatusKey == null)) {
-                }
-                else {
-                    context.JsonContext.WritePropertyUtil(w, "vipStatus", _strong.VipStatusKey, context);
-                }
-            }
-            if (context.ShouldSerialize("maritalStatus")) {
-                if ((_strong.MaritalStatusKey == null)) {
-                }
-                else {
-                    context.JsonContext.WritePropertyUtil(w, "maritalStatus", _strong.MaritalStatusKey, context);
-                }
-            }
-            if (context.ShouldSerialize("educationLevel")) {
-                if ((_strong.EducationLevelKey == null)) {
-                }
-                else {
-                    context.JsonContext.WritePropertyUtil(w, "educationLevel", _strong.EducationLevelKey, context);
                 }
             }
             if (context.ShouldSerialize("livingArrangement")) {
@@ -3843,85 +3824,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
                 else {
                     context.JsonContext.WritePropertyUtil(w, "religion", _strong.ReligiousAffiliationKey, context);
-                }
-            }
-            if (context.ShouldSerialize("nationality")) {
-                if ((_strong.NationalityKey == null)) {
-                }
-                else {
-                    context.JsonContext.WritePropertyUtil(w, "nationality", _strong.NationalityKey, context);
-                }
-            }
-            if (context.ShouldSerialize("maritalStatusModel")) {
-                if ((_strong.MaritalStatus == null)) {
-                    if ((_strong.MaritalStatusKey.HasValue && context.ShouldForceLoad("maritalStatusModel", _strong.Key))) {
-                        SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "MaritalStatus");
-                        if ((_delay != null)) {
-                            _strong.MaritalStatus = _delay;
-                            context.JsonContext.WritePropertyUtil(w, "maritalStatusModel", _strong.MaritalStatus, context);
-                        }
-                        else {
-                            context.RegisterMissTarget("maritalStatusModel", _strong.Key.GetValueOrDefault());
-                        }
-                    }
-                }
-                else {
-                    context.JsonContext.WritePropertyUtil(w, "maritalStatusModel", _strong.MaritalStatus, context);
-                }
-            }
-            if (context.ShouldSerialize("nationalityModel")) {
-                if ((_strong.Nationality == null)) {
-                    if ((_strong.NationalityKey.HasValue && context.ShouldForceLoad("nationalityModel", _strong.Key))) {
-                        SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "Nationality");
-                        if ((_delay != null)) {
-                            _strong.Nationality = _delay;
-                            context.JsonContext.WritePropertyUtil(w, "nationalityModel", _strong.Nationality, context);
-                        }
-                        else {
-                            context.RegisterMissTarget("nationalityModel", _strong.Key.GetValueOrDefault());
-                        }
-                    }
-                }
-                else {
-                    context.JsonContext.WritePropertyUtil(w, "nationalityModel", _strong.Nationality, context);
-                }
-            }
-            if (context.ShouldSerialize("vipStatusModel")) {
-                if ((_strong.VipStatus == null)) {
-                    if ((_strong.VipStatusKey.HasValue && context.ShouldForceLoad("vipStatusModel", _strong.Key))) {
-                        SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "VipStatus");
-                        if ((_delay != null)) {
-                            _strong.VipStatus = _delay;
-                            context.JsonContext.WritePropertyUtil(w, "vipStatusModel", _strong.VipStatus, context);
-                        }
-                        else {
-                            context.RegisterMissTarget("vipStatusModel", _strong.Key.GetValueOrDefault());
-                        }
-                    }
-                }
-                else {
-                    context.JsonContext.WritePropertyUtil(w, "vipStatusModel", _strong.VipStatus, context);
-                }
-            }
-            if (context.ShouldSerialize("educationLevelModel")) {
-                if ((_strong.EducationLevel == null)) {
-                    if ((_strong.EducationLevelKey.HasValue && context.ShouldForceLoad("educationLevelModel", _strong.Key))) {
-                        SanteDB.Core.Model.DataTypes.Concept _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "EducationLevel");
-                        if ((_delay != null)) {
-                            _strong.EducationLevel = _delay;
-                            context.JsonContext.WritePropertyUtil(w, "educationLevelModel", _strong.EducationLevel, context);
-                        }
-                        else {
-                            context.RegisterMissTarget("educationLevelModel", _strong.Key.GetValueOrDefault());
-                        }
-                    }
-                }
-                else {
-                    context.JsonContext.WritePropertyUtil(w, "educationLevelModel", _strong.EducationLevel, context);
                 }
             }
             if (context.ShouldSerialize("livingArrangementModel")) {
@@ -3983,6 +3885,56 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
                 else {
                     context.JsonContext.WritePropertyUtil(w, "ethnicityModel", _strong.EthnicGroup, context);
+                }
+            }
+            if (context.ShouldSerialize("maritalStatusModel")) {
+                if ((_strong.MaritalStatus == null)) {
+                    if ((_strong.MaritalStatusKey.HasValue && context.ShouldForceLoad("maritalStatusModel", _strong.Key))) {
+                        SanteDB.Core.Model.DataTypes.Concept _delay = null;
+                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "MaritalStatus");
+                        if ((_delay != null)) {
+                            _strong.MaritalStatus = _delay;
+                            context.JsonContext.WritePropertyUtil(w, "maritalStatusModel", _strong.MaritalStatus, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("maritalStatusModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "maritalStatusModel", _strong.MaritalStatus, context);
+                }
+            }
+            if (context.ShouldSerialize("educationLevelModel")) {
+                if ((_strong.EducationLevel == null)) {
+                    if ((_strong.EducationLevelKey.HasValue && context.ShouldForceLoad("educationLevelModel", _strong.Key))) {
+                        SanteDB.Core.Model.DataTypes.Concept _delay = null;
+                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "EducationLevel");
+                        if ((_delay != null)) {
+                            _strong.EducationLevel = _delay;
+                            context.JsonContext.WritePropertyUtil(w, "educationLevelModel", _strong.EducationLevel, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("educationLevelModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "educationLevelModel", _strong.EducationLevel, context);
+                }
+            }
+            if (context.ShouldSerialize("maritalStatus")) {
+                if ((_strong.MaritalStatusKey == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "maritalStatus", _strong.MaritalStatusKey, context);
+                }
+            }
+            if (context.ShouldSerialize("educationLevel")) {
+                if ((_strong.EducationLevelKey == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "educationLevel", _strong.EducationLevelKey, context);
                 }
             }
             if (context.ShouldSerialize("dateOfBirthPrecision")) {
@@ -4066,6 +4018,70 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
                 else {
                     context.JsonContext.WritePropertyUtil(w, "occupationModel", _strong.Occupation, context);
+                }
+            }
+            if (context.ShouldSerialize("deceasedDate")) {
+                if ((_strong.DeceasedDateXml == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "deceasedDate", _strong.DeceasedDateXml, context);
+                }
+            }
+            if (context.ShouldSerialize("deceasedDatePrecision")) {
+                if ((_strong.DeceasedDatePrecision == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "deceasedDatePrecision", _strong.DeceasedDatePrecision, context);
+                }
+            }
+            if (context.ShouldSerialize("vipStatus")) {
+                if ((_strong.VipStatusKey == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "vipStatus", _strong.VipStatusKey, context);
+                }
+            }
+            if (context.ShouldSerialize("vipStatusModel")) {
+                if ((_strong.VipStatus == null)) {
+                    if ((_strong.VipStatusKey.HasValue && context.ShouldForceLoad("vipStatusModel", _strong.Key))) {
+                        SanteDB.Core.Model.DataTypes.Concept _delay = null;
+                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "VipStatus");
+                        if ((_delay != null)) {
+                            _strong.VipStatus = _delay;
+                            context.JsonContext.WritePropertyUtil(w, "vipStatusModel", _strong.VipStatus, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("vipStatusModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "vipStatusModel", _strong.VipStatus, context);
+                }
+            }
+            if (context.ShouldSerialize("nationality")) {
+                if ((_strong.NationalityKey == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "nationality", _strong.NationalityKey, context);
+                }
+            }
+            if (context.ShouldSerialize("nationalityModel")) {
+                if ((_strong.Nationality == null)) {
+                    if ((_strong.NationalityKey.HasValue && context.ShouldForceLoad("nationalityModel", _strong.Key))) {
+                        SanteDB.Core.Model.DataTypes.Concept _delay = null;
+                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "Nationality");
+                        if ((_delay != null)) {
+                            _strong.Nationality = _delay;
+                            context.JsonContext.WritePropertyUtil(w, "nationalityModel", _strong.Nationality, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("nationalityModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "nationalityModel", _strong.Nationality, context);
                 }
             }
             if (context.ShouldSerialize("address")) {
@@ -4821,195 +4837,195 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                     }
                                                                                                                                                                 }
                                                                                                                                                                 else {
-                                                                                                                                                                    if ("occupationModel".Equals(r.Value)) {
+                                                                                                                                                                    if ("nationalityModel".Equals(r.Value)) {
                                                                                                                                                                         r.Read();
-                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("occupationModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("nationalityModel", context.JsonContext, _retVal, context));
                                                                                                                                                                         if ((_instance != null)) {
-                                                                                                                                                                            _retVal.Occupation = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                                                                            _retVal.Nationality = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                                         }
                                                                                                                                                                     }
                                                                                                                                                                     else {
-                                                                                                                                                                        if ("occupation".Equals(r.Value)) {
+                                                                                                                                                                        if ("nationality".Equals(r.Value)) {
                                                                                                                                                                             r.Read();
-                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("occupation", context.JsonContext, _retVal, context));
+                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("nationality", context.JsonContext, _retVal, context));
                                                                                                                                                                             if ((_instance != null)) {
-                                                                                                                                                                                _retVal.OccupationKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                _retVal.NationalityKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                             }
                                                                                                                                                                         }
                                                                                                                                                                         else {
-                                                                                                                                                                            if ("language".Equals(r.Value)) {
+                                                                                                                                                                            if ("vipStatusModel".Equals(r.Value)) {
                                                                                                                                                                                 r.Read();
-                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("language", context.JsonContext, _retVal, context));
+                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("vipStatusModel", context.JsonContext, _retVal, context));
                                                                                                                                                                                 if ((_instance != null)) {
-                                                                                                                                                                                    _retVal.LanguageCommunication = ((System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication>)(_instance));
+                                                                                                                                                                                    _retVal.VipStatus = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                                                 }
                                                                                                                                                                             }
                                                                                                                                                                             else {
-                                                                                                                                                                                if ("dateOfBirth".Equals(r.Value)) {
+                                                                                                                                                                                if ("vipStatus".Equals(r.Value)) {
                                                                                                                                                                                     r.Read();
-                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("dateOfBirth", context.JsonContext, _retVal, context));
+                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("vipStatus", context.JsonContext, _retVal, context));
                                                                                                                                                                                     if ((_instance != null)) {
-                                                                                                                                                                                        _retVal.DateOfBirthXml = ((string)(_instance));
+                                                                                                                                                                                        _retVal.VipStatusKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                                     }
                                                                                                                                                                                 }
                                                                                                                                                                                 else {
-                                                                                                                                                                                    if ("genderConceptModel".Equals(r.Value)) {
+                                                                                                                                                                                    if ("deceasedDatePrecision".Equals(r.Value)) {
                                                                                                                                                                                         r.Read();
-                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("genderConceptModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("deceasedDatePrecision", context.JsonContext, _retVal, context));
                                                                                                                                                                                         if ((_instance != null)) {
-                                                                                                                                                                                            _retVal.GenderConcept = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                                                                                            _retVal.DeceasedDatePrecision = ((System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>)(_instance));
                                                                                                                                                                                         }
                                                                                                                                                                                     }
                                                                                                                                                                                     else {
-                                                                                                                                                                                        if ("genderConcept".Equals(r.Value)) {
+                                                                                                                                                                                        if ("deceasedDate".Equals(r.Value)) {
                                                                                                                                                                                             r.Read();
-                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("genderConcept", context.JsonContext, _retVal, context));
+                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("deceasedDate", context.JsonContext, _retVal, context));
                                                                                                                                                                                             if ((_instance != null)) {
-                                                                                                                                                                                                _retVal.GenderConceptKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                _retVal.DeceasedDateXml = ((string)(_instance));
                                                                                                                                                                                             }
                                                                                                                                                                                         }
                                                                                                                                                                                         else {
-                                                                                                                                                                                            if ("dateOfBirthPrecision".Equals(r.Value)) {
+                                                                                                                                                                                            if ("occupationModel".Equals(r.Value)) {
                                                                                                                                                                                                 r.Read();
-                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("dateOfBirthPrecision", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("occupationModel", context.JsonContext, _retVal, context));
                                                                                                                                                                                                 if ((_instance != null)) {
-                                                                                                                                                                                                    _retVal.DateOfBirthPrecision = ((System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>)(_instance));
+                                                                                                                                                                                                    _retVal.Occupation = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                                                                 }
                                                                                                                                                                                             }
                                                                                                                                                                                             else {
-                                                                                                                                                                                                if ("ethnicityModel".Equals(r.Value)) {
+                                                                                                                                                                                                if ("occupation".Equals(r.Value)) {
                                                                                                                                                                                                     r.Read();
-                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("ethnicityModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("occupation", context.JsonContext, _retVal, context));
                                                                                                                                                                                                     if ((_instance != null)) {
-                                                                                                                                                                                                        _retVal.EthnicGroup = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                                                                                                        _retVal.OccupationKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                                                     }
                                                                                                                                                                                                 }
                                                                                                                                                                                                 else {
-                                                                                                                                                                                                    if ("ethnicity".Equals(r.Value)) {
+                                                                                                                                                                                                    if ("language".Equals(r.Value)) {
                                                                                                                                                                                                         r.Read();
-                                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("ethnicity", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("language", context.JsonContext, _retVal, context));
                                                                                                                                                                                                         if ((_instance != null)) {
-                                                                                                                                                                                                            _retVal.EthnicGroupKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                            _retVal.LanguageCommunication = ((System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication>)(_instance));
                                                                                                                                                                                                         }
                                                                                                                                                                                                     }
                                                                                                                                                                                                     else {
-                                                                                                                                                                                                        if ("religionModel".Equals(r.Value)) {
+                                                                                                                                                                                                        if ("dateOfBirth".Equals(r.Value)) {
                                                                                                                                                                                                             r.Read();
-                                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("religionModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("dateOfBirth", context.JsonContext, _retVal, context));
                                                                                                                                                                                                             if ((_instance != null)) {
-                                                                                                                                                                                                                _retVal.ReligiousAffiliation = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                                                                                                                _retVal.DateOfBirthXml = ((string)(_instance));
                                                                                                                                                                                                             }
                                                                                                                                                                                                         }
                                                                                                                                                                                                         else {
-                                                                                                                                                                                                            if ("livingArrangementModel".Equals(r.Value)) {
+                                                                                                                                                                                                            if ("genderConceptModel".Equals(r.Value)) {
                                                                                                                                                                                                                 r.Read();
-                                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("livingArrangementModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("genderConceptModel", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                 if ((_instance != null)) {
-                                                                                                                                                                                                                    _retVal.LivingArrangement = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                                                                                                                    _retVal.GenderConcept = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                                                                                 }
                                                                                                                                                                                                             }
                                                                                                                                                                                                             else {
-                                                                                                                                                                                                                if ("educationLevelModel".Equals(r.Value)) {
+                                                                                                                                                                                                                if ("genderConcept".Equals(r.Value)) {
                                                                                                                                                                                                                     r.Read();
-                                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("educationLevelModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("genderConcept", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                     if ((_instance != null)) {
-                                                                                                                                                                                                                        _retVal.EducationLevel = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                                                                                                                        _retVal.GenderConceptKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                                                                     }
                                                                                                                                                                                                                 }
                                                                                                                                                                                                                 else {
-                                                                                                                                                                                                                    if ("vipStatusModel".Equals(r.Value)) {
+                                                                                                                                                                                                                    if ("dateOfBirthPrecision".Equals(r.Value)) {
                                                                                                                                                                                                                         r.Read();
-                                                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("vipStatusModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("dateOfBirthPrecision", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                         if ((_instance != null)) {
-                                                                                                                                                                                                                            _retVal.VipStatus = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                                                                                                                            _retVal.DateOfBirthPrecision = ((System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>)(_instance));
                                                                                                                                                                                                                         }
                                                                                                                                                                                                                     }
                                                                                                                                                                                                                     else {
-                                                                                                                                                                                                                        if ("nationalityModel".Equals(r.Value)) {
+                                                                                                                                                                                                                        if ("educationLevel".Equals(r.Value)) {
                                                                                                                                                                                                                             r.Read();
-                                                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("nationalityModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("educationLevel", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                             if ((_instance != null)) {
-                                                                                                                                                                                                                                _retVal.Nationality = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                                                                                                                                _retVal.EducationLevelKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                                                                             }
                                                                                                                                                                                                                         }
                                                                                                                                                                                                                         else {
-                                                                                                                                                                                                                            if ("maritalStatusModel".Equals(r.Value)) {
+                                                                                                                                                                                                                            if ("maritalStatus".Equals(r.Value)) {
                                                                                                                                                                                                                                 r.Read();
-                                                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("maritalStatusModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("maritalStatus", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                                 if ((_instance != null)) {
-                                                                                                                                                                                                                                    _retVal.MaritalStatus = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                                                                                                                                    _retVal.MaritalStatusKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                                                                                 }
                                                                                                                                                                                                                             }
                                                                                                                                                                                                                             else {
-                                                                                                                                                                                                                                if ("nationality".Equals(r.Value)) {
+                                                                                                                                                                                                                                if ("educationLevelModel".Equals(r.Value)) {
                                                                                                                                                                                                                                     r.Read();
-                                                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("nationality", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("educationLevelModel", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                                     if ((_instance != null)) {
-                                                                                                                                                                                                                                        _retVal.NationalityKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                                                        _retVal.EducationLevel = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                                                                                                     }
                                                                                                                                                                                                                                 }
                                                                                                                                                                                                                                 else {
-                                                                                                                                                                                                                                    if ("religion".Equals(r.Value)) {
+                                                                                                                                                                                                                                    if ("maritalStatusModel".Equals(r.Value)) {
                                                                                                                                                                                                                                         r.Read();
-                                                                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("religion", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("maritalStatusModel", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                                         if ((_instance != null)) {
-                                                                                                                                                                                                                                            _retVal.ReligiousAffiliationKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                                                            _retVal.MaritalStatus = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                                                                                                         }
                                                                                                                                                                                                                                     }
                                                                                                                                                                                                                                     else {
-                                                                                                                                                                                                                                        if ("livingArrangement".Equals(r.Value)) {
+                                                                                                                                                                                                                                        if ("ethnicityModel".Equals(r.Value)) {
                                                                                                                                                                                                                                             r.Read();
-                                                                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("livingArrangement", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("ethnicityModel", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                                             if ((_instance != null)) {
-                                                                                                                                                                                                                                                _retVal.LivingArrangementKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                                                                _retVal.EthnicGroup = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                                                                                                             }
                                                                                                                                                                                                                                         }
                                                                                                                                                                                                                                         else {
-                                                                                                                                                                                                                                            if ("educationLevel".Equals(r.Value)) {
+                                                                                                                                                                                                                                            if ("ethnicity".Equals(r.Value)) {
                                                                                                                                                                                                                                                 r.Read();
-                                                                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("educationLevel", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("ethnicity", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                                                 if ((_instance != null)) {
-                                                                                                                                                                                                                                                    _retVal.EducationLevelKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                                                                    _retVal.EthnicGroupKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                                                                                                 }
                                                                                                                                                                                                                                             }
                                                                                                                                                                                                                                             else {
-                                                                                                                                                                                                                                                if ("maritalStatus".Equals(r.Value)) {
+                                                                                                                                                                                                                                                if ("religionModel".Equals(r.Value)) {
                                                                                                                                                                                                                                                     r.Read();
-                                                                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("maritalStatus", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("religionModel", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                                                     if ((_instance != null)) {
-                                                                                                                                                                                                                                                        _retVal.MaritalStatusKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                                                                        _retVal.ReligiousAffiliation = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                                                                                                                     }
                                                                                                                                                                                                                                                 }
                                                                                                                                                                                                                                                 else {
-                                                                                                                                                                                                                                                    if ("vipStatus".Equals(r.Value)) {
+                                                                                                                                                                                                                                                    if ("livingArrangementModel".Equals(r.Value)) {
                                                                                                                                                                                                                                                         r.Read();
-                                                                                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("vipStatus", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("livingArrangementModel", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                                                         if ((_instance != null)) {
-                                                                                                                                                                                                                                                            _retVal.VipStatusKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                                                                            _retVal.LivingArrangement = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                                                                                                                         }
                                                                                                                                                                                                                                                     }
                                                                                                                                                                                                                                                     else {
-                                                                                                                                                                                                                                                        if ("multipleBirthOrder".Equals(r.Value)) {
+                                                                                                                                                                                                                                                        if ("religion".Equals(r.Value)) {
                                                                                                                                                                                                                                                             r.Read();
-                                                                                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<int>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("multipleBirthOrder", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("religion", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                                                             if ((_instance != null)) {
-                                                                                                                                                                                                                                                                _retVal.MultipleBirthOrder = ((System.Nullable<int>)(_instance));
+                                                                                                                                                                                                                                                                _retVal.ReligiousAffiliationKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                                                                                                             }
                                                                                                                                                                                                                                                         }
                                                                                                                                                                                                                                                         else {
-                                                                                                                                                                                                                                                            if ("deceasedDatePrecision".Equals(r.Value)) {
+                                                                                                                                                                                                                                                            if ("livingArrangement".Equals(r.Value)) {
                                                                                                                                                                                                                                                                 r.Read();
-                                                                                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("deceasedDatePrecision", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("livingArrangement", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                                                                 if ((_instance != null)) {
-                                                                                                                                                                                                                                                                    _retVal.DeceasedDatePrecision = ((System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>)(_instance));
+                                                                                                                                                                                                                                                                    _retVal.LivingArrangementKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                                                                                                                 }
                                                                                                                                                                                                                                                             }
                                                                                                                                                                                                                                                             else {
-                                                                                                                                                                                                                                                                if ("deceasedDate".Equals(r.Value)) {
+                                                                                                                                                                                                                                                                if ("multipleBirthOrder".Equals(r.Value)) {
                                                                                                                                                                                                                                                                     r.Read();
-                                                                                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("deceasedDate", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<int>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("multipleBirthOrder", context.JsonContext, _retVal, context));
                                                                                                                                                                                                                                                                     if ((_instance != null)) {
-                                                                                                                                                                                                                                                                        _retVal.DeceasedDateXml = ((string)(_instance));
+                                                                                                                                                                                                                                                                        _retVal.MultipleBirthOrder = ((System.Nullable<int>)(_instance));
                                                                                                                                                                                                                                                                     }
                                                                                                                                                                                                                                                                 }
                                                                                                                                                                                                                                                                 else {
@@ -5245,6 +5261,70 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
                 else {
                     context.JsonContext.WritePropertyUtil(w, "occupationModel", _strong.Occupation, context);
+                }
+            }
+            if (context.ShouldSerialize("deceasedDate")) {
+                if ((_strong.DeceasedDateXml == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "deceasedDate", _strong.DeceasedDateXml, context);
+                }
+            }
+            if (context.ShouldSerialize("deceasedDatePrecision")) {
+                if ((_strong.DeceasedDatePrecision == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "deceasedDatePrecision", _strong.DeceasedDatePrecision, context);
+                }
+            }
+            if (context.ShouldSerialize("vipStatus")) {
+                if ((_strong.VipStatusKey == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "vipStatus", _strong.VipStatusKey, context);
+                }
+            }
+            if (context.ShouldSerialize("vipStatusModel")) {
+                if ((_strong.VipStatus == null)) {
+                    if ((_strong.VipStatusKey.HasValue && context.ShouldForceLoad("vipStatusModel", _strong.Key))) {
+                        SanteDB.Core.Model.DataTypes.Concept _delay = null;
+                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "VipStatus");
+                        if ((_delay != null)) {
+                            _strong.VipStatus = _delay;
+                            context.JsonContext.WritePropertyUtil(w, "vipStatusModel", _strong.VipStatus, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("vipStatusModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "vipStatusModel", _strong.VipStatus, context);
+                }
+            }
+            if (context.ShouldSerialize("nationality")) {
+                if ((_strong.NationalityKey == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "nationality", _strong.NationalityKey, context);
+                }
+            }
+            if (context.ShouldSerialize("nationalityModel")) {
+                if ((_strong.Nationality == null)) {
+                    if ((_strong.NationalityKey.HasValue && context.ShouldForceLoad("nationalityModel", _strong.Key))) {
+                        SanteDB.Core.Model.DataTypes.Concept _delay = null;
+                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "Nationality");
+                        if ((_delay != null)) {
+                            _strong.Nationality = _delay;
+                            context.JsonContext.WritePropertyUtil(w, "nationalityModel", _strong.Nationality, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("nationalityModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "nationalityModel", _strong.Nationality, context);
                 }
             }
             if (context.ShouldSerialize("address")) {
@@ -6000,88 +6080,142 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                     }
                                                                                                                                                                 }
                                                                                                                                                                 else {
-                                                                                                                                                                    if ("occupationModel".Equals(r.Value)) {
+                                                                                                                                                                    if ("nationalityModel".Equals(r.Value)) {
                                                                                                                                                                         r.Read();
-                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("occupationModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("nationalityModel", context.JsonContext, _retVal, context));
                                                                                                                                                                         if ((_instance != null)) {
-                                                                                                                                                                            _retVal.Occupation = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                                                                            _retVal.Nationality = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                                         }
                                                                                                                                                                     }
                                                                                                                                                                     else {
-                                                                                                                                                                        if ("occupation".Equals(r.Value)) {
+                                                                                                                                                                        if ("nationality".Equals(r.Value)) {
                                                                                                                                                                             r.Read();
-                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("occupation", context.JsonContext, _retVal, context));
+                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("nationality", context.JsonContext, _retVal, context));
                                                                                                                                                                             if ((_instance != null)) {
-                                                                                                                                                                                _retVal.OccupationKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                _retVal.NationalityKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                             }
                                                                                                                                                                         }
                                                                                                                                                                         else {
-                                                                                                                                                                            if ("language".Equals(r.Value)) {
+                                                                                                                                                                            if ("vipStatusModel".Equals(r.Value)) {
                                                                                                                                                                                 r.Read();
-                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("language", context.JsonContext, _retVal, context));
+                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("vipStatusModel", context.JsonContext, _retVal, context));
                                                                                                                                                                                 if ((_instance != null)) {
-                                                                                                                                                                                    _retVal.LanguageCommunication = ((System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication>)(_instance));
+                                                                                                                                                                                    _retVal.VipStatus = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                                                 }
                                                                                                                                                                             }
                                                                                                                                                                             else {
-                                                                                                                                                                                if ("dateOfBirth".Equals(r.Value)) {
+                                                                                                                                                                                if ("vipStatus".Equals(r.Value)) {
                                                                                                                                                                                     r.Read();
-                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("dateOfBirth", context.JsonContext, _retVal, context));
+                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("vipStatus", context.JsonContext, _retVal, context));
                                                                                                                                                                                     if ((_instance != null)) {
-                                                                                                                                                                                        _retVal.DateOfBirthXml = ((string)(_instance));
+                                                                                                                                                                                        _retVal.VipStatusKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                                     }
                                                                                                                                                                                 }
                                                                                                                                                                                 else {
-                                                                                                                                                                                    if ("genderConceptModel".Equals(r.Value)) {
+                                                                                                                                                                                    if ("deceasedDatePrecision".Equals(r.Value)) {
                                                                                                                                                                                         r.Read();
-                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("genderConceptModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("deceasedDatePrecision", context.JsonContext, _retVal, context));
                                                                                                                                                                                         if ((_instance != null)) {
-                                                                                                                                                                                            _retVal.GenderConcept = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                                                                                            _retVal.DeceasedDatePrecision = ((System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>)(_instance));
                                                                                                                                                                                         }
                                                                                                                                                                                     }
                                                                                                                                                                                     else {
-                                                                                                                                                                                        if ("genderConcept".Equals(r.Value)) {
+                                                                                                                                                                                        if ("deceasedDate".Equals(r.Value)) {
                                                                                                                                                                                             r.Read();
-                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("genderConcept", context.JsonContext, _retVal, context));
+                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("deceasedDate", context.JsonContext, _retVal, context));
                                                                                                                                                                                             if ((_instance != null)) {
-                                                                                                                                                                                                _retVal.GenderConceptKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                _retVal.DeceasedDateXml = ((string)(_instance));
                                                                                                                                                                                             }
                                                                                                                                                                                         }
                                                                                                                                                                                         else {
-                                                                                                                                                                                            if ("dateOfBirthPrecision".Equals(r.Value)) {
+                                                                                                                                                                                            if ("occupationModel".Equals(r.Value)) {
                                                                                                                                                                                                 r.Read();
-                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("dateOfBirthPrecision", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("occupationModel", context.JsonContext, _retVal, context));
                                                                                                                                                                                                 if ((_instance != null)) {
-                                                                                                                                                                                                    _retVal.DateOfBirthPrecision = ((System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>)(_instance));
+                                                                                                                                                                                                    _retVal.Occupation = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                                                                 }
                                                                                                                                                                                             }
                                                                                                                                                                                             else {
-                                                                                                                                                                                                if ("providerSpecialtyModel".Equals(r.Value)) {
+                                                                                                                                                                                                if ("occupation".Equals(r.Value)) {
                                                                                                                                                                                                     r.Read();
-                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("providerSpecialtyModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("occupation", context.JsonContext, _retVal, context));
                                                                                                                                                                                                     if ((_instance != null)) {
-                                                                                                                                                                                                        _retVal.Specialty = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                                                                                                        _retVal.OccupationKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                                                     }
                                                                                                                                                                                                 }
                                                                                                                                                                                                 else {
-                                                                                                                                                                                                    if ("providerSpecialty".Equals(r.Value)) {
+                                                                                                                                                                                                    if ("language".Equals(r.Value)) {
                                                                                                                                                                                                         r.Read();
-                                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("providerSpecialty", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("language", context.JsonContext, _retVal, context));
                                                                                                                                                                                                         if ((_instance != null)) {
-                                                                                                                                                                                                            _retVal.SpecialtyKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                            _retVal.LanguageCommunication = ((System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication>)(_instance));
                                                                                                                                                                                                         }
                                                                                                                                                                                                     }
                                                                                                                                                                                                     else {
-                                                                                                                                                                                                        if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
-                                                                                                                                                                                                            if ((_type != typeof(SanteDB.Core.Model.Roles.Provider))) {
-                                                                                                                                                                                                                SanteDB.Core.Model.Roles.Provider _nretVal = ((SanteDB.Core.Model.Roles.Provider)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
-                                                                                                                                                                                                                _nretVal.CopyObjectData(_retVal);
-                                                                                                                                                                                                                return _nretVal;
+                                                                                                                                                                                                        if ("dateOfBirth".Equals(r.Value)) {
+                                                                                                                                                                                                            r.Read();
+                                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("dateOfBirth", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                            if ((_instance != null)) {
+                                                                                                                                                                                                                _retVal.DateOfBirthXml = ((string)(_instance));
                                                                                                                                                                                                             }
                                                                                                                                                                                                         }
                                                                                                                                                                                                         else {
-                                                                                                                                                                                                            r.Skip();
+                                                                                                                                                                                                            if ("genderConceptModel".Equals(r.Value)) {
+                                                                                                                                                                                                                r.Read();
+                                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("genderConceptModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                if ((_instance != null)) {
+                                                                                                                                                                                                                    _retVal.GenderConcept = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                                                                                                                }
+                                                                                                                                                                                                            }
+                                                                                                                                                                                                            else {
+                                                                                                                                                                                                                if ("genderConcept".Equals(r.Value)) {
+                                                                                                                                                                                                                    r.Read();
+                                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("genderConcept", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                    if ((_instance != null)) {
+                                                                                                                                                                                                                        _retVal.GenderConceptKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                }
+                                                                                                                                                                                                                else {
+                                                                                                                                                                                                                    if ("dateOfBirthPrecision".Equals(r.Value)) {
+                                                                                                                                                                                                                        r.Read();
+                                                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("dateOfBirthPrecision", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                        if ((_instance != null)) {
+                                                                                                                                                                                                                            _retVal.DateOfBirthPrecision = ((System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>)(_instance));
+                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                    else {
+                                                                                                                                                                                                                        if ("providerSpecialtyModel".Equals(r.Value)) {
+                                                                                                                                                                                                                            r.Read();
+                                                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("providerSpecialtyModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                            if ((_instance != null)) {
+                                                                                                                                                                                                                                _retVal.Specialty = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                        else {
+                                                                                                                                                                                                                            if ("providerSpecialty".Equals(r.Value)) {
+                                                                                                                                                                                                                                r.Read();
+                                                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("providerSpecialty", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                                if ((_instance != null)) {
+                                                                                                                                                                                                                                    _retVal.SpecialtyKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                            else {
+                                                                                                                                                                                                                                if ("$type".Equals(r.Value)) {
+                                                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                                                    if ((_type != typeof(SanteDB.Core.Model.Roles.Provider))) {
+                                                                                                                                                                                                                                        SanteDB.Core.Model.Roles.Provider _nretVal = ((SanteDB.Core.Model.Roles.Provider)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
+                                                                                                                                                                                                                                        _nretVal.CopyObjectData(_retVal);
+                                                                                                                                                                                                                                        return _nretVal;
+                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                                else {
+                                                                                                                                                                                                                                    r.Skip();
+                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                }
+                                                                                                                                                                                                            }
                                                                                                                                                                                                         }
                                                                                                                                                                                                     }
                                                                                                                                                                                                 }
@@ -15869,6 +16003,70 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "occupationModel", _strong.Occupation, context);
                 }
             }
+            if (context.ShouldSerialize("deceasedDate")) {
+                if ((_strong.DeceasedDateXml == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "deceasedDate", _strong.DeceasedDateXml, context);
+                }
+            }
+            if (context.ShouldSerialize("deceasedDatePrecision")) {
+                if ((_strong.DeceasedDatePrecision == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "deceasedDatePrecision", _strong.DeceasedDatePrecision, context);
+                }
+            }
+            if (context.ShouldSerialize("vipStatus")) {
+                if ((_strong.VipStatusKey == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "vipStatus", _strong.VipStatusKey, context);
+                }
+            }
+            if (context.ShouldSerialize("vipStatusModel")) {
+                if ((_strong.VipStatus == null)) {
+                    if ((_strong.VipStatusKey.HasValue && context.ShouldForceLoad("vipStatusModel", _strong.Key))) {
+                        SanteDB.Core.Model.DataTypes.Concept _delay = null;
+                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "VipStatus");
+                        if ((_delay != null)) {
+                            _strong.VipStatus = _delay;
+                            context.JsonContext.WritePropertyUtil(w, "vipStatusModel", _strong.VipStatus, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("vipStatusModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "vipStatusModel", _strong.VipStatus, context);
+                }
+            }
+            if (context.ShouldSerialize("nationality")) {
+                if ((_strong.NationalityKey == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "nationality", _strong.NationalityKey, context);
+                }
+            }
+            if (context.ShouldSerialize("nationalityModel")) {
+                if ((_strong.Nationality == null)) {
+                    if ((_strong.NationalityKey.HasValue && context.ShouldForceLoad("nationalityModel", _strong.Key))) {
+                        SanteDB.Core.Model.DataTypes.Concept _delay = null;
+                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "Nationality");
+                        if ((_delay != null)) {
+                            _strong.Nationality = _delay;
+                            context.JsonContext.WritePropertyUtil(w, "nationalityModel", _strong.Nationality, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("nationalityModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "nationalityModel", _strong.Nationality, context);
+                }
+            }
             if (context.ShouldSerialize("address")) {
                 if (((_strong.Addresses == null) 
                             || (_strong.Addresses.Count == 0))) {
@@ -16622,72 +16820,126 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                     }
                                                                                                                                                                 }
                                                                                                                                                                 else {
-                                                                                                                                                                    if ("occupationModel".Equals(r.Value)) {
+                                                                                                                                                                    if ("nationalityModel".Equals(r.Value)) {
                                                                                                                                                                         r.Read();
-                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("occupationModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("nationalityModel", context.JsonContext, _retVal, context));
                                                                                                                                                                         if ((_instance != null)) {
-                                                                                                                                                                            _retVal.Occupation = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                                                                            _retVal.Nationality = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                                         }
                                                                                                                                                                     }
                                                                                                                                                                     else {
-                                                                                                                                                                        if ("language".Equals(r.Value)) {
+                                                                                                                                                                        if ("vipStatusModel".Equals(r.Value)) {
                                                                                                                                                                             r.Read();
-                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("language", context.JsonContext, _retVal, context));
+                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("vipStatusModel", context.JsonContext, _retVal, context));
                                                                                                                                                                             if ((_instance != null)) {
-                                                                                                                                                                                _retVal.LanguageCommunication = ((System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication>)(_instance));
+                                                                                                                                                                                _retVal.VipStatus = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                                             }
                                                                                                                                                                         }
                                                                                                                                                                         else {
-                                                                                                                                                                            if ("dateOfBirth".Equals(r.Value)) {
+                                                                                                                                                                            if ("deceasedDatePrecision".Equals(r.Value)) {
                                                                                                                                                                                 r.Read();
-                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("dateOfBirth", context.JsonContext, _retVal, context));
+                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("deceasedDatePrecision", context.JsonContext, _retVal, context));
                                                                                                                                                                                 if ((_instance != null)) {
-                                                                                                                                                                                    _retVal.DateOfBirthXml = ((string)(_instance));
+                                                                                                                                                                                    _retVal.DeceasedDatePrecision = ((System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>)(_instance));
                                                                                                                                                                                 }
                                                                                                                                                                             }
                                                                                                                                                                             else {
-                                                                                                                                                                                if ("genderConceptModel".Equals(r.Value)) {
+                                                                                                                                                                                if ("deceasedDate".Equals(r.Value)) {
                                                                                                                                                                                     r.Read();
-                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("genderConceptModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("deceasedDate", context.JsonContext, _retVal, context));
                                                                                                                                                                                     if ((_instance != null)) {
-                                                                                                                                                                                        _retVal.GenderConcept = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                                                                                        _retVal.DeceasedDateXml = ((string)(_instance));
                                                                                                                                                                                     }
                                                                                                                                                                                 }
                                                                                                                                                                                 else {
-                                                                                                                                                                                    if ("dateOfBirthPrecision".Equals(r.Value)) {
+                                                                                                                                                                                    if ("occupationModel".Equals(r.Value)) {
                                                                                                                                                                                         r.Read();
-                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("dateOfBirthPrecision", context.JsonContext, _retVal, context));
+                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("occupationModel", context.JsonContext, _retVal, context));
                                                                                                                                                                                         if ((_instance != null)) {
-                                                                                                                                                                                            _retVal.DateOfBirthPrecision = ((System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>)(_instance));
+                                                                                                                                                                                            _retVal.Occupation = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                                                         }
                                                                                                                                                                                     }
                                                                                                                                                                                     else {
-                                                                                                                                                                                        if ("occupation".Equals(r.Value)) {
+                                                                                                                                                                                        if ("language".Equals(r.Value)) {
                                                                                                                                                                                             r.Read();
-                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("occupation", context.JsonContext, _retVal, context));
+                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("language", context.JsonContext, _retVal, context));
                                                                                                                                                                                             if ((_instance != null)) {
-                                                                                                                                                                                                _retVal.OccupationKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                _retVal.LanguageCommunication = ((System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication>)(_instance));
                                                                                                                                                                                             }
                                                                                                                                                                                         }
                                                                                                                                                                                         else {
-                                                                                                                                                                                            if ("genderConcept".Equals(r.Value)) {
+                                                                                                                                                                                            if ("dateOfBirth".Equals(r.Value)) {
                                                                                                                                                                                                 r.Read();
-                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("genderConcept", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("dateOfBirth", context.JsonContext, _retVal, context));
                                                                                                                                                                                                 if ((_instance != null)) {
-                                                                                                                                                                                                    _retVal.GenderConceptKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                    _retVal.DateOfBirthXml = ((string)(_instance));
                                                                                                                                                                                                 }
                                                                                                                                                                                             }
                                                                                                                                                                                             else {
-                                                                                                                                                                                                if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
-                                                                                                                                                                                                    if ((_type != typeof(SanteDB.Core.Model.Entities.Person))) {
-                                                                                                                                                                                                        SanteDB.Core.Model.Entities.Person _nretVal = ((SanteDB.Core.Model.Entities.Person)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
-                                                                                                                                                                                                        _nretVal.CopyObjectData(_retVal);
-                                                                                                                                                                                                        return _nretVal;
+                                                                                                                                                                                                if ("genderConceptModel".Equals(r.Value)) {
+                                                                                                                                                                                                    r.Read();
+                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("genderConceptModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                    if ((_instance != null)) {
+                                                                                                                                                                                                        _retVal.GenderConcept = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                                                                     }
                                                                                                                                                                                                 }
                                                                                                                                                                                                 else {
-                                                                                                                                                                                                    r.Skip();
+                                                                                                                                                                                                    if ("dateOfBirthPrecision".Equals(r.Value)) {
+                                                                                                                                                                                                        r.Read();
+                                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("dateOfBirthPrecision", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                        if ((_instance != null)) {
+                                                                                                                                                                                                            _retVal.DateOfBirthPrecision = ((System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>)(_instance));
+                                                                                                                                                                                                        }
+                                                                                                                                                                                                    }
+                                                                                                                                                                                                    else {
+                                                                                                                                                                                                        if ("nationality".Equals(r.Value)) {
+                                                                                                                                                                                                            r.Read();
+                                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("nationality", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                            if ((_instance != null)) {
+                                                                                                                                                                                                                _retVal.NationalityKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                            }
+                                                                                                                                                                                                        }
+                                                                                                                                                                                                        else {
+                                                                                                                                                                                                            if ("vipStatus".Equals(r.Value)) {
+                                                                                                                                                                                                                r.Read();
+                                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("vipStatus", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                if ((_instance != null)) {
+                                                                                                                                                                                                                    _retVal.VipStatusKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                                }
+                                                                                                                                                                                                            }
+                                                                                                                                                                                                            else {
+                                                                                                                                                                                                                if ("occupation".Equals(r.Value)) {
+                                                                                                                                                                                                                    r.Read();
+                                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("occupation", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                    if ((_instance != null)) {
+                                                                                                                                                                                                                        _retVal.OccupationKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                }
+                                                                                                                                                                                                                else {
+                                                                                                                                                                                                                    if ("genderConcept".Equals(r.Value)) {
+                                                                                                                                                                                                                        r.Read();
+                                                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("genderConcept", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                        if ((_instance != null)) {
+                                                                                                                                                                                                                            _retVal.GenderConceptKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                    else {
+                                                                                                                                                                                                                        if ("$type".Equals(r.Value)) {
+                                                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                                            if ((_type != typeof(SanteDB.Core.Model.Entities.Person))) {
+                                                                                                                                                                                                                                SanteDB.Core.Model.Entities.Person _nretVal = ((SanteDB.Core.Model.Entities.Person)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
+                                                                                                                                                                                                                                _nretVal.CopyObjectData(_retVal);
+                                                                                                                                                                                                                                return _nretVal;
+                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                        else {
+                                                                                                                                                                                                                            r.Skip();
+                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                }
+                                                                                                                                                                                                            }
+                                                                                                                                                                                                        }
+                                                                                                                                                                                                    }
                                                                                                                                                                                                 }
                                                                                                                                                                                             }
                                                                                                                                                                                         }
@@ -18247,6 +18499,70 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "occupationModel", _strong.Occupation, context);
                 }
             }
+            if (context.ShouldSerialize("deceasedDate")) {
+                if ((_strong.DeceasedDateXml == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "deceasedDate", _strong.DeceasedDateXml, context);
+                }
+            }
+            if (context.ShouldSerialize("deceasedDatePrecision")) {
+                if ((_strong.DeceasedDatePrecision == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "deceasedDatePrecision", _strong.DeceasedDatePrecision, context);
+                }
+            }
+            if (context.ShouldSerialize("vipStatus")) {
+                if ((_strong.VipStatusKey == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "vipStatus", _strong.VipStatusKey, context);
+                }
+            }
+            if (context.ShouldSerialize("vipStatusModel")) {
+                if ((_strong.VipStatus == null)) {
+                    if ((_strong.VipStatusKey.HasValue && context.ShouldForceLoad("vipStatusModel", _strong.Key))) {
+                        SanteDB.Core.Model.DataTypes.Concept _delay = null;
+                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "VipStatus");
+                        if ((_delay != null)) {
+                            _strong.VipStatus = _delay;
+                            context.JsonContext.WritePropertyUtil(w, "vipStatusModel", _strong.VipStatus, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("vipStatusModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "vipStatusModel", _strong.VipStatus, context);
+                }
+            }
+            if (context.ShouldSerialize("nationality")) {
+                if ((_strong.NationalityKey == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "nationality", _strong.NationalityKey, context);
+                }
+            }
+            if (context.ShouldSerialize("nationalityModel")) {
+                if ((_strong.Nationality == null)) {
+                    if ((_strong.NationalityKey.HasValue && context.ShouldForceLoad("nationalityModel", _strong.Key))) {
+                        SanteDB.Core.Model.DataTypes.Concept _delay = null;
+                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "Nationality");
+                        if ((_delay != null)) {
+                            _strong.Nationality = _delay;
+                            context.JsonContext.WritePropertyUtil(w, "nationalityModel", _strong.Nationality, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("nationalityModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "nationalityModel", _strong.Nationality, context);
+                }
+            }
             if (context.ShouldSerialize("address")) {
                 if (((_strong.Addresses == null) 
                             || (_strong.Addresses.Count == 0))) {
@@ -19000,88 +19316,142 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                     }
                                                                                                                                                                 }
                                                                                                                                                                 else {
-                                                                                                                                                                    if ("occupationModel".Equals(r.Value)) {
+                                                                                                                                                                    if ("nationalityModel".Equals(r.Value)) {
                                                                                                                                                                         r.Read();
-                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("occupationModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("nationalityModel", context.JsonContext, _retVal, context));
                                                                                                                                                                         if ((_instance != null)) {
-                                                                                                                                                                            _retVal.Occupation = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                                                                            _retVal.Nationality = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                                         }
                                                                                                                                                                     }
                                                                                                                                                                     else {
-                                                                                                                                                                        if ("occupation".Equals(r.Value)) {
+                                                                                                                                                                        if ("nationality".Equals(r.Value)) {
                                                                                                                                                                             r.Read();
-                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("occupation", context.JsonContext, _retVal, context));
+                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("nationality", context.JsonContext, _retVal, context));
                                                                                                                                                                             if ((_instance != null)) {
-                                                                                                                                                                                _retVal.OccupationKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                _retVal.NationalityKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                             }
                                                                                                                                                                         }
                                                                                                                                                                         else {
-                                                                                                                                                                            if ("language".Equals(r.Value)) {
+                                                                                                                                                                            if ("vipStatusModel".Equals(r.Value)) {
                                                                                                                                                                                 r.Read();
-                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("language", context.JsonContext, _retVal, context));
+                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("vipStatusModel", context.JsonContext, _retVal, context));
                                                                                                                                                                                 if ((_instance != null)) {
-                                                                                                                                                                                    _retVal.LanguageCommunication = ((System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication>)(_instance));
+                                                                                                                                                                                    _retVal.VipStatus = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                                                 }
                                                                                                                                                                             }
                                                                                                                                                                             else {
-                                                                                                                                                                                if ("dateOfBirth".Equals(r.Value)) {
+                                                                                                                                                                                if ("vipStatus".Equals(r.Value)) {
                                                                                                                                                                                     r.Read();
-                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("dateOfBirth", context.JsonContext, _retVal, context));
+                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("vipStatus", context.JsonContext, _retVal, context));
                                                                                                                                                                                     if ((_instance != null)) {
-                                                                                                                                                                                        _retVal.DateOfBirthXml = ((string)(_instance));
+                                                                                                                                                                                        _retVal.VipStatusKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                                     }
                                                                                                                                                                                 }
                                                                                                                                                                                 else {
-                                                                                                                                                                                    if ("genderConceptModel".Equals(r.Value)) {
+                                                                                                                                                                                    if ("deceasedDatePrecision".Equals(r.Value)) {
                                                                                                                                                                                         r.Read();
-                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("genderConceptModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("deceasedDatePrecision", context.JsonContext, _retVal, context));
                                                                                                                                                                                         if ((_instance != null)) {
-                                                                                                                                                                                            _retVal.GenderConcept = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                                                                                            _retVal.DeceasedDatePrecision = ((System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>)(_instance));
                                                                                                                                                                                         }
                                                                                                                                                                                     }
                                                                                                                                                                                     else {
-                                                                                                                                                                                        if ("genderConcept".Equals(r.Value)) {
+                                                                                                                                                                                        if ("deceasedDate".Equals(r.Value)) {
                                                                                                                                                                                             r.Read();
-                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("genderConcept", context.JsonContext, _retVal, context));
+                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("deceasedDate", context.JsonContext, _retVal, context));
                                                                                                                                                                                             if ((_instance != null)) {
-                                                                                                                                                                                                _retVal.GenderConceptKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                _retVal.DeceasedDateXml = ((string)(_instance));
                                                                                                                                                                                             }
                                                                                                                                                                                         }
                                                                                                                                                                                         else {
-                                                                                                                                                                                            if ("dateOfBirthPrecision".Equals(r.Value)) {
+                                                                                                                                                                                            if ("occupationModel".Equals(r.Value)) {
                                                                                                                                                                                                 r.Read();
-                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("dateOfBirthPrecision", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("occupationModel", context.JsonContext, _retVal, context));
                                                                                                                                                                                                 if ((_instance != null)) {
-                                                                                                                                                                                                    _retVal.DateOfBirthPrecision = ((System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>)(_instance));
+                                                                                                                                                                                                    _retVal.Occupation = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                                                                                                                                                 }
                                                                                                                                                                                             }
                                                                                                                                                                                             else {
-                                                                                                                                                                                                if ("securityUser".Equals(r.Value)) {
+                                                                                                                                                                                                if ("occupation".Equals(r.Value)) {
                                                                                                                                                                                                     r.Read();
-                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("securityUser", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("occupation", context.JsonContext, _retVal, context));
                                                                                                                                                                                                     if ((_instance != null)) {
-                                                                                                                                                                                                        _retVal.SecurityUserKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                        _retVal.OccupationKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                                                                                                                     }
                                                                                                                                                                                                 }
                                                                                                                                                                                                 else {
-                                                                                                                                                                                                    if ("securityUserModel".Equals(r.Value)) {
+                                                                                                                                                                                                    if ("language".Equals(r.Value)) {
                                                                                                                                                                                                         r.Read();
-                                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.Security.SecurityUser), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("securityUserModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("language", context.JsonContext, _retVal, context));
                                                                                                                                                                                                         if ((_instance != null)) {
-                                                                                                                                                                                                            _retVal.SecurityUser = ((SanteDB.Core.Model.Security.SecurityUser)(_instance));
+                                                                                                                                                                                                            _retVal.LanguageCommunication = ((System.Collections.Generic.List<SanteDB.Core.Model.Entities.PersonLanguageCommunication>)(_instance));
                                                                                                                                                                                                         }
                                                                                                                                                                                                     }
                                                                                                                                                                                                     else {
-                                                                                                                                                                                                        if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
-                                                                                                                                                                                                            if ((_type != typeof(SanteDB.Core.Model.Entities.UserEntity))) {
-                                                                                                                                                                                                                SanteDB.Core.Model.Entities.UserEntity _nretVal = ((SanteDB.Core.Model.Entities.UserEntity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
-                                                                                                                                                                                                                _nretVal.CopyObjectData(_retVal);
-                                                                                                                                                                                                                return _nretVal;
+                                                                                                                                                                                                        if ("dateOfBirth".Equals(r.Value)) {
+                                                                                                                                                                                                            r.Read();
+                                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("dateOfBirth", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                            if ((_instance != null)) {
+                                                                                                                                                                                                                _retVal.DateOfBirthXml = ((string)(_instance));
                                                                                                                                                                                                             }
                                                                                                                                                                                                         }
                                                                                                                                                                                                         else {
-                                                                                                                                                                                                            r.Skip();
+                                                                                                                                                                                                            if ("genderConceptModel".Equals(r.Value)) {
+                                                                                                                                                                                                                r.Read();
+                                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("genderConceptModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                if ((_instance != null)) {
+                                                                                                                                                                                                                    _retVal.GenderConcept = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                                                                                                                                                                                                                }
+                                                                                                                                                                                                            }
+                                                                                                                                                                                                            else {
+                                                                                                                                                                                                                if ("genderConcept".Equals(r.Value)) {
+                                                                                                                                                                                                                    r.Read();
+                                                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("genderConcept", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                    if ((_instance != null)) {
+                                                                                                                                                                                                                        _retVal.GenderConceptKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                }
+                                                                                                                                                                                                                else {
+                                                                                                                                                                                                                    if ("dateOfBirthPrecision".Equals(r.Value)) {
+                                                                                                                                                                                                                        r.Read();
+                                                                                                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("dateOfBirthPrecision", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                        if ((_instance != null)) {
+                                                                                                                                                                                                                            _retVal.DateOfBirthPrecision = ((System.Nullable<SanteDB.Core.Model.DataTypes.DatePrecision>)(_instance));
+                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                    else {
+                                                                                                                                                                                                                        if ("securityUser".Equals(r.Value)) {
+                                                                                                                                                                                                                            r.Read();
+                                                                                                                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("securityUser", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                            if ((_instance != null)) {
+                                                                                                                                                                                                                                _retVal.SecurityUserKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                        else {
+                                                                                                                                                                                                                            if ("securityUserModel".Equals(r.Value)) {
+                                                                                                                                                                                                                                r.Read();
+                                                                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.Security.SecurityUser), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("securityUserModel", context.JsonContext, _retVal, context));
+                                                                                                                                                                                                                                if ((_instance != null)) {
+                                                                                                                                                                                                                                    _retVal.SecurityUser = ((SanteDB.Core.Model.Security.SecurityUser)(_instance));
+                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                            else {
+                                                                                                                                                                                                                                if ("$type".Equals(r.Value)) {
+                                                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                                                    if ((_type != typeof(SanteDB.Core.Model.Entities.UserEntity))) {
+                                                                                                                                                                                                                                        SanteDB.Core.Model.Entities.UserEntity _nretVal = ((SanteDB.Core.Model.Entities.UserEntity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
+                                                                                                                                                                                                                                        _nretVal.CopyObjectData(_retVal);
+                                                                                                                                                                                                                                        return _nretVal;
+                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                                else {
+                                                                                                                                                                                                                                    r.Skip();
+                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                }
+                                                                                                                                                                                                            }
                                                                                                                                                                                                         }
                                                                                                                                                                                                     }
                                                                                                                                                                                                 }
@@ -40790,7 +41160,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("typeModel")) {
                 if ((_strong.ArrangementType == null)) {
-                    if ((_strong.ArrangementTypeKey != System.Guid.Empty && context.ShouldForceLoad("typeModel", _strong.Key))) {
+                    if ((_strong.ArrangementTypeKey.HasValue && context.ShouldForceLoad("typeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "ArrangementType");
                         if ((_delay != null)) {
