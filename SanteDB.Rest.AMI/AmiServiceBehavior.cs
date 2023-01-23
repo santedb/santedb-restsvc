@@ -1135,7 +1135,7 @@ namespace SanteDB.Rest.AMI
                     // Now apply controls
                     var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<Object>();
 
-                    if (this.m_configuration.IncludeMetadataHeadersOnSearch)
+                    if (this.m_configuration?.IncludeMetadataHeadersOnSearch == true)
                     {
                         RestOperationContext.Current.OutgoingResponse.SetLastModified((retVal.OfType<IdentifiedData>().OrderByDescending(o => o.ModifiedOn).FirstOrDefault()?.ModifiedOn.DateTime ?? DateTime.Now));
                     }
