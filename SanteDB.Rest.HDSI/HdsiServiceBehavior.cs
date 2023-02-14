@@ -214,6 +214,7 @@ namespace SanteDB.Rest.HDSI
                .WithEventType("CREATE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Create")
                 .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
                 .WithLocalDestination()
+                .WithPrincipal()
                 .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
             try
@@ -277,6 +278,7 @@ namespace SanteDB.Rest.HDSI
                 .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
                .WithEventType("CREATE_UPDATE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Create or Update")
                 .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithPrincipal()
                 .WithLocalDestination()
                 .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
@@ -360,6 +362,7 @@ namespace SanteDB.Rest.HDSI
                .WithAction(Core.Model.Audit.ActionType.Read)
                .WithEventType("READ", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Read (Current Version)")
                .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithPrincipal()
                .WithLocalDestination()
                .WithQueryPerformed($"{resourceType}/{id}")
                .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
@@ -543,6 +546,7 @@ namespace SanteDB.Rest.HDSI
                .WithQueryPerformed($"{resourceType}/{id}/_history/{versionId}")
                 .WithEventType("VREAD", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Version Read")
                .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithPrincipal()
                .WithLocalDestination()
                .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
@@ -640,6 +644,7 @@ namespace SanteDB.Rest.HDSI
                .WithQueryPerformed($"{resourceType}/{id}/_history")
                .WithEventType("HISTORY", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "History Read")
                .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithPrincipal()
                .WithLocalDestination()
                .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
@@ -725,6 +730,7 @@ namespace SanteDB.Rest.HDSI
                .WithQueryPerformed($"{resourceType}?{RestOperationContext.Current.IncomingRequest.QueryString.ToHttpString()}")
                .WithEventType("SEARCH", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Search")
                .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithPrincipal()
                .WithLocalDestination()
                .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
@@ -838,6 +844,7 @@ namespace SanteDB.Rest.HDSI
               .WithAction(Core.Model.Audit.ActionType.Update)
               .WithEventType("UPDATE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Update")
               .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithPrincipal()
               .WithLocalDestination()
               .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
@@ -922,6 +929,7 @@ namespace SanteDB.Rest.HDSI
               .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
               .WithAction(Core.Model.Audit.ActionType.Delete)
               .WithEventType("DELETE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Delete")
+                .WithPrincipal()
               .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
               .WithLocalDestination()
               .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
@@ -1023,6 +1031,7 @@ namespace SanteDB.Rest.HDSI
              .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
              .WithAction(Core.Model.Audit.ActionType.Update)
              .WithEventType("PATCH", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Patch")
+                .WithPrincipal()
              .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
              .WithLocalDestination()
              .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
@@ -1244,6 +1253,7 @@ namespace SanteDB.Rest.HDSI
              .WithAction(Core.Model.Audit.ActionType.Execute)
              .WithEventType("ASSOC_SEARCH", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Association Search")
              .WithQueryPerformed($"{resourceType}/{key}/{childResourceType}?{RestOperationContext.Current.IncomingRequest.QueryString.ToHttpString()}")
+                .WithPrincipal()
              .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
              .WithLocalDestination()
              .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
@@ -1339,6 +1349,7 @@ namespace SanteDB.Rest.HDSI
                  .WithAction(Core.Model.Audit.ActionType.Create)
                  .WithEventType("ASSOC_CREATE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Association Create")
                  .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithPrincipal()
                  .WithLocalDestination()
                  .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
@@ -1409,6 +1420,7 @@ namespace SanteDB.Rest.HDSI
              .WithAction(Core.Model.Audit.ActionType.Delete)
              .WithEventType("ASSOC_DELETE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Association Delete")
              .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithPrincipal()
              .WithLocalDestination()
              .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
@@ -1475,6 +1487,7 @@ namespace SanteDB.Rest.HDSI
              .WithEventType("ASSOC_READ", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Association Read")
              .WithQueryPerformed($"{resourceType}/{key}/{childResourceType}/{scopedEntityKey}?{RestOperationContext.Current.IncomingRequest.QueryString.ToHttpString()}")
              .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithPrincipal()
              .WithLocalDestination()
              .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
@@ -1555,6 +1568,7 @@ namespace SanteDB.Rest.HDSI
              .WithEventType("BARCODE_GEN", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Generate Barcode")
              .WithQueryPerformed($"{resourceType}/{id}?{RestOperationContext.Current.IncomingRequest.QueryString.ToHttpString()}")
              .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithPrincipal()
              .WithLocalDestination()
              .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
@@ -1638,6 +1652,7 @@ namespace SanteDB.Rest.HDSI
              .WithAction(Core.Model.Audit.ActionType.Update)
              .WithEventType("TOUCH", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Touch Resource")
              .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithPrincipal()
              .WithLocalDestination()
              .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
@@ -1745,6 +1760,7 @@ namespace SanteDB.Rest.HDSI
                 .WithAction(Core.Model.Audit.ActionType.Execute)
                 .WithEventType("VRP_GEN", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Generate VRP Data")
                 .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithPrincipal()
                 .WithLocalDestination()
                 .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
@@ -1822,6 +1838,7 @@ namespace SanteDB.Rest.HDSI
                 .WithQueryPerformed($"{resourceType}/{id}/${operationName}")
                 .WithEventType("INSTANCE_INVOKE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Invoke REST procedure on instance of resource")
                 .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithPrincipal()
                 .WithLocalDestination()
                 .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
@@ -1889,6 +1906,7 @@ namespace SanteDB.Rest.HDSI
                 .WithAction(Core.Model.Audit.ActionType.Execute)
                 .WithEventType("CHECKIN", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Release Object Edit Lock")
                 .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithPrincipal()
                 .WithLocalDestination()
                 .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
@@ -1941,6 +1959,7 @@ namespace SanteDB.Rest.HDSI
                .WithAction(Core.Model.Audit.ActionType.Execute)
                .WithEventType("CHECKOUT", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Obtain Object Edit Lock")
                .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                .WithPrincipal()
                .WithLocalDestination()
                .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
@@ -1996,6 +2015,7 @@ namespace SanteDB.Rest.HDSI
                 .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.ApplicationActivity)
                 .WithAction(Core.Model.Audit.ActionType.Execute)
                 .WithQueryPerformed($"{resourceType}/${operationName}")
+                .WithPrincipal()
                 .WithEventType("CLASS_INVOKE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Invoke REST operation on class of resource")
                 .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
                 .WithLocalDestination()
@@ -2065,6 +2085,7 @@ namespace SanteDB.Rest.HDSI
                 .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Query)
                 .WithAction(Core.Model.Audit.ActionType.Read)
                 .WithQueryPerformed($"{resourceType}/{childResourceType}/{childResourceKey}")
+                .WithPrincipal()
                 .WithEventType("ASSOC_READ", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Association Read")
                 .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
                 .WithLocalDestination()
@@ -2137,6 +2158,7 @@ namespace SanteDB.Rest.HDSI
                 .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
                 .WithAction(Core.Model.Audit.ActionType.Delete)
                 .WithEventType("ASSOC_DELETE", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Association Delete")
+                .WithPrincipal()
                 .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
                 .WithLocalDestination()
                 .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
@@ -2209,6 +2231,7 @@ namespace SanteDB.Rest.HDSI
                .WithAction(Core.Model.Audit.ActionType.Delete)
                .WithEventType("ASSOC_SEARCH", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Association Search")
                .WithQueryPerformed($"{resourceType}/{childResourceType}?{RestOperationContext.Current.IncomingRequest.QueryString.ToHttpString()}")
+                .WithPrincipal()
                .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
                .WithLocalDestination()
                .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
@@ -2237,7 +2260,7 @@ namespace SanteDB.Rest.HDSI
 
                     try
                     {
-                        var modifiedOnSelector = QueryExpressionParser.BuildPropertySelector(handler.Type, "modifiedOn", convertReturn: typeof(object));
+                        var modifiedOnSelector = QueryExpressionParser.BuildPropertySelector(results.ElementType, "modifiedOn", convertReturn: typeof(object));
                         var lastModified = (DateTime)results.OrderByDescending(modifiedOnSelector).Select<DateTimeOffset>(modifiedOnSelector).FirstOrDefault().DateTime;
                         RestOperationContext.Current.OutgoingResponse.SetLastModified(lastModified);
                     }

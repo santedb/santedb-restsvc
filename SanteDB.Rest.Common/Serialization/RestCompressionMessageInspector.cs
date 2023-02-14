@@ -111,14 +111,15 @@ namespace SanteDB.Rest.Common.Serialization
 
                         // Read binary contents of the message
                         var memoryStream = new MemoryStream();
-                        using (var compressor = CompressionUtil.GetCompressionScheme(compressionScheme).CreateCompressionStream(memoryStream))
+                        using (response.Body)
                         {
-                            response.Body.CopyTo(compressor);
+                            using (var compressor = CompressionUtil.GetCompressionScheme(compressionScheme).CreateCompressionStream(memoryStream))
+                            {
+                                response.Body.CopyTo(compressor);
+                            }
+                            memoryStream.Seek(0, SeekOrigin.Begin);
+                            response.Body = memoryStream;
                         }
-
-                        response.Body.Dispose();
-                        memoryStream.Seek(0, SeekOrigin.Begin);
-                        response.Body = memoryStream;
                     }
                     catch (Exception e)
                     {
