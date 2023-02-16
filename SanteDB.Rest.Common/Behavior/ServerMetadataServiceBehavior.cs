@@ -24,8 +24,12 @@ namespace SanteDB.Rest.Common.Behavior
         /// <inheritdoc cref="IMessageInspector.BeforeSendResponse(RestResponseMessage)"/>
         public void BeforeSendResponse(RestResponseMessage response)
         {
+            var assembly = Assembly.GetEntryAssembly();
+            var assemblyname = assembly?.GetName();
+
+
             response.Headers.Add("X-SanteDB-Application", ApplicationServiceContext.Current.ApplicationName);
-            response.Headers.Add("X-Powered-By", string.Format("{0} v{1} ({2})", Assembly.GetEntryAssembly().GetName().Name, Assembly.GetEntryAssembly().GetName().Version, Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion));
+            response.Headers.Add("X-Powered-By", string.Format("{0} v{1} ({2})", assemblyname?.Name, assemblyname?.Version, assembly?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion));
         }
     }
 }
