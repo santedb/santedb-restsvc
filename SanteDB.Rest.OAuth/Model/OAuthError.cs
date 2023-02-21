@@ -95,5 +95,11 @@ namespace SanteDB.Rest.OAuth.Model
         /// </summary>
         [JsonProperty("state")]
         public string State { get; set; }
+
+        /// <summary>
+        /// Error detail - extended field for sending special data back
+        /// </summary>
+        [JsonProperty("error_detail")]
+        public String ErrorDetail { get; set; }
     }
 }

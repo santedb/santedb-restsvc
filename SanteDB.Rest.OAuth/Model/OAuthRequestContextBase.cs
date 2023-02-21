@@ -41,7 +41,7 @@ namespace SanteDB.Rest.OAuth.Model
         /// A secret code used as a second factor in an authentication flow.
         /// </summary>
         [Obsolete("Use of this is discouraged.")]
-        public string TfaSecret => IncomingRequest?.Headers?[ExtendedHttpHeaderNames.TfaSecret];
+        public string TfaSecret => FormFields?[OAuthConstants.FormField_MfaCode];
        
         #endregion
 

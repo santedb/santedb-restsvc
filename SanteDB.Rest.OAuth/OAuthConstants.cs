@@ -152,6 +152,10 @@ namespace SanteDB.Rest.OAuth
         /// </summary>
         public const string FormField_AuthorizationCode = "code";
         /// <summary>
+        /// In a token request, this is the tfa field key
+        /// </summary>
+        public const string FormField_MfaCode = "x_mfa";
+        /// <summary>
         /// In a token request, this is the username field key
         /// </summary>
         public const string FormField_Username = "username";

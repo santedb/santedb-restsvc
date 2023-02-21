@@ -108,8 +108,8 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
             catch(TfaRequiredAuthenticationException tfareqex)
             {
                 _Tracer.TraceVerbose("Authentication failed due to Tfa configured on account.");
-                context.ErrorMessage = "mfa_required";
-                context.ErrorType = OAuthErrorType.invalid_request;
+                context.ErrorMessage = tfareqex.Message;
+                context.ErrorType = OAuthErrorType.mfa_required;
                 return false;
             }
             catch (AuthenticationException authnex)
