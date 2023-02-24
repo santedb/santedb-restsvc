@@ -3,6 +3,7 @@ using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
+using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
@@ -41,7 +42,7 @@ namespace SanteDB.Rest.AMI.Resources
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Search | ResourceCapabilityType.Get;
 
         /// <summary>
-        /// DI CTOR
+        /// TFA mechanism resource handler
         /// </summary>
         public TfaMechanismResourceHandler(ITfaService tfaRelay)
         {
@@ -67,7 +68,6 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <inheritdoc/>
-        [Demand(PermissionPolicyIdentifiers.Login)]
         public IQueryResultSet Query(NameValueCollection queryParameters)
         {
             IQueryable<TfaMechanismInfo> query = this.m_tfaRelayService.Mechanisms.Select(o => new TfaMechanismInfo(o)).AsQueryable();

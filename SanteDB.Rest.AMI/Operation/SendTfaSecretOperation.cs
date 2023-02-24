@@ -1,6 +1,7 @@
 ﻿using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Parameters;
+using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Rest.Common;
 using System;
@@ -35,7 +36,7 @@ namespace SanteDB.Rest.AMI.Operation
         /// <summary>
         /// Parent types
         /// </summary>
-        public Type[] ParentTypes => new Type[] { typeof(TfaMechanismInfo) };
+        public Type[] ParentTypes => new Type[] { typeof(TfaMechanismInfo), typeof(SecurityUserInfo) };
 
         /// <summary>
         /// Get the name
@@ -47,11 +48,17 @@ namespace SanteDB.Rest.AMI.Operation
         /// </summary>
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
-            if(parameters.TryGet<Guid>("mechanism", out var mechainsmId) && 
-                parameters.TryGet<String>("userName", out var user))
+            if(parameters.TryGet<Guid>("mechanism", out var mechainsmId))
             {
-                var identity = this.m_identityProvider.GetIdentity(user);
-                this.m_tfaService.SendSecret(mechainsmId, identity);
+                if (parameters.TryGet<String>("userName", out var user))
+                {
+                    var identity = this.m_identityProvider.GetIdentity(user);
+                    this.m_tfaService.SendSecret(mechainsmId, identity);
+                }
+                else
+                {
+                    this.m_tfaService.SendSecret(mechainsmId, AuthenticationContext.Current.Principal.Identity);
+                }
                 return null;
             }
             else

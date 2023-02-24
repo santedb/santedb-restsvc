@@ -77,17 +77,16 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
             try
             {
                 context.UserPrincipal = _SecurityChallengeService.Authenticate(context.Username, securitychallengeguid, context.SecurityChallengeResponse, context.TfaSecret) as IClaimsPrincipal;
-
-                if (null != context.UserPrincipal)
+                // The principal is already a token based principal - so we may have gotten it from an upstream - we just have to relay this token back to the caller 
+                if (context.UserPrincipal is ITokenPrincipal itp)
                 {
-                    _Tracer.TracePolicyDemand(context.IncomingRequest.RequestTraceIdentifier, OAuthConstants.OAuthResetFlowPolicy, context.UserPrincipal);
-                    _PolicyService.Demand(OAuthConstants.OAuthResetFlowPolicy, context.UserPrincipal);
-
-                    if (null == context.DevicePrincipal)
-                    {
-                        _Tracer.TracePolicyDemand(context.IncomingRequest.RequestTraceIdentifier, OAuthConstants.OAuthResetFlowPolicyWithoutDevice, context.UserPrincipal);
-                        _PolicyService.Demand(OAuthConstants.OAuthResetFlowPolicyWithoutDevice, context.UserPrincipal);
-                    }
+                    context.IdToken = itp.IdentityToken;
+                    context.AccessToken = itp.AccessToken;
+                    context.TokenType = itp.TokenType;
+                    return true;
+                }
+                else if (null != context.UserPrincipal)
+                {
 
                     if (context.UserPrincipal?.Identity?.IsAuthenticated == true && null == context.ApplicationPrincipal)
                     {
@@ -128,7 +127,6 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                 context.ErrorMessage = "invalid challenge response";
                 return false;
             }
-            
 
             context.Session = null; //Setting this to null will let the OAuthTokenBehavior establish the session for us.
             return true;

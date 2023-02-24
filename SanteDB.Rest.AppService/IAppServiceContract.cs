@@ -232,7 +232,8 @@ namespace SanteDB.Rest.AppService
         /// </summary>
         [Get("/SessionInfo")]
         Dictionary<String, Object> GetCurrentSessionInfo();
-        #endregion
 
+        #endregion
+        
     }
 }
