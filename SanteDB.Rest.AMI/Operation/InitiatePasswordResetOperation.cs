@@ -71,7 +71,7 @@ namespace SanteDB.Rest.AMI.Operation
 
                         return new ParameterCollection(
                             new Parameter("text", this.m_tfaService.SendSecret(mechanism, this.m_identityProvider.GetIdentity(userName))),
-                            new Parameter("challenge", user.TwoFactorMechnaismKey)
+                            new Parameter("challenge", mechanism)
                         );
                     }
                     else if (challengeQuestions.Any())
