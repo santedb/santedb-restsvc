@@ -75,6 +75,10 @@ namespace SanteDB.Rest.AMI.Operation
                             new Parameter("challenge", challenge.Key.Value)
                         );
                     }
+                    else
+                    {
+                        throw new InvalidOperationException(ErrorMessages.NO_RESET_POSSIBLE);
+                    }
                 }
             }
             else
