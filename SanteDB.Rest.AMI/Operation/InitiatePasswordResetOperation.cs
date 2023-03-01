@@ -19,7 +19,7 @@ namespace SanteDB.Rest.AMI.Operation
     /// </summary>
     public class InitiatePasswordResetOperation : IApiChildOperation
     {
-  
+
         private readonly ITfaService m_tfaService;
         private readonly ISecurityRepositoryService m_securityRepository;
         private readonly ISecurityChallengeService m_securityChallenge;
@@ -48,7 +48,7 @@ namespace SanteDB.Rest.AMI.Operation
         /// <inheritdoc/>
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
-            if(parameters.TryGet("userName", out string userName))
+            if (parameters.TryGet("userName", out string userName))
             {
                 using (AuthenticationContext.EnterSystemContext())
                 {
@@ -59,16 +59,17 @@ namespace SanteDB.Rest.AMI.Operation
                     }
 
                     // TFA setup?
-                    if (user.TwoFactorEnabled || !this.m_securityChallenge.Get(user.UserName, AuthenticationContext.Current.Principal).Any())
+                    var challengeQuestions = this.m_securityChallenge.Get(user.UserName, AuthenticationContext.Current.Principal);
+                    if (this.m_tfaService.Mechanisms.Any() && (user.TwoFactorEnabled || !challengeQuestions.Any()))
                     {
                         return new ParameterCollection(
                             new Parameter("text", this.m_tfaService.SendSecret(user.TwoFactorMechnaismKey, this.m_identityProvider.GetIdentity(userName))),
                             new Parameter("challenge", user.TwoFactorMechnaismKey)
                         );
                     }
-                    else
+                    else if (challengeQuestions.Any())
                     {
-                        var challenge = this.m_securityChallenge.Get(user.UserName, AuthenticationContext.Current.Principal).First();
+                        var challenge = challengeQuestions.First();
                         return new ParameterCollection(
                             new Parameter("text", challenge.ChallengeText),
                             new Parameter("challenge", challenge.Key.Value)
