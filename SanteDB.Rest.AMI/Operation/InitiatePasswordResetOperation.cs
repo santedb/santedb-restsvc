@@ -59,7 +59,7 @@ namespace SanteDB.Rest.AMI.Operation
                     }
 
                     // TFA setup?
-                    if (user.TwoFactorEnabled)
+                    if (user.TwoFactorEnabled || !this.m_securityChallenge.Get(user.UserName, AuthenticationContext.Current.Principal).Any())
                     {
                         return new ParameterCollection(
                             new Parameter("text", this.m_tfaService.SendSecret(user.TwoFactorMechnaismKey, this.m_identityProvider.GetIdentity(userName))),
