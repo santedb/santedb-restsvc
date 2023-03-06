@@ -70,9 +70,13 @@ namespace SanteDB.Rest.OAuth
 
             // Error
             object result = null;
-            if (rootCause is RestClientException<Object> rco)
+            if (rootCause is RestClientException<Object> rco) // Pass through any upstream oauth errors
             {
                 result = rco.Result;
+            }
+            else if(rootCause is RestClientException<OAuthError> rce)
+            {
+                result = rce.Result;
             }
             else
             {

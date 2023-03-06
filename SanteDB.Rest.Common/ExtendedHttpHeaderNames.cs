@@ -62,6 +62,10 @@ namespace SanteDB.Rest.Common
         /// Force the application of patches - ignoring conflicts
         /// </summary>
         public const string ForceApplyPatchHeaderName = "X-Patch-Force";
+        /// <summary>
+        /// The checkout status header
+        /// </summary>
+        public const string CheckoutStatusHeader = "X-SanteDB-Checkout";
         ///// <summary>
         ///// Device authorization when using HTTP basic auth
         ///// </summary>

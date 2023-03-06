@@ -40,7 +40,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <param name="localizationService"></param>
         /// <param name="freetextSearchService"></param>
         /// <param name="repositoryService"></param>
-        public EntityResourceHandlerBase(ILocalizationService localizationService, IRepositoryService<TData> repositoryService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, freetextSearchService)
+        public EntityResourceHandlerBase(ILocalizationService localizationService, IRepositoryService<TData> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
         }
 

@@ -18,10 +18,12 @@
  * User: fyfej
  * Date: 2022-9-7
  */
+using RestSrvr;
 using SanteDB.Core;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
+using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
@@ -56,12 +58,14 @@ namespace SanteDB.Rest.HDSI.Resources
 
         // Property providers
         private ConcurrentDictionary<String, IApiChildOperation> m_operationProviders = new ConcurrentDictionary<string, IApiChildOperation>();
+        private readonly IResourceCheckoutService m_resourceCheckoutService;
 
         /// <summary>
         /// DI Constructor
         /// </summary>
-        protected HdsiResourceHandlerBase(ILocalizationService localizationService, IRepositoryService<TData> repositoryService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, freetextSearchService)
+        protected HdsiResourceHandlerBase(ILocalizationService localizationService, IRepositoryService<TData> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, freetextSearchService)
         {
+            this.m_resourceCheckoutService = resourceCheckoutService;
         }
 
         /// <summary>
@@ -78,6 +82,21 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Get all child resources
         /// </summary>
         public IEnumerable<IApiChildOperation> Operations => this.m_operationProviders.Values;
+
+        /// <inheritdoc/>
+        public override object Get(object id, object versionId)
+        {
+            var retVal = base.Get(id, versionId);
+            if (retVal is TData td) {
+                if (this.m_resourceCheckoutService.IsCheckedout<TData>(td.Key.Value, out var owner) && 
+                    retVal is ITaggable taggable)
+                {
+                    taggable.AddTag(SanteDBModelConstants.CheckoutStatusTag, owner.Name);
+                    RestOperationContext.Current.OutgoingResponse.AddHeader(ExtendedHttpHeaderNames.CheckoutStatusHeader, owner.Name);
+                }
+            }
+            return retVal;
+        }
 
         /// <summary>
         /// OBsoletion wrapper with locking
@@ -206,8 +225,7 @@ namespace SanteDB.Rest.HDSI.Resources
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public object CheckOut(object key)
         {
-            var adHocCache = ApplicationServiceContext.Current.GetService<IResourceCheckoutService>();
-            if (adHocCache?.Checkout<TData>((Guid)key) == false)
+            if (this.m_resourceCheckoutService?.Checkout<TData>((Guid)key) == false)
             {
                 throw new ObjectLockedException(this.m_localizationService.GetString("error.type.ObjectLockedException"));
             }
@@ -274,8 +292,7 @@ namespace SanteDB.Rest.HDSI.Resources
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public object CheckIn(object key)
         {
-            var adHocCache = ApplicationServiceContext.Current.GetService<IResourceCheckoutService>();
-            if (adHocCache?.Checkin<TData>((Guid)key) == false)
+            if (this.m_resourceCheckoutService?.Checkin<TData>((Guid)key) == false)
             {
                 throw new ObjectLockedException(this.m_localizationService.GetString("error.type.ObjectLockedException"));
             }
