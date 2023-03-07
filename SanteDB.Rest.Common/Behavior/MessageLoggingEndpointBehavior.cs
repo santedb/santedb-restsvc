@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using RestSrvr;
 using RestSrvr.Message;
@@ -35,9 +35,8 @@ namespace SanteDB.Rest.Common.Behavior
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public class MessageLoggingEndpointBehavior : IEndpointBehavior, IMessageInspector
     {
-
         // Trace source name
-        private Tracer m_traceSource = Tracer.GetTracer(typeof(MessageLoggingEndpointBehavior));
+        private readonly Tracer m_traceSource = Tracer.GetTracer(typeof(MessageLoggingEndpointBehavior));
 
         // Correlation id
         [ThreadStatic]
@@ -50,7 +49,6 @@ namespace SanteDB.Rest.Common.Behavior
         public void AfterReceiveRequest(RestRequestMessage request)
         {
             Guid httpCorrelator = Guid.NewGuid();
-
 
             this.m_traceSource.TraceEvent(EventLevel.Verbose, "HTTP RQO {0} : {1} {2} ({3}) - {4}",
                 RestOperationContext.Current.IncomingRequest.RemoteEndPoint,

@@ -16,9 +16,10 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.HDSI.Resources
@@ -27,15 +28,13 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a device entity handler for security devices
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class DeviceEntityResourceHandler : ResourceHandlerBase<DeviceEntity>
+    public class DeviceEntityResourceHandler : EntityResourceHandlerBase<DeviceEntity>
     {
         /// <summary>
         /// DI constructor
         /// </summary>
-        /// <param name="localizationService"></param>
-        public DeviceEntityResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        public DeviceEntityResourceHandler(ILocalizationService localizationService, IRepositoryService<DeviceEntity> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
-
         }
     }
 }

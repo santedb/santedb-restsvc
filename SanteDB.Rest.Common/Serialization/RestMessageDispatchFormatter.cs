@@ -16,8 +16,9 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
+using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using RestSrvr;
@@ -28,12 +29,13 @@ using SanteDB.Core.Applets.Services;
 using SanteDB.Core.Applets.ViewModel.Description;
 using SanteDB.Core.Applets.ViewModel.Json;
 using SanteDB.Core.Diagnostics;
+using SanteDB.Core.Http;
 using SanteDB.Core.Model;
-using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Json.Formatter;
 using SanteDB.Core.Model.Serialization;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics.Tracing;
@@ -100,7 +102,7 @@ namespace SanteDB.Rest.Common.Serialization
         private String m_versionName = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "Unnamed";
 
         // Trace source
-        private Tracer m_traceSource = Tracer.GetTracer(typeof(RestMessageDispatchFormatter));
+        private readonly Tracer m_traceSource = Tracer.GetTracer(typeof(RestMessageDispatchFormatter));
 
         // Known types
         private static Type[] s_knownTypes;
@@ -127,23 +129,27 @@ namespace SanteDB.Rest.Common.Serialization
                     throw;
                 }
 
-                this.m_traceSource.TraceInfo("Will generate serializer for {0} ({1} types)...", typeof(TContract).FullName, s_knownTypes.Length);
+                //if (ApplicationServiceContext.Current.HostType == SanteDBHostType.Server) // This can take a while on .NET framework where the Xml serializers are compiled - 
+                //                                                                          // however in an environment like a server it is useful to do this
+                //{
+                //    this.m_traceSource.TraceVerbose("Will generate serializer for {0} ({1} types)...", typeof(TContract).FullName, s_knownTypes.Length);
 
-                foreach (var s in s_knownTypes)
-                {
-                    this.m_traceSource.TraceInfo("Generating serializer for {0}...", s.Name);
-                    try
-                    {
-                        // Force creation of .NET Serializer
-                        XmlModelSerializerFactory.Current.CreateSerializer(s);
-                        ModelSerializationBinder.RegisterModelType(s);
-                    }
-                    catch (Exception e)
-                    {
-                        this.m_traceSource.TraceError("Error generating for {0} : {1}", s.Name, e.ToString());
-                        //throw;
-                    }
-                }
+                //    foreach (var s in s_knownTypes)
+                //    {
+                //        this.m_traceSource.TraceVerbose("Generating serializer for {0}...", s.Name);
+                //        try
+                //        {
+                //            // Force creation of .NET Serializer
+                //            XmlModelSerializerFactory.Current.CreateSerializer(s);
+                //            ModelSerializationBinder.RegisterModelType(s);
+                //        }
+                //        catch (Exception e)
+                //        {
+                //            this.m_traceSource.TraceError("Error generating for {0} : {1}", s.Name, e.ToString());
+                //            //throw;
+                //        }
+                //    }
+                //}
             }
             catch (Exception e)
             {
@@ -166,7 +172,9 @@ namespace SanteDB.Rest.Common.Serialization
                 var httpRequest = RestOperationContext.Current.IncomingRequest;
                 ContentType contentType = null;
                 if (!String.IsNullOrEmpty(httpRequest.Headers["Content-Type"]))
+                {
                     contentType = new ContentType(httpRequest.Headers["Content-Type"]);
+                }
 
                 for (int pNumber = 0; pNumber < parameters.Length; pNumber++)
                 {
@@ -181,16 +189,21 @@ namespace SanteDB.Rest.Common.Serialization
                         switch (contentType.MediaType)
                         {
                             case "application/xml":
+                            case "application/xml+sdb-patch":
                                 XmlSerializer serializer = null;
                                 using (XmlReader bodyReader = XmlReader.Create(request.Body))
                                 {
                                     while (bodyReader.NodeType != XmlNodeType.Element)
+                                    {
                                         bodyReader.Read();
+                                    }
 
                                     Type eType = s_knownTypes.FirstOrDefault(o => o.GetCustomAttribute<XmlRootAttribute>()?.ElementName == bodyReader.LocalName &&
                                         o.GetCustomAttribute<XmlRootAttribute>()?.Namespace == bodyReader.NamespaceURI);
                                     if (eType == null)
+                                    {
                                         eType = new ModelSerializationBinder().BindToType(null, bodyReader.LocalName); // Try to find by root element
+                                    }
 
                                     serializer = XmlModelSerializerFactory.Current.CreateSerializer(eType ?? parm.ParameterType);
                                     parameters[pNumber] = serializer.Deserialize(bodyReader);
@@ -198,7 +211,7 @@ namespace SanteDB.Rest.Common.Serialization
                                 break;
 
                             case "application/json+sdb-viewmodel":
-                                var viewModel = httpRequest.Headers["X-SanteDB-ViewModel"] ?? httpRequest.QueryString["_viewModel"];
+                                var viewModel = httpRequest.Headers[ExtendedHttpHeaderNames.ViewModelHeaderName] ?? httpRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName];
 
                                 // Create the view model serializer
                                 var viewModelSerializer = new JsonViewModelSerializer();
@@ -215,11 +228,14 @@ namespace SanteDB.Rest.Common.Serialization
                                 }
 
                                 using (var sr = new StreamReader(request.Body))
+                                {
                                     parameters[pNumber] = viewModelSerializer.DeSerialize(sr, parm.ParameterType);
+                                }
 
                                 break;
 
                             case "application/json":
+                            case "application/json+sdb-patch":
                                 using (var sr = new StreamReader(request.Body))
                                 {
                                     JsonSerializer jsz = new JsonSerializer()
@@ -254,6 +270,38 @@ namespace SanteDB.Rest.Common.Serialization
                                 parameters[pNumber] = nvc;
                                 break;
 
+                            case "multipart/form-data":
+                                var multipartReader = new MultipartReader(contentType.Boundary, request.Body);
+                                var parmValue = new List<MultiPartFormData>();
+                                while (true)
+                                {
+                                    var nextSection = multipartReader.ReadNextSectionAsync().Result;
+                                    if (nextSection == null)
+                                    {
+                                        break;
+                                    }
+
+                                    var contentDisposition = nextSection.GetContentDispositionHeader();
+                                    if(String.IsNullOrEmpty(contentDisposition.FileName.Value))
+                                    {
+                                        using (var sr = new StreamReader(nextSection.Body))
+                                        {
+                                            parmValue.Add(new MultiPartFormData(contentDisposition.Name.Value, sr.ReadToEnd()));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        using (var buffer = new MemoryStream())
+                                        {
+                                            nextSection.Body.CopyTo(buffer); 
+                                            parmValue.Add(new MultiPartFormData(contentDisposition.Name.Value, buffer.ToArray(), nextSection.ContentType, contentDisposition.FileName.Value, false));
+                                        }
+                                    }
+                                }
+                                parameters[pNumber] = parmValue;
+
+                                break;
+
                             default:
                                 throw new InvalidOperationException("Invalid request format");
                         }
@@ -262,11 +310,11 @@ namespace SanteDB.Rest.Common.Serialization
                         switch (parameters[pNumber])
                         {
                             case IResourceCollection irc:
-                                irc.AddAnnotationToAll(SanteDBConstants.NoDynamicLoadAnnotation);
+                                irc.AddAnnotationToAll(SanteDBModelConstants.NoDynamicLoadAnnotation);
                                 break;
 
-                            case IIdentifiedEntity ide:
-                                ide.AddAnnotation(SanteDBConstants.NoDynamicLoadAnnotation);
+                            case IAnnotatedResource ide:
+                                ide.AddAnnotation(SanteDBModelConstants.NoDynamicLoadAnnotation);
                                 break;
                         }
                     }
@@ -286,7 +334,7 @@ namespace SanteDB.Rest.Common.Serialization
         {
             try
             {
-                this.m_traceSource.TraceInfo("Serializing {0}", result?.GetType());
+                this.m_traceSource.TraceVerbose("Serializing {0}", result?.GetType());
                 // Outbound control
                 var httpRequest = RestOperationContext.Current.IncomingRequest;
                 string accepts = httpRequest.Headers["Accept"],
@@ -294,18 +342,32 @@ namespace SanteDB.Rest.Common.Serialization
 
                 if (String.IsNullOrEmpty(accepts) && String.IsNullOrEmpty(contentType))
                 {
-                    accepts = "application/xml";
+                    accepts = "application/json";
                 }
                 var contentTypeMime = (accepts ?? contentType).Split(',').Select(o => new ContentType(o)).First();
 
                 // Result is serializable
                 if (result == null)
                 {
-                    if (response.StatusCode == 200)
-                        response.StatusCode = 204;
+                    if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Created)
+                    {
+                        response.StatusCode = HttpStatusCode.NoContent;
+                    }
                 }
-                else if (result?.GetType().GetCustomAttribute<XmlTypeAttribute>() != null ||
-                    result?.GetType().GetCustomAttribute<JsonObjectAttribute>() != null)
+                else if (result is XmlSchema xs)
+                {
+                    MemoryStream ms = new MemoryStream();
+                    xs.Write(ms);
+                    ms.Seek(0, SeekOrigin.Begin);
+                    contentType = "text/xml";
+                    response.Body = ms;
+                }
+                else if (result is Stream str) // TODO: This is messy, clean it up
+                {
+                    contentType = "application/octet-stream";
+                    response.Body = str;
+                }
+                else
                 {
                     switch (contentTypeMime.MediaType)
                     {
@@ -314,22 +376,22 @@ namespace SanteDB.Rest.Common.Serialization
                             if (result is IdentifiedData id)
                             {
 #if DEBUG
-                                this.m_traceSource.TraceInfo("Serializing {0} as view model result", result);
+                                this.m_traceSource.TraceVerbose("Serializing {0} as view model result", result);
 #endif
-                                var viewModel = httpRequest.Headers["X-SanteDB-ViewModel"] ?? httpRequest.QueryString["_viewModel"];
+                                var viewModel = httpRequest.Headers[ExtendedHttpHeaderNames.ViewModelHeaderName] ?? httpRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName];
 
                                 // Create the view model serializer
                                 var viewModelSerializer = new JsonViewModelSerializer();
 
 #if DEBUG
-                                this.m_traceSource.TraceInfo("Will load serialization assembly {0}", typeof(ActExtensionViewModelSerializer).Assembly);
+                                this.m_traceSource.TraceVerbose("Will load serialization assembly {0}", typeof(ActExtensionViewModelSerializer).Assembly);
 #endif
                                 viewModelSerializer.LoadSerializerAssembly(typeof(ActExtensionViewModelSerializer).Assembly);
 
                                 if (!String.IsNullOrEmpty(viewModel))
                                 {
                                     var viewModelDescription = ApplicationServiceContext.Current.GetService<IAppletManagerService>()?.Applets.GetViewModelDescription(viewModel);
-                                    viewModelSerializer.ViewModel = viewModelDescription;
+                                    viewModelSerializer.ViewModel = viewModelDescription ?? viewModelSerializer.ViewModel;
                                 }
                                 else
                                 {
@@ -337,7 +399,7 @@ namespace SanteDB.Rest.Common.Serialization
                                 }
 
 #if DEBUG
-                                this.m_traceSource.TraceInfo("Using view model {0}", viewModelSerializer.ViewModel?.Name);
+                                this.m_traceSource.TraceVerbose("Using view model {0}", viewModelSerializer.ViewModel?.Name);
 #endif
                                 using (var tms = new MemoryStream())
                                 using (StreamWriter sw = new StreamWriter(tms, new UTF8Encoding(false)))
@@ -350,7 +412,7 @@ namespace SanteDB.Rest.Common.Serialization
                                 }
 
 #if DEBUG
-                                this.m_traceSource.TraceInfo("Serialized body of  {0}", result);
+                                this.m_traceSource.TraceVerbose("Serialized body of  {0}", result);
 #endif
                                 contentType = "application/json+sdb-viewmodel";
                             }
@@ -374,7 +436,15 @@ namespace SanteDB.Rest.Common.Serialization
                                     jsz.DateFormatHandling = DateFormatHandling.IsoDateFormat;
                                     jsz.NullValueHandling = NullValueHandling.Ignore;
                                     jsz.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                                    jsz.TypeNameHandling = TypeNameHandling.Auto;
+
+                                    if (result is IDictionary)
+                                    {
+                                        jsz.TypeNameHandling = TypeNameHandling.None;
+                                    }
+                                    else
+                                    {
+                                        jsz.TypeNameHandling = result.GetType().GetCustomAttribute<JsonObjectAttribute>()?.ItemTypeNameHandling ?? TypeNameHandling.Auto;
+                                    }
                                     jsz.Converters.Add(new StringEnumConverter());
                                     jsz.Serialize(jsw, result);
                                     jsw.Flush();
@@ -386,14 +456,17 @@ namespace SanteDB.Rest.Common.Serialization
                                 contentType = "application/json";
                                 break;
                             }
-                        default:
+                        case "application/xml":
                             {
                                 XmlSerializer xsz = XmlModelSerializerFactory.Current.CreateSerializer(result.GetType());
                                 MemoryStream ms = new MemoryStream();
                                 try
                                 {
                                     if (xsz == null)
+                                    {
                                         xsz = XmlModelSerializerFactory.Current.CreateSerializer(result.GetType());
+                                    }
+
                                     xsz.Serialize(ms, result);
                                 }
                                 // No longer needed
@@ -414,32 +487,18 @@ namespace SanteDB.Rest.Common.Serialization
                                 response.Body = ms;
                                 break;
                             }
+                        default:
+                            contentType = "text/plain";
+                            response.Body = new MemoryStream(Encoding.UTF8.GetBytes(result.ToString()));
+                            break;
                     }
                 }
-                else if (result is XmlSchema)
-                {
-                    MemoryStream ms = new MemoryStream();
-                    (result as XmlSchema).Write(ms);
-                    ms.Seek(0, SeekOrigin.Begin);
-                    contentType = "text/xml";
-                    response.Body = ms;
-                }
-                else if (result is Stream) // TODO: This is messy, clean it up
-                {
-                    contentType = "application/octet-stream";
-                    response.Body = result as Stream;
-                }
-                else
-                {
-                    contentType = "text/plain";
-                    response.Body = new MemoryStream(Encoding.UTF8.GetBytes(result.ToString()));
-                }
+
 
 #if DEBUG
                 this.m_traceSource.TraceVerbose("Setting response headers");
 #endif
                 RestOperationContext.Current.OutgoingResponse.ContentType = RestOperationContext.Current.OutgoingResponse.ContentType ?? contentType;
-                RestOperationContext.Current.OutgoingResponse.AppendHeader("X-PoweredBy", String.Format("SanteDB {0} ({1})", m_version, m_versionName));
                 RestOperationContext.Current.OutgoingResponse.AppendHeader("X-GeneratedOn", DateTime.Now.ToString("o"));
             }
             catch (Exception e)

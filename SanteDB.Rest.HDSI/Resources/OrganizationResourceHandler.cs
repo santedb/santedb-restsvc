@@ -16,15 +16,16 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
@@ -32,16 +33,15 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents an organization resource handler.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class OrganizationResourceHandler : ResourceHandlerBase<Organization>
+    public class OrganizationResourceHandler : EntityResourceHandlerBase<Organization>
     {
         /// <summary>
         /// DI constructor
         /// </summary>
-        /// <param name="localizationService"></param>
-        public OrganizationResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        public OrganizationResourceHandler(ILocalizationService localizationService, IRepositoryService<Organization> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
-
         }
+
         /// <summary>
         /// Create the specified material
         /// </summary>
@@ -65,30 +65,19 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Obsoletes the specified material
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.DeletePlacesAndOrgs)]
-        public override Object Obsolete(object key)
+        public override Object Delete(object key)
         {
-            return base.Obsolete(key);
+            return base.Delete(key);
         }
 
         /// <summary>
         /// Query for the specified material
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadPlacesAndOrgs)]
-        public override IEnumerable<Object> Query(NameValueCollection queryParameters)
+        public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             return base.Query(queryParameters);
         }
-
-
-        /// <summary>
-        /// Query for the specified material with restrictions
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.ReadPlacesAndOrgs)]
-        public override IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
-        {
-            return base.Query(queryParameters, offset, count, out totalCount);
-        }
-
 
         /// <summary>
         /// Update the specified material

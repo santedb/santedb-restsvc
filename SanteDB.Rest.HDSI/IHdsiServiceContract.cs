@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using RestSrvr.Attributes;
 using SanteDB.Core.Interop;
@@ -95,7 +95,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Gets the current server time from the API allowing for time synchronization
         /// </summary>
-        [Get("/time")]
+        [Get("/time"), Obsolete]
         DateTime Time();
 
         /// <summary>
@@ -121,11 +121,12 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Returns specific options for a single resource
         /// </summary>
+        /// <param name="resourceType">The type of resource for which the service options should be retrieved</param>
         [RestInvoke("OPTIONS", "/{resourceType}")]
         ServiceResourceOptions ResourceOptions(string resourceType);
 
         /// <summary>
-        /// Performs a minimal PING request to test service uptime
+        /// Performs a minimal PING request to test service availability
         /// </summary>
         /// <remarks>The PING operation is used by the mobile (or other applications)
         /// to ensure that not only is the network available (like a network ping) but that the
@@ -137,6 +138,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Perform a search (query) for <paramref name="resourceType"/> matching the HTTP query parameters provided
         /// </summary>
+        /// <param name="resourceType">The type of resource against which the search should be performed</param>
         /// <remarks>The search operation calls the database and loads results either from cache or data store. Care should be taken in the number of results retrieved by this operation.</remarks>
         [Get("/{resourceType}")]
         IdentifiedData Search(string resourceType);
@@ -144,19 +146,26 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Perform a search (query) and return only the headers
         /// </summary>
+        /// <param name="resourceType">The type of resource against which the HEAD operation should be performed</param>
         /// <remarks>The HEAD operation is useful if you wish to determine if the header information for a specific result set has resulted in a change</remarks>
         [RestInvoke("HEAD", "/{resourceType}")]
         void HeadSearch(string resourceType);
 
         /// <summary>
-        /// Downloads a copy of the specified resource and all dependent objects for the dCDR
+        /// Downloads a copy of the specified resource and all dependent objects from another cdr to this CDR
         /// </summary>
+        /// <param name="resourceType">The type of resource which should be downloaded/copied</param>
+        /// <param name="id">The identifier of the object to be copied</param>
+        /// <returns>The copied data</returns>
         [RestInvoke("COPY", "/{resourceType}/{id}")]
         IdentifiedData Copy(string resourceType, string id);
 
         /// <summary>
         /// Retrieves the current version of the specified resource
         /// </summary>
+        /// <param name="id">The identifier of the object which should be retrieved</param>
+        /// <param name="resourceType">The type of resource which should be retrieved</param>
+        /// <returns>The current version of <paramref name="resourceType"/>/<paramref name="id"/></returns>
         /// <remarks>This method will first use cache to locate the most recent copy before searching the database. It is recommended to use this method rather than a query to Resource?id={id}</remarks>
         [Get("/{resourceType}/{id}")]
         IdentifiedData Get(string resourceType, string id);
@@ -164,6 +173,8 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Retrieves only the metadata of the specified resource
         /// </summary>
+        /// <param name="id">The identifier of the resource to be retrieved</param>
+        /// <param name="resourceType">The type of resource to be retrieved</param>
         /// <remarks>The metadata for the most recent version of this resource includes the last modified time, the e-tag, etc.</remarks>
         [RestInvoke("HEAD", "/{resourceType}/{id}")]
         void Head(string resourceType, string id);
@@ -171,29 +182,40 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Gets a complete history of all changes made to the specified resource
         /// </summary>
-        /// <remarks>The result of the history operation is a Bundle which contains a complete list of all previous versions associated with the specified object</remarks>
+        /// <param name="resourceType">The type of resource for which history should be retrieved</param>
+        /// <param name="id">The identifier of the resource to retrieve</param>
+        /// <remarks>The result of the history operation is a <see cref="Bundle"/> which contains a complete list of all previous versions associated with the specified object</remarks>
         [Get("/{resourceType}/{id}/_history")]
         IdentifiedData History(string resourceType, string id);
 
         /// <summary>
         /// Invokes the specified operation
         /// </summary>
+        /// <remarks>In SanteDB an operation or method is invoked using <c>POST /resource/123/$do-somthing</c> and is used to invoke remote procedures on the server</remarks>
         /// <param name="resourceType">The type of operation being invoked</param>
-        /// <param name="id">The ID of the operation</param>
+        /// <param name="id">The ID of the object which scopes the operation</param>
+        /// <param name="parameters">The parameters to invoke the operation with</param>
         /// <param name="operationName">The name of the operation</param>
         /// <returns>The result of the operation invokation</returns>
         [RestInvoke("POST", "/{resourceType}/{id}/${operationName}")]
-        object InvokeMethod(String resourceType, String id, String operationName, ParameterCollection body);
+        object InvokeMethod(String resourceType, String id, String operationName, ParameterCollection parameters);
 
         /// <summary>
         /// Releases an edit lock on the specified object
         /// </summary>
+        /// <remarks>This is the opposite of the <see cref="CheckOut(string, string)"/> command</remarks>
+        /// <param name="resourceType">The type of resource to release the lock on</param>
+        /// <param name="id">The identifier of the resource to release the lock on</param>
         [RestInvoke("CHECKIN", "/{resourceType}/{id}")]
         object CheckIn(String resourceType, String id);
 
         /// <summary>
         /// Acquires an edit lock on the specified object
         /// </summary>
+        /// <param name="resourceType">The type of resource which should be checked out</param>
+        /// <param name="id">The identifier of the resource to be checked out</param>
+        /// <remarks>The checkout operation allows for multi-user control of objects. This operation allows the caller to attempt to 
+        /// lock the object for edit. If the lock is success a lock reference object is returned</remarks>
         [RestInvoke("CHECKOUT", "/{resourceType}/{id}")]
         object CheckOut(String resourceType, String id);
 
@@ -206,6 +228,9 @@ namespace SanteDB.Rest.HDSI
         ///
         /// The server will load the most recent version and compre the version code with If-Match, if the match is successful the instructions in the PATCH are applied to the loaded version.
         /// </remarks>
+        /// <param name="id">The identifier of the resource to be patched</param>
+        /// <param name="resourceType">The type of resource to be patched</param>
+        /// <param name="body">The patch body which contains update instructions on the object referenced by <paramref name="id"/></param>
         [RestInvoke("PATCH", "/{resourceType}/{id}")]
         [RestServiceFault(409, "The patch submitted does not match the current version of the object being patched")]
         void Patch(string resourceType, string id, Patch body);
@@ -214,6 +239,9 @@ namespace SanteDB.Rest.HDSI
         /// Retrieves a specific version of the specified resource
         /// </summary>
         /// <remarks>This method allows the caller to retrieve a specific version of the identified object, which is useful for loading a previous copy of a resource for reference.</remarks>
+        /// <param name="resourceType">The type of resource for which history should be retrieved</param>
+        /// <param name="id">The identifier of the resource for which history sould be retrieved</param>
+        /// <param name="versionId">The version of the resource to retrieve</param>
         [Get("/{resourceType}/{id}/_history/{versionId}")]
         IdentifiedData GetVersion(string resourceType, string id, string versionId);
 
@@ -221,6 +249,7 @@ namespace SanteDB.Rest.HDSI
         /// Creates the resource. If the resource already exists, then a 409 is thrown
         /// </summary>
         /// <remarks>This operation is a CREATE ONLY operation, and will throw an error if the operation results in a duplicate. If you are looking for a CREATE OR UPDATE method use the POST with identifier operation</remarks>
+        /// <param name="resourceType">The type of resource to create</param>
         [RestServiceFault(409, "There is a conflict in the update request (version mismatch)")]
         [Post("/{resourceType}")]
         IdentifiedData Create(string resourceType, IdentifiedData body);
@@ -231,6 +260,9 @@ namespace SanteDB.Rest.HDSI
         /// <remarks>This operation will update an existing resource on the server such that the data in the database exactly matches the data passed via the API.
         ///
         /// Note: If you post an incomplete object (such as one missing identifiers, or addresses) then the current resource will have those attributes removed. For partial updates, use the PATCH operation instead.</remarks>
+        /// <param name="resourceType">The type of resource which should be updated</param>
+        /// <param name="id">The identifier of the resource to be updated</param>
+        /// <param name="body">The new contents of the resource to be updated</param>
         [Put("/{resourceType}/{id}")]
         [RestServiceFault(409, "There is a conflict in the update request (version mismatch)")]
         IdentifiedData Update(string resourceType, string id, IdentifiedData body);
@@ -243,9 +275,12 @@ namespace SanteDB.Rest.HDSI
         /// The barcode is generated using the server's configuration, and is signed by the server's signing key.
         ///
         /// For complete specification see: https://help.santesuite.org/santedb/extending-santedb/service-apis/health-data-service-interface-hdsi/digitally-signed-visual-code-api</remarks>
-        [Get("/{resourceType}/{id}/_code/{authority}")]
+        /// <param name="id">The identifier of the resource for which a VRP should be generated</param>
+        /// <param name="resourceType">The type of resource for which the VRP should be generated</param>
+        /// <returns>The generated VRP code in PNG format</returns>
+        [Get("/{resourceType}/{id}/_code")]
         [ServiceProduces("image/png")]
-        Stream GetBarcode(String resourceType, String id, String authority);
+        Stream GetBarcode(String resourceType, String id);
 
         /// <summary>
         /// Gets the digitally signed pointer (in JWS format) for the resource
@@ -256,8 +291,11 @@ namespace SanteDB.Rest.HDSI
         ///
         /// For complete specification see: https://help.santesuite.org/santedb/extending-santedb/service-apis/health-data-service-interface-hdsi/digitally-signed-visual-code-api
         /// </remarks>
-        [Get("/{resourceType}/{id}/_ptr/{authorityId}")]
-        Stream GetPointer(String resourceType, String id, String authorityId);
+        /// <param name="id">The identifier of the object for which the pointer should be created</param>
+        /// <param name="resourceType">The type of resource which should be generated</param>
+        /// <returns>A JSON structure in JWS form</returns>
+        [Get("/{resourceType}/{id}/_ptr")]
+        Stream GetVrpPointerData(String resourceType, String id);
 
         /// <summary>
         /// Resolve a code to a resource by posting a form-encoded search to the API
@@ -265,27 +303,44 @@ namespace SanteDB.Rest.HDSI
         /// <remarks>
         /// This operation will decode and validate the pointer passed in the <code>code</code> parameter of the form submission and will return a 303 (method redirect) to the object that matches the code.
         /// </remarks>
+        /// <param name="body">The search parameters in in HTTP form query</param>
         [RestInvoke("SEARCH", "/_ptr")]
+        [ServiceConsumes("application/x-www-form-urlencoded")]
         void ResolvePointer(NameValueCollection body);
 
         /// <summary>
         /// Creates or updates a resource. That is, creates the resource if it does not exist, or updates it if it does
         /// </summary>
         /// <remarks>This method will attempt to update the resource if it exists (a-la PUT style) however, if a PUT fails the operation will create (a-la POST)</remarks>
+        /// <param name="resource">The resource which is to be created or updated</param>
+        /// <param name="resourceType">The type of resource to be created or updated</param>
+        /// <param name="id">The identifier of the resource to be created or updated</param>
+        /// <returns>The created or updated resource</returns>
         [Post("/{resourceType}/{id}")]
-        IdentifiedData CreateUpdate(string resourceType, string id, IdentifiedData body);
+        IdentifiedData CreateUpdate(string resourceType, string id, IdentifiedData resource);
 
         /// <summary>
         /// Touch the resource (update its timestamp) without modifying the resource itself
         /// </summary>
         /// <remarks>The touch operation is useful for updating the modified time (forcing a re-download) without creating a new version of the resource.</remarks>
+        /// <param name="id">The identity of the resource to be touched</param>
+        /// <param name="resourceType">The type of resource to be touched</param>
+        /// <returns>The object which was updated as part of the touch operation</returns>
         [RestInvoke("TOUCH", "/{resourceType}/{id}")]
         IdentifiedData Touch(string resourceType, string id);
 
         /// <summary>
         /// Deletes the specified resource from the server
         /// </summary>
-        /// <remarks>This operation logically deletes the identified resource so that it no longer appears in general searches, however the data is retained.</remarks>
+        /// <remarks>This operation either logically or permanently deletes the identified resource so that it no longer appears in general searches. The method of deletion is controlled by the 
+        /// <c>X-SanteDB-DeleteMode</c> header:
+        /// <list type="table">
+        ///     <item><term>LogicalDelete</term><description>Creates a null head version of the object which no longer appears in searches, however can be restored from the database</description></item>
+        ///     <item><term>PermanentDelete</term><description>Purges the record from the CDR</description></item>
+        /// </list></remarks>
+        /// <returns>The deleted object</returns>
+        /// <param name="resourceType">The type of resource to be deleted</param>
+        /// <param name="id">The identifier of the resource to be deleted</param>
         [Delete("/{resourceType}/{id}")]
         [RestServiceFault(409, "There is a conflict in the update request (version mismatch)")]
         IdentifiedData Delete(string resourceType, string id);
@@ -294,7 +349,7 @@ namespace SanteDB.Rest.HDSI
         /// Performs a linked or chained search on a sub-property
         /// </summary>
         /// <param name="resourceType">The type of resource which should be searched</param>
-        /// <param name="key">The key of the hosting (container object)</param>
+        /// <param name="id">The key of the hosting (container object)</param>
         /// <param name="childResourceKey">The key of the sub-item to fetch</param>
         /// <param name="childResourceType">The property to search</param>
         /// <returns>The search for the specified resource type limited to the specified object</returns>
@@ -305,7 +360,7 @@ namespace SanteDB.Rest.HDSI
         /// Performs a linked or chained search on a sub-property
         /// </summary>
         /// <param name="resourceType">The type of resource which should be searched</param>
-        /// <param name="key">The key of the hosting (container object)</param>
+        /// <param name="id">The key of the hosting (container object)</param>
         /// <param name="childResourceType">The property to search</param>
         /// <returns>The search for the specified resource type limited to the specified object</returns>
         /// <remarks>This method performs a general search on the child resource type, however scoped to the container of the parent (so users within role container)</remarks>
@@ -316,7 +371,7 @@ namespace SanteDB.Rest.HDSI
         /// Assigns the child object as a child (or link) of the parent
         /// </summary>
         /// <param name="resourceType">The type of container resource</param>
-        /// <param name="key">The identiifer of the container</param>
+        /// <param name="id">The identiifer of the container</param>
         /// <param name="childResourceType">The property which is the association to be added</param>
         /// <param name="body">The object to be added to the collection</param>
         /// <remarks>This method adds a new child resource instance to the container and performs the necessary linking</remarks>
@@ -327,7 +382,7 @@ namespace SanteDB.Rest.HDSI
         /// Removes a child resource instance from the parent container
         /// </summary>
         /// <param name="resourceType">The type of resource which is the container</param>
-        /// <param name="key">The key of the container</param>
+        /// <param name="id">The key of the container</param>
         /// <param name="childResourceType">The property on which the sub-key resides</param>
         /// <param name="childResourceKey">The actual value of the sub-key</param>
         /// <returns>The removed object</returns>
@@ -339,11 +394,11 @@ namespace SanteDB.Rest.HDSI
         /// Invokes the specified operation
         /// </summary>
         /// <param name="resourceType">The type of operation being invoked</param>
-        /// <param name="id">The ID of the operation</param>
         /// <param name="operationName">The name of the operation</param>
+        /// <param name="parameters">The parameters to invoke the operation with</param>
         /// <returns>The result of the operation invokation</returns>
         [RestInvoke("POST", "/{resourceType}/${operationName}")]
-        object InvokeMethod(String resourceType, String operationName, ParameterCollection body);
+        object InvokeMethod(String resourceType, String operationName, ParameterCollection parameters);
 
         /// <summary>
         /// Performs a linked or chained search on a sub-property

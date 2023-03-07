@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using RestSrvr;
 using SanteDB.Rest.Common.Serialization;
@@ -37,7 +37,9 @@ namespace SanteDB.Rest.Common.Behavior
         public void ApplyEndpointBehavior(ServiceEndpoint endpoint, EndpointDispatcher dispatcher)
         {
             foreach (var op in endpoint.Description.Contract.Operations)
+            {
                 op.AddOperationBehavior(this);
+            }
         }
 
         /// <summary>

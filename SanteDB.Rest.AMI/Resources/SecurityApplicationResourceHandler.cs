@@ -1,23 +1,23 @@
 ﻿/*
- * Portions Copyright 2015-2019 Mohawk College of Applied Arts and Technology
- * Portions Copyright 2019-2022 SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ * Copyright (C) 2021 - 2022, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
+ * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
- * DatERROR: 2021-8-27
+ * Date: 2022-5-30
  */
-using SanteDB.Core;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
@@ -36,61 +36,72 @@ namespace SanteDB.Rest.AMI.Resources
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class SecurityApplicationResourceHandler : SecurityEntityResourceHandler<SecurityApplication>, ILockableResourceHandler
     {
-        /// <summary>
-        /// DI constructor
-        /// </summary>
-        /// <param name="localizationService"></param>
-        public SecurityApplicationResourceHandler(ILocalizationService localizationService) : base(localizationService)
-        {
+        // Security repository
+        private readonly ISecurityRepositoryService m_securityRepository;
 
+        /// <summary>
+        /// Wrapper type
+        /// </summary>
+        protected override Type WrapperType => typeof(SecurityApplicationInfo);
+
+        /// <summary>
+        /// Create security repository
+        /// </summary>
+        public SecurityApplicationResourceHandler(ISecurityRepositoryService securityRepository, IPolicyInformationService policyInformationService, ILocalizationService localizationService, IAuditService auditService, IDataCachingService cachingService = null, IRepositoryService<SecurityApplication> repository = null) : base(auditService, policyInformationService, localizationService, cachingService, repository)
+        {
+            this.m_securityRepository = securityRepository;
         }
 
         /// <summary>
-        /// Get the type of results
-        /// </summary>
-        public override Type Type => typeof(SecurityApplicationInfo);
-
-        /// <summary>
-        /// Create device
+        /// Create application
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.CreateApplication)]
         public override object Create(object data, bool updateIfExists)
         {
-            if (data is SecurityApplication)
-                data = new SecurityApplicationInfo(data as SecurityApplication);
+            if (data is SecurityApplication sa)
+            {
+                data = new SecurityApplicationInfo(sa, this.m_policyInformationService);
+            }
 
             var sde = data as SecurityApplicationInfo;
             // If no policies then assign the ones from SYNCHRONIZERS
-            if (sde.Policies == null || sde.Policies.Count == 0 && sde.Entity?.Policies == null || sde.Entity.Policies.Count == 0)
-
-            {
-                var role = ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>()?.GetRole("SYNCHRONIZERS");
-                var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>()?.GetPolicies(role);
-                if (policies != null)
-                    sde.Policies = policies.Select(o => new SecurityPolicyInfo(o)).ToList();
-            }
+            //if (sde.Policies?.Any() != true)
+            //{
+            //    var role = this.m_securityRepository.GetRole("APPLICATIONS");
+            //    var policies = this.m_policyInformationService?.GetPolicies(role);
+            //    if (policies != null)
+            //    {
+            //        sde.Policies = policies.Select(o => new SecurityPolicyInfo(o)).ToList();
+            //    }
+            //}
+            //Policies now always copy from APPLICATIONS in AdoApplicationIdentityProvider
 
             return base.Create(data, updateIfExists);
         }
 
         /// <summary>
-        /// Update the device
+        /// Update the application.
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.CreateApplication)]
         public override object Update(object data)
         {
-            if (data is SecurityApplication)
-                data = new SecurityApplicationInfo(data as SecurityApplication);
+            if (data is SecurityApplication app)
+            {
+                data = new SecurityApplicationInfo(app, this.m_policyInformationService);
+            }
+
+            //Secret changes are handled by the downstream identity provider on save. This is different to how the user service is built up.
+
             return base.Update(data);
         }
 
         /// <summary>
-        /// Obolete the device
+        /// Obolete the application
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.CreateApplication)]
-        public override object Obsolete(object key)
+        public override object Delete(object key)
         {
-            return base.Obsolete(key);
+            return base.Delete(key);
         }
 
         /// <summary>
@@ -99,23 +110,22 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.CreateApplication)]
         public object Lock(object key)
         {
-            ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().LockApplication((Guid)key);
+            this.m_securityRepository.LockApplication((Guid)key);
             var retVal = this.Get(key, Guid.Empty);
             this.FireSecurityAttributesChanged(retVal, true, "Lockout = true");
             return retVal;
         }
 
         /// <summary>
-        /// Unlock user
+        /// Unlock the application.
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.CreateApplication)]
         public object Unlock(object key)
         {
-            ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().UnlockApplication((Guid)key);
+            this.m_securityRepository.UnlockApplication((Guid)key);
             var retVal = this.Get(key, Guid.Empty);
             this.FireSecurityAttributesChanged(retVal, true, "Lockout = false");
             return retVal;
         }
-
     }
 }

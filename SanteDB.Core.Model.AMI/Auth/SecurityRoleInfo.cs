@@ -16,10 +16,11 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using Newtonsoft.Json;
 using SanteDB.Core.Model.Security;
+using SanteDB.Core.Security.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,17 +41,24 @@ namespace SanteDB.Core.Model.AMI.Auth
         /// </summary>
         public SecurityRoleInfo()
         {
+        }
+
+        /// <summary>
+        /// Create new security role
+        /// </summary>
+        public SecurityRoleInfo(SecurityRole role) : this(role, ApplicationServiceContext.Current.GetService<IPolicyInformationService>())
+        {
 
         }
 
         /// <summary>
         /// Create new security role information from the specified role
         /// </summary>
-        public SecurityRoleInfo(SecurityRole role)
+        public SecurityRoleInfo(SecurityRole role, IPolicyInformationService pipService)
         {
             this.Users = role.Users.Select(o => o.UserName).ToList();
             this.Entity = role;
-            this.Policies = role.Policies.Where(o => o.Policy != null).Select(o => new SecurityPolicyInfo(o)).ToList();
+            this.Policies = pipService.GetPolicies(role).Select(o => new SecurityPolicyInfo(o)).ToList();
         }
 
         /// <summary>
@@ -86,10 +94,18 @@ namespace SanteDB.Core.Model.AMI.Auth
         /// Get the key for the object
         /// </summary>
         [JsonProperty("id"), XmlElement("id")]
-        public string Key
+        public Guid? Key
         {
-            get => this.Entity?.Key?.ToString();
-            set => this.Entity.Key = Guid.Parse(value);
+            get => this.Entity?.Key;
+            set => this.Entity.Key = value;
+        }
+
+        /// <inheritdoc/>
+        [XmlIgnore, JsonIgnore]
+        Object IAmiIdentified.Key
+        {
+            get => this.Key;
+            set => this.Key = Guid.Parse(value.ToString());
         }
 
 
@@ -99,7 +115,6 @@ namespace SanteDB.Core.Model.AMI.Auth
         [JsonIgnore]
         [XmlIgnore]
         public DateTimeOffset ModifiedOn => this.Entity?.ModifiedOn ?? DateTimeOffset.Now;
-
 
         /// <summary>
         /// Get the tag

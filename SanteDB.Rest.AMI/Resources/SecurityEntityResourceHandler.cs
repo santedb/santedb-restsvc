@@ -1,28 +1,29 @@
 ﻿/*
- * Portions Copyright 2015-2019 Mohawk College of Applied Arts and Technology
- * Portions Copyright 2019-2022 SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ * Copyright (C) 2021 - 2022, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
+ * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
- * DatERROR: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
+using SanteDB.Core.Model;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Query;
-using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Security.Services;
@@ -32,6 +33,7 @@ using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
@@ -42,29 +44,31 @@ namespace SanteDB.Rest.AMI.Resources
     /// Represents a resource handler that wraps a security based entity
     /// </summary>
     /// <typeparam name="TSecurityEntity">The type of security entity being wrapped</typeparam>
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public abstract class SecurityEntityResourceHandler<TSecurityEntity> : IApiResourceHandler, IChainedApiResourceHandler,IServiceImplementation
-        where TSecurityEntity : SecurityEntity
+    public abstract class SecurityEntityResourceHandler<TSecurityEntity> : ChainedResourceHandlerBase
+        where TSecurityEntity : NonVersionedEntityData
     {
-        // Localization Service
-        protected readonly ILocalizationService m_localizationService;
-
-        // Property providers
-        private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
-
         // The repository for the entity
         private IRepositoryService<TSecurityEntity> m_repository;
 
-        // Get the tracer
-        protected Tracer m_tracer = Tracer.GetTracer(typeof(SecurityEntityResourceHandler<TSecurityEntity>));
+        // CAche Service
+        private IDataCachingService m_cacheService;
+
+        // Policy information service
+        protected IPolicyInformationService m_policyInformationService;
+
+        readonly IAuditService _AuditService;
 
         /// <summary>
-        /// Create a new instance of the security entity resource handler
+        /// Create a new instance of the respository handler
         /// </summary>
-        public SecurityEntityResourceHandler(ILocalizationService localizationService)
+        public SecurityEntityResourceHandler(IAuditService auditService, IPolicyInformationService policyInformationService, ILocalizationService localizationService, IDataCachingService cachingService = null, IRepositoryService<TSecurityEntity> repository = null)
+            : base(localizationService)
+
         {
-            ApplicationServiceContext.Current.Started += (o, e) => this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<TSecurityEntity>>();
-            this.m_localizationService = localizationService;
+            this.m_cacheService = cachingService;
+            this.m_repository = repository;
+            this.m_policyInformationService = policyInformationService;
+            _AuditService = auditService;
         }
 
         /// <summary>
@@ -72,35 +76,33 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         protected void FireSecurityAttributesChanged(object scope, bool success, params String[] changedProperties)
         {
-            AuditUtil.AuditSecurityAttributeAction(new object[] { scope }, success, changedProperties);
+            _AuditService.Audit().ForSecurityAttributeAction(new object[] { scope }, success, changedProperties).Send();
         }
 
         /// <summary>
         /// Gets the name of the resource
         /// </summary>
-        public string ResourceName => typeof(TSecurityEntity).GetCustomAttribute<XmlRootAttribute>().ElementName;
+        public override string ResourceName => typeof(TSecurityEntity).GetCustomAttribute<XmlRootAttribute>().ElementName;
 
         /// <summary>
         /// Gets the type that this handles
         /// </summary>
-        public virtual Type Type => typeof(ISecurityEntityInfo<TSecurityEntity>);
+        public override Type Type => typeof(TSecurityEntity);
+
+        /// <summary>
+        /// Get the wrapped type
+        /// </summary>
+        protected abstract Type WrapperType { get; }
 
         /// <summary>
         /// Gets the scope of the object
         /// </summary>
-        public Type Scope => typeof(IAmiServiceContract);
+        public override Type Scope => typeof(IAmiServiceContract);
 
         /// <summary>
         /// Gets the capabilities of the resource
         /// </summary>
-        public ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.CreateOrUpdate | ResourceCapabilityType.Delete | ResourceCapabilityType.Get | ResourceCapabilityType.Search | ResourceCapabilityType.Update;
-
-        /// <summary>
-        /// Get the child resources
-        /// </summary>
-        public IEnumerable<IApiChildResourceHandler> ChildResources => this.m_propertyProviders.Values;
-
-        public string ServiceName => "Security Entity Resource Service";
+        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.CreateOrUpdate | ResourceCapabilityType.Delete | ResourceCapabilityType.Get | ResourceCapabilityType.Search | ResourceCapabilityType.Update;
 
         /// <summary>
         /// Gets the repository
@@ -108,15 +110,10 @@ namespace SanteDB.Rest.AMI.Resources
         protected IRepositoryService<TSecurityEntity> GetRepository()
         {
             if (this.m_repository == null)
-                this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<TSecurityEntity>>();
-            if (this.m_repository == null)
             {
-                this.m_tracer.TraceError($"IRepositoryService<{typeof(TSecurityEntity).FullName}> not found and no repository is found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.repositoryNotFound", new
-                {
-                    param = typeof(TSecurityEntity).FullName
-                }));
+                this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<TSecurityEntity>>();
             }
+
             return this.m_repository;
         }
 
@@ -127,15 +124,14 @@ namespace SanteDB.Rest.AMI.Resources
         /// <param name="updateIfExists">True if the data should be updated if it already exists</param>
         /// <returns>The created object</returns>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual object Create(object data, bool updateIfExists)
+        public override object Create(object data, bool updateIfExists)
         {
-
             // First, we want to copy over the roles
             var td = data as ISecurityEntityInfo<TSecurityEntity>;
             if (td is null)
             {
                 this.m_tracer.TraceError($"Invalid type {nameof(data)}");
-                throw new ArgumentException(this.m_localizationService.FormatString("error.type.ArgumentException", new
+                throw new ArgumentException(this.LocalizationService.GetString("error.type.ArgumentException", new
                 {
                     param = nameof(data)
                 }));
@@ -143,28 +139,35 @@ namespace SanteDB.Rest.AMI.Resources
 
             try
             {
-                // Now for the fun part we want to map any policies over to the wrapped type
-                if (td.Entity.Policies != null && td.Policies != null)
-                    td.Entity.Policies = td.Policies.Select(p => new SecurityPolicyInstance(p.Policy, p.Grant)).ToList();
-
                 if (updateIfExists)
                 {
                     td.Entity = this.GetRepository().Save(td.Entity);
-                    AuditUtil.AuditDataAction(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Update, Core.Auditing.AuditableObjectLifecycle.Amendment, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.Success, null, td.Entity);
+                    _AuditService.Audit().ForEventDataAction(EventTypeCodes.SecurityObjectChanged, Core.Model.Audit.ActionType.Update, Core.Model.Audit.AuditableObjectLifecycle.Amendment, Core.Model.Audit.EventIdentifierType.SecurityAlert, Core.Model.Audit.OutcomeIndicator.Success, null, td.Entity).Send();
                 }
                 else
                 {
                     td.Entity = this.GetRepository().Insert(td.Entity);
-                    AuditUtil.AuditDataAction(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Create, Core.Auditing.AuditableObjectLifecycle.Creation, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.Success, null, td.Entity);
+                    _AuditService.Audit().ForEventDataAction(EventTypeCodes.SecurityObjectChanged, Core.Model.Audit.ActionType.Create, Core.Model.Audit.AuditableObjectLifecycle.Creation, Core.Model.Audit.EventIdentifierType.SecurityAlert, Core.Model.Audit.OutcomeIndicator.Success, null, td.Entity).Send();
+                }
+
+                // Add policies
+                if (td.Policies?.Any() == true)
+                {
+                    foreach (var pol in td.Policies.GroupBy(o => o.Grant))
+                    {
+                        this.m_policyInformationService.AddPolicies(td.Entity, pol.Key, AuthenticationContext.Current.Principal, pol.Select(o => o.Oid).ToArray());
+                    }
                 }
 
                 // Special case for security entity wrappers, we want to load them from DB from fresh
-                ApplicationServiceContext.Current.GetService<IDataCachingService>()?.Remove(td.Entity.Key.Value);
+                this.m_cacheService?.Remove(td.Entity.Key.Value);
+
+                td.Policies = this.m_policyInformationService.GetPolicies(td.Entity).Select(o => new SecurityPolicyInfo(o)).ToList();
                 return td;
             }
             catch
             {
-                AuditUtil.AuditDataAction<TSecurityEntity>(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Create, Core.Auditing.AuditableObjectLifecycle.Creation, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.MinorFail, null, td.Entity);
+                _AuditService.Audit().ForEventDataAction<TSecurityEntity>(EventTypeCodes.SecurityObjectChanged, Core.Model.Audit.ActionType.Create, Core.Model.Audit.AuditableObjectLifecycle.Creation, Core.Model.Audit.EventIdentifierType.SecurityAlert, Core.Model.Audit.OutcomeIndicator.MinorFail, null, td.Entity).Send();
                 throw;
             }
         }
@@ -173,36 +176,35 @@ namespace SanteDB.Rest.AMI.Resources
         /// Get the specified object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual object Get(object id, object versionId)
+        public override object Get(object id, object versionId)
         {
             // Get the object
             var data = this.GetRepository().Get((Guid)id, (Guid)versionId);
 
-            var retVal = Activator.CreateInstance(this.Type, data) as ISecurityEntityInfo<TSecurityEntity>;
-            retVal.Policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetPolicies(data).Select(o => new SecurityPolicyInfo(o)).ToList();
+            var retVal = Activator.CreateInstance(this.WrapperType, data) as ISecurityEntityInfo<TSecurityEntity>;
+            retVal.Policies = this.m_policyInformationService.GetPolicies(data).Select(o => new SecurityPolicyInfo(o)).ToList();
             return retVal;
-
         }
 
         /// <summary>
         /// Obsolete the specified object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual object Obsolete(object key)
+        public override object Delete(object key)
         {
             try
             {
-                var retVal = Activator.CreateInstance(this.Type, this.GetRepository().Obsolete((Guid)key));
-                AuditUtil.AuditDataAction(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Delete, Core.Auditing.AuditableObjectLifecycle.LogicalDeletion, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.Success, key.ToString(), retVal);
+                var retVal = Activator.CreateInstance(this.WrapperType, this.GetRepository().Delete((Guid)key));
+                _AuditService.Audit().ForEventDataAction(EventTypeCodes.SecurityObjectChanged, Core.Model.Audit.ActionType.Delete, Core.Model.Audit.AuditableObjectLifecycle.LogicalDeletion, Core.Model.Audit.EventIdentifierType.SecurityAlert, Core.Model.Audit.OutcomeIndicator.Success, key.ToString(), retVal).Send();
 
                 // Special case for security entity wrappers, we want to load them from DB from fresh
-                ApplicationServiceContext.Current.GetService<IDataCachingService>()?.Remove((Guid)key);
+                this.m_cacheService?.Remove((Guid)key);
 
                 return retVal;
             }
             catch
             {
-                AuditUtil.AuditDataAction<TSecurityEntity>(EventTypeCodes.SecurityObjectChanged, Core.Auditing.ActionType.Delete, Core.Auditing.AuditableObjectLifecycle.LogicalDeletion, Core.Auditing.EventIdentifierType.SecurityAlert, Core.Auditing.OutcomeIndicator.MinorFail, key.ToString());
+                _AuditService.Audit().ForEventDataAction<TSecurityEntity>(EventTypeCodes.SecurityObjectChanged, Core.Model.Audit.ActionType.Delete, Core.Model.Audit.AuditableObjectLifecycle.LogicalDeletion, Core.Model.Audit.EventIdentifierType.SecurityAlert, Core.Model.Audit.OutcomeIndicator.MinorFail, key.ToString()).Send();
                 throw;
             }
         }
@@ -211,57 +213,38 @@ namespace SanteDB.Rest.AMI.Resources
         /// Query for the specified object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual IEnumerable<object> Query(NameValueCollection queryParameters)
-        {
-            int tr = 0;
-            return this.Query(queryParameters, 0, 100, out tr);
-        }
-
-        /// <summary>
-        /// Query for specified objects
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             var query = QueryExpressionParser.BuildLinqExpression<TSecurityEntity>(queryParameters);
 
-            List<String> orderBy = null, queryId = null;
-            Guid? queryIdParsed = null;
-            // Order by
-            ModelSort<TSecurityEntity>[] sortParameters = null;
-            if (queryParameters.TryGetValue("_orderBy", out orderBy))
-                sortParameters = QueryExpressionParser.BuildSort<TSecurityEntity>(orderBy);
-            if (queryParameters.TryGetValue("_queryId", out queryId))
-                queryIdParsed = Guid.Parse(queryId.First());
-
-            var repo = this.GetRepository();
-            IEnumerable<TSecurityEntity> results = null;
-            if (repo is IPersistableQueryRepositoryService<TSecurityEntity> && queryIdParsed.HasValue)
-                results = (repo as IPersistableQueryRepositoryService<TSecurityEntity>).Find(query, offset, count, out totalCount, queryIdParsed.Value, sortParameters);
-            else
-                results = repo.Find(query, offset, count, out totalCount, sortParameters);
-
-            return results.Select(o =>
+            try
             {
-                var r = Activator.CreateInstance(this.Type, o) as ISecurityEntityInfo<TSecurityEntity>;
-                r.Policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>().GetPolicies(o).Select(p => new SecurityPolicyInfo(p)).ToList();
-                return r;
-            }).OfType<Object>();
-
+                return new TransformQueryResultSet<TSecurityEntity, ISecurityEntityInfo<TSecurityEntity>>(this.m_repository.Find(query), (o) =>
+                {
+                    var r = Activator.CreateInstance(this.WrapperType, o) as ISecurityEntityInfo<TSecurityEntity>;
+                    r.Policies = this.m_policyInformationService.GetPolicies(o).Select(p => new SecurityPolicyInfo(p)).ToList();
+                    return r;
+                });
+            }
+            catch (Exception e)
+            {
+                this.m_tracer.TraceError("Error querying security resource {0} - {1}", typeof(TSecurityEntity), e);
+                throw new Exception(this.LocalizationService.GetString("error.rest.ami.subscriptionQuery"), e);
+            }
         }
 
         /// <summary>
         /// Update the specified object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual object Update(object data)
+        public override object Update(object data)
         {
             // First, we want to copy over the roles
             var td = data as ISecurityEntityInfo<TSecurityEntity>;
             if (td is null)
             {
                 this.m_tracer.TraceError($"Invalid type {nameof(data)}");
-                throw new ArgumentException(this.m_localizationService.FormatString("error.type.ArgumentException", new
+                throw new ArgumentException(this.LocalizationService.GetString("error.type.ArgumentException", new
                 {
                     param = nameof(data)
                 }));
@@ -269,15 +252,32 @@ namespace SanteDB.Rest.AMI.Resources
 
             try
             {
-                // Now for the fun part we want to map any policies over to the wrapped type
-                if (td.Policies != null)
-                    td.Entity.Policies = td.Policies.Select(p => new SecurityPolicyInstance(p.Policy, p.Grant)).ToList();
                 td.Entity = this.GetRepository().Save(td.Entity);
+
+                // Add policies
+                if (td.Policies?.Any() == true)
+                {
+                    var currentPolicies = this.m_policyInformationService.GetPolicies(td.Entity).Select(o => new { rule = o.Rule, pol = o.Policy.Oid });
+                    var newPolicies = td.Policies.Select(p => new { rule = p.Grant, pol = p.Oid });
+                    var addedPolicies = newPolicies.Except(currentPolicies);
+                    var removedPolicies = currentPolicies.Except(newPolicies);
+
+                    if (addedPolicies.Any() || removedPolicies.Any())
+                    {
+                        this.m_policyInformationService.RemovePolicies(td.Entity, AuthenticationContext.Current.Principal, removedPolicies.Select(o => o.pol).ToArray());
+                        foreach (var pol in addedPolicies.GroupBy(o => o.rule))
+                        {
+                            this.m_policyInformationService.AddPolicies(td.Entity, pol.Key, AuthenticationContext.Current.Principal, pol.Select(o => o.pol).ToArray());
+                        }
+                    }
+                }
 
                 FireSecurityAttributesChanged(td.Entity, true);
 
                 // Special case for security entity wrappers, we want to load them from DB from fresh
-                ApplicationServiceContext.Current.GetService<IDataCachingService>()?.Remove(td.Entity.Key.Value);
+                this.m_cacheService?.Remove(td.Entity.Key.Value);
+
+                td.Policies = this.m_policyInformationService.GetPolicies(td.Entity).Select(o => new SecurityPolicyInfo(o)).ToList();
 
                 return td;
             }
@@ -288,111 +288,42 @@ namespace SanteDB.Rest.AMI.Resources
             }
         }
 
-        /// <summary>
-        /// Add a child resource
-        /// </summary>
-        public virtual void AddChildResource(IApiChildResourceHandler property)
-        {
-            this.m_propertyProviders.TryAdd(property.Name, property);
-        }
 
         /// <summary>
         /// Remove a child object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
+        public override object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
         {
-            Guid objectKey = (Guid)scopingEntityKey;
-
-            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Remove(typeof(TSecurityEntity), objectKey, subItemKey);
-            }
-            else
-            {
-                this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
-                {
-                    param = propertyName
-                }));
-            }
+            return base.RemoveChildObject(scopingEntityKey, propertyName, subItemKey);
         }
 
         /// <summary>
         /// Query child objects
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual IEnumerable<object> QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
+        public override IQueryResultSet QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter)
         {
-            Guid objectKey = (Guid)scopingEntityKey;
-            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Query(typeof(TSecurityEntity), objectKey, filter, offset, count, out totalCount);
-            }
-            else
-            {
-                this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
-                {
-                    param = propertyName
-                }));
-            }
+            return base.QueryChildObjects(scopingEntityKey, propertyName, filter);
         }
 
         /// <summary>
         /// Add a child object instance
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
+        public override object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
         {
-            Guid objectKey = (Guid)scopingEntityKey;
-            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Add(typeof(TSecurityEntity), scopingEntityKey, scopedItem);
-            }
-            else
-            {
-                this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound",new
-                {
-                    param = propertyName
-                }));
-            }
+            return base.AddChildObject(scopingEntityKey, propertyName, scopedItem);
         }
 
         /// <summary>
         /// Get a child object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual object GetChildObject(object scopingEntity, string propertyName, object subItemKey)
+        public override object GetChildObject(object scopingEntity, string propertyName, object subItemKey)
         {
-            Guid objectKey = (Guid)scopingEntity;
-            if (this.TryGetChainedResource(propertyName, scopingEntity == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Get(typeof(TSecurityEntity), objectKey, subItemKey);
-            }
-            else
-            {
-                this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
-                {
-                    param = propertyName
-                }));
-            }
+            return base.GetChildObject(scopingEntity, propertyName, subItemKey);
         }
 
-        /// <summary>
-        /// Try to get a chained resource
-        /// </summary>
-        public virtual bool TryGetChainedResource(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildResourceHandler childHandler)
-        {
-            var retVal = this.m_propertyProviders.TryGetValue(propertyName, out childHandler) &&
-                childHandler.ScopeBinding.HasFlag(bindingType);
-            if (!retVal)
-            {
-                childHandler = null;//clear in case of lazy programmers like me
-            }
-            return retVal;
-        }
     }
 }

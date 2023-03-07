@@ -16,10 +16,11 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.DataTypes;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.HDSI.Resources
@@ -28,20 +29,19 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Template definition resource handler
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class TemplateDefinitionResourceHandler : ResourceHandlerBase<TemplateDefinition>
+    public class TemplateDefinitionResourceHandler : HdsiResourceHandlerBase<TemplateDefinition>
     {
         /// <summary>
         /// DI constructor
         /// </summary>
         /// <param name="localizationService"></param>
-        public TemplateDefinitionResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        public TemplateDefinitionResourceHandler(ILocalizationService localizationService, IRepositoryService<TemplateDefinition> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
-
         }
+
         /// <summary>
-        /// Get capabilities 
+        /// Get capabilities
         /// </summary>
         public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Search;
-
     }
 }

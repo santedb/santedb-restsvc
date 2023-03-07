@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using Newtonsoft.Json;
 using SanteDB.Core.Diagnostics;
@@ -51,9 +51,13 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
             this.ReadingDate = DateTime.Now;
             this.ProbeKey = counter.Uuid;
             if (counter is ICompositeDiagnosticsProbe)
+            {
                 this.Value = (counter as ICompositeDiagnosticsProbe).Value.Select(o => new DiagnosticsProbeReading(o)).ToArray();
+            }
             else
+            {
                 this.Value = counter.Value;
+            }
         }
 
         /// <summary>

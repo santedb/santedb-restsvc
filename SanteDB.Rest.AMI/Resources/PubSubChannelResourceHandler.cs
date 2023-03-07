@@ -1,21 +1,22 @@
 ﻿/*
- * Portions Copyright 2015-2019 Mohawk College of Applied Arts and Technology
- * Portions Copyright 2019-2022 SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ * Copyright (C) 2021 - 2022, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
+ * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
- * DatERROR: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
@@ -26,7 +27,7 @@ using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
@@ -41,7 +42,7 @@ namespace SanteDB.Rest.AMI.Resources
         private IPubSubManagerService m_manager;
 
         // Tracer
-        private Tracer m_tracer = Tracer.GetTracer(typeof(PubSubSubscriptionDefinition));
+        private readonly Tracer m_tracer = Tracer.GetTracer(typeof(PubSubSubscriptionDefinition));
 
         private ILocalizationService m_localizationService;
 
@@ -57,7 +58,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Gets the name of the resource
         /// </summary>
-        public string ResourceName => "PubSubChannel";
+        public string ResourceName => typeof(PubSubChannelDefinition).GetSerializationName();
 
         /// <summary>
         /// Gets the type this handles
@@ -115,11 +116,13 @@ namespace SanteDB.Rest.AMI.Resources
         public object Get(object id, object versionId)
         {
             if (id is Guid uuid)
+            {
                 return this.m_manager.GetChannel(uuid);
+            }
             else
             {
                 this.m_tracer.TraceError($"{id} is not a valid UUID");
-                throw new ArgumentException(this.m_localizationService.FormatString("error.rest.ami.invalidUUID", new { param = id.ToString() }));
+                throw new ArgumentException(this.m_localizationService.GetString("error.rest.ami.invalidUUID", new { param = id.ToString() }));
             }
         }
 
@@ -127,14 +130,16 @@ namespace SanteDB.Rest.AMI.Resources
         /// Obsolete the specified object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.DeletePubSubSubscription)]
-        public object Obsolete(object key)
+        public object Delete(object key)
         {
             if (key is Guid uuid)
+            {
                 return this.m_manager.RemoveChannel(uuid);
+            }
             else
             {
                 this.m_tracer.TraceError($"{key} is not a valid UUID");
-                throw new ArgumentException(this.m_localizationService.FormatString("error.rest.ami.invalidUUID", new { param = key.ToString() }));
+                throw new ArgumentException(this.m_localizationService.GetString("error.rest.ami.invalidUUID", new { param = key.ToString() }));
             }
         }
 
@@ -142,21 +147,12 @@ namespace SanteDB.Rest.AMI.Resources
         /// Query the specified channels
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadPubSubSubscription)]
-        public IEnumerable<object> Query(NameValueCollection queryParameters)
-        {
-            return this.Query(queryParameters, 0, 20, out int _);
-        }
-
-        /// <summary>
-        /// Query the specified channels
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.ReadPubSubSubscription)]
-        public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        public IQueryResultSet Query(NameValueCollection queryParameters)
         {
             try
             {
                 var filter = QueryExpressionParser.BuildLinqExpression<PubSubChannelDefinition>(queryParameters);
-                return this.m_manager.FindChannel(filter, offset, count, out totalCount);
+                return this.m_manager.FindChannel(filter);
             }
             catch (Exception e)
             {
@@ -180,7 +176,7 @@ namespace SanteDB.Rest.AMI.Resources
                 catch (Exception e)
                 {
                     this.m_tracer.TraceError($"Error updating channel definition: {definition.Key}", e);
-                    throw new Exception(this.m_localizationService.FormatString("error.rest.ami.updatingChannel", new { param = definition.Key }), e);
+                    throw new Exception(this.m_localizationService.GetString("error.rest.ami.updatingChannel", new { param = definition.Key }), e);
                 }
             }
             else

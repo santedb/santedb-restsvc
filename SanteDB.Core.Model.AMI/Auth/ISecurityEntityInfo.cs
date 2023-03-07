@@ -16,9 +16,9 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
-using SanteDB.Core.Model.Security;
+using SanteDB.Core.Model.Interfaces;
 using System.Collections.Generic;
 
 namespace SanteDB.Core.Model.AMI.Auth
@@ -38,8 +38,8 @@ namespace SanteDB.Core.Model.AMI.Auth
     /// <summary>
     /// Represents an object that provide a wrapper for a security info
     /// </summary>
-    public interface ISecurityEntityInfo<TSecurityObject> : IAmiIdentified, ISecurityEntityInfo
-        where TSecurityObject : SecurityEntity
+    public interface ISecurityEntityInfo<TSecurityObject> : IAmiIdentified, IIdentifiedResource, ISecurityEntityInfo
+        where TSecurityObject : NonVersionedEntityData
     {
 
 

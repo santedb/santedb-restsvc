@@ -16,13 +16,11 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-10-15
+ * Date: 2022-5-30
  */
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Services;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SanteDB.Rest.Common.Configuration
 {
@@ -50,7 +48,7 @@ namespace SanteDB.Rest.Common.Configuration
         /// <summary>
         /// Gets the description
         /// </summary>
-        public string Description => $"Installs the {this.m_configuration.Name} REST service at {this.m_configuration.Endpoints[0].Address}";
+        public string Description => $"Installs the {this.m_configuration.ConfigurationName} REST service at {this.m_configuration.Endpoints[0].Address}";
 
         /// <summary>
         /// Gets the feature
@@ -60,7 +58,7 @@ namespace SanteDB.Rest.Common.Configuration
         /// <summary>
         /// Gets the name
         /// </summary>
-        public string Name => $"Install {this.m_configuration.Name} REST API";
+        public string Name => $"Install {this.m_configuration.ConfigurationName} REST API";
 
         /// <summary>
         /// Progress has changed
@@ -79,7 +77,7 @@ namespace SanteDB.Rest.Common.Configuration
                 configuration.AddSection(restSection);
             }
 
-            restSection.Services.RemoveAll(o => o.Name == this.m_configuration.Name);
+            restSection.Services.RemoveAll(o => o.ConfigurationName == this.m_configuration.ConfigurationName);
             restSection.Services.Add(this.m_configuration);
             return true;
         }

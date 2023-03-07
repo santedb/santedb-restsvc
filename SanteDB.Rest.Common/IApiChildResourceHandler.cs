@@ -16,12 +16,12 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
 using System;
-using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace SanteDB.Rest.Common
 {
@@ -30,12 +30,10 @@ namespace SanteDB.Rest.Common
     /// </summary>
     public interface IApiChildResourceHandler : IApiChildObject
     {
-
         /// <summary>
         /// Gets the type of data this associative property is expecting
         /// </summary>
         Type PropertyType { get; }
-
 
         /// <summary>
         /// The capabilities of the sub-resource
@@ -45,7 +43,7 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Get the value of the associated property with no context (exmaple: GET /hdsi/resource/property)
         /// </summary>
-        IEnumerable<object> Query(Type scopingType, Object scopingKey, NameValueCollection filter, int offset, int count, out int totalCount);
+        IQueryResultSet Query(Type scopingType, Object scopingKey, NameValueCollection filter);
 
         /// <summary>
         /// Get the value of the associated property with context (exmaple: GET /hdsi/resource/property/key)

@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using Newtonsoft.Json;
 using SanteDB.Core.Services;
@@ -74,7 +74,6 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
             this.Description = (instance as IServiceImplementation)?.ServiceName ??
                 daemonType.GetCustomAttribute<ServiceProviderAttribute>()?.Name ??
                 daemonType.FullName;
-            this.IsRunning = (instance as IDaemonService)?.IsRunning == true;
 
         }
 
@@ -83,7 +82,11 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         /// </summary>
         public DiagnosticServiceInfo(object daemon) : this(daemon.GetType())
         {
-            this.IsRunning = (bool)(daemon.GetType().GetRuntimeProperty("IsRunning")?.GetValue(daemon) ?? false);
+            if (daemon is IDaemonService d)
+            {
+                this.IsRunning = d.IsRunning;
+            }
+
         }
 
         /// <summary>

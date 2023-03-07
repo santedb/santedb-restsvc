@@ -16,9 +16,10 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using Newtonsoft.Json;
+using SanteDB.Core.Security.Services;
 using System;
 using System.Xml.Serialization;
 
@@ -32,12 +33,23 @@ namespace SanteDB.Core.Model.AMI.Auth
     [JsonObject(nameof(TfaMechanismInfo))]
     public class TfaMechanismInfo
     {
+
         /// <summary>
-        /// Gets or sets the challenge text
+        /// Get the mechanism
         /// </summary>
-        [XmlElement("challenge")]
-        [JsonProperty("challenge")]
-        public string Challenge { get; set; }
+        public TfaMechanismInfo()
+        {
+
+        }
+
+        /// <summary>
+        /// Create a mechanism info from the specified <paramref name="tfaMechanism"/>
+        /// </summary>
+        public TfaMechanismInfo(ITfaMechanism tfaMechanism)
+        {
+            this.Id = tfaMechanism.Id;
+            this.Name = tfaMechanism.Name;
+        }
 
         /// <summary>
         /// Gets or sets the identifier

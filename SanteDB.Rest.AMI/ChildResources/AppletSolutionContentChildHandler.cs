@@ -1,21 +1,22 @@
 ﻿/*
- * Portions Copyright 2015-2019 Mohawk College of Applied Arts and Technology
- * Portions Copyright 2019-2022 SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ * Copyright (C) 2021 - 2022, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
+ * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
- * DatERROR: 2021-8-27
+ * Date: 2022-5-30
  */
 using RestSrvr;
 using SanteDB.Core.Applets.Model;
@@ -25,7 +26,7 @@ using SanteDB.Core.Model.AMI.Applet;
 using SanteDB.Core.Model.Query;
 using SanteDB.Rest.Common;
 using System;
-using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 
@@ -54,14 +55,16 @@ namespace SanteDB.Rest.AMI.ChildResources
 
         // Solution Manager
         private IAppletSolutionManagerService m_solutionManager;
+        private readonly IAppletManagerService m_appletManager;
 
         /// <summary>
         /// Creates a new content child handler
         /// </summary>
         /// <param name="solutionManager">The solution manager</param>
-        public AppletSolutionContentChildHandler(IAppletSolutionManagerService solutionManager)
+        public AppletSolutionContentChildHandler(IAppletSolutionManagerService solutionManager, IAppletManagerService appletManager)
         {
             this.m_solutionManager = solutionManager;
+            this.m_appletManager = appletManager;
         }
 
         /// <summary>
@@ -72,7 +75,7 @@ namespace SanteDB.Rest.AMI.ChildResources
         /// <summary>
         /// Binding
         /// </summary>
-        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Instance;
+        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Instance | ChildObjectScopeBinding.Class;
 
         /// <summary>
         /// Adding applets is not yet supported
@@ -87,17 +90,32 @@ namespace SanteDB.Rest.AMI.ChildResources
         /// </summary>
         public object Get(Type scopingType, object scopingKey, object key)
         {
-            var appletData = this.m_solutionManager.GetPackage(scopingKey.ToString(), key.ToString());
+            var solutionId = scopingKey.ToString();
+            byte[] appletData = null;
+
+            if (String.IsNullOrEmpty(solutionId))
+            {
+                appletData = this.m_appletManager.GetPackage(key.ToString());
+            }
+            else
+            {
+                appletData = this.m_solutionManager.GetPackage(solutionId, key.ToString());
+            }
 
             if (appletData == null)
+            {
                 throw new FileNotFoundException(key.ToString());
+            }
             else
             {
                 var appletManifest = AppletPackage.Load(appletData);
                 RestOperationContext.Current.OutgoingResponse.SetETag(appletManifest.Meta.Version);
-                RestOperationContext.Current.OutgoingResponse.Headers.Add("X-SanteDB-PakID", appletManifest.Meta.Id);
+                RestOperationContext.Current.OutgoingResponse.Headers.Add(ExtendedHttpHeaderNames.PackageIdentifierHeaderName, appletManifest.Meta.Id);
                 if (appletManifest.Meta.Hash != null)
-                    RestOperationContext.Current.OutgoingResponse.AppendHeader("X-SanteDB-Hash", Convert.ToBase64String(appletManifest.Meta.Hash));
+                {
+                    RestOperationContext.Current.OutgoingResponse.AppendHeader(ExtendedHttpHeaderNames.PackageHashHeaderName, Convert.ToBase64String(appletManifest.Meta.Hash));
+                }
+
                 RestOperationContext.Current.OutgoingResponse.AppendHeader("Content-Type", "application/octet-stream");
                 RestOperationContext.Current.OutgoingResponse.ContentType = "application/octet-stream";
                 RestOperationContext.Current.OutgoingResponse.AppendHeader("Content-Disposition", $"attachment; filename=\"{appletManifest.Meta.Id}.pak.gz\"");
@@ -109,12 +127,11 @@ namespace SanteDB.Rest.AMI.ChildResources
         /// <summary>
         /// Query for applet
         /// </summary>
-        public IEnumerable<object> Query(Type scopingType, object scopingKey, NameValueCollection filter, int offset, int count, out int totalCount)
+        public IQueryResultSet Query(Type scopingType, object scopingKey, NameValueCollection filter)
         {
             var query = QueryExpressionParser.BuildLinqExpression<AppletManifest>(filter);
             var applets = this.m_solutionManager.GetApplets(scopingKey.ToString()).Where(query.Compile()).Select(o => new AppletManifestInfo(o.Info, null));
-            totalCount = applets.Count();
-            return applets.Skip(offset).Take(count).OfType<Object>();
+            return new MemoryQueryResultSet(applets);
         }
 
         /// <summary>
@@ -124,7 +141,5 @@ namespace SanteDB.Rest.AMI.ChildResources
         {
             throw new NotSupportedException();
         }
-
-
     }
 }

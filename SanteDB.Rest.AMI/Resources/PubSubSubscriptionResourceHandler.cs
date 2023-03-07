@@ -1,21 +1,22 @@
 ﻿/*
- * Portions Copyright 2015-2019 Mohawk College of Applied Arts and Technology
- * Portions Copyright 2019-2022 SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ * Copyright (C) 2021 - 2022, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
+ * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
- * DatERROR: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
@@ -29,6 +30,7 @@ using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
@@ -46,7 +48,7 @@ namespace SanteDB.Rest.AMI.Resources
         private IPubSubManagerService m_manager;
 
         // Tracer
-        private Tracer m_tracer = Tracer.GetTracer(typeof(PubSubSubscriptionDefinition));
+        private readonly Tracer m_tracer = Tracer.GetTracer(typeof(PubSubSubscriptionDefinition));
 
         // Localization service
         private readonly ILocalizationService m_localizationService;
@@ -63,7 +65,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Gets the name of the resource
         /// </summary>
-        public string ResourceName => "PubSubSubscription";
+        public string ResourceName => typeof(PubSubSubscriptionDefinition).GetSerializationName();
 
         /// <summary>
         /// Gets the type this handles
@@ -104,7 +106,10 @@ namespace SanteDB.Rest.AMI.Resources
                     // First , find the channel
                     var retVal = this.m_manager.RegisterSubscription(definition.ResourceType, definition.Name, definition.Description, definition.Event, definition.Filter.First(), definition.ChannelKey, definition.SupportContact, definition.NotBefore, definition.NotAfter);
                     if (definition.IsActive)
+                    {
                         this.m_manager.ActivateSubscription(retVal.Key.Value, true);
+                    }
+
                     return retVal;
                 }
                 catch (Exception e)
@@ -135,7 +140,7 @@ namespace SanteDB.Rest.AMI.Resources
                 catch (Exception e)
                 {
                     this.m_tracer.TraceError("Error fetching subscription {0} - {1}", id, e);
-                    throw new Exception(this.m_localizationService.FormatString("error.rest.ami.fetchingSubscription", new { param = uuid.ToString() }), e);
+                    throw new Exception(this.m_localizationService.GetString("error.rest.ami.fetchingSubscription", new { param = uuid.ToString() }), e);
                 }
             }
             else
@@ -149,7 +154,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Deletes the specified subscription
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.DeletePubSubSubscription)]
-        public object Obsolete(object key)
+        public object Delete(object key)
         {
             if (key is Guid uuid)
             {
@@ -160,7 +165,7 @@ namespace SanteDB.Rest.AMI.Resources
                 catch (Exception e)
                 {
                     this.m_tracer.TraceError("Error obsoleting / deleting subscription {0} - {1}", uuid, e);
-                    throw new Exception(this.m_localizationService.FormatString("error.rest.ami.obsoletingSubscription", new { param = uuid.ToString() }), e);
+                    throw new Exception(this.m_localizationService.GetString("error.rest.ami.obsoletingSubscription", new { param = uuid.ToString() }), e);
                 }
             }
             else
@@ -174,21 +179,12 @@ namespace SanteDB.Rest.AMI.Resources
         /// Find all subscriptions
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadPubSubSubscription)]
-        public IEnumerable<object> Query(NameValueCollection queryParameters)
-        {
-            return this.Query(queryParameters, 0, 25, out int _);
-        }
-
-        /// <summary>
-        /// Query for subscriptions
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.ReadPubSubSubscription)]
-        public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        public IQueryResultSet Query(NameValueCollection queryParameters)
         {
             try
             {
                 var filter = QueryExpressionParser.BuildLinqExpression<PubSubSubscriptionDefinition>(queryParameters);
-                return this.m_manager.FindSubscription(filter, offset, count, out totalCount);
+                return this.m_manager.FindSubscription(filter);
             }
             catch (Exception e)
             {
@@ -213,7 +209,7 @@ namespace SanteDB.Rest.AMI.Resources
                 catch (Exception e)
                 {
                     this.m_tracer.TraceError("Error updating subscription {0} - {1}", definition.Key, e);
-                    throw new Exception(this.m_localizationService.FormatString("error.rest.ami.updatingSubscription", new { param = definition.Key.ToString() }), e);
+                    throw new Exception(this.m_localizationService.GetString("error.rest.ami.updatingSubscription", new { param = definition.Key.ToString() }), e);
                 }
             }
             else

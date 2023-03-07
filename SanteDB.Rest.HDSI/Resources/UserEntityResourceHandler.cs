@@ -16,17 +16,18 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
@@ -34,16 +35,16 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a user entity resource handler.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class UserEntityResourceHandler : ResourceHandlerBase<UserEntity>
+    public class UserEntityResourceHandler : EntityResourceHandlerBase<UserEntity>
     {
         /// <summary>
         /// DI constructor
         /// </summary>
         /// <param name="localizationService"></param>
-        public UserEntityResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        public UserEntityResourceHandler(ILocalizationService localizationService, IRepositoryService<UserEntity> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
-
         }
+
         /// <summary>
         /// Create the specified user entity
         /// </summary>
@@ -54,7 +55,9 @@ namespace SanteDB.Rest.HDSI.Resources
             {
                 var securityService = ApplicationServiceContext.Current.GetService<IRepositoryService<SecurityUser>>();
                 if (securityService.Get(userEntity.SecurityUserKey.GetValueOrDefault()) != null)
+                {
                     return base.Create(data, updateIfExists);
+                }
                 else
                 {
                     this.m_tracer.TraceWarning("Security user {0} doesn't exist here, ignoring update", userEntity.SecurityUserKey);
@@ -70,7 +73,7 @@ namespace SanteDB.Rest.HDSI.Resources
         }
 
         /// <summary>
-        /// Gets the specified user 
+        /// Gets the specified user
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
         public override Object Get(object id, object versionId)
@@ -82,27 +85,18 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Obsolete
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.UnrestrictedMetadata)]
-        public override Object Obsolete(object key)
+        public override Object Delete(object key)
         {
-            return base.Obsolete((Guid)key);
+            return base.Delete((Guid)key);
         }
 
         /// <summary>
         /// Query the specified data
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public override IEnumerable<Object> Query(NameValueCollection queryParameters)
+        public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             return base.Query(queryParameters);
-        }
-
-        /// <summary>
-        /// Query specified user
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public override IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
-        {
-            return base.Query(queryParameters, offset, count, out totalCount);
         }
 
         /// <summary>
@@ -115,14 +109,15 @@ namespace SanteDB.Rest.HDSI.Resources
             {
                 var securityService = ApplicationServiceContext.Current.GetService<IRepositoryService<SecurityUser>>();
                 if (securityService.Get(userEntity.SecurityUserKey.GetValueOrDefault()) != null)
+                {
                     return base.Update(data);
+                }
                 else
                 {
                     this.m_tracer.TraceWarning("Security user {0} doesn't exist here, ignoring update", userEntity.SecurityUserKey);
                     userEntity.SecurityUserKey = null;
                     return base.Update(userEntity);
                 }
-
             }
             else
             {

@@ -16,15 +16,16 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
-using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
@@ -32,16 +33,15 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents an identifier type resource handler.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class IdentifierTypeResourceHandler : ResourceHandlerBase<IdentifierType>
+    public class IdentifierTypeResourceHandler : HdsiResourceHandlerBase<IdentifierType>
     {
         /// <summary>
         /// DI constructor
         /// </summary>
-        /// <param name="localizationService"></param>
-        public IdentifierTypeResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        public IdentifierTypeResourceHandler(ILocalizationService localizationService, IRepositoryService<IdentifierType> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
-
         }
+
         /// <summary>
         /// Get capabilities for this resource handler
         /// </summary>
@@ -60,10 +60,9 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Permission override
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public override IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
-            return base.Query(queryParameters, offset, count, out totalCount);
+            return base.Query(queryParameters);
         }
-
     }
 }

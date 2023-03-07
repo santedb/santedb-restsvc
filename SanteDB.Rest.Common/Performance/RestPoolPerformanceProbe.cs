@@ -16,13 +16,11 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2022-1-28
+ * Date: 2022-5-30
  */
 using SanteDB.Core.Diagnostics;
-using SanteDB.Core.Services;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace SanteDB.Rest.Common.Performance
 {
@@ -112,13 +110,13 @@ namespace SanteDB.Rest.Common.Performance
         /// </summary>
         private class PoolConcurrencyProbe : DiagnosticsProbeBase<int>
         {
-           
+
             /// <summary>
             /// Non pooled workers counter
             /// </summary>
             public PoolConcurrencyProbe() : base("Allocated Workers", "Shows the total number of threads which are allocated to processing HTTP requests")
             {
-               
+
             }
 
             /// <summary>
@@ -134,7 +132,7 @@ namespace SanteDB.Rest.Common.Performance
                 get
                 {
                     //ThreadPool.GetMaxThreads(out int workerCount, out int completionPort);
-                   RestSrvr.RestServerThreadPool.Current.GetWorkerStatus(out int workerCount, out _, out _);
+                    RestSrvr.RestServerThreadPool.Current.GetWorkerStatus(out int workerCount, out _, out _);
                     return workerCount;
                 }
             }

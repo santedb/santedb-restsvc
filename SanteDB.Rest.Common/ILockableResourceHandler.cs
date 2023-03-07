@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using System;
 
@@ -30,13 +30,14 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Obtain (checkout) a resource
         /// </summary>
+        /// <returns>Lock information that was created as a result of the checkout</returns>
         Object CheckOut(Object key);
 
         /// <summary>
         /// Releas a checkout
         /// </summary>
         /// <param name="key">The key of the resource to chekin.</param>
-        /// <returns>Returns the unlock object.</returns>
+        /// <returns>Returns lock information that was released as a result of checkin.</returns>
         Object CheckIn(Object key);
     }
 }

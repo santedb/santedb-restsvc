@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using Newtonsoft.Json;
 using RestSrvr.Attributes;
@@ -66,25 +66,25 @@ namespace SanteDB.Rest.Common.Configuration
             {
                 this.Endpoints = new List<RestEndpointConfiguration>(configuration.Endpoints?.Select(o => new RestEndpointConfiguration(o)));
             }
-            this.Name = configuration.Name;
+            this.ConfigurationName = configuration.ConfigurationName;
             this.ServiceType = configuration.ServiceType;
         }
 
         /// <summary>
         /// Creates a service configuration from the specified type
         /// </summary>
-        internal RestServiceConfiguration(Type type) : this()
+        public RestServiceConfiguration(Type implementationType) : this()
         {
-            this.Name = type.GetCustomAttribute<ServiceBehaviorAttribute>()?.Name ?? type.FullName;
-            this.ServiceType = type;
+            this.ConfigurationName = implementationType.GetCustomAttribute<ServiceBehaviorAttribute>()?.Name ?? implementationType.FullName;
+            this.ServiceType = implementationType;
         }
 
         /// <summary>
         /// Gets or sets the name of the service
         /// </summary>
         [XmlAttribute("name"), JsonProperty("name")]
-        [DisplayName("Info Name"), Description("Sets the informative name for this service")]
-        public string Name { get; set; }
+        [DisplayName("Configuration Name"), Description("Sets the informative name for this service")]
+        public string ConfigurationName { get; set; }
 
         /// <summary>
         /// Gets or sets the behavior
@@ -123,14 +123,17 @@ namespace SanteDB.Rest.Common.Configuration
         public static RestServiceConfiguration Load(Stream stream)
         {
             if (s_serializer == null)
+            {
                 s_serializer = XmlModelSerializerFactory.Current.CreateSerializer(typeof(RestServiceConfiguration));
+            }
+
             return s_serializer.Deserialize(stream) as RestServiceConfiguration;
         }
 
         /// <summary>
         /// Gets the string representation of this 
         /// </summary>
-        public override string ToString() => $"REST Service: {this.Name}";
+        public override string ToString() => $"REST Service: {this.ConfigurationName}";
 
     }
 }

@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using RestSrvr;
 using RestSrvr.Message;
@@ -148,8 +148,12 @@ namespace SanteDB.Rest.Common.Serialization
                     {"Access-Control-Allow-Headers", String.Join(",", settings.Headers)}
                 };
                 foreach (var kv in requiredHeaders)
+                {
                     if (!RestOperationContext.Current.OutgoingResponse.Headers.AllKeys.Contains(kv.Key))
+                    {
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(kv.Key, kv.Value);
+                    }
+                }
             }
         }
     }

@@ -1,24 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003"> -->
-  <!-- <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" /> -->
-  <!-- <PropertyGroup> -->
-    <!-- <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration> -->
-    <!-- <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform> -->
-    <!-- <ProjectGuid>{903E2E75-7B62-4C42-A001-404DC0235A6B}</ProjectGuid> -->
-    <!-- <OutputType>Library</OutputType> -->
-    <!-- <AppDesignerFolder>Properties</AppDesignerFolder> -->
-    <!-- <RootNamespace>SanteDB.Rest.HDSI</RootNamespace> -->
-    <!-- <AssemblyName>SanteDB.Rest.HDSI</AssemblyName> -->
-    <!-- <TargetFrameworkVersion>v4.7</TargetFrameworkVersion> -->
-    <!-- <FileAlignment>512</FileAlignment> -->
-    <!-- <Deterministic>false</Deterministic> -->
-  <!-- </PropertyGroup> -->
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(VersionNumber)' == ''">
-    <VersionNumber>2.1.0-debug</VersionNumber>
+    <VersionNumber>3.0-debug</VersionNumber>
   </PropertyGroup>
   <PropertyGroup>
     <PackageId>SanteDB.Rest.HDSI</PackageId>
@@ -39,9 +25,17 @@
     <Company>SanteSuite Contributors</Company>
     <PackageIconUrl>http://santesuite.org/assets/img/logo.png</PackageIconUrl>
     <PackageProjectUrl>http://santesuite.org</PackageProjectUrl>
-  </PropertyGroup>  
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Configuration\Default.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Configuration\Default.xml" />
+  </ItemGroup>  
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="ZXing.Net" Version="0.16.8" />
+    <PackageReference Include="ZXing.Net.Bindings.Windows.Compatibility" Version="0.16.10" />
   </ItemGroup>     
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -126,6 +120,7 @@
           <Name>RestSrvr</Name>
         </ProjectReference>
         <ProjectReference Include="..\..\santedb-docker\SanteDB.Docker.Core\SanteDB.Docker.Core.csproj" />
+        <ProjectReference Include="..\..\santedb-i18n\SanteDB.Core.i18n\SanteDB.Core.i18n.csproj" />
 
       </ItemGroup>
     </When>
@@ -135,6 +130,7 @@
         <PackageReference Include="SanteDB.Core.Applets" Version="$(VersionNumber)" />
         <PackageReference Include="SanteDB.Core.Api" Version="$(VersionNumber)" />
         <PackageReference Include="SanteDB.Core.Model" Version="$(VersionNumber)" />
+        <PackageReference Include="SanteDB.Core.i18n" Version="$(VersionNumber)" />
         <PackageReference Include="SanteDB.Docker.Core" Version="$(VersionNumber)" />
 
       </ItemGroup>
@@ -151,5 +147,4 @@
       <Link>SanteDB.licenseheader</Link>
     </None>
   </ItemGroup>
-  <!-- <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" /> -->
 </Project>

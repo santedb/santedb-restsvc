@@ -16,10 +16,11 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Collection;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.HDSI.Resources
@@ -28,20 +29,19 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a resource handler which is for the persistence of bundles.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class BundleResourceHandler : ResourceHandlerBase<Bundle>
+    public class BundleResourceHandler : HdsiResourceHandlerBase<Bundle>
     {
         /// <summary>
         /// DI constructor
         /// </summary>
         /// <param name="localizationService"></param>
-        public BundleResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        public BundleResourceHandler(ILocalizationService localizationService, IRepositoryService<Bundle> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
-
         }
+
         /// <summary>
         /// Get capabilities
         /// </summary>
         public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Update | ResourceCapabilityType.Create;
-
     }
 }

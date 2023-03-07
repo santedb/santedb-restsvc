@@ -1,36 +1,36 @@
 ﻿/*
- * Portions Copyright 2015-2019 Mohawk College of Applied Arts and Technology
- * Portions Copyright 2019-2022 SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ * Copyright (C) 2021 - 2022, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
+ * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
- * DatERROR: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core;
-using SanteDB.Core.Auditing;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
-using SanteDB.Core.Model;
 using SanteDB.Core.Model.AMI.Security;
+using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -40,43 +40,29 @@ namespace SanteDB.Rest.AMI.Resources
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class AuditResourceHandler : IServiceImplementation, IApiResourceHandler
     {
-
         // Configuration
         private AuditAccountabilityConfigurationSection m_configuration = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<AuditAccountabilityConfigurationSection>();
 
         // The audit repository
-        private IRepositoryService<AuditData> m_repository = null;
+        private IRepositoryService<AuditEventData> m_repository = null;
 
         // Tracer
         private readonly Tracer m_tracer = Tracer.GetTracer(typeof(AuditResourceHandler));
+
+        // Audit dispatch
+        private readonly IAuditDispatchService m_auditDispatch;
 
         // Localization service
         private readonly ILocalizationService m_localizationService;
 
         /// <summary>
-        /// Get the repository
-        /// </summary>
-        private IRepositoryService<AuditData> GetRepository()
-        {
-
-            if (this.m_repository == null)
-                this.m_repository = ApplicationServiceContext.Current.GetService<IRepositoryService<AuditData>>();
-            if (this.m_repository == null)
-            {
-                this.m_tracer.TraceError("No audit repository is configured");
-                throw new InvalidOperationException(this.m_localizationService.GetString("error.rest.ami.noAuditRepository"));
-            }
-                
-
-            return this.m_repository;
-        }
-
-        /// <summary>
         /// Initializes the audit resource handler
         /// </summary>
-        public AuditResourceHandler(ILocalizationService localizationService)
+        public AuditResourceHandler(ILocalizationService localizationService, IRepositoryService<AuditEventData> repositoryService, IAuditDispatchService dispatchService = null)
         {
             this.m_localizationService = localizationService;
+            this.m_repository = repositoryService;
+            this.m_auditDispatch = dispatchService;
         }
 
         /// <summary>
@@ -84,7 +70,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.Get | ResourceCapabilityType.Search;
 
-        // Dispatcher 
+        // Dispatcher
         private IAuditDispatchService m_dispatcher = ApplicationServiceContext.Current.GetService<IAuditDispatchService>();
 
         /// <summary>
@@ -100,7 +86,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Get the type this persists
         /// </summary>
-        public Type Type => typeof(AuditData);
+        public Type Type => typeof(AuditEventData);
 
         /// <summary>
         /// Get the service name
@@ -116,14 +102,13 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public object Create(object data, bool updateIfExists)
         {
-
             var auditData = data as AuditSubmission;
             if (auditData == null) // may be a single audit
             {
-                var singleAudit = data as AuditData;
+                var singleAudit = data as AuditEventData;
                 if (singleAudit != null)
                 {
-                    var retVal = this.GetRepository().Insert(singleAudit);
+                    var retVal = this.m_repository.Insert(singleAudit);
                     ApplicationServiceContext.Current.GetService<IAuditDispatchService>()?.SendAudit(singleAudit);
                     return null;
                 }
@@ -132,14 +117,13 @@ namespace SanteDB.Rest.AMI.Resources
             {
                 auditData.Audit.ForEach(o =>
                 {
-                    this.GetRepository().Insert(o);
-                    ApplicationServiceContext.Current.GetService<IAuditDispatchService>()?.SendAudit(o);
+                    this.m_repository.Insert(o);
+                    this.m_auditDispatch?.SendAudit(o);
                 });
                 // Send the audit to the audit repo
             }
             return null;
         }
-
 
         /// <summary>
         /// Get the specified audit identifier from the database
@@ -150,10 +134,12 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.AccessAuditLog)]
         public object Get(object id, object versionId)
         {
-
-            var retVal = new AuditData();
+            var retVal = new AuditEventData();
             if (Guid.TryParse(id.ToString(), out Guid gid))
-                retVal.CopyObjectData(this.GetRepository().Get(gid));
+            {
+                retVal.CopyObjectData(this.m_repository.Get(gid));
+            }
+
             return retVal;
         }
 
@@ -162,41 +148,21 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         /// <param name="key">Not supported</param>
         /// <returns></returns>
-        public object Obsolete(object key)
+        public object Delete(object key)
         {
             throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
-        }
-
-        /// <summary>
-        /// Query for the audit 
-        /// </summary>
-        /// <param name="queryParameters">The query to perform</param>
-        /// <returns>The matching audits</returns>
-        [Demand(PermissionPolicyIdentifiers.AccessAuditLog)]
-        public IEnumerable<object> Query(NameValueCollection queryParameters)
-        {
-            int tr = 0;
-            return this.Query(queryParameters, 0, 100, out tr);
         }
 
         /// <summary>
         /// Perform the query for audits
         /// </summary>
         /// <param name="queryParameters">The filter parameters for the audit</param>
-        /// <param name="offset">The first result to retrieve</param>
-        /// <param name="count">The count of objects to retrieve</param>
-        /// <param name="totalCount">The total counts of objects</param>
         /// <returns>An array of objects matching the query </returns>
         [Demand(PermissionPolicyIdentifiers.AccessAuditLog)]
-        public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        public IQueryResultSet Query(NameValueCollection queryParameters)
         {
-
-            var filter = QueryExpressionParser.BuildLinqExpression<AuditData>(queryParameters);
-
-            ModelSort<AuditData>[] sortParameters = null;
-            if (queryParameters.TryGetValue("_orderBy", out var orderBy))
-                sortParameters = QueryExpressionParser.BuildSort<AuditData>(orderBy);
-            return this.GetRepository().Find(filter, offset, count, out totalCount, sortParameters);
+            var filter = QueryExpressionParser.BuildLinqExpression<AuditEventData>(queryParameters);
+            return this.m_repository.Find(filter);
         }
 
         /// <summary>

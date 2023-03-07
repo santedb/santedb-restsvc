@@ -1,21 +1,22 @@
 ﻿/*
- * Portions Copyright 2015-2019 Mohawk College of Applied Arts and Technology
- * Portions Copyright 2019-2022 SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ * Copyright (C) 2021 - 2022, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
+ * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
- * DatERROR: 2021-8-27
+ * Date: 2022-5-30
  */
 using RestSrvr;
 using SanteDB.Core;
@@ -33,6 +34,7 @@ using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -43,22 +45,13 @@ namespace SanteDB.Rest.AMI.Resources
     /// Represents a resource handler for applet solution files
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class AppletSolutionResourceHandler : IServiceImplementation, IApiResourceHandler, IChainedApiResourceHandler
+    public class AppletSolutionResourceHandler : ChainedResourceHandlerBase
     {
-
-        // Property providers
-        private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
-
-        // Tracer
-        private readonly Tracer m_tracer = Tracer.GetTracer(typeof(AppletSolutionResourceHandler));
-
-        // Localization service
-        private readonly ILocalizationService m_localizationService;
 
         /// <summary>
         /// Gets the capabilities of the resource handler
         /// </summary>
-        public ResourceCapabilityType Capabilities
+        public override ResourceCapabilityType Capabilities
         {
             get
             {
@@ -69,7 +62,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Gets the name of the resource
         /// </summary>
-        public string ResourceName
+        public override string ResourceName
         {
             get
             {
@@ -80,49 +73,40 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Get the scope of this object
         /// </summary>
-        public Type Scope => typeof(IAmiServiceContract);
+        public override Type Scope => typeof(IAmiServiceContract);
 
         /// <summary>
         /// Get the type of this
         /// </summary>
-        public Type Type => typeof(AppletSolution);
-
-        /// <summary>
-        /// Child resources
-        /// </summary>
-        public IEnumerable<IApiChildResourceHandler> ChildResources => this.m_propertyProviders.Values;
-
-        /// <summary>
-        /// Gets the service name
-        /// </summary>
-        public string ServiceName => "Applet Solution Resource Handler";
+        public override Type Type => typeof(AppletSolution);
 
         /// <summary>
         /// Constructor for AppletSolutionResourceHandler
         /// </summary>
         /// <param name="localizationService">Localization service</param>
-        public AppletSolutionResourceHandler(ILocalizationService localizationService)
+        public AppletSolutionResourceHandler(ILocalizationService localizationService) : base(localizationService)
         {
-            this.m_localizationService = localizationService;
         }
 
         /// <summary>
         /// Create / install an applet on the server
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.AdministerApplet)]
-        public object Create(object data, bool updateIfExists)
+        public override object Create(object data, bool updateIfExists)
         {
             var pkg = AppletPackage.Load((Stream)data) as AppletSolution;
             if (pkg == null)
             {
                 this.m_tracer.TraceError("Package does not appear to be a solution");
-                throw new InvalidOperationException(this.m_localizationService.GetString("error.rest.ami.packageNotASolution"));
+                throw new InvalidOperationException(this.LocalizationService.GetString("error.rest.ami.packageNotASolution"));
             }
-               
+
             ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().Install(pkg);
             X509Certificate2 cert = null;
             if (pkg.PublicKey != null)
+            {
                 cert = new X509Certificate2(pkg.PublicKey);
+            }
             else if (pkg.Meta.PublicKeyToken != null)
             {
                 X509Store store = new X509Store(StoreName.TrustedPublisher, StoreLocation.LocalMachine);
@@ -131,7 +115,9 @@ namespace SanteDB.Rest.AMI.Resources
                     store.Open(OpenFlags.ReadOnly);
                     var results = store.Certificates.Find(X509FindType.FindByThumbprint, pkg.Meta.PublicKeyToken, false);
                     if (results.Count > 0)
+                    {
                         cert = results[0];
+                    }
                 }
                 finally
                 {
@@ -148,7 +134,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <param name="versionId">The version of the applet</param>
         /// <returns></returns>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public object Get(Object solutionId, Object versionId)
+        public override object Get(Object solutionId, Object versionId)
         {
             var appletService = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>();
             var appletData = appletService.Solutions.FirstOrDefault(o => o.Meta.Id == solutionId.ToString());
@@ -156,8 +142,8 @@ namespace SanteDB.Rest.AMI.Resources
             if (appletData == null)
             {
                 this.m_tracer.TraceError($"File not found: {solutionId}");
-                throw new FileNotFoundException(this.m_localizationService.FormatString("error.rest.ami.FileNotFoundParam", new 
-                { 
+                throw new FileNotFoundException(this.LocalizationService.GetString("error.rest.ami.FileNotFoundParam", new
+                {
                     param = solutionId.ToString()
                 }));
             }
@@ -167,22 +153,23 @@ namespace SanteDB.Rest.AMI.Resources
             }
         }
 
-
         /// <summary>
         /// Set applet headers
         /// </summary>
         private void SetAppletHeaders(AppletInfo package)
         {
             RestOperationContext.Current.OutgoingResponse.SetETag(package.Version);
-            RestOperationContext.Current.OutgoingResponse.Headers.Add("X-SanteDB-PakID", package.Id);
+            RestOperationContext.Current.OutgoingResponse.Headers.Add(ExtendedHttpHeaderNames.PackageIdentifierHeaderName, package.Id);
             if (package.Hash != null)
-                RestOperationContext.Current.OutgoingResponse.AppendHeader("X-SanteDB-Hash", Convert.ToBase64String(package.Hash));
+            {
+                RestOperationContext.Current.OutgoingResponse.AppendHeader(ExtendedHttpHeaderNames.PackageHashHeaderName, Convert.ToBase64String(package.Hash));
+            }
+
             RestOperationContext.Current.OutgoingResponse.AppendHeader("Content-Type", "application/octet-stream");
             RestOperationContext.Current.OutgoingResponse.ContentType = "application/octet-stream";
             RestOperationContext.Current.OutgoingResponse.AppendHeader("Content-Disposition", $"attachment; filename=\"{package.Id}.pak.gz\"");
             RestOperationContext.Current.OutgoingResponse.AppendHeader("Location", $"/ami/Applet/{package.Id}");
         }
-
 
         /// <summary>
         /// Obsoletes the specified applet
@@ -190,40 +177,23 @@ namespace SanteDB.Rest.AMI.Resources
         /// <param name="solutionId">The identifier of the applet to uninstall</param>
         /// <returns>Null</returns>
         [Demand(PermissionPolicyIdentifiers.AdministerApplet)]
-        public object Obsolete(object solutionId)
+        public override object Delete(object solutionId)
         {
             ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().UnInstall(solutionId.ToString());
             return null;
         }
 
         /// <summary>
-        /// Perform a query of applets
-        /// </summary>
-        /// <param name="queryParameters">The filter to apply to the applet</param>
-        /// <returns>The matching applet manifests</returns>
-        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public IEnumerable<object> Query(NameValueCollection queryParameters)
-        {
-            int tc = 0;
-            return this.Query(queryParameters, 0, 100, out tc);
-        }
-
-        /// <summary>
         /// Perform a query of applets with restrictions
         /// </summary>
         /// <param name="queryParameters">The filter to apply</param>
-        /// <param name="offset">The offset of the first result</param>
-        /// <param name="count">The count of objects</param>
-        /// <param name="totalCount">The total matching results</param>
         /// <returns>The applet manifests</returns>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public IEnumerable<object> Query(Core.Model.Query.NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             var query = QueryExpressionParser.BuildLinqExpression<AppletSolution>(queryParameters);
             var applets = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().Solutions.Where(query.Compile()).Select(o => new AppletSolutionInfo(o, null));
-            totalCount = applets.Count();
-            return applets.Skip(offset).Take(count).OfType<Object>();
-
+            return new MemoryQueryResultSet(applets);
         }
 
         /// <summary>
@@ -232,7 +202,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <param name="data">The data to be update</param>
         /// <returns>The updated applet manifest</returns>
         [Demand(PermissionPolicyIdentifiers.AdministerApplet)]
-        public object Update(object data)
+        public override object Update(object data)
         {
             var appletMgr = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>();
 
@@ -240,17 +210,18 @@ namespace SanteDB.Rest.AMI.Resources
             if (!appletMgr.Solutions.Any(o => pkg.Meta.Id == o.Meta.Id))
             {
                 this.m_tracer.TraceError($"File not found: {pkg.Meta.Id}");
-                throw new FileNotFoundException(this.m_localizationService.FormatString("error.rest.ami.FileNotFoundParam", new
+                throw new FileNotFoundException(this.LocalizationService.GetString("error.rest.ami.FileNotFoundParam", new
                 {
                     param = pkg.Meta.Id
                 }));
             }
-               
 
             appletMgr.Install(pkg, true);
             X509Certificate2 cert = null;
             if (pkg.PublicKey != null)
+            {
                 cert = new X509Certificate2(pkg.PublicKey);
+            }
             else if (pkg.Meta.PublicKeyToken != null)
             {
                 X509Store store = new X509Store(StoreName.TrustedPublisher, StoreLocation.LocalMachine);
@@ -259,7 +230,9 @@ namespace SanteDB.Rest.AMI.Resources
                     store.Open(OpenFlags.ReadOnly);
                     var results = store.Certificates.Find(X509FindType.FindByThumbprint, pkg.Meta.PublicKeyToken, false);
                     if (results.Count > 0)
+                    {
                         cert = results[0];
+                    }
                 }
                 finally
                 {
@@ -269,109 +242,38 @@ namespace SanteDB.Rest.AMI.Resources
             return new AppletSolutionInfo(pkg, new X509Certificate2Info(cert?.Issuer, cert?.NotBefore, cert?.NotAfter, cert?.Subject, cert?.Thumbprint));
         }
 
-
-
-        /// <summary>
-        /// Add a child resource
-        /// </summary>
-        public void AddChildResource(IApiChildResourceHandler property)
-        {
-            this.m_propertyProviders.TryAdd(property.Name, property);
-        }
-
-        /// <summary>
-        /// Remove a child object
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.AdministerApplet)]
-        public object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
-        {
-            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Remove(typeof(AppletSolution), scopingEntityKey, subItemKey);
-            }
-            else
-            {
-                this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new 
-                { 
-                    param = propertyName
-                }));
-            }
-        }
-
         /// <summary>
         /// Query child objects
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public IEnumerable<object> QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out int totalCount)
+        public override IQueryResultSet QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter)
         {
-            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Query(typeof(AppletSolution), scopingEntityKey, filter, offset, count, out totalCount);
-            }
-            else
-            {
-                this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
-                {
-                    param = propertyName
-                }));
-            }
+            return base.QueryChildObjects(scopingEntityKey, propertyName, filter);
         }
 
         /// <summary>
         /// Add a child object instance
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.AdministerApplet)]
-        public object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
+        public override object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
         {
-            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Add(typeof(AppletSolution), scopingEntityKey, scopedItem);
-            }
-            else
-            {
-                this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
-                {
-                    param = propertyName
-                }));
-            }
+            return base.AddChildObject(scopingEntityKey, propertyName, scopedItem);
         }
 
         /// <summary>
         /// Get a child object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public object GetChildObject(object scopingEntity, string propertyName, object subItemKey)
+        public override object GetChildObject(object scopingEntity, string propertyName, object subItemKey)
         {
-            if (this.TryGetChainedResource(propertyName, scopingEntity == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Get(typeof(AppletSolution), scopingEntity, subItemKey);
-            }
-            else
-            {
-                this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.type.KeyNotFoundException.notFound", new
-                {
-                    param = propertyName
-                }));
-            }
+            return base.GetChildObject(scopingEntity, propertyName, subItemKey);
         }
 
-
-        /// <summary>
-        /// Try to get a chained resource
-        /// </summary>
-        public bool TryGetChainedResource(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildResourceHandler childHandler)
+        /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.AdministerApplet)]
+        public override object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
         {
-            var retVal = this.m_propertyProviders.TryGetValue(propertyName, out childHandler) &&
-                childHandler.ScopeBinding.HasFlag(bindingType);
-            if (!retVal)
-            {
-                childHandler = null;//clear in case of lazy programmers like me
-            }
-            return retVal;
+            return base.RemoveChildObject(scopingEntityKey, propertyName, subItemKey);
         }
     }
 }

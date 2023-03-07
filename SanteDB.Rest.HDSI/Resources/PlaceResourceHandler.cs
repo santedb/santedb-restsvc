@@ -16,16 +16,16 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Specialized;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
@@ -33,16 +33,15 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a resource handler which queries places
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class PlaceResourceHandler : ResourceHandlerBase<Place>
+    public class PlaceResourceHandler : EntityResourceHandlerBase<Place>
     {
         /// <summary>
         /// DI constructor
         /// </summary>
-        /// <param name="localizationService"></param>
-        public PlaceResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        public PlaceResourceHandler(ILocalizationService localizationService, IRepositoryService<Place> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
-
         }
+
         /// <summary>
         /// Create the specified place
         /// </summary>
@@ -66,38 +65,19 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Obsoletes the specified place
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.DeletePlacesAndOrgs)]
-        public override Object Obsolete(object key)
+        public override Object Delete(object key)
         {
-            return base.Obsolete(key);
+            return base.Delete(key);
         }
 
         /// <summary>
         /// Query for the specified place
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadPlacesAndOrgs)]
-        public override IEnumerable<Object> Query(NameValueCollection queryParameters)
+        public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             return base.Query(queryParameters);
         }
-
-
-        /// <summary>
-        /// Query for the specified place with restrictions
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.ReadPlacesAndOrgs)]
-        public override IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
-        {
-            var retVal = base.Query(queryParameters, offset, count, out totalCount);
-
-            // Clean reverse relationships
-            List<String> lean = null;
-            if (queryParameters.TryGetValue("_lean", out lean) && lean[0] == "true")
-                foreach (var r in retVal.OfType<Entity>())
-                    r.Relationships.RemoveAll(o => o.SourceEntityKey != r.Key);
-
-            return retVal;
-        }
-
 
         /// <summary>
         /// Update the specified place

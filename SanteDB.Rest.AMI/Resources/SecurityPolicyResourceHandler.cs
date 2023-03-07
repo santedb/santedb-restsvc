@@ -1,27 +1,28 @@
 ﻿/*
- * Portions Copyright 2015-2019 Mohawk College of Applied Arts and Technology
- * Portions Copyright 2019-2022 SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ * Copyright (C) 2021 - 2022, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
+ * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
- * DatERROR: 2021-8-27
+ * Date: 2022-5-30
  */
-using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
@@ -39,11 +40,10 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        /// <param name="localizationService"></param>
-        public SecurityPolicyResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        public SecurityPolicyResourceHandler(ILocalizationService localizationService, IRepositoryService<SecurityPolicy> repositoryService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, freetextSearchService)
         {
-
         }
+
         /// <summary>
         /// Get the capabilities of this resource
         /// </summary>
@@ -64,45 +64,46 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.AlterPolicy)]
         public override object Update(object data)
         {
-            var key = (data as IIdentifiedEntity).Key.Value;
+            var key = (data as IAnnotatedResource).Key.Value;
             var policy = this.Get(key, Guid.Empty);
             if (policy == null || (policy as SecurityPolicy).IsPublic)
+            {
                 return base.Update(data);
+            }
             else if (policy == null)
             {
                 this.m_tracer.TraceError($"Policy {key} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.policyNotFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.ami.policyNotFound", new
                 {
                     param = key
                 }));
-
             }
             else
             {
                 this.m_tracer.TraceError($"Policy {(policy as SecurityPolicy).Oid} is a system policy and cannot be edited");
-                throw new SecurityException(this.m_localizationService.FormatString("error.rest.ami.editSystemPolicy", new 
-                { 
+                throw new SecurityException(this.m_localizationService.GetString("error.rest.ami.editSystemPolicy", new
+                {
                     param = (policy as SecurityPolicy).Oid
                 }));
             }
         }
-
-
 
         /// <summary>
         /// Obsolete the policy
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public override object Obsolete(object key)
+        public override object Delete(object key)
         {
             var policy = this.Get(key, Guid.Empty);
             if (policy == null || (policy as SecurityPolicy).IsPublic)
-                return base.Obsolete(key);
+            {
+                return base.Delete(key);
+            }
             else if (policy == null)
             {
                 this.m_tracer.TraceError($"Policy {key} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.policyNotFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.ami.policyNotFound", new
                 {
                     param = key
                 }));
@@ -110,7 +111,7 @@ namespace SanteDB.Rest.AMI.Resources
             else
             {
                 this.m_tracer.TraceError($"Policy {(policy as SecurityPolicy).Oid} is a system policy and cannot be disabled");
-                throw new SecurityException(this.m_localizationService.FormatString("error.rest.ami.disableSystemPolicy", new
+                throw new SecurityException(this.m_localizationService.GetString("error.rest.ami.disableSystemPolicy", new
                 {
                     param = (policy as SecurityPolicy).Oid
                 }));

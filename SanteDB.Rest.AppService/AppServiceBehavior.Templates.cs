@@ -1,0 +1,80 @@
+﻿using RestSrvr;
+using SanteDB.Core.Applets.Model;
+using SanteDB.Core.i18n;
+using SanteDB.Core.Model;
+using SanteDB.Core.Model.Constants;
+using SanteDB.Core.Model.Query;
+using SanteDB.Core.Security;
+using SanteDB.Rest.Common.Attributes;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace SanteDB.Rest.AppService
+{
+    /// <summary>
+    /// Application service behavior for applets
+    /// </summary>
+    public partial class AppServiceBehavior
+    {
+
+        /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        public IdentifiedData GetTemplateDefinition(string templateId)
+        {
+            // First, get the template definition
+            var parameters = RestOperationContext.Current.IncomingRequest.QueryString;
+
+            // Add context parameters
+            var userEntity = this.m_securityRepositoryService.GetUserEntity(AuthenticationContext.Current.Principal.Identity);
+            if (String.IsNullOrEmpty(parameters["userEntityId"]))
+            {
+                parameters.Add("userEntityId", userEntity?.Key.ToString());
+            }
+            if (String.IsNullOrEmpty(parameters["facilityId"]))
+            {
+                parameters.Add("facilityId", userEntity.LoadProperty(o=>o.Relationships).FirstOrDefault(o => o.RelationshipTypeKey == EntityRelationshipTypeKeys.DedicatedServiceDeliveryLocation)?.TargetEntityKey?.ToString());
+            }
+
+            return this.m_appletManagerService.Applets.GetTemplateInstance(templateId, parameters.ToList().GroupBy(o=>o.Key).ToDictionary(o=>o.Key, o=>o.First().Value));
+        }
+
+        /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        public void GetTemplateForm(string templateId)
+        {
+            var template = this.m_appletManagerService.Applets.GetTemplateDefinition(templateId);
+            if (template == null)
+            {
+                throw new KeyNotFoundException(this.m_localizationService.GetString(ErrorMessageStrings.NOT_FOUND, new { type = "Template", id = templateId }));
+            }
+            RestOperationContext.Current.OutgoingResponse.Redirect(template.Form);
+        }
+
+        /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        public List<AppletTemplateDefinition> GetTemplates()
+        {
+            var query = QueryExpressionParser.BuildLinqExpression<AppletTemplateDefinition>(RestOperationContext.Current.IncomingRequest.QueryString, null, true);
+            return this.m_appletManagerService.Applets
+                .SelectMany(o => o.Templates)
+                .GroupBy(o => o.Mnemonic)
+                .Select(o => o.OrderByDescending(t => t.Priority).FirstOrDefault())
+                .Where(query.Compile()).ToList();
+        }
+
+        /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        public void GetTemplateView(string templateId)
+        {
+            var template = this.m_appletManagerService.Applets.GetTemplateDefinition(templateId);
+            if (template == null)
+            {
+                throw new KeyNotFoundException(this.m_localizationService.GetString(ErrorMessageStrings.NOT_FOUND, new { type = "Template", id = templateId }));
+            }
+            RestOperationContext.Current.OutgoingResponse.Redirect(template.View);
+        }
+
+    }
+}

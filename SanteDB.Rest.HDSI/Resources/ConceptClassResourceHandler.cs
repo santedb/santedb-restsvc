@@ -16,10 +16,11 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.DataTypes;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.HDSI.Resources
@@ -28,16 +29,16 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents concept class resource handler.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class ConceptClassResourceHandler : ResourceHandlerBase<ConceptClass>
+    public class ConceptClassResourceHandler : HdsiResourceHandlerBase<ConceptClass>
     {
         /// <summary>
         /// DI constructor
         /// </summary>
         /// <param name="localizationService"></param>
-        public ConceptClassResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        public ConceptClassResourceHandler(ILocalizationService localizationService, IRepositoryService<ConceptClass> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
-
         }
+
         /// <summary>
         /// Get capabilities
         /// </summary>

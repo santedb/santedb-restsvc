@@ -1,23 +1,23 @@
 ﻿/*
- * Portions Copyright 2015-2019 Mohawk College of Applied Arts and Technology
- * Portions Copyright 2019-2022 SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ * Copyright (C) 2021 - 2022, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
+ * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
- * DatERROR: 2021-8-27
+ * Date: 2022-5-30
  */
-using SanteDB.Core;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
@@ -36,19 +36,21 @@ namespace SanteDB.Rest.AMI.Resources
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class SecurityDeviceResourceHandler : SecurityEntityResourceHandler<SecurityDevice>, ILockableResourceHandler
     {
+        // Security repository
+        private readonly ISecurityRepositoryService m_securityRepository;
+
         /// <summary>
-        /// DI constructor
+        /// Wrapper type
         /// </summary>
-        /// <param name="localizationService"></param>
-        public SecurityDeviceResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        protected override Type WrapperType => typeof(SecurityDeviceInfo);
+
+        /// <summary>
+        /// Create security repository
+        /// </summary>
+        public SecurityDeviceResourceHandler(ISecurityRepositoryService securityRepository, IPolicyInformationService policyInformationService, ILocalizationService localizationService, IAuditService auditService, IDataCachingService cachingService = null, IRepositoryService<SecurityDevice> repository = null) : base(auditService, policyInformationService, localizationService, cachingService, repository)
         {
-
+            this.m_securityRepository = securityRepository;
         }
-        /// <summary>
-        /// Type of security device
-        /// </summary>
-        public override Type Type => typeof(SecurityDeviceInfo);
-
 
         /// <summary>
         /// Create device
@@ -56,19 +58,23 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.CreateDevice)]
         public override object Create(object data, bool updateIfExists)
         {
-
             if (data is SecurityDevice)
-                data = new SecurityDeviceInfo(data as SecurityDevice);
+            {
+                data = new SecurityDeviceInfo(data as SecurityDevice, this.m_policyInformationService);
+            }
 
             var sde = data as SecurityDeviceInfo;
             // If no policies then assign the ones from DEVICE
-            if (sde.Policies == null || sde.Policies.Count == 0 && sde.Entity?.Policies == null || sde.Entity.Policies.Count == 0)
-            {
-                var role = ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>()?.GetRole("DEVICE");
-                var policies = ApplicationServiceContext.Current.GetService<IPolicyInformationService>()?.GetPolicies(role);
-                if (policies != null)
-                    sde.Policies = policies.Select(o => new SecurityPolicyInfo(o)).ToList();
-            }
+            //if (sde.Policies?.Any() != true)
+            //{
+            //    var role = this.m_securityRepository?.GetRole("DEVICE");
+            //    var policies = this.m_policyInformationService?.GetPolicies(role);
+            //    if (policies != null)
+            //    {
+            //        sde.Policies = policies.Select(o => new SecurityPolicyInfo(o)).ToList();
+            //    }
+            //}
+            //Policies now always copy from DEVICE automatically by the AdoDeviceIdentityProvider.
 
             return base.Create(data, updateIfExists);
         }
@@ -80,7 +86,10 @@ namespace SanteDB.Rest.AMI.Resources
         public override object Update(object data)
         {
             if (data is SecurityDevice)
-                data = new SecurityDeviceInfo(data as SecurityDevice);
+            {
+                data = new SecurityDeviceInfo(data as SecurityDevice, this.m_policyInformationService);
+            }
+
             return base.Update(data);
         }
 
@@ -88,9 +97,9 @@ namespace SanteDB.Rest.AMI.Resources
         /// Obolete the device
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.CreateDevice)]
-        public override object Obsolete(object key)
+        public override object Delete(object key)
         {
-            return base.Obsolete(key);
+            return base.Delete(key);
         }
 
         /// <summary>
@@ -99,7 +108,7 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.CreateDevice)]
         public object Lock(object key)
         {
-            ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().LockDevice((Guid)key);
+            this.m_securityRepository.LockDevice((Guid)key);
             var retVal = this.Get(key, Guid.Empty);
             this.FireSecurityAttributesChanged(retVal, true, "Lockout = true");
             return retVal;
@@ -111,11 +120,10 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.CreateDevice)]
         public object Unlock(object key)
         {
-            ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>().UnlockDevice((Guid)key);
+            this.m_securityRepository.UnlockDevice((Guid)key);
             var retVal = this.Get(key, Guid.Empty);
             this.FireSecurityAttributesChanged(retVal, true, "Lockout = false");
             return retVal;
         }
-
     }
 }

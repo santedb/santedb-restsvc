@@ -16,12 +16,13 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace SanteDB.Rest.Common
 {
@@ -30,7 +31,6 @@ namespace SanteDB.Rest.Common
     /// </summary>
     public interface IChainedApiResourceHandler : IApiResourceHandler
     {
-
         /// <summary>
         /// Gets the associated resources
         /// </summary>
@@ -55,14 +55,11 @@ namespace SanteDB.Rest.Common
         /// <param name="scopingEntityKey">The container (scope) entity to which the sub entity belongs</param>
         /// <param name="propertyName">The name of the property/relationship to scope to</param>
         /// <param name="filter">The filter to apply</param>
-        /// <param name="offset">The offset of the first row to be retrieved </param>
-        /// <param name="count">The number of objects which should be returned from the query</param>
-        /// <param name="totalCount">The total matching results</param>
         /// <returns>The matching results</returns>
-        IEnumerable<Object> QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter, int offset, int count, out Int32 totalCount);
+        IQueryResultSet QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter);
 
         /// <summary>
-        /// Adds the specified object with sub item key 
+        /// Adds the specified object with sub item key
         /// </summary>
         /// <param name="scopingEntityKey">The scoping entity key or null if global execution</param>
         /// <param name="propertyName">The property name</param>

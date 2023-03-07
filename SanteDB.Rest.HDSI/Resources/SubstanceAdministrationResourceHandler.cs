@@ -16,15 +16,16 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
@@ -32,16 +33,16 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Resource handler for sbadm
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class SubstanceAdministrationResourceHandler : ResourceHandlerBase<SubstanceAdministration>
+    public class SubstanceAdministrationResourceHandler : HdsiResourceHandlerBase<SubstanceAdministration>
     {
         /// <summary>
         /// DI constructor
         /// </summary>
         /// <param name="localizationService"></param>
-        public SubstanceAdministrationResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        public SubstanceAdministrationResourceHandler(ILocalizationService localizationService, IRepositoryService<SubstanceAdministration> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
-
         }
+
         [Demand(PermissionPolicyIdentifiers.WriteClinicalData)]
         public override Object Create(Object data, bool updateIfExists)
         {
@@ -55,21 +56,15 @@ namespace SanteDB.Rest.HDSI.Resources
         }
 
         [Demand(PermissionPolicyIdentifiers.DeleteClinicalData)]
-        public override Object Obsolete(object key)
+        public override Object Delete(object key)
         {
-            return base.Obsolete(key);
+            return base.Delete(key);
         }
 
-        [Demand(PermissionPolicyIdentifiers.ReadClinicalData)]
-        public override IEnumerable<Object> Query(NameValueCollection queryParameters)
+        [Demand(PermissionPolicyIdentifiers.QueryClinicalData)]
+        public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             return base.Query(queryParameters);
-        }
-
-        [Demand(PermissionPolicyIdentifiers.ReadClinicalData)]
-        public override IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
-        {
-            return base.Query(queryParameters, offset, count, out totalCount);
         }
 
         [Demand(PermissionPolicyIdentifiers.WriteClinicalData)]

@@ -1,19 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2046
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SanteDB.Rest.Common", "SanteDB.Rest.Common\SanteDB.Rest.Common.csproj", "{786BD0EE-1806-4158-BA45-80249AC6DFE7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SanteDB.Rest.Common", "SanteDB.Rest.Common\SanteDB.Rest.Common.csproj", "{786BD0EE-1806-4158-BA45-80249AC6DFE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SanteDB.Rest.AMI", "SanteDB.Rest.AMI\SanteDB.Rest.AMI.csproj", "{F14023E2-F8DF-4EBC-B2C4-34A825E3790E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SanteDB.Rest.AMI", "SanteDB.Rest.AMI\SanteDB.Rest.AMI.csproj", "{F14023E2-F8DF-4EBC-B2C4-34A825E3790E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SanteDB.Core.Model.AMI", "SanteDB.Core.Model.AMI\SanteDB.Core.Model.AMI.csproj", "{65EF51C6-5CB8-43B8-AE65-4A68F0B44AD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SanteDB.Core.Model.AMI", "SanteDB.Core.Model.AMI\SanteDB.Core.Model.AMI.csproj", "{65EF51C6-5CB8-43B8-AE65-4A68F0B44AD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SanteDB.Core.Model.RISI", "SanteDB.Core.Model.RISI\SanteDB.Core.Model.RISI.csproj", "{F3D2FA84-C398-4390-9834-1272CC2D6F89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SanteDB.Core.Model.RISI", "SanteDB.Core.Model.RISI\SanteDB.Core.Model.RISI.csproj", "{F3D2FA84-C398-4390-9834-1272CC2D6F89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SanteDB.Rest.HDSI", "SanteDB.Rest.HDSI\SanteDB.Rest.HDSI.csproj", "{903E2E75-7B62-4C42-A001-404DC0235A6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SanteDB.Rest.HDSI", "SanteDB.Rest.HDSI\SanteDB.Rest.HDSI.csproj", "{903E2E75-7B62-4C42-A001-404DC0235A6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SanteDB.Core.Model.ViewModelSerializers", "SanteDB.Core.Model.ViewModelSerializers\SanteDB.Core.Model.ViewModelSerializers.csproj", "{ECE9B280-9647-4092-BABF-EB2E25084670}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SanteDB.Core.Model.ViewModelSerializers", "SanteDB.Core.Model.ViewModelSerializers\SanteDB.Core.Model.ViewModelSerializers.csproj", "{ECE9B280-9647-4092-BABF-EB2E25084670}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SanteDB.Rest.WWW", "SanteDB.Rest.WWW\SanteDB.Rest.WWW.csproj", "{317CE77F-13F5-4488-9F16-76C39A0AA9F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{ECE9B280-9647-4092-BABF-EB2E25084670}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ECE9B280-9647-4092-BABF-EB2E25084670}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ECE9B280-9647-4092-BABF-EB2E25084670}.Release|Any CPU.Build.0 = Release|Any CPU
+		{317CE77F-13F5-4488-9F16-76C39A0AA9F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{317CE77F-13F5-4488-9F16-76C39A0AA9F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{317CE77F-13F5-4488-9F16-76C39A0AA9F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{317CE77F-13F5-4488-9F16-76C39A0AA9F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

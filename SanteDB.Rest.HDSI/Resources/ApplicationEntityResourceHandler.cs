@@ -16,9 +16,10 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.HDSI.Resources
@@ -27,15 +28,13 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents the adminstrative application entity resource handler
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class ApplicationEntityResourceHandler : ResourceHandlerBase<ApplicationEntity>
+    public class ApplicationEntityResourceHandler : EntityResourceHandlerBase<ApplicationEntity>
     {
         /// <summary>
         /// DI constructor
         /// </summary>
-        /// <param name="localizationService"></param>
-        public ApplicationEntityResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        public ApplicationEntityResourceHandler(ILocalizationService localizationService, IRepositoryService<ApplicationEntity> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
-
         }
     }
 }

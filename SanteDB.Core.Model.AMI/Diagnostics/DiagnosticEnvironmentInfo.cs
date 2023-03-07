@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using Newtonsoft.Json;
 using System;
@@ -59,5 +59,22 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         /// </summary>
         [JsonProperty("version"), XmlElement("version")]
         public String Version { get; set; }
+
+        /// <summary>
+        /// Operating system classification
+        /// </summary>
+        [JsonProperty("osClass"), XmlElement("osClass")]
+        public OperatingSystemID OSType { get; set; }
+
+        /// <summary>
+        /// Manufacturer of this device
+        /// </summary>
+        [JsonProperty("manufacturer"), XmlElement("manufacturer")]
+        public string ManufacturerName { get; set; }
+        /// <summary>
+        /// Gets the machine name
+        /// </summary>
+        [JsonProperty("machineName"), XmlElement("machineName")]
+        public string MachineName { get; set; }
     }
 }

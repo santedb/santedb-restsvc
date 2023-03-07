@@ -16,10 +16,11 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 
@@ -29,18 +30,18 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a resource handler for code systems
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class CodeSystemResourceHandler : ResourceHandlerBase<CodeSystem>
+    public class CodeSystemResourceHandler : HdsiResourceHandlerBase<CodeSystem>
     {
         /// <summary>
         /// DI constructor
         /// </summary>
         /// <param name="localizationService"></param>
-        public CodeSystemResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        public CodeSystemResourceHandler(ILocalizationService localizationService, IRepositoryService<CodeSystem> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
-
         }
+
         /// <summary>
-        /// Create, update and delete require administer concept dictionary 
+        /// Create, update and delete require administer concept dictionary
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
         public override object Create(object data, bool updateIfExists)
@@ -49,7 +50,7 @@ namespace SanteDB.Rest.HDSI.Resources
         }
 
         /// <summary>
-        /// Create, update and delete require administer concept dictionary 
+        /// Create, update and delete require administer concept dictionary
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
         public override object Update(object data)
@@ -58,12 +59,12 @@ namespace SanteDB.Rest.HDSI.Resources
         }
 
         /// <summary>
-        /// Create, update and delete require administer concept dictionary 
+        /// Create, update and delete require administer concept dictionary
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
-        public override object Obsolete(object key)
+        public override object Delete(object key)
         {
-            return base.Obsolete(key);
+            return base.Delete(key);
         }
     }
 }

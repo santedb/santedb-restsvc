@@ -16,15 +16,16 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
@@ -32,23 +33,22 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a resource handler for entities.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class EntityResourceHandler : ResourceHandlerBase<Entity>
+    public class EntityResourceHandler : EntityResourceHandlerBase<Entity>
     {
         /// <summary>
         /// DI constructor
         /// </summary>
-        /// <param name="localizationService"></param>
-        public EntityResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        public EntityResourceHandler(ILocalizationService localizationService, IRepositoryService<Entity> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
-
         }
+
         /// <summary>
         /// Creates an entity.
         /// </summary>
         /// <param name="data">The entity to be created.</param>
         /// <param name="updateIfExists">Whether to update the entity if it exits.</param>
         /// <returns>Returns the created entity.s</returns>
-        [Demand(PermissionPolicyIdentifiers.WriteClinicalData)]
+        [Demand(PermissionPolicyIdentifiers.Login)]
         public override Object Create(Object data, bool updateIfExists)
         {
             return base.Create(data, updateIfExists);
@@ -60,7 +60,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <param name="id">The id of the entity.</param>
         /// <param name="versionId">The version id of the entity.</param>
         /// <returns>Returns the entity.</returns>
-        [Demand(PermissionPolicyIdentifiers.ReadClinicalData)]
+        [Demand(PermissionPolicyIdentifiers.Login)]
         public override Object Get(object id, object versionId)
         {
             return base.Get(id, versionId);
@@ -71,10 +71,10 @@ namespace SanteDB.Rest.HDSI.Resources
         /// </summary>
         /// <param name="key">The key of the entity to be obsoleted.</param>
         /// <returns>Returns the obsoleted entity.</returns>
-        [Demand(PermissionPolicyIdentifiers.DeleteClinicalData)]
-        public override Object Obsolete(object key)
+        [Demand(PermissionPolicyIdentifiers.Login)]
+        public override Object Delete(object key)
         {
-            return base.Obsolete(key);
+            return base.Delete(key);
         }
 
         /// <summary>
@@ -82,24 +82,10 @@ namespace SanteDB.Rest.HDSI.Resources
         /// </summary>
         /// <param name="queryParameters">The query parameters to use to search for the entity.</param>
         /// <returns>Returns a list of entities.</returns>
-        [Demand(PermissionPolicyIdentifiers.QueryClinicalData)]
-        public override IEnumerable<Object> Query(NameValueCollection queryParameters)
+        [Demand(PermissionPolicyIdentifiers.Login)]
+        public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             return base.Query(queryParameters);
-        }
-
-        /// <summary>
-        /// Queries for an entity.
-        /// </summary>
-        /// <param name="queryParameters">The query parameters to use to search for the entity.</param>
-        /// <param name="offset">The offset of the query.</param>
-        /// <param name="count">The count of the query.</param>
-        /// <param name="totalCount">The total count of the query.</param>
-        /// <returns>Returns a list of entities.</returns>
-        [Demand(PermissionPolicyIdentifiers.QueryClinicalData)]
-        public override IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
-        {
-            return base.Query(queryParameters, offset, count, out totalCount);
         }
 
         /// <summary>
@@ -107,7 +93,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// </summary>
         /// <param name="data">The entity to be updated.</param>
         /// <returns>Returns the updated entity.</returns>
-        [Demand(PermissionPolicyIdentifiers.WriteClinicalData)]
+        [Demand(PermissionPolicyIdentifiers.Login)]
         public override Object Update(Object data)
         {
             return base.Update(data);

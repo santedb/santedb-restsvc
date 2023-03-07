@@ -1,23 +1,25 @@
 ﻿/*
- * Portions Copyright 2015-2019 Mohawk College of Applied Arts and Technology
- * Portions Copyright 2019-2022 SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ * Copyright (C) 2021 - 2022, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
+ * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
- * DatERROR: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core;
+using SanteDB.Core.Configuration;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Jobs;
@@ -31,6 +33,7 @@ using SanteDB.Rest.Common;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
@@ -45,8 +48,16 @@ namespace SanteDB.Rest.AMI.Resources
         // Job manager
         private readonly IJobManagerService m_jobManager;
 
+
         // State service
         private readonly IJobStateManagerService m_jobStateService;
+
+        // Tracer
+        private readonly Tracer m_tracer = Tracer.GetTracer(typeof(JobResourceHandler));
+
+        // Localization service
+        private readonly ILocalizationService m_localizationService;
+        private readonly IJobScheduleManager m_jobScheduleManager;
 
         // Property providers
         private ConcurrentDictionary<String, IApiChildOperation> m_operationHandlers = new ConcurrentDictionary<string, IApiChildOperation>();
@@ -54,12 +65,15 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        public JobResourceHandler(ILocalizationService localizationService, IJobManagerService jobManagerService, IJobStateManagerService jobStateManagerService)
+        public JobResourceHandler(ILocalizationService localizationService, 
+            IJobManagerService jobManagerService, 
+            IJobStateManagerService jobStateManagerService,
+            IJobScheduleManager jobScheduleManager)
         {
             this.m_jobManager = jobManagerService;
             this.m_jobStateService = jobStateManagerService;
             this.m_localizationService = localizationService;
-
+            this.m_jobScheduleManager = jobScheduleManager;
         }
 
         /// <summary>
@@ -94,11 +108,6 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public IEnumerable<IApiChildOperation> Operations => this.m_operationHandlers.Values;
 
-        // Tracer
-        private readonly Tracer m_tracer = Tracer.GetTracer(typeof(JobResourceHandler));
-
-        // Localization service
-        private readonly ILocalizationService m_localizationService;
 
         /// <summary>
         /// Create a new job instance
@@ -118,16 +127,16 @@ namespace SanteDB.Rest.AMI.Resources
             if (job == null)
             {
                 this.m_tracer.TraceError($"No IJob of type {id} found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.noIJobType", new { param = id.ToString() }));
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.ami.noIJobType", new { param = id.ToString() }));
             }
 
-            return new JobInfo(this.m_jobStateService.GetJobState(job), this.m_jobManager.GetJobSchedules(job));
+            return new JobInfo(this.m_jobStateService.GetJobState(job), this.m_jobScheduleManager.Get(job));
         }
 
         /// <summary>
         /// Cancels a job
         /// </summary>
-        public object Obsolete(object key)
+        public object Delete(object key)
         {
             throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
         }
@@ -135,22 +144,16 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Query for all jobs
         /// </summary>
-        public IEnumerable<object> Query(NameValueCollection queryParameters)
-        {
-            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
-        }
-
-        /// <summary>
-        /// Query for jobs
-        /// </summary>
-        public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        public IQueryResultSet Query(NameValueCollection queryParameters)
         {
             ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
             var jobs = this.m_jobManager.Jobs;
-            if (queryParameters.TryGetValue("name", out List<string> data))
+            if (queryParameters.TryGetValue("name", out var data))
+            {
                 jobs = jobs.Where(o => o.Name.Contains(data.First()));
-            totalCount = jobs.Count();
-            return jobs.Skip(offset).Take(count).Select(o => new JobInfo(this.m_jobStateService.GetJobState(o), this.m_jobManager.GetJobSchedules(o)));
+            }
+
+            return new MemoryQueryResultSet(jobs.Select(o => new JobInfo(this.m_jobStateService.GetJobState(o), this.m_jobScheduleManager.Get(o))).ToArray());
         }
 
         /// <summary>
@@ -164,27 +167,33 @@ namespace SanteDB.Rest.AMI.Resources
                 ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
 
                 var jobInfo = data as JobInfo;
-                var job = this.m_jobManager.GetJobInstance(Guid.Parse(jobInfo.Key));
+                var job = this.m_jobManager.GetJobInstance(jobInfo.Key.GetValueOrDefault());
                 if (job == null)
                 {
                     this.m_tracer.TraceError($"Could not find job with ID {jobInfo.Key}");
-                    throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.couldNotFindJob", new { param = jobInfo.Key }));
+                    throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.ami.couldNotFindJob", new { param = jobInfo.Key }));
                 }
-                
-                if(jobInfo.Schedule != null)
+
+                if (jobInfo.Schedule != null)
                 {
+                    this.m_jobScheduleManager.Clear(job);
                     this.m_tracer.TraceInfo("User setting job schedule for {0}", job.Name);
-                    foreach(var itm in jobInfo.Schedule)
+                    foreach (var itm in jobInfo.Schedule)
                     {
-                        if(itm.Type == Core.Configuration.JobScheduleType.Interval)
+                        if (itm.Type == Core.Configuration.JobScheduleType.Interval)
                         {
-                            this.m_jobManager.SetJobSchedule(job, itm.Interval);
+                            this.m_jobScheduleManager.Add(job, itm.Interval, itm.StopDateSpecified ? (DateTime?)itm.StopDate : null);
                         }
                         else
                         {
-                            this.m_jobManager.SetJobSchedule(job, itm.RepeatOn, itm.StartDate);
+                            this.m_jobScheduleManager.Add(job, itm.RepeatOn, itm.StartDate, itm.StopDateSpecified ? (DateTime?)itm.StopDate : null);
                         }
                     }
+                }
+                else
+                {
+                    this.m_tracer.TraceInfo("User clearing job schedule for {0}", job.Name);
+                    this.m_jobScheduleManager.Clear(job);
                 }
                 return jobInfo;
             }
@@ -204,7 +213,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <inheritdoc/>
         public object InvokeOperation(object scopingEntityKey, string operationName, ParameterCollection parameters)
         {
-            if(this.TryGetOperation(operationName, scopingEntityKey != null ? ChildObjectScopeBinding.Instance : ChildObjectScopeBinding.Class, out var handler))
+            if (this.TryGetOperation(operationName, scopingEntityKey != null ? ChildObjectScopeBinding.Instance : ChildObjectScopeBinding.Class, out var handler))
             {
                 return handler.Invoke(typeof(JobInfo), scopingEntityKey, parameters);
             }
@@ -217,7 +226,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <inheritdoc/>
         public bool TryGetOperation(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildOperation operationHandler)
         {
-            if(this.m_operationHandlers.TryGetValue(propertyName, out operationHandler))
+            if (this.m_operationHandlers.TryGetValue(propertyName, out operationHandler))
             {
                 return operationHandler.ScopeBinding.HasFlag(bindingType);
             }

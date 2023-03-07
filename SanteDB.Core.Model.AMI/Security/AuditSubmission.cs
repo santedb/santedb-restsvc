@@ -16,10 +16,10 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using Newtonsoft.Json;
-using SanteDB.Core.Auditing;
+using SanteDB.Core.Model.Audit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,16 +40,16 @@ namespace SanteDB.Core.Model.AMI.Security
         /// </summary>
         public AuditSubmission()
         {
-            this.Audit = new List<AuditData>();
+            this.Audit = new List<AuditEventData>();
         }
 
         /// <summary>
         ///  Audit info with data
         /// </summary>
         /// <param name="data"></param>
-        public AuditSubmission(AuditData data)
+        public AuditSubmission(AuditEventData data)
         {
-            this.Audit = new List<AuditData> { data };
+            this.Audit = new List<AuditEventData> { data };
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace SanteDB.Core.Model.AMI.Security
         /// </summary>
         [XmlElement("audit")]
         [JsonProperty("audit")]
-        public List<AuditData> Audit { get; set; }
+        public List<AuditEventData> Audit { get; set; }
 
         /// <summary>
         /// When was the audit modified

@@ -1,0 +1,144 @@
+﻿using SanteDB.Core.Data.Import;
+using SanteDB.Core.Http;
+using SanteDB.Core.Interop;
+using SanteDB.Core.Model.AMI.Alien;
+using SanteDB.Core.Model.Query;
+using SanteDB.Core.Security;
+using SanteDB.Core.Security.Audit;
+using SanteDB.Core.Services;
+using SanteDB.Rest.Common;
+using SanteDB.Rest.Common.Attributes;
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.IO;
+using System.Linq;
+using System.Text;
+
+namespace SanteDB.Rest.AMI.Resources
+{
+    /// <summary>
+    /// Foreign data stage resource handler
+    /// </summary>
+    public class ForeignDataStageHandler : ChainedResourceHandlerBase
+    {
+        private readonly IForeignDataManagerService m_foreignDataService;
+
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        public ForeignDataStageHandler(ILocalizationService localizationService, IForeignDataManagerService foreignDataManagerService) : base(localizationService)
+        {
+            this.m_foreignDataService = foreignDataManagerService;
+        }
+
+        /// <inheritdoc/>
+        public override string ResourceName => "ForeignData";
+
+        /// <inheritdoc/>
+        public override Type Type => typeof(IForeignDataSubmission);
+
+        /// <inheritdoc/>
+        public override Type Scope => typeof(IAmiServiceContract);
+
+        /// <inheritdoc/>
+        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.Delete | ResourceCapabilityType.Get | ResourceCapabilityType.Search
+            | ResourceCapabilityType.Update;
+
+        /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.ManageForeignData)]
+        public override object Create(object data, bool updateIfExists)
+        {
+            if(data is IEnumerable<MultiPartFormData> multiPartData)
+            {
+                var description = multiPartData.FirstOrDefault(o => o.Name == "description");
+                var map = multiPartData.FirstOrDefault(o => o.Name == "map");
+                var source = multiPartData.FirstOrDefault(o => o.Name == "source");
+
+                if(map != null && source != null && source.IsFile)
+                {
+                    return new ForeignDataInfo(this.m_foreignDataService.Stage(new MemoryStream(source.Data), source.FileName, description.ToString(), Guid.Parse(map.ToString())));
+                }
+                else
+                {
+                    throw new ArgumentException("Expected name, map and source parameters", nameof(data));
+                }
+            }
+            else
+            {
+                throw new ArgumentException("Expected multipart/form-data", nameof(data));
+            }
+        }
+
+        /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.ManageForeignData)]
+        public override object Delete(object key)
+        {
+            if(key is Guid guidKey)
+            {
+                return new ForeignDataInfo(this.m_foreignDataService.Delete(guidKey));
+            }
+            else
+            {
+                throw new ArgumentException(nameof(key));
+            }
+        }
+
+        /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.ManageForeignData)]
+        public override object Get(object id, object versionId)
+        {
+            if(id is Guid guidId)
+            {
+                return new ForeignDataInfo(this.m_foreignDataService.Get(guidId));
+            }
+            else
+            {
+                throw new ArgumentException(nameof(id));
+            }
+        }
+
+        /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.ManageForeignData)]
+        public override IQueryResultSet Query(NameValueCollection queryParameters)
+        {
+            var query = QueryExpressionParser.BuildLinqExpression<IForeignDataSubmission>(queryParameters);
+            return new TransformQueryResultSet<IForeignDataSubmission, ForeignDataInfo>(this.m_foreignDataService.Find(query), (a)=> new ForeignDataInfo(a));
+        }
+
+        /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.ManageForeignData)]
+        public override object Update(object data)
+        {
+            if (data is IEnumerable<MultiPartFormData> multiPartData)
+            {
+                var description = multiPartData.FirstOrDefault(o => o.Name == "description");
+                var map = multiPartData.FirstOrDefault(o => o.Name == "map");
+                var source = multiPartData.FirstOrDefault(o => o.Name == "source");
+                var id = multiPartData.FirstOrDefault(o => o.Name == "id");
+
+                if (Guid.TryParse(id?.ToString(), out var idGuid))
+                {
+                    this.Delete(idGuid);
+                }
+                else
+                {
+                    throw new ArgumentNullException("Need id for update", nameof(data));
+                }
+
+                if (map != null && source != null && source.IsFile)
+                {
+                    return new ForeignDataInfo(this.m_foreignDataService.Stage(new MemoryStream(source.Data), source.FileName, description.ToString(), Guid.Parse(map.ToString())));
+                }
+                else
+                {
+                    throw new ArgumentException("Expected name, map and source parameters", nameof(data));
+                }
+            }
+            else
+            {
+                throw new ArgumentException("Expected multipart/form-data", nameof(data));
+            }
+        }
+    }
+}

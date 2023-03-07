@@ -16,31 +16,21 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
+using SanteDB.Core.Model.Interfaces;
 using System;
 
 namespace SanteDB.Core.Model.AMI
 {
     /// <summary>
-    /// Represents an interface to extract the URL identifier path
+    /// Represents an object which has a key which may be any object (integer, string, guid) for the AMI service behavior to populat
     /// </summary>
     public interface IAmiIdentified
     {
-
         /// <summary>
-        /// Get the desired url resource key 
+        /// The key for the object
         /// </summary>
-        String Key { get; set; }
-
-        /// <summary>
-        /// Gets the tag for the resource
-        /// </summary>
-        string Tag { get; }
-
-        /// <summary>
-        /// Get the modified on
-        /// </summary>
-        DateTimeOffset ModifiedOn { get; }
+        Object Key { get; set; }
     }
 }

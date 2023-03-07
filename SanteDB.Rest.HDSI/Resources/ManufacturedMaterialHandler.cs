@@ -16,18 +16,16 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
-using SanteDB.Core;
-using SanteDB.Core.Model.Constants;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Specialized;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
@@ -35,16 +33,15 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a HDSI handler for manufactured materials
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class ManufacturedMaterialHandler : ResourceHandlerBase<ManufacturedMaterial>
+    public class ManufacturedMaterialHandler : EntityResourceHandlerBase<ManufacturedMaterial>
     {
         /// <summary>
         /// DI constructor
         /// </summary>
-        /// <param name="localizationService"></param>
-        public ManufacturedMaterialHandler(ILocalizationService localizationService) : base(localizationService)
+        public ManufacturedMaterialHandler(ILocalizationService localizationService, IRepositoryService<ManufacturedMaterial> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
-
         }
+
         /// <summary>
         /// Create the specified material
         /// </summary>
@@ -68,42 +65,19 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Obsoletes the specified material
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.DeleteMaterials)]
-        public override Object Obsolete(object key)
+        public override Object Delete(object key)
         {
-            return base.Obsolete(key);
+            return base.Delete(key);
         }
 
         /// <summary>
         /// Query for the specified material
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadMaterials)]
-        public override IEnumerable<Object> Query(NameValueCollection queryParameters)
+        public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             return base.Query(queryParameters);
         }
-
-
-        /// <summary>
-        /// Query for the specified material with restrictions
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.ReadMaterials)]
-        public override IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
-        {
-            var retVal = base.Query(queryParameters, offset, count, out totalCount);
-
-            var erPersistence = ApplicationServiceContext.Current.GetService<IRepositoryService<EntityRelationship>>();
-            var auth = AuthenticationContext.Current;
-
-            foreach (var o in retVal.OfType<ManufacturedMaterial>())
-            {
-                int tr = 0;
-                if (!o.Relationships.Any(r => r.RelationshipTypeKey == EntityRelationshipTypeKeys.Instance))
-                    o.Relationships.AddRange(erPersistence.Find(q => q.TargetEntityKey == o.Key && q.RelationshipTypeKey == EntityRelationshipTypeKeys.Instance, 0, 100, out tr));
-            };
-
-            return retVal;
-        }
-
 
         /// <summary>
         /// Update the specified material
@@ -113,6 +87,5 @@ namespace SanteDB.Rest.HDSI.Resources
         {
             return base.Update(data);
         }
-
     }
 }

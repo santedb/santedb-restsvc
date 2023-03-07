@@ -16,12 +16,13 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
+using SanteDB.Core.Services;
 using System;
-using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace SanteDB.Rest.Common
 {
@@ -30,6 +31,8 @@ namespace SanteDB.Rest.Common
     /// </summary>
     public interface IApiResourceHandler
     {
+
+
         /// <summary>
         /// Gets the name of the resource which the resource handler supports.
         /// </summary>
@@ -67,28 +70,19 @@ namespace SanteDB.Rest.Common
         Object Get(Object id, Object versionId);
 
         /// <summary>
-        /// Obsoletes a resource.
+        /// Delete a resource.
         /// </summary>
-        /// <param name="key">The key of the resource to obsolete.</param>
-        /// <returns>Returns the obsoleted resource.</returns>
-        Object Obsolete(Object key);
+        /// <param name="key">The key of the resource to delete.</param>
+        /// <returns>Returns the deleted resource.</returns>
+        /// <remarks>This functionality has changed since SanteDB 2.x</remarks>
+        Object Delete(Object key);
 
         /// <summary>
         /// Queries for a resource.
         /// </summary>
         /// <param name="queryParameters">The query parameters of the resource.</param>
         /// <returns>Returns a collection of resources.</returns>
-        IEnumerable<Object> Query(NameValueCollection queryParameters);
-
-        /// <summary>
-        /// Queries for a resource.
-        /// </summary>
-        /// <param name="queryParameters">The query parameters of the resource.</param>
-        /// <param name="offset">The offset of the query.</param>
-        /// <param name="count">The count of the query.</param>
-        /// <param name="totalCount">The total count of the results.</param>
-        /// <returns>Returns a collection of resources.</returns>
-        IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out Int32 totalCount);
+        IQueryResultSet Query(NameValueCollection queryParameters);
 
         /// <summary>
         /// Updates a resource.

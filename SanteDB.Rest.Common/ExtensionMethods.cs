@@ -16,11 +16,12 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Text;
 
 namespace SanteDB.Rest.Common
 {
@@ -31,6 +32,19 @@ namespace SanteDB.Rest.Common
     public static class ExtensionMethods
     {
 
+        /// <summary>
+        /// Encode the specified string to ASCII escape characters
+        /// </summary>
+        public static String EncodeAscii(this string value)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var c in value)
+                if (c > 127)
+                    sb.AppendFormat("\\u{0:x4}", (int)c);
+                else
+                    sb.Append(c);
+            return sb.ToString();
+        }
 
         /// <summary>
         /// Get if modified since
@@ -38,7 +52,23 @@ namespace SanteDB.Rest.Common
         public static DateTime? GetIfModifiedSince(this HttpListenerRequest me)
         {
             if (me.Headers["If-Modified-Since"] != null)
+            {
                 return DateTime.Parse(me.Headers["If-Modified-Since"]);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get if modified since
+        /// </summary>
+        public static DateTime? GetIfUnmodifiedSince(this HttpListenerRequest me)
+        {
+            if (me.Headers["If-Unmodified-Since"] != null)
+            {
+                return DateTime.Parse(me.Headers["If-Unmodified-Since"]);
+            }
+
             return null;
         }
 
@@ -47,10 +77,24 @@ namespace SanteDB.Rest.Common
         /// </summary>
         public static String[] GetIfNoneMatch(this HttpListenerRequest me)
         {
-            if (me.Headers["If-None-Match"] != null)
-                return me.Headers["If-None-Match"].Split(',');
-            return null;
+            return me.Headers["If-None-Match"]?.ParseETagMatch();
         }
+
+        /// <summary>
+        /// Get the if match header
+        /// </summary>
+        public static string[] GetIfMatch(this HttpListenerRequest me)
+        {
+            return me.Headers["If-Match"]?.ParseETagMatch();
+        }
+
+        /// <summary>
+        /// Parse ETag match header
+        /// </summary>
+        private static string[] ParseETagMatch(this String me) => me.Split('"').Where(o =>
+                        !o.StartsWith(",") &&
+                        !"W/".Equals(o) &&
+                        !String.IsNullOrEmpty(o)).ToArray();
 
         /// <summary>
         /// Set the e-tag
@@ -60,7 +104,9 @@ namespace SanteDB.Rest.Common
         public static void SetETag(this HttpListenerResponse me, String etag, bool isWeak = false)
         {
             if (!String.IsNullOrEmpty(etag))
+            {
                 me.AppendHeader("ETag", isWeak ? $"W/{etag}" : etag);
+            }
         }
 
         /// <summary>
@@ -73,28 +119,6 @@ namespace SanteDB.Rest.Common
             me.AppendHeader("Last-Modified", lastModified.ToString("r"));
         }
 
-        /// <summary>
-        /// Convert query types
-        /// </summary>
-        public static SanteDB.Core.Model.Query.NameValueCollection ToQuery(this System.Collections.Specialized.NameValueCollection nvc)
-        {
-            var retVal = new SanteDB.Core.Model.Query.NameValueCollection();
-            foreach (var k in nvc.AllKeys)
-                retVal.Add(k, new List<String>(nvc.GetValues(k)));
-            return retVal;
-        }
-
-        /// <summary>
-        /// Convert query types
-        /// </summary>
-        public static List<KeyValuePair<String, Object>> ToList(this System.Collections.Specialized.NameValueCollection nvc)
-        {
-            var retVal = new List<KeyValuePair<String, Object>>();
-            foreach (var k in nvc.AllKeys)
-                foreach (var v in nvc.GetValues(k))
-                    retVal.Add(new KeyValuePair<String, Object>(k, v));
-            return retVal;
-        }
 
     }
 }

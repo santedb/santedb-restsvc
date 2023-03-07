@@ -16,12 +16,12 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using RestSrvr;
 using RestSrvr.Message;
 using SanteDB.Core.Diagnostics;
-using SanteDB.Rest.Common.Compression;
+using SanteDB.Core.Http.Compression;
 using System;
 using System.Diagnostics.Tracing;
 using System.IO;
@@ -36,7 +36,7 @@ namespace SanteDB.Rest.Common.Serialization
     public class RestCompressionMessageInspector : IMessageInspector
     {
         // Trace source
-        private Tracer m_traceSource = Tracer.GetTracer(typeof(RestCompressionMessageInspector));
+        private readonly Tracer m_traceSource = Tracer.GetTracer(typeof(RestCompressionMessageInspector));
 
         /// <summary>
         /// After request is received
@@ -45,11 +45,12 @@ namespace SanteDB.Rest.Common.Serialization
         {
             try
             {
-
                 // Handle compressed requests
                 var compressionScheme = CompressionUtil.GetCompressionScheme(RestOperationContext.Current.IncomingRequest.Headers["Content-Encoding"]);
                 if (compressionScheme != null)
+                {
                     request.Body = compressionScheme.CreateDecompressionStream(request.Body);
+                }
             }
             catch (Exception e)
             {
@@ -64,7 +65,6 @@ namespace SanteDB.Rest.Common.Serialization
         {
             try
             {
-
                 string encodings = RestOperationContext.Current.IncomingRequest.Headers.Get("Accept-Encoding");
                 string compressionScheme = String.Empty;
 
@@ -73,20 +73,32 @@ namespace SanteDB.Rest.Common.Serialization
                     encodings = encodings.ToLowerInvariant();
 
                     if (encodings.Contains("lzma"))
+                    {
                         compressionScheme = "lzma";
+                    }
                     else if (encodings.Contains("bzip2"))
+                    {
                         compressionScheme = "bzip2";
+                    }
                     else if (encodings.Contains("gzip"))
+                    {
                         compressionScheme = "gzip";
+                    }
                     else if (encodings.Contains("deflate"))
+                    {
                         compressionScheme = "deflate";
+                    }
                     else
+                    {
                         response.Headers.Add("X-CompressResponseStream", "no-known-accept");
+                    }
                 }
 
                 // No reply = no compress :)
                 if (response.Body == null)
+                {
                     return;
+                }
 
                 // Finally compress
                 // Compress
@@ -99,12 +111,15 @@ namespace SanteDB.Rest.Common.Serialization
 
                         // Read binary contents of the message
                         var memoryStream = new MemoryStream();
-                        using (var compressor = CompressionUtil.GetCompressionScheme(compressionScheme).CreateCompressionStream(memoryStream))
-                            response.Body.CopyTo(compressor);
-                        response.Body.Dispose();
-                        memoryStream.Seek(0, SeekOrigin.Begin);
-                        response.Body = memoryStream;
-
+                        using (response.Body)
+                        {
+                            using (var compressor = CompressionUtil.GetCompressionScheme(compressionScheme).CreateCompressionStream(memoryStream))
+                            {
+                                response.Body.CopyTo(compressor);
+                            }
+                            memoryStream.Seek(0, SeekOrigin.Begin);
+                            response.Body = memoryStream;
+                        }
                     }
                     catch (Exception e)
                     {

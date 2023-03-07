@@ -16,13 +16,15 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
+using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
-using System;
-using System.Collections.Generic;
+using SanteDB.Rest.Common.Attributes;
+using System.Collections.Specialized;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
@@ -32,16 +34,15 @@ namespace SanteDB.Rest.HDSI.Resources
     /// <remarks>This is a special resource handler which only supports updates/inserts. It actually just creates a new version
     /// of an entity on the server so the changes propagate down</remarks>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class EntityRelationshipResourceHandler : ResourceHandlerBase<EntityRelationship>
+    public class EntityRelationshipResourceHandler : HdsiResourceHandlerBase<EntityRelationship>
     {
         /// <summary>
         /// DI constructor
         /// </summary>
-        /// <param name="localizationService"></param>
-        public EntityRelationshipResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        public EntityRelationshipResourceHandler(ILocalizationService localizationService, IRepositoryService<EntityRelationship> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
-
         }
+
         /// <summary>
         /// Get the name of the resource
         /// </summary>
@@ -56,16 +57,10 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Massage query parameters
         /// </summary>
-        /// <param name="queryParameters"></param>
-        /// <param name="offset"></param>
-        /// <param name="count"></param>
-        /// <param name="totalCount"></param>
-        /// <returns></returns>
-        public override IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
-            if (queryParameters.ContainsKey("modifiedOn"))
-                queryParameters.Remove("modifiedOn");
-            return base.Query(queryParameters, offset, count, out totalCount);
+            return base.Query(queryParameters);
         }
     }
 }

@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using RestSrvr;
 using RestSrvr.Message;
@@ -39,7 +39,7 @@ namespace SanteDB.Rest.Common.Behavior
     public class AcceptLanguageEndpointBehavior : IEndpointBehavior, IMessageInspector
     {
         // Trace
-        private Tracer m_tracer = Tracer.GetTracer(typeof(AcceptLanguageEndpointBehavior));
+        private readonly Tracer m_tracer = Tracer.GetTracer(typeof(AcceptLanguageEndpointBehavior));
 
         /// <summary>
         /// After receive a request look for the language
@@ -52,13 +52,14 @@ namespace SanteDB.Rest.Common.Behavior
                 RestOperationContext.Current.Data.Add("originalLanguage", Thread.CurrentThread.CurrentUICulture.Name);
                 var langPrincipal = AuthenticationContext.Current.Principal.GetClaimValue(SanteDBClaimTypes.Language);
                 if (langPrincipal != null)
+                {
                     Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(langPrincipal);
+                }
                 else if (RestOperationContext.Current.Data.TryGetValue("Session", out object dataSession) && dataSession is ISession session &&
                     session.Claims.Any(o => o.Type == SanteDBClaimTypes.Language))
                 {
                     langPrincipal = session.Claims.First(o => o.Type == SanteDBClaimTypes.Language)?.Value;
                     Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(langPrincipal);
-
                 }
                 else if (request.Headers["Accept-Language"] != null)
                 {
@@ -66,13 +67,12 @@ namespace SanteDB.Rest.Common.Behavior
                     Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(language[0]);
                 }
 
-                if (request.Headers["X-SdbLanguage"] != null) // Language override
+                if (!String.IsNullOrEmpty(request.Headers["X-SdbLanguage"]?.Replace("null",""))) // Language override
                 {
                     var language = request.Headers["X-SdbLanguage"].Split(',');
                     Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(language[0]);
                 }
                 RestOperationContext.Current.Data.Add("lang", Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName);
-
             }
             catch (Exception e)
             {
@@ -97,7 +97,9 @@ namespace SanteDB.Rest.Common.Behavior
             {
                 response.Headers.Add("Content-Language", Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName);
                 if (RestOperationContext.Current.Data.TryGetValue("originalLanguage", out Object name))
+                {
                     Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(name.ToString());
+                }
             }
             catch (Exception e)
             {

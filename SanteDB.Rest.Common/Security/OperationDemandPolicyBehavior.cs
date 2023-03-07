@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using RestSrvr;
 using RestSrvr.Message;
@@ -55,8 +55,9 @@ namespace SanteDB.Rest.Common.Security
         {
             var methInfo = this.m_behaviorType.GetMethod(operation.Description.InvokeMethod.Name, operation.Description.InvokeMethod.GetParameters().Select(p => p.ParameterType).ToArray());
             foreach (var demand in methInfo.GetCustomAttributes<DemandAttribute>())
+            {
                 ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(demand.PolicyId);
-
+            }
         }
 
         /// <summary>
@@ -65,7 +66,9 @@ namespace SanteDB.Rest.Common.Security
         public void ApplyEndpointBehavior(ServiceEndpoint endpoint, EndpointDispatcher dispatcher)
         {
             foreach (var op in endpoint.Description.Contract.Operations)
+            {
                 op.AddOperationBehavior(this);
+            }
         }
 
         /// <summary>

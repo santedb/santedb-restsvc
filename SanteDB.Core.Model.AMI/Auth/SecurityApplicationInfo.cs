@@ -16,10 +16,11 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using Newtonsoft.Json;
 using SanteDB.Core.Model.Security;
+using SanteDB.Core.Security.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,12 +45,21 @@ namespace SanteDB.Core.Model.AMI.Auth
         }
 
         /// <summary>
+        /// Create new application info
+        /// </summary>
+        public SecurityApplicationInfo(SecurityApplication application) : this(application, ApplicationServiceContext.Current.GetService<IPolicyInformationService>())
+        {
+
+        }
+
+
+        /// <summary>
         /// Creates a new app info from the specified object
         /// </summary>
-        public SecurityApplicationInfo(SecurityApplication app)
+        public SecurityApplicationInfo(SecurityApplication app, IPolicyInformationService pipService)
         {
             this.Entity = app;
-            this.Policies = app.Policies.Where(o => o.Policy != null).Select(o => new SecurityPolicyInfo(o)).ToList();
+            this.Policies = pipService.GetPolicies(app).Select(o => new SecurityPolicyInfo(o)).ToList();
         }
 
         /// <summary>
@@ -63,10 +73,18 @@ namespace SanteDB.Core.Model.AMI.Auth
         /// Get the key for the object
         /// </summary>
         [JsonProperty("id"), XmlElement("id")]
-        public string Key
+        public Guid? Key
         {
-            get => this.Entity?.Key?.ToString();
-            set => this.Entity.Key = Guid.Parse(value);
+            get => this.Entity?.Key;
+            set => this.Entity.Key = value;
+        }
+
+        /// <inheritdoc/>
+        [XmlIgnore, JsonIgnore]
+        Object IAmiIdentified.Key
+        {
+            get => this.Key;
+            set => this.Key = Guid.Parse(value.ToString());
         }
 
         /// <summary>

@@ -16,14 +16,13 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core.Configuration;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Xml.Serialization;
 
-namespace SanteDB.Rest.Common
+namespace SanteDB.Rest.Common.Configuration
 {
     /// <summary>
     /// Basic authorization configuration

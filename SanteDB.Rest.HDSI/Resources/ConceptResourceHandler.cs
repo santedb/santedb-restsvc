@@ -16,15 +16,16 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
@@ -32,16 +33,16 @@ namespace SanteDB.Rest.HDSI.Resources
     /// A resource handler for a concept
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class ConceptResourceHandler : ResourceHandlerBase<Concept>
+    public class ConceptResourceHandler : HdsiResourceHandlerBase<Concept>
     {
         /// <summary>
         /// DI constructor
         /// </summary>
         /// <param name="localizationService"></param>
-        public ConceptResourceHandler(ILocalizationService localizationService) : base(localizationService)
+        public ConceptResourceHandler(ILocalizationService localizationService, IRepositoryService<Concept> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
-
         }
+
         /// <summary>
         /// Create the specified object in the database
         /// </summary>
@@ -64,28 +65,18 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Obsolete the specified concept
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
-        public override Object Obsolete(object key)
+        public override Object Delete(object key)
         {
-            return base.Obsolete(key);
+            return base.Delete(key);
         }
 
         /// <summary>
         /// Query the specified data
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public override IEnumerable<Object> Query(NameValueCollection queryParameters)
+        public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
-            int tr = 0;
-            return this.Query(queryParameters, 0, 100, out tr);
-        }
-
-        /// <summary>
-        /// Query with offsets
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public override IEnumerable<Object> Query(NameValueCollection queryParameters, int offset, int count, out Int32 totalCount)
-        {
-            return base.Query(queryParameters, offset, count, out totalCount);
+            return base.Query(queryParameters);
         }
 
         /// <summary>

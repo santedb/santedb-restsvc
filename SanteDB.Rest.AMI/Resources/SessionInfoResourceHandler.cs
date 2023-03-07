@@ -1,33 +1,35 @@
 ﻿/*
- * Portions Copyright 2015-2019 Mohawk College of Applied Arts and Technology
- * Portions Copyright 2019-2022 SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ * Copyright (C) 2021 - 2022, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
+ * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
- * DatERROR: 2021-8-27
+ * Date: 2022-5-30
  */
-using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Security;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -39,18 +41,21 @@ namespace SanteDB.Rest.AMI.Resources
     {
         // ILocalization Service
         private readonly ILocalizationService m_localizationService;
+        private readonly ISessionProviderService m_sessionProvider;
 
-        // Tracer 
+        // Tracer
         private readonly Tracer m_tracer = Tracer.GetTracer(typeof(SessionInfoResourceHandler));
 
         /// <summary>
         /// Instantiate the localization service
         /// </summary>
         /// <param name="localizationService"></param>
-        public SessionInfoResourceHandler(ILocalizationService localizationService)
+        public SessionInfoResourceHandler(ILocalizationService localizationService, ISessionProviderService sessionProvider)
         {
             this.m_localizationService = localizationService;
+            this.m_sessionProvider = sessionProvider;
         }
+
         /// <summary>
         /// Gets the resource name
         /// </summary>
@@ -75,7 +80,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Gets the service name
         /// </summary>
 
-        public string ServiceName => "Session Inoformation Resource Service";
+        public string ServiceName => "Session Information Resource Service";
 
         /// <summary>
         /// Create an object
@@ -92,11 +97,11 @@ namespace SanteDB.Rest.AMI.Resources
         public object Get(object id, object versionId)
         {
             var uuid = (Guid)id;
-            var session = ApplicationServiceContext.Current.GetService<ISessionProviderService>().Get(uuid.ToByteArray(), true);
+            var session = this.m_sessionProvider.Get(uuid.ToByteArray(), true);
             if (session == null)
             {
                 this.m_tracer.TraceError($"Session {uuid} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.sessionNotFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.ami.sessionNotFound", new
                 {
                     param = uuid
                 }));
@@ -108,34 +113,26 @@ namespace SanteDB.Rest.AMI.Resources
         /// Obsolete the specified session
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.UnrestrictedAdministration)]
-        public object Obsolete(object key)
+        public object Delete(object key)
         {
             var uuid = (Guid)key;
-            var session = ApplicationServiceContext.Current.GetService<ISessionProviderService>().Get(uuid.ToByteArray(), false);
+            var session = this.m_sessionProvider.Get(uuid.ToByteArray(), false);
             if (session == null)
             {
                 this.m_tracer.TraceError($"Session {uuid} not found");
-                throw new KeyNotFoundException(this.m_localizationService.FormatString("error.rest.ami.sessionNotFound", new
+                throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.ami.sessionNotFound", new
                 {
                     param = uuid
                 }));
             }
-            ApplicationServiceContext.Current.GetService<ISessionProviderService>().Abandon(session);
+            this.m_sessionProvider.Abandon(session);
             return null;
         }
 
         /// <summary>
         /// Query for sessions
         /// </summary>
-        public IEnumerable<object> Query(NameValueCollection queryParameters)
-        {
-            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException.userMessage"));
-        }
-
-        /// <summary>
-        /// Query for sessions
-        /// </summary>
-        public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        public IQueryResultSet Query(NameValueCollection queryParameters)
         {
             throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException.userMessage"));
         }

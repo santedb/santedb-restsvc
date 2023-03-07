@@ -16,9 +16,10 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using Newtonsoft.Json;
+using System.Security.Cryptography.X509Certificates;
 using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Security
@@ -41,24 +42,29 @@ namespace SanteDB.Core.Model.AMI.Security
         /// <summary>
         /// Creates a new client certificate request result based on the internal request response
         /// </summary>
-        /// <param name="cert">The certificate</param>
+        /// <param name="pkcsCert">The certificate</param>
         /// <param name="id">The id of the certificate</param>
         /// <param name="msg">The message for the submission result</param>
         /// <param name="outcome">The outcome of the submission</param>
-        public SubmissionResult(string msg, int id, SubmissionStatus outcome, string cert)
+        public SubmissionResult(string msg, int id, SubmissionStatus outcome, byte[] pkcsCert)
         {
             this.Message = msg;
             this.RequestId = id;
             this.Status = outcome;
-            this.Certificate = cert;
+            this.CertificatePkcs = pkcsCert;
         }
 
         /// <summary>
         /// Gets or sets the certificate content
         /// </summary>
-        [XmlElement("pkcs")]
-        [JsonProperty("pkcs")]
-        public string Certificate { get; set; }
+        [XmlElement("pkcs7")]
+        [JsonProperty("pkcs7")]
+        public byte[] CertificatePkcs { get; set; }
+
+        /// <summary>
+        /// Get certificate
+        /// </summary>
+        public X509Certificate2 GetCertificiate() => new X509Certificate2(this.CertificatePkcs);
 
         /// <summary>
         /// Gets or sets the message from the server

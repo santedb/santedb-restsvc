@@ -1,27 +1,28 @@
 ﻿/*
- * Portions Copyright 2015-2019 Mohawk College of Applied Arts and Technology
- * Portions Copyright 2019-2022 SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ * Copyright (C) 2021 - 2022, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
+ * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
- * DatERROR: 2021-8-27
+ * Date: 2022-5-30
  */
 using RestSrvr.Attributes;
 using SanteDB.Core.Applets.Model;
-using SanteDB.Core.Auditing;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Mail;
+using SanteDB.Core.Model.AMI.Alien;
 using SanteDB.Core.Model.AMI.Applet;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.AMI.Collections;
@@ -29,6 +30,7 @@ using SanteDB.Core.Model.AMI.Diagnostics;
 using SanteDB.Core.Model.AMI.Jobs;
 using SanteDB.Core.Model.AMI.Logging;
 using SanteDB.Core.Model.AMI.Security;
+using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Parameters;
@@ -40,7 +42,6 @@ using SanteDB.Core.Queue;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.IO;
 using System.Xml.Schema;
 
 namespace SanteDB.Rest.AMI
@@ -56,7 +57,7 @@ namespace SanteDB.Rest.AMI
     [ServiceKnownResource(typeof(ExtensionType))]
     [ServiceKnownResource(typeof(MailMessage))]
     [ServiceKnownResource(typeof(SecurityApplication))]
-    [ServiceKnownResource(typeof(AssigningAuthority))]
+    [ServiceKnownResource(typeof(IdentityDomain))]
     [ServiceKnownResource(typeof(SecurityDeviceInfo))]
     [ServiceKnownResource(typeof(SecurityApplicationInfo))]
     [ServiceKnownResource(typeof(SecurityPolicyInfo))]
@@ -71,7 +72,7 @@ namespace SanteDB.Rest.AMI
     [ServiceKnownResource(typeof(SecurityDevice))]
     [ServiceKnownResource(typeof(SubscriptionDefinition))]
     [ServiceKnownResource(typeof(TfaMechanismInfo))]
-    [ServiceKnownResource(typeof(AuditData))]
+    [ServiceKnownResource(typeof(AuditEventData))]
     [ServiceKnownResource(typeof(AppletManifest))]
     [ServiceKnownResource(typeof(JobInfo))]
     [ServiceKnownResource(typeof(AppletManifestInfo))]
@@ -94,6 +95,7 @@ namespace SanteDB.Rest.AMI
     [ServiceKnownResource(typeof(LogFileInfo))]
     [ServiceKnownResource(typeof(DispatcherQueueInfo))]
     [ServiceKnownResource(typeof(DispatcherQueueEntry))]
+    [ServiceKnownResource(typeof(ForeignDataInfo))]
     [ServiceKnownResource(typeof(PubSubSubscriptionDefinition))]
     [ServiceKnownResource(typeof(PubSubChannelDefinition))]
     [ServiceProduces("application/json")]
@@ -120,50 +122,7 @@ namespace SanteDB.Rest.AMI
         [Get("/?xsd={schemaId}")]
         XmlSchema GetSchema(int schemaId);
 
-        /// <summary>
-        /// Gets the TFA mechanisms which can be set for the specified ID
-        /// </summary>
-        /// <returns></returns>
-        [Get("/Tfa")]
-        AmiCollection GetTfaMechanisms();
-
         #region Diagnostic / Ad-Hoc interfaces
-
-        /// <summary>
-        /// Creates a diagnostic report.
-        /// </summary>
-        /// <param name="report">The diagnostic report to be created.</param>
-        /// <returns>Returns the created diagnostic report.</returns>
-        [Post("/Sherlock")]
-        DiagnosticReport CreateDiagnosticReport(DiagnosticReport report);
-
-        /// <summary>
-		/// Gets a specific log file.
-		/// </summary>
-		/// <param name="logId">The log identifier.</param>
-		/// <returns>Returns the log file information.</returns>
-		[Get("/Log/{logId}")]
-        LogFileInfo GetLog(string logId);
-
-        /// <summary>
-        /// Get log files on the server and their sizes.
-        /// </summary>
-        /// <returns>Returns a collection of log files.</returns>
-        [Get("/Log")]
-        AmiCollection GetLogs();
-
-        /// <summary>
-        /// Download log
-        /// </summary>
-        [Get("/Log/Stream/{logId}")]
-        Stream DownloadLog(String logId);
-
-        /// <summary>
-		/// Gets a server diagnostic report.
-		/// </summary>
-		/// <returns>Returns the created diagnostic report.</returns>
-		[Get("/Sherlock")]
-        DiagnosticReport GetServerDiagnosticReport();
 
         /// <summary>
 		/// Ping the service to determine up/down
@@ -244,7 +203,7 @@ namespace SanteDB.Rest.AMI
         AmiCollection AssociationSearch(String resourceType, String id, String childResourceType);
 
         /// <summary>
-        /// Assigns the <paramref name="body"/> object with the resource at <paramref name="resourceType"/>/<paramref name="key"/>
+        /// Assigns the <paramref name="body"/> object with the resource at <paramref name="resourceType"/>/<paramref name="id"/>
         /// </summary>
         /// <param name="resourceType">The type of container resource</param>
         /// <param name="id">The identiifer of the container</param>
@@ -356,7 +315,7 @@ namespace SanteDB.Rest.AMI
         /// Invokes the specified operation
         /// </summary>
         /// <param name="resourceType">The type of operation being invoked</param>
-        /// <param name="id">The ID of the operation</param>
+        /// <param name="body">The parameters which should be used to execute the operation</param>
         /// <param name="operationName">The name of the operation</param>
         /// <returns>The result of the operation invokation</returns>
         [RestInvoke("POST", "/{resourceType}/${operationName}")]

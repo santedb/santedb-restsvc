@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using Newtonsoft.Json;
 using SanteDB.Core.Security.Configuration;
@@ -123,6 +123,13 @@ namespace SanteDB.Rest.Common.Configuration
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [DisplayName("Certificate Binding"), Description("The certificate information to bind to the HTTP endpoint")]
         public X509ConfigurationElement CertificateBinding { get; set; }
+
+        /// <summary>
+        /// Client certificate negotiation
+        /// </summary>
+        [XmlElement("clientCerts"), JsonProperty("clientCerts")]
+        [DisplayName("Client Certificates"), Description("When enabled, negotiate client certificates with the endpoint")]
+        public bool ClientCertNegotiation { get; set; }
 
         /// <summary>
         /// Endpoint configuration

@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2022-1-11
+ * Date: 2022-5-30
  */
 using Newtonsoft.Json;
 using SanteDB.Core.Configuration;
@@ -28,7 +28,7 @@ using System.Xml.Serialization;
 namespace SanteDB.Core.Model.AMI.Jobs
 {
 
-   
+
     /// <summary>
     /// Job scheduling information
     /// </summary>

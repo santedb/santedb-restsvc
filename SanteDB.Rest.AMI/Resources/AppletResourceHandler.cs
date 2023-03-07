@@ -1,21 +1,22 @@
 ﻿/*
- * Portions Copyright 2015-2019 Mohawk College of Applied Arts and Technology
- * Portions Copyright 2019-2022 SanteSuite Contributors (See NOTICE)
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- * 
- * http://www.apache.org/licenses/LICENSE-2.0 
- * 
+ * Copyright (C) 2021 - 2022, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
+ * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations under 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * User: fyfej
- * DatERROR: 2021-8-27
+ * Date: 2022-5-30
  */
 using RestSrvr;
 using SanteDB.Core;
@@ -31,7 +32,7 @@ using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -106,7 +107,9 @@ namespace SanteDB.Rest.AMI.Resources
             ApplicationServiceContext.Current.GetService<IAppletManagerService>().Install(pkg);
             X509Certificate2 cert = null;
             if (pkg.PublicKey != null)
+            {
                 cert = new X509Certificate2(pkg.PublicKey);
+            }
             else if (pkg.Meta.PublicKeyToken != null)
             {
                 X509Store store = new X509Store(StoreName.TrustedPublisher, StoreLocation.LocalMachine);
@@ -115,7 +118,9 @@ namespace SanteDB.Rest.AMI.Resources
                     store.Open(OpenFlags.ReadOnly);
                     var results = store.Certificates.Find(X509FindType.FindByThumbprint, pkg.Meta.PublicKeyToken, false);
                     if (results.Count > 0)
+                    {
                         cert = results[0];
+                    }
                 }
                 finally
                 {
@@ -140,7 +145,7 @@ namespace SanteDB.Rest.AMI.Resources
             if (appletData == null)
             {
                 this.m_tracer.TraceError($"File not found: {appletId}");
-                throw new FileNotFoundException(this.m_localizationService.FormatString("error.rest.ami.FileNotFoundParam", new
+                throw new FileNotFoundException(this.m_localizationService.GetString("error.rest.ami.FileNotFoundParam", new
                 {
                     param = appletId.ToString()
                 }));
@@ -159,39 +164,31 @@ namespace SanteDB.Rest.AMI.Resources
         /// <param name="appletId">The identifier of the applet to uninstall</param>
         /// <returns>Null</returns>
         [Demand(PermissionPolicyIdentifiers.AdministerApplet)]
-        public object Obsolete(object appletId)
+        public object Delete(object appletId)
         {
             ApplicationServiceContext.Current.GetService<IAppletManagerService>().UnInstall(appletId.ToString());
             return null;
         }
 
         /// <summary>
-        /// Perform a query of applets
-        /// </summary>
-        /// <param name="queryParameters">The filter to apply to the applet</param>
-        /// <returns>The matching applet manifests</returns>
-        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public IEnumerable<object> Query(NameValueCollection queryParameters)
-        {
-            int tc = 0;
-            return this.Query(queryParameters, 0, 100, out tc);
-        }
-
-        /// <summary>
         /// Perform a query of applets with restrictions
         /// </summary>
         /// <param name="queryParameters">The filter to apply</param>
-        /// <param name="offset">The offset of the first result</param>
-        /// <param name="count">The count of objects</param>
-        /// <param name="totalCount">The total matching results</param>
         /// <returns>The applet manifests</returns>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public IEnumerable<object> Query(NameValueCollection queryParameters, int offset, int count, out int totalCount)
+        public IQueryResultSet Query(NameValueCollection queryParameters)
         {
             var query = QueryExpressionParser.BuildLinqExpression<AppletManifest>(queryParameters);
             var applets = ApplicationServiceContext.Current.GetService<IAppletManagerService>().Applets.Where(query.Compile()).Select(o => new AppletManifestInfo(o.Info, null));
-            totalCount = applets.Count();
-            return applets.Skip(offset).Take(count).OfType<Object>();
+            return new MemoryQueryResultSet(applets);
+        }
+
+        /// <summary>
+        /// Remove an associated entity
+        /// </summary>
+        public object RemoveAssociatedEntity(object scopingEntityKey, string propertyName, object subItemKey)
+        {
+            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotImplementedException"));
         }
 
         /// <summary>
@@ -208,7 +205,7 @@ namespace SanteDB.Rest.AMI.Resources
             if (!appletMgr.Applets.Any(o => pkg.Meta.Id == o.Info.Id))
             {
                 this.m_tracer.TraceError($"File not found: {pkg.Meta.Id}");
-                throw new FileNotFoundException(this.m_localizationService.FormatString("error.rest.ami.FileNotFoundParam", new
+                throw new FileNotFoundException(this.m_localizationService.GetString("error.rest.ami.FileNotFoundParam", new
                 {
                     param = pkg.Meta.Id
                 }));
@@ -217,7 +214,9 @@ namespace SanteDB.Rest.AMI.Resources
             ApplicationServiceContext.Current.GetService<IAppletManagerService>().Install(pkg, true);
             X509Certificate2 cert = null;
             if (pkg.PublicKey != null)
+            {
                 cert = new X509Certificate2(pkg.PublicKey);
+            }
             else if (pkg.Meta.PublicKeyToken != null)
             {
                 X509Store store = new X509Store(StoreName.TrustedPublisher, StoreLocation.LocalMachine);
@@ -226,7 +225,9 @@ namespace SanteDB.Rest.AMI.Resources
                     store.Open(OpenFlags.ReadOnly);
                     var results = store.Certificates.Find(X509FindType.FindByThumbprint, pkg.Meta.PublicKeyToken, false);
                     if (results.Count > 0)
+                    {
                         cert = results[0];
+                    }
                 }
                 finally
                 {
@@ -242,9 +243,12 @@ namespace SanteDB.Rest.AMI.Resources
         private void SetAppletHeaders(AppletInfo package)
         {
             RestOperationContext.Current.OutgoingResponse.SetETag(package.Version);
-            RestOperationContext.Current.OutgoingResponse.Headers.Add("X-SanteDB-PakID", package.Id);
+            RestOperationContext.Current.OutgoingResponse.Headers.Add(ExtendedHttpHeaderNames.PackageIdentifierHeaderName, package.Id);
             if (package.Hash != null)
-                RestOperationContext.Current.OutgoingResponse.AppendHeader("X-SanteDB-Hash", Convert.ToBase64String(package.Hash));
+            {
+                RestOperationContext.Current.OutgoingResponse.AppendHeader(ExtendedHttpHeaderNames.PackageHashHeaderName, Convert.ToBase64String(package.Hash));
+            }
+
             RestOperationContext.Current.OutgoingResponse.AppendHeader("Content-Type", "application/octet-stream");
             RestOperationContext.Current.OutgoingResponse.ContentType = "application/octet-stream";
             RestOperationContext.Current.OutgoingResponse.AppendHeader("Content-Disposition", $"attachment; filename=\"{package.Id}.pak.gz\"");

@@ -16,11 +16,10 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using RestSrvr;
 using RestSrvr.Message;
-using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Model.Serialization;
 using System;
@@ -48,6 +47,11 @@ namespace SanteDB.Rest.Common.Behavior
         [XmlElement("limit")]
         public Int32 Limit { get; set; }
 
+        /// <summary>
+        /// Get the cooldown time
+        /// </summary>
+        [XmlElement("cooldown")]
+        public Int32 CooldownTime { get; set; }
     }
 
     /// <summary>
@@ -71,9 +75,14 @@ namespace SanteDB.Rest.Common.Behavior
         public ServiceThrottlingEndpointBehavior(XElement xe)
         {
             if (xe == null)
+            {
                 throw new InvalidOperationException("Missing ServiceThrottlingConfiguration");
+            }
+
             using (var sr = new StringReader(xe.ToString()))
+            {
                 this.m_settings = XmlModelSerializerFactory.Current.CreateSerializer(typeof(ServiceThrottlingConfiguration)).Deserialize(sr) as ServiceThrottlingConfiguration;
+            }
         }
 
         /// <summary>
@@ -89,11 +98,11 @@ namespace SanteDB.Rest.Common.Behavior
         /// </summary>
         public void AfterReceiveRequest(RestRequestMessage request)
         {
-
-            var cReq = Interlocked.Increment(ref this.m_requests);
-            if (cReq > this.m_settings.Limit)
-                throw new LimitExceededException();
-
+            if (Interlocked.Increment(ref this.m_requests) > this.m_settings.Limit)
+            {
+                Interlocked.Decrement(ref this.m_requests);
+                throw new LimitExceededException(this.m_settings.CooldownTime);
+            }
         }
 
         /// <summary>

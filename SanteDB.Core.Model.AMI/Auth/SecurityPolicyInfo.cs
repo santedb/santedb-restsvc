@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2021-8-27
+ * Date: 2022-5-30
  */
 using Newtonsoft.Json;
 using SanteDB.Core.Model.Security;
@@ -49,6 +49,17 @@ namespace SanteDB.Core.Model.AMI.Auth
             this.Oid = o.Oid;
             this.CanOverride = o.CanOverride;
             this.Policy = o;
+        }
+
+        /// <summary>
+        /// Constructs this policy information object from an IMS policy instane
+        /// </summary>
+        public SecurityPolicyInfo(IPolicy o)
+        {
+            this.Name = o.Name;
+            this.Oid = o.Oid;
+            this.CanOverride = o.CanOverride;
+            this.Policy = new SecurityPolicy(o.Name, o.Oid, o.IsActive, o.CanOverride);
         }
 
         /// <summary>
