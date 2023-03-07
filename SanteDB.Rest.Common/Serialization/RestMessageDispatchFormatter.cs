@@ -349,7 +349,10 @@ namespace SanteDB.Rest.Common.Serialization
                 // Result is serializable
                 if (result == null)
                 {
+                    if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Created)
+                    {
                         response.StatusCode = HttpStatusCode.NoContent;
+                    }
                 }
                 else if (result is XmlSchema xs)
                 {
