@@ -91,8 +91,7 @@ namespace SanteDB.Rest.Common.Behavior
             try
             {
                 var authCookie = request.Cookies["_s"];
-                if (AuthenticationContext.Current.Principal.Identity.Name == AuthenticationContext.AnonymousPrincipal.Identity.Name &&
-                    authCookie != null)
+                if (authCookie != null)
                 {
                     var session = m_sessionTokenResolver.GetSessionFromIdToken(authCookie.Value);
                     if (session != null)
