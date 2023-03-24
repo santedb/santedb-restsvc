@@ -377,6 +377,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                 {
                     e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ViewModelHeaderName, inboundHeaders[ExtendedHttpHeaderNames.ViewModelHeaderName]);
                 }
+                else if (!String.IsNullOrEmpty(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName]))
+                {
+                    e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ViewModelHeaderName, RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName]);
+                }
             };
             return retVal;
         }
@@ -433,7 +437,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     ApplicationServiceContext.Current.GetService<IDataPersistenceService<Bundle>>()?.Insert(insertBundle, TransactionMode.Commit, AuthenticationContext.Current.Principal);
 
                     // Clear cache
-                    ApplicationServiceContext.Current.GetService<IDataCachingService>().Clear();
+                    this.m_dataCachingService.Clear();
                     return remote;
                 }
                 catch (Exception e)
@@ -557,6 +561,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         var restClient = this.CreateProxyClient();
                         var patchId = restClient.Patch<Patch>($"/{resourceType}/{id}", "application/xml+sdb-patch", RestOperationContext.Current.IncomingRequest.Headers["If-Match"], body);
                         RestOperationContext.Current.OutgoingResponse.SetETag(patchId);
+
+                        if (Guid.TryParse(id, out Guid uuid))
+                        {
+                            this.m_dataCachingService.Remove(uuid);
+                        }
                     }
                     catch (Exception e)
                     {
