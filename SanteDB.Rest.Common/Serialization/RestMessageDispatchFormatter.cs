@@ -44,6 +44,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mime;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
@@ -100,6 +101,7 @@ namespace SanteDB.Rest.Common.Serialization
     {
         private String m_version = Assembly.GetEntryAssembly()?.GetName().Version.ToString();
         private String m_versionName = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "Unnamed";
+        private readonly string[] m_noBodyVerbs = { "GET", "HEAD" };
 
         // Trace source
         private readonly Tracer m_traceSource = Tracer.GetTracer(typeof(RestMessageDispatchFormatter));
@@ -168,8 +170,13 @@ namespace SanteDB.Rest.Common.Serialization
 #if DEBUG
                 this.m_traceSource.TraceEvent(EventLevel.Informational, "Received request from: {0}", RestOperationContext.Current.IncomingRequest.RemoteEndPoint);
 #endif
-
+                
                 var httpRequest = RestOperationContext.Current.IncomingRequest;
+                if(this.m_noBodyVerbs.Contains(httpRequest.HttpMethod))
+                {
+                    return; // no body
+                }
+
                 ContentType contentType = null;
                 if (!String.IsNullOrEmpty(httpRequest.Headers["Content-Type"]))
                 {

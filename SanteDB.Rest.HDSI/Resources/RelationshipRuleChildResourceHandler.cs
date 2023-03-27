@@ -158,12 +158,14 @@ namespace SanteDB.Rest.HDSI.Resources
                 throw new NotImplementedException($"Support for {scopingType.FullName} is not available.");
             }
 
+
             if (null == relationships)
             {
                 return new MemoryQueryResultSet<RelationshipValidationRule>();
             }
             else
             {
+                var whereClause = QueryExpressionParser.BuildLinqExpression<RelationshipValidationRule>(filter);
                 return new MemoryQueryResultSet<RelationshipValidationRule>(relationships.Select(rel => new RelationshipValidationRule
                 {
                     Key = rel.Key,
@@ -171,7 +173,7 @@ namespace SanteDB.Rest.HDSI.Resources
                     RelationshipTypeKey = rel.RelationshipTypeKey,
                     TargetClassKey = rel.TargetClassKey,
                     Description = rel.Description
-                }));
+                }).Where(whereClause.Compile()));
             }
         }
 

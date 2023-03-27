@@ -22,6 +22,7 @@ using RestSrvr;
 using RestSrvr.Attributes;
 using RestSrvr.Exceptions;
 using SanteDB.Core;
+using SanteDB.Core.Data;
 using SanteDB.Core.Http;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
@@ -40,9 +41,11 @@ using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.HDSI;
 using SanteDB.Rest.HDSI.Model;
+using SharpCompress;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Net;
 
@@ -94,7 +97,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         }
 
         /// <inheritdoc/>
-        public UpstreamHdsiServiceBehavior(IDataCachingService dataCache, ILocalizationService localeService, IPatchService patchService, IPolicyEnforcementService pepService, IBarcodeProviderService barcodeService, IResourcePointerService resourcePointerService, IServiceManager serviceManager, IConfigurationManager configurationManager, IRestClientFactory restClientResolver, IUpstreamIntegrationService upstreamIntegrationService, IUpstreamAvailabilityProvider availabilityProvider, IDataPersistenceService<Entity> entityRepository = null, IDataPersistenceService<Act> actRepository = null, IAdhocCacheService adhocCacheService = null, IAuditService auditService = null) 
+        public UpstreamHdsiServiceBehavior(IDataCachingService dataCache, ILocalizationService localeService, IPatchService patchService, IPolicyEnforcementService pepService, IBarcodeProviderService barcodeService, IResourcePointerService resourcePointerService, IServiceManager serviceManager, IConfigurationManager configurationManager, IRestClientFactory restClientResolver, IUpstreamIntegrationService upstreamIntegrationService, IUpstreamAvailabilityProvider availabilityProvider, IDataPersistenceService<Entity> entityRepository = null, IDataPersistenceService<Act> actRepository = null, IAdhocCacheService adhocCacheService = null, IAuditService auditService = null)
             : base(dataCache, localeService, patchService, pepService, barcodeService, resourcePointerService, serviceManager, configurationManager, auditService)
         {
             this.m_restClientFactory = restClientResolver;
@@ -144,7 +147,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     try
                     {
                         var restClient = this.CreateProxyClient();
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                        restClient.Responded += this.CopyResponseHeaders;
 
                         var result = restClient.Invoke<CodeSearchRequest, IdentifiedData>("SEARCH", "_ptr", "application/x-www-form-urlencoded", new CodeSearchRequest(parms));
                         if (result != null)
@@ -195,8 +198,14 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     {
                         var restClient = this.CreateProxyClient();
 
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                        return restClient.Post<IdentifiedData, IdentifiedData>($"{resourceType}", body);
+                        restClient.Responded += this.CopyResponseHeaders;
+                        var retVal = restClient.Post<IdentifiedData, IdentifiedData>($"{resourceType}", body);
+                        this.m_dataCachingService.Remove(retVal.Key.GetValueOrDefault());
+                        if (retVal is IResourceCollection irc)
+                        {
+                            irc.Item.ForEach(o => this.m_dataCachingService.Remove(o.Key.GetValueOrDefault()));
+                        }
+                        return retVal;
                     }
                     catch (Exception e)
                     {
@@ -228,13 +237,19 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     {
                         var restClient = this.CreateProxyClient();
 
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                        restClient.Responded += this.CopyResponseHeaders;
 
                         if (Guid.TryParse(id, out Guid uuid))
                         {
                             this.m_dataCachingService.Remove(uuid);
                         }
-                        return restClient.Post<IdentifiedData, IdentifiedData>($"{resourceType}/{id}", body);
+                        var retVal = restClient.Post<IdentifiedData, IdentifiedData>($"{resourceType}/{id}", body);
+                        this.m_dataCachingService.Remove(retVal.Key.GetValueOrDefault());
+                        if (retVal is IResourceCollection irc)
+                        {
+                            irc.Item.ForEach(o => this.m_dataCachingService.Remove(o.Key.GetValueOrDefault()));
+                        }
+                        return retVal;
                     }
                     catch (Exception e)
                     {
@@ -267,14 +282,20 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         var restClient = this.CreateProxyClient();
 
                         restClient.Requesting += (o, e) => e.AdditionalHeaders.Add("X-Delete-Mode", RestOperationContext.Current.IncomingRequest.Headers["X-Delete-Mode"] ?? "OBSOLETE");
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                        restClient.Responded += this.CopyResponseHeaders;
 
                         if (Guid.TryParse(id, out Guid uuid))
                         {
                             this.m_dataCachingService.Remove(uuid);
                         }
 
-                        return restClient.Delete<IdentifiedData>($"{resourceType}/{id}");
+                        var retVal = restClient.Delete<IdentifiedData>($"{resourceType}/{id}");
+                        this.m_dataCachingService.Remove(retVal.Key.GetValueOrDefault());
+                        if (retVal is IResourceCollection irc)
+                        {
+                            irc.Item.ForEach(o => this.m_dataCachingService.Remove(o.Key.GetValueOrDefault()));
+                        }
+                        return retVal;
                     }
                     catch (Exception e)
                     {
@@ -321,7 +342,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                             }
                         }
 
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                        restClient.Responded += this.CopyResponseHeaders;
                         //restClient.Accept = String.Join(",", RestOperationContext.Current.IncomingRequest.AcceptTypes);
                         var retVal = restClient.Get<IdentifiedData>($"{resourceType}/{id}", RestOperationContext.Current.IncomingRequest.QueryString);
 
@@ -464,7 +485,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     try
                     {
                         var restClient = this.CreateProxyClient();
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                        restClient.Responded += this.CopyResponseHeaders;
                         return restClient.Get<IdentifiedData>($"{resourceType}/{id}/_history/{versionId}");
                     }
                     catch (Exception e)
@@ -496,7 +517,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     try
                     {
                         var restClient = this.CreateProxyClient();
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                        restClient.Responded += this.CopyResponseHeaders;
                         return restClient.Get<IdentifiedData>($"{resourceType}/{id}/history");
                     }
                     catch (Exception e)
@@ -637,7 +658,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     try
                     {
                         var restClient = this.CreateProxyClient();
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                        restClient.Responded += this.CopyResponseHeaders;
                         //restClient.Accept = String.Join(",", RestOperationContext.Current.IncomingRequest.AcceptTypes);
                         // This NVC is UTF8 compliant
                         var nvc = RestOperationContext.Current.IncomingRequest.Url.Query.ParseQueryString();
@@ -675,7 +696,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     try
                     {
                         var restClient = this.CreateProxyClient();
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                        restClient.Responded += this.CopyResponseHeaders;
 
                         if (Guid.TryParse(id, out Guid uuid))
                         {
@@ -713,7 +734,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     try
                     {
                         var restClient = this.CreateProxyClient();
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                        restClient.Responded += this.CopyResponseHeaders;
                         // This NVC is UTF8 compliant
                         var nvc = RestOperationContext.Current.IncomingRequest.Url.Query.ParseQueryString();
                         var retVal = restClient.Get<Object>($"/{resourceType}/{key}/{childResourceType}", nvc) as IdentifiedData;
@@ -751,7 +772,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     {
                         var restClient = this.CreateProxyClient();
                         restClient.Requesting += (o, e) => e.AdditionalHeaders.Add("X-Delete-Mode", RestOperationContext.Current.IncomingRequest.Headers["X-Delete-Mode"] ?? "OBSOLETE");
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                        restClient.Responded += this.CopyResponseHeaders;
 
                         if (Guid.TryParse(key, out Guid uuid))
                         {
@@ -792,7 +813,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     try
                     {
                         var restClient = this.CreateProxyClient();
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                        restClient.Responded += this.CopyResponseHeaders;
                         var retVal = restClient.Get<IdentifiedData>($"{resourceType}/{key}/{childResourceType}/{scopedEntityKey}", RestOperationContext.Current.IncomingRequest.QueryString);
                         this.TagUpstream(retVal);
                         return retVal;
@@ -825,7 +846,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     try
                     {
                         var restClient = this.CreateProxyClient();
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                        restClient.Responded += this.CopyResponseHeaders;
 
                         if (Guid.TryParse(key, out Guid uuid))
                         {
@@ -866,8 +887,13 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     try
                     {
                         var restClient = this.CreateProxyClient();
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                        return restClient.Post<object, object>($"{resourceType}/${operationName}", body);
+                        restClient.Responded += this.CopyResponseHeaders;
+                        var retVal = restClient.Post<object, object>($"{resourceType}/${operationName}", body);
+                        if(retVal is byte[] ba)
+                        {
+                            retVal = new MemoryStream(ba);
+                        }
+                        return retVal;
                     }
                     catch (Exception e)
                     {
@@ -888,6 +914,45 @@ namespace SanteDB.Messaging.HDSI.Wcf
 
         /// <inheritdoc/>
         [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
+        public override Stream GetDataset(string resourceType, string id)
+        {
+
+            if (this.ShouldForwardRequest())
+            {
+                if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
+                {
+                    try
+                    {
+                        var restClient = this.CreateProxyClient();
+                        restClient.Responded += this.CopyResponseHeaders;
+                        if (String.IsNullOrEmpty(id))
+                        {
+                            return new MemoryStream(restClient.Get($"{resourceType}/_export?{RestOperationContext.Current.IncomingRequest.QueryString.ToHttpString()}"));
+                        }
+                        else
+                        {
+                            return new MemoryStream(restClient.Get($"{resourceType}/{id}/_export?{RestOperationContext.Current.IncomingRequest.QueryString.ToHttpString()}"));
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
+                        throw;
+                    }
+                }
+                else
+                {
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
+            }
+            else
+            {
+                return base.GetDataset(resourceType, id);
+            }
+        }
+
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override object InvokeMethod(string resourceType, string id, string operationName, ParameterCollection body)
         {
             if (body is null)
@@ -902,7 +967,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     try
                     {
                         var restClient = this.CreateProxyClient();
-                        restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                        restClient.Responded += this.CopyResponseHeaders;
 
                         if (Guid.TryParse(id, out Guid uuid))
                         {
@@ -925,6 +990,18 @@ namespace SanteDB.Messaging.HDSI.Wcf
             else
             {
                 return base.InvokeMethod(resourceType, id, operationName, body);
+            }
+        }
+
+        /// <summary>
+        /// Copy response headers
+        /// </summary>
+        private void CopyResponseHeaders(object sender, RestResponseEventArgs e)
+        {
+            RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+            if (e.Headers?.ContainsKey("Content-Disposition") == true)
+            {
+                RestOperationContext.Current.OutgoingResponse.AddHeader("Content-Disposition", e.Headers["Content-Disposition"]);
             }
         }
     }

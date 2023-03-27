@@ -18,15 +18,20 @@
  * User: fyfej
  * Date: 2023-3-10
  */
+using DynamicExpresso;
 using RestSrvr;
 using RestSrvr.Attributes;
 using RestSrvr.Exceptions;
 using SanteDB.Core;
+using SanteDB.Core.Data.Initialization;
+using SanteDB.Core.Data;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
+using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Acts;
+using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Entities;
@@ -45,6 +50,7 @@ using SanteDB.Rest.HDSI.Configuration;
 using SanteDB.Rest.HDSI.Vrp;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -245,7 +251,7 @@ namespace SanteDB.Rest.HDSI
 
                         audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
                             .WithObjects(retVal.BatchOperation == Core.Model.DataTypes.BatchOperationType.Update ? Core.Model.Audit.AuditableObjectLifecycle.Amendment : Core.Model.Audit.AuditableObjectLifecycle.Creation, retVal)
-                            .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retVal);
+                            .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Creation, retVal);
 
                         return retVal;
                     }
@@ -397,7 +403,7 @@ namespace SanteDB.Rest.HDSI
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(retVal.ModifiedOn.DateTime);
 
                     audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success);
-                    if(!RestOperationContext.Current.IncomingRequest.HttpMethod.Equals("head", StringComparison.OrdinalIgnoreCase))
+                    if (!RestOperationContext.Current.IncomingRequest.HttpMethod.Equals("head", StringComparison.OrdinalIgnoreCase))
                     {
                         audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retVal);
                     }
@@ -417,13 +423,15 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) {
+            catch (PreconditionFailedException)
+            {
                 audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
-                throw; 
+                throw;
             }
-            catch (FaultException) { 
+            catch (FaultException)
+            {
                 audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
-                throw; 
+                throw;
             }
             catch (Exception e)
             {
@@ -512,7 +520,7 @@ namespace SanteDB.Rest.HDSI
                             rawObject = handler.Get(objectId, null) as IdentifiedData;
                         }
 
-                        if(rawObject == null)
+                        if (rawObject == null)
                         {
                             throw new KeyNotFoundException();
                         }
@@ -520,11 +528,11 @@ namespace SanteDB.Rest.HDSI
                         {
                             throw new PreconditionFailedException(); // if-none-match contains the tag
                         }
-                        else if(ifMatchHeader?.Contains(rawObject.Tag) != true)
+                        else if (ifMatchHeader?.Contains(rawObject.Tag) != true)
                         {
                             throw new PreconditionFailedException(); // if-match does not contain the tag
                         }
-                        else if(rawObject.ModifiedOn <= ifModifiedHeader.GetValueOrDefault() ||
+                        else if (rawObject.ModifiedOn <= ifModifiedHeader.GetValueOrDefault() ||
                             ifUnmodifiedHeader.GetValueOrDefault() >= rawObject.ModifiedOn)
                         {
                             throw new PreconditionFailedException(); // modification
@@ -691,13 +699,15 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) {
+            catch (PreconditionFailedException)
+            {
                 audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
-                throw; 
+                throw;
             }
-            catch (FaultException) { 
+            catch (FaultException)
+            {
                 audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
-                throw; 
+                throw;
             }
             catch (Exception e)
             {
@@ -800,13 +810,15 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) {
+            catch (PreconditionFailedException)
+            {
                 audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
-                throw; 
+                throw;
             }
-            catch (FaultException) {
+            catch (FaultException)
+            {
                 audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
-                throw; 
+                throw;
             }
             catch (Exception e)
             {
@@ -897,13 +909,15 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) {
+            catch (PreconditionFailedException)
+            {
                 audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
-                throw; 
+                throw;
             }
-            catch (FaultException) {
+            catch (FaultException)
+            {
                 audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
-                throw; 
+                throw;
             }
             catch (Exception e)
             {
@@ -978,13 +992,15 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) {
+            catch (PreconditionFailedException)
+            {
                 audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
-                throw; 
+                throw;
             }
-            catch (FaultException) {
+            catch (FaultException)
+            {
                 audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
-                throw; 
+                throw;
             }
             catch (Exception e)
             {
@@ -1314,13 +1330,15 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) {
+            catch (PreconditionFailedException)
+            {
                 audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
-                throw; 
+                throw;
             }
-            catch (FaultException) {
+            catch (FaultException)
+            {
                 audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
-                throw; 
+                throw;
             }
             catch (Exception e)
             {
@@ -1928,13 +1946,15 @@ namespace SanteDB.Rest.HDSI
                     throw new FileNotFoundException(resourceType);
                 }
             }
-            catch (PreconditionFailedException) {
+            catch (PreconditionFailedException)
+            {
                 audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
-                throw; 
+                throw;
             }
-            catch (FaultException) {
+            catch (FaultException)
+            {
                 audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
-                throw; 
+                throw;
             }
             catch (Exception e)
             {
@@ -2228,7 +2248,7 @@ namespace SanteDB.Rest.HDSI
 
             var audit = this.m_auditService.Audit()
                .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
-               .WithAction(Core.Model.Audit.ActionType.Delete)
+               .WithAction(Core.Model.Audit.ActionType.Execute)
                .WithEventType("ASSOC_SEARCH", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Association Search")
                .WithQueryPerformed($"{resourceType}/{childResourceType}?{RestOperationContext.Current.IncomingRequest.QueryString.ToHttpString()}")
                 .WithPrincipal()
@@ -2313,5 +2333,127 @@ namespace SanteDB.Rest.HDSI
                 }
             }
         }
+
+        /// <inheritdoc/>
+        public virtual Stream GetDataset(string resourceType, string id)
+        {
+            this.m_pepService.Demand(PermissionPolicyIdentifiers.ExportData);
+
+            var audit = this.m_auditService.Audit()
+                    .WithAction(Core.Model.Audit.ActionType.Execute)
+                    .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Export)
+                    .WithEventType("EXPORT", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "Export resources to XML")
+                    .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+                    .WithLocalDestination()
+                    .WithPrincipal()
+                    .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
+
+            try
+            {
+                var handler = this.GetResourceHandler(resourceType) as IChainedApiResourceHandler;
+                if (handler != null)
+                {
+                    this.AclCheck(handler, nameof(IApiResourceHandler.Query));
+
+                    using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
+                    {
+                        // Send the query to the resource handler
+                        var query = RestOperationContext.Current.IncomingRequest.Url.Query.ParseQueryString();
+
+                        // Modified on?
+                        if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null)
+                        {
+                            query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince()?.ToString("o"));
+                        }
+
+                        // Query for results
+                        var results = handler.Query(query);
+                        var retVal = new Dataset()
+                        {
+                            Id = $"Export {resourceType} - {DateTime.Now:yyyyMMddHHmmSS}",
+                            Action = results.OfType<IdentifiedData>().ToArray().Select(o => new DataUpdate()
+                            {
+                                IgnoreErrors = false,
+                                InsertIfNotExists = true,
+                                Element = o
+                            }).OfType<DataInstallAction>().ToList()
+                        };
+
+                        if (query["_include"] != null)
+                        {
+                            retVal.Action.InsertRange(0,
+                                query.GetValues("_include").SelectMany(inc =>
+                                {
+                                    var resourceParts = inc.Split('?');
+                                    if (resourceParts.Length != 2)
+                                    {
+                                        throw new ArgumentOutOfRangeException("_include", String.Format(ErrorMessages.ARGUMENT_COUNT_MISMATCH, 2, resourceParts.Length));
+                                    }
+
+                                    var includeHandler = HdsiMessageHandler.ResourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceParts[0]);
+                                    var ds = includeHandler.Query(resourceParts[1].ParseQueryString());
+                                    return ds.OfType<IdentifiedData>().Select(r => new DataUpdate()
+                                    {
+                                        Element = r,
+                                        InsertIfNotExists = true,
+                                        IgnoreErrors = false
+                                    });
+                                }));
+                        }
+
+                        var filename = $"{resourceType}-{DateTime.Now:yyyyMMddHHmmSS}.dataset";
+                        RestOperationContext.Current.OutgoingResponse.AddHeader("Content-Disposition", $"attachment; filename={filename}");
+
+                        audit.WithOutcome(OutcomeIndicator.Success)
+                            .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Export, retVal.Action.Select(o => o.Element).ToArray())
+                            .WithAuditableObjects(new AuditableObject()
+                            {
+                                IDTypeCode = AuditableObjectIdType.ReportNumber,
+                                LifecycleType = AuditableObjectLifecycle.Creation,
+                                NameData = filename,
+                                ObjectId = retVal.Id,
+                                Type = AuditableObjectType.SystemObject,
+                                Role = AuditableObjectRole.DataDestination,
+                                QueryData = query.ToString()
+                            });
+
+
+                        var tfs = new TemporaryFileStream();
+                        retVal.Save(tfs);
+                        tfs.Seek(0, SeekOrigin.Begin);
+                        return tfs;
+                    }
+                }
+                else
+                {
+                    throw new FileNotFoundException(resourceType);
+                }
+            }
+            catch (PreconditionFailedException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw;
+            }
+            catch (FaultException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw;
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw;
+            }
+            finally
+            {
+                // Only audit queries for things that are sensitive (codes and whatnot don't need to be audited)
+                audit.WithTimestamp().Send();
+            }
+
+
+        }
+
     }
 }

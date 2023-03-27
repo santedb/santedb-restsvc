@@ -99,6 +99,13 @@ namespace SanteDB.Rest.HDSI
         DateTime Time();
 
         /// <summary>
+        /// Get the dataset for the specified object
+        /// </summary>
+        [Get("/{resourceType}/_export")]
+        [RestInvoke("GET", "/{resourceType}/{id}/_export")]
+        Stream GetDataset(string resourceType, string id);
+
+        /// <summary>
         /// Get the schema of the HDSI API for use in code generation frameworks
         /// </summary>
         /// <remarks>
@@ -266,6 +273,7 @@ namespace SanteDB.Rest.HDSI
         [Put("/{resourceType}/{id}")]
         [RestServiceFault(409, "There is a conflict in the update request (version mismatch)")]
         IdentifiedData Update(string resourceType, string id, IdentifiedData body);
+
 
         /// <summary>
         /// Gets the specified barcode for the resource
