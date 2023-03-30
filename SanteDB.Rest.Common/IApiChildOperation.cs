@@ -28,6 +28,12 @@ namespace SanteDB.Rest.Common
     /// </summary>
     public interface IApiChildOperation : IApiChildObject
     {
+
+        /// <summary>
+        /// Gets the name of the associated property
+        /// </summary>
+        string Name { get; }
+
         /// <summary>
         /// Invoke the specified operation
         /// </summary>

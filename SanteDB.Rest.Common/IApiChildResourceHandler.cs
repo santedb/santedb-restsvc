@@ -30,6 +30,12 @@ namespace SanteDB.Rest.Common
     /// </summary>
     public interface IApiChildResourceHandler : IApiChildObject
     {
+
+        /// <summary>
+        /// Gets the name of the associated property
+        /// </summary>
+        string Name { get; }
+
         /// <summary>
         /// Gets the type of data this associative property is expecting
         /// </summary>

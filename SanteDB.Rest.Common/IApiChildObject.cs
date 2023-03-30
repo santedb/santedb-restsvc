@@ -40,10 +40,6 @@ namespace SanteDB.Rest.Common
         /// </summary>
         Type[] ParentTypes { get; }
 
-        /// <summary>
-        /// Gets the name of the associated property
-        /// </summary>
-        string Name { get; }
 
     }
 }
