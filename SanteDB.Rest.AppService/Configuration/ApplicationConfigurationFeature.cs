@@ -36,10 +36,19 @@ namespace SanteDB.Rest.AppService.Configuration
     /// </summary>
     public class ApplicationConfigurationFeature : IClientConfigurationFeature
     {
-
+        /// <summary>
+        /// The setting for services
+        /// </summary>
         public const string SERVICES_SETTING = "service";
+        /// <summary>
+        /// The appsetting setting name in the property grid
+        /// </summary>
         public const string APPSETTING_SETTING = "setting";
+        /// <summary>
+        /// The instance name setting int he property grid
+        /// </summary>
         public const string INSTANCE_NAME_SETTING = "instance";
+
         private readonly ApplicationServiceContextConfigurationSection m_configurationSection;
 
         /// <summary>

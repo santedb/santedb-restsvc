@@ -42,12 +42,33 @@ namespace SanteDB.Rest.AppService.Configuration
     {
         private readonly SecurityConfigurationSection m_configurationSection;
         private readonly IRestClientFactory m_restClientFactory;
+        /// <summary>
+        /// The name of the audit retention setting in the configuration dictionary
+        /// </summary>
         public const string AUDIT_RETENTION_SETTING = "auditRetention";
+        /// <summary>
+        /// The name of the subscribed/assigned facility setting in the configuraiton dictionary
+        /// </summary>
         public const string ASSIGNED_FACILITY_SETTING = "facility";
+        /// <summary>
+        /// The name of hte device owner setting in the configuration dictionary
+        /// </summary>
         public const string ASSIGNED_OWNER_SETTING = "owner";
+        /// <summary>
+        /// The name of the restrict login policy setting in the configuration dictionary
+        /// </summary>
         public const string RESTRICT_LOGIN_POLICY_SETTING = "restrictLogin";
+        /// <summary>
+        /// The name of the allow offline login configuration dictionary setting
+        /// </summary>
         public const string ALLOW_OFFLINE_LOGIN_SETTING = "allowOffline";
+        /// <summary>
+        /// The name of the security signing keys setting
+        /// </summary>
         public const string SECURITY_SIGN_KEYS_SETTING = "signingKeys";
+        /// <summary>
+        /// The name of the HS256 masking string
+        /// </summary>
         public const string HS256_MASK = "XXXX";
 
         /// <summary>

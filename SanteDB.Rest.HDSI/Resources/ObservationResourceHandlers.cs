@@ -38,7 +38,6 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        /// <param name="localizationService"></param>
         public QuantityObservationResourceHandler(ILocalizationService localizationService, IRepositoryService<QuantityObservation> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
         }
@@ -53,7 +52,6 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        /// <param name="localizationService"></param>
         public CodedObservationResourceHandler(ILocalizationService localizationService, IRepositoryService<CodedObservation> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
         }
@@ -68,7 +66,6 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        /// <param name="localizationService"></param>
         public TextObservationResourceHandler(ILocalizationService localizationService, IRepositoryService<TextObservation> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
         }
@@ -83,35 +80,39 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        /// <param name="localizationService"></param>
         public ObservationResourceHandler(ILocalizationService localizationService, IRepositoryService<TObservation> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
         }
 
+        /// <inheritdoc/>
         [Demand(PermissionPolicyIdentifiers.WriteClinicalData)]
         public override Object Create(Object data, bool updateIfExists)
         {
             return base.Create(data, updateIfExists);
         }
 
+        /// <inheritdoc/>
         [Demand(PermissionPolicyIdentifiers.ReadClinicalData)]
         public override Object Get(object id, object versionId)
         {
             return base.Get(id, versionId);
         }
 
+        /// <inheritdoc/>
         [Demand(PermissionPolicyIdentifiers.DeleteClinicalData)]
         public override Object Delete(object key)
         {
             return base.Delete(key);
         }
 
+        /// <inheritdoc/>
         [Demand(PermissionPolicyIdentifiers.QueryClinicalData)]
         public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             return base.Query(queryParameters);
         }
 
+        /// <inheritdoc/>
         [Demand(PermissionPolicyIdentifiers.WriteClinicalData)]
         public override Object Update(Object data)
         {

@@ -62,16 +62,49 @@ namespace SanteDB.Rest.AppService
     [ServiceBehavior(Name = AppServiceMessageHandler.ConfigurationName, InstanceMode = ServiceInstanceMode.Singleton)]
     public partial class AppServiceBehavior : IAppServiceContract, IDisposable
     {
+        /// <summary>
+        /// The configuration manager
+        /// </summary>
         protected readonly IConfigurationManager m_configurationManager;
+        /// <summary>
+        /// The service manager injected into the instance
+        /// </summary>
         protected readonly IServiceManager m_serviceManager;
+        /// <summary>
+        /// The policy enforcement service injected into the instance
+        /// </summary>
         protected readonly IPolicyEnforcementService m_policyEnforcementService;
+        /// <summary>
+        /// The upstream management service injected into the instance
+        /// </summary>
         protected readonly IUpstreamManagementService m_upstreamManagementService;
+        /// <summary>
+        /// The tickle service injected into the 
+        /// </summary>
         protected readonly ITickleService m_tickleService;
+        /// <summary>
+        /// The patch service injected into the instance
+        /// </summary>
         protected readonly IPatchService m_patchService;
+        /// <summary>
+        /// The applet manager service injected into the instance
+        /// </summary>
         protected readonly IAppletManagerService m_appletManagerService;
+        /// <summary>
+        /// The localization service injected into the instance
+        /// </summary>
         protected readonly ILocalizationService m_localizationService;
+        /// <summary>
+        /// the update manager service injected into the instance
+        /// </summary>
         protected readonly IUpdateManager m_updateManager;
+        /// <summary>
+        /// The security repository service injected into the instance
+        /// </summary>
         protected readonly ISecurityRepositoryService m_securityRepositoryService;
+        /// <summary>
+        /// The user preference manager injected into the instance
+        /// </summary>
         protected readonly IUserPreferencesManager m_userPreferenceManager;
         private readonly IEnumerable<IUpstreamIntegrationPattern> m_integrationPatterns;
         private readonly Tracer m_tracer = Tracer.GetTracer(typeof(AppServiceBehavior));

@@ -36,13 +36,37 @@ namespace SanteDB.Rest.AppService.Configuration
     /// </summary>
     public class RealmConfigurationFeature : IClientConfigurationFeature
     {
+        /// <summary>
+        /// The name of the realm address property int he configuration dictionary
+        /// </summary>
         public const string REALM_NAME = "address";
+        /// <summary>
+        /// The name of the port number in the configuration dictionary
+        /// </summary>
         public const string PORT_NUMBER = "port";
+        /// <summary>
+        /// The name of the TLS configuration parameter in the dictionary
+        /// </summary>
         public const string USE_TLS = "tls";
+        /// <summary>
+        /// The name of the device configuraiton property in the dictionary
+        /// </summary>
         public const string DEVICE_NAME = "device";
+        /// <summary>
+        /// Th ename of the client name configuration property in the dictionary
+        /// </summary>
         public const string CLIENT_NAME = "client";
+        /// <summary>
+        /// The name of the client secret configuraiton property in the dictionary
+        /// </summary>
         public const string CLIENT_SECRET = "secret";
+        /// <summary>
+        /// The name of the override client secret configuration property in the dictionary
+        /// </summary>
         public const string OVERRIDE_NAME = "override";
+        /// <summary>
+        /// The name of the joined indicator in the configuration property
+        /// </summary>
         public const string IS_JOINED = "joined";
 
         private readonly IConfigurationManager m_configurationManager;

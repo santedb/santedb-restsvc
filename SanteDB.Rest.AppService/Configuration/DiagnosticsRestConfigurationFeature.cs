@@ -43,7 +43,13 @@ namespace SanteDB.Rest.AppService.Configuration
     {
         private readonly DiagnosticsConfigurationSection m_configurationSection;
 
+        /// <summary>
+        /// The name of the setting for log detail in the property grid
+        /// </summary>
         public const string LOG_DETAIL_SETTING = "mode";
+        /// <summary>
+        /// The name of hte writer setting for log detail in the property grid
+        /// </summary>
         public const string LOG_WRITER_SETTING = "writer";
 
         /// <summary>

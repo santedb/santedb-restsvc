@@ -39,10 +39,25 @@ namespace SanteDB.Rest.AppService.Configuration
     /// </summary>
     public class ClientRestConfigurationFeature : IClientConfigurationFeature
     {
+        /// <summary>
+        /// The name of hte clients property in the property grid
+        /// </summary>
         public const string REST_CLIENT_SETTING = "clients";
+        /// <summary>
+        /// The name of the optimize setting in the property grid
+        /// </summary>
         public const string REST_CLIENT_OPTIMIZE_SETTING = "optimize";
+        /// <summary>
+        /// The name of the optimize request setting in the property grid
+        /// </summary>
         public const string REST_CLIENT_OPTIMIZE_REQ_SETTING = "optimizeReq";
+        /// <summary>
+        /// The name of the rest client certificate setting
+        /// </summary>
         public const string REST_CLIENT_CERT_SETTING = "clientCertificate";
+        /// <summary>
+        /// The name of the proxy address setting int he property grid
+        /// </summary>
         public const string REST_CLIENT_PROXY_SETTING = "proxyAddress";
         private readonly RestClientConfigurationSection m_configuration;
         

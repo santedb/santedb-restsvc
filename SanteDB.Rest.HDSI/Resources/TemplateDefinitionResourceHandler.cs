@@ -34,14 +34,11 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        /// <param name="localizationService"></param>
         public TemplateDefinitionResourceHandler(ILocalizationService localizationService, IRepositoryService<TemplateDefinition> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
         }
 
-        /// <summary>
-        /// Get capabilities
-        /// </summary>
+        /// <inheritdoc/>
         public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Search;
     }
 }

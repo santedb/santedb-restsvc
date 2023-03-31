@@ -38,7 +38,6 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        /// <param name="localizationService"></param>
         public PatientEncounterResourceHandler(ILocalizationService localizationService, IRepositoryService<PatientEncounter> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
         {
         }

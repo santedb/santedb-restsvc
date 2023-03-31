@@ -98,7 +98,9 @@ namespace SanteDB.Rest.HDSI
         /// </summary>
         protected readonly IDataCachingService m_dataCachingService;
 
-        // Configuration settings
+        /// <summary>
+        /// The configuration loaded/injected into the HDSI
+        /// </summary>
         protected readonly HdsiConfigurationSection m_configuration;
 
         /// <summary>

@@ -34,6 +34,9 @@ using System.Text;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
+    /// <summary>
+    /// Represents an <see cref="IApiChildResourceHandler"/> which gathers the validation criteria for a validation rule
+    /// </summary>
     public class RelationshipRuleChildResourceHandler : IApiChildResourceHandler
     {
         readonly Tracer _Tracer;
@@ -44,22 +47,31 @@ namespace SanteDB.Rest.HDSI.Resources
         static readonly Type s_ActParticipationType = typeof(ActParticipation);
 
 
+        /// <summary>
+        /// DI constructor
+        /// </summary>
         public RelationshipRuleChildResourceHandler(IRelationshipValidationProvider provider)
         {
             _Tracer = new Tracer(nameof(RelationshipRuleChildResourceHandler));
             _Provider = provider;
         }
 
+        /// <inheritdoc/>
         public Type PropertyType => typeof(Core.BusinessRules.RelationshipValidationRule);
 
+        /// <inheritdoc/>
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.Get | ResourceCapabilityType.Delete | ResourceCapabilityType.Search;
 
+        /// <inheritdoc/>
         public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Class;
 
+        /// <inheritdoc/>
         public Type[] ParentTypes => new[] { s_EntityRelationshipType, s_ActRelationshipType, s_ActParticipationType };
 
+        /// <inheritdoc/>
         public string Name => "_relationshipRule";
 
+        /// <inheritdoc/>
         public object Add(Type scopingType, object scopingKey, object item)
         {
             if (item is RelationshipValidationRule rr)
@@ -99,6 +111,7 @@ namespace SanteDB.Rest.HDSI.Resources
             }
         }
 
+        /// <inheritdoc/>
         public object Get(Type scopingType, object scopingKey, object key)
         {
             IRelationshipValidationRule relationship = null;
@@ -137,6 +150,7 @@ namespace SanteDB.Rest.HDSI.Resources
             }
         }
 
+        /// <inheritdoc/>
         public IQueryResultSet Query(Type scopingType, object scopingKey, NameValueCollection filter)
         {
             IEnumerable<IRelationshipValidationRule> relationships = null;
@@ -177,6 +191,7 @@ namespace SanteDB.Rest.HDSI.Resources
             }
         }
 
+        /// <inheritdoc/>
         public object Remove(Type scopingType, object scopingKey, object key)
         {
             throw new NotImplementedException();

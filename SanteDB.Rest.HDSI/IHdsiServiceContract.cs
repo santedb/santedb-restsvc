@@ -255,6 +255,7 @@ namespace SanteDB.Rest.HDSI
         /// <summary>
         /// Creates the resource. If the resource already exists, then a 409 is thrown
         /// </summary>
+        /// <param name="body">The body of the request</param>
         /// <remarks>This operation is a CREATE ONLY operation, and will throw an error if the operation results in a duplicate. If you are looking for a CREATE OR UPDATE method use the POST with identifier operation</remarks>
         /// <param name="resourceType">The type of resource to create</param>
         [RestServiceFault(409, "There is a conflict in the update request (version mismatch)")]

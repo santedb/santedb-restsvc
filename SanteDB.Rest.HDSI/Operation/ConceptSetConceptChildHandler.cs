@@ -22,7 +22,9 @@ namespace SanteDB.Rest.HDSI.Operation
         // Concept repository service
         private readonly IConceptRepositoryService m_conceptRepository;
 
-        // DI CTOR
+        /// <summary>
+        /// DI constructor
+        /// </summary>
         public ConceptSetConceptChildHandler(IConceptRepositoryService conceptRepository)
         {
             this.m_conceptRepository = conceptRepository;

@@ -42,35 +42,38 @@ namespace SanteDB.Rest.HDSI.Resources
         {
         }
 
-        /// <summary>
-        /// Gets the scope
-        /// </summary>
+        /// <inheritdoc/>
         public override Type Scope => typeof(IHdsiServiceContract);
 
+        /// <inheritdoc/>
         [Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
         public override object Create(object data, bool updateIfExists)
         {
             return base.Create(data, updateIfExists);
         }
 
+        /// <inheritdoc/>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
         public override object Get(object id, object versionId)
         {
             return base.Get(id, versionId);
         }
 
+        /// <inheritdoc/>
         [Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
         public override object Delete(object key)
         {
             return base.Delete(key);
         }
 
+        /// <inheritdoc/>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
         public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             return base.Query(queryParameters);
         }
 
+        /// <inheritdoc/>
         [Demand(PermissionPolicyIdentifiers.AdministerConceptDictionary)]
         public override object Update(object data)
         {
