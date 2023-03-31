@@ -60,10 +60,12 @@ namespace SanteDB.Rest.Common.Configuration
         /// </summary>
         public string Name => $"Remove {this.m_configuration.ConfigurationName} REST API";
 
+#pragma warning disable CS0067
         /// <summary>
         /// Progress has changed
         /// </summary>
         public event EventHandler<ProgressChangedEventArgs> ProgressChanged;
+#pragma warning restore
 
         /// <summary>
         /// Execute the installation

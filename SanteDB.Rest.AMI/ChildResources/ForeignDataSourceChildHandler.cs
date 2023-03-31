@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Text;
+#pragma warning disable CS0612
 
 namespace SanteDB.Rest.AMI.ChildResources
 {
@@ -138,3 +139,4 @@ namespace SanteDB.Rest.AMI.ChildResources
         }
     }
 }
+#pragma warning restore

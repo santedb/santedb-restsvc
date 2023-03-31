@@ -32,6 +32,8 @@ using System;
 using System.Linq;
 using System.Net;
 
+#pragma warning disable CS0612
+
 namespace SanteDB.Rest.Common.Behavior
 {
     /// <summary>
@@ -133,3 +135,4 @@ namespace SanteDB.Rest.Common.Behavior
         }
     }
 }
+#pragma warning restore

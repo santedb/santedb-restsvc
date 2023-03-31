@@ -38,6 +38,8 @@ using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
 
+#pragma warning disable CS0612
+
 namespace SanteDB.Rest.AMI.Resources
 {
     /// <summary>
@@ -327,3 +329,4 @@ namespace SanteDB.Rest.AMI.Resources
 
     }
 }
+#pragma warning restore

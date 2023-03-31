@@ -29,6 +29,7 @@ using SanteDB.Rest.OAuth.Model;
 using System.Collections.Generic;
 using System.Security.Authentication;
 
+#pragma warning disable CS0618
 namespace SanteDB.Rest.OAuth.TokenRequestHandlers
 {
     /// <summary>
@@ -153,3 +154,4 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
         }
     }
 }
+#pragma warning restore

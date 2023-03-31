@@ -7,6 +7,7 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+#pragma warning disable CS0219
 
 namespace SanteDB.Core.Model.Json.Formatter {
     using SanteDB.Core.Model;
@@ -43985,3 +43986,4 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
     }
 }
+#pragma warning restore

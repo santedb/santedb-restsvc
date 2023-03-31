@@ -62,6 +62,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Xml;
 
+#pragma warning disable CS0612
 namespace SanteDB.Rest.OAuth.Rest
 {
     /// <summary>
@@ -1779,3 +1780,5 @@ namespace SanteDB.Rest.OAuth.Rest
         #endregion
     }
 }
+
+#pragma warning restore

@@ -277,10 +277,12 @@ namespace SanteDB.Rest.Common.Configuration.Features
         /// </summary>
         public string Name => $"Remove {this.Feature.Name} Service";
 
+#pragma warning disable CS0067
         /// <summary>
         /// Fired when progress changes
         /// </summary>
         public event EventHandler<SanteDB.Core.Services.ProgressChangedEventArgs> ProgressChanged;
+#pragma warning restore
 
         /// <summary>
         /// Execute the change
@@ -445,10 +447,12 @@ namespace SanteDB.Rest.Common.Configuration.Features
         /// </summary>
         public string Name => $"Remove {this.Feature.Name} Daemon";
 
+#pragma warning disable CS0067
         /// <summary>
         /// Fired when progress has changed
         /// </summary>
         public event EventHandler<SanteDB.Core.Services.ProgressChangedEventArgs> ProgressChanged;
+#pragma warning restore
 
         /// <summary>
         /// Execute the uninstall
@@ -691,10 +695,12 @@ namespace SanteDB.Rest.Common.Configuration.Features
         /// </summary>
         public string Name => $"Register {this.Feature.Name} daemon";
 
+#pragma warning disable CS0067
         /// <summary>
         /// Fired when progress has changed
         /// </summary>
         public event EventHandler<SanteDB.Core.Services.ProgressChangedEventArgs> ProgressChanged;
+#pragma warning restore
 
         /// <summary>
         /// Execute the feature install
