@@ -35,9 +35,21 @@ namespace SanteDB.Rest.AMI.Operation
     public class SendMailMessageOperation : IApiChildOperation
     {
 
+        /// <summary>
+        /// The name of the TO parameter
+        /// </summary>
         public const string TO_PARAMETER_NAME = "to";
+        /// <summary>
+        /// The name of the subject
+        /// </summary>
         public const string SUBJECT_PARAMETER_NAME = "subject";
+        /// <summary>
+        /// The name of the flags parameter
+        /// </summary>
         public const string FLAG_PARAMETER_NAME = "flag";
+        /// <summary>
+        /// The name of the body parameter
+        /// </summary>
         public const string BODY_PARAMETER_NAME = "body";
 
         private readonly ILocalizationService m_localizationService;

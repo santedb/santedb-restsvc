@@ -41,12 +41,27 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary>
     public class CertificateResourceHandler : IApiResourceHandler
     {
+        /// <summary>
+        /// The name of the store name parameter
+        /// </summary>
         public const string CertificateStoreParameterName = "storeName";
+        /// <summary>
+        /// The name of the location parameter
+        /// </summary>
         public const string CertificateLocationParameterName = "storeLocation";
+        /// <summary>
+        /// The name of hte private key parameter
+        /// </summary>
         public const string PrivateKeyParameterName = "hasPrivateKey";
+        /// <summary>
+        /// The name of hte password header
+        /// </summary>
         public const string PrivateKeyPasswordHeaderName = "X-Pfx-KeyAuthorization";
         private readonly IPolicyEnforcementService m_pepService;
 
+        /// <summary>
+        /// DI constructor
+        /// </summary>
         public CertificateResourceHandler(IPolicyEnforcementService policyEnforcementService)
         {
             this.m_pepService = policyEnforcementService;

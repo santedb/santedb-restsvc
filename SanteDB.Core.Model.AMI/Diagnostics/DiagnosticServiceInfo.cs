@@ -34,12 +34,24 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
     [XmlType(nameof(ServiceClass), Namespace = "http://santedb.org/ami/diagnostics")]
     public enum ServiceClass
     {
+        /// <summary>
+        /// The service class is a daemon which starts and run continuously
+        /// </summary>
         [XmlEnum("daemon")]
         Daemon = 1,
+        /// <summary>
+        /// The service is a data service which is fired to interact with a data source
+        /// </summary>
         [XmlEnum("data")]
         Data = 2,
+        /// <summary>
+        /// The service is a repository service which translates between messaging and data layer
+        /// </summary>
         [XmlEnum("repo")]
         Repository = 3,
+        /// <summary>
+        /// Represents a generic, passive service
+        /// </summary>
         [XmlEnum("other")]
         Passive = 4
     }
