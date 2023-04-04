@@ -54,7 +54,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="data\000-OAuthPolicies.dataset">
+    <None Include="Data\000-OAuthPolicies.dataset">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <EmbeddedResource Include="Docker\OauthFeature.xml" />
