@@ -93,7 +93,7 @@ namespace SanteDB.Rest.Common.Behavior
                 var authCookie = request.Cookies["_s"];
                 if (authCookie != null)
                 {
-                    var session = m_sessionTokenResolver.GetSessionFromIdToken(authCookie.Value);
+                    var session = m_sessionTokenResolver.GetSessionFromBearerToken(authCookie.Value);
                     if (session != null)
                     {
 

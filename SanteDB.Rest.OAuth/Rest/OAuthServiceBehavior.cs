@@ -45,19 +45,14 @@ using SanteDB.Rest.OAuth.Abstractions;
 using SanteDB.Rest.OAuth.Configuration;
 using SanteDB.Rest.OAuth.Model;
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Tracing;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security;
 using System.Security.Authentication;
-using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using System.Xml;
@@ -175,8 +170,6 @@ namespace SanteDB.Rest.OAuth.Rest
             //Optimization - try to resolve from the same session provider. 
             m_SessionIdentityProvider = m_SessionProvider as ISessionIdentityProviderService;
 
-
-
             //Fallback and resolve from DI.
             if (null == m_SessionIdentityProvider)
             {
@@ -184,6 +177,12 @@ namespace SanteDB.Rest.OAuth.Rest
             }
 
             m_JwtHandler = new JsonWebTokenHandler();
+            
+
+            if (m_configuration.TokenType != OAuthConstants.BearerTokenType)
+            {
+                TokenAuthorizationAccessBehavior.SetSessionResolverDelegate(GetSessionFromIdToken);
+            }
 
             //Wire up token request handlers.
             var servicemanager = ApplicationServiceContext.Current.GetService<IServiceManager>();
@@ -616,6 +615,81 @@ namespace SanteDB.Rest.OAuth.Rest
             return context;
         }
 
+        /// <summary>
+        /// Alternate resolution method for <see cref="TokenAuthorizationAccessBehavior"/> when the token type is not bearer.
+        /// </summary>
+        /// <param name="idToken">The JWT as a string to extract a session from.</param>
+        /// <returns>The related <see cref="ISession"/> session for the idtoken.</returns>
+        protected virtual ISession GetSessionFromIdToken(string idToken)
+        {
+            var result = m_JwtHandler.ValidateToken(idToken, GetTokenValidationParameters());
+
+            if (result?.IsValid != true)
+            {
+                return null;
+            }
+
+            var claims = result.Claims.ToList();
+
+            var sessionidstr = claims.FirstOrDefault(clm => clm.Key == OAuthConstants.ClaimType_Sid).Value?.ToString();
+
+            if (!Guid.TryParse(sessionidstr, out var sessionid))
+            {
+                return null;
+            }
+
+            var session = m_SessionProvider.Get(sessionid.ToByteArray());
+
+            return session;
+        }
+
+
+        /// <summary>
+        /// Gets a <see cref="TokenValidationParameters"/> object to validate tokens issued by this service.
+        /// </summary>
+        /// <returns>A <see cref="TokenValidationParameters"/> object configured for the current issuer's configuration.</returns>
+        protected virtual TokenValidationParameters GetTokenValidationParameters()
+        {
+            var tvp = new TokenValidationParameters();
+
+            var jwks = GetJsonWebKeySet();
+            jwks.SkipUnresolvedJsonWebKeys = false; //Fix for HS256 Keys.
+            tvp.IssuerSigningKeys = jwks.GetSigningKeys();
+            tvp.ValidIssuer = m_configuration.IssuerName;
+            tvp.ValidateIssuer = true;
+            tvp.ValidateIssuerSigningKey = true;
+            tvp.ValidateLifetime = true;
+            tvp.ValidateAudience = false;
+            tvp.TryAllIssuerSigningKeys = true;
+            tvp.ClockSkew = TimeSpan.FromSeconds(5); //Should be minimal since we're the ones issuing.
+
+            tvp.NameClaimType = GetNameClaimType();
+
+            return tvp;
+        }
+
+        /// <summary>
+        /// Retrieves the claim type that is used for name validation in the <see cref="TokenValidationParameters"/>.
+        /// </summary>
+        /// <returns>A claim type for the name claim.</returns>
+        protected virtual string GetNameClaimType()
+        {
+            if (ClaimMapper.Current.TryGetMapper(ClaimMapper.ExternalTokenTypeJwt, out var mappers))
+            {
+                foreach (var mapper in mappers)
+                {
+                    var mapped = mapper.MapToExternalClaimType(SanteDBClaimTypes.DefaultNameClaimType);
+
+                    if (mapped != SanteDBClaimTypes.DefaultNameClaimType)
+                    {
+                        return mapped;
+                    }
+                }
+            }
+
+            return OAuthConstants.ClaimType_Name;
+        }
+
         protected ISession EstablishClientSession(IPrincipal clientPrincipal, IPrincipal devicePrincipal, List<string> scopes, IEnumerable<IClaim> additionalClaims)
         {
             SanteDBClaimsPrincipal claimsPrincipal = null;
@@ -787,6 +861,28 @@ namespace SanteDB.Rest.OAuth.Rest
             }
         }
 
+        private static SecurityKey GetSecurityKeyForHs256Configuration(SecuritySignatureConfiguration configuration)
+        {
+            byte[] secret = configuration.GetSecret().ToArray();
+            while (secret.Length < 16) //TODO: Why are we doing this?
+            {
+                secret = secret.Concat(secret).ToArray();
+            }
+
+            var key = new SymmetricSecurityKey(secret);
+
+            if (!string.IsNullOrEmpty(configuration.KeyName))
+            {
+                key.KeyId = configuration.KeyName;
+            }
+            else
+            {
+                key.KeyId = "0"; //Predefined default KID
+            }
+
+            return key;
+        }
+
         /// <summary>
         /// Create signing credentials
         /// </summary>
@@ -834,24 +930,7 @@ namespace SanteDB.Rest.OAuth.Rest
                     }
                     return new X509SigningCredentials(cert, signingAlgorithm);
                 case SignatureAlgorithm.HS256:
-                    byte[] secret = configuration.GetSecret().ToArray();
-                    while (secret.Length < 16) //TODO: Why are we doing this?
-                    {
-                        secret = secret.Concat(secret).ToArray();
-                    }
-
-                    var key = new SymmetricSecurityKey(secret);
-
-                    if (!string.IsNullOrEmpty(configuration.KeyName))
-                    {
-                        key.KeyId = configuration.KeyName;
-                    }
-                    else
-                    {
-                        key.KeyId = "0"; //Predefined default KID
-                    }
-
-
+                    var key = GetSecurityKeyForHs256Configuration(configuration);
                     return new SigningCredentials(key, SecurityAlgorithms.HmacSha256) ;
                 default:
                     throw new SecurityException("Invalid signing configuration");
@@ -1028,8 +1107,6 @@ namespace SanteDB.Rest.OAuth.Rest
             {
                 return null; // There is no way to try to load the session
             }
-
-            new TokenAuthorizationAccessBehavior().Apply(new RestRequestMessage(RestOperationContext.Current.IncomingRequest));
 
             if (RestOperationContext.Current.Data.TryGetValue(TokenAuthorizationAccessBehavior.RestPropertyNameSession, out var sessobj))
             {

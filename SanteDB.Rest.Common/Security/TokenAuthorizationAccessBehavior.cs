@@ -25,10 +25,13 @@ using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Audit;
+using SanteDB.Core.Security.Configuration;
 using SanteDB.Core.Security.Services;
+using SanteDB.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Principal;
 
@@ -50,13 +53,34 @@ namespace SanteDB.Rest.Common.Security
         private readonly Tracer m_traceSource = Tracer.GetTracer(typeof(TokenAuthorizationAccessBehavior));
 
         /// <summary>
+        /// Delegate to resolve a session from a bearer token.
+        /// </summary>
+        private static Func<string, ISession> s_SessionResolverDelegate;
+
+        static TokenAuthorizationAccessBehavior()
+        {
+            s_SessionResolverDelegate = ApplicationServiceContext.Current.GetService<ISessionTokenResolverService>().GetSessionFromBearerToken;
+        }
+
+        /// <summary>
+        /// Sets the session resolution delegate for all instances of the <see cref="TokenAuthorizationAccessBehavior"/>.
+        /// </summary>
+        /// <param name="sessionResolverDelegate"></param>
+        public static void SetSessionResolverDelegate(Func<string, ISession> sessionResolverDelegate)
+        {
+            s_SessionResolverDelegate = sessionResolverDelegate;
+        }
+
+        /// <summary>
         /// Checks bearer access token
         /// </summary>
         /// <returns>True if authorization is successful</returns>
         private IDisposable CheckBearerAccess(string authorizationToken)
         {
+            //var session = ApplicationServiceContext.Current.GetService<ISessionTokenResolverService>().GetSessionFromBearerToken(authorizationToken);
 
-            var session = ApplicationServiceContext.Current.GetService<ISessionTokenResolverService>().GetSessionFromIdToken(authorizationToken);
+            var session = s_SessionResolverDelegate(authorizationToken);
+
             if(session == null)
             {
                 throw new SecuritySessionException(SessionExceptionType.Other, "Invalid bearer token", null);
