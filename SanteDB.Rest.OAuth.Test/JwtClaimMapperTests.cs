@@ -64,8 +64,8 @@ namespace SanteDB.Rest.OAuth.Test
 
             Assert.AreEqual("external-magic", dut.MapToExternalClaimType("external-magic"));
 
-            Assert.DoesNotThrow(() => dut.MapToExternalClaimType(null));
-            Assert.DoesNotThrow(() => dut.MapToExternalClaimType(string.Empty));
+            Assert.Throws<ArgumentNullException>(() => dut.MapToExternalClaimType(null));
+            Assert.Throws<ArgumentNullException>(() => dut.MapToExternalClaimType(string.Empty));
             Assert.DoesNotThrow(() => dut.MapToExternalClaimType("\0"));
             Assert.DoesNotThrow(() => dut.MapToExternalClaimType("name"));
         }

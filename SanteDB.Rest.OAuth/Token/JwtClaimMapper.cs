@@ -56,6 +56,10 @@ namespace SanteDB.Rest.OAuth.Token
         /// <inheritdoc/>
         public string MapToExternalClaimType(string internalClaimType)
         {
+            if(String.IsNullOrEmpty(internalClaimType))
+            {
+                throw new ArgumentNullException(nameof(internalClaimType));
+            }
             if (m_claimTypeMapping.TryGetValue(internalClaimType, out var newclaimtype))
             {
                 return newclaimtype;
