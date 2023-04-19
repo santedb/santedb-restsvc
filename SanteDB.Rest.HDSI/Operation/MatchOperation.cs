@@ -103,7 +103,7 @@ namespace SanteDB.Rest.HDSI.Operation
                 }
                 else
                 {
-                    return reportFactory.CreateMatchReport(scopingType, source, this.m_matchConfiguration.Configurations.Where(o => o.Metadata.State == MatchConfigurationStatus.Active).SelectMany(c => this.m_matchingService.Match(source, configuration, null)));
+                    return reportFactory.CreateMatchReport(scopingType, source, this.m_matchConfiguration.Configurations.Where(o => o.Metadata.Status == MatchConfigurationStatus.Active).SelectMany(c => this.m_matchingService.Match(source, configuration, null)));
                 }
             }
 
