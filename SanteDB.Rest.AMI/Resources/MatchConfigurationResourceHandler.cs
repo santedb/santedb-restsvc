@@ -18,6 +18,7 @@
  * User: fyfej
  * Date: 2023-3-10
  */
+using SanteDB.Core.Exceptions;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Matching;
 using SanteDB.Core.Model.Parameters;
@@ -31,6 +32,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -38,10 +40,11 @@ namespace SanteDB.Rest.AMI.Resources
     /// Represents a resource handler which serves out match metadata
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class MatchConfigurationResourceHandler : ChainedResourceHandlerBase, IApiResourceHandler, IOperationalApiResourceHandler
+    public class MatchConfigurationResourceHandler : ChainedResourceHandlerBase, IApiResourceHandler, IOperationalApiResourceHandler, ICheckoutResourceHandler
     {
         // Configuration service
         private readonly IRecordMatchingConfigurationService m_configurationService;
+        private readonly IResourceCheckoutService m_checkoutService;
 
         /// <summary>
         /// Gets the resource name
@@ -66,11 +69,12 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Match configuration resource handler
         /// </summary>
-        public MatchConfigurationResourceHandler(ILocalizationService localizationService, IRecordMatchingConfigurationService configurationService = null) :
+        public MatchConfigurationResourceHandler(ILocalizationService localizationService, IResourceCheckoutService checkoutService, IRecordMatchingConfigurationService configurationService = null) :
             base(localizationService)
         {
             // TODO: Throw method not support exception if someone calls this
             this.m_configurationService = configurationService;
+            this.m_checkoutService = checkoutService;
         }
 
         /// <summary>
@@ -183,6 +187,35 @@ namespace SanteDB.Rest.AMI.Resources
         public override object GetChildObject(object scopingEntity, string propertyName, object subItem)
         {
             return base.GetChildObject(scopingEntity, propertyName, subItem);
+        }
+
+        /// <summary>
+        /// Checkout the specified object
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.AlterMatchConfiguration)]
+        public object CheckOut(object key)
+        {
+            var match = this.Get(key, null) as IRecordMatchingConfiguration;
+            if (match != null && 
+                this.m_checkoutService?.Checkout<IRecordMatchingConfiguration>(match.Uuid) == false)
+            {
+                throw new ObjectLockedException();
+            }
+            return null;
+        }
+
+         /// <summary>
+        /// Checkout the specified object
+        /// </summary>
+        public object CheckIn(object key)
+        {
+            var match = this.Get(key, null) as IRecordMatchingConfiguration;
+            if (match != null &&
+                this.m_checkoutService?.Checkin<IRecordMatchingConfiguration>(match.Uuid) == false)
+            {
+                throw new ObjectLockedException();
+            }
+            return null;
         }
     }
 }

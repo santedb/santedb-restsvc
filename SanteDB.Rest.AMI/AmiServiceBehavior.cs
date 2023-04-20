@@ -1009,7 +1009,6 @@ namespace SanteDB.Rest.AMI
         {
             if (!ApplicationServiceContext.Current.IsRunning)
             {
-                throw new DomainStateException();
             }
         }
 
@@ -1331,7 +1330,7 @@ namespace SanteDB.Rest.AMI
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(ICheckoutResourceHandler.CheckIn));
-                    return handler.CheckIn(Guid.Parse(key));
+                    return handler.CheckIn(key);
                 }
                 else
                 {
@@ -1359,7 +1358,7 @@ namespace SanteDB.Rest.AMI
                 if (handler != null)
                 {
                     this.AclCheck(handler, nameof(ICheckoutResourceHandler.CheckIn));
-                    return handler.CheckOut(Guid.Parse(key));
+                    return handler.CheckOut(key);
                 }
                 else
                 {
