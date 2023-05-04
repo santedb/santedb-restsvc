@@ -107,6 +107,7 @@ namespace SanteDB.Rest.OAuth.Docker
             {
                 oauthRestConfiguration = new RestServiceConfiguration()
                 {
+                    ServiceType = typeof(OAuthServiceBehavior),
                     ConfigurationName = OAuthMessageHandler.ConfigurationName,
                     Endpoints = new List<RestEndpointConfiguration>()
                     {

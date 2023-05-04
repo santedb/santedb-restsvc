@@ -108,6 +108,7 @@ namespace SanteDB.Rest.AMI.Docker
                         new Rest.Common.Configuration.RestServiceBehaviorConfiguration(typeof(TokenAuthorizationAccessBehavior))
                     },
                     ConfigurationName = AmiMessageHandler.ConfigurationName,
+                    ServiceType = typeof(AmiServiceBehavior),
                     Endpoints = new List<Rest.Common.Configuration.RestEndpointConfiguration>()
                     {
                         this.CreateEndpoint("http://0.0.0.0:8080/ami")

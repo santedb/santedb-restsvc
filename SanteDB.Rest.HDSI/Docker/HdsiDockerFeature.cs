@@ -107,6 +107,7 @@ namespace SanteDB.Rest.HDSI.Docker
                     {
                         new Common.Configuration.RestServiceBehaviorConfiguration(typeof(TokenAuthorizationAccessBehavior))
                     },
+                    ServiceType = typeof(HdsiServiceBehavior),
                     ConfigurationName = HdsiMessageHandler.ConfigurationName,
                     Endpoints = new List<Common.Configuration.RestEndpointConfiguration>()
                     {

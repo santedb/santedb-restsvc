@@ -115,6 +115,7 @@ namespace SanteDB.Rest.WWW.Docker
             {
                 wwwRestConfiguration = new RestServiceConfiguration()
                 {
+                    ServiceType = typeof(WwwServiceBehavior),
                     Behaviors = new List<RestServiceBehaviorConfiguration>()
                     {
                         new RestServiceBehaviorConfiguration(typeof(CookieAuthenticationBehavior)),
