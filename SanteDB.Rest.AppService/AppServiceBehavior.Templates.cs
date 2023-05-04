@@ -25,6 +25,7 @@ using SanteDB.Core.Model;
 using SanteDB.Core.Model.Constants;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Claims;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
@@ -54,7 +55,12 @@ namespace SanteDB.Rest.AppService
             }
             if (String.IsNullOrEmpty(parameters["facilityId"]))
             {
-                parameters.Add("facilityId", userEntity.LoadProperty(o=>o.Relationships).FirstOrDefault(o => o.RelationshipTypeKey == EntityRelationshipTypeKeys.DedicatedServiceDeliveryLocation)?.TargetEntityKey?.ToString());
+                // Does the current principal have a facility claim?
+                if(AuthenticationContext.Current.Principal is IClaimsPrincipal cp && 
+                    cp.TryGetClaimValue(SanteDBClaimTypes.XspaFacilityClaim, out var facilityId))
+                {
+                    parameters.Add("facilityId", facilityId);
+                }
             }
 
             return this.m_appletManagerService.Applets.GetTemplateInstance(templateId, parameters.ToList().GroupBy(o=>o.Key).ToDictionary(o=>o.Key, o=>o.First().Value));

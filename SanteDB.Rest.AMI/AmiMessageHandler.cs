@@ -159,7 +159,7 @@ namespace SanteDB.Rest.AMI
                 this.Starting?.Invoke(this, EventArgs.Empty);
 
                 //Setup the res handler before the service is instantiated.
-                if (this.m_configuration?.ResourceHandlers.Count() > 0)
+                if (this.m_configuration?.ResourceHandlers?.Count() > 0)
                 {
                     AmiMessageHandler.ResourceHandler = new ResourceHandlerTool(this.m_configuration.ResourceHandlers, typeof(IAmiServiceContract));
                 }
