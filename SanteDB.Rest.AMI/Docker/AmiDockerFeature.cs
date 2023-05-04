@@ -18,6 +18,7 @@
  * User: fyfej
  * Date: 2023-3-10
  */
+using SanteDB.Core;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Exceptions;
 using SanteDB.Docker.Core;
@@ -189,7 +190,9 @@ namespace SanteDB.Rest.AMI.Docker
                     IncludeMetadataHeadersOnSearch = true,
                     PublicSettings = new List<AppSettingKeyValuePair>()
                     {
-                        new AppSettingKeyValuePair("welcome", "Welcome to SanteDB in Docker!")
+                        new AppSettingKeyValuePair("welcome", "Welcome to SanteDB in Docker!"),
+                        new AppSettingKeyValuePair("forbidhs256", "false"),
+                        new AppSettingKeyValuePair("dn", $"OID.2.5.6.11={ApplicationServiceContext.Current.ApplicationName}") 
                     }
                 };
                 configuration.AddSection(amiConfiguration);
