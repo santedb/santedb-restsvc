@@ -91,7 +91,7 @@ namespace SanteDB.Rest.AppService.Configuration
             if(featureConfiguration.TryGetValue(MODE_SETTING, out var modeRaw))
             {
                 // Remove old services
-                var oldMode = this.m_integrationPatterns.FirstOrDefault(o => o.Name == this.Configuration[MODE_SETTING]?.ToString())?.GetServices();
+                var oldMode = this.m_integrationPatterns.FirstOrDefault(o => o.Name == (this.Configuration[MODE_SETTING]?.ToString() ?? OnlineIntegrationPattern.INTEGRATION_PATTERN_NAME))?.GetServices();
                 if (oldMode != null) {
                     appSetting.ServiceProviders.RemoveAll(s => oldMode.Contains(s.Type));
                 }
