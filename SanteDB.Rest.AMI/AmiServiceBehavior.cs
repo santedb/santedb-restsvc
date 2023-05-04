@@ -410,7 +410,7 @@ namespace SanteDB.Rest.AMI
             var serviceOptions = new ServiceOptions()
             {
                 Key = ApplicationServiceContext.Current.ActivityUuid,
-                ServerVersion = $"{Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyProductAttribute>()?.Product} v{Assembly.GetEntryAssembly().GetName().Version} ({Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion})",
+                ServerVersion = $"{Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyProductAttribute>()?.Product} v{Assembly.GetEntryAssembly()?.GetName().Version} ({Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion})",
                 InterfaceVersion = typeof(AmiServiceBehavior).Assembly.GetName().Version.ToString(),
                 Endpoints = this.m_serviceManager.GetServices().OfType<IApiEndpointProvider>().Select(o =>
                     new ServiceEndpointOptions(o)

@@ -21,6 +21,7 @@
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Exceptions;
 using SanteDB.Docker.Core;
+using SanteDB.Rest.AMI.Configuration;
 using SanteDB.Rest.Common.Behavior;
 using SanteDB.Rest.Common.Configuration;
 using SanteDB.Rest.Common.Security;
@@ -178,6 +179,20 @@ namespace SanteDB.Rest.AMI.Docker
             if (!serviceConfiguration.Any(s => s.Type == typeof(AmiMessageHandler)))
             {
                 serviceConfiguration.Add(new TypeReferenceConfiguration(typeof(AmiMessageHandler)));
+            }
+
+            var amiConfiguration = configuration.GetSection<AmiConfigurationSection>();
+            if(amiConfiguration == null)
+            {
+                amiConfiguration = new AmiConfigurationSection()
+                {
+                    IncludeMetadataHeadersOnSearch = true,
+                    PublicSettings = new List<AppSettingKeyValuePair>()
+                    {
+                        new AppSettingKeyValuePair("welcome", "Welcome to SanteDB in Docker!")
+                    }
+                };
+                configuration.AddSection(amiConfiguration);
             }
         }
     }
