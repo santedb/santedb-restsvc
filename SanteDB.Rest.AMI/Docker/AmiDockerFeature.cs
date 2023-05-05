@@ -119,7 +119,6 @@ namespace SanteDB.Rest.AMI.Docker
                 restConfiguration.Services.Add(hdsiRestConfiguration);
             }
 
-
             // Listen address
             if (settings.TryGetValue(ListenUriSetting, out string listen))
             {
