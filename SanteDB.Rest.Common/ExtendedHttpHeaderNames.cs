@@ -66,6 +66,10 @@ namespace SanteDB.Rest.Common
         /// The checkout status header
         /// </summary>
         public const string CheckoutStatusHeader = "X-SanteDB-Checkout";
+        /// <summary>
+        /// Include all related objects in the resulting bundle
+        /// </summary>
+        public const string IncludeRelatedObjectsHeader = "X-SanteDB-Include";
         ///// <summary>
         ///// Device authorization when using HTTP basic auth
         ///// </summary>

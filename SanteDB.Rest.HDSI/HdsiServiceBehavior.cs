@@ -58,6 +58,7 @@ using System.Reflection;
 using System.Text;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using System.Xml;
 
 namespace SanteDB.Rest.HDSI
 {
@@ -800,7 +801,17 @@ namespace SanteDB.Rest.HDSI
                             }
                             else
                             {
-                                var retBundle = new Bundle(retVal, offset, totalCount);
+                                Bundle retBundle = null;
+                                if (XmlConvert.ToBoolean(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.IncludeRelatedObjectsHeader] ?? "false"))
+                                {
+                                    // TODO: Find a more efficient way of doing this
+                                    retBundle = Bundle.CreateBundle(retVal, totalCount, offset);
+                                }
+                                else
+                                {
+                                    retBundle = new Bundle(retVal, offset, totalCount);
+                                }
+
                                 audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retBundle);
                                 return retBundle;
                             }

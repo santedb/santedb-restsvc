@@ -430,24 +430,24 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     if (remote is Entity entity)
                     {
                         var targetKeys = entity.Relationships.Select(t => t.TargetEntityKey.Value).Where(s => !this.m_entityPersistence.Query(e => e.Key == s, AuthenticationContext.SystemPrincipal).Any()).ToArray(); // Related entities which are not in this
-                        insertBundle.AddRange(this.m_upstreamIntegrationService.Find<Entity>(o => targetKeys.Contains(o.Key.Value)));
+                        insertBundle.AddRange(this.m_upstreamIntegrationService.Query<Entity>(o => targetKeys.Contains(o.Key.Value)).Item.OfType<IdentifiedData>());
 
                         if (remote is Patient patient)
                         {
                             var localKeys = this.m_actPersistence.Query(a => a.Participations.Any(p => p.PlayerEntityKey == patient.Key), AuthenticationContext.SystemPrincipal).Select(k => k.Key.Value).ToArray();
                             // We want to update the patient so that this SDL is linked
-                            insertBundle.Item.AddRange(this.m_upstreamIntegrationService.Find<Act>(o => o.Participations.Any(p => p.PlayerEntityKey == patient.Key) && !localKeys.Contains(o.Key.Value)));
+                            insertBundle.Item.AddRange(this.m_upstreamIntegrationService.Query<Act>(o => o.Participations.Any(p => p.PlayerEntityKey == patient.Key) && !localKeys.Contains(o.Key.Value)).Item.OfType<IdentifiedData>());
                             // Handle MDM just in case
-                            insertBundle.Item.AddRange(this.m_upstreamIntegrationService.Find<Act>(o => o.Participations.Any(p => p.PlayerEntity.Relationships.Where(r => r.RelationshipType.Mnemonic == "MDM-Master").Any(r => r.SourceEntityKey == patient.Key))));
+                            insertBundle.Item.AddRange(this.m_upstreamIntegrationService.Query<Act>(o => o.Participations.Any(p => p.PlayerEntity.Relationships.Where(r => r.RelationshipType.Mnemonic == "MDM-Master").Any(r => r.SourceEntityKey == patient.Key))).Item.OfType<IdentifiedData>());
                         }
 
                     }
                     else if (remote is Act act)
                     {
                         var targetKeys = act.Relationships.Select(t => t.TargetActKey.Value).Where(s => !this.m_actPersistence.Query(e => e.Key == s, AuthenticationContext.SystemPrincipal).Any()).ToArray(); // Related acts which are not in this act
-                        insertBundle.AddRange(this.m_upstreamIntegrationService.Find<Act>(o => targetKeys.Contains(o.Key.Value)));
+                        insertBundle.AddRange(this.m_upstreamIntegrationService.Query<Act>(o => targetKeys.Contains(o.Key.Value)).Item.OfType<IdentifiedData>());
                         targetKeys = act.Participations.Select(t => t.PlayerEntityKey.Value).Where(s => !this.m_entityPersistence.Query(e => e.Key == s, AuthenticationContext.SystemPrincipal).Any()).ToArray(); // Related players which are not in this act
-                        insertBundle.AddRange(this.m_upstreamIntegrationService.Find<Entity>(o => targetKeys.Contains(o.Key.Value)));
+                        insertBundle.AddRange(this.m_upstreamIntegrationService.Query<Entity>(o => targetKeys.Contains(o.Key.Value)).Item.OfType<IdentifiedData>());
                     }
 
                     this.ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(0.5f, UserMessages.FETCH_FROM_UPSTREAM));
