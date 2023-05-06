@@ -30,6 +30,8 @@ using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
+using System.Text;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -42,6 +44,7 @@ namespace SanteDB.Rest.AMI.Resources
         // ILocalization Service
         private readonly ILocalizationService m_localizationService;
         private readonly ISessionProviderService m_sessionProvider;
+        private readonly IIdentityProviderService m_identityProvider;
 
         // Tracer
         private readonly Tracer m_tracer = Tracer.GetTracer(typeof(SessionInfoResourceHandler));
@@ -49,11 +52,11 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Instantiate the localization service
         /// </summary>
-        /// <param name="localizationService"></param>
-        public SessionInfoResourceHandler(ILocalizationService localizationService, ISessionProviderService sessionProvider)
+        public SessionInfoResourceHandler(ILocalizationService localizationService, ISessionProviderService sessionProvider, IIdentityProviderService identityProviderService)
         {
             this.m_localizationService = localizationService;
             this.m_sessionProvider = sessionProvider;
+            this.m_identityProvider = identityProviderService;
         }
 
         /// <summary>
@@ -96,8 +99,24 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.UnrestrictedAdministration)]
         public object Get(object id, object versionId)
         {
-            var uuid = (Guid)id;
-            var session = this.m_sessionProvider.Get(uuid.ToByteArray(), true);
+            byte[] sessionId = null;
+            if (id is Guid uuid)
+            {
+                sessionId = uuid.ToByteArray();
+            }
+            else if (id is String str)
+            {
+                try
+                {
+                    sessionId = str.HexDecode();
+                }
+                catch
+                {
+                    sessionId = Convert.FromBase64String(str);
+                }
+            }
+
+            var session = this.m_sessionProvider.Get(sessionId, true);
             if (session == null)
             {
                 this.m_tracer.TraceError($"Session {uuid} not found");
@@ -115,8 +134,24 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.UnrestrictedAdministration)]
         public object Delete(object key)
         {
-            var uuid = (Guid)key;
-            var session = this.m_sessionProvider.Get(uuid.ToByteArray(), false);
+            byte[] sessionId = null;
+            if (key is Guid uuid)
+            {
+                sessionId = uuid.ToByteArray();
+            }
+            else if (key is String str)
+            {
+                try
+                {
+                    sessionId = str.HexDecode();
+                }
+                catch
+                {
+                    sessionId = Convert.FromBase64String(str);
+                }
+            }
+            
+            var session = this.m_sessionProvider.Get(sessionId, false);
             if (session == null)
             {
                 this.m_tracer.TraceError($"Session {uuid} not found");
@@ -132,9 +167,18 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Query for sessions
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.UnrestrictedAdministration)]
         public IQueryResultSet Query(NameValueCollection queryParameters)
         {
-            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException.userMessage"));
+            if (queryParameters["userIdentity"] != null)
+            {
+                var userId = this.m_identityProvider.GetSid(queryParameters["userIdentity"]);
+                return this.m_sessionProvider.GetUserSessions(userId).Select(o => new SecuritySessionInfo(o)).AsResultSet();
+            }
+            else
+            {
+                return this.m_sessionProvider.GetActiveSessions().Select(o => new SecuritySessionInfo(o)).AsResultSet();
+            }
         }
 
         /// <summary>

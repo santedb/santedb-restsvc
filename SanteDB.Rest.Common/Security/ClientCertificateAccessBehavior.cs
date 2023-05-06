@@ -45,7 +45,7 @@ using System.Xml.Serialization;
 namespace SanteDB.Rest.Common.Security
 {
     /// <summary>
-    /// CORS settings
+    /// Certificate settings
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     [XmlRoot(nameof(ClientCertificateAccessConfiguration), Namespace = "http://santedb.org/configuration")]
@@ -153,9 +153,9 @@ namespace SanteDB.Rest.Common.Security
                 {
                     throw new SecurityException($"Expected https or {X_CLIENT_CERT_PEM} header");
                 }
-                else if (request.ClientCertificateError != 0)
+                else if (request.ClientCertificate == null && String.IsNullOrEmpty(headerPem))
                 {
-                    throw new AuthenticationException($"Client Certificate Error {request.ClientCertificateError}");
+                    throw new AuthenticationException($"No Client Certificate Provided");
                 }
 
                 IPrincipal authenticationPrincipal = null;
@@ -183,7 +183,7 @@ namespace SanteDB.Rest.Common.Security
                     {
                         chain.ChainPolicy.RevocationMode = this.m_configuration.RevokationCheckMode;
                         chain.Build(clientCertificate);
-                        if (chain.ChainStatus.Length != 0)
+                        if (chain.ChainStatus.Any())
                         {
                             // Invalid certificate
                             this.m_tracer.TraceError("Error validating {0} from {1} - {2}", clientCertificate, RestOperationContext.Current.IncomingRequest.RemoteEndPoint, String.Join(";", chain.ChainStatus));

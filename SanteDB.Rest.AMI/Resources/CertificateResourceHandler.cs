@@ -46,10 +46,6 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public const string CertificateStoreParameterName = "storeName";
         /// <summary>
-        /// The name of the location parameter
-        /// </summary>
-        public const string CertificateLocationParameterName = "storeLocation";
-        /// <summary>
         /// The name of hte private key parameter
         /// </summary>
         public const string PrivateKeyParameterName = "hasPrivateKey";
@@ -57,6 +53,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// The name of hte password header
         /// </summary>
         public const string PrivateKeyPasswordHeaderName = "X-Pfx-KeyAuthorization";
+
         private readonly IPolicyEnforcementService m_pepService;
 
         /// <summary>
@@ -78,19 +75,11 @@ namespace SanteDB.Rest.AMI.Resources
         /// <inheritdoc/>
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.Search | ResourceCapabilityType.Get | ResourceCapabilityType.Delete;
 
-        private bool TryParseRestParameters(out StoreLocation storeLocation, out StoreName storeName, out string password, out bool privateKey)
+        private bool TryParseRestParameters(out StoreName storeName, out string password, out bool privateKey)
         {
             var queryString = RestOperationContext.Current.IncomingRequest.QueryString;
             var retVal = true;
-            if (!String.IsNullOrEmpty(queryString[CertificateLocationParameterName]))
-            {
-                retVal &= Enum.TryParse<StoreLocation>(queryString[CertificateLocationParameterName], out storeLocation);
-            }
-            else
-            {
-                storeLocation = StoreLocation.CurrentUser;
-            }
-
+ 
             if (!string.IsNullOrEmpty(queryString[CertificateStoreParameterName]))
             {
                 retVal &= Enum.TryParse<StoreName>(queryString[CertificateStoreParameterName], out storeName);
@@ -120,7 +109,8 @@ namespace SanteDB.Rest.AMI.Resources
             this.m_pepService.Demand(PermissionPolicyIdentifiers.UnrestrictedCertificate); // require direct calls to pass validation as well
             X509Certificate2 certificate = null;
             // Attempt to get the parameters
-            if (!this.TryParseRestParameters(out var storeLocation, out var storeName, out var password, out _))
+            if (!this.TryParseRestParameters(out var storeName, out var password, out _) ||
+                storeName != StoreName.My)
             {
                 throw new ArgumentOutOfRangeException();
             }
@@ -149,7 +139,7 @@ namespace SanteDB.Rest.AMI.Resources
                     throw new ArgumentOutOfRangeException(nameof(data));
             }
 
-            using (var store = new X509Store(storeName, storeLocation))
+            using (var store = new X509Store(storeName, StoreLocation.CurrentUser))
             {
                 store.Open(OpenFlags.ReadWrite);
                 store.Add(certificate);
@@ -167,7 +157,7 @@ namespace SanteDB.Rest.AMI.Resources
         {
             RestOperationContext.Current.OutgoingResponse.ContentType = "application/x-pem-file";
             var ms = new MemoryStream();
-            using (var tw = new StreamWriter(ms))
+            using (var tw = new StreamWriter(ms, Encoding.UTF8, 1024, true))
             {
                 tw.WriteLine("-----BEGIN CERTIFICATE-----");
                 tw.WriteLine(Convert.ToBase64String(certificate.Export(X509ContentType.Cert), Base64FormattingOptions.InsertLineBreaks));
@@ -184,12 +174,12 @@ namespace SanteDB.Rest.AMI.Resources
             this.m_pepService.Demand(PermissionPolicyIdentifiers.UnrestrictedCertificate); // require direct calls to pass validation as well
 
             // Attempt to get the parameters
-            if (!this.TryParseRestParameters(out var storeLocation, out var storeName, out var password, out _))
+            if (!this.TryParseRestParameters(out var storeName, out var password, out _))
             {
                 throw new ArgumentOutOfRangeException();
             }
 
-            using (var store = new X509Store(storeName, storeLocation))
+            using (var store = new X509Store(storeName, StoreLocation.CurrentUser))
             {
                 store.Open(OpenFlags.ReadWrite);
                 var certificate = store.Certificates.Find(X509FindType.FindByThumbprint, key.ToString(), true);
@@ -214,12 +204,12 @@ namespace SanteDB.Rest.AMI.Resources
             this.m_pepService.Demand(PermissionPolicyIdentifiers.UnrestrictedCertificate); // require direct calls to pass validation as well
 
             // Attempt to get the parameters
-            if (!this.TryParseRestParameters(out var storeLocation, out var storeName, out var password, out bool privateKey))
+            if (!this.TryParseRestParameters(out var storeName, out var password, out bool privateKey))
             {
                 throw new ArgumentOutOfRangeException();
             }
 
-            var certificate = X509CertificateUtils.FindCertificate(X509FindType.FindByThumbprint, storeLocation, storeName, id.ToString());
+            var certificate = X509CertificateUtils.FindCertificate(X509FindType.FindByThumbprint, StoreLocation.CurrentUser, storeName, id.ToString());
             if (!String.IsNullOrEmpty(password) && privateKey)
             {
                 RestOperationContext.Current.OutgoingResponse.ContentType = "application/x-pkcs12";
@@ -238,27 +228,27 @@ namespace SanteDB.Rest.AMI.Resources
         {
             this.m_pepService.Demand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction); // require direct calls to pass validation as well
             // Attempt to get the parameters
-            if (!this.TryParseRestParameters(out var storeLocation, out var storeName, out var password, out bool privateKey))
+            if (!this.TryParseRestParameters(out var storeName, out var password, out bool privateKey))
             {
                 throw new ArgumentOutOfRangeException();
             }
 
-            using(var store = new X509Store(storeName, storeLocation))
+            using(var store = new X509Store(storeName, StoreLocation.CurrentUser))
             {
                 store.Open(OpenFlags.ReadOnly);
 
                 X509Certificate2Collection certificates = null;
                 if (!String.IsNullOrEmpty(queryParameters["subject"]))
                 {
-                    certificates = store.Certificates.Find(X509FindType.FindBySubjectName, queryParameters["subject"], true);
+                    certificates = store.Certificates.Find(X509FindType.FindBySubjectName, queryParameters["subject"], false);
                 }
                 else if (!String.IsNullOrEmpty(queryParameters["thumbprint"]))
                 {
-                    certificates = store.Certificates.Find(X509FindType.FindByThumbprint, queryParameters["thumbprint"], true);
+                    certificates = store.Certificates.Find(X509FindType.FindByThumbprint, queryParameters["thumbprint"], false);
                 }
                 else
                 {
-                    certificates = store.Certificates.Find(X509FindType.FindByTimeValid, DateTime.Now.AddMonths(1), true);
+                    certificates = store.Certificates.Find(X509FindType.FindByTimeValid, DateTime.Now.AddMonths(1), false);
                 }
 
                 var results = certificates.OfType<X509Certificate>().Select(o => new X509Certificate2Info(o));

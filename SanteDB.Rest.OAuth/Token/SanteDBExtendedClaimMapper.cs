@@ -41,7 +41,7 @@ namespace SanteDB.Rest.OAuth.Token
         public const string ApplicationSubjectJwtClaim = "appid";
         public const string DeviceSubjectJwtClaim = "devid";
         public const string UserSubjectJwtClaim = "usrid";
-        
+                
         /// <summary>
         /// Mapping information to map to kmnown jwt claim names
         /// </summary>

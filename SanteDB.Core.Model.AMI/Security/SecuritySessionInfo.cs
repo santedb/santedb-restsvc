@@ -20,9 +20,11 @@
  */
 using Newtonsoft.Json;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Claims;
 using SanteDB.Core.Security.Principal;
 using SanteDB.Core.Security.Services;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 
@@ -56,6 +58,7 @@ namespace SanteDB.Core.Model.AMI.Security
             this.Application = identities.OfType<IApplicationIdentity>().FirstOrDefault()?.Name;
             this.Device = identities.OfType<IDeviceIdentity>().FirstOrDefault()?.Name;
             this.User = identities.FirstOrDefault(o => !(o is IDeviceIdentity || o is IApplicationIdentity))?.Name;
+            this.RemoteEndpoint = session.Claims?.FirstOrDefault(o => o.Type == SanteDBClaimTypes.RemoteEndpointClaim)?.Value;
         }
 
         /// <summary>
@@ -101,5 +104,12 @@ namespace SanteDB.Core.Model.AMI.Security
         [XmlElement("userIdentity")]
         [JsonProperty("userIdentity")]
         public string User { get; set; }
+
+        /// <summary>
+        /// Claims on the session
+        /// </summary>
+        [XmlElement("remoteEndpoint")]
+        [JsonProperty("remoteEndpoint")]
+        public String RemoteEndpoint { get; set; }
     }
 }

@@ -227,7 +227,7 @@ namespace SanteDB.Rest.AMI
             {
 
                 IdentifiedData cacheResult = null;
-                if (Guid.TryParse(objectId, out var guidKey))
+                if (Guid.TryParseExact(objectId, "D", out var guidKey))
                 {
                     cacheResult = this.m_dataCachingService.GetCacheItem(guidKey);
                 }
@@ -653,7 +653,7 @@ namespace SanteDB.Rest.AMI
                     this.AclCheck(handler, nameof(IApiResourceHandler.Delete));
 
                     this.ThrowIfPreConditionFails(handler, key);
-                    var retVal = handler.Delete(Guid.TryParse(key, out var uuid) ? (object)uuid : key);
+                    var retVal = handler.Delete(Guid.TryParseExact(key, "D", out var uuid) ? (object)uuid : key);
 
                     RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.Created;
                     this.AddEtagHeader(retVal);
@@ -687,7 +687,7 @@ namespace SanteDB.Rest.AMI
 
                     this.AclCheck(handler, nameof(IApiResourceHandler.Get));
                     this.ThrowIfPreConditionFails(handler, key);
-                    var retVal = handler.Get(Guid.TryParse(key, out var guidKey) ? (object)guidKey : key, Guid.Empty);
+                    var retVal = handler.Get(Guid.TryParseExact(key, "D", out var guidKey) ? (object)guidKey : key, Guid.Empty);
                     if (retVal == null)
                     {
                         throw new FileNotFoundException(key);
@@ -724,7 +724,7 @@ namespace SanteDB.Rest.AMI
 
                     this.AclCheck(handler, nameof(IApiResourceHandler.Get));
                     this.ThrowIfPreConditionFails(handler, key);
-                    var retVal = handler.Get(Guid.TryParse(key, out var guidKey) ? (object)guidKey : key, Guid.TryParse(versionKey, out var versionGuid) ? (object)versionGuid : versionKey);
+                    var retVal = handler.Get(Guid.TryParseExact(key, "D", out var guidKey) ? (object)guidKey : key, Guid.TryParseExact(versionKey, "D", out var versionGuid) ? (object)versionGuid : versionKey);
                     if (retVal == null)
                     {
                         throw new FileNotFoundException(key);
@@ -766,7 +766,7 @@ namespace SanteDB.Rest.AMI
                     this.AclCheck(handler, nameof(IApiResourceHandler.Get));
 
                     this.ThrowIfPreConditionFails(handler, key);
-                    var retVal = handler.Get(Guid.TryParse(key, out var guidKey) ? (object)guidKey : key, Guid.Empty) as IVersionedData;
+                    var retVal = handler.Get(Guid.TryParseExact(key, "D", out var guidKey) ? (object)guidKey : key, Guid.Empty) as IVersionedData;
                     List<IVersionedData> histItm = new List<IVersionedData>() { retVal };
                     while (retVal.PreviousVersionKey.HasValue)
                     {
@@ -937,7 +937,7 @@ namespace SanteDB.Rest.AMI
                     switch (data)
                     {
                         case IdentifiedData iddata:
-                            if ((!Guid.TryParse(key, out var guidKey) || iddata.Key != guidKey) && iddata.Key.HasValue)
+                            if ((!Guid.TryParseExact(key, "D", out var guidKey) || iddata.Key != guidKey) && iddata.Key.HasValue)
                             {
                                 throw new FaultException(HttpStatusCode.BadRequest, "Key mismatch");
                             }
@@ -945,7 +945,7 @@ namespace SanteDB.Rest.AMI
                             iddata.Key = guidKey;
                             break;
                         case IIdentifiedResource iir:
-                            if((!Guid.TryParse(key, out var guidKey2) || iir.Key != guidKey2) && iir.Key.HasValue)
+                            if((!Guid.TryParseExact(key, "D", out var guidKey2) || iir.Key != guidKey2) && iir.Key.HasValue)
                             {
                                 throw new FaultException(HttpStatusCode.BadRequest, "Key mismatch");
                             }
@@ -1025,7 +1025,7 @@ namespace SanteDB.Rest.AMI
                 {
                     this.AclCheck(handler, nameof(ILockableResourceHandler.Lock));
                     this.ThrowIfPreConditionFails(handler, key);
-                    var retVal = (handler as ILockableResourceHandler).Lock(Guid.TryParse(key, out var guidKey) ? (object)guidKey : key);
+                    var retVal = (handler as ILockableResourceHandler).Lock(Guid.TryParseExact(key, "D", out var guidKey) ? (object)guidKey : key);
                     if (retVal == null)
                     {
                         throw new FileNotFoundException(key);
@@ -1068,7 +1068,7 @@ namespace SanteDB.Rest.AMI
                 {
                     this.AclCheck(handler, nameof(ILockableResourceHandler.Unlock));
                     this.ThrowIfPreConditionFails(handler, key);
-                    var retVal = (handler as ILockableResourceHandler).Unlock(Guid.TryParse(key, out var guidKey) ? (object)guidKey : key);
+                    var retVal = (handler as ILockableResourceHandler).Unlock(Guid.TryParseExact(key, "D", out var guidKey) ? (object)guidKey : key);
                     if (retVal == null)
                     {
                         throw new FileNotFoundException(key);
@@ -1122,7 +1122,7 @@ namespace SanteDB.Rest.AMI
 
                     // Query for results
                     IQueryResultSet results = null;
-                    if (Guid.TryParse(key, out Guid keyUuid))
+                    if (Guid.TryParseExact(key,"D", out Guid keyUuid))
                     {
                         results = handler.QueryChildObjects(keyUuid, childResourceType, query);
                     }
@@ -1179,7 +1179,7 @@ namespace SanteDB.Rest.AMI
                 {
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.AddChildObject));
                     this.ThrowIfPreConditionFails(handler, key);
-                    var retVal = handler.AddChildObject(Guid.TryParse(key, out var guidKey) ? (object)guidKey : key, childResourceType, body);
+                    var retVal = handler.AddChildObject(Guid.TryParseExact(key,"D", out var guidKey) ? (object)guidKey : key, childResourceType, body);
                     
                     RestOperationContext.Current.OutgoingResponse.StatusCode = retVal == null ? (int)HttpStatusCode.NoContent : (int)System.Net.HttpStatusCode.Created;
                     this.AddEtagHeader(retVal);
@@ -1214,7 +1214,7 @@ namespace SanteDB.Rest.AMI
                 {
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.RemoveChildObject));
                     this.ThrowIfPreConditionFails(handler, key);
-                    var retVal = handler.RemoveChildObject(Guid.TryParse(key, out var uuid) ? (object)uuid : key, childResourceType, Guid.TryParse(scopedEntityKey, out var scopedUuid) ? (object)scopedUuid : scopedEntityKey);
+                    var retVal = handler.RemoveChildObject(Guid.TryParseExact(key, "D", out var uuid) ? (object)uuid : key, childResourceType, Guid.TryParseExact(scopedEntityKey, "D", out var scopedUuid) ? (object)scopedUuid : scopedEntityKey);
 
                     var versioned = retVal as IVersionedData;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = (int)System.Net.HttpStatusCode.OK;
@@ -1250,7 +1250,7 @@ namespace SanteDB.Rest.AMI
                 {
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.GetChildObject));
                     this.ThrowIfPreConditionFails(handler, scopedEntityKey);
-                    var retVal = handler.GetChildObject(Guid.TryParse(key, out var uuid) ? (object)uuid : key, childResourceType, Guid.TryParse(scopedEntityKey, out var childUuid) ? (object)childUuid : scopedEntityKey);
+                    var retVal = handler.GetChildObject(Guid.TryParseExact(key, "D", out var uuid) ? (object)uuid : key, childResourceType, Guid.TryParseExact(scopedEntityKey, "D", out var childUuid) ? (object)childUuid : scopedEntityKey);
 
                     var versioned = retVal as IVersionedData;
                     RestOperationContext.Current.OutgoingResponse.StatusCode = (int)System.Net.HttpStatusCode.OK;
