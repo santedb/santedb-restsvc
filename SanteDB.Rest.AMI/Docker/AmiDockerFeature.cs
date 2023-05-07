@@ -190,8 +190,7 @@ namespace SanteDB.Rest.AMI.Docker
                     PublicSettings = new List<AppSettingKeyValuePair>()
                     {
                         new AppSettingKeyValuePair("welcome", "Welcome to SanteDB in Docker!"),
-                        new AppSettingKeyValuePair("forbidhs256", "false"),
-                        new AppSettingKeyValuePair("dn", $"OU=SanteDB.Docker.Server") 
+                        new AppSettingKeyValuePair("forbidhs256", "false")
                     }
                 };
                 configuration.AddSection(amiConfiguration);
