@@ -55,14 +55,17 @@ namespace SanteDB.Rest.AMI.Resources
         public const string PrivateKeyPasswordHeaderName = "X-Pfx-KeyAuthorization";
 
         private readonly IPolicyEnforcementService m_pepService;
+        private readonly IPlatformSecurityProvider m_platformSecurityService;
 
         /// <summary>
         /// DI constructor
         /// </summary>
-        public CertificateResourceHandler(IPolicyEnforcementService policyEnforcementService)
+        public CertificateResourceHandler(IPolicyEnforcementService policyEnforcementService, IPlatformSecurityProvider platformSecurity)
         {
             this.m_pepService = policyEnforcementService;
+            this.m_platformSecurityService = platformSecurity;
         }
+
         /// <inheritdoc/>
         public string ResourceName => "Certificate";
 
@@ -79,7 +82,7 @@ namespace SanteDB.Rest.AMI.Resources
         {
             var queryString = RestOperationContext.Current.IncomingRequest.QueryString;
             var retVal = true;
- 
+
             if (!string.IsNullOrEmpty(queryString[CertificateStoreParameterName]))
             {
                 retVal &= Enum.TryParse<StoreName>(queryString[CertificateStoreParameterName], out storeName);
@@ -179,22 +182,12 @@ namespace SanteDB.Rest.AMI.Resources
                 throw new ArgumentOutOfRangeException();
             }
 
-            using (var store = new X509Store(storeName, StoreLocation.CurrentUser))
+            if (!this.m_platformSecurityService.TryGetCertificate(X509FindType.FindByThumbprint, key.ToString(), storeName, out var certificate))
             {
-                store.Open(OpenFlags.ReadWrite);
-                var certificate = store.Certificates.Find(X509FindType.FindByThumbprint, key.ToString(), true);
-                if (certificate.Count != 1)
-                {
-                    throw new KeyNotFoundException(key.ToString());
-                }
-                else
-                {
-                    store.Remove(certificate[0]);
-
-                    return this.GetSerializedPublicCert(certificate[0]);
-                }
+                throw new KeyNotFoundException(key.ToString());
             }
-
+            _ = this.m_platformSecurityService.TryUninstallCertificate(certificate, storeName);
+            return this.GetSerializedPublicCert(certificate);
         }
 
         /// <inheritdoc/>
@@ -209,8 +202,11 @@ namespace SanteDB.Rest.AMI.Resources
                 throw new ArgumentOutOfRangeException();
             }
 
-            var certificate = X509CertificateUtils.FindCertificate(X509FindType.FindByThumbprint, StoreLocation.CurrentUser, storeName, id.ToString());
-            if (!String.IsNullOrEmpty(password) && privateKey)
+            if (!this.m_platformSecurityService.TryGetCertificate(X509FindType.FindByThumbprint, id.ToString(), storeName, out var certificate)) {
+                throw new KeyNotFoundException(id.ToString());
+            }
+
+            if (!String.IsNullOrEmpty(password) && privateKey && certificate.HasPrivateKey)
             {
                 RestOperationContext.Current.OutgoingResponse.ContentType = "application/x-pkcs12";
                 return new MemoryStream(certificate.Export(X509ContentType.Pfx, password));
@@ -233,35 +229,30 @@ namespace SanteDB.Rest.AMI.Resources
                 throw new ArgumentOutOfRangeException();
             }
 
-            using(var store = new X509Store(storeName, StoreLocation.CurrentUser))
-            {
-                store.Open(OpenFlags.ReadOnly);
-
-                X509Certificate2Collection certificates = null;
+                IEnumerable<X509Certificate2> certificates = null;
                 if (!String.IsNullOrEmpty(queryParameters["subject"]))
                 {
-                    certificates = store.Certificates.Find(X509FindType.FindBySubjectName, queryParameters["subject"], false);
+                    certificates = this.m_platformSecurityService.FindAllCertificates(X509FindType.FindBySubjectDistinguishedName, queryParameters["subject"], validOnly: false);
                 }
                 else if (!String.IsNullOrEmpty(queryParameters["thumbprint"]))
                 {
-                    certificates = store.Certificates.Find(X509FindType.FindByThumbprint, queryParameters["thumbprint"], false);
+                    certificates = this.m_platformSecurityService.FindAllCertificates(X509FindType.FindByThumbprint, queryParameters["thumbprint"], validOnly: false);
                 }
                 else
                 {
-                    certificates = store.Certificates.Find(X509FindType.FindByTimeValid, DateTime.Now.AddMonths(1), false);
+                    certificates = this.m_platformSecurityService.FindAllCertificates(X509FindType.FindByTimeValid, DateTime.Now.AddMonths(1), validOnly: false);
                 }
 
-                var results = certificates.OfType<X509Certificate>().Select(o => new X509Certificate2Info(o));
-                if(privateKey)
+                var results = certificates.Select(o => new X509Certificate2Info(o));
+                if (privateKey)
                 {
-                    return new MemoryQueryResultSet(results.Where(o=>o.HasPrivateKey));
+                    return new MemoryQueryResultSet(results.Where(o => o.HasPrivateKey));
                 }
                 else
                 {
                     return new MemoryQueryResultSet(results);
 
                 }
-            }
         }
 
         /// <inheritdoc/>

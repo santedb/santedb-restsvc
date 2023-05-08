@@ -29,6 +29,7 @@ namespace SanteDB.Rest.AMI.ChildResources
         private readonly Tracer m_tracer = Tracer.GetTracer(typeof(CertificateAuthenticationChildHandler));
         private readonly IApplicationIdentityProviderService m_applicationIdentityProvider;
         private readonly IIdentityProviderService m_identityProvider;
+        private readonly IPlatformSecurityProvider m_platformSecurityProvider;
 
         /// <summary>
         /// DI constructor
@@ -36,12 +37,14 @@ namespace SanteDB.Rest.AMI.ChildResources
         public CertificateAuthenticationChildHandler(ICertificateIdentityProvider certificateIdentityProvider,
             IDeviceIdentityProviderService deviceIdentityProviderService,
             IApplicationIdentityProviderService applicationIdentityProviderService,
+            IPlatformSecurityProvider platformSecurityProvider,
             IIdentityProviderService identityProviderService)
         {
             this.m_certificateIdentityProvider = certificateIdentityProvider;
             this.m_deviceIdentityProvider = deviceIdentityProviderService;
             this.m_applicationIdentityProvider = applicationIdentityProviderService;
             this.m_identityProvider = identityProviderService;
+            this.m_platformSecurityProvider = platformSecurityProvider;
         }
 
         /// <inheritdoc/>
@@ -104,9 +107,8 @@ namespace SanteDB.Rest.AMI.ChildResources
         private X509Certificate2 FindCertificateByThumbprint(string thumbprint)
         {
             // Find the certificate
-            var cert = X509CertificateUtils.FindCertificate(System.Security.Cryptography.X509Certificates.X509FindType.FindByThumbprint, System.Security.Cryptography.X509Certificates.StoreLocation.CurrentUser, System.Security.Cryptography.X509Certificates.StoreName.My, thumbprint) ??
-                X509CertificateUtils.FindCertificate(System.Security.Cryptography.X509Certificates.X509FindType.FindByThumbprint, System.Security.Cryptography.X509Certificates.StoreLocation.CurrentUser, System.Security.Cryptography.X509Certificates.StoreName.TrustedPeople, thumbprint);
-            if (cert == null)
+            if (!this.m_platformSecurityProvider.TryGetCertificate(X509FindType.FindByThumbprint, thumbprint, out var cert) &&
+                !this.m_platformSecurityProvider.TryGetCertificate(X509FindType.FindByThumbprint, thumbprint, StoreName.TrustedPeople, out cert))
             {
                 throw new InvalidOperationException(ErrorMessages.CERTIFICATE_NOT_FOUND);
             }
