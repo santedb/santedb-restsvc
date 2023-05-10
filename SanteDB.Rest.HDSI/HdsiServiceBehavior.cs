@@ -59,6 +59,8 @@ using System.Text;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Xml;
+using SharpCompress;
+using System.Runtime.InteropServices;
 
 namespace SanteDB.Rest.HDSI
 {
@@ -807,6 +809,13 @@ namespace SanteDB.Rest.HDSI
                                     // TODO: Find a more efficient way of doing this
                                     retBundle = Bundle.CreateBundle(retVal, totalCount, offset);
                                 }
+                                else if (RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpIncludePathParameterName] != null ||
+                                    RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpExcludePathParameterName] != null)
+                                {
+                                    var includeProperties = RestOperationContext.Current.IncomingRequest.QueryString.GetValues(QueryControlParameterNames.HttpIncludePathParameterName)?.Select(o => this.ResolvePropertyInfo(handler.Type, o)).ToArray();
+                                    var excludeProperties = RestOperationContext.Current.IncomingRequest.QueryString.GetValues(QueryControlParameterNames.HttpExcludePathParameterName)?.Select(o => this.ResolvePropertyInfo(handler.Type, o)).ToArray();
+                                    retBundle = Bundle.CreateBundle(retVal, totalCount, offset, includeProperties, excludeProperties);
+                                }
                                 else
                                 {
                                     retBundle = new Bundle(retVal, offset, totalCount);
@@ -847,6 +856,22 @@ namespace SanteDB.Rest.HDSI
                     audit.WithTimestamp().Send();
                 }
             }
+        }
+
+        /// <summary>
+        /// Resolve property info
+        /// </summary>
+        private PropertyInfo ResolvePropertyInfo(Type rootType, string includePath)
+        {
+            PropertyInfo retVal = null;
+            foreach (var propertyPart in includePath.Split('.')) {
+                retVal = rootType.GetQueryProperty(propertyPart, dropXmlSuffix: false);
+                if(retVal == null) {
+                    throw new MissingMemberException($"{rootType.Name}.{propertyPart}");
+                }
+                rootType = retVal.PropertyType.StripGeneric();
+            }
+            return retVal;
         }
 
         /// <inheritdoc/>
@@ -2392,15 +2417,15 @@ namespace SanteDB.Rest.HDSI
                             }).OfType<DataInstallAction>().ToList()
                         };
 
-                        if (query["_include"] != null)
+                        if (query[QueryControlParameterNames.HttpIncludePathParameterName] != null)
                         {
                             retVal.Action.InsertRange(0,
-                                query.GetValues("_include").SelectMany(inc =>
+                                query.GetValues(QueryControlParameterNames.HttpIncludePathParameterName).SelectMany(inc =>
                                 {
                                     var resourceParts = inc.Split('?');
                                     if (resourceParts.Length != 2)
                                     {
-                                        throw new ArgumentOutOfRangeException("_include", String.Format(ErrorMessages.ARGUMENT_COUNT_MISMATCH, 2, resourceParts.Length));
+                                        throw new ArgumentOutOfRangeException(QueryControlParameterNames.HttpIncludePathParameterName, String.Format(ErrorMessages.ARGUMENT_COUNT_MISMATCH, 2, resourceParts.Length));
                                     }
 
                                     var includeHandler = HdsiMessageHandler.ResourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceParts[0]);

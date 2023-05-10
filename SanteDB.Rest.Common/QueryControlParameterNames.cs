@@ -72,6 +72,13 @@ namespace SanteDB.Rest.Common
         /// NAme of the HTTP parameter to count all results
         /// </summary>
         public const String HttpIncludeTotalParameterName = "_includeTotal";
-
+        /// <summary>
+        /// Name of the include path
+        /// </summary>
+        public const String HttpIncludePathParameterName = "_include";
+        /// <summary>
+        /// Name of the exclude path
+        /// </summary>
+        public const String HttpExcludePathParameterName = "_exclude";
     }
 }
