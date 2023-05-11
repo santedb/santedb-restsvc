@@ -128,10 +128,10 @@ namespace SanteDB.Rest.WWW
                 lang = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
             }
 
-           
+
             // Navigate asset
 
-            String appletPath = RestOperationContext.Current.IncomingRequest.Url.AbsolutePath.ToLower();
+            String appletPath = RestOperationContext.Current.IncomingRequest.Url.AbsolutePath;
             if (String.IsNullOrEmpty(appletPath) || "/".Equals(appletPath))
             {
                 appletPath = "index.html";

@@ -107,20 +107,12 @@
       <ItemGroup>
 
         <ProjectReference Include="..\..\santedb-model\SanteDB.Core.Model\SanteDB.Core.Model.csproj">
-          <Project>{F1A82A4F-4A57-47D7-AE76-444C8A4FF54A}</Project>
-          <Name>SanteDB.Core.Model</Name>
         </ProjectReference>
         <ProjectReference Include="..\..\santedb-api\SanteDB.Core.Api\SanteDB.Core.Api.csproj">
-          <Project>{3A45F695-47A2-464C-ACE6-BDABBFA39FBC}</Project>
-          <Name>SanteDB.Core.Api</Name>
         </ProjectReference>
         <ProjectReference Include="..\..\santedb-applets\SanteDB.Core.Applets\SanteDB.Core.Applets.csproj">
-          <Project>{39E61451-F4FE-493D-B754-5F06EB284AAC}</Project>
-          <Name>SanteDB.Core.Applets</Name>
         </ProjectReference>
         <ProjectReference Include="..\..\restsrvr\RestSrvr\RestSrvr.csproj">
-          <Project>{16EF1840-0361-439D-806C-92D0411122EB}</Project>
-          <Name>RestSrvr</Name>
         </ProjectReference>
       </ItemGroup>
     </When>
@@ -144,8 +136,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SanteDB.Core.Model.ViewModelSerializers\SanteDB.Core.Model.ViewModelSerializers.csproj">
-      <Project>{ece9b280-9647-4092-babf-eb2e25084670}</Project>
-      <Name>SanteDB.Core.Model.ViewModelSerializers</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
