@@ -61,6 +61,7 @@ using System.Xml.Serialization;
 using System.Xml;
 using SharpCompress;
 using System.Runtime.InteropServices;
+using SanteDB.Core.Model.Constants;
 
 namespace SanteDB.Rest.HDSI
 {
@@ -498,9 +499,9 @@ namespace SanteDB.Rest.HDSI
                 {
                     var cacheHeader = this.ExtractValidateMatchHeader(cacheResult.GetType(), cacheResult.Tag);
 
-                    if (cacheResult is ITaggable tagged && tagged.GetTag(SanteDBModelConstants.DcdrRefetchTag) != null)
+                    if (cacheResult is ITaggable tagged && tagged.GetTag(SystemTagNames.DcdrRefetchTag) != null)
                     {
-                        tagged.RemoveTag(SanteDBModelConstants.DcdrRefetchTag);
+                        tagged.RemoveTag(SystemTagNames.DcdrRefetchTag);
                     }
                     else if (ifNoneMatchHeader?.Contains(cacheHeader) == true ||
                         ifMatchHeader?.Contains(cacheHeader) != true ||

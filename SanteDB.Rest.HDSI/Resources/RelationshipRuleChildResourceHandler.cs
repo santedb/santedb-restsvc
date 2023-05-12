@@ -116,22 +116,7 @@ namespace SanteDB.Rest.HDSI.Resources
         {
             IRelationshipValidationRule relationship = null;
 
-            if (scopingType == s_EntityRelationshipType)
-            {
-                relationship = _Provider.GetRuleByKey<EntityRelationship>((Guid)key);
-            }
-            else if (scopingType == s_ActParticipationType)
-            {
-                relationship = _Provider.GetRuleByKey<ActParticipation>((Guid)key);
-            }
-            else if (scopingType == s_ActRelationshipType)
-            {
-                relationship = _Provider.GetRuleByKey<ActRelationship>((Guid)key);
-            }
-            else
-            {
-                throw new NotImplementedException($"Support for {scopingType.FullName} is not available.");
-            }
+            relationship = _Provider.GetRuleByKey((Guid)key);
 
             if (null == relationship)
             {

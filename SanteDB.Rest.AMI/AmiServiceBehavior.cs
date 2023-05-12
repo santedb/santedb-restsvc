@@ -29,6 +29,7 @@ using SanteDB.Core.Model;
 using SanteDB.Core.Model.AMI;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.AMI.Collections;
+using SanteDB.Core.Model.Constants;
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Patch;
@@ -239,13 +240,13 @@ namespace SanteDB.Rest.AMI
                 {
                     if (cacheResult is ITaggable tagged)
                     {
-                        if (tagged.GetTag(SanteDBModelConstants.DcdrRefetchTag) == null)
+                        if (tagged.GetTag(SystemTagNames.DcdrRefetchTag) == null)
                         {
                             throw new PreconditionFailedException();
                         }
                         else
                         {
-                            tagged.RemoveTag(SanteDBModelConstants.DcdrRefetchTag);
+                            tagged.RemoveTag(SystemTagNames.DcdrRefetchTag);
                         }
                     }
                     else

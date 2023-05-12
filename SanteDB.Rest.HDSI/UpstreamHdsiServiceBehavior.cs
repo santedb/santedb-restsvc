@@ -29,6 +29,7 @@ using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Collection;
+using SanteDB.Core.Model.Constants;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Parameters;
@@ -117,12 +118,12 @@ namespace SanteDB.Messaging.HDSI.Wcf
             if (data is Entity entity &&
                                this.m_entityPersistence?.Query(o => o.Key == data.Key, AuthenticationContext.SystemPrincipal).Any() != true)
             {
-                entity.AddTag("$upstream", "true");
+                entity.AddTag(SystemTagNames.UpstreamDataTag, "true");
             }
             else if (data is Act act &&
                 this.m_actPersistence?.Query(o => o.Key == data.Key, AuthenticationContext.SystemPrincipal).Any() != true)
             {
-                act.AddTag("$upstream", "true");
+                act.AddTag(SystemTagNames.UpstreamDataTag, "true");
             }
             else if (data is Bundle bundle)
             {

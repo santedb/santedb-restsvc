@@ -23,6 +23,7 @@ using SanteDB.Core;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
+using SanteDB.Core.Model.Constants;
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Query;
@@ -91,7 +92,7 @@ namespace SanteDB.Rest.HDSI.Resources
                 if (this.m_resourceCheckoutService.IsCheckedout<TData>(td.Key.Value, out var owner) && 
                     retVal is ITaggable taggable)
                 {
-                    taggable.AddTag(SanteDBModelConstants.CheckoutStatusTag, owner.Name);
+                    taggable.AddTag(SystemTagNames.CheckoutStatusTag, owner.Name);
                     RestOperationContext.Current.OutgoingResponse.AddHeader(ExtendedHttpHeaderNames.CheckoutStatusHeader, owner.Name);
                 }
             }
