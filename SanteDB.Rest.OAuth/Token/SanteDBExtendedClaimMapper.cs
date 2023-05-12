@@ -24,7 +24,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.OAuth.Token
 {
@@ -41,7 +40,7 @@ namespace SanteDB.Rest.OAuth.Token
         public const string ApplicationSubjectJwtClaim = "appid";
         public const string DeviceSubjectJwtClaim = "devid";
         public const string UserSubjectJwtClaim = "usrid";
-                
+
         /// <summary>
         /// Mapping information to map to kmnown jwt claim names
         /// </summary>
@@ -77,9 +76,9 @@ namespace SanteDB.Rest.OAuth.Token
         public IDictionary<string, object> MapToExternalIdentityClaims(IEnumerable<IClaim> internalClaims)
         {
             var retVal = new Dictionary<String, Object>();
-            foreach(var itm in internalClaims)
+            foreach (var itm in internalClaims)
             {
-                if(this.m_claimTypeMapping.TryGetValue(itm.Type, out var jwtType))
+                if (this.m_claimTypeMapping.TryGetValue(itm.Type, out var jwtType))
                 {
                     retVal.AddClaim(jwtType, itm.Value);
                 }

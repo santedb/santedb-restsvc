@@ -22,13 +22,11 @@ using SanteDB.Core.Interop;
 using SanteDB.Core.Mail;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
-using SanteDB.Core.Security.Principal;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 
@@ -80,7 +78,7 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.ManageMail)] // Login only since the user can manage their own mailboxes
         public override object Create(object data, bool updateIfExists)
         {
-            if(!(data is Mailbox mailbox))
+            if (!(data is Mailbox mailbox))
             {
                 throw new ArgumentOutOfRangeException(nameof(data));
             }
@@ -104,7 +102,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public override object Get(object id, object versionId)
         {
-            if(id is String str)
+            if (id is String str)
             {
                 return this.m_mailMessageService.GetMailbox(str);
             }
@@ -121,9 +119,9 @@ namespace SanteDB.Rest.AMI.Resources
         {
 
             var query = QueryExpressionParser.BuildLinqExpression<Mailbox>(queryParameters);
-            if(queryParameters.TryGetValue("owner", out var values) && Guid.TryParse(values.Single(), out var ownerKey))
+            if (queryParameters.TryGetValue("owner", out var values) && Guid.TryParse(values.Single(), out var ownerKey))
             {
-                return this.m_mailMessageService.GetMailboxes(ownerKey).Where(query); 
+                return this.m_mailMessageService.GetMailboxes(ownerKey).Where(query);
             }
             else
             {

@@ -29,7 +29,6 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics.Tracing;
 using System.Linq;
-using System.Reflection;
 
 namespace SanteDB.Rest.AppService
 {

@@ -19,7 +19,6 @@
  * Date: 2023-3-10
  */
 using Newtonsoft.Json;
-using System;
 
 namespace SanteDB.Rest.OAuth.Model
 {

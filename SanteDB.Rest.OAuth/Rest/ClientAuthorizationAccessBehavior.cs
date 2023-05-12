@@ -27,7 +27,6 @@ using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
-using SanteDB.Rest.Common;
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;

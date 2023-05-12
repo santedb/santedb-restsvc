@@ -22,10 +22,12 @@ using RestSrvr;
 using RestSrvr.Message;
 using SanteDB.Core;
 using SanteDB.Core.Applets;
+using SanteDB.Core.Applets.Configuration;
 using SanteDB.Core.Applets.Services;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Security.Audit;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
@@ -33,8 +35,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using SanteDB.Core.Applets.Configuration;
-using SanteDB.Core.Security.Services;
 
 namespace SanteDB.Rest.WWW.Behaviors
 {

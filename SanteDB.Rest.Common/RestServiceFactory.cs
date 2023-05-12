@@ -28,7 +28,6 @@ using SanteDB.Rest.Common.Behavior;
 using SanteDB.Rest.Common.Security;
 using System;
 using System.Linq;
-using System.Net;
 
 namespace SanteDB.Rest.Common
 {
@@ -90,7 +89,7 @@ namespace SanteDB.Rest.Common
             {
                 retVal |= ServiceEndpointCapabilities.BearerAuth;
             }
-            if(me.ServiceBehaviors.OfType<ClientCertificateAccessBehavior>().Any())
+            if (me.ServiceBehaviors.OfType<ClientCertificateAccessBehavior>().Any())
             {
                 retVal |= ServiceEndpointCapabilities.CertificateAuth;
             }

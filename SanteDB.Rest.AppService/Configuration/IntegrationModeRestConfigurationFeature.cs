@@ -26,7 +26,6 @@ using SanteDB.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.AppService.Configuration
 {
@@ -88,15 +87,16 @@ namespace SanteDB.Rest.AppService.Configuration
         public bool Configure(SanteDBConfiguration configuration, IDictionary<string, object> featureConfiguration)
         {
             var appSetting = configuration.GetSection<ApplicationServiceContextConfigurationSection>();
-            if(featureConfiguration.TryGetValue(MODE_SETTING, out var modeRaw))
+            if (featureConfiguration.TryGetValue(MODE_SETTING, out var modeRaw))
             {
                 // Remove old services
                 var oldMode = this.m_integrationPatterns.FirstOrDefault(o => o.Name == (this.Configuration[MODE_SETTING]?.ToString() ?? OnlineIntegrationPattern.INTEGRATION_PATTERN_NAME))?.GetServices();
-                if (oldMode != null) {
+                if (oldMode != null)
+                {
                     appSetting.ServiceProviders.RemoveAll(s => oldMode.Contains(s.Type));
                 }
                 var newMode = this.m_integrationPatterns.First(o => o.Name == modeRaw.ToString())?.GetServices();
-                if(newMode == null)
+                if (newMode == null)
                 {
                     throw new InvalidOperationException(String.Format(ErrorMessages.TYPE_NOT_FOUND, modeRaw));
                 }

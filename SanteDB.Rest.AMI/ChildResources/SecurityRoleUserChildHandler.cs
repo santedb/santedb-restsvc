@@ -101,7 +101,7 @@ namespace SanteDB.Rest.AMI.ChildResources
             this.m_roleRepository = roleRepository;
             this.m_securityRepository = securityRepository;
             this.m_roleProvider = roleProvider;
-            _AuditService = auditService;   
+            _AuditService = auditService;
         }
 
         /// <summary>
@@ -122,10 +122,10 @@ namespace SanteDB.Rest.AMI.ChildResources
 
                 var userNames = new List<string>();
                 // Get user entity
-                switch(item )
+                switch (item)
                 {
                     case SecurityUser su:
-                    userNames.Add(su.UserName);
+                        userNames.Add(su.UserName);
                         break;
                     case SecurityUserInfo sui:
                         userNames.Add(sui.Entity.UserName);

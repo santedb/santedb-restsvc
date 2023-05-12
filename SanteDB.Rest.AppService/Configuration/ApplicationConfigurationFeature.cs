@@ -27,7 +27,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.AppService.Configuration
 {
@@ -57,7 +56,7 @@ namespace SanteDB.Rest.AppService.Configuration
         public ApplicationConfigurationFeature(IConfigurationManager configurationManager)
         {
             this.m_configurationSection = configurationManager.GetSection<ApplicationServiceContextConfigurationSection>();
-            
+
         }
 
         /// <inheritdoc/>
@@ -89,7 +88,7 @@ namespace SanteDB.Rest.AppService.Configuration
         public bool Configure(SanteDBConfiguration configuration, IDictionary<string, object> featureConfiguration)
         {
             var section = configuration.GetSection<ApplicationServiceContextConfigurationSection>();
-            if(section == null)
+            if (section == null)
             {
                 section = new ApplicationServiceContextConfigurationSection()
                 {

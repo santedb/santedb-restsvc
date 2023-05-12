@@ -18,14 +18,13 @@
  * User: fyfej
  * Date: 2023-3-10
  */
-using System.Linq;
 using RestSrvr;
 using SanteDB.Client.Tickles;
 using SanteDB.Core.Security;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Net;
 
 namespace SanteDB.Rest.AppService

@@ -19,9 +19,6 @@
  * Date: 2023-3-10
  */
 using SanteDB.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SanteDB.Rest.Common
 {

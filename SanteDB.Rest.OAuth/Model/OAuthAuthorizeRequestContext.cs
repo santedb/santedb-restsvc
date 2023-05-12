@@ -43,7 +43,7 @@ namespace SanteDB.Rest.OAuth.Model
 
         public override string Nonce
         {
-            get => base.Nonce ?? GetValue(OAuthConstants.AuthorizeParameter_Nonce); 
+            get => base.Nonce ?? GetValue(OAuthConstants.AuthorizeParameter_Nonce);
             set => base.Nonce = value;
         }
 

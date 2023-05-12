@@ -19,7 +19,6 @@
  * Date: 2023-3-10
  */
 using SanteDB.Core.Model.Security;
-using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.AMI.Resources

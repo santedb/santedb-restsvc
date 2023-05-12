@@ -30,7 +30,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Tracing;
 using System.Linq;
-using System.Reflection;
 
 namespace SanteDB.Rest.OAuth
 {
@@ -162,7 +161,7 @@ namespace SanteDB.Rest.OAuth
                     m_serviceHost.AddServiceBehavior(new ClientAuthorizationAccessBehavior());
                 }
                 // Handles when the user calls with a bearer token
-                if(!m_serviceHost.ServiceBehaviors.OfType<TokenAuthorizationAccessBehavior>().Any())
+                if (!m_serviceHost.ServiceBehaviors.OfType<TokenAuthorizationAccessBehavior>().Any())
                 {
                     m_serviceHost.AddServiceBehavior(new TokenAuthorizationAccessBehavior());
                 }

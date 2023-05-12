@@ -28,7 +28,6 @@ using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
-using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
@@ -88,8 +87,9 @@ namespace SanteDB.Rest.HDSI.Resources
         public override object Get(object id, object versionId)
         {
             var retVal = base.Get(id, versionId);
-            if (retVal is TData td) {
-                if (this.m_resourceCheckoutService.IsCheckedout<TData>(td.Key.Value, out var owner) && 
+            if (retVal is TData td)
+            {
+                if (this.m_resourceCheckoutService.IsCheckedout<TData>(td.Key.Value, out var owner) &&
                     retVal is ITaggable taggable)
                 {
                     taggable.AddTag(SystemTagNames.CheckoutStatusTag, owner.Name);

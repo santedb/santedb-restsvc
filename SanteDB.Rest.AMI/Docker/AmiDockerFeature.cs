@@ -18,7 +18,6 @@
  * User: fyfej
  * Date: 2023-3-10
  */
-using SanteDB.Core;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Exceptions;
 using SanteDB.Docker.Core;
@@ -182,7 +181,7 @@ namespace SanteDB.Rest.AMI.Docker
             }
 
             var amiConfiguration = configuration.GetSection<AmiConfigurationSection>();
-            if(amiConfiguration == null)
+            if (amiConfiguration == null)
             {
                 amiConfiguration = new AmiConfigurationSection()
                 {
@@ -191,7 +190,7 @@ namespace SanteDB.Rest.AMI.Docker
                     {
                         new AppSettingKeyValuePair("welcome", "Welcome to SanteDB in Docker!"),
                         new AppSettingKeyValuePair("forbidhs256", "false"),
-                        new AppSettingKeyValuePair("dn", $"OID.2.5.6.11=SanteDB.Docker.Server") 
+                        new AppSettingKeyValuePair("dn", $"OID.2.5.6.11=SanteDB.Docker.Server")
                     }
                 };
                 configuration.AddSection(amiConfiguration);

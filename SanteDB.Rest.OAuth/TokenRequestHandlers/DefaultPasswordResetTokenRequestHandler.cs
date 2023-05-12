@@ -28,7 +28,6 @@ using SanteDB.Rest.OAuth.Model;
 using System;
 using System.Collections.Generic;
 using System.Security.Authentication;
-using System.Text;
 
 namespace SanteDB.Rest.OAuth.TokenRequestHandlers
 {
@@ -52,7 +51,7 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
             _Tracer = new Tracer(nameof(DefaultPasswordResetTokenRequestHandler));
             _PolicyService = policyService;
             _SecurityChallengeService = securityChallengeService;
-            _ApplicationIdentityProviderService = applicationIdentityProviderService;   
+            _ApplicationIdentityProviderService = applicationIdentityProviderService;
         }
 
         /// <inheritdoc />

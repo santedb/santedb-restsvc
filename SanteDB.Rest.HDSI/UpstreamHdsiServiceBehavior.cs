@@ -22,7 +22,6 @@ using RestSrvr;
 using RestSrvr.Attributes;
 using RestSrvr.Exceptions;
 using SanteDB.Core;
-using SanteDB.Core.Data;
 using SanteDB.Core.Http;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
@@ -36,7 +35,6 @@ using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Model.Roles;
 using SanteDB.Core.Security;
-using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
@@ -890,7 +888,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         var restClient = this.CreateProxyClient();
                         restClient.Responded += this.CopyResponseHeaders;
                         var retVal = restClient.Post<object, object>($"{resourceType}/${operationName}", body);
-                        if(retVal is byte[] ba)
+                        if (retVal is byte[] ba)
                         {
                             retVal = new MemoryStream(ba);
                         }

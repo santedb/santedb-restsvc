@@ -27,8 +27,6 @@ using SanteDB.Core.Services;
 using SanteDB.Rest.AppService.Configuration;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SanteDB.Rest.AppService
 {
@@ -50,11 +48,11 @@ namespace SanteDB.Rest.AppService
             public ParameterRealmSettings(ParameterCollection parameter, String defaultClientSecret)
             {
                 var uriBuilder = new UriBuilder();
-                if(parameter.TryGet(RealmConfigurationFeature.REALM_NAME, out string host))
+                if (parameter.TryGet(RealmConfigurationFeature.REALM_NAME, out string host))
                 {
                     uriBuilder.Host = host;
                 }
-                if(parameter.TryGet(RealmConfigurationFeature.USE_TLS, out bool useTls))
+                if (parameter.TryGet(RealmConfigurationFeature.USE_TLS, out bool useTls))
                 {
                     uriBuilder.Scheme = useTls ? "https" : "http";
                 }
@@ -62,13 +60,13 @@ namespace SanteDB.Rest.AppService
                 {
                     uriBuilder.Scheme = "http";
                 }
-                if(parameter.TryGet(RealmConfigurationFeature.PORT_NUMBER, out int port))
+                if (parameter.TryGet(RealmConfigurationFeature.PORT_NUMBER, out int port))
                 {
                     uriBuilder.Port = port;
                 }
                 this.Realm = uriBuilder.Uri;
 
-                if(parameter.TryGet(RealmConfigurationFeature.DEVICE_NAME, out string deviceName))
+                if (parameter.TryGet(RealmConfigurationFeature.DEVICE_NAME, out string deviceName))
                 {
                     this.LocalDeviceName = deviceName;
                 }
@@ -77,7 +75,7 @@ namespace SanteDB.Rest.AppService
                     throw new ArgumentNullException(RealmConfigurationFeature.DEVICE_NAME);
                 }
 
-                if(parameter.TryGet(RealmConfigurationFeature.CLIENT_NAME, out string clientName))
+                if (parameter.TryGet(RealmConfigurationFeature.CLIENT_NAME, out string clientName))
                 {
                     this.LocalClientName = clientName;
                 }
@@ -86,7 +84,7 @@ namespace SanteDB.Rest.AppService
                     throw new ArgumentNullException(RealmConfigurationFeature.CLIENT_NAME);
                 }
 
-                if(parameter.TryGet(RealmConfigurationFeature.CLIENT_SECRET, out string clientSecret))
+                if (parameter.TryGet(RealmConfigurationFeature.CLIENT_SECRET, out string clientSecret))
                 {
                     this.LocalClientSecret = clientSecret;
                 }
@@ -113,7 +111,7 @@ namespace SanteDB.Rest.AppService
         {
             try
             {
-                if(this.m_upstreamManagementService.IsConfigured())
+                if (this.m_upstreamManagementService.IsConfigured())
                 {
                     this.m_policyEnforcementService.Demand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
                 }
@@ -127,9 +125,9 @@ namespace SanteDB.Rest.AppService
                 parameters.Set("welcome", welcomeMessage);
                 return parameters;
             }
-            catch(UpstreamIntegrationException e)
+            catch (UpstreamIntegrationException e)
             {
-                this.m_tracer.TraceError("{0}: {1}", e.Message,  e.InnerException?.Message);
+                this.m_tracer.TraceError("{0}: {1}", e.Message, e.InnerException?.Message);
                 throw;
             }
             catch (Exception e)

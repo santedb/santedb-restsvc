@@ -24,10 +24,8 @@ using SanteDB.Core.Security;
 using SanteDB.Rest.AMI.Configuration;
 using SanteDB.Rest.BIS.Configuration;
 using SanteDB.Rest.HDSI.Configuration;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.AppService.Configuration
 {
@@ -71,17 +69,17 @@ namespace SanteDB.Rest.AppService.Configuration
                 var amiSection = configuration.GetSection<AmiConfigurationSection>();
                 var hdsiSection = configuration.GetSection<HdsiConfigurationSection>();
                 var bisSection = configuration.GetSection<BisServiceConfigurationSection>();
-                if(amiSection == null)
+                if (amiSection == null)
                 {
                     amiSection = new AmiConfigurationSection();
                     configuration.AddSection(amiSection);
                 }
-                if(hdsiSection == null)
+                if (hdsiSection == null)
                 {
                     hdsiSection = new HdsiConfigurationSection();
                     configuration.AddSection(hdsiSection);
                 }
-                if(bisSection == null)
+                if (bisSection == null)
                 {
                     bisSection = new BisServiceConfigurationSection();
                     configuration.AddSection(bisSection);

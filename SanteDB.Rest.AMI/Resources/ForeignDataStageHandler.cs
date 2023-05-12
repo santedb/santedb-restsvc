@@ -24,7 +24,6 @@ using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Alien;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
-using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
@@ -33,7 +32,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -69,13 +67,13 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.ManageForeignData)]
         public override object Create(object data, bool updateIfExists)
         {
-            if(data is IEnumerable<MultiPartFormData> multiPartData)
+            if (data is IEnumerable<MultiPartFormData> multiPartData)
             {
                 var description = multiPartData.FirstOrDefault(o => o.Name == "description");
                 var map = multiPartData.FirstOrDefault(o => o.Name == "map");
                 var source = multiPartData.FirstOrDefault(o => o.Name == "source");
 
-                if(map != null && source != null && source.IsFile)
+                if (map != null && source != null && source.IsFile)
                 {
                     return new ForeignDataInfo(this.m_foreignDataService.Stage(new MemoryStream(source.Data), source.FileName, description.ToString(), Guid.Parse(map.ToString())));
                 }
@@ -94,7 +92,7 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.ManageForeignData)]
         public override object Delete(object key)
         {
-            if(key is Guid guidKey)
+            if (key is Guid guidKey)
             {
                 return new ForeignDataInfo(this.m_foreignDataService.Delete(guidKey));
             }
@@ -108,7 +106,7 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.ManageForeignData)]
         public override object Get(object id, object versionId)
         {
-            if(id is Guid guidId)
+            if (id is Guid guidId)
             {
                 return new ForeignDataInfo(this.m_foreignDataService.Get(guidId));
             }
@@ -123,7 +121,7 @@ namespace SanteDB.Rest.AMI.Resources
         public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             var query = QueryExpressionParser.BuildLinqExpression<IForeignDataSubmission>(queryParameters);
-            return new TransformQueryResultSet<IForeignDataSubmission, ForeignDataInfo>(this.m_foreignDataService.Find(query), (a)=> new ForeignDataInfo(a));
+            return new TransformQueryResultSet<IForeignDataSubmission, ForeignDataInfo>(this.m_foreignDataService.Find(query), (a) => new ForeignDataInfo(a));
         }
 
         /// <inheritdoc/>

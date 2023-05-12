@@ -31,7 +31,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.AppService
 {
@@ -177,7 +176,7 @@ namespace SanteDB.Rest.AppService
         /// <inheritdoc/>
         public List<AppletWidget> GetWidgets()
         {
-            
+
             var httpq = RestOperationContext.Current.IncomingRequest.Url.Query.ParseQueryString();
             var queryExpression = QueryExpressionParser.BuildLinqExpression<AppletWidget>(httpq).Compile();
             return this.m_appletManagerService.Applets.WidgetAssets
@@ -229,7 +228,7 @@ namespace SanteDB.Rest.AppService
 
             // Restricts the menu context based on policy and whether the menu points to an asset that does not exist
             //if (appletMenu.Context != context || null != appletMenu.Asset && 
-            if (asset?.Policies?.Any() == true && asset?.Policies?.All(p => this.m_policyEnforcementService.SoftDemand(p, principal)) != true) 
+            if (asset?.Policies?.Any() == true && asset?.Policies?.All(p => this.m_policyEnforcementService.SoftDemand(p, principal)) != true)
             {
                 return null;
             }

@@ -25,9 +25,7 @@ using SanteDB.Core.Model.Query;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Text;
 
 namespace SanteDB.Rest.AMI.ChildResources
 {
@@ -78,7 +76,7 @@ namespace SanteDB.Rest.AMI.ChildResources
         /// </summary>
         public object Add(Type scopingType, object scopingKey, object item)
         {
-            if(!(item is MailMessage message))
+            if (!(item is MailMessage message))
             {
                 throw new ArgumentOutOfRangeException(nameof(item));
             }
@@ -94,11 +92,11 @@ namespace SanteDB.Rest.AMI.ChildResources
         /// </summary>
         public object Get(Type scopingType, object scopingKey, object key)
         {
-            if(!(key is Guid messageKey))
+            if (!(key is Guid messageKey))
             {
                 throw new ArgumentOutOfRangeException(nameof(key));
             }
-            return this.m_mailMessageService.GetMessages(scopingKey.ToString()).Where(o => o.TargetKey == messageKey).FirstOrDefault()?.LoadProperty(o=>o.Target);
+            return this.m_mailMessageService.GetMessages(scopingKey.ToString()).Where(o => o.TargetKey == messageKey).FirstOrDefault()?.LoadProperty(o => o.Target);
         }
 
         /// <summary>
@@ -106,7 +104,7 @@ namespace SanteDB.Rest.AMI.ChildResources
         /// </summary>
         public IQueryResultSet Query(Type scopingType, object scopingKey, NameValueCollection filter)
         {
-           
+
             var linqExpression = QueryExpressionParser.BuildLinqExpression<MailboxMailMessage>(filter);
             return this.m_mailMessageService.GetMessages(scopingKey.ToString()).Where(linqExpression);
         }
@@ -116,8 +114,8 @@ namespace SanteDB.Rest.AMI.ChildResources
         /// </summary>
         public object Remove(Type scopingType, object scopingKey, object key)
         {
-            
-            if(!(key is Guid keyGuid))
+
+            if (!(key is Guid keyGuid))
             {
                 throw new ArgumentOutOfRangeException(nameof(key));
             }

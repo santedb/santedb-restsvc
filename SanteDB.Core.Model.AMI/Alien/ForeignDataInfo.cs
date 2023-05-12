@@ -21,12 +21,10 @@
 using Newtonsoft.Json;
 using SanteDB.Core.BusinessRules;
 using SanteDB.Core.Data.Import;
-using SanteDB.Core.Model.AMI.Security;
 using SanteDB.Core.Model.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Alien
@@ -67,7 +65,7 @@ namespace SanteDB.Core.Model.AMI.Alien
             this.Issues = submission.Issues.ToList();
         }
 
-      
+
         /// <summary>
         /// Gets or sets the name of the foreign data
         /// </summary>
@@ -95,7 +93,7 @@ namespace SanteDB.Core.Model.AMI.Alien
         /// <summary>
         /// Gets or sets the issues for the mapping
         /// </summary>
-        [XmlElement("issue"), JsonProperty("issue") ]
+        [XmlElement("issue"), JsonProperty("issue")]
         public List<DetectedIssue> Issues { get; set; }
 
         /// <summary>

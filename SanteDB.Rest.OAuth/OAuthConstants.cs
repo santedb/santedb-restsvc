@@ -19,7 +19,6 @@
  * Date: 2023-3-10
  */
 using SanteDB.Core.Security;
-using System.Data;
 
 namespace SanteDB.Rest.OAuth
 {

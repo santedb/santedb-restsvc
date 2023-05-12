@@ -31,7 +31,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
-using System.Text;
 #pragma warning disable CS0612
 
 namespace SanteDB.Rest.AMI.ChildResources
@@ -77,10 +76,10 @@ namespace SanteDB.Rest.AMI.ChildResources
         /// <inheritdoc/>
         public object Get(Type scopingType, object scopingKey, object key)
         {
-            if(scopingKey is Guid uuid)
+            if (scopingKey is Guid uuid)
             {
                 var foreignData = this.m_foreignDataManager.Get(uuid);
-                if(foreignData == null)
+                if (foreignData == null)
                 {
                     throw new KeyNotFoundException(uuid.ToString());
                 }

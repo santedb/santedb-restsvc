@@ -25,7 +25,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 
 namespace SanteDB.Rest.OAuth.Token
 {
@@ -56,7 +55,7 @@ namespace SanteDB.Rest.OAuth.Token
         /// <inheritdoc/>
         public string MapToExternalClaimType(string internalClaimType)
         {
-            if(String.IsNullOrEmpty(internalClaimType))
+            if (String.IsNullOrEmpty(internalClaimType))
             {
                 throw new ArgumentNullException(nameof(internalClaimType));
             }
@@ -92,10 +91,10 @@ namespace SanteDB.Rest.OAuth.Token
         /// <inheritdoc/>
         public IEnumerable<IClaim> MapToInternalIdentityClaims(IDictionary<string, object> externalClaims)
         {
-            foreach(var claim in externalClaims)
+            foreach (var claim in externalClaims)
             {
                 var internalClaim = this.m_claimTypeMapping.FirstOrDefault(o => o.Value == claim.Key);
-                if(internalClaim.Key == null)
+                if (internalClaim.Key == null)
                 {
                     continue;
                 }

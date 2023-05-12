@@ -24,8 +24,6 @@ using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SanteDB.Rest.AMI.Operation
 {
@@ -85,7 +83,7 @@ namespace SanteDB.Rest.AMI.Operation
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
             var mail = new MailMessage();
-            if(parameters.TryGet(TO_PARAMETER_NAME, out string to))
+            if (parameters.TryGet(TO_PARAMETER_NAME, out string to))
             {
                 mail.To = to;
             }
@@ -94,7 +92,7 @@ namespace SanteDB.Rest.AMI.Operation
                 throw new ArgumentNullException(TO_PARAMETER_NAME);
             }
 
-            if(parameters.TryGet(SUBJECT_PARAMETER_NAME, out string subject))
+            if (parameters.TryGet(SUBJECT_PARAMETER_NAME, out string subject))
             {
                 mail.Subject = subject;
             }
@@ -103,7 +101,7 @@ namespace SanteDB.Rest.AMI.Operation
                 throw new ArgumentNullException(SUBJECT_PARAMETER_NAME);
             }
 
-            if(parameters.TryGet(BODY_PARAMETER_NAME, out string body))
+            if (parameters.TryGet(BODY_PARAMETER_NAME, out string body))
             {
                 mail.Body = body;
             }
@@ -112,7 +110,7 @@ namespace SanteDB.Rest.AMI.Operation
                 throw new ArgumentNullException(BODY_PARAMETER_NAME);
             }
 
-            if(parameters.TryGet(FLAG_PARAMETER_NAME, out MailMessageFlags flags))
+            if (parameters.TryGet(FLAG_PARAMETER_NAME, out MailMessageFlags flags))
             {
                 mail.Flags = flags;
             }

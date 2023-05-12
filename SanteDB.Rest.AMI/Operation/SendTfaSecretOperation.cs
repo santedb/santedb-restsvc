@@ -25,9 +25,6 @@ using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Rest.Common;
 using System;
-using System.Collections.Generic;
-using System.Security.Principal;
-using System.Text;
 
 namespace SanteDB.Rest.AMI.Operation
 {
@@ -68,7 +65,7 @@ namespace SanteDB.Rest.AMI.Operation
         /// </summary>
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
-            if(parameters.TryGet<Guid>("mechanism", out var mechainsmId))
+            if (parameters.TryGet<Guid>("mechanism", out var mechainsmId))
             {
                 if (parameters.TryGet<String>("userName", out var user))
                 {

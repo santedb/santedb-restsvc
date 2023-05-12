@@ -20,7 +20,6 @@
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Collection;
-using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.HDSI.Resources

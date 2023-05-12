@@ -86,7 +86,7 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                 }
 
                 // The principal is already a token based principal - so we may have gotten it from an upstream - we just have to relay this token back to the caller 
-                if(context.UserPrincipal is ITokenPrincipal itp)
+                if (context.UserPrincipal is ITokenPrincipal itp)
                 {
                     context.IdToken = itp.IdentityToken;
                     context.AccessToken = itp.AccessToken;
@@ -113,7 +113,7 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                             context.ApplicationPrincipal = app as IClaimsPrincipal;
                         }
                     }
-                } 
+                }
 
                 _PolicyEnforcementService?.Demand(OAuthConstants.OAuthPasswordFlowPolicy, context.ApplicationPrincipal);
 
@@ -126,7 +126,7 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                     _PolicyEnforcementService?.Demand(OAuthConstants.OAuthPasswordFlowPolicyWithoutDevice, context.ApplicationPrincipal);
                 }
             }
-            catch(TfaRequiredAuthenticationException tfareqex)
+            catch (TfaRequiredAuthenticationException tfareqex)
             {
                 _Tracer.TraceVerbose("Authentication failed due to Tfa configured on account.");
                 context.ErrorMessage = tfareqex.Message;

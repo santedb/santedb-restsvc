@@ -18,7 +18,6 @@
  * User: fyfej
  * Date: 2023-3-10
  */
-using SanteDB.Core.Model.Interfaces;
 using System;
 
 namespace SanteDB.Core.Model.AMI

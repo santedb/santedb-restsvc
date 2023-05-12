@@ -20,14 +20,12 @@
  */
 using SanteDB.Client.Configuration;
 using SanteDB.Client.Configuration.Upstream;
-using SanteDB.Client.Upstream;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SanteDB.Rest.AppService.Configuration
 {

@@ -184,7 +184,7 @@ namespace SanteDB.Rest.WWW.Docker
             {
                 appletConfiguration.DefaultApplet = defaultApp;
             }
-          
+
         }
     }
 }

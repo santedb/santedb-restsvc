@@ -31,7 +31,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -150,7 +149,7 @@ namespace SanteDB.Rest.AMI.Resources
                     sessionId = Convert.FromBase64String(str);
                 }
             }
-            
+
             var session = this.m_sessionProvider.Get(sessionId, false);
             if (session == null)
             {

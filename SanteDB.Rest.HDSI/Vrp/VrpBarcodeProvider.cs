@@ -21,13 +21,11 @@
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Services;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 using ZXing;
-using ZXing.QrCode;
 
 namespace SanteDB.Rest.HDSI.Vrp
 {

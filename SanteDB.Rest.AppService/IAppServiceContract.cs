@@ -19,22 +19,17 @@
  * Date: 2023-3-10
  */
 using RestSrvr.Attributes;
-using SanteDB.Core.Interop;
+using SanteDB.Client.Tickles;
+using SanteDB.Core.Applets.Model;
+using SanteDB.Core.Configuration;
+using SanteDB.Core.Model;
+using SanteDB.Core.Model.AMI.Diagnostics;
+using SanteDB.Core.Model.Parameters;
+using SanteDB.Rest.AppService.Model;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using SanteDB.Core.Model.Parameters;
-using SanteDB.Rest.AppService.Model;
-using SanteDB.Client.Tickles;
-using SanteDB.Core.Applets.Model;
-using SanteDB.Core.Model;
-using SanteDB.Core.Model.Patch;
-using SanteDB.Core.Configuration;
-using Newtonsoft.Json.Linq;
-using SanteDB.Core.Model.AMI.Diagnostics;
-using SanteDB.Core.Security.Configuration;
-using SanteDB.Core.Model.AMI.Security;
 
 namespace SanteDB.Rest.AppService
 {
@@ -234,6 +229,6 @@ namespace SanteDB.Rest.AppService
         Dictionary<String, Object> GetCurrentSessionInfo();
 
         #endregion
-        
+
     }
 }

@@ -1,7 +1,6 @@
 ﻿using SanteDB.Core.Diagnostics;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
-using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.AMI.Security;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Security;
@@ -11,11 +10,9 @@ using SanteDB.Rest.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
-using System.Text;
 
 namespace SanteDB.Rest.AMI.ChildResources
 {
@@ -71,11 +68,11 @@ namespace SanteDB.Rest.AMI.ChildResources
         public object Add(Type scopingType, object scopingKey, object item)
         {
             // Add a security object
-            if(scopingKey is Guid sid && item is X509Certificate2Info certInfo)
+            if (scopingKey is Guid sid && item is X509Certificate2Info certInfo)
             {
 
                 IIdentity identityToMap = null;
-                switch(scopingType.Name)
+                switch (scopingType.Name)
                 {
                     case nameof(SecurityUser):
                         identityToMap = this.m_identityProvider.GetIdentity(sid);
@@ -87,7 +84,7 @@ namespace SanteDB.Rest.AMI.ChildResources
                         identityToMap = this.m_deviceIdentityProvider.GetIdentity(sid);
                         break;
                 }
-                if(identityToMap == null)
+                if (identityToMap == null)
                 {
                     throw new KeyNotFoundException(sid.ToString());
                 }
@@ -147,7 +144,7 @@ namespace SanteDB.Rest.AMI.ChildResources
                 }
 
                 // Find the certificate
-                return new MemoryQueryResultSet<X509Certificate2Info>(this.m_certificateIdentityProvider.GetIdentityCertificates(identityToMap).Select(o=>new X509Certificate2Info(o)));
+                return new MemoryQueryResultSet<X509Certificate2Info>(this.m_certificateIdentityProvider.GetIdentityCertificates(identityToMap).Select(o => new X509Certificate2Info(o)));
             }
             else
             {

@@ -27,10 +27,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace SanteDB.Rest.OAuth.Test
 {
@@ -128,7 +124,7 @@ namespace SanteDB.Rest.OAuth.Test
 
             Assert.AreEqual(2, result.Count());
 
-            foreach(var claim in result)
+            foreach (var claim in result)
             {
                 Assert.NotNull(claim);
                 Assert.AreEqual(SanteDBClaimTypes.Name, claim.Type, "The claim type does not match the expected claim type. Claim {0}", claim);

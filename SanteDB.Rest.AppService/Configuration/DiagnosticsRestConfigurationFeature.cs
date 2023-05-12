@@ -32,7 +32,6 @@ using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.AppService.Configuration
 {
@@ -93,7 +92,7 @@ namespace SanteDB.Rest.AppService.Configuration
         public bool Configure(SanteDBConfiguration configuration, IDictionary<string, object> featureConfiguration)
         {
             var section = configuration.GetSection<DiagnosticsConfigurationSection>();
-            if(section == null)
+            if (section == null)
             {
                 section = new DiagnosticsConfigurationSection()
                 {
@@ -116,7 +115,7 @@ namespace SanteDB.Rest.AppService.Configuration
 
             if (featureConfiguration[LOG_WRITER_SETTING] is IEnumerable enu)
             {
-                foreach(JObject itm in enu)
+                foreach (JObject itm in enu)
                 {
                     var logWriter = itm["aqn"];
 
@@ -131,7 +130,7 @@ namespace SanteDB.Rest.AppService.Configuration
                         }
                         continue;
                     }
-                    else if(existingConfig == null)
+                    else if (existingConfig == null)
                     {
                         existingConfig = new TraceWriterConfiguration()
                         {

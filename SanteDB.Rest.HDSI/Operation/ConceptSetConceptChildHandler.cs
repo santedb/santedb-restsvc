@@ -1,16 +1,11 @@
 ﻿using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
-using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.DataTypes;
-using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.HDSI.Operation
 {
@@ -66,7 +61,8 @@ namespace SanteDB.Rest.HDSI.Operation
                 var query = QueryExpressionParser.BuildLinqExpression<Concept>(filter);
                 return retVal.Where(query);
             }
-            else {
+            else
+            {
                 throw new ArgumentOutOfRangeException(String.Format(ErrorMessages.ARGUMENT_INCOMPATIBLE_TYPE, typeof(Guid), scopingKey.GetType()));
             }
         }

@@ -23,7 +23,6 @@ using SanteDB.Core.Configuration;
 using SanteDB.Core.Configuration.Data;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SanteDB.Rest.AppService.Model
 {

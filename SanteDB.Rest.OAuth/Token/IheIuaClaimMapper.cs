@@ -25,7 +25,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.OAuth.Token
 {
@@ -103,7 +102,7 @@ namespace SanteDB.Rest.OAuth.Token
 
         /// <inheritdoc/>
         public IEnumerable<IClaim> MapToInternalIdentityClaims(IDictionary<string, object> externalClaims)
-        { 
+        {
             if (externalClaims.TryGetValue("extensions", out var extValue) && extValue is ICustomTypeDescriptor extensionClaims)
             {
                 var iheProperty = extensionClaims.GetProperties().Find("ihe_iua", true);
@@ -161,10 +160,10 @@ namespace SanteDB.Rest.OAuth.Token
                     throw new ArgumentOutOfRangeException(String.Format(ErrorMessages.ARGUMENT_OUT_OF_RANGE, value, new { system = "x", code = "y" }));
                 }
             }
-            else 
+            else
             {
-                return value.ToString().Replace("urn:uuid:","").Replace("urn:oid:" ,"");
-                
+                return value.ToString().Replace("urn:uuid:", "").Replace("urn:oid:", "");
+
             }
         }
     }

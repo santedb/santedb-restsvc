@@ -21,10 +21,8 @@
 using Microsoft.IdentityModel.Tokens;
 using RestSrvr;
 using SanteDB.Core.Security;
-using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Text;
 
 namespace SanteDB.Rest.OAuth.Model
 {

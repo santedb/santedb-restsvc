@@ -18,28 +18,26 @@
  * User: fyfej
  * Date: 2023-3-10
  */
-using DynamicExpresso;
 using RestSrvr;
 using RestSrvr.Attributes;
 using RestSrvr.Exceptions;
 using SanteDB.Core;
-using SanteDB.Core.Data.Initialization;
 using SanteDB.Core.Data;
+using SanteDB.Core.Data.Initialization;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
-using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Model.Collection;
+using SanteDB.Core.Model.Constants;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Model.Query;
-using SanteDB.Core.Model.Roles;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Security.Services;
@@ -50,18 +48,14 @@ using SanteDB.Rest.HDSI.Configuration;
 using SanteDB.Rest.HDSI.Vrp;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using System.Xml;
-using SharpCompress;
-using System.Runtime.InteropServices;
-using SanteDB.Core.Model.Constants;
 
 namespace SanteDB.Rest.HDSI
 {
@@ -865,9 +859,11 @@ namespace SanteDB.Rest.HDSI
         private PropertyInfo ResolvePropertyInfo(Type rootType, string includePath)
         {
             PropertyInfo retVal = null;
-            foreach (var propertyPart in includePath.Split('.')) {
+            foreach (var propertyPart in includePath.Split('.'))
+            {
                 retVal = rootType.GetQueryProperty(propertyPart, dropXmlSuffix: false);
-                if(retVal == null) {
+                if (retVal == null)
+                {
                     throw new MissingMemberException($"{rootType.Name}.{propertyPart}");
                 }
                 rootType = retVal.PropertyType.StripGeneric();

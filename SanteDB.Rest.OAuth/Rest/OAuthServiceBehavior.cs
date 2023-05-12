@@ -30,7 +30,6 @@ using SanteDB.Core.Applets.Services;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
-using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Security.Claims;
@@ -177,7 +176,7 @@ namespace SanteDB.Rest.OAuth.Rest
             }
 
             m_JwtHandler = new JsonWebTokenHandler();
-            
+
 
             if (m_configuration.TokenType != OAuthConstants.BearerTokenType)
             {
@@ -931,7 +930,7 @@ namespace SanteDB.Rest.OAuth.Rest
                     return new X509SigningCredentials(cert, signingAlgorithm);
                 case SignatureAlgorithm.HS256:
                     var key = GetSecurityKeyForHs256Configuration(configuration);
-                    return new SigningCredentials(key, SecurityAlgorithms.HmacSha256) ;
+                    return new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                 default:
                     throw new SecurityException("Invalid signing configuration");
             }
@@ -1729,7 +1728,7 @@ namespace SanteDB.Rest.OAuth.Rest
 
             if (context.IdTokenHint != null)
             {
-                
+
 
                 context.TokenValidationParameters = new TokenValidationParameters
                 {

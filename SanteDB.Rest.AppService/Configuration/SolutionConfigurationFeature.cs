@@ -24,7 +24,6 @@ using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SanteDB.Rest.AppService.Configuration
 {
@@ -83,7 +82,7 @@ namespace SanteDB.Rest.AppService.Configuration
         public bool Configure(SanteDBConfiguration configuration, IDictionary<string, object> featureConfiguration)
         {
             var section = configuration.GetSection<ClientConfigurationSection>();
-            if(section == null)
+            if (section == null)
             {
                 section = new ClientConfigurationSection();
                 configuration.AddSection(section);

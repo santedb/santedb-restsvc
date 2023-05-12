@@ -63,7 +63,7 @@ namespace SanteDB.Rest.Common
         /// <param name="scope">The scope in which the handler types operate</param>
         public ResourceHandlerTool(IEnumerable<Type> resourceHandlerTypes, Type scope)
         {
-            
+
             foreach (var t in resourceHandlerTypes.Where(t => !t.ContainsGenericParameters && !t.IsAbstract && !t.IsInterface))
             {
                 try

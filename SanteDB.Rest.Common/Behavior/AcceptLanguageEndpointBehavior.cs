@@ -67,7 +67,7 @@ namespace SanteDB.Rest.Common.Behavior
                     Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(language[0]);
                 }
 
-                if (!String.IsNullOrEmpty(request.Headers["X-SdbLanguage"]?.Replace("null",""))) // Language override
+                if (!String.IsNullOrEmpty(request.Headers["X-SdbLanguage"]?.Replace("null", ""))) // Language override
                 {
                     var language = request.Headers["X-SdbLanguage"].Split(',');
                     Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo(language[0]);

@@ -74,7 +74,7 @@ namespace SanteDB.Rest.OAuth
             {
                 result = rco.Result;
             }
-            else if(rootCause is RestClientException<OAuthError> rce)
+            else if (rootCause is RestClientException<OAuthError> rce)
             {
                 result = rce.Result;
             }
@@ -87,7 +87,7 @@ namespace SanteDB.Rest.OAuth
                 };
             }
 
-            JsonSerializer serializer = new JsonSerializer() {  NullValueHandling = NullValueHandling.Ignore };
+            JsonSerializer serializer = new JsonSerializer() { NullValueHandling = NullValueHandling.Ignore };
 
             response.ContentType = "application/json";
             using (var stw = new StringWriter())

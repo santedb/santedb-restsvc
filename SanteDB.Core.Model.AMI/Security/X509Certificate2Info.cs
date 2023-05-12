@@ -136,7 +136,7 @@ namespace SanteDB.Core.Model.AMI.Security
         [XmlElement("hasPrivateKey")]
         [JsonProperty("hasPrivateKey")]
         public bool HasPrivateKey { get; set; }
-        
+
         /// <summary>
         /// True if the certificate is valid
         /// </summary>

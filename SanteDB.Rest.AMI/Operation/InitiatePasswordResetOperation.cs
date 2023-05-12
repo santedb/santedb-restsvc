@@ -20,7 +20,6 @@
  */
 using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
-using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
@@ -29,9 +28,7 @@ using SanteDB.Core.Security.Tfa;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.AMI.Operation
 {
@@ -84,7 +81,7 @@ namespace SanteDB.Rest.AMI.Operation
                     if (this.m_tfaService.Mechanisms.Any() && (user.TwoFactorEnabled || !challengeQuestions.Any()))
                     {
                         var mechanism = user.TwoFactorMechnaismKey;
-                        if(mechanism == Guid.Empty)
+                        if (mechanism == Guid.Empty)
                         {
                             mechanism = TfaEmailMechanism.MechanismId;
                         }

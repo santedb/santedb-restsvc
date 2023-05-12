@@ -18,7 +18,6 @@
  * User: fyfej
  * Date: 2023-3-10
  */
-using Newtonsoft.Json.Serialization;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Audit;

@@ -19,7 +19,6 @@
  * Date: 2023-3-10
  */
 using RestSrvr;
-using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Queue;
@@ -30,8 +29,6 @@ using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 

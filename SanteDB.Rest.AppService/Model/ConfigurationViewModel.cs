@@ -20,20 +20,11 @@
  */
 using Newtonsoft.Json;
 using SanteDB.Client.Configuration;
-using SanteDB.Client.Configuration.Upstream;
 using SanteDB.Core;
-using SanteDB.Core.Applets.Configuration;
-using SanteDB.Core.Configuration;
-using SanteDB.Core.Configuration.Data;
-using SanteDB.Core.Configuration.Http;
-using SanteDB.Core.Security.Configuration;
 using SanteDB.Core.Services;
-using SanteDB.Rest.AppService.Configuration;
-using SanteDB.Rest.Common.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Serialization;
 
 namespace SanteDB.Rest.AppService.Model
@@ -41,7 +32,7 @@ namespace SanteDB.Rest.AppService.Model
     /// <summary>
     /// Configuration view model
     /// </summary>
-    [JsonObject(SerializationTypeName, MemberSerialization = MemberSerialization.OptIn, ItemTypeNameHandling = TypeNameHandling.None )]
+    [JsonObject(SerializationTypeName, MemberSerialization = MemberSerialization.OptIn, ItemTypeNameHandling = TypeNameHandling.None)]
     public class ConfigurationViewModel
     {
         private const string SerializationTypeName = "Configuration";
@@ -78,7 +69,7 @@ namespace SanteDB.Rest.AppService.Model
         public ConfigurationViewModel(IEnumerable<IClientConfigurationFeature> features)
         {
             this.IsConfigured = !(ApplicationServiceContext.Current.GetService<IConfigurationManager>() is InitialConfigurationManager);
-            this.Configuration = features.OrderBy(o=>o.Order).ToDictionary(f => f.Name, f => f.Configuration.ToDictionary(o=>o.Key, o=>o.Value));
+            this.Configuration = features.OrderBy(o => o.Order).ToDictionary(f => f.Name, f => f.Configuration.ToDictionary(o => o.Key, o => o.Value));
         }
 
         /// <summary>

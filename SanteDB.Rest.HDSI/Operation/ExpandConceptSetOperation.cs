@@ -5,8 +5,6 @@ using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SanteDB.Rest.HDSI.Operation
 {
@@ -39,11 +37,11 @@ namespace SanteDB.Rest.HDSI.Operation
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
 
-            if(scopingKey is Guid uuid)
+            if (scopingKey is Guid uuid)
             {
                 return new Bundle(this.m_conceptRepository.ExpandConceptSet(uuid));
             }
-            else if(parameters.TryGet("mnemonic", out String mnemonic))
+            else if (parameters.TryGet("mnemonic", out String mnemonic))
             {
                 return new Bundle(this.m_conceptRepository.ExpandConceptSet(mnemonic));
             }

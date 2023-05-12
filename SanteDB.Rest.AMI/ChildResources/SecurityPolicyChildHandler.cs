@@ -73,7 +73,7 @@ namespace SanteDB.Rest.AMI.ChildResources
             this.m_roleRepository = roleRepository;
             this.m_deviceRepository = deviceRepository;
             this.m_applicationRepository = applicationRepository;
-            m_auditService = auditService;  
+            m_auditService = auditService;
         }
 
         /// <summary>

@@ -24,7 +24,6 @@ using SanteDB.Core.Security.Claims;
 using SanteDB.Core.Security.Principal;
 using SanteDB.Core.Security.Services;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 

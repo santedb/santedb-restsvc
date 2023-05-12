@@ -67,7 +67,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// DI ctor
         /// </summary>
-        public DiagnosticReportResourceHandler(IAppletManagerService appletManager,  IServiceManager serviceManager,
+        public DiagnosticReportResourceHandler(IAppletManagerService appletManager, IServiceManager serviceManager,
             INetworkInformationService networkInformationService, IOperatingSystemInfoService operatingSystemInfoService, IDataPersistenceService<DiagnosticReport> persistenceService = null, IAppletSolutionManagerService solutionManager = null)
         {
             this.m_appletManager = appletManager;

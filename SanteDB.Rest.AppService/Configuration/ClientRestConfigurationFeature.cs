@@ -30,7 +30,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 
 namespace SanteDB.Rest.AppService.Configuration
 {
@@ -60,7 +59,7 @@ namespace SanteDB.Rest.AppService.Configuration
         /// </summary>
         public const string REST_CLIENT_PROXY_SETTING = "proxyAddress";
         private readonly RestClientConfigurationSection m_configuration;
-        
+
         /// <summary>
         /// Rest constructor
         /// </summary>
@@ -104,19 +103,19 @@ namespace SanteDB.Rest.AppService.Configuration
         public bool Configure(SanteDBConfiguration configuration, IDictionary<string, object> featureConfiguration)
         {
             var section = configuration.GetSection<RestClientConfigurationSection>();
-            if(section == null)
+            if (section == null)
             {
                 section = new RestClientConfigurationSection()
                 {
-                    RestClientType = new TypeReferenceConfiguration( typeof(RestClient))
+                    RestClientType = new TypeReferenceConfiguration(typeof(RestClient))
                 };
             }
 
             section.ProxyAddress = featureConfiguration[REST_CLIENT_PROXY_SETTING]?.ToString() ?? section.ProxyAddress;
-            foreach(var client in (JArray)featureConfiguration[REST_CLIENT_SETTING])
+            foreach (var client in (JArray)featureConfiguration[REST_CLIENT_SETTING])
             {
                 var localClient = section.Client.Find(o => o.Name == client[REST_CLIENT_SETTING].ToString());
-                if(localClient == null) { continue; }
+                if (localClient == null) { continue; }
                 if (Enum.TryParse<HttpCompressionAlgorithm>(client[REST_CLIENT_OPTIMIZE_SETTING].ToString(), out var optimize))
                 {
                     localClient.Binding.OptimizationMethod = optimize;

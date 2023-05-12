@@ -25,13 +25,10 @@ using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Audit;
-using SanteDB.Core.Security.Configuration;
 using SanteDB.Core.Security.Services;
-using SanteDB.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Security.Principal;
 
@@ -81,7 +78,7 @@ namespace SanteDB.Rest.Common.Security
 
             var session = s_SessionResolverDelegate(authorizationToken);
 
-            if(session == null)
+            if (session == null)
             {
                 throw new SecuritySessionException(SessionExceptionType.Other, "Invalid bearer token", null);
             }

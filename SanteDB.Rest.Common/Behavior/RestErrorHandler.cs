@@ -68,7 +68,7 @@ namespace SanteDB.Rest.Common.Behavior
             {
                 fault = new RestServiceFault(dte);
             }
-            else if(rootCause is RestClientException<Object> rco && rco.Result is RestServiceFault rcf)
+            else if (rootCause is RestClientException<Object> rco && rco.Result is RestServiceFault rcf)
             {
                 fault = rcf;
             }
@@ -105,22 +105,22 @@ namespace SanteDB.Rest.Common.Behavior
 
             // Get the root cause / fault for the user 
 
-            if(error is FaultException fe)
+            if (error is FaultException fe)
             {
                 faultMessage.Headers.Add(fe.Headers);
             }
 
             if (RestOperationContext.Current.ServiceEndpoint != null)
             {
-                
-                    RestMessageDispatchFormatter.CreateFormatter(RestOperationContext.Current.ServiceEndpoint.Description.Contract.Type).SerializeResponse(faultMessage, null, fault);
+
+                RestMessageDispatchFormatter.CreateFormatter(RestOperationContext.Current.ServiceEndpoint.Description.Contract.Type).SerializeResponse(faultMessage, null, fault);
             }
             else
             {
                 RestMessageDispatchFormatter.CreateFormatter(typeof(IRestApiContractImplementation)).SerializeResponse(faultMessage, null, fault);
             }
 
-            if((int)faultMessage.StatusCode >= 500)
+            if ((int)faultMessage.StatusCode >= 500)
             {
                 this.m_traceSource.TraceWarning("Server Error on REST pipeline: {0}", error);
                 ApplicationServiceContext.Current.GetAuditService().Audit().ForNetworkRequestFailure(error, uriMatched, RestOperationContext.Current.IncomingRequest.Headers.AllKeys.ToDictionary(o => o, o => RestOperationContext.Current.IncomingRequest.Headers[o]), RestOperationContext.Current.OutgoingResponse.Headers.AllKeys.ToDictionary(o => o, o => RestOperationContext.Current.OutgoingResponse.Headers[o])).Send();

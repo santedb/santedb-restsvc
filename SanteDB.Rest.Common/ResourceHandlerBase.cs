@@ -20,16 +20,10 @@
  */
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
-using SanteDB.Core.Model;
-using SanteDB.Core.Model.Acts;
-using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Model.Collection;
-using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
-using SanteDB.Core.Security.Audit;
-using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
@@ -44,8 +38,8 @@ namespace SanteDB.Rest.Common
     /// Resource handler base
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
-    public abstract class ResourceHandlerBase<TResource> : 
-        IServiceImplementation, 
+    public abstract class ResourceHandlerBase<TResource> :
+        IServiceImplementation,
         IApiResourceHandlerRepository,
         IApiResourceHandler where TResource : class, IIdentifiedResource, new()
     {

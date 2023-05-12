@@ -19,7 +19,6 @@
  * Date: 2023-3-10
  */
 using SanteDB.Core;
-using SanteDB.Core.Configuration;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Jobs;
@@ -65,8 +64,8 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        public JobResourceHandler(ILocalizationService localizationService, 
-            IJobManagerService jobManagerService, 
+        public JobResourceHandler(ILocalizationService localizationService,
+            IJobManagerService jobManagerService,
             IJobStateManagerService jobStateManagerService,
             IJobScheduleManager jobScheduleManager)
         {

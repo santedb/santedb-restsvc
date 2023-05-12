@@ -22,7 +22,6 @@ using Newtonsoft.Json.Linq;
 using SanteDB.Client.Configuration;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Http;
-using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Model.Constants;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Security;
@@ -31,7 +30,6 @@ using SanteDB.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.AppService.Configuration
 {
@@ -147,7 +145,7 @@ namespace SanteDB.Rest.AppService.Configuration
             if (featureConfiguration.TryGetValue(ASSIGNED_FACILITY_SETTING, out var assignedFacilityRaw) && Guid.TryParse(assignedFacilityRaw?.ToString(), out var assignedFacility))
             {
                 section.SetPolicy(SecurityPolicyIdentification.AssignedFacilityUuid, assignedFacility);
-                using(var client = this.m_restClientFactory.GetRestClientFor(Core.Interop.ServiceEndpointType.HealthDataService))
+                using (var client = this.m_restClientFactory.GetRestClientFor(Core.Interop.ServiceEndpointType.HealthDataService))
                 {
                     client.Post<EntityRelationship, EntityRelationship>($"EntityRelationship", new EntityRelationship()
                     {
@@ -170,7 +168,7 @@ namespace SanteDB.Rest.AppService.Configuration
                     });
                 }
             }
-            if(featureConfiguration.TryGetValue(RESTRICT_LOGIN_POLICY_SETTING, out var restrictLoginSettingRaw) && Boolean.TryParse(restrictLoginSettingRaw.ToString(), out var restrictLoginSetting))
+            if (featureConfiguration.TryGetValue(RESTRICT_LOGIN_POLICY_SETTING, out var restrictLoginSettingRaw) && Boolean.TryParse(restrictLoginSettingRaw.ToString(), out var restrictLoginSetting))
             {
                 section.SetPolicy(SecurityPolicyIdentification.AllowNonAssignedUsersToLogin, restrictLoginSetting);
             }
@@ -179,7 +177,7 @@ namespace SanteDB.Rest.AppService.Configuration
             foreach (JObject itm in (JArray)featureConfiguration[SECURITY_SIGN_KEYS_SETTING])
             {
                 var existingKey = section.Signatures?.Find(o => o.KeyName == itm["name"].ToString());
-                if(existingKey == null)
+                if (existingKey == null)
                 {
                     existingKey = new SecuritySignatureConfiguration()
                     {
@@ -192,14 +190,14 @@ namespace SanteDB.Rest.AppService.Configuration
                     existingKey.Algorithm = algorithm;
                 }
 
-                if(existingKey.Algorithm == SignatureAlgorithm.HS256 && !HS256_MASK.Equals(itm["value"].ToString()))
+                if (existingKey.Algorithm == SignatureAlgorithm.HS256 && !HS256_MASK.Equals(itm["value"].ToString()))
                 {
                     existingKey.HmacSecret = itm["value"].ToString();
                     existingKey.StoreLocationSpecified = false;
                     existingKey.FindTypeSpecified = false;
                     existingKey.FindValue = null;
                 }
-                else if(existingKey.Algorithm == SignatureAlgorithm.RS256)
+                else if (existingKey.Algorithm == SignatureAlgorithm.RS256)
                 {
                     existingKey.HmacSecret = null;
                     existingKey.StoreLocation = System.Security.Cryptography.X509Certificates.StoreLocation.CurrentUser;

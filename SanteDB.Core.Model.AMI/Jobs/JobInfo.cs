@@ -48,7 +48,7 @@ namespace SanteDB.Core.Model.AMI.Jobs
         /// </summary>
         public JobInfo(IJobState job, IEnumerable<IJobSchedule> schedule)
         {
-            if(job is IIdentifiedResource iir)
+            if (job is IIdentifiedResource iir)
             {
                 this.Key = iir.Key;
                 this.Tag = iir.Tag;

@@ -41,7 +41,7 @@ namespace SanteDB.Core.Model.AMI.Security
         {
 
         }
-        
+
         /// <summary>
         /// Create submission request
         /// </summary>
@@ -50,7 +50,7 @@ namespace SanteDB.Core.Model.AMI.Security
         public SubmissionRequest(byte[] cmcRequest, IPrincipal createdBy)
         {
             this.CmcRequest = cmcRequest;
-            if(createdBy is IClaimsPrincipal cp)
+            if (createdBy is IClaimsPrincipal cp)
             {
                 this.AdminAddress = cp.GetClaimValue(SanteDBClaimTypes.Email);
                 this.AdminContactName = cp.Identity.Name;

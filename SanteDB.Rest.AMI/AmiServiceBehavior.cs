@@ -145,7 +145,7 @@ namespace SanteDB.Rest.AMI
             {
                 case IIdentifiedResource resource:
                     return resource.Tag;
-                
+
                 default:
                     return null;
             }
@@ -181,7 +181,7 @@ namespace SanteDB.Rest.AMI
                 case IIdentifiedResource idr:
                     RestOperationContext.Current.OutgoingResponse.SetLastModified(idr.ModifiedOn.DateTime);
                     return idr.ModifiedOn.DateTime;
-               
+
                 default:
                     if (useCurrentTime)
                     {
@@ -451,7 +451,7 @@ namespace SanteDB.Rest.AMI
             }
             serviceOptions.Settings = config.PublicSettings.ToList();
 
-            if(this.m_pepService.SoftDemand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction, AuthenticationContext.Current.Principal))
+            if (this.m_pepService.SoftDemand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction, AuthenticationContext.Current.Principal))
             {
                 serviceOptions.Settings.AddRange(this.m_configurationManager.GetSection<SecurityConfigurationSection>().ForDisclosure());
             }
@@ -946,7 +946,7 @@ namespace SanteDB.Rest.AMI
                             iddata.Key = guidKey;
                             break;
                         case IIdentifiedResource iir:
-                            if((!Guid.TryParseExact(key, "D", out var guidKey2) || iir.Key != guidKey2) && iir.Key.HasValue)
+                            if ((!Guid.TryParseExact(key, "D", out var guidKey2) || iir.Key != guidKey2) && iir.Key.HasValue)
                             {
                                 throw new FaultException(HttpStatusCode.BadRequest, "Key mismatch");
                             }
@@ -1123,7 +1123,7 @@ namespace SanteDB.Rest.AMI
 
                     // Query for results
                     IQueryResultSet results = null;
-                    if (Guid.TryParseExact(key,"D", out Guid keyUuid))
+                    if (Guid.TryParseExact(key, "D", out Guid keyUuid))
                     {
                         results = handler.QueryChildObjects(keyUuid, childResourceType, query);
                     }
@@ -1180,8 +1180,8 @@ namespace SanteDB.Rest.AMI
                 {
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.AddChildObject));
                     this.ThrowIfPreConditionFails(handler, key);
-                    var retVal = handler.AddChildObject(Guid.TryParseExact(key,"D", out var guidKey) ? (object)guidKey : key, childResourceType, body);
-                    
+                    var retVal = handler.AddChildObject(Guid.TryParseExact(key, "D", out var guidKey) ? (object)guidKey : key, childResourceType, body);
+
                     RestOperationContext.Current.OutgoingResponse.StatusCode = retVal == null ? (int)HttpStatusCode.NoContent : (int)System.Net.HttpStatusCode.Created;
                     this.AddEtagHeader(retVal);
                     this.AddContentLocationHeader(retVal);

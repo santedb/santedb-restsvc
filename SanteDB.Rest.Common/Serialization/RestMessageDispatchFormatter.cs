@@ -44,7 +44,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Mime;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
@@ -170,9 +169,9 @@ namespace SanteDB.Rest.Common.Serialization
 #if DEBUG
                 this.m_traceSource.TraceEvent(EventLevel.Informational, "Received request from: {0}", RestOperationContext.Current.IncomingRequest.RemoteEndPoint);
 #endif
-                
+
                 var httpRequest = RestOperationContext.Current.IncomingRequest;
-                if(this.m_noBodyVerbs.Contains(httpRequest.HttpMethod))
+                if (this.m_noBodyVerbs.Contains(httpRequest.HttpMethod))
                 {
                     return; // no body
                 }
@@ -289,7 +288,7 @@ namespace SanteDB.Rest.Common.Serialization
                                     }
 
                                     var contentDisposition = nextSection.GetContentDispositionHeader();
-                                    if(String.IsNullOrEmpty(contentDisposition.FileName.Value))
+                                    if (String.IsNullOrEmpty(contentDisposition.FileName.Value))
                                     {
                                         using (var sr = new StreamReader(nextSection.Body))
                                         {
@@ -300,7 +299,7 @@ namespace SanteDB.Rest.Common.Serialization
                                     {
                                         using (var buffer = new MemoryStream())
                                         {
-                                            nextSection.Body.CopyTo(buffer); 
+                                            nextSection.Body.CopyTo(buffer);
                                             parmValue.Add(new MultiPartFormData(contentDisposition.Name.Value, buffer.ToArray(), nextSection.ContentType, contentDisposition.FileName.Value, false));
                                         }
                                     }

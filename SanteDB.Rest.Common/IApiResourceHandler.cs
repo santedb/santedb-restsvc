@@ -20,7 +20,6 @@
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
-using SanteDB.Core.Services;
 using System;
 using System.Collections.Specialized;
 

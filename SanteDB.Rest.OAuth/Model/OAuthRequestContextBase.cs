@@ -22,12 +22,10 @@ using Microsoft.IdentityModel.Tokens;
 using RestSrvr;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
-using SanteDB.Rest.Common;
 using SanteDB.Rest.OAuth.Configuration;
 using System;
 using System.Collections.Specialized;
 using System.Net;
-using System.Security.Principal;
 
 namespace SanteDB.Rest.OAuth.Model
 {
@@ -62,7 +60,7 @@ namespace SanteDB.Rest.OAuth.Model
         /// </summary>
         [Obsolete("Use of this is discouraged.")]
         public string TfaSecret => FormFields?[OAuthConstants.FormField_MfaCode];
-       
+
         #endregion
 
         #region Common Request Elements

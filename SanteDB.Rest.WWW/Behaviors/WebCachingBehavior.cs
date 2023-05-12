@@ -21,7 +21,6 @@
 using RestSrvr;
 using RestSrvr.Message;
 using SanteDB.Core;
-using SanteDB.Core.Applets.Configuration;
 using SanteDB.Core.Services;
 using SanteDB.Rest.WWW.Configuration;
 using System;

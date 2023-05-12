@@ -18,8 +18,6 @@
  * User: fyfej
  * Date: 2023-3-10
  */
-using RestSrvr;
-using RestSrvr.Attributes;
 using RestSrvr.Exceptions;
 using SanteDB.Client.Configuration;
 using SanteDB.Core;
@@ -29,16 +27,12 @@ using SanteDB.Core.Exceptions;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Model.AMI.Diagnostics;
 using SanteDB.Core.Security;
-using SanteDB.Core.Security.Configuration;
 using SanteDB.Core.Services;
-using SanteDB.Rest.AppService.Configuration;
 using SanteDB.Rest.AppService.Model;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 
 namespace SanteDB.Rest.AppService
 {
@@ -97,7 +91,7 @@ namespace SanteDB.Rest.AppService
         [Demand(PermissionPolicyIdentifiers.Login)]
         public List<AppSettingKeyValuePair> GetAppSettings(string scope)
         {
-            if(scope != AuthenticationContext.Current.Principal.Identity.Name)
+            if (scope != AuthenticationContext.Current.Principal.Identity.Name)
             {
                 this.m_policyEnforcementService.Demand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
             }
@@ -125,7 +119,7 @@ namespace SanteDB.Rest.AppService
         public List<String> GetIntegrationPatterns() => this.m_integrationPatterns.Select(o => o.Name).ToList();
 
         /// <inheritdoc/>
-        public List<StorageProviderViewModel> GetDataStorageProviders() => DataConfigurationSection.GetDataConfigurationProviders().Where(o=>o.HostType.HasFlag(ApplicationServiceContext.Current.HostType)).Select(o => new StorageProviderViewModel(o)).ToList();
+        public List<StorageProviderViewModel> GetDataStorageProviders() => DataConfigurationSection.GetDataConfigurationProviders().Where(o => o.HostType.HasFlag(ApplicationServiceContext.Current.HostType)).Select(o => new StorageProviderViewModel(o)).ToList();
 
         /// <inheritdoc/>
         public void SetAppSettings(string scope, List<AppSettingKeyValuePair> settings)
@@ -141,12 +135,12 @@ namespace SanteDB.Rest.AppService
             try
             {
                 var currentConfiguration = this.m_configurationManager.Configuration;
-                foreach(var configHandler in this.m_configurationFeatures.OrderBy(o=>o.Order))
+                foreach (var configHandler in this.m_configurationFeatures.OrderBy(o => o.Order))
                 {
-                    if(configuration.Configuration.TryGetValue(configHandler.Name, out var settings))
+                    if (configuration.Configuration.TryGetValue(configHandler.Name, out var settings))
                     {
                         this.m_policyEnforcementService.Demand(configHandler.WritePolicy);
-                        if(!configHandler.Configure(currentConfiguration, settings))
+                        if (!configHandler.Configure(currentConfiguration, settings))
                         {
                             throw new ConfigurationException($"Error applying configuration {configHandler.Name}", currentConfiguration);
                         }
@@ -155,12 +149,12 @@ namespace SanteDB.Rest.AppService
 
                 if (this.m_configurationManager is IRequestRestarts irr)
                 {
-                    irr.RestartRequested += (o,e) => configuration.AutoRestart = true;
+                    irr.RestartRequested += (o, e) => configuration.AutoRestart = true;
                 }
                 this.m_configurationManager.SaveConfiguration();
                 return configuration;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new FaultException(System.Net.HttpStatusCode.InternalServerError, "Error saving configuration", e);
             }

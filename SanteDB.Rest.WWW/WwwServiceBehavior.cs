@@ -123,7 +123,7 @@ namespace SanteDB.Rest.WWW
             {
                 lang = icp.GetClaimValue(SanteDBClaimTypes.Language);
             }
-            if(String.IsNullOrEmpty(lang))
+            if (String.IsNullOrEmpty(lang))
             {
                 lang = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
             }
@@ -150,7 +150,7 @@ namespace SanteDB.Rest.WWW
                     this.m_cacheApplets.TryAdd(appletPath, navigateAsset);
                 }
 
-                
+
             }
 
             // Navigate policy?

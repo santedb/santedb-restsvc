@@ -27,8 +27,6 @@ using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SanteDB.Rest.AMI.Operation
 {
@@ -58,7 +56,7 @@ namespace SanteDB.Rest.AMI.Operation
                     jobManagerService.SetJobSchedule(importJob, new DayOfWeek[] { DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday }, DateTime.Now.Date);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 this.m_tracer.TraceWarning("Could not register foreign data importer job due to {0}", e);
             }
@@ -77,11 +75,11 @@ namespace SanteDB.Rest.AMI.Operation
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
             var job = this.m_jobManagerService.GetJobInstance(ForeignDataImportJob.JOB_ID);
-            if(job == null)
+            if (job == null)
             {
                 throw new InvalidOperationException(String.Format(ErrorMessages.MISSING_JOB, ForeignDataImportJob.JOB_ID));
             }
-            else if(this.m_jobStateManager.GetJobState(job).CurrentState != JobStateType.Running)
+            else if (this.m_jobStateManager.GetJobState(job).CurrentState != JobStateType.Running)
             {
                 job.Run(this, EventArgs.Empty, null);
             }

@@ -22,7 +22,6 @@ using RestSrvr;
 using SanteDB.Core.Applets.Model;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Model;
-using SanteDB.Core.Model.Constants;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
@@ -30,7 +29,6 @@ using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SanteDB.Rest.AppService
 {
@@ -56,14 +54,14 @@ namespace SanteDB.Rest.AppService
             if (String.IsNullOrEmpty(parameters["facilityId"]))
             {
                 // Does the current principal have a facility claim?
-                if(AuthenticationContext.Current.Principal is IClaimsPrincipal cp && 
+                if (AuthenticationContext.Current.Principal is IClaimsPrincipal cp &&
                     cp.TryGetClaimValue(SanteDBClaimTypes.XspaFacilityClaim, out var facilityId))
                 {
                     parameters.Add("facilityId", facilityId);
                 }
             }
 
-            return this.m_appletManagerService.Applets.GetTemplateInstance(templateId, parameters.ToList().GroupBy(o=>o.Key).ToDictionary(o=>o.Key, o=>o.First().Value));
+            return this.m_appletManagerService.Applets.GetTemplateInstance(templateId, parameters.ToList().GroupBy(o => o.Key).ToDictionary(o => o.Key, o => o.First().Value));
         }
 
         /// <inheritdoc/>

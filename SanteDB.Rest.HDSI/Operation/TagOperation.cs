@@ -23,8 +23,6 @@ using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SanteDB.Rest.HDSI.Operation
 {
@@ -55,9 +53,10 @@ namespace SanteDB.Rest.HDSI.Operation
         /// <inheritdoc/>
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
-            if(scopingKey is Guid scopeGuid || Guid.TryParse(scopingKey.ToString(), out scopeGuid))
+            if (scopingKey is Guid scopeGuid || Guid.TryParse(scopingKey.ToString(), out scopeGuid))
             {
-                foreach (var p in parameters.Parameters) {
+                foreach (var p in parameters.Parameters)
+                {
                     this.m_tagPersistenceService.Save(scopeGuid, p.Name, p.Value?.ToString());
                 }
                 return null;

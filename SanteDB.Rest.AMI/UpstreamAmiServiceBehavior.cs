@@ -24,7 +24,6 @@ using RestSrvr.Exceptions;
 using SanteDB.Core;
 using SanteDB.Core.Http;
 using SanteDB.Core.Interop;
-using SanteDB.Core.Model;
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.AMI.Collections;
 using SanteDB.Core.Model.Collection;

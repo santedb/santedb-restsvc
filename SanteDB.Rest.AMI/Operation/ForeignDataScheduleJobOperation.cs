@@ -25,8 +25,6 @@ using SanteDB.Core.Model.AMI.Alien;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Rest.Common;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SanteDB.Rest.AMI.Operation
 {
@@ -59,7 +57,7 @@ namespace SanteDB.Rest.AMI.Operation
         {
             if (scopingKey is Guid uuid || Guid.TryParse(scopingKey.ToString(), out uuid))
             {
-                return new ForeignDataInfo( this.m_foreignDataManagerService.Schedule(uuid));
+                return new ForeignDataInfo(this.m_foreignDataManagerService.Schedule(uuid));
             }
             else
             {

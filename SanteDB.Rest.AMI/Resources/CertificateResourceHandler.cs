@@ -202,7 +202,8 @@ namespace SanteDB.Rest.AMI.Resources
                 throw new ArgumentOutOfRangeException();
             }
 
-            if (!this.m_platformSecurityService.TryGetCertificate(X509FindType.FindByThumbprint, id.ToString(), storeName, out var certificate)) {
+            if (!this.m_platformSecurityService.TryGetCertificate(X509FindType.FindByThumbprint, id.ToString(), storeName, out var certificate))
+            {
                 throw new KeyNotFoundException(id.ToString());
             }
 
@@ -229,30 +230,30 @@ namespace SanteDB.Rest.AMI.Resources
                 throw new ArgumentOutOfRangeException();
             }
 
-                IEnumerable<X509Certificate2> certificates = null;
-                if (!String.IsNullOrEmpty(queryParameters["subject"]))
-                {
-                    certificates = this.m_platformSecurityService.FindAllCertificates(X509FindType.FindBySubjectDistinguishedName, queryParameters["subject"], validOnly: false);
-                }
-                else if (!String.IsNullOrEmpty(queryParameters["thumbprint"]))
-                {
-                    certificates = this.m_platformSecurityService.FindAllCertificates(X509FindType.FindByThumbprint, queryParameters["thumbprint"], validOnly: false);
-                }
-                else
-                {
-                    certificates = this.m_platformSecurityService.FindAllCertificates(X509FindType.FindByTimeValid, DateTime.Now.AddMonths(1), validOnly: false);
-                }
+            IEnumerable<X509Certificate2> certificates = null;
+            if (!String.IsNullOrEmpty(queryParameters["subject"]))
+            {
+                certificates = this.m_platformSecurityService.FindAllCertificates(X509FindType.FindBySubjectDistinguishedName, queryParameters["subject"], validOnly: false);
+            }
+            else if (!String.IsNullOrEmpty(queryParameters["thumbprint"]))
+            {
+                certificates = this.m_platformSecurityService.FindAllCertificates(X509FindType.FindByThumbprint, queryParameters["thumbprint"], validOnly: false);
+            }
+            else
+            {
+                certificates = this.m_platformSecurityService.FindAllCertificates(X509FindType.FindByTimeValid, DateTime.Now.AddMonths(1), validOnly: false);
+            }
 
-                var results = certificates.Select(o => new X509Certificate2Info(o));
-                if (privateKey)
-                {
-                    return new MemoryQueryResultSet(results.Where(o => o.HasPrivateKey));
-                }
-                else
-                {
-                    return new MemoryQueryResultSet(results);
+            var results = certificates.Select(o => new X509Certificate2Info(o));
+            if (privateKey)
+            {
+                return new MemoryQueryResultSet(results.Where(o => o.HasPrivateKey));
+            }
+            else
+            {
+                return new MemoryQueryResultSet(results);
 
-                }
+            }
         }
 
         /// <inheritdoc/>

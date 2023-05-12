@@ -28,11 +28,8 @@ using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -123,7 +120,7 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                return new MemoryQueryResultSet(this.m_configurationService.Configurations.Where(o=>!o.Id.StartsWith("$"))); // hide the $ystem configuration
+                return new MemoryQueryResultSet(this.m_configurationService.Configurations.Where(o => !o.Id.StartsWith("$"))); // hide the $ystem configuration
             }
         }
 
@@ -196,7 +193,7 @@ namespace SanteDB.Rest.AMI.Resources
         public object CheckOut(object key)
         {
             var match = this.Get(key, null) as IRecordMatchingConfiguration;
-            if (match != null && 
+            if (match != null &&
                 this.m_checkoutService?.Checkout<IRecordMatchingConfiguration>(match.Uuid) == false)
             {
                 throw new ObjectLockedException();
@@ -204,7 +201,7 @@ namespace SanteDB.Rest.AMI.Resources
             return null;
         }
 
-         /// <summary>
+        /// <summary>
         /// Checkout the specified object
         /// </summary>
         public object CheckIn(object key)

@@ -198,7 +198,7 @@ namespace SanteDB.Rest.Common.Configuration
         /// </summary>
         public RestEndpointBehaviorConfiguration(Type type) : base(type)
         {
-            if(!typeof(IEndpointBehavior).IsAssignableFrom(type))
+            if (!typeof(IEndpointBehavior).IsAssignableFrom(type))
             {
                 throw new ArgumentOutOfRangeException(nameof(type), String.Format(ErrorMessages.ARGUMENT_INCOMPATIBLE_TYPE, type.GetType(), typeof(IEndpointBehavior)));
             }
