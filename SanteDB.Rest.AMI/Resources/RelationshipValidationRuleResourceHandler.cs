@@ -3,6 +3,7 @@ using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Constants;
+using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
@@ -50,24 +51,23 @@ namespace SanteDB.Rest.AMI.Resources
 
             if (data is RelationshipValidationRule rule)
             {
-                IRelationshipValidationRule createdRule = null;
                 if (this.m_conceptRepositoryService.IsMember(ConceptSetKeys.EntityClass, (rule.SourceClassKey ?? rule.TargetClassKey).Value))
                 {
-                    createdRule = this.m_ruleProvider.AddValidRelationship<EntityRelationship>(rule.SourceClassKey, rule.TargetClassKey, rule.RelationshipTypeKey, rule.Description);
+                    rule = this.m_ruleProvider.AddValidRelationship<EntityRelationship>(rule.SourceClassKey, rule.TargetClassKey, rule.RelationshipTypeKey, rule.Description);
                 }
                 else if (this.m_conceptRepositoryService.IsMember(ConceptSetKeys.ActClass, (rule.SourceClassKey ?? rule.TargetClassKey).Value))
                 {
-                    createdRule = this.m_ruleProvider.AddValidRelationship<ActRelationship>(rule.SourceClassKey, rule.TargetClassKey, rule.RelationshipTypeKey, rule.Description);
+                    rule = this.m_ruleProvider.AddValidRelationship<ActRelationship>(rule.SourceClassKey, rule.TargetClassKey, rule.RelationshipTypeKey, rule.Description);
                 }
                 else if (this.m_conceptRepositoryService.IsMember(ConceptSetKeys.ActParticipationType, (rule.SourceClassKey ?? rule.TargetClassKey).Value))
                 {
-                    createdRule = this.m_ruleProvider.AddValidRelationship<ActParticipation>(rule.SourceClassKey, rule.TargetClassKey, rule.RelationshipTypeKey, rule.Description);
+                    rule = this.m_ruleProvider.AddValidRelationship<ActParticipation>(rule.SourceClassKey, rule.TargetClassKey, rule.RelationshipTypeKey, rule.Description);
                 }
                 else
                 {
                     throw new ArgumentOutOfRangeException(ErrorMessages.INVALID_CLASS_CODE);
                 }
-                return new RelationshipValidationRule(createdRule);
+                return rule;
             }
 
             else
@@ -82,7 +82,7 @@ namespace SanteDB.Rest.AMI.Resources
         {
             if (key is Guid uuid)
             {
-                return new RelationshipValidationRule(this.m_ruleProvider.RemoveRuleByKey(uuid));
+                return this.m_ruleProvider.RemoveRuleByKey(uuid);
             }
             else
             {
@@ -96,7 +96,7 @@ namespace SanteDB.Rest.AMI.Resources
         {
             if (id is Guid uuid)
             {
-                return new RelationshipValidationRule(this.m_ruleProvider.GetRuleByKey(uuid));
+                return this.m_ruleProvider.GetRuleByKey(uuid);
             }
             else
             {
@@ -109,8 +109,7 @@ namespace SanteDB.Rest.AMI.Resources
         public IQueryResultSet Query(NameValueCollection queryParameters)
         {
             var filter = QueryExpressionParser.BuildLinqExpression<RelationshipValidationRule>(queryParameters);
-            var newFilter = new ExpressionParameterRewriter<RelationshipValidationRule, IRelationshipValidationRule, bool>(filter).Convert();
-            return new TransformQueryResultSet<IRelationshipValidationRule, RelationshipValidationRule>(this.m_ruleProvider.QueryRelationships(newFilter), (o) => new RelationshipValidationRule(o));
+            return this.m_ruleProvider.QueryRelationships(filter);
 
         }
 

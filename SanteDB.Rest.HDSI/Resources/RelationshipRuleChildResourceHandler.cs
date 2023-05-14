@@ -22,6 +22,7 @@ using SanteDB.Core.BusinessRules;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Acts;
+using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Services;
@@ -56,7 +57,7 @@ namespace SanteDB.Rest.HDSI.Resources
         }
 
         /// <inheritdoc/>
-        public Type PropertyType => typeof(Core.BusinessRules.RelationshipValidationRule);
+        public Type PropertyType => typeof(Core.Model.DataTypes.RelationshipValidationRule);
 
         /// <inheritdoc/>
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.Get | ResourceCapabilityType.Delete | ResourceCapabilityType.Search;
@@ -75,28 +76,26 @@ namespace SanteDB.Rest.HDSI.Resources
         {
             if (item is RelationshipValidationRule rr)
             {
-                IRelationshipValidationRule rule = null;
-
                 if (scopingType == s_EntityRelationshipType)
                 {
-                    rule = _Provider.AddValidRelationship<EntityRelationship>(rr.SourceClassKey, rr.TargetClassKey, rr.RelationshipTypeKey, rr.Description);
+                    rr = _Provider.AddValidRelationship<EntityRelationship>(rr.SourceClassKey, rr.TargetClassKey, rr.RelationshipTypeKey, rr.Description);
                 }
                 else if (scopingType == s_ActParticipationType)
                 {
-                    rule = _Provider.AddValidRelationship<ActParticipation>(rr.SourceClassKey, rr.TargetClassKey, rr.RelationshipTypeKey, rr.Description);
+                    rr = _Provider.AddValidRelationship<ActParticipation>(rr.SourceClassKey, rr.TargetClassKey, rr.RelationshipTypeKey, rr.Description);
                 }
                 else if (scopingType == s_ActRelationshipType)
                 {
-                    rule = _Provider.AddValidRelationship<ActRelationship>(rr.SourceClassKey, rr.TargetClassKey, rr.RelationshipTypeKey, rr.Description);
+                    rr = _Provider.AddValidRelationship<ActRelationship>(rr.SourceClassKey, rr.TargetClassKey, rr.RelationshipTypeKey, rr.Description);
                 }
                 else
                 {
                     throw new NotImplementedException($"Support for {scopingType.FullName} is not available.");
                 }
 
-                if (null != rule)
+                if (null != rr)
                 {
-                    rr.Key = rule.Key;
+                    rr.Key = rr.Key;
                     return rr;
                 }
                 else
@@ -113,66 +112,30 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <inheritdoc/>
         public object Get(Type scopingType, object scopingKey, object key)
         {
-            IRelationshipValidationRule relationship = null;
-
-            relationship = _Provider.GetRuleByKey((Guid)key);
-
-            if (null == relationship)
-            {
-                return null;
-            }
-            else
-            {
-                return new RelationshipValidationRule
-                {
-                    Key = relationship.Key,
-                    SourceClassKey = relationship.SourceClassKey,
-                    RelationshipTypeKey = relationship.RelationshipTypeKey,
-                    TargetClassKey = relationship.TargetClassKey,
-                    Description = relationship.Description
-                };
-            }
+            return _Provider.GetRuleByKey((Guid)key);
         }
 
         /// <inheritdoc/>
         public IQueryResultSet Query(Type scopingType, object scopingKey, NameValueCollection filter)
         {
-            IEnumerable<IRelationshipValidationRule> relationships = null;
-
+            var query = QueryExpressionParser.BuildLinqExpression<RelationshipValidationRule>(filter);
             if (scopingType == s_EntityRelationshipType)
             {
-                relationships = _Provider.GetValidRelationships<EntityRelationship>();
+                return _Provider.GetValidRelationships<EntityRelationship>().Where(query.Compile()).AsResultSet();
             }
             else if (scopingType == s_ActParticipationType)
             {
-                relationships = _Provider.GetValidRelationships<ActParticipation>();
+                return _Provider.GetValidRelationships<ActParticipation>().Where(query.Compile()).AsResultSet();
             }
             else if (scopingType == s_ActRelationshipType)
             {
-                relationships = _Provider.GetValidRelationships<ActRelationship>();
+                return _Provider.GetValidRelationships<ActRelationship>().Where(query.Compile()).AsResultSet();
             }
             else
             {
                 throw new NotImplementedException($"Support for {scopingType.FullName} is not available.");
             }
 
-
-            if (null == relationships)
-            {
-                return new MemoryQueryResultSet<RelationshipValidationRule>();
-            }
-            else
-            {
-                var whereClause = QueryExpressionParser.BuildLinqExpression<RelationshipValidationRule>(filter);
-                return new MemoryQueryResultSet<RelationshipValidationRule>(relationships.Select(rel => new RelationshipValidationRule
-                {
-                    Key = rel.Key,
-                    SourceClassKey = rel.SourceClassKey,
-                    RelationshipTypeKey = rel.RelationshipTypeKey,
-                    TargetClassKey = rel.TargetClassKey,
-                    Description = rel.Description
-                }).Where(whereClause.Compile()));
-            }
         }
 
         /// <inheritdoc/>
