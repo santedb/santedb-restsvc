@@ -866,6 +866,12 @@ namespace SanteDB.Rest.AMI
         /// <summary>
         /// Performs a search of the specified AMI resource
         /// </summary>
+        [UrlParameter(QueryControlParameterNames.HttpOffsetParameterName, typeof(int), "The offet of the first result to return")]
+        [UrlParameter(QueryControlParameterNames.HttpCountParameterName, typeof(int), "The count of items to return in this result set")]
+        [UrlParameter(QueryControlParameterNames.HttpIncludeTotalParameterName, typeof(bool), "True if the server should count the matching results. May reduce performance")]
+        [UrlParameter(QueryControlParameterNames.HttpOrderByParameterName, typeof(string), "Instructs the result set to be ordered (in format: property:(asc|desc))")]
+        [UrlParameter(QueryControlParameterNames.HttpQueryStateParameterName, typeof(Guid), "The query state identifier. This allows the client to get a stable result set.")]
+        [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual AmiCollection Search(string resourceType)
         {
             this.ThrowIfNotReady();

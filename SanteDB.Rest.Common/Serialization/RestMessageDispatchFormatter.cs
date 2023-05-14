@@ -379,6 +379,7 @@ namespace SanteDB.Rest.Common.Serialization
                     {
                         case "application/json+sdb-viewmodel":
 
+                           
                             if (result is IdentifiedData id)
                             {
 #if DEBUG

@@ -20,6 +20,7 @@
  */
 using Newtonsoft.Json;
 using SanteDB.Core.Applets.Model;
+using SanteDB.Core.BusinessRules;
 using SanteDB.Core.Data.Import.Definition;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Mail;
@@ -94,6 +95,7 @@ namespace SanteDB.Core.Model.AMI.Collections
     [XmlInclude(typeof(DiagnosticsProbe))]
     [XmlInclude(typeof(DiagnosticsProbeReading))]
     [XmlInclude(typeof(LogFileInfo))]
+    [XmlInclude(typeof(RelationshipValidationRule))]
     public class AmiCollection : IResourceCollection
     {
         /// <summary>
