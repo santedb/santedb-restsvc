@@ -16,12 +16,13 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2023-3-10
+ * Date: 2023-5-19
  */
 using SanteDB;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Exceptions;
 using SanteDB.Docker.Core;
+using SanteDB.Rest.Common.Behavior;
 using SanteDB.Rest.Common.Configuration;
 using SanteDB.Rest.OAuth.Configuration;
 using SanteDB.Rest.OAuth.Rest;
@@ -115,6 +116,10 @@ namespace SanteDB.Rest.OAuth.Docker
                         {
                             Address = "http://0.0.0.0:8080/auth",
                             ContractXml = typeof(IOAuthServiceContract).AssemblyQualifiedName,
+                            Behaviors = new List<RestEndpointBehaviorConfiguration>()
+                            {
+                                new RestEndpointBehaviorConfiguration(typeof(AcceptLanguageEndpointBehavior))
+                            }
                         }
                     }
                 };
