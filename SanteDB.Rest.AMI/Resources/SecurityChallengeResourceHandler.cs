@@ -32,7 +32,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Security chalenge resource handler DI constructor
         /// </summary>
-        public SecurityChallengeResourceHandler(ILocalizationService localizationService, IRepositoryService<SecurityChallenge> repositoryService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, freetextSearchService)
+        public SecurityChallengeResourceHandler(ILocalizationService localizationService, IRepositoryService<SecurityChallenge> repositoryService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, subscriptionExecutor, freetextSearchService)
         {
         }
     }

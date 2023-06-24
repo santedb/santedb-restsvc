@@ -42,7 +42,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// DI Constructor
         /// </summary>
-        public MailSyncResourceHandler(ILocalizationService localizationService, IRepositoryService<MailMessage> repositoryService, IPolicyEnforcementService pepService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, freetextSearchService)
+        public MailSyncResourceHandler(ILocalizationService localizationService, IRepositoryService<MailMessage> repositoryService, IPolicyEnforcementService pepService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, subscriptionExecutor, freetextSearchService)
         {
             this.m_pepService = pepService;
         }

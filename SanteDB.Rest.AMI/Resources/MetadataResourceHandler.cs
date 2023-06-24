@@ -37,7 +37,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        public MetadataResourceHandler(ILocalizationService localizationService, IRepositoryService<TMetadata> repositoryService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, freetextSearchService)
+        public MetadataResourceHandler(ILocalizationService localizationService, IRepositoryService<TMetadata> repositoryService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, subscriptionExecutor, freetextSearchService)
         {
         }
 

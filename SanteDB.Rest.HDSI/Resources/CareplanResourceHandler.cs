@@ -32,7 +32,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Create careplan resource handler
         /// </summary>
-        public CareplanResourceHandler(ILocalizationService localizationService, IRepositoryService<CarePlan> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
+        public CareplanResourceHandler(ILocalizationService localizationService, IRepositoryService<CarePlan> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
         {
         }
     }

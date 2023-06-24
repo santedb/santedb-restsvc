@@ -61,14 +61,18 @@ namespace SanteDB.Rest.Common
         /// </summary>
         protected readonly IFreetextSearchService m_freetextSearch;
 
+        // Subscrpition executor
+        protected readonly ISubscriptionExecutor m_subscriptionExecutor;
+
         /// <summary>
         /// Constructs the resource handler base
         /// </summary>
-        public ResourceHandlerBase(ILocalizationService localizationService, IRepositoryService<TResource> repositoryService, IFreetextSearchService freetextSearchService = null)
+        public ResourceHandlerBase(ILocalizationService localizationService, IRepositoryService<TResource> repositoryService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null)
         {
             this.m_localizationService = localizationService;
             this.m_repository = repositoryService;
             this.m_freetextSearch = freetextSearchService;
+            this.m_subscriptionExecutor = subscriptionExecutor;
         }
 
         /// <summary>
@@ -242,6 +246,11 @@ namespace SanteDB.Rest.Common
                 if (queryParameters.TryGetValue("_any", out var terms))
                 {
                     return this.HandleFreeTextSearch(terms);
+                }
+                else if(queryParameters.TryGetValue("_subscription", out var subscription) &&
+                    Guid.TryParse(subscription[0], out var subId))
+                {
+                    return this.m_subscriptionExecutor.Execute(subId, queryParameters);
                 }
                 else
                 {

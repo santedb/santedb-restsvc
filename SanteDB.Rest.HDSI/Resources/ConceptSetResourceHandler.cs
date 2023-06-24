@@ -37,7 +37,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        public ConceptSetResourceHandler(ILocalizationService localizationService, IRepositoryService<ConceptSet> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, freetextSearchService)
+        public ConceptSetResourceHandler(ILocalizationService localizationService, IRepositoryService<ConceptSet> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
         {
         }
 

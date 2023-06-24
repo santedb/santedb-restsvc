@@ -32,7 +32,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Extension type resource handler
         /// </summary>
-        public ExtensionTypeResourceHandler(ILocalizationService localizationService, IRepositoryService<ExtensionType> repositoryService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, freetextSearchService)
+        public ExtensionTypeResourceHandler(ILocalizationService localizationService, IRepositoryService<ExtensionType> repositoryService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, subscriptionExecutor, freetextSearchService)
         {
         }
     }

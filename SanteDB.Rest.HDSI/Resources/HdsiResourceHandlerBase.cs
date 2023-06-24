@@ -63,7 +63,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// DI Constructor
         /// </summary>
-        protected HdsiResourceHandlerBase(ILocalizationService localizationService, IRepositoryService<TData> repositoryService, IResourceCheckoutService resourceCheckoutService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, freetextSearchService)
+        protected HdsiResourceHandlerBase(ILocalizationService localizationService, IRepositoryService<TData> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, subscriptionExecutor, freetextSearchService)
         {
             this.m_resourceCheckoutService = resourceCheckoutService;
         }

@@ -30,7 +30,7 @@ namespace SanteDB.Rest.AMI.Resources
     public class ForeignDataMapResourceHandler : ResourceHandlerBase<ForeignDataMap>
     {
         /// <inheritdoc/>
-        public ForeignDataMapResourceHandler(ILocalizationService localizationService, IRepositoryService<ForeignDataMap> repositoryService, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, freetextSearchService)
+        public ForeignDataMapResourceHandler(ILocalizationService localizationService, IRepositoryService<ForeignDataMap> repositoryService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, subscriptionExecutor, freetextSearchService)
         {
         }
 
