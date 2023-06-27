@@ -49,6 +49,9 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\bin\Release\SanteDB.Core.Model.RISI.XML</DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
   <!-- <ItemGroup> -->
     <!-- <Compile Include="AutoCompleteSourceDefinition.cs" /> -->
     <!-- <Compile Include="Constants\ParameterTypeKeys.cs" /> -->

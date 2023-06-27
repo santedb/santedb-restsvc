@@ -48,6 +48,9 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\bin\Release\SanteDB.Core.Model.AMI.XML</DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
   <!-- <ItemGroup> -->
     <!-- <Compile Include="AmiCollection.cs" /> -->
     <!-- <Compile Include="Applet\AppletManifestInfo.cs" /> -->
