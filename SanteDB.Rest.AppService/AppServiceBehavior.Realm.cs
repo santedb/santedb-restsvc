@@ -104,6 +104,9 @@ namespace SanteDB.Rest.AppService
 
             /// <inheritdoc/>
             public string LocalClientSecret { get; }
+
+            /// <inheritdoc/>
+            public Guid LocalDeviceSid => Guid.Empty;
         }
 
         /// <inheritdoc/>
