@@ -417,10 +417,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                 {
                     var handler = this.GetResourceHandler(resourceType);
 
-                    this.ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(0.0f, UserMessages.FETCH_FROM_UPSTREAM));
+                    this.ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(nameof(UpstreamHdsiServiceBehavior), 0.0f, UserMessages.FETCH_FROM_UPSTREAM));
                     var remote = this.m_upstreamIntegrationService.Get(handler.Type, idGuid, null);
                     ApplicationServiceContext.Current.GetService<IDataCachingService>().Remove(remote.Key.Value);
-                    this.ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(0.25f, UserMessages.FETCH_FROM_UPSTREAM));
+                    this.ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(nameof(UpstreamHdsiServiceBehavior), 0.25f, UserMessages.FETCH_FROM_UPSTREAM));
 
                     Bundle insertBundle = new Bundle();
                     insertBundle.Add(remote);
@@ -449,13 +449,14 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         insertBundle.AddRange(this.m_upstreamIntegrationService.Query<Entity>(o => targetKeys.Contains(o.Key.Value)).Item.OfType<IdentifiedData>());
                     }
 
-                    this.ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(0.5f, UserMessages.FETCH_FROM_UPSTREAM));
+                    this.ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(nameof(UpstreamHdsiServiceBehavior), 0.5f, UserMessages.FETCH_FROM_UPSTREAM));
 
                     // Now we want to fetch all participations which have a relationship with the downloaded object if the object is a patient
 
                     // Insert
                     ApplicationServiceContext.Current.GetService<IDataPersistenceService<Bundle>>()?.Insert(insertBundle, TransactionMode.Commit, AuthenticationContext.Current.Principal);
 
+                    this.ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(nameof(UpstreamHdsiServiceBehavior), 1f, UserMessages.FETCH_FROM_UPSTREAM));
                     // Clear cache
                     this.m_dataCachingService.Clear();
                     return remote;
