@@ -1139,7 +1139,7 @@ namespace SanteDB.Rest.AMI
                     }
 
                     // Now apply controls
-                    var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<Object>();
+                    var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount)?.OfType<Object>();
 
                     if (this.m_configuration?.IncludeMetadataHeadersOnSearch == true)
                     {
