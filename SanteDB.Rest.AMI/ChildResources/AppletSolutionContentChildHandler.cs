@@ -130,7 +130,7 @@ namespace SanteDB.Rest.AMI.ChildResources
         public IQueryResultSet Query(Type scopingType, object scopingKey, NameValueCollection filter)
         {
             var query = QueryExpressionParser.BuildLinqExpression<AppletManifest>(filter);
-            var applets = this.m_solutionManager.GetApplets(scopingKey.ToString()).Where(query.Compile()).Select(o => new AppletManifestInfo(o.Info, null));
+            var applets = this.m_solutionManager.GetApplets(scopingKey.ToString()).Where(query.Compile()).Select(o => new AppletManifestInfo(o.CreatePackage()));
             return new MemoryQueryResultSet(applets);
         }
 

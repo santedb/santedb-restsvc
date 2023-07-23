@@ -105,29 +105,7 @@ namespace SanteDB.Rest.AMI.Resources
         {
             var pkg = AppletPackage.Load((Stream)data);
             ApplicationServiceContext.Current.GetService<IAppletManagerService>().Install(pkg);
-            X509Certificate2 cert = null;
-            if (pkg.PublicKey != null)
-            {
-                cert = new X509Certificate2(pkg.PublicKey);
-            }
-            else if (pkg.Meta.PublicKeyToken != null)
-            {
-                X509Store store = new X509Store(StoreName.TrustedPublisher, StoreLocation.LocalMachine);
-                try
-                {
-                    store.Open(OpenFlags.ReadOnly);
-                    var results = store.Certificates.Find(X509FindType.FindByThumbprint, pkg.Meta.PublicKeyToken, false);
-                    if (results.Count > 0)
-                    {
-                        cert = results[0];
-                    }
-                }
-                finally
-                {
-                    store.Close();
-                }
-            }
-            return new AppletManifestInfo(pkg.Meta, new X509Certificate2Info(cert?.Issuer, cert?.NotBefore, cert?.NotAfter, cert?.Subject, cert?.Thumbprint));
+            return new AppletManifestInfo(pkg);
         }
 
         /// <summary>
@@ -179,7 +157,7 @@ namespace SanteDB.Rest.AMI.Resources
         public IQueryResultSet Query(NameValueCollection queryParameters)
         {
             var query = QueryExpressionParser.BuildLinqExpression<AppletManifest>(queryParameters);
-            var applets = ApplicationServiceContext.Current.GetService<IAppletManagerService>().Applets.Where(query.Compile()).Select(o => new AppletManifestInfo(o.Info, null));
+            var applets = ApplicationServiceContext.Current.GetService<IAppletManagerService>().Applets.Where(query.Compile()).Select(o => new AppletManifestInfo(o.CreatePackage()));
             return new MemoryQueryResultSet(applets);
         }
 
@@ -234,7 +212,7 @@ namespace SanteDB.Rest.AMI.Resources
                     store.Close();
                 }
             }
-            return new AppletManifestInfo(pkg.Meta, new X509Certificate2Info(cert?.Issuer, cert?.NotBefore, cert?.NotAfter, cert?.Subject, cert?.Thumbprint));
+            return new AppletManifestInfo(pkg);
         }
 
         /// <summary>

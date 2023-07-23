@@ -21,6 +21,7 @@
 using Newtonsoft.Json;
 using SanteDB.Core.Applets.Model;
 using SanteDB.Core.Model.AMI.Security;
+using SanteDB.Core.Security;
 using System.Xml.Serialization;
 
 namespace SanteDB.Core.Model.AMI.Applet
@@ -44,12 +45,21 @@ namespace SanteDB.Core.Model.AMI.Applet
         /// Initializes a new instance of the <see cref="AppletManifestInfo"/> class
         /// with a specific applet manifest instance.
         /// </summary>
-        /// <param name="info">The applet manifest metadata instance.</param>
+        /// <param name="manifest">The applet manifest metadata instance.</param>
         /// <param name="publisher">The publisher of the applet</param>
-        public AppletManifestInfo(AppletInfo info, X509Certificate2Info publisher)
+        public AppletManifestInfo(AppletPackage manifest)
         {
-            this.AppletInfo = info;
-            this.PublisherData = publisher;
+            this.AppletInfo = manifest.Meta;
+
+            if (manifest.PublicKey != null)
+            {
+                this.PublisherData = new X509Certificate2Info(new System.Security.Cryptography.X509Certificates.X509Certificate(manifest.PublicKey));
+            }
+            else if (manifest.Meta.PublicKeyToken != null && 
+                X509CertificateUtils.GetPlatformServiceOrDefault().TryGetCertificate(System.Security.Cryptography.X509Certificates.X509FindType.FindByThumbprint, manifest.Meta.PublicKeyToken, out var cert))
+            {
+                this.PublisherData = new X509Certificate2Info(cert);
+            }
         }
 
         /// <summary>

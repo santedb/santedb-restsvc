@@ -121,7 +121,7 @@ namespace SanteDB.Rest.AMI.Resources
                     store.Close();
                 }
             }
-            return new AppletSolutionInfo(pkg, new X509Certificate2Info(cert?.Issuer, cert?.NotBefore, cert?.NotAfter, cert?.Subject, cert?.Thumbprint));
+            return new AppletSolutionInfo(pkg);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                return new AppletSolutionInfo(appletData, null);
+                return new AppletSolutionInfo(appletData);
             }
         }
 
@@ -189,7 +189,7 @@ namespace SanteDB.Rest.AMI.Resources
         public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             var query = QueryExpressionParser.BuildLinqExpression<AppletSolution>(queryParameters);
-            var applets = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().Solutions.Where(query.Compile()).Select(o => new AppletSolutionInfo(o, null));
+            var applets = ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().Solutions.Where(query.Compile()).Select(o => new AppletSolutionInfo(o));
             return new MemoryQueryResultSet(applets);
         }
 
@@ -236,7 +236,7 @@ namespace SanteDB.Rest.AMI.Resources
                     store.Close();
                 }
             }
-            return new AppletSolutionInfo(pkg, new X509Certificate2Info(cert?.Issuer, cert?.NotBefore, cert?.NotAfter, cert?.Subject, cert?.Thumbprint));
+            return new AppletSolutionInfo(pkg);
         }
 
         /// <summary>
