@@ -178,6 +178,7 @@ namespace SanteDB.Rest.AMI.Resources
         public override object Get(object id, object versionId)
         {
             // Get the object
+            
             var data = this.GetRepository().Get((Guid)id, (Guid)versionId);
 
             var retVal = Activator.CreateInstance(this.WrapperType, data) as ISecurityEntityInfo<TSecurityEntity>;
