@@ -26806,7 +26806,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("relationshipTypeModel")) {
                 if ((_strong.RelationshipType == null)) {
-                    if ((_strong.RelationshipTypeKey.HasValue && context.ShouldForceLoad("relationshipTypeModel", _strong.Key))) {
+                    if ((_strong.RelationshipTypeKey == System.Guid.Empty && context.ShouldForceLoad("relationshipTypeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "RelationshipType");
                         if ((_delay != null)) {
