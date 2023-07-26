@@ -191,6 +191,8 @@ namespace SanteDB.Rest.Common.Serialization
                         {
                             case "application/xml":
                             case "application/xml+sdb-patch":
+                            case SanteDBExtendedMimeTypes.XmlPatch:
+                            case SanteDBExtendedMimeTypes.XmlRimModel:
                                 XmlSerializer serializer = null;
                                 using (XmlReader bodyReader = XmlReader.Create(request.Body))
                                 {
@@ -212,6 +214,7 @@ namespace SanteDB.Rest.Common.Serialization
                                 break;
 
                             case "application/json+sdb-viewmodel":
+                            case SanteDBExtendedMimeTypes.JsonViewModel:
                                 var viewModel = httpRequest.Headers[ExtendedHttpHeaderNames.ViewModelHeaderName] ?? httpRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName];
 
                                 // Create the view model serializer
@@ -237,6 +240,8 @@ namespace SanteDB.Rest.Common.Serialization
 
                             case "application/json":
                             case "application/json+sdb-patch":
+                            case SanteDBExtendedMimeTypes.JsonPatch:
+                            case SanteDBExtendedMimeTypes.JsonRimModel:
                                 using (var sr = new StreamReader(request.Body))
                                 {
                                     JsonSerializer jsz = new JsonSerializer()
@@ -373,6 +378,7 @@ namespace SanteDB.Rest.Common.Serialization
                     switch (contentTypeMime.MediaType)
                     {
                         case "application/json+sdb-viewmodel":
+                        case SanteDBExtendedMimeTypes.JsonViewModel:
 
 
                             if (result is IdentifiedData id)
@@ -425,6 +431,7 @@ namespace SanteDB.Rest.Common.Serialization
                             break;
 
                         case "application/json":
+                        case SanteDBExtendedMimeTypes.JsonRimModel:
                             {
                                 // Prepare the serializer
                                 JsonSerializer jsz = new JsonSerializer();
@@ -459,6 +466,7 @@ namespace SanteDB.Rest.Common.Serialization
                                 break;
                             }
                         case "application/xml":
+                        case SanteDBExtendedMimeTypes.XmlRimModel:
                             {
                                 XmlSerializer xsz = XmlModelSerializerFactory.Current.CreateSerializer(result.GetType());
                                 MemoryStream ms = new MemoryStream();

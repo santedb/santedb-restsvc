@@ -396,7 +396,7 @@ namespace SanteDB.Rest.AMI
 
             if (this.m_patchService != null)
             {
-                RestOperationContext.Current.OutgoingResponse.Headers.Add("Accept-Patch", "application/xml+sdb-patch");
+                    RestOperationContext.Current.OutgoingResponse.Headers.Add("Accept-Patch", $"application/xml+sdb-patch, {SanteDBExtendedMimeTypes.XmlPatch}, {SanteDBExtendedMimeTypes.JsonPatch}");
             }
 
             // mex configuration
