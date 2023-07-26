@@ -79,6 +79,7 @@ namespace SanteDB.Rest.HDSI.Vrp
                 {
                     Height = 432,
                     Width = 432,
+                    NoPadding = true,
                     PureBarcode = true
                 },
                 Renderer = new ZXing.Windows.Compatibility.BitmapRenderer()
