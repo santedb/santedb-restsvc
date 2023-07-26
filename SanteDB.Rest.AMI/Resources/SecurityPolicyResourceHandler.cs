@@ -72,7 +72,7 @@ namespace SanteDB.Rest.AMI.Resources
             else if (policy == null)
             {
                 this.m_tracer.TraceError($"Policy {key} not found");
-                throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.ami.policyNotFound", new
+                throw new KeyNotFoundException(this.LocalizationService.GetString("error.rest.ami.policyNotFound", new
                 {
                     param = key
                 }));
@@ -80,7 +80,7 @@ namespace SanteDB.Rest.AMI.Resources
             else
             {
                 this.m_tracer.TraceError($"Policy {(policy as SecurityPolicy).Oid} is a system policy and cannot be edited");
-                throw new SecurityException(this.m_localizationService.GetString("error.rest.ami.editSystemPolicy", new
+                throw new SecurityException(this.LocalizationService.GetString("error.rest.ami.editSystemPolicy", new
                 {
                     param = (policy as SecurityPolicy).Oid
                 }));
@@ -102,7 +102,7 @@ namespace SanteDB.Rest.AMI.Resources
             else if (policy == null)
             {
                 this.m_tracer.TraceError($"Policy {key} not found");
-                throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.ami.policyNotFound", new
+                throw new KeyNotFoundException(this.LocalizationService.GetString("error.rest.ami.policyNotFound", new
                 {
                     param = key
                 }));
@@ -110,7 +110,7 @@ namespace SanteDB.Rest.AMI.Resources
             else
             {
                 this.m_tracer.TraceError($"Policy {(policy as SecurityPolicy).Oid} is a system policy and cannot be disabled");
-                throw new SecurityException(this.m_localizationService.GetString("error.rest.ami.disableSystemPolicy", new
+                throw new SecurityException(this.LocalizationService.GetString("error.rest.ami.disableSystemPolicy", new
                 {
                     param = (policy as SecurityPolicy).Oid
                 }));

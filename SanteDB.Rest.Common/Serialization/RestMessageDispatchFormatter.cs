@@ -36,6 +36,7 @@ using SanteDB.Core.Model.Json.Formatter;
 using SanteDB.Core.Model.Serialization;
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics.Tracing;
@@ -58,7 +59,7 @@ namespace SanteDB.Rest.Common.Serialization
     public abstract class RestMessageDispatchFormatter : IDispatchMessageFormatter
     {
         // Formatters
-        private static Dictionary<Type, RestMessageDispatchFormatter> m_formatters = new Dictionary<Type, RestMessageDispatchFormatter>();
+        private static ConcurrentDictionary<Type, RestMessageDispatchFormatter> m_formatters = new ConcurrentDictionary<Type, RestMessageDispatchFormatter>();
 
         /// <summary>
         /// Create a formatter for the specified contract type
@@ -68,15 +69,9 @@ namespace SanteDB.Rest.Common.Serialization
             RestMessageDispatchFormatter retVal = null;
             if (!m_formatters.TryGetValue(contractType, out retVal))
             {
-                lock (m_formatters)
-                {
-                    if (!m_formatters.ContainsKey(contractType))
-                    {
-                        var typeFormatter = typeof(RestMessageDispatchFormatter<>).MakeGenericType(contractType);
-                        retVal = Activator.CreateInstance(typeFormatter) as RestMessageDispatchFormatter;
-                        m_formatters.Add(contractType, retVal);
-                    }
-                }
+                var typeFormatter = typeof(RestMessageDispatchFormatter<>).MakeGenericType(contractType);
+                retVal = Activator.CreateInstance(typeFormatter) as RestMessageDispatchFormatter;
+                m_formatters.TryAdd(contractType, retVal);
             }
             return retVal;
         }
@@ -379,7 +374,7 @@ namespace SanteDB.Rest.Common.Serialization
                     {
                         case "application/json+sdb-viewmodel":
 
-                           
+
                             if (result is IdentifiedData id)
                             {
 #if DEBUG

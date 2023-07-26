@@ -46,18 +46,13 @@ namespace SanteDB.Rest.HDSI.Resources
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public abstract class HdsiResourceHandlerBase<TData> : SanteDB.Rest.Common.ResourceHandlerBase<TData>,
         ICancelResourceHandler,
-        IChainedApiResourceHandler,
         ICheckoutResourceHandler,
         IApiResourceHandlerEx,
         IOperationalApiResourceHandler
 
         where TData : IdentifiedData, new()
     {
-        // Property providers
-        private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
 
-        // Property providers
-        private ConcurrentDictionary<String, IApiChildOperation> m_operationProviders = new ConcurrentDictionary<string, IApiChildOperation>();
         private readonly IResourceCheckoutService m_resourceCheckoutService;
 
         /// <summary>
@@ -72,16 +67,6 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Gets the scope
         /// </summary>
         public override Type Scope => typeof(IHdsiServiceContract);
-
-        /// <summary>
-        /// Get all child resources
-        /// </summary>
-        public IEnumerable<IApiChildResourceHandler> ChildResources => this.m_propertyProviders.Values;
-
-        /// <summary>
-        /// Get all child resources
-        /// </summary>
-        public IEnumerable<IApiChildOperation> Operations => this.m_operationProviders.Values;
 
         /// <inheritdoc/>
         public override object Get(object id, object versionId)
@@ -138,39 +123,6 @@ namespace SanteDB.Rest.HDSI.Resources
             }
         }
 
-        /// <summary>
-        /// Add an associated entity
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
-        {
-            try
-            {
-                if (scopingEntityKey is Guid objectKey)
-                {
-                    this.CheckOut(objectKey);
-                }
-                if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-                {
-                    return propertyProvider.Add(typeof(TData), scopingEntityKey, scopedItem);
-                }
-                else
-                {
-                    this.m_tracer.TraceError($"{propertyName} not found");
-                    throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
-                    {
-                        param = propertyName
-                    }));
-                }
-            }
-            finally
-            {
-                if (scopingEntityKey is Guid objectKey)
-                {
-                    this.CheckIn(objectKey);
-                }
-            }
-        }
 
         /// <summary>
         /// Cancel the specified object
@@ -187,7 +139,7 @@ namespace SanteDB.Rest.HDSI.Resources
                 else
                 {
                     this.m_tracer.TraceError($"Repository for {this.ResourceName} does not support Cancel");
-                    throw new NotSupportedException(this.m_localizationService.GetString("error.rest.hdsi.notSupportCancel", new
+                    throw new NotSupportedException(this.LocalizationService.GetString("error.rest.hdsi.notSupportCancel", new
                     {
                         param = this.ResourceName
                     }));
@@ -200,27 +152,6 @@ namespace SanteDB.Rest.HDSI.Resources
         }
 
         /// <summary>
-        /// Get associated entity
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual object GetChildObject(object scopingEntity, string propertyName, object subItem)
-        {
-            Guid objectKey = (Guid)scopingEntity, subItemKey = (Guid)subItem;
-            if (this.TryGetChainedResource(propertyName, scopingEntity == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Get(typeof(TData), objectKey, subItemKey);
-            }
-            else
-            {
-                this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
-                {
-                    param = propertyName
-                }));
-            }
-        }
-
-        /// <summary>
         /// Attempt to get a lock on the specified object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
@@ -228,63 +159,9 @@ namespace SanteDB.Rest.HDSI.Resources
         {
             if (this.m_resourceCheckoutService?.Checkout<TData>((Guid)key) == false)
             {
-                throw new ObjectLockedException(this.m_localizationService.GetString("error.type.ObjectLockedException"));
+                throw new ObjectLockedException(this.LocalizationService.GetString("error.type.ObjectLockedException"));
             }
             return null;
-        }
-
-        /// <summary>
-        /// Query for associated entities
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual IQueryResultSet QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter)
-        {
-            if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-            {
-                return propertyProvider.Query(typeof(TData), scopingEntityKey, filter);
-            }
-            else
-            {
-                this.m_tracer.TraceError($"{propertyName} not found");
-                throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
-                {
-                    param = propertyName
-                }));
-            }
-        }
-
-        /// <summary>
-        /// Remove an associated entity
-        /// </summary>
-        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
-        public virtual object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
-        {
-            try
-            {
-                if (scopingEntityKey is Guid objectKey)
-                {
-                    this.CheckOut(objectKey);
-                }
-                if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
-                {
-                    return propertyProvider.Remove(typeof(TData), scopingEntityKey, subItemKey);
-                }
-                else
-                {
-                    this.m_tracer.TraceError($"{propertyName} not found");
-                    throw new KeyNotFoundException(this.m_localizationService.GetString("error.type.KeyNotFoundException.notFound", new
-                    {
-                        param = propertyName
-                    }));
-                }
-            }
-            finally
-            {
-                if (scopingEntityKey is Guid objectKey)
-                {
-                    this.CheckIn(objectKey);
-                }
-            }
         }
 
         /// <summary>
@@ -295,7 +172,7 @@ namespace SanteDB.Rest.HDSI.Resources
         {
             if (this.m_resourceCheckoutService?.Checkin<TData>((Guid)key) == false)
             {
-                throw new ObjectLockedException(this.m_localizationService.GetString("error.type.ObjectLockedException"));
+                throw new ObjectLockedException(this.LocalizationService.GetString("error.type.ObjectLockedException"));
             }
             return null;
         }
@@ -316,71 +193,9 @@ namespace SanteDB.Rest.HDSI.Resources
             else
             {
                 this.m_tracer.TraceError("Repository service does not support TOUCH");
-                throw new InvalidOperationException(this.m_localizationService.GetString("error.rest.hdsi.supportTouch"));
+                throw new InvalidOperationException(this.LocalizationService.GetString("error.rest.hdsi.supportTouch"));
             }
         }
 
-        /// <summary>
-        /// Add the property handler to this handler
-        /// </summary>
-        public void AddChildResource(IApiChildResourceHandler property)
-        {
-            this.m_propertyProviders.TryAdd(property.Name, property);
-        }
-
-        /// <summary>
-        /// Add the child operation
-        /// </summary>
-        public void AddOperation(IApiChildOperation operation)
-        {
-            this.m_operationProviders.TryAdd(operation.Name, operation);
-        }
-
-        /// <summary>
-        /// Invoke the specified operation
-        /// </summary>
-        public object InvokeOperation(object scopingEntityKey, string operationName, ParameterCollection parameters)
-        {
-            if (this.TryGetOperation(operationName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildOperation handler))
-            {
-                return handler.Invoke(typeof(TData), scopingEntityKey, parameters);
-            }
-            else
-            {
-                this.m_tracer.TraceError($"Operation {operationName} not supported");
-                throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException.operation", new
-                {
-                    param = operationName
-                }));
-            }
-        }
-
-        /// <summary>
-        /// Try to get a chained resource
-        /// </summary>
-        public bool TryGetChainedResource(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildResourceHandler childHandler)
-        {
-            var retVal = this.m_propertyProviders.TryGetValue(propertyName, out childHandler) &&
-                childHandler.ScopeBinding.HasFlag(bindingType);
-            if (!retVal)
-            {
-                childHandler = null;//clear in case of lazy programmers like me
-            }
-            return retVal;
-        }
-
-        /// <summary>
-        /// Try to get operation
-        /// </summary>
-        public bool TryGetOperation(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildOperation operationHandler)
-        {
-            var retVal = this.m_operationProviders.TryGetValue(propertyName, out operationHandler) &&
-                operationHandler.ScopeBinding.HasFlag(bindingType);
-            if (!retVal)
-            {
-                operationHandler = null;//clear in case of lazy programmers like me
-            }
-            return retVal;
-        }
     }
 }
