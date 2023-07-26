@@ -580,7 +580,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     try
                     {
                         var restClient = this.CreateProxyClient();
-                        var patchId = restClient.Patch<Patch>($"/{resourceType}/{id}", "application/xml+sdb-patch", RestOperationContext.Current.IncomingRequest.Headers["If-Match"], body);
+                        var patchId = restClient.Patch<Patch>($"/{resourceType}/{id}", "application/xml", RestOperationContext.Current.IncomingRequest.Headers["If-Match"], body);
                         RestOperationContext.Current.OutgoingResponse.SetETag(patchId);
 
                         if (Guid.TryParse(id, out Guid uuid))
