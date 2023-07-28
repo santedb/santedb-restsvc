@@ -72,10 +72,11 @@ namespace SanteDB.Rest.AMI.Resources
                 var description = multiPartData.FirstOrDefault(o => o.Name == "description");
                 var map = multiPartData.FirstOrDefault(o => o.Name == "map");
                 var source = multiPartData.FirstOrDefault(o => o.Name == "source");
+                var parameters = multiPartData.Where(o => !o.IsFile).ToDictionaryIgnoringDuplicates(o => o.Name, o => o.ToString());
 
                 if (map != null && source != null && source.IsFile)
                 {
-                    return new ForeignDataInfo(this.m_foreignDataService.Stage(new MemoryStream(source.Data), source.FileName, description.ToString(), Guid.Parse(map.ToString())));
+                    return new ForeignDataInfo(this.m_foreignDataService.Stage(new MemoryStream(source.Data), source.FileName, description.ToString(), Guid.Parse(map.ToString()), parameters));
                 }
                 else
                 {
@@ -134,7 +135,7 @@ namespace SanteDB.Rest.AMI.Resources
                 var map = multiPartData.FirstOrDefault(o => o.Name == "map");
                 var source = multiPartData.FirstOrDefault(o => o.Name == "source");
                 var id = multiPartData.FirstOrDefault(o => o.Name == "id");
-
+                var parameters = multiPartData.Where(o => !o.IsFile).ToDictionaryIgnoringDuplicates(o => o.Name, o => o.ToString());
                 if (Guid.TryParse(id?.ToString(), out var idGuid))
                 {
                     this.Delete(idGuid);
@@ -146,7 +147,7 @@ namespace SanteDB.Rest.AMI.Resources
 
                 if (map != null && source != null && source.IsFile)
                 {
-                    return new ForeignDataInfo(this.m_foreignDataService.Stage(new MemoryStream(source.Data), source.FileName, description.ToString(), Guid.Parse(map.ToString())));
+                    return new ForeignDataInfo(this.m_foreignDataService.Stage(new MemoryStream(source.Data), source.FileName, description.ToString(), Guid.Parse(map.ToString()), parameters));
                 }
                 else
                 {
