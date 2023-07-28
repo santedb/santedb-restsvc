@@ -43,10 +43,6 @@ namespace SanteDB.Rest.Common
         IApiResourceHandlerRepository,
         IApiResourceHandler where TResource : class, IIdentifiedResource, new()
     {
-        /// <summary>
-        /// Tracer to receive trace messages.
-        /// </summary>
-        protected readonly Tracer m_tracer = Tracer.GetTracer(typeof(ResourceHandlerBase<TResource>));
 
         /// <summary>
         /// IRepository service
