@@ -66,7 +66,7 @@ namespace SanteDB.Rest.HDSI.Resources
             else
             {
                 this.m_tracer.TraceError("Can only handle UserEntity");
-                throw new ArgumentOutOfRangeException(this.m_localizationService.GetString("error.rest.hdsi.handleUserEntity"));
+                throw new ArgumentOutOfRangeException(this.LocalizationService.GetString("error.rest.hdsi.handleUserEntity"));
             }
         }
 
@@ -120,7 +120,7 @@ namespace SanteDB.Rest.HDSI.Resources
             else
             {
                 this.m_tracer.TraceError("Can only handle UserEntity");
-                throw new ArgumentOutOfRangeException(this.m_localizationService.GetString("error.rest.hdsi.handleUserEntity"));
+                throw new ArgumentOutOfRangeException(this.LocalizationService.GetString("error.rest.hdsi.handleUserEntity"));
             }
         }
     }

@@ -119,6 +119,9 @@ namespace SanteDB.Rest.Common
                     return HttpStatusCode.Conflict;
                 case RestClientException<Object> rco:
                     return rco.HttpStatus;
+                case MissingMemberException mme:
+                case FormatException fe:
+                    return HttpStatusCode.BadRequest;
                 default:
                     return System.Net.HttpStatusCode.InternalServerError;
             }

@@ -396,7 +396,7 @@ namespace SanteDB.Rest.AMI
 
             if (this.m_patchService != null)
             {
-                RestOperationContext.Current.OutgoingResponse.Headers.Add("Accept-Patch", "application/xml+sdb-patch");
+                    RestOperationContext.Current.OutgoingResponse.Headers.Add("Accept-Patch", $"application/xml+sdb-patch, {SanteDBExtendedMimeTypes.XmlPatch}, {SanteDBExtendedMimeTypes.JsonPatch}");
             }
 
             // mex configuration
@@ -685,6 +685,10 @@ namespace SanteDB.Rest.AMI
                 var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null)
                 {
+                    if (handler is IChainedApiResourceHandler chainedHandler && chainedHandler.TryGetChainedResource(key, ChildObjectScopeBinding.Class, out IApiChildResourceHandler childHandler))
+                    {
+                        return this.AssociationSearch(resourceType, null, key);
+                    }
 
                     this.AclCheck(handler, nameof(IApiResourceHandler.Get));
                     this.ThrowIfPreConditionFails(handler, key);

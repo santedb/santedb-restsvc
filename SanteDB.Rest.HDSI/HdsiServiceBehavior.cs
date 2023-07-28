@@ -1184,7 +1184,7 @@ namespace SanteDB.Rest.HDSI
                 RestOperationContext.Current.OutgoingResponse.Headers.Add("Allow", $"GET, PUT, POST, OPTIONS, HEAD, DELETE{(this.m_patchService != null ? ", PATCH" : null)}");
                 if (this.m_patchService != null)
                 {
-                    RestOperationContext.Current.OutgoingResponse.Headers.Add("Accept-Patch", "application/xml+sdb-patch");
+                    RestOperationContext.Current.OutgoingResponse.Headers.Add("Accept-Patch", $"application/xml+sdb-patch, {SanteDBExtendedMimeTypes.XmlPatch}, {SanteDBExtendedMimeTypes.JsonPatch}");
                 }
 
                 // Service options
