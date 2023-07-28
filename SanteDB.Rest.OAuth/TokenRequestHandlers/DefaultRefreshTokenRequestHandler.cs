@@ -49,6 +49,8 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
         /// </summary>
         /// <param name="sessionResolver">Injected through dependency injection.</param>
         /// <param name="sessionIdentityProvider"></param>
+        /// <param name="sessionProvider"></param>
+        /// <param name="auditService"></param>
         public DefaultRefreshTokenRequestHandler(ISessionTokenResolverService sessionResolver, ISessionIdentityProviderService sessionIdentityProvider, ISessionProviderService sessionProvider, IAuditService auditService)
         {
             _Tracer = new Tracer(nameof(DefaultRefreshTokenRequestHandler));

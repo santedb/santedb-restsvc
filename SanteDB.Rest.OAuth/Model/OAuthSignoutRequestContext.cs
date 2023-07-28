@@ -26,12 +26,16 @@ using System.Collections.Specialized;
 
 namespace SanteDB.Rest.OAuth.Model
 {
+    /// <summary>
+    /// Request context for a signout request.
+    /// </summary>
     public class OAuthSignoutRequestContext : OAuthRequestContextBase
     {
+        /// <inheritdoc />
         public OAuthSignoutRequestContext(RestOperationContext operationContext) : base(operationContext)
         {
         }
-
+        /// <inheritdoc />
         public OAuthSignoutRequestContext(RestOperationContext operationContext, NameValueCollection formFields) : base(operationContext, formFields)
         {
         }

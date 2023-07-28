@@ -38,7 +38,10 @@ namespace SanteDB.Rest.Common.Behavior
     public class CookieAuthenticationBehavior : IServiceBehavior, IAuthorizationServicePolicy
     {
 
-        public const string RestPropertyNameSession = "Session";
+        /// <summary>
+        /// The key for the <see cref="ISession"/> stored in the <see cref="RestOperationContext"/> by the <see cref="CookieAuthenticationBehavior"/>.
+        /// </summary>
+        public const string RestDataItem_Session = "Session";
 
         // Tracer
         private readonly Tracer m_tracer = Tracer.GetTracer(typeof(CookieAuthenticationBehavior));
@@ -96,7 +99,7 @@ namespace SanteDB.Rest.Common.Behavior
                     if (session != null)
                     {
 
-                        RestOperationContext.Current.Data.Add(RestPropertyNameSession, session);
+                        RestOperationContext.Current.Data.Add(RestDataItem_Session, session);
 
                         var authContext = AuthenticationContext.EnterContext(m_sessionIdentityProvider.Authenticate(session));
                         RestOperationContext.Current.Disposed += (o, e) => authContext.Dispose();

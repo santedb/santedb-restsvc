@@ -90,6 +90,9 @@ namespace SanteDB.Rest.Common.Security
     {
 
         // Client certificate DN if passed from proxy
+        /// <summary>
+        /// HTTP header name for client certificate distinguished name (DN).
+        /// </summary>
         public const string X_CLIENT_CERT_PEM = "X-SSL-ClientCert";
 
         // Tracer

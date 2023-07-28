@@ -46,6 +46,7 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
         /// </summary>
         /// <param name="policyService"></param>
         /// <param name="securityChallengeService"></param>
+        /// <param name="applicationIdentityProviderService"></param>
         public DefaultPasswordResetTokenRequestHandler(IPolicyEnforcementService policyService, ISecurityChallengeIdentityService securityChallengeService, IApplicationIdentityProviderService applicationIdentityProviderService)
         {
             _Tracer = new Tracer(nameof(DefaultPasswordResetTokenRequestHandler));

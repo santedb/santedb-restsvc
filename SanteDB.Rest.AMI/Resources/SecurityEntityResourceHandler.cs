@@ -52,7 +52,9 @@ namespace SanteDB.Rest.AMI.Resources
         // CAche Service
         private IDataCachingService m_cacheService;
 
-        // Policy information service
+        /// <summary>
+        /// The policy information service.
+        /// </summary>
         protected IPolicyInformationService m_policyInformationService;
 
         readonly IAuditService _AuditService;

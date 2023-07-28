@@ -99,6 +99,7 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Set the e-tag
         /// </summary>
+        /// <param name="me">The response to set the e-tag header on.</param>
         /// <param name="isWeak">True if the e-tag is a weak reference</param>
         /// <param name="etag">The value of the e-tag</param>
         public static void SetETag(this HttpListenerResponse me, String etag, bool isWeak = false)

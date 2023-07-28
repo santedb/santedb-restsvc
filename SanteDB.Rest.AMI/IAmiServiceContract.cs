@@ -327,6 +327,7 @@ namespace SanteDB.Rest.AMI
         /// <param name="resourceType">The type of operation being invoked</param>
         /// <param name="id">The ID of the operation</param>
         /// <param name="operationName">The name of the operation</param>
+        /// <param name="body">The body of the request.</param>
         /// <returns>The result of the operation invokation</returns>
         [RestInvoke("POST", "/{resourceType}/{id}/${operationName}")]
         object InvokeMethod(String resourceType, String id, String operationName, ParameterCollection body);

@@ -64,8 +64,10 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Add a value to the associated property
         /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
+        /// <param name="scopingType">The enclosing type this child is a member of.</param>
+        /// <param name="scopingKey">The identifier for the enclosing type which scopes this item.</param>
+        /// <param name="item">The item to add.</param>
+        /// <returns>An appropriate response for adding the <paramref name="item"/>.</returns>
         object Add(Type scopingType, Object scopingKey, object item);
     }
 }
