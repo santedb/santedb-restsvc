@@ -152,6 +152,7 @@ namespace SanteDB.Core.Model.AMI.Collections
         /// <summary>
         /// Get the items 
         /// </summary>
+        [JsonIgnore, XmlIgnore]
         IEnumerable<IIdentifiedResource> IResourceCollection.Item => this.CollectionItem.OfType<IIdentifiedResource>();
 
         /// <summary>
