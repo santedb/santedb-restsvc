@@ -31,12 +31,13 @@ namespace SanteDB.Rest.OAuth.Model
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // Serialization class
     public class OAuthTokenRequestContext : OAuthRequestContextBase
     {
-
+        /// <inheritdoc />
         public OAuthTokenRequestContext(RestOperationContext operationContext) : base(operationContext)
         {
 
         }
 
+        /// <inheritdoc />
         public OAuthTokenRequestContext(RestOperationContext operationContext, NameValueCollection formFields)
             : base(operationContext, formFields)
         {
@@ -70,8 +71,13 @@ namespace SanteDB.Rest.OAuth.Model
         /// </summary>
         public string SecurityChallengeResponse => FormFields?[OAuthConstants.FormField_ChallengeResponse];
 
-
+        /// <summary>
+        /// The code verifier used in a PKCE flow.
+        /// </summary>
         public string CodeVerifier { get; set; }
+        /// <summary>
+        /// The code verifier method used for a PKCE flow.
+        /// </summary>
         public string CodeVerifierMethod { get; set; }
         #endregion
 

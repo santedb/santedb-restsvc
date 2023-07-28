@@ -253,7 +253,7 @@ namespace SanteDB.Rest.AppService
         {
             var retVal = new Dictionary<string, object>();
             var identity = AuthenticationContext.Current.Principal.Identity;
-            if (RestOperationContext.Current.Data.TryGetValue(CookieAuthenticationBehavior.RestPropertyNameSession, out var sessionObject) && sessionObject is ISession ses)
+            if (RestOperationContext.Current.Data.TryGetValue(CookieAuthenticationBehavior.RestDataItem_Session, out var sessionObject) && sessionObject is ISession ses)
             {
                 retVal.Add("lang", ses.Claims.FirstOrDefault(o => o.Type == SanteDBClaimTypes.Language)?.Value);
                 retVal.Add("scope", ses.Claims.Where(o => o.Type == SanteDBClaimTypes.SanteDBGrantedPolicyClaim).Select(o => o.Value).ToArray());

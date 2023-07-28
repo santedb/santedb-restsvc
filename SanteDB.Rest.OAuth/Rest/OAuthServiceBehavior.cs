@@ -119,7 +119,9 @@ namespace SanteDB.Rest.OAuth.Rest
         /// JWT Handler to create JWTs with.
         /// </summary>
         protected readonly JsonWebTokenHandler m_JwtHandler;
-
+        /// <summary>
+        /// Applet solution manager.
+        /// </summary>
         protected readonly IAppletSolutionManagerService _AppletSolutionManager;
 
         /// <summary>
@@ -128,7 +130,9 @@ namespace SanteDB.Rest.OAuth.Rest
         protected readonly IAppletManagerService _AppletManager;
 
         private IAssetProvider _AssetProvider;
-
+        /// <summary>
+        /// Symmetric encryption provider.
+        /// </summary>
         protected readonly ISymmetricCryptographicProvider _SymmetricProvider;
 
         readonly IAuditService _AuditService;
@@ -139,7 +143,9 @@ namespace SanteDB.Rest.OAuth.Rest
 
         // XHTML
         private const string XS_HTML = "http://www.w3.org/1999/xhtml";
-
+        /// <summary>
+        /// A list of grant type names and corresponding <see cref="ITokenRequestHandler"/> to process the request.
+        /// </summary>
         protected readonly Dictionary<string, ITokenRequestHandler> _TokenRequestHandlers;
         private readonly Dictionary<string, Func<OAuthAuthorizeRequestContext, object>> _AuthorizeResponseModeHandlers;
 
@@ -689,6 +695,15 @@ namespace SanteDB.Rest.OAuth.Rest
             return OAuthConstants.ClaimType_Name;
         }
 
+        /// <summary>
+        /// Establishes a session for a daemon application and optional device identity. No user is associated with the session.
+        /// </summary>
+        /// <param name="clientPrincipal">The application which the session will be created for.</param>
+        /// <param name="devicePrincipal">An optional device identity associated with the session.</param>
+        /// <param name="scopes">Scopes that the session is granted</param>
+        /// <param name="additionalClaims">Additional claims to establish with the session.</param>
+        /// <returns>A session object that can be used to perform operations with.</returns>
+        /// <exception cref="ArgumentException">The <paramref name="clientPrincipal"/> is not an <see cref="IApplicationIdentity"/>.</exception>
         protected ISession EstablishClientSession(IPrincipal clientPrincipal, IPrincipal devicePrincipal, List<string> scopes, IEnumerable<IClaim> additionalClaims)
         {
             SanteDBClaimsPrincipal claimsPrincipal = null;
@@ -1697,7 +1712,11 @@ namespace SanteDB.Rest.OAuth.Rest
         #endregion
 
         #region Signout Endpoint
-
+        /// <summary>
+        /// Process a signout request flow.
+        /// </summary>
+        /// <param name="form">The form parameters for the signout request.</param>
+        /// <returns>Null. The response should be a redirect to the provided uri or to the default URI.</returns>
         [return: MessageFormat(MessageFormatType.Json)]
         public virtual object Signout(NameValueCollection form)
         {

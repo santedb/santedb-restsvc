@@ -61,6 +61,7 @@ namespace SanteDB.Rest.AMI.ChildResources
         /// Creates a new content child handler
         /// </summary>
         /// <param name="solutionManager">The solution manager</param>
+        /// <param name="appletManager">The applet manager</param>
         public AppletSolutionContentChildHandler(IAppletSolutionManagerService solutionManager, IAppletManagerService appletManager)
         {
             this.m_solutionManager = solutionManager;

@@ -27,8 +27,17 @@ namespace SanteDB.Rest.OAuth
     /// </summary>
     public static class OAuthConstants
     {
+        /// <summary>
+        /// The response type in the authorize request. This is part of the OAuth specification.
+        /// </summary>
         public const string ResponseType_Code = "code";
+        /// <summary>
+        /// The response type in the authorize request. This is part of the OAuth specification.
+        /// </summary>
         public const string ResponseType_Token = "token";
+        /// <summary>
+        /// The response type in the authorize request. This is part of the OAuth specification. 
+        /// </summary>
         public const string ResponseType_IdToken = "id_token";
 
         /// <summary>
@@ -199,41 +208,131 @@ namespace SanteDB.Rest.OAuth
         /// </summary>
         public const string ResponseMode_FormPost = "form_post";
 
+        /// <summary>
+        /// Query string property name for the client id.
+        /// </summary>
         public const string AuthorizeParameter_ClientId = "client_id";
+        /// <summary>
+        /// Query string property name for the login hint.
+        /// </summary>
         public const string AuthorizeParameter_LoginHint = "login_hint";
+        /// <summary>
+        /// Query string property name for the nonce.
+        /// </summary>
         public const string AuthorizeParameter_Nonce = "nonce";
+        /// <summary>
+        /// Query string property name for the scope.
+        /// </summary>
         public const string AuthorizeParameter_Scope = "scope";
+        /// <summary>
+        /// Query string property name for the prompt.
+        /// </summary>
         public const string AuthorizeParameter_Prompt = "prompt";
+        /// <summary>
+        /// Query string property name for the state.
+        /// </summary>
         public const string AuthorizeParameter_State = "state";
+        /// <summary>
+        /// Query string property name for the response type.
+        /// </summary>
         public const string AuthorizeParameter_ResponseType = "response_type";
+        /// <summary>
+        /// Query string property name for the response mode.
+        /// </summary>
         public const string AuthorizeParameter_ResponseMode = "response_mode";
+        /// <summary>
+        /// Query string property name for the redirect uri.
+        /// </summary>
         public const string AuthorizeParameter_RedirectUri = "redirect_uri";
 
 
         //Signout endpoint.
+        /// <summary>
+        /// An id token used to select which user to sign out.
+        /// </summary>
         public const string FormField_IdTokenHint = "id_token_hint";
+        /// <summary>
+        /// The user identifier used to determine who to log out.
+        /// </summary>
         public const string FormField_LogoutHint = "logout_hint";
+        /// <summary>
+        /// Where to redirect the user agent after the sign out process is completed.
+        /// </summary>
         public const string FormField_PostLogoutRedirectUri = "post_logout_redirect_uri";
 
+        /// <summary>
+        /// Name
+        /// </summary>
         public const string ClaimType_Name = "name";
+        /// <summary>
+        /// Actor
+        /// </summary>
         public const string ClaimType_Actor = "actor";
+        /// <summary>
+        /// Subject
+        /// </summary>
         public const string ClaimType_Subject = "sub";
+        /// <summary>
+        /// Session Id
+        /// </summary>
         public const string ClaimType_Sid = "sid";
+        /// <summary>
+        /// Nonce
+        /// </summary>
         public const string ClaimType_Nonce = "nonce";
+        /// <summary>
+        /// Access token hash
+        /// </summary>
         public const string ClaimType_AtHash = "at_hash";
+        /// <summary>
+        /// JWT id
+        /// </summary>
         public const string ClaimType_Jti = "jti";
+        /// <summary>
+        /// Role
+        /// </summary>
         public const string ClaimType_Role = "role";
+        /// <summary>
+        /// Email
+        /// </summary>
         public const string ClaimType_Email = "email";
+        /// <summary>
+        /// Realm
+        /// </summary>
         public const string ClaimType_Realm = "realm";
+        /// <summary>
+        /// Phone Number
+        /// </summary>
         public const string ClaimType_Telephone = "phone_number";
 
         // Claims from https://profiles.ihe.net/ITI/IUA/index.html#3714221-json-web-token-option
+        /// <summary>
+        /// IUA Subject Name
+        /// </summary>
         public const string IUA_Claim_SubjectName = "subject_name";
+        /// <summary>
+        /// IUA Subject Organization ID
+        /// </summary>
         public const string IUA_Claim_SubjectOrganizationId = "subject_organization_id";
+        /// <summary>
+        /// IUA Subject Organization
+        /// </summary>
         public const string IUA_Claim_SubjectOrganization = "subject_organization";
+        /// <summary>
+        /// IUA Subject Role
+        /// </summary>
         public const string IUA_Claim_SubjectRole = "subject_role";
+        /// <summary>
+        /// IUA Purpose of Use
+        /// </summary>
         public const string IUA_Claim_PurposeOfUse = "purpose_of_use";
+        /// <summary>
+        /// IUA Nation Provider Id
+        /// </summary>
         public const string IUA_Claim_NationalProviderId = "national_provider_identifier";
+        /// <summary>
+        /// IUA Person Id
+        /// </summary>
         public const string IUA_Claim_PersonId = "person_id";
     }
 }

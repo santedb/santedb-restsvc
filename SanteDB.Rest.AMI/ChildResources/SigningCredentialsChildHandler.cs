@@ -28,7 +28,6 @@ namespace SanteDB.Rest.AMI.ChildResources
     {
         private readonly Tracer m_tracer = Tracer.GetTracer(typeof(SigningCredentialsChildHandler));
         private readonly IDataSigningCertificateManagerService m_dataSigningCertificateManager;
-        private readonly IPolicyEnforcementService m_pepService;
         private readonly IApplicationIdentityProviderService m_applicationIdentityProvider;
         private readonly IDeviceIdentityProviderService m_deviceIdentityProvider;
         private readonly IPlatformSecurityProvider m_platformSecurityProvider;

@@ -32,7 +32,7 @@ namespace SanteDB.Rest.OAuth.Token
     /// </summary>
     public class SanteDBExtendedClaimMapper : IClaimMapper
     {
-
+#pragma warning disable CS1591
         public const string TemporarySessionJwtClaim = "temporary";
         public const string LanguageJwtClaim = "lang";
         public const string MustChangePasswordJwtClaim = "pwd_reset";
@@ -40,6 +40,7 @@ namespace SanteDB.Rest.OAuth.Token
         public const string ApplicationSubjectJwtClaim = "appid";
         public const string DeviceSubjectJwtClaim = "devid";
         public const string UserSubjectJwtClaim = "usrid";
+#pragma warning restore CS1591
 
         /// <summary>
         /// Mapping information to map to kmnown jwt claim names
