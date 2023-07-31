@@ -18,6 +18,7 @@
  * User: fyfej
  * Date: 2023-5-19
  */
+using Microsoft.Win32.SafeHandles;
 using RestSrvr;
 using RestSrvr.Attributes;
 using RestSrvr.Exceptions;
@@ -29,6 +30,7 @@ using SanteDB.Core.Exceptions;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
+using SanteDB.Core.Model.Attributes;
 using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Constants;
@@ -48,10 +50,13 @@ using SanteDB.Rest.HDSI.Configuration;
 using SanteDB.Rest.HDSI.Vrp;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Security;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
@@ -214,6 +219,11 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
+            if(body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
+
             var audit = this.m_auditService.Audit()
                 .WithAction(Core.Model.Audit.ActionType.Create)
                 .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
@@ -250,8 +260,7 @@ namespace SanteDB.Rest.HDSI
                         }
 
                         audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
-                            .WithObjects(retVal.BatchOperation == Core.Model.DataTypes.BatchOperationType.Update ? Core.Model.Audit.AuditableObjectLifecycle.Amendment : Core.Model.Audit.AuditableObjectLifecycle.Creation, retVal)
-                            .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Creation, retVal);
+                            .WithObjects(retVal.BatchOperation == Core.Model.DataTypes.BatchOperationType.Update ? Core.Model.Audit.AuditableObjectLifecycle.Amendment : Core.Model.Audit.AuditableObjectLifecycle.Creation, retVal);
 
                         return retVal;
                     }
@@ -279,6 +288,12 @@ namespace SanteDB.Rest.HDSI
         [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual IdentifiedData CreateUpdate(string resourceType, string id, IdentifiedData body)
         {
+            this.ThrowIfNotReady();
+
+            if(body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
 
             var audit = this.m_auditService.Audit()
                 .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
@@ -645,6 +660,7 @@ namespace SanteDB.Rest.HDSI
         [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual IdentifiedData History(string resourceType, string id)
         {
+            this.ThrowIfNotReady();
 
             var audit = this.m_auditService.Audit()
                .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Query)
@@ -656,7 +672,6 @@ namespace SanteDB.Rest.HDSI
                .WithLocalDestination()
                .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
-            this.ThrowIfNotReady();
             try
             {
                 var handler = this.GetResourceHandler(resourceType);
@@ -1018,8 +1033,16 @@ namespace SanteDB.Rest.HDSI
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id));
                     }
 
-                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
-                        .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.LogicalDeletion, retVal);
+                    if (retVal is BaseEntityData be && be.ObsoletionTime.HasValue)
+                    {
+                        audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.LogicalDeletion, retVal);
+                    }
+                    else
+                    {
+                        audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.PermanentErasure, retVal);
+                    }
+                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success);
+
                     return retVal;
                 }
                 else
@@ -1495,8 +1518,16 @@ namespace SanteDB.Rest.HDSI
 
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
                     RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, key, childResourceType, retVal.Key));
-                    audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.LogicalDeletion, retVal)
-                        .WithOutcome(Core.Model.Audit.OutcomeIndicator.Success);
+                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success);
+                    if (retVal is BaseEntityData be && be.ObsoletionTime.HasValue)
+                    {
+                        audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.LogicalDeletion, retVal);
+                    }
+                    else
+                    {
+                        audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.PermanentErasure, retVal);
+                    }
+
                     return retVal;
                 }
                 else
@@ -1973,6 +2004,7 @@ namespace SanteDB.Rest.HDSI
                     this.ThrowIfPreConditionFails(handler, objectId);
                     var retVal = handler.CheckIn(objectId);
                     audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
+                        .WithObjects(AuditableObjectLifecycle.Access, objectId)
                         .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.PermanentErasure, retVal);
                     return retVal;
                 }
@@ -2028,6 +2060,7 @@ namespace SanteDB.Rest.HDSI
                     this.ThrowIfPreConditionFails(handler, objectId);
                     var retVal = handler.CheckOut(objectId);
                     audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
+                        .WithObjects(AuditableObjectLifecycle.Access, objectId)
                         .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Creation, retVal);
                     return retVal;
                 }
@@ -2372,7 +2405,7 @@ namespace SanteDB.Rest.HDSI
         /// <inheritdoc/>
         public virtual Stream GetDataset(string resourceType, string id)
         {
-            this.m_pepService.Demand(PermissionPolicyIdentifiers.ExportData);
+
 
             var audit = this.m_auditService.Audit()
                     .WithAction(Core.Model.Audit.ActionType.Execute)
@@ -2390,8 +2423,32 @@ namespace SanteDB.Rest.HDSI
                 {
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
+                    // We want to also check the export permission
+                    var exportPolicyAttribute = handler.Type.GetCustomAttribute<ResourceSensitivityAttribute>(true);
+                    if (exportPolicyAttribute == null)
+                    {
+                        throw new SecurityException(ErrorMessages.UNABLE_TO_DETERMINE_EXPORT_POLICY);
+                    }
+                    else switch(exportPolicyAttribute.Classification)
+                    {
+                            case ResourceSensitivityClassification.PersonalHealthInformation:
+                                this.m_pepService.Demand(PermissionPolicyIdentifiers.ExportClinicalData);
+                                break;
+                            case ResourceSensitivityClassification.Metadata:
+                            case ResourceSensitivityClassification.Administrative:
+                                this.m_pepService.Demand(PermissionPolicyIdentifiers.ExportData);
+                                break;
+                            default:
+                                throw new SecurityException(ErrorMessages.UNABLE_TO_DETERMINE_EXPORT_POLICY);
+                        }
+
                     using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
                     {
+                        // Are there any query parameters?
+                        if(!RestOperationContext.Current.IncomingRequest.QueryString.ToArray().Any(o=>!o.Key.StartsWith("_")))
+                        {
+                            throw new ArgumentException(ErrorMessages.OPERATION_REQUIRES_QUERY_PARAMETER);
+                        }
                         // Send the query to the resource handler
                         var query = RestOperationContext.Current.IncomingRequest.Url.Query.ParseQueryString();
 
@@ -2419,20 +2476,22 @@ namespace SanteDB.Rest.HDSI
                             retVal.Action.InsertRange(0,
                                 query.GetValues(QueryControlParameterNames.HttpIncludePathParameterName).SelectMany(inc =>
                                 {
-                                    var resourceParts = inc.Split('?');
-                                    if (resourceParts.Length != 2)
-                                    {
-                                        throw new ArgumentOutOfRangeException(QueryControlParameterNames.HttpIncludePathParameterName, String.Format(ErrorMessages.ARGUMENT_COUNT_MISMATCH, 2, resourceParts.Length));
-                                    }
+                                    var propertyPath = QueryExpressionParser.BuildPropertySelector(handler.Type, inc).Compile();
+                                    var identifiers = retVal.Action.Select(o => o.Element).Select(p=>propertyPath.DynamicInvoke(p)).OfType<Guid>().Distinct();
 
-                                    var includeHandler = HdsiMessageHandler.ResourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceParts[0]);
-                                    var ds = includeHandler.Query(resourceParts[1].ParseQueryString());
-                                    return ds.OfType<IdentifiedData>().Select(r => new DataUpdate()
+                                    var serializationRedirect = handler.Type.GetQueryProperty(inc).GetSerializationModelProperty();
+                                    // Get the include handler
+                                    if (serializationRedirect == null || !identifiers.Any())
                                     {
-                                        Element = r,
-                                        InsertIfNotExists = true,
-                                        IgnoreErrors = false
-                                    });
+                                        return new DataInstallAction[0];
+                                    }
+                                    else
+                                    {
+                                        var incHandlerType = typeof(IRepositoryService<>).MakeGenericType(serializationRedirect.PropertyType.StripGeneric());
+                                        var incHandler = ApplicationServiceContext.Current.GetService(incHandlerType) as IRepositoryService;
+
+                                        return identifiers.Select(d => new DataUpdate() { Element = incHandler.Get(d), IgnoreErrors = false, InsertIfNotExists = true }).ToArray();
+                                    }
                                 }));
                         }
 
