@@ -935,11 +935,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         restClient.Responded += this.CopyResponseHeaders;
                         if (String.IsNullOrEmpty(id))
                         {
-                            return new MemoryStream(restClient.Get($"{resourceType}/_export?{RestOperationContext.Current.IncomingRequest.QueryString.ToHttpString()}"));
+                            return new MemoryStream(restClient.Get($"{resourceType}/_export", RestOperationContext.Current.IncomingRequest.QueryString));
                         }
                         else
                         {
-                            return new MemoryStream(restClient.Get($"{resourceType}/{id}/_export?{RestOperationContext.Current.IncomingRequest.QueryString.ToHttpString()}"));
+                            return new MemoryStream(restClient.Get($"{resourceType}/{id}/_export", RestOperationContext.Current.IncomingRequest.QueryString));
                         }
                     }
                     catch (Exception e)

@@ -40,6 +40,7 @@ using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Model.Query;
+using SanteDB.Core.Model.Serialization;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Security.Services;
@@ -53,6 +54,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -219,7 +221,7 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
-            if(body == null)
+            if (body == null)
             {
                 throw new ArgumentNullException(nameof(body));
             }
@@ -290,7 +292,7 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
-            if(body == null)
+            if (body == null)
             {
                 throw new ArgumentNullException(nameof(body));
             }
@@ -2429,8 +2431,8 @@ namespace SanteDB.Rest.HDSI
                     {
                         throw new SecurityException(ErrorMessages.UNABLE_TO_DETERMINE_EXPORT_POLICY);
                     }
-                    else switch(exportPolicyAttribute.Classification)
-                    {
+                    else switch (exportPolicyAttribute.Classification)
+                        {
                             case ResourceSensitivityClassification.PersonalHealthInformation:
                                 this.m_pepService.Demand(PermissionPolicyIdentifiers.ExportClinicalData);
                                 break;
@@ -2444,22 +2446,29 @@ namespace SanteDB.Rest.HDSI
 
                     using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
                     {
-                        // Are there any query parameters?
-                        if(!RestOperationContext.Current.IncomingRequest.QueryString.ToArray().Any(o=>!o.Key.StartsWith("_")))
+
+                        var query = RestOperationContext.Current.IncomingRequest.QueryString;
+                        IQueryResultSet results = null;
+                        if (Guid.TryParse(id, out var uuid)) // explicit record get
+                        {
+                            results = new Object[] { handler.Get(uuid, Guid.Empty) }.AsResultSet();
+                        }
+                        else if (!RestOperationContext.Current.IncomingRequest.QueryString.ToArray().Any(o => !o.Key.StartsWith("_"))) // no global exports
                         {
                             throw new ArgumentException(ErrorMessages.OPERATION_REQUIRES_QUERY_PARAMETER);
                         }
-                        // Send the query to the resource handler
-                        var query = RestOperationContext.Current.IncomingRequest.Url.Query.ParseQueryString();
-
-                        // Modified on?
-                        if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null)
+                        else
                         {
-                            query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince()?.ToString("o"));
+                            // Modified on?
+                            if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null)
+                            {
+                                query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince()?.ToString("o"));
+                            }
+
+                            // Query for results
+                            results = handler.Query(query);
                         }
 
-                        // Query for results
-                        var results = handler.Query(query);
                         var retVal = new Dataset()
                         {
                             Id = $"Export {resourceType} - {DateTime.Now:yyyyMMddHHmmSS}",
@@ -2473,25 +2482,24 @@ namespace SanteDB.Rest.HDSI
 
                         if (query[QueryControlParameterNames.HttpIncludePathParameterName] != null)
                         {
-                            retVal.Action.InsertRange(0,
-                                query.GetValues(QueryControlParameterNames.HttpIncludePathParameterName).SelectMany(inc =>
+                            retVal.Action.AddRange(query.GetValues(QueryControlParameterNames.HttpIncludePathParameterName).SelectMany(inc =>
                                 {
-                                    var propertyPath = QueryExpressionParser.BuildPropertySelector(handler.Type, inc).Compile();
-                                    var identifiers = retVal.Action.Select(o => o.Element).Select(p=>propertyPath.DynamicInvoke(p)).OfType<Guid>().Distinct();
-
-                                    var serializationRedirect = handler.Type.GetQueryProperty(inc).GetSerializationModelProperty();
-                                    // Get the include handler
-                                    if (serializationRedirect == null || !identifiers.Any())
+                                    // Is this a direct property reference or another query?
+                                    if (!inc.Contains(':'))
                                     {
-                                        return new DataInstallAction[0];
+                                        throw new ArgumentException(String.Format(ErrorMessages.INVALID_FORMAT, inc, "Type:Query"));
                                     }
-                                    else
-                                    {
-                                        var incHandlerType = typeof(IRepositoryService<>).MakeGenericType(serializationRedirect.PropertyType.StripGeneric());
-                                        var incHandler = ApplicationServiceContext.Current.GetService(incHandlerType) as IRepositoryService;
 
-                                        return identifiers.Select(d => new DataUpdate() { Element = incHandler.Get(d), IgnoreErrors = false, InsertIfNotExists = true }).ToArray();
+                                    var incParts = inc.Split(':');
+                                    var repositoryType = new ModelSerializationBinder().BindToType(null, incParts[0]);
+                                    if (repositoryType == null)
+                                    {
+                                        throw new ArgumentException(String.Format(ErrorMessages.TYPE_NOT_FOUND, incParts[0]));
                                     }
+                                    var subQuery = QueryExpressionParser.BuildLinqExpression(repositoryType, incParts[1].ParseQueryString());
+                                    var incHandlerType = typeof(IRepositoryService<>).MakeGenericType(repositoryType);
+                                    var incHandler = ApplicationServiceContext.Current.GetService(incHandlerType) as IRepositoryService;
+                                    return incHandler.Find(subQuery).OfType<IdentifiedData>().Select(d => new DataUpdate() { Element = d, IgnoreErrors = false, InsertIfNotExists = true }).ToArray();
                                 }));
                         }
 
