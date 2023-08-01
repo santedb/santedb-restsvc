@@ -2508,15 +2508,9 @@ namespace SanteDB.Rest.HDSI
                                     var incHandlerType = typeof(IRepositoryService<>).MakeGenericType(repositoryType);
                                     var incHandler = ApplicationServiceContext.Current.GetService(incHandlerType) as IRepositoryService;
                                     var incResults = incHandler.Find(subQuery).OfType<IdentifiedData>();
-
-                                    var includeProperties = incQuery.GetValues(QueryControlParameterNames.HttpIncludePathParameterName)?.Select(o => this.ResolvePropertyInfo(repositoryType, o)).ToArray();
                                     var excludeProperties = incQuery.GetValues(QueryControlParameterNames.HttpExcludePathParameterName)?.Select(o => this.ResolvePropertyInfo(repositoryType, o)).ToArray();
-                                    return Bundle.CreateBundle(incResults, 0, 0, includeProperties, excludeProperties).GetFocalItems().Select(o => new DataUpdate()
-                                    {
-                                        Element = o,
-                                        IgnoreErrors = false,
-                                        InsertIfNotExists = true
-                                    });
+
+                                    return incResults.Select(o => new DataUpdate() { Element = o.NullifyProperties(excludeProperties), InsertIfNotExists = true });
                                 });
                             if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString["_includesFirst"], out var incFirst) && incFirst) {
                                 retVal.Action.InsertRange(0, includes);
