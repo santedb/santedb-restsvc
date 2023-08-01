@@ -2469,6 +2469,13 @@ namespace SanteDB.Rest.HDSI
                             results = handler.Query(query);
                         }
 
+                        // HACK: Use the bundle to include and excludes
+                        if (RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpExcludePathParameterName] != null)
+                        {
+                            var excludeProperties = RestOperationContext.Current.IncomingRequest.QueryString.GetValues(QueryControlParameterNames.HttpExcludePathParameterName)?.Select(o => this.ResolvePropertyInfo(handler.Type, o)).ToArray();
+                            results = Bundle.CreateBundle(results.OfType<IdentifiedData>(), 0, 0, propertiesToExclude: excludeProperties).Item.AsResultSet();
+                        }
+
                         var retVal = new Dataset()
                         {
                             Id = $"Export {resourceType} - {DateTime.Now:yyyyMMddHHmmSS}",
@@ -2482,7 +2489,7 @@ namespace SanteDB.Rest.HDSI
 
                         if (query[QueryControlParameterNames.HttpIncludePathParameterName] != null)
                         {
-                            retVal.Action.AddRange(query.GetValues(QueryControlParameterNames.HttpIncludePathParameterName).SelectMany(inc =>
+                            var includes = query.GetValues(QueryControlParameterNames.HttpIncludePathParameterName).SelectMany(inc =>
                                 {
                                     // Is this a direct property reference or another query?
                                     if (!inc.Contains(':'))
@@ -2496,11 +2503,28 @@ namespace SanteDB.Rest.HDSI
                                     {
                                         throw new ArgumentException(String.Format(ErrorMessages.TYPE_NOT_FOUND, incParts[0]));
                                     }
-                                    var subQuery = QueryExpressionParser.BuildLinqExpression(repositoryType, incParts[1].ParseQueryString());
+                                    var incQuery = incParts[1].ParseQueryString();
+                                    var subQuery = QueryExpressionParser.BuildLinqExpression(repositoryType, incQuery);
                                     var incHandlerType = typeof(IRepositoryService<>).MakeGenericType(repositoryType);
                                     var incHandler = ApplicationServiceContext.Current.GetService(incHandlerType) as IRepositoryService;
-                                    return incHandler.Find(subQuery).OfType<IdentifiedData>().Select(d => new DataUpdate() { Element = d, IgnoreErrors = false, InsertIfNotExists = true }).ToArray();
-                                }));
+                                    var incResults = incHandler.Find(subQuery).OfType<IdentifiedData>();
+
+                                    var includeProperties = incQuery.GetValues(QueryControlParameterNames.HttpIncludePathParameterName)?.Select(o => this.ResolvePropertyInfo(repositoryType, o)).ToArray();
+                                    var excludeProperties = incQuery.GetValues(QueryControlParameterNames.HttpExcludePathParameterName)?.Select(o => this.ResolvePropertyInfo(repositoryType, o)).ToArray();
+                                    return Bundle.CreateBundle(incResults, 0, 0, includeProperties, excludeProperties).GetFocalItems().Select(o => new DataUpdate()
+                                    {
+                                        Element = o,
+                                        IgnoreErrors = false,
+                                        InsertIfNotExists = true
+                                    });
+                                });
+                            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString["_includesFirst"], out var incFirst) && incFirst) {
+                                retVal.Action.InsertRange(0, includes);
+                            }
+                            else
+                            {
+                                retVal.Action.AddRange(includes);
+                            }
                         }
 
                         var filename = $"{resourceType}-{DateTime.Now:yyyyMMddHHmmSS}.dataset";
