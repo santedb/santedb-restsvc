@@ -22,6 +22,7 @@ using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Parameters;
+using SanteDB.Core.Model.Query;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
@@ -57,18 +58,43 @@ namespace SanteDB.Rest.HDSI.Operation
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
 
+            IQueryResultSet<Concept> results = null;
             if (scopingKey is Guid uuid)
             {
-                return new Bundle(this.m_conceptRepository.ExpandConceptSet(uuid));
+                results = this.m_conceptRepository.ExpandConceptSet(uuid);
             }
-            else if (parameters.TryGet("mnemonic", out String mnemonic))
+            else if (parameters.TryGet("_mnemonic", out String mnemonic))
             {
-                return new Bundle(this.m_conceptRepository.ExpandConceptSet(mnemonic));
+                results = this.m_conceptRepository.ExpandConceptSet(mnemonic);
             }
             else
             {
                 throw new ArgumentNullException("mnemonic");
             }
+
+            // Is there a filter?
+            var filter = parameters.Parameters.ToDictionaryIgnoringDuplicates(o => o.Name, o => o.Value).ToNameValueCollection();
+            var linq = QueryExpressionParser.BuildLinqExpression<Concept>(filter);
+            results = results.Where(linq);
+            int totalCount = 0;
+            if(parameters.TryGet<Guid>(QueryControlParameterNames.HttpQueryStateParameterName, out var queryId))
+            {
+                results = results.AsStateful(queryId);
+            }
+            if(parameters.TryGet<bool>(QueryControlParameterNames.HttpIncludeTotalParameterName, out var total))
+            {
+                totalCount = results.Count();
+            }
+            if(parameters.TryGet<Int32>(QueryControlParameterNames.HttpOffsetParameterName, out var offset))
+            {
+                results = results.Skip(offset);
+            }
+            if(parameters.TryGet<Int32>(QueryControlParameterNames.HttpCountParameterName, out var count))
+            {
+                results = results.Take(count);
+            }
+
+            return new Bundle(results, offset, totalCount);
         }
     }
 }
