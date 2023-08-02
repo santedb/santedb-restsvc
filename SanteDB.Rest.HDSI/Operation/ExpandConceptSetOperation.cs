@@ -75,26 +75,8 @@ namespace SanteDB.Rest.HDSI.Operation
             // Is there a filter?
             var filter = parameters.Parameters.ToDictionaryIgnoringDuplicates(o => o.Name, o => o.Value).ToNameValueCollection();
             var linq = QueryExpressionParser.BuildLinqExpression<Concept>(filter);
-            results = results.Where(linq);
-            int totalCount = 0;
-            if(parameters.TryGet<Guid>(QueryControlParameterNames.HttpQueryStateParameterName, out var queryId))
-            {
-                results = results.AsStateful(queryId);
-            }
-            if(parameters.TryGet<bool>(QueryControlParameterNames.HttpIncludeTotalParameterName, out var total))
-            {
-                totalCount = results.Count();
-            }
-            if(parameters.TryGet<Int32>(QueryControlParameterNames.HttpOffsetParameterName, out var offset))
-            {
-                results = results.Skip(offset);
-            }
-            if(parameters.TryGet<Int32>(QueryControlParameterNames.HttpCountParameterName, out var count))
-            {
-                results = results.Take(count);
-            }
-
-            return new Bundle(results, offset, totalCount);
+            var outputResults = results.Where(linq).ApplyResultInstructions(filter, out var offset, out var count).OfType<Concept>();
+            return new Bundle(outputResults, offset, count);
         }
     }
 }
