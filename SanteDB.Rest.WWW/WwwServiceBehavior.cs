@@ -54,14 +54,6 @@ namespace SanteDB.Rest.WWW
         private readonly IAppletSolutionManagerService m_appletSolutionManager;
         private readonly ReadonlyAppletCollection m_serviceApplet;
 
-        private static readonly string s_DefaultRobotsFile = 
-@"User-agent: *
-Disallow: /
-
-User-agent: GPTBot
-Disallow: /
-";
-
         /// <summary>
         /// Web page service behavior
         /// </summary>
@@ -196,21 +188,19 @@ Disallow: /
         ///<inheritdoc />
         public Stream GetRobots()
         {
-            try
+            this.ThrowIfNotRunning();
+
+            if (m_serviceApplet.TryResolveApplet("robots.txt", out var robotsfile))
             {
-                var result = Get();
-
-                if (null != result)
-                {
-                    return result;
-                }
+                return new MemoryStream(m_serviceApplet.RenderAssetContent(robotsfile));
             }
-            catch (FileNotFoundException) //File not found in applets is okay because we will serve the default here.
+            else
             {
-
+                var ms = new MemoryStream();
+                typeof(WwwServiceBehavior).Assembly.GetManifestResourceStream("SanteDB.Rest.WWW.Resources.robots.txt").CopyTo(ms);
+                ms.Seek(0, SeekOrigin.Begin);
+                return ms;
             }
-
-            return new MemoryStream(Encoding.UTF8.GetBytes(s_DefaultRobotsFile));
         }
     }
 }
