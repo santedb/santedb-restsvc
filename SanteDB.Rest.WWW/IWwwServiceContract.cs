@@ -39,6 +39,13 @@ namespace SanteDB.Rest.WWW
         Stream GetIcon();
 
         /// <summary>
+        /// Gets the default robots.txt file that controls crawlers.
+        /// </summary>
+        /// <returns></returns>
+        [Get("/robots.txt")]
+        Stream GetRobots();
+
+        /// <summary>
         /// Get specified object
         /// </summary>
         [Get("*")]

@@ -37,6 +37,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace SanteDB.Rest.WWW
 {
@@ -52,6 +53,14 @@ namespace SanteDB.Rest.WWW
         private readonly IPolicyEnforcementService m_policyEnforcementSerivce;
         private readonly IAppletSolutionManagerService m_appletSolutionManager;
         private readonly ReadonlyAppletCollection m_serviceApplet;
+
+        private static readonly string s_DefaultRobotsFile = 
+@"User-agent: *
+Disallow: /
+
+User-agent: GPTBot
+Disallow: /
+";
 
         /// <summary>
         /// Web page service behavior
@@ -184,5 +193,24 @@ namespace SanteDB.Rest.WWW
 
         }
 
+        ///<inheritdoc />
+        public Stream GetRobots()
+        {
+            try
+            {
+                var result = Get();
+
+                if (null != result)
+                {
+                    return result;
+                }
+            }
+            catch (FileNotFoundException) //File not found in applets is okay because we will serve the default here.
+            {
+
+            }
+
+            return new MemoryStream(Encoding.UTF8.GetBytes(s_DefaultRobotsFile));
+        }
     }
 }
