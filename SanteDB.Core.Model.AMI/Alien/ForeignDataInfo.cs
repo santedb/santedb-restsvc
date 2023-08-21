@@ -20,6 +20,7 @@
  */
 using Newtonsoft.Json;
 using SanteDB.Core.BusinessRules;
+using SanteDB.Core.Configuration;
 using SanteDB.Core.Data.Import;
 using SanteDB.Core.Model.Interfaces;
 using System;
@@ -63,6 +64,7 @@ namespace SanteDB.Core.Model.AMI.Alien
             this.UpdatedByKey = submission.UpdatedByKey;
             this.UpdatedTime = submission.UpdatedTime;
             this.Issues = submission.Issues.ToList();
+            this.Parameters = submission.ParameterValues.Select(o => new AppSettingKeyValuePair(o.Key, o.Value)).ToList();
         }
 
 
@@ -95,6 +97,12 @@ namespace SanteDB.Core.Model.AMI.Alien
         /// </summary>
         [XmlElement("issue"), JsonProperty("issue")]
         public List<DetectedIssue> Issues { get; set; }
+
+        /// <summary>
+        /// Parameters 
+        /// </summary>
+        [XmlElement("parameter"), JsonProperty("parameter")]
+        public List<AppSettingKeyValuePair> Parameters { get; set; }
 
         /// <summary>
         /// Gets or sets the key for the AMI identified

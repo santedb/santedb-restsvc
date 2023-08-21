@@ -381,13 +381,21 @@ namespace SanteDB.Messaging.HDSI.Wcf
         {
             var retVal = this.m_restClientFactory.GetRestClientFor(ServiceEndpointType.HealthDataService);
 
-            if (RestOperationContext.Current.IncomingRequest.QueryString["_format"] != null)
+            // For read operations - we want to pass the accept up to save re-fetching
+            if (RestOperationContext.Current.IncomingRequest.HttpMethod.Equals("get", StringComparison.InvariantCultureIgnoreCase))
             {
-                retVal.Accept = RestOperationContext.Current.IncomingRequest.QueryString["_format"];
+                if (RestOperationContext.Current.IncomingRequest.QueryString["_format"] != null)
+                {
+                    retVal.Accept = RestOperationContext.Current.IncomingRequest.QueryString["_format"];
+                }
+                else
+                {
+                    retVal.Accept = RestOperationContext.Current.IncomingRequest.AcceptTypes.First();
+                }
             }
-            else
+            else // For posts - we don't want the ViewModel data going up - we want an XML sync representation going up so delay loading on upbound objects is not performed
             {
-                retVal.Accept = RestOperationContext.Current.IncomingRequest.AcceptTypes.First();
+                retVal.Accept = "application/xml";
             }
 
             retVal.Requesting += (o, e) =>
@@ -417,10 +425,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                 {
                     var handler = this.GetResourceHandler(resourceType);
 
-                    this.ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(0.0f, UserMessages.FETCH_FROM_UPSTREAM));
+                    this.ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(nameof(UpstreamHdsiServiceBehavior), 0.0f, UserMessages.FETCH_FROM_UPSTREAM));
                     var remote = this.m_upstreamIntegrationService.Get(handler.Type, idGuid, null);
                     ApplicationServiceContext.Current.GetService<IDataCachingService>().Remove(remote.Key.Value);
-                    this.ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(0.25f, UserMessages.FETCH_FROM_UPSTREAM));
+                    this.ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(nameof(UpstreamHdsiServiceBehavior), 0.25f, UserMessages.FETCH_FROM_UPSTREAM));
 
                     Bundle insertBundle = new Bundle();
                     insertBundle.Add(remote);
@@ -449,13 +457,14 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         insertBundle.AddRange(this.m_upstreamIntegrationService.Query<Entity>(o => targetKeys.Contains(o.Key.Value)).Item.OfType<IdentifiedData>());
                     }
 
-                    this.ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(0.5f, UserMessages.FETCH_FROM_UPSTREAM));
+                    this.ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(nameof(UpstreamHdsiServiceBehavior), 0.5f, UserMessages.FETCH_FROM_UPSTREAM));
 
                     // Now we want to fetch all participations which have a relationship with the downloaded object if the object is a patient
 
                     // Insert
                     ApplicationServiceContext.Current.GetService<IDataPersistenceService<Bundle>>()?.Insert(insertBundle, TransactionMode.Commit, AuthenticationContext.Current.Principal);
 
+                    this.ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(nameof(UpstreamHdsiServiceBehavior), 1f, UserMessages.FETCH_FROM_UPSTREAM));
                     // Clear cache
                     this.m_dataCachingService.Clear();
                     return remote;
@@ -579,7 +588,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     try
                     {
                         var restClient = this.CreateProxyClient();
-                        var patchId = restClient.Patch<Patch>($"/{resourceType}/{id}", "application/xml+sdb-patch", RestOperationContext.Current.IncomingRequest.Headers["If-Match"], body);
+                        var patchId = restClient.Patch<Patch>($"/{resourceType}/{id}", "application/xml", RestOperationContext.Current.IncomingRequest.Headers["If-Match"], body);
                         RestOperationContext.Current.OutgoingResponse.SetETag(patchId);
 
                         if (Guid.TryParse(id, out Guid uuid))
@@ -926,11 +935,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         restClient.Responded += this.CopyResponseHeaders;
                         if (String.IsNullOrEmpty(id))
                         {
-                            return new MemoryStream(restClient.Get($"{resourceType}/_export?{RestOperationContext.Current.IncomingRequest.QueryString.ToHttpString()}"));
+                            return new MemoryStream(restClient.Get($"{resourceType}/_export", RestOperationContext.Current.IncomingRequest.QueryString));
                         }
                         else
                         {
-                            return new MemoryStream(restClient.Get($"{resourceType}/{id}/_export?{RestOperationContext.Current.IncomingRequest.QueryString.ToHttpString()}"));
+                            return new MemoryStream(restClient.Get($"{resourceType}/{id}/_export", RestOperationContext.Current.IncomingRequest.QueryString));
                         }
                     }
                     catch (Exception e)

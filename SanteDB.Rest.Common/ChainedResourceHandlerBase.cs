@@ -22,7 +22,9 @@ using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Query;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
+using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -77,6 +79,7 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Add a child resource
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual void AddChildResource(IApiChildResourceHandler property)
         {
             this.m_propertyProviders.TryAdd(property.Name, property);
@@ -85,6 +88,7 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Remove a child object
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual object RemoveChildObject(object scopingEntityKey, string propertyName, object subItemKey)
         {
             if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
@@ -104,6 +108,7 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Query child objects
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual IQueryResultSet QueryChildObjects(object scopingEntityKey, string propertyName, NameValueCollection filter)
         {
             if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
@@ -123,6 +128,7 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Add a child object instance
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual object AddChildObject(object scopingEntityKey, string propertyName, object scopedItem)
         {
             if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
@@ -142,6 +148,7 @@ namespace SanteDB.Rest.Common
         /// <summary>
         /// Get a child object
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public virtual object GetChildObject(object scopingEntity, string propertyName, object subItemKey)
         {
             if (this.TryGetChainedResource(propertyName, scopingEntity == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))

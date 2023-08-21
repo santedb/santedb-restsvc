@@ -48,9 +48,9 @@ namespace SanteDB.Core.Model.AMI.Applet
 		/// Initializes a new instance of the <see cref="AppletSolutionInfo"/> class
 		/// with a specific applet manifest instance.
 		/// </summary>
-		public AppletSolutionInfo(AppletSolution soln, X509Certificate2Info publisher) : base(soln.Meta, publisher)
+		public AppletSolutionInfo(AppletSolution soln) : base(soln)
         {
-            this.Include = soln.Include.Select(s => new AppletManifestInfo(s.Meta, null)).ToList();
+            this.Include = soln.Include.Select(s => new AppletManifestInfo(s)).ToList();
         }
 
         /// <summary>

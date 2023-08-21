@@ -22,6 +22,7 @@ using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Parameters;
+using SanteDB.Core.Model.Query;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
@@ -57,18 +58,25 @@ namespace SanteDB.Rest.HDSI.Operation
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
 
+            IQueryResultSet<Concept> results = null;
             if (scopingKey is Guid uuid)
             {
-                return new Bundle(this.m_conceptRepository.ExpandConceptSet(uuid));
+                results = this.m_conceptRepository.ExpandConceptSet(uuid);
             }
-            else if (parameters.TryGet("mnemonic", out String mnemonic))
+            else if (parameters.TryGet("_mnemonic", out String mnemonic))
             {
-                return new Bundle(this.m_conceptRepository.ExpandConceptSet(mnemonic));
+                results = this.m_conceptRepository.ExpandConceptSet(mnemonic);
             }
             else
             {
                 throw new ArgumentNullException("mnemonic");
             }
+
+            // Is there a filter?
+            var filter = parameters.Parameters.ToDictionaryIgnoringDuplicates(o => o.Name, o => o.Value).ToNameValueCollection();
+            var linq = QueryExpressionParser.BuildLinqExpression<Concept>(filter);
+            var outputResults = results.Where(linq).ApplyResultInstructions(filter, out var offset, out var count).OfType<Concept>();
+            return new Bundle(outputResults, offset, count);
         }
     }
 }

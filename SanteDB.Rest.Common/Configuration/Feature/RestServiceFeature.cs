@@ -356,7 +356,7 @@ namespace SanteDB.Rest.Common.Configuration.Features
             var restSection = configuration.GetSection<SanteDB.Rest.Common.Configuration.RestConfigurationSection>();
             if (restSection != null)
             {
-                this.ProgressChanged?.Invoke(this, new SanteDB.Core.Services.ProgressChangedEventArgs(0.33f, null));
+                this.ProgressChanged?.Invoke(this, new SanteDB.Core.Services.ProgressChangedEventArgs(nameof(RestEndpointUninstallTask), 0.33f, null));
                 restSection.Services.RemoveAll(o => o.ServiceType == this.m_restServiceConfiguration.ServiceType);
             }
 
@@ -386,7 +386,7 @@ namespace SanteDB.Rest.Common.Configuration.Features
                     }
                 }
             }
-            this.ProgressChanged?.Invoke(this, new SanteDB.Core.Services.ProgressChangedEventArgs(0.66f, null));
+            this.ProgressChanged?.Invoke(this, new SanteDB.Core.Services.ProgressChangedEventArgs(nameof(RestEndpointUninstallTask), 0.66f, null));
             return true;
         }
 
@@ -531,7 +531,7 @@ namespace SanteDB.Rest.Common.Configuration.Features
         {
             configuration.Sections.RemoveAll(o => o is IConfigurationSection && o.GetType() == this.m_serviceConfigurationObject.GetType());
             configuration.AddSection(this.m_serviceConfigurationObject);
-            this.ProgressChanged?.Invoke(this, new SanteDB.Core.Services.ProgressChangedEventArgs(1.0f, "Complete"));
+            this.ProgressChanged?.Invoke(this, new SanteDB.Core.Services.ProgressChangedEventArgs(nameof(RestServiceConfigurationInstallTask), 1.0f, "Complete"));
             return true;
         }
 
@@ -603,7 +603,7 @@ namespace SanteDB.Rest.Common.Configuration.Features
             restSection.Services.Add(this.m_restServiceConfiguration);
 
             // Remove the HTTP bindings
-            this.ProgressChanged?.Invoke(this, new SanteDB.Core.Services.ProgressChangedEventArgs(0.5f, "Binding Certificates"));
+            this.ProgressChanged?.Invoke(this, new SanteDB.Core.Services.ProgressChangedEventArgs(nameof(RestEndpointInstallTask), 0.5f, "Binding Certificates"));
             foreach (var ep in this.m_restServiceConfiguration.Endpoints)
             {
                 Uri address = new Uri(ep.Address);

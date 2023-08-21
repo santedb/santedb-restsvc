@@ -24,12 +24,24 @@ using System.Collections.Generic;
 
 namespace SanteDB.Rest.OAuth.Model
 {
+    /// <summary>
+    /// Data structure for serializing user information into a cookie.
+    /// </summary>
     public class AuthorizationCookie
     {
+        /// <summary>
+        /// Users covered in the cookie.
+        /// </summary>
         [JsonProperty("u")]
         public List<string> Users { get; set; }
+        /// <summary>
+        /// When the cookie was created according to the server.
+        /// </summary>
         [JsonProperty("c")]
         public DateTimeOffset CreatedAt { get; set; }
+        /// <summary>
+        /// Random nonce value for the cookie.
+        /// </summary>
         [JsonProperty("n")]
         public int Nonce { get; set; }
     }

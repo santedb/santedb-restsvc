@@ -23,12 +23,17 @@ using System.Collections.Specialized;
 
 namespace SanteDB.Rest.OAuth.Model
 {
+    /// <summary>
+    /// A context object for a session request.
+    /// </summary>
     public class OAuthSessionRequestContext : OAuthRequestContextBase
     {
+        /// <inheritdoc />
         public OAuthSessionRequestContext(RestOperationContext operationContext) : base(operationContext)
         {
         }
 
+        /// <inheritdoc />
         public OAuthSessionRequestContext(RestOperationContext operationContext, NameValueCollection formFields) : base(operationContext, formFields)
         {
 

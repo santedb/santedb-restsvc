@@ -34,23 +34,44 @@ namespace SanteDB.Rest.OAuth.Model
     /// </summary>
     public abstract class OAuthRequestContextBase
     {
+        /// <summary>
+        /// Constructor when form values a provided, for example in an HTTP POST message.
+        /// </summary>
+        /// <param name="operationContext">The request context.</param>
+        /// <param name="formFields">The form fields.</param>
         public OAuthRequestContextBase(RestOperationContext operationContext, NameValueCollection formFields)
             : this(operationContext)
         {
             FormFields = formFields;
         }
 
+        /// <summary>
+        /// Constructor for when no form fields are available, for example in an HTTP GET message.
+        /// </summary>
+        /// <param name="operationContext">The request context.</param>
         public OAuthRequestContextBase(RestOperationContext operationContext)
         {
             OperationContext = operationContext;
         }
 
         #region Core Properties
+        /// <summary>
+        /// A name-value collection of form fields in the request. This collection may be null if no fields were provided.
+        /// </summary>
         public NameValueCollection FormFields { get; }
 
+        /// <summary>
+        /// The underlying <see cref="RestOperationContext"/> which this context represents.
+        /// </summary>
         public RestOperationContext OperationContext { get; }
 
+        /// <summary>
+        /// Quick access to the <see cref="RestOperationContext.IncomingRequest"/> property.
+        /// </summary>
         public HttpListenerRequest IncomingRequest => OperationContext?.IncomingRequest;
+        /// <summary>
+        /// Quick access to the <see cref="RestOperationContext.OutgoingResponse"/> property.
+        /// </summary>
         public HttpListenerResponse OutgoingResponse => OperationContext?.OutgoingResponse;
         #endregion
 
@@ -58,7 +79,6 @@ namespace SanteDB.Rest.OAuth.Model
         /// <summary>
         /// A secret code used as a second factor in an authentication flow.
         /// </summary>
-        [Obsolete("Use of this is discouraged.")]
         public string TfaSecret => FormFields?[OAuthConstants.FormField_MfaCode];
 
         #endregion
@@ -117,8 +137,13 @@ namespace SanteDB.Rest.OAuth.Model
         /// The authenticated user principal.
         /// </summary>
         public IClaimsPrincipal UserPrincipal { get; set; }
-
+        /// <summary>
+        /// The client id of the application in this request.
+        /// </summary>
         public virtual string ClientId => null;
+        /// <summary>
+        /// The client secret of the application in this request.
+        /// </summary>
         public virtual string ClientSecret => null;
         /// <summary>
         /// The session that is established as part of this request. Typically, an <see cref="Abstractions.ITokenRequestHandler"/> will set this during processing.

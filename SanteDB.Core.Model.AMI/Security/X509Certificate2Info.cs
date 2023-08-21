@@ -55,6 +55,7 @@ namespace SanteDB.Core.Model.AMI.Security
             this.Thumbprint = cert.Thumbprint;
             this.HasPrivateKey = cert.HasPrivateKey;
             this.IsValid = new X509Chain().Build(cert);
+            this.PublicKey = cert.GetRawCertData();
         }
 
         /// <summary>
@@ -143,6 +144,13 @@ namespace SanteDB.Core.Model.AMI.Security
         [XmlElement("isValid")]
         [JsonProperty("isValid")]
         public bool IsValid { get; set; }
+
+        /// <summary>
+        /// Public key 
+        /// </summary>
+        [XmlElement("publicKey")]
+        [JsonProperty("publicKey")]
+        public byte[] PublicKey { get; set;  }
 
 
 #pragma warning disable CS1591

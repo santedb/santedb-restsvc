@@ -18,6 +18,7 @@
  * User: fyfej
  * Date: 2023-5-19
  */
+using Microsoft.Win32.SafeHandles;
 using RestSrvr;
 using RestSrvr.Attributes;
 using RestSrvr.Exceptions;
@@ -29,6 +30,7 @@ using SanteDB.Core.Exceptions;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
+using SanteDB.Core.Model.Attributes;
 using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Constants;
@@ -38,6 +40,7 @@ using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Model.Query;
+using SanteDB.Core.Model.Serialization;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Security.Services;
@@ -48,10 +51,14 @@ using SanteDB.Rest.HDSI.Configuration;
 using SanteDB.Rest.HDSI.Vrp;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Security;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
@@ -214,6 +221,11 @@ namespace SanteDB.Rest.HDSI
         {
             this.ThrowIfNotReady();
 
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
+
             var audit = this.m_auditService.Audit()
                 .WithAction(Core.Model.Audit.ActionType.Create)
                 .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
@@ -250,8 +262,7 @@ namespace SanteDB.Rest.HDSI
                         }
 
                         audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
-                            .WithObjects(retVal.BatchOperation == Core.Model.DataTypes.BatchOperationType.Update ? Core.Model.Audit.AuditableObjectLifecycle.Amendment : Core.Model.Audit.AuditableObjectLifecycle.Creation, retVal)
-                            .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Creation, retVal);
+                            .WithObjects(retVal.BatchOperation == Core.Model.DataTypes.BatchOperationType.Update ? Core.Model.Audit.AuditableObjectLifecycle.Amendment : Core.Model.Audit.AuditableObjectLifecycle.Creation, retVal);
 
                         return retVal;
                     }
@@ -279,6 +290,12 @@ namespace SanteDB.Rest.HDSI
         [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual IdentifiedData CreateUpdate(string resourceType, string id, IdentifiedData body)
         {
+            this.ThrowIfNotReady();
+
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
 
             var audit = this.m_auditService.Audit()
                 .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
@@ -645,6 +662,7 @@ namespace SanteDB.Rest.HDSI
         [UrlParameter(QueryControlParameterNames.HttpViewModelParameterName, typeof(String), "When using the view model serializer - specifies the view model definition to use which will load properties and return them inline in the response")]
         public virtual IdentifiedData History(string resourceType, string id)
         {
+            this.ThrowIfNotReady();
 
             var audit = this.m_auditService.Audit()
                .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Query)
@@ -656,7 +674,6 @@ namespace SanteDB.Rest.HDSI
                .WithLocalDestination()
                .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
 
-            this.ThrowIfNotReady();
             try
             {
                 var handler = this.GetResourceHandler(resourceType);
@@ -1018,8 +1035,16 @@ namespace SanteDB.Rest.HDSI
                         RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, id));
                     }
 
-                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
-                        .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.LogicalDeletion, retVal);
+                    if (retVal is BaseEntityData be && be.ObsoletionTime.HasValue)
+                    {
+                        audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.LogicalDeletion, retVal);
+                    }
+                    else
+                    {
+                        audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.PermanentErasure, retVal);
+                    }
+                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success);
+
                     return retVal;
                 }
                 else
@@ -1184,7 +1209,7 @@ namespace SanteDB.Rest.HDSI
                 RestOperationContext.Current.OutgoingResponse.Headers.Add("Allow", $"GET, PUT, POST, OPTIONS, HEAD, DELETE{(this.m_patchService != null ? ", PATCH" : null)}");
                 if (this.m_patchService != null)
                 {
-                    RestOperationContext.Current.OutgoingResponse.Headers.Add("Accept-Patch", "application/xml+sdb-patch");
+                    RestOperationContext.Current.OutgoingResponse.Headers.Add("Accept-Patch", $"application/xml+sdb-patch, {SanteDBExtendedMimeTypes.XmlPatch}, {SanteDBExtendedMimeTypes.JsonPatch}");
                 }
 
                 // Service options
@@ -1495,8 +1520,16 @@ namespace SanteDB.Rest.HDSI
 
                     RestOperationContext.Current.OutgoingResponse.StatusCode = 201;
                     RestOperationContext.Current.OutgoingResponse.Headers.Add(HttpResponseHeader.ContentLocation, this.CreateContentLocation(resourceType, key, childResourceType, retVal.Key));
-                    audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.LogicalDeletion, retVal)
-                        .WithOutcome(Core.Model.Audit.OutcomeIndicator.Success);
+                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success);
+                    if (retVal is BaseEntityData be && be.ObsoletionTime.HasValue)
+                    {
+                        audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.LogicalDeletion, retVal);
+                    }
+                    else
+                    {
+                        audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.PermanentErasure, retVal);
+                    }
+
                     return retVal;
                 }
                 else
@@ -1973,6 +2006,7 @@ namespace SanteDB.Rest.HDSI
                     this.ThrowIfPreConditionFails(handler, objectId);
                     var retVal = handler.CheckIn(objectId);
                     audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
+                        .WithObjects(AuditableObjectLifecycle.Access, objectId)
                         .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.PermanentErasure, retVal);
                     return retVal;
                 }
@@ -2028,6 +2062,7 @@ namespace SanteDB.Rest.HDSI
                     this.ThrowIfPreConditionFails(handler, objectId);
                     var retVal = handler.CheckOut(objectId);
                     audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
+                        .WithObjects(AuditableObjectLifecycle.Access, objectId)
                         .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Creation, retVal);
                     return retVal;
                 }
@@ -2372,7 +2407,7 @@ namespace SanteDB.Rest.HDSI
         /// <inheritdoc/>
         public virtual Stream GetDataset(string resourceType, string id)
         {
-            this.m_pepService.Demand(PermissionPolicyIdentifiers.ExportData);
+
 
             var audit = this.m_auditService.Audit()
                     .WithAction(Core.Model.Audit.ActionType.Execute)
@@ -2390,19 +2425,57 @@ namespace SanteDB.Rest.HDSI
                 {
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
-                    using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
+                    // We want to also check the export permission
+                    var exportPolicyAttribute = handler.Type.GetCustomAttribute<ResourceSensitivityAttribute>(true);
+                    if (exportPolicyAttribute == null)
                     {
-                        // Send the query to the resource handler
-                        var query = RestOperationContext.Current.IncomingRequest.Url.Query.ParseQueryString();
-
-                        // Modified on?
-                        if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null)
+                        throw new SecurityException(ErrorMessages.UNABLE_TO_DETERMINE_EXPORT_POLICY);
+                    }
+                    else switch (exportPolicyAttribute.Classification)
                         {
-                            query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince()?.ToString("o"));
+                            case ResourceSensitivityClassification.PersonalHealthInformation:
+                                this.m_pepService.Demand(PermissionPolicyIdentifiers.ExportClinicalData);
+                                break;
+                            case ResourceSensitivityClassification.Metadata:
+                            case ResourceSensitivityClassification.Administrative:
+                                this.m_pepService.Demand(PermissionPolicyIdentifiers.ExportData);
+                                break;
+                            default:
+                                throw new SecurityException(ErrorMessages.UNABLE_TO_DETERMINE_EXPORT_POLICY);
                         }
 
-                        // Query for results
-                        var results = handler.Query(query);
+                    using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
+                    {
+
+                        var query = RestOperationContext.Current.IncomingRequest.QueryString;
+                        IQueryResultSet results = null;
+                        if (Guid.TryParse(id, out var uuid)) // explicit record get
+                        {
+                            results = new Object[] { handler.Get(uuid, Guid.Empty) }.AsResultSet();
+                        }
+                        else if (!RestOperationContext.Current.IncomingRequest.QueryString.ToArray().Any(o => !o.Key.StartsWith("_"))) // no global exports
+                        {
+                            throw new ArgumentException(ErrorMessages.OPERATION_REQUIRES_QUERY_PARAMETER);
+                        }
+                        else
+                        {
+                            // Modified on?
+                            if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null)
+                            {
+                                query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince()?.ToString("o"));
+                            }
+
+                            // Query for results
+                            results = handler.Query(query);
+                        }
+
+                        // HACK: Use the bundle to include and excludes
+                        if (RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpExcludePathParameterName] != null)
+                        {
+                            var excludeProperties = RestOperationContext.Current.IncomingRequest.QueryString.GetValues(QueryControlParameterNames.HttpExcludePathParameterName)?.Select(o => this.ResolvePropertyInfo(handler.Type, o)).ToArray();
+                            results = Bundle.CreateBundle(results.OfType<IdentifiedData>(), 0, 0, propertiesToExclude: excludeProperties).Item.AsResultSet();
+                        }
+
                         var retVal = new Dataset()
                         {
                             Id = $"Export {resourceType} - {DateTime.Now:yyyyMMddHHmmSS}",
@@ -2416,24 +2489,36 @@ namespace SanteDB.Rest.HDSI
 
                         if (query[QueryControlParameterNames.HttpIncludePathParameterName] != null)
                         {
-                            retVal.Action.InsertRange(0,
-                                query.GetValues(QueryControlParameterNames.HttpIncludePathParameterName).SelectMany(inc =>
+                            var includes = query.GetValues(QueryControlParameterNames.HttpIncludePathParameterName).SelectMany(inc =>
                                 {
-                                    var resourceParts = inc.Split('?');
-                                    if (resourceParts.Length != 2)
+                                    // Is this a direct property reference or another query?
+                                    if (!inc.Contains(':'))
                                     {
-                                        throw new ArgumentOutOfRangeException(QueryControlParameterNames.HttpIncludePathParameterName, String.Format(ErrorMessages.ARGUMENT_COUNT_MISMATCH, 2, resourceParts.Length));
+                                        throw new ArgumentException(String.Format(ErrorMessages.INVALID_FORMAT, inc, "Type:Query"));
                                     }
 
-                                    var includeHandler = HdsiMessageHandler.ResourceHandler.GetResourceHandler<IHdsiServiceContract>(resourceParts[0]);
-                                    var ds = includeHandler.Query(resourceParts[1].ParseQueryString());
-                                    return ds.OfType<IdentifiedData>().Select(r => new DataUpdate()
+                                    var incParts = inc.Split(':');
+                                    var repositoryType = new ModelSerializationBinder().BindToType(null, incParts[0]);
+                                    if (repositoryType == null)
                                     {
-                                        Element = r,
-                                        InsertIfNotExists = true,
-                                        IgnoreErrors = false
-                                    });
-                                }));
+                                        throw new ArgumentException(String.Format(ErrorMessages.TYPE_NOT_FOUND, incParts[0]));
+                                    }
+                                    var incQuery = incParts[1].ParseQueryString();
+                                    var subQuery = QueryExpressionParser.BuildLinqExpression(repositoryType, incQuery);
+                                    var incHandlerType = typeof(IRepositoryService<>).MakeGenericType(repositoryType);
+                                    var incHandler = ApplicationServiceContext.Current.GetService(incHandlerType) as IRepositoryService;
+                                    var incResults = incHandler.Find(subQuery).OfType<IdentifiedData>();
+                                    var excludeProperties = incQuery.GetValues(QueryControlParameterNames.HttpExcludePathParameterName)?.Select(o => this.ResolvePropertyInfo(repositoryType, o)).ToArray();
+
+                                    return incResults.Select(o => new DataUpdate() { Element = o.NullifyProperties(excludeProperties), InsertIfNotExists = true });
+                                });
+                            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString["_includesFirst"], out var incFirst) && incFirst) {
+                                retVal.Action.InsertRange(0, includes);
+                            }
+                            else
+                            {
+                                retVal.Action.AddRange(includes);
+                            }
                         }
 
                         var filename = $"{resourceType}-{DateTime.Now:yyyyMMddHHmmSS}.dataset";

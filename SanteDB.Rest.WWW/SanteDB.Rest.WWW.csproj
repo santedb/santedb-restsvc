@@ -57,6 +57,7 @@
     <None Remove="icon.ico" />
     <None Remove="Resources\antihaxor" />
     <None Remove="Resources\GenericError.html" />
+    <None Remove="Resources\robots.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -64,6 +65,7 @@
     <EmbeddedResource Include="Resources\GenericError.html" />
     <EmbeddedResource Include="Resources\icon.ico" />
     <EmbeddedResource Include="Resources\antihaxor" />
+    <EmbeddedResource Include="Resources\robots.txt" />
   </ItemGroup>
 
   <ItemGroup>

@@ -31,6 +31,7 @@ using SanteDB.Core.Model.AMI.Diagnostics;
 using SanteDB.Core.Model.AMI.Jobs;
 using SanteDB.Core.Model.AMI.Logging;
 using SanteDB.Core.Model.AMI.Security;
+using SanteDB.Core.Model.AMI.Types;
 using SanteDB.Core.Model.Attributes;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Entities;
@@ -69,6 +70,7 @@ namespace SanteDB.Core.Model.AMI.Collections
     [XmlInclude(typeof(AppletManifest))]
     [XmlInclude(typeof(AppletSolutionInfo))]
     [XmlInclude(typeof(AppletManifestInfo))]
+    [XmlInclude(typeof(AmiTypeDescriptor))]
     [XmlInclude(typeof(DeviceEntity))]
     [XmlInclude(typeof(DiagnosticApplicationInfo))]
     [XmlInclude(typeof(DiagnosticAttachmentInfo))]
@@ -150,6 +152,7 @@ namespace SanteDB.Core.Model.AMI.Collections
         /// <summary>
         /// Get the items 
         /// </summary>
+        [JsonIgnore, XmlIgnore]
         IEnumerable<IIdentifiedResource> IResourceCollection.Item => this.CollectionItem.OfType<IIdentifiedResource>();
 
         /// <summary>

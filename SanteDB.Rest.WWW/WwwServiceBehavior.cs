@@ -37,6 +37,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace SanteDB.Rest.WWW
 {
@@ -184,5 +185,22 @@ namespace SanteDB.Rest.WWW
 
         }
 
+        ///<inheritdoc />
+        public Stream GetRobots()
+        {
+            this.ThrowIfNotRunning();
+
+            if (m_serviceApplet.TryResolveApplet("robots.txt", out var robotsfile))
+            {
+                return new MemoryStream(m_serviceApplet.RenderAssetContent(robotsfile));
+            }
+            else
+            {
+                var ms = new MemoryStream();
+                typeof(WwwServiceBehavior).Assembly.GetManifestResourceStream("SanteDB.Rest.WWW.Resources.robots.txt").CopyTo(ms);
+                ms.Seek(0, SeekOrigin.Begin);
+                return ms;
+            }
+        }
     }
 }

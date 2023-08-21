@@ -19,6 +19,7 @@
  * Date: 2023-5-19
  */
 using RestSrvr;
+using SanteDB.Core;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Security;
 using SanteDB.Core.Model.Query;
@@ -138,6 +139,14 @@ namespace SanteDB.Rest.AMI.Resources
                     // PEM encoding?
                     certificate = new X509Certificate2(Encoding.UTF8.GetBytes(str));
                     break;
+                case X509Certificate2Info certInfo:
+                    if(certInfo.PublicKey == null)
+                    {
+                        throw new ArgumentException();
+                    }
+
+                    certificate = new X509Certificate2(certInfo.PublicKey);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(data));
             }
@@ -159,14 +168,7 @@ namespace SanteDB.Rest.AMI.Resources
         private Stream GetSerializedPublicCert(X509Certificate2 certificate)
         {
             RestOperationContext.Current.OutgoingResponse.ContentType = "application/x-pem-file";
-            var ms = new MemoryStream();
-            using (var tw = new StreamWriter(ms, Encoding.UTF8, 1024, true))
-            {
-                tw.WriteLine("-----BEGIN CERTIFICATE-----");
-                tw.WriteLine(Convert.ToBase64String(certificate.Export(X509ContentType.Cert), Base64FormattingOptions.InsertLineBreaks));
-                tw.WriteLine("-----END CERTIFICATE-----");
-            }
-            ms.Seek(0, SeekOrigin.Begin);
+            var ms = new MemoryStream(Encoding.UTF8.GetBytes(certificate.GetAsPemString()));
             return ms;
         }
 
