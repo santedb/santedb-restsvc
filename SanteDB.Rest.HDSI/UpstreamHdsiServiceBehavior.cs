@@ -381,22 +381,22 @@ namespace SanteDB.Messaging.HDSI.Wcf
         {
             var retVal = this.m_restClientFactory.GetRestClientFor(ServiceEndpointType.HealthDataService);
 
-            // For read operations - we want to pass the accept up to save re-fetching
-            if (RestOperationContext.Current.IncomingRequest.HttpMethod.Equals("get", StringComparison.InvariantCultureIgnoreCase))
-            {
-                if (RestOperationContext.Current.IncomingRequest.QueryString["_format"] != null)
-                {
-                    retVal.Accept = RestOperationContext.Current.IncomingRequest.QueryString["_format"];
-                }
-                else
-                {
-                    retVal.Accept = RestOperationContext.Current.IncomingRequest.AcceptTypes.First();
-                }
-            }
-            else // For posts - we don't want the ViewModel data going up - we want an XML sync representation going up so delay loading on upbound objects is not performed
-            {
+            //// For read operations - we want to pass the accept up to save re-fetching
+            //if (RestOperationContext.Current.IncomingRequest.HttpMethod.Equals("get", StringComparison.InvariantCultureIgnoreCase))
+            //{
+            //    if (RestOperationContext.Current.IncomingRequest.QueryString["_format"] != null)
+            //    {
+            //        retVal.Accept = RestOperationContext.Current.IncomingRequest.QueryString["_format"];
+            //    }
+            //    else
+            //    {
+            //        retVal.Accept = RestOperationContext.Current.IncomingRequest.AcceptTypes.First();
+            //    }
+            //}
+            //else // For posts - we don't want the ViewModel data going up - we want an XML sync representation going up so delay loading on upbound objects is not performed
+            //{
                 retVal.Accept = "application/xml";
-            }
+            //}
 
             retVal.Requesting += (o, e) =>
             {

@@ -37,7 +37,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        public QuantityObservationResourceHandler(ILocalizationService localizationService, IRepositoryService<QuantityObservation> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
+        public QuantityObservationResourceHandler(ILocalizationService localizationService, IRepositoryService<QuantityObservation> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
         {
         }
     }
@@ -51,7 +51,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        public CodedObservationResourceHandler(ILocalizationService localizationService, IRepositoryService<CodedObservation> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
+        public CodedObservationResourceHandler(ILocalizationService localizationService, IRepositoryService<CodedObservation> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
         {
         }
     }
@@ -65,7 +65,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        public TextObservationResourceHandler(ILocalizationService localizationService, IRepositoryService<TextObservation> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
+        public TextObservationResourceHandler(ILocalizationService localizationService, IRepositoryService<TextObservation> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
         {
         }
     }

@@ -68,6 +68,7 @@ namespace SanteDB.Rest.Common
             {
                 try
                 {
+
                     IApiResourceHandler rh = s_serviceManager.CreateInjected(t) as IApiResourceHandler;
                     if (rh == null)
                     {
