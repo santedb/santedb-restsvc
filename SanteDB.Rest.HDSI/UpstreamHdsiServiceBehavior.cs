@@ -526,7 +526,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     {
                         var restClient = this.CreateProxyClient();
                         restClient.Responded += this.CopyResponseHeaders;
-                        return restClient.Get<IdentifiedData>($"{resourceType}/{id}/history");
+                        return restClient.Get<IdentifiedData>($"{resourceType}/{id}/_history");
                     }
                     catch (Exception e)
                     {
