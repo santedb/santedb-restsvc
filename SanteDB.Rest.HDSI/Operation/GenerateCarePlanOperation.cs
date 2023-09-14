@@ -25,7 +25,7 @@ using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Constants;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Roles;
-using SanteDB.Core.Protocol;
+using SanteDB.Core.Cdss;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
@@ -40,7 +40,7 @@ namespace SanteDB.Rest.HDSI.Operation
     {
         // Care plan service
         private ICarePlanService m_carePlanService;
-        private readonly IClinicalProtocolRepositoryService m_clinicalProtocolRepository;
+        private readonly ICdssAssetRepository m_clinicalProtocolRepository;
 
         // Repo service
         private IConceptRepositoryService m_conceptRepositoryService;
@@ -51,7 +51,7 @@ namespace SanteDB.Rest.HDSI.Operation
         /// <summary>
         /// DI constructor for care plan
         /// </summary>
-        public GenerateCarePlanOperation(ICarePlanService carePlanService, IClinicalProtocolRepositoryService clinicalProtocolRepository, IConceptRepositoryService conceptRepositoryService, ILocalizationService localizationService)
+        public GenerateCarePlanOperation(ICarePlanService carePlanService, ICdssAssetRepository clinicalProtocolRepository, IConceptRepositoryService conceptRepositoryService, ILocalizationService localizationService)
         {
             this.m_carePlanService = carePlanService;
             this.m_clinicalProtocolRepository = clinicalProtocolRepository;
@@ -92,10 +92,10 @@ namespace SanteDB.Rest.HDSI.Operation
             }
 
             // Get parameter for desired protocols
-            IClinicalProtocol clinicalProtocol = null;
+            ICdssProtocolAsset clinicalProtocol = null;
             if (parameters.TryGet("protocol", out Guid protocolId))
             {
-                clinicalProtocol = this.m_clinicalProtocolRepository.GetProtocol(protocolId);
+                clinicalProtocol = this.m_clinicalProtocolRepository.Get(protocolId) as ICdssProtocolAsset;
             }
             parameters.TryGet("asEncounter", out bool asEncounters);
 
