@@ -40,7 +40,7 @@ namespace SanteDB.Rest.HDSI.Operation
     {
         // Care plan service
         private ICarePlanService m_carePlanService;
-        private readonly ICdssAssetRepository m_clinicalProtocolRepository;
+        private readonly ICdssLibraryRepository m_clinicalProtocolRepository;
 
         // Repo service
         private IConceptRepositoryService m_conceptRepositoryService;
@@ -51,7 +51,7 @@ namespace SanteDB.Rest.HDSI.Operation
         /// <summary>
         /// DI constructor for care plan
         /// </summary>
-        public GenerateCarePlanOperation(ICarePlanService carePlanService, ICdssAssetRepository clinicalProtocolRepository, IConceptRepositoryService conceptRepositoryService, ILocalizationService localizationService)
+        public GenerateCarePlanOperation(ICarePlanService carePlanService, ICdssLibraryRepository clinicalProtocolRepository, IConceptRepositoryService conceptRepositoryService, ILocalizationService localizationService)
         {
             this.m_carePlanService = carePlanService;
             this.m_clinicalProtocolRepository = clinicalProtocolRepository;
@@ -92,10 +92,10 @@ namespace SanteDB.Rest.HDSI.Operation
             }
 
             // Get parameter for desired protocols
-            ICdssProtocolAsset clinicalProtocol = null;
+            ICdssProtocol clinicalProtocol = null;
             if (parameters.TryGet("protocol", out Guid protocolId))
             {
-                clinicalProtocol = this.m_clinicalProtocolRepository.Get(protocolId) as ICdssProtocolAsset;
+                clinicalProtocol = this.m_clinicalProtocolRepository.Get(protocolId) as ICdssProtocol;
             }
             parameters.TryGet("asEncounter", out bool asEncounters);
 
