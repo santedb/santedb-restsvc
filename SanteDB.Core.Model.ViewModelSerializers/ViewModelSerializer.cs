@@ -23271,7 +23271,14 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 return null;
             }
             try {
-                _strong = ((byte[])(o));
+                if (o is byte[] b)
+                {
+                    _strong = b;
+                }
+                else if (o is String s)
+                {
+                    _strong = Convert.FromBase64String(s);
+                }
             }
             catch (System.Exception e) {
                 this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
