@@ -39,7 +39,7 @@ namespace SanteDB.Rest.HDSI.Operation
     public class GenerateCarePlanOperation : IApiChildOperation
     {
         // Care plan service
-        private ICarePlanService m_carePlanService;
+        private IDecisionSupportService m_carePlanService;
         private readonly ICdssLibraryRepository m_clinicalProtocolRepository;
 
         // Repo service
@@ -51,7 +51,7 @@ namespace SanteDB.Rest.HDSI.Operation
         /// <summary>
         /// DI constructor for care plan
         /// </summary>
-        public GenerateCarePlanOperation(ICarePlanService carePlanService, ICdssLibraryRepository clinicalProtocolRepository, IConceptRepositoryService conceptRepositoryService, ILocalizationService localizationService)
+        public GenerateCarePlanOperation(IDecisionSupportService carePlanService, ICdssLibraryRepository clinicalProtocolRepository, IConceptRepositoryService conceptRepositoryService, ILocalizationService localizationService)
         {
             this.m_carePlanService = carePlanService;
             this.m_clinicalProtocolRepository = clinicalProtocolRepository;
@@ -92,18 +92,25 @@ namespace SanteDB.Rest.HDSI.Operation
             }
 
             // Get parameter for desired protocols
-            ICdssProtocol clinicalProtocol = null;
-            if (parameters.TryGet("protocol", out Guid protocolId))
+            ICdssLibrary libraryToApply = null;
+            if (parameters.TryGet("library", out Guid libraryId))
             {
-                clinicalProtocol = this.m_clinicalProtocolRepository.Get(protocolId) as ICdssProtocol;
+                libraryToApply = this.m_clinicalProtocolRepository.Get(libraryId);
             }
             parameters.TryGet("asEncounter", out bool asEncounters);
 
-            // Get care plan service
-            var plan = clinicalProtocol != null ?
-                this.m_carePlanService.CreateCarePlan(target, asEncounters, parameters.Parameters.ToDictionary(o => o.Name, o => (object)o.Value), clinicalProtocol) :
-                this.m_carePlanService.CreateCarePlan(target, asEncounters, parameters.Parameters.ToDictionary(o => o.Name, o => (object)o.Value));
+            var cpParameters = parameters.Parameters.ToDictionary(o => o.Name, p => p.Value);
 
+            CarePlan plan = null;
+            if(libraryToApply != null)
+            {
+                plan = this.m_carePlanService.CreateCarePlan(target, asEncounters, cpParameters, libraryToApply);
+            }
+            else
+            {
+                plan = this.m_carePlanService.CreateCarePlan(target, asEncounters, cpParameters);
+            }
+            
             // Expand the participation roles form the care planner
             foreach (var p in plan.Relationships.Where(o => o.RelationshipTypeKey == ActRelationshipTypeKeys.HasComponent).Select(o => o.TargetAct))
             {
