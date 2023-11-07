@@ -92,7 +92,7 @@ namespace SanteDB.Rest.Common.Behavior
         {
             try
             {
-                var authCookie = request.Cookies["_s"];
+                var authCookie = request.Cookies[ExtendedCookieNames.SessionCookieName];
                 if (authCookie != null)
                 {
                     var session = m_sessionTokenResolver.GetSessionFromBearerToken(authCookie.Value);
@@ -108,7 +108,7 @@ namespace SanteDB.Rest.Common.Behavior
             }
             catch (Exception)
             {
-                RestOperationContext.Current.OutgoingResponse.SetCookie(new System.Net.Cookie("_s", "")
+                RestOperationContext.Current.OutgoingResponse.SetCookie(new System.Net.Cookie(ExtendedCookieNames.SessionCookieName, "")
                 {
                     Discard = true,
                     Expired = true,
