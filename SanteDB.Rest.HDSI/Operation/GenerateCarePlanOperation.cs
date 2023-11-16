@@ -47,32 +47,38 @@ namespace SanteDB.Rest.HDSI.Operation
 
         // Locale service
         private readonly ILocalizationService m_localizationService;
+        private readonly IRepositoryService<Patient> m_patientRepository;
 
         /// <summary>
         /// DI constructor for care plan
         /// </summary>
-        public GenerateCarePlanOperation(IDecisionSupportService carePlanService, ICdssLibraryRepository clinicalProtocolRepository, IConceptRepositoryService conceptRepositoryService, ILocalizationService localizationService)
+        public GenerateCarePlanOperation(IDecisionSupportService carePlanService, 
+            ICdssLibraryRepository clinicalProtocolRepository, 
+            IConceptRepositoryService conceptRepositoryService, 
+            IRepositoryService<Patient> patientRepository,
+            ILocalizationService localizationService)
         {
             this.m_carePlanService = carePlanService;
             this.m_clinicalProtocolRepository = clinicalProtocolRepository;
             this.m_conceptRepositoryService = conceptRepositoryService;
             this.m_localizationService = localizationService;
+            this.m_patientRepository = patientRepository;
         }
 
         /// <summary>
         /// Gets the parent types
         /// </summary>
-        public Type[] ParentTypes => new Type[] { typeof(CarePlan) };
+        public Type[] ParentTypes => new Type[] { typeof(Patient) };
 
         /// <summary>
         /// The name of the operation
         /// </summary>
-        public string Name => "cdss";
+        public string Name => "generate-careplan";
 
         /// <summary>
         /// The binding of the scope
         /// </summary>
-        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Class;
+        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Class | ChildObjectScopeBinding.Instance;
 
         /// <summary>
         /// Invoke the care plan operation
@@ -80,9 +86,15 @@ namespace SanteDB.Rest.HDSI.Operation
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
             // Target - of the operation
-            if (!parameters.TryGet("targetPatient", out Patient target))
+            var hasIdentifiedTarget = scopingKey is Guid targetUuid || Guid.TryParse(scopingKey?.ToString(), out targetUuid);
+            Patient target = null;
+            if(!hasIdentifiedTarget && !parameters.TryGet("targetPatient", out target))
             {
                 throw new ArgumentNullException("targetPatient", this.m_localizationService.GetString(ErrorMessageStrings.MISSING_ARGUMENT));
+            }
+            if(hasIdentifiedTarget)
+            {
+                target = this.m_patientRepository.Get(targetUuid);
             }
 
             // Get parameters for the history of the patient which can provide history
