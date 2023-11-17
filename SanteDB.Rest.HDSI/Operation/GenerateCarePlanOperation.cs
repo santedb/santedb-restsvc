@@ -92,15 +92,14 @@ namespace SanteDB.Rest.HDSI.Operation
             {
                 throw new ArgumentNullException("targetPatient", this.m_localizationService.GetString(ErrorMessageStrings.MISSING_ARGUMENT));
             }
+
             if(hasIdentifiedTarget)
             {
                 target = this.m_patientRepository.Get(targetUuid);
             }
-
-            // Get parameters for the history of the patient which can provide history
-            if (!parameters.TryGet("history", out Bundle history))
+            else if (parameters.TryGet("history", out Bundle history))
             {
-                history = new Bundle();
+                target.Participations = history.Item.OfType<Act>().Select(o => new ActParticipation(ActParticipationKeys.RecordTarget, target) { Act = o }).ToList();
             }
 
             // Get parameter for desired protocols
