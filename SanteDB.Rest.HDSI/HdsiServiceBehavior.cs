@@ -782,7 +782,7 @@ namespace SanteDB.Rest.HDSI
                     var results = handler.Query(query) as IOrderableQueryResultSet;
 
                     // Now apply controls
-                    var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<IdentifiedData>();
+                    var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<IdentifiedData>().ToArray();
 
                     // Last modified object
                     if (this.m_configuration?.IncludeMetadataHeadersOnSearch == true)

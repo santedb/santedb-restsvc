@@ -152,6 +152,25 @@ namespace SanteDB.Rest.AMI
         Object CreateUpdate(String resourceType, String key, Object data);
 
         /// <summary>
+        /// Gets the specified versioned copy of the data
+        /// </summary>
+        /// <param name="resourceType">The type of resource</param>
+        /// <param name="key">The key of the resource</param>
+        /// <param name="versionKey">The version key to retrieve</param>
+        /// <returns>The object as it existed at that version</returns>
+        [Get("/{resourceType}/{key}/_history/{versionKey}")]
+        Object GetVersion(String resourceType, String key, String versionKey);
+
+        /// <summary>
+        /// Gets a complete history of changes made to the object (if supported)
+        /// </summary>
+        /// <param name="resourceType">The type of resource</param>
+        /// <param name="key">The key of the object to retrieve the history for</param>
+        /// <returns>The history</returns>
+        [Get("/{resourceType}/{key}/_history")]
+        AmiCollection History(String resourceType, String key);
+
+        /// <summary>
         /// Updates the specified resource
         /// </summary>
         /// <param name="resourceType">The type of resource to be updated</param>
@@ -249,25 +268,6 @@ namespace SanteDB.Rest.AMI
         /// <returns>Headers for the specified resource</returns>
         [RestInvoke("HEAD", "/{resourceType}/{key}")]
         void Head(String resourceType, String key);
-
-        /// <summary>
-        /// Gets the specified versioned copy of the data
-        /// </summary>
-        /// <param name="resourceType">The type of resource</param>
-        /// <param name="key">The key of the resource</param>
-        /// <param name="versionKey">The version key to retrieve</param>
-        /// <returns>The object as it existed at that version</returns>
-        [Get("/{resourceType}/{key}/_history/{versionKey}")]
-        Object GetVersion(String resourceType, String key, String versionKey);
-
-        /// <summary>
-        /// Gets a complete history of changes made to the object (if supported)
-        /// </summary>
-        /// <param name="resourceType">The type of resource</param>
-        /// <param name="key">The key of the object to retrieve the history for</param>
-        /// <returns>The history</returns>
-        [Get("/{resourceType}/{key}/_history")]
-        AmiCollection History(String resourceType, String key);
 
         /// <summary>
         /// Searches the specified resource type for matches

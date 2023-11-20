@@ -106,7 +106,7 @@ namespace SanteDB.Rest.HDSI.Operation
             ICdssLibrary libraryToApply = null;
             if (parameters.TryGet("library", out Guid libraryId))
             {
-                libraryToApply = this.m_clinicalProtocolRepository.Get(libraryId);
+                libraryToApply = this.m_clinicalProtocolRepository.Get(libraryId, null);
             }
             parameters.TryGet("asEncounter", out bool asEncounters);
 

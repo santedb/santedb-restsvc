@@ -1111,8 +1111,9 @@ namespace SanteDB.Rest.AMI
                     }
                     else
                     {
-                        audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retVal.ToArray());
-                        return new AmiCollection(retVal, offset, totalCount);
+                        var retArray = retVal.ToArray();
+                        audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retArray);
+                        return new AmiCollection(retArray, offset, totalCount);
                     }
                 }
                 else
