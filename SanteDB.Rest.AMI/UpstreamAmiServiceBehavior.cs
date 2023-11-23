@@ -117,6 +117,17 @@ namespace SanteDB.Rest.AMI
                 {
                     e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ViewModelHeaderName, RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName]);
                 }
+
+            };
+
+            retVal.Responded += (o, e) =>
+            {
+                var responseHeaders = RestOperationContext.Current.OutgoingResponse.Headers;
+                if (e.Headers?.ContainsKey("Content-Disposition") == true)
+                {
+                    responseHeaders.Add("Content-Disposition", e.Headers["Content-Disposition"]);
+                  RestOperationContext.Current.OutgoingResponse.ContentType = e.ContentType;
+                }
             };
             return retVal;
         }
@@ -284,7 +295,7 @@ namespace SanteDB.Rest.AMI
                         using (var restClient = this.CreateProxyClient())
                         {
                             restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                            var retVal = restClient.Get<Object>($"{resourceType}/{key}");
+                            var retVal = restClient.Get<Object>($"{resourceType}/{key}", RestOperationContext.Current.IncomingRequest.QueryString);
                             this.TagUpstream(retVal);
                             return retVal;
                         }
@@ -320,7 +331,7 @@ namespace SanteDB.Rest.AMI
                         using (var restClient = this.CreateProxyClient())
                         {
                             restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                            return restClient.Get<Object>($"{resourceType}/{key}/history/{versionKey}");
+                            return restClient.Get<Object>($"{resourceType}/{key}/history/{versionKey}", RestOperationContext.Current.IncomingRequest.QueryString);
                         }
                     }
                     catch (Exception e)
