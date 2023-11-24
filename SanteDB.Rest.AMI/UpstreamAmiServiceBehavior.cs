@@ -331,7 +331,7 @@ namespace SanteDB.Rest.AMI
                         using (var restClient = this.CreateProxyClient())
                         {
                             restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                            return restClient.Get<Object>($"{resourceType}/{key}/history/{versionKey}", RestOperationContext.Current.IncomingRequest.QueryString);
+                            return restClient.Get<Object>($"{resourceType}/{key}/_history/{versionKey}", RestOperationContext.Current.IncomingRequest.QueryString);
                         }
                     }
                     catch (Exception e)
@@ -365,7 +365,7 @@ namespace SanteDB.Rest.AMI
                         using (var restClient = this.CreateProxyClient())
                         {
                             restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                            return restClient.Get<AmiCollection>($"{resourceType}/{key}/history");
+                            return restClient.Get<AmiCollection>($"{resourceType}/{key}/_history");
                         }
                     }
                     catch (Exception e)
