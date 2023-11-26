@@ -1104,7 +1104,7 @@ namespace SanteDB.Rest.AMI
                     // Last modification time and not modified conditions
                     if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||
                         RestOperationContext.Current.IncomingRequest.GetIfNoneMatch() != null) &&
-                        totalCount == 0)
+                        !retVal.Any())
                     {
                         RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
                         return null;

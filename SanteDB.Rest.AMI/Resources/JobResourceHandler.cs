@@ -19,7 +19,9 @@
  * Date: 2023-5-19
  */
 using SanteDB.Core;
+using SanteDB.Core.Configuration;
 using SanteDB.Core.Diagnostics;
+using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Jobs;
 using SanteDB.Core.Model.AMI.Jobs;
@@ -29,6 +31,7 @@ using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
+using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -95,7 +98,9 @@ namespace SanteDB.Rest.AMI.Resources
         /// </summary>
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Update | // start
             ResourceCapabilityType.Search | // find
-            ResourceCapabilityType.Get;
+            ResourceCapabilityType.Get |
+            ResourceCapabilityType.Create | 
+            ResourceCapabilityType.Delete;
 
         /// <summary>
         /// Gets the service name
@@ -109,11 +114,25 @@ namespace SanteDB.Rest.AMI.Resources
 
 
         /// <summary>
-        /// Create a new job instance
+        /// Create a new job instance - registers it with the job manager
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.AlterSystemConfiguration)]
         public object Create(object data, bool updateIfExists)
         {
-            throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
+            if(data is TypeReferenceConfiguration trc)
+            {
+                var job = this.m_jobManager.RegisterJob(trc.Type);
+                return new JobInfo(this.m_jobStateService.GetJobState(job), null);
+            }
+            else if(data is JobInfo ji)
+            {
+                var job = this.m_jobManager.RegisterJob(Type.GetType(ji.JobType));
+                return new JobInfo(this.m_jobStateService.GetJobState(job), null);
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException(String.Format(ErrorMessages.ARGUMENT_INCOMPATIBLE_TYPE, typeof(TypeReferenceConfiguration), data.GetType()));
+            }
         }
 
         /// <summary>
@@ -146,13 +165,28 @@ namespace SanteDB.Rest.AMI.Resources
         public IQueryResultSet Query(NameValueCollection queryParameters)
         {
             ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
-            var jobs = this.m_jobManager.Jobs;
-            if (queryParameters.TryGetValue("name", out var data))
-            {
-                jobs = jobs.Where(o => o.Name.Contains(data.First()));
-            }
 
-            return new MemoryQueryResultSet(jobs.Select(o => new JobInfo(this.m_jobStateService.GetJobState(o), this.m_jobScheduleManager.Get(o))).ToArray());
+            // Is the user looking for unconfigured jobs?
+            if (Boolean.TryParse(queryParameters["_unconfigured"], out var b) && b)
+            {
+                return new MemoryQueryResultSet(this.m_jobManager.GetAvailableJobs().Select(o => {
+                    if(!this.m_jobManager.IsJobRegistered(o))
+                    {
+                        return new TypeReferenceConfiguration(o);
+                    }
+                    return null;
+                }).OfType<TypeReferenceConfiguration>());
+            }
+            else
+            {
+                var jobs = this.m_jobManager.Jobs;
+                if (queryParameters.TryGetValue("name", out var data))
+                {
+                    jobs = jobs.Where(o => o.Name.Contains(data.First()));
+                }
+
+                return new MemoryQueryResultSet(jobs.Select(o => new JobInfo(this.m_jobStateService.GetJobState(o), this.m_jobScheduleManager.Get(o))).ToArray());
+            }
         }
 
         /// <summary>
