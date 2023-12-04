@@ -260,6 +260,12 @@ namespace SanteDB.Rest.Common.Serialization
                                 parameters[pNumber] = request.Body;
                                 break;
 
+                            case "text/plain":
+                                using (var sr = new StreamReader(request.Body, Encoding.GetEncoding(contentType.CharSet ?? "utf-8")))
+                                {
+                                    parameters[pNumber] = sr.ReadToEnd();
+                                }
+                                break;
                             case "application/x-www-form-urlencoded":
                                 NameValueCollection nvc = new NameValueCollection();
                                 using (var sr = new StreamReader(request.Body))
