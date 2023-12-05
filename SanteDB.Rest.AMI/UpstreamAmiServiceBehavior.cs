@@ -101,7 +101,7 @@ namespace SanteDB.Rest.AMI
                     retVal.Accept = "application/xml";
                     break;
                 default:
-                    retVal.Accept = RestOperationContext.Current.IncomingRequest.ContentType;
+                    retVal.Accept = RestOperationContext.Current.IncomingRequest.ContentType ?? retVal.Accept;
                     break;
             }
             //}
@@ -117,6 +117,7 @@ namespace SanteDB.Rest.AMI
                 {
                     e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ViewModelHeaderName, RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName]);
                 }
+                e.Query?.Remove("_upstream"); // Don't cascade the upstream query to the upstream
 
             };
 
@@ -559,6 +560,73 @@ namespace SanteDB.Rest.AMI
             }
         }
 
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
+        public override object CheckIn(string resourceType, string key)
+        {
+            // Perform only on the external server
+            if (this.ShouldForwardRequest())
+            {
+                if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                {
+                    try
+                    {
+                        using (var restClient = this.CreateProxyClient())
+                        {
+                            restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                            return restClient.Invoke<Object, Object>("CHECKIN", $"{resourceType}/{key}", null);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
+                        throw;
+                    }
+                }
+                else
+                {
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
+            }
+            else
+            {
+                return base.CheckIn(resourceType, key);
+            }
+        }
+
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
+        public override object CheckOut(string resourceType, string key)
+        {
+            // Perform only on the external server
+            if (this.ShouldForwardRequest())
+            {
+                if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                {
+                    try
+                    {
+                        using (var restClient = this.CreateProxyClient())
+                        {
+                            restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                            return restClient.Invoke<Object, Object>("CHECKOUT", $"{resourceType}/{key}", null);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
+                        throw;
+                    }
+                }
+                else
+                {
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
+            }
+            else
+            {
+                return base.CheckOut(resourceType, key);
+            }
+        }
         /// <inheritdoc/>
         [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override object InvokeMethod(string resourceType, string operationName, ParameterCollection body)
