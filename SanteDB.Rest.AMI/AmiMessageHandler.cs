@@ -165,9 +165,6 @@ namespace SanteDB.Rest.AMI
                 else
                 {
                     AmiMessageHandler.ResourceHandler = new ResourceHandlerTool(
-                        ApplicationServiceContext.Current.GetService<IServiceManager>().GetAllTypes()
-                        .Where(t => !t.IsAbstract && !t.IsInterface && typeof(IApiResourceHandler).IsAssignableFrom(t))
-                        .ToList(),
                         typeof(IAmiServiceContract)
                     );
                 }
