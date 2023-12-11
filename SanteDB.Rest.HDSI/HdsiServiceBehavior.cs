@@ -782,7 +782,7 @@ namespace SanteDB.Rest.HDSI
                     var results = handler.Query(query) as IOrderableQueryResultSet;
 
                     // Now apply controls
-                    var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<IdentifiedData>();
+                    var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<IdentifiedData>().ToArray();
 
                     // Last modified object
                     if (this.m_configuration?.IncludeMetadataHeadersOnSearch == true)
@@ -800,7 +800,7 @@ namespace SanteDB.Rest.HDSI
                     // Last modification time and not modified conditions
                     if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||
                         RestOperationContext.Current.IncomingRequest.GetIfNoneMatch() != null) &&
-                        totalCount == 0)
+                        !retVal.Any())
                     {
                         RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
                         return null;

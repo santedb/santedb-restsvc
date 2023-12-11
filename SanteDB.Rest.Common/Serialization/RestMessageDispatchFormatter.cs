@@ -260,6 +260,12 @@ namespace SanteDB.Rest.Common.Serialization
                                 parameters[pNumber] = request.Body;
                                 break;
 
+                            case "text/plain":
+                                using (var sr = new StreamReader(request.Body, Encoding.GetEncoding(contentType.CharSet ?? "utf-8")))
+                                {
+                                    parameters[pNumber] = sr.ReadToEnd();
+                                }
+                                break;
                             case "application/x-www-form-urlencoded":
                                 NameValueCollection nvc = new NameValueCollection();
                                 using (var sr = new StreamReader(request.Body))
@@ -343,15 +349,24 @@ namespace SanteDB.Rest.Common.Serialization
                 this.m_traceSource.TraceVerbose("Serializing {0}", result?.GetType());
                 // Outbound control
                 var httpRequest = RestOperationContext.Current.IncomingRequest;
-                string accepts = httpRequest.Headers["Accept"],
-                    contentType = httpRequest.Headers["Content-Type"];
+                ContentType contentTypeMime = null;
 
-                if (String.IsNullOrEmpty(accepts) && String.IsNullOrEmpty(contentType))
+                if (!String.IsNullOrEmpty(RestOperationContext.Current.OutgoingResponse.ContentType)) // Declared content type
                 {
-                    accepts = "application/json";
+                    contentTypeMime = new ContentType(RestOperationContext.Current.OutgoingResponse.ContentType);
                 }
-                var contentTypeMime = (accepts ?? contentType).Split(',').Select(o => new ContentType(o)).First();
+                else // let client decide
+                {
+                    string accepts = httpRequest.Headers["Accept"],
+                        contentType = httpRequest.Headers["Content-Type"];
 
+                    if (String.IsNullOrEmpty(accepts) && String.IsNullOrEmpty(contentType))
+                    {
+                        accepts = "application/json";
+                    }
+                    contentTypeMime = (accepts ?? contentType).Split(',').Select(o => new ContentType(o)).First();
+                }
+                
                 // Result is serializable
                 if (result == null)
                 {
@@ -365,12 +380,16 @@ namespace SanteDB.Rest.Common.Serialization
                     MemoryStream ms = new MemoryStream();
                     xs.Write(ms);
                     ms.Seek(0, SeekOrigin.Begin);
-                    contentType = "text/xml";
+                    contentTypeMime = new ContentType("text/xml");
                     response.Body = ms;
                 }
                 else if (result is Stream str) // TODO: This is messy, clean it up
                 {
-                    contentType = "application/octet-stream";
+                    // Did the returner explicitly set the content type mime
+                    if (RestOperationContext.Current.OutgoingResponse.ContentType == null)
+                    {
+                        contentTypeMime = new ContentType("application/octet-stream");
+                    }
                     response.Body = str;
                 }
                 else
@@ -422,7 +441,7 @@ namespace SanteDB.Rest.Common.Serialization
 #if DEBUG
                                 this.m_traceSource.TraceVerbose("Serialized body of  {0}", result);
 #endif
-                                contentType = "application/json+sdb-viewmodel";
+                                contentTypeMime = new ContentType("application/json+sdb-viewmodel");
                             }
                             else
                             {
@@ -462,7 +481,7 @@ namespace SanteDB.Rest.Common.Serialization
                                 }
 
                                 // Prepare reply for the WCF pipeline
-                                contentType = "application/json";
+                                contentTypeMime = new ContentType("application/json");
                                 break;
                             }
                         case "application/xml":
@@ -492,13 +511,13 @@ namespace SanteDB.Rest.Common.Serialization
                                     this.m_traceSource.TraceError("Error serializing response: {0}", e);
                                     throw new Exception($"Could not serialize response message {result}", e);
                                 }
-                                contentType = "application/xml";
+                                contentTypeMime = new ContentType("application/xml");
                                 ms.Seek(0, SeekOrigin.Begin);
                                 response.Body = ms;
                                 break;
                             }
                         default:
-                            contentType = "text/plain";
+                            contentTypeMime = new ContentType("text/plain");
                             response.Body = new MemoryStream(Encoding.UTF8.GetBytes(result.ToString()));
                             break;
                     }
@@ -508,7 +527,7 @@ namespace SanteDB.Rest.Common.Serialization
 #if DEBUG
                 this.m_traceSource.TraceVerbose("Setting response headers");
 #endif
-                RestOperationContext.Current.OutgoingResponse.ContentType = RestOperationContext.Current.OutgoingResponse.ContentType ?? contentType;
+                RestOperationContext.Current.OutgoingResponse.ContentType = contentTypeMime.ToString();
                 RestOperationContext.Current.OutgoingResponse.AppendHeader("X-GeneratedOn", DateTime.Now.ToString("o"));
             }
             catch (Exception e)

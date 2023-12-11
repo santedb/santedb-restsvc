@@ -25,7 +25,7 @@ using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Constants;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Roles;
-using SanteDB.Core.Protocol;
+using SanteDB.Core.Cdss;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
@@ -39,40 +39,46 @@ namespace SanteDB.Rest.HDSI.Operation
     public class GenerateCarePlanOperation : IApiChildOperation
     {
         // Care plan service
-        private ICarePlanService m_carePlanService;
-        private readonly IClinicalProtocolRepositoryService m_clinicalProtocolRepository;
+        private IDecisionSupportService m_carePlanService;
+        private readonly ICdssLibraryRepository m_clinicalProtocolRepository;
 
         // Repo service
         private IConceptRepositoryService m_conceptRepositoryService;
 
         // Locale service
         private readonly ILocalizationService m_localizationService;
+        private readonly IRepositoryService<Patient> m_patientRepository;
 
         /// <summary>
         /// DI constructor for care plan
         /// </summary>
-        public GenerateCarePlanOperation(ICarePlanService carePlanService, IClinicalProtocolRepositoryService clinicalProtocolRepository, IConceptRepositoryService conceptRepositoryService, ILocalizationService localizationService)
+        public GenerateCarePlanOperation(IDecisionSupportService carePlanService, 
+            ICdssLibraryRepository clinicalProtocolRepository, 
+            IConceptRepositoryService conceptRepositoryService, 
+            IRepositoryService<Patient> patientRepository,
+            ILocalizationService localizationService)
         {
             this.m_carePlanService = carePlanService;
             this.m_clinicalProtocolRepository = clinicalProtocolRepository;
             this.m_conceptRepositoryService = conceptRepositoryService;
             this.m_localizationService = localizationService;
+            this.m_patientRepository = patientRepository;
         }
 
         /// <summary>
         /// Gets the parent types
         /// </summary>
-        public Type[] ParentTypes => new Type[] { typeof(CarePlan) };
+        public Type[] ParentTypes => new Type[] { typeof(Patient) };
 
         /// <summary>
         /// The name of the operation
         /// </summary>
-        public string Name => "cdss";
+        public string Name => "generate-careplan";
 
         /// <summary>
         /// The binding of the scope
         /// </summary>
-        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Class;
+        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Class | ChildObjectScopeBinding.Instance;
 
         /// <summary>
         /// Invoke the care plan operation
@@ -80,30 +86,42 @@ namespace SanteDB.Rest.HDSI.Operation
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
             // Target - of the operation
-            if (!parameters.TryGet("targetPatient", out Patient target))
+            var hasIdentifiedTarget = scopingKey is Guid targetUuid || Guid.TryParse(scopingKey?.ToString(), out targetUuid);
+            Patient target = null;
+            if(!hasIdentifiedTarget && !parameters.TryGet("targetPatient", out target))
             {
                 throw new ArgumentNullException("targetPatient", this.m_localizationService.GetString(ErrorMessageStrings.MISSING_ARGUMENT));
             }
 
-            // Get parameters for the history of the patient which can provide history
-            if (!parameters.TryGet("history", out Bundle history))
+            if(hasIdentifiedTarget)
             {
-                history = new Bundle();
+                target = this.m_patientRepository.Get(targetUuid);
+            }
+            else if (parameters.TryGet("history", out Bundle history))
+            {
+                target.Participations = history.Item.OfType<Act>().Select(o => new ActParticipation(ActParticipationKeys.RecordTarget, target) { Act = o }).ToList();
             }
 
             // Get parameter for desired protocols
-            IClinicalProtocol clinicalProtocol = null;
-            if (parameters.TryGet("protocol", out Guid protocolId))
+            ICdssLibrary libraryToApply = null;
+            if (parameters.TryGet("library", out Guid libraryId))
             {
-                clinicalProtocol = this.m_clinicalProtocolRepository.GetProtocol(protocolId);
+                libraryToApply = this.m_clinicalProtocolRepository.Get(libraryId, null);
             }
             parameters.TryGet("asEncounter", out bool asEncounters);
 
-            // Get care plan service
-            var plan = clinicalProtocol != null ?
-                this.m_carePlanService.CreateCarePlan(target, asEncounters, parameters.Parameters.ToDictionary(o => o.Name, o => (object)o.Value), clinicalProtocol) :
-                this.m_carePlanService.CreateCarePlan(target, asEncounters, parameters.Parameters.ToDictionary(o => o.Name, o => (object)o.Value));
+            var cpParameters = parameters.Parameters.ToDictionary(o => o.Name, p => p.Value);
 
+            CarePlan plan = null;
+            if(libraryToApply != null)
+            {
+                plan = this.m_carePlanService.CreateCarePlan(target, asEncounters, cpParameters, libraryToApply);
+            }
+            else
+            {
+                plan = this.m_carePlanService.CreateCarePlan(target, asEncounters, cpParameters);
+            }
+            
             // Expand the participation roles form the care planner
             foreach (var p in plan.Relationships.Where(o => o.RelationshipTypeKey == ActRelationshipTypeKeys.HasComponent).Select(o => o.TargetAct))
             {

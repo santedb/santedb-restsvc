@@ -57,6 +57,14 @@ namespace SanteDB.Rest.Common
         public IEnumerable<IApiResourceHandler> Handlers => this.m_handlers.Values;
 
         /// <summary>
+        /// Create for all types assigned to <paramref name="scope"/>
+        /// </summary>
+        public ResourceHandlerTool(Type scope) : this(AppDomain.CurrentDomain.GetAllTypes()
+                    .Where(t => !t.IsAbstract && !t.IsInterface && typeof(IApiResourceHandler).IsAssignableFrom(t)), scope)
+        { 
+        }
+
+        /// <summary>
         /// Creates an single resource handler for a particular service
         /// </summary>
         /// <param name="resourceHandlerTypes">The type of resource handlers</param>
@@ -68,6 +76,7 @@ namespace SanteDB.Rest.Common
             {
                 try
                 {
+
                     IApiResourceHandler rh = s_serviceManager.CreateInjected(t) as IApiResourceHandler;
                     if (rh == null)
                     {

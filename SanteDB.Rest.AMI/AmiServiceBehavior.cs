@@ -1104,15 +1104,16 @@ namespace SanteDB.Rest.AMI
                     // Last modification time and not modified conditions
                     if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||
                         RestOperationContext.Current.IncomingRequest.GetIfNoneMatch() != null) &&
-                        totalCount == 0)
+                        !retVal.Any())
                     {
                         RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
                         return null;
                     }
                     else
                     {
-                        audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retVal.ToArray());
-                        return new AmiCollection(retVal, offset, totalCount);
+                        var retArray = retVal.ToArray();
+                        audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retArray);
+                        return new AmiCollection(retArray, offset, totalCount);
                     }
                 }
                 else

@@ -24,6 +24,7 @@ using RestSrvr.Exceptions;
 using SanteDB.Core;
 using SanteDB.Core.Http;
 using SanteDB.Core.Interop;
+using SanteDB.Core.Model;
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.AMI.Collections;
 using SanteDB.Core.Model.Collection;
@@ -64,6 +65,72 @@ namespace SanteDB.Rest.AMI
             this.m_dataCachingService = ApplicationServiceContext.Current.GetService<IDataCachingService>();
             this.m_entityRepository = ApplicationServiceContext.Current.GetService<IDataPersistenceService<Entity>>();
             this.m_actRepository = ApplicationServiceContext.Current.GetService<IDataPersistenceService<Act>>();
+        }
+
+        /// <summary>
+        /// Create a proxy client with appropriate headers
+        /// </summary>
+        private IRestClient CreateProxyClient()
+        {
+            var retVal = this.m_restClientResolver.GetRestClientFor(ServiceEndpointType.AdministrationIntegrationService);
+
+            //// For read operations - we want to pass the accept up to save re-fetching
+            //if (RestOperationContext.Current.IncomingRequest.HttpMethod.Equals("get", StringComparison.InvariantCultureIgnoreCase))
+            //{
+            //    if (RestOperationContext.Current.IncomingRequest.QueryString["_format"] != null)
+            //    {
+            //        retVal.Accept = RestOperationContext.Current.IncomingRequest.QueryString["_format"];
+            //    }
+            //    else
+            //    {
+            //        retVal.Accept = RestOperationContext.Current.IncomingRequest.AcceptTypes.First();
+            //    }
+            //}
+            //else // For posts - we don't want the ViewModel data going up - we want an XML sync representation going up so delay loading on upbound objects is not performed
+            //{
+            switch (RestOperationContext.Current.IncomingRequest.ContentType)
+            {
+                case SanteDBExtendedMimeTypes.JsonPatch:
+                case SanteDBExtendedMimeTypes.JsonRimModel:
+                case SanteDBExtendedMimeTypes.JsonViewModel:
+                case SanteDBExtendedMimeTypes.XmlPatch:
+                case SanteDBExtendedMimeTypes.XmlRimModel:
+                case "application/json":
+                case "application/json+sdb-viewmodel":
+                case "application/xml": // We want to use the XML format for serialization
+                    retVal.Accept = "application/xml";
+                    break;
+                default:
+                    retVal.Accept = RestOperationContext.Current.IncomingRequest.ContentType ?? retVal.Accept;
+                    break;
+            }
+            //}
+
+            retVal.Requesting += (o, e) =>
+            {
+                var inboundHeaders = RestOperationContext.Current.IncomingRequest.Headers;
+                if (!String.IsNullOrEmpty(inboundHeaders[ExtendedHttpHeaderNames.ViewModelHeaderName]))
+                {
+                    e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ViewModelHeaderName, inboundHeaders[ExtendedHttpHeaderNames.ViewModelHeaderName]);
+                }
+                else if (!String.IsNullOrEmpty(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName]))
+                {
+                    e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ViewModelHeaderName, RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName]);
+                }
+                e.Query?.Remove("_upstream"); // Don't cascade the upstream query to the upstream
+
+            };
+
+            retVal.Responded += (o, e) =>
+            {
+                var responseHeaders = RestOperationContext.Current.OutgoingResponse.Headers;
+                if (e.Headers?.ContainsKey("Content-Disposition") == true)
+                {
+                    responseHeaders.Add("Content-Disposition", e.Headers["Content-Disposition"]);
+                  RestOperationContext.Current.OutgoingResponse.ContentType = e.ContentType;
+                }
+            };
+            return retVal;
         }
 
         /// <summary>
@@ -115,8 +182,9 @@ namespace SanteDB.Rest.AMI
                 {
                     try
                     {
-                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        using (var restClient = this.CreateProxyClient())
                         {
+                            
                             restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
                             return restClient.Post<Object, Object>($"{resourceType}", data);
                         }
@@ -149,7 +217,7 @@ namespace SanteDB.Rest.AMI
                 {
                     try
                     {
-                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        using (var restClient = this.CreateProxyClient())
                         {
                             restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
                             if (Guid.TryParse(key, out Guid uuid))
@@ -187,7 +255,7 @@ namespace SanteDB.Rest.AMI
                 {
                     try
                     {
-                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        using (var restClient = this.CreateProxyClient())
                         {
                             restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
                             if (Guid.TryParse(key, out Guid uuid))
@@ -225,10 +293,10 @@ namespace SanteDB.Rest.AMI
                 {
                     try
                     {
-                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        using (var restClient = this.CreateProxyClient())
                         {
                             restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                            var retVal = restClient.Get<Object>($"{resourceType}/{key}");
+                            var retVal = restClient.Get<Object>($"{resourceType}/{key}", RestOperationContext.Current.IncomingRequest.QueryString);
                             this.TagUpstream(retVal);
                             return retVal;
                         }
@@ -261,10 +329,10 @@ namespace SanteDB.Rest.AMI
                 {
                     try
                     {
-                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        using (var restClient = this.CreateProxyClient())
                         {
                             restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                            return restClient.Get<Object>($"{resourceType}/{key}/history/{versionKey}");
+                            return restClient.Get<Object>($"{resourceType}/{key}/_history/{versionKey}", RestOperationContext.Current.IncomingRequest.QueryString);
                         }
                     }
                     catch (Exception e)
@@ -295,10 +363,10 @@ namespace SanteDB.Rest.AMI
                 {
                     try
                     {
-                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        using (var restClient = this.CreateProxyClient())
                         {
                             restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
-                            return restClient.Get<AmiCollection>($"{resourceType}/{key}/history");
+                            return restClient.Get<AmiCollection>($"{resourceType}/{key}/_history");
                         }
                     }
                     catch (Exception e)
@@ -329,7 +397,7 @@ namespace SanteDB.Rest.AMI
                 {
                     try
                     {
-                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        using (var restClient = this.CreateProxyClient())
                         {
                             return restClient.Options<ServiceResourceOptions>($"{resourceType}");
                         }
@@ -362,7 +430,7 @@ namespace SanteDB.Rest.AMI
                 {
                     try
                     {
-                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        using (var restClient = this.CreateProxyClient())
                         {
                             var retVal = restClient.Get<AmiCollection>($"{resourceType}", RestOperationContext.Current.IncomingRequest.QueryString);
                             this.TagUpstream(retVal);
@@ -397,7 +465,7 @@ namespace SanteDB.Rest.AMI
                 {
                     try
                     {
-                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        using (var restClient = this.CreateProxyClient())
                         {
                             restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
                             if (Guid.TryParse(key, out Guid uuid))
@@ -435,7 +503,7 @@ namespace SanteDB.Rest.AMI
                 {
                     try
                     {
-                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        using (var restClient = this.CreateProxyClient())
                         {
                             restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
                             return restClient.Lock<Object>($"{resourceType}/{key}");
@@ -469,7 +537,7 @@ namespace SanteDB.Rest.AMI
                 {
                     try
                     {
-                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        using (var restClient = this.CreateProxyClient())
                         {
                             restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
                             return restClient.Unlock<Object>($"{resourceType}/{key}");
@@ -494,6 +562,73 @@ namespace SanteDB.Rest.AMI
 
         /// <inheritdoc/>
         [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
+        public override object CheckIn(string resourceType, string key)
+        {
+            // Perform only on the external server
+            if (this.ShouldForwardRequest())
+            {
+                if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                {
+                    try
+                    {
+                        using (var restClient = this.CreateProxyClient())
+                        {
+                            restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                            return restClient.Invoke<Object, Object>("CHECKIN", $"{resourceType}/{key}", null);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
+                        throw;
+                    }
+                }
+                else
+                {
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
+            }
+            else
+            {
+                return base.CheckIn(resourceType, key);
+            }
+        }
+
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
+        public override object CheckOut(string resourceType, string key)
+        {
+            // Perform only on the external server
+            if (this.ShouldForwardRequest())
+            {
+                if (this.m_upstreamAvailabilityProvider.IsAvailable(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                {
+                    try
+                    {
+                        using (var restClient = this.CreateProxyClient())
+                        {
+                            restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
+                            return restClient.Invoke<Object, Object>("CHECKOUT", $"{resourceType}/{key}", null);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
+                        throw;
+                    }
+                }
+                else
+                {
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
+            }
+            else
+            {
+                return base.CheckOut(resourceType, key);
+            }
+        }
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override object InvokeMethod(string resourceType, string operationName, ParameterCollection body)
         {
             if (this.ShouldForwardRequest())
@@ -502,7 +637,7 @@ namespace SanteDB.Rest.AMI
                 {
                     try
                     {
-                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        using (var restClient = this.CreateProxyClient())
                         {
                             restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
                             return restClient.Post<object, object>($"{resourceType}/${operationName}", body);
@@ -540,7 +675,7 @@ namespace SanteDB.Rest.AMI
                 {
                     try
                     {
-                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        using (var restClient = this.CreateProxyClient())
                         {
                             restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
                             if (Guid.TryParse(id, out Guid uuid))
@@ -578,7 +713,7 @@ namespace SanteDB.Rest.AMI
                 {
                     try
                     {
-                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        using (var restClient = this.CreateProxyClient())
                         {
                             restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
                             // This NVC is UTF8 compliant
@@ -617,7 +752,7 @@ namespace SanteDB.Rest.AMI
                 {
                     try
                     {
-                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        using (var restClient = this.CreateProxyClient())
                         {
                             restClient.Requesting += (o, e) => e.AdditionalHeaders.Add("X-Delete-Mode", RestOperationContext.Current.IncomingRequest.Headers["X-Delete-Mode"] ?? "OBSOLETE");
                             restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
@@ -661,7 +796,7 @@ namespace SanteDB.Rest.AMI
                 {
                     try
                     {
-                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        using (var restClient = this.CreateProxyClient())
                         {
                             restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
                             var retVal = restClient.Get<object>($"{resourceType}/{key}/{childResourceType}/{scopedEntityKey}");
@@ -696,7 +831,7 @@ namespace SanteDB.Rest.AMI
                 {
                     try
                     {
-                        using (var restClient = this.m_restClientResolver.GetRestClientFor(Core.Interop.ServiceEndpointType.AdministrationIntegrationService))
+                        using (var restClient = this.CreateProxyClient())
                         {
                             restClient.Responded += (o, e) => RestOperationContext.Current.OutgoingResponse.SetETag(e.ETag);
 
