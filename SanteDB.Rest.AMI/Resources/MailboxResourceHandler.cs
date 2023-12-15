@@ -36,7 +36,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// Represents an alert resource handler which can store / retrieve alerts
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class MailboxMessageHandler : ChainedResourceHandlerBase
+    public class MailboxResourceHandler : ChainedResourceHandlerBase
     {
         private readonly IMailMessageService m_mailMessageService;
         private readonly ISecurityRepositoryService m_securityRepository;
@@ -45,7 +45,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// DI Constructor
         /// </summary>
-        public MailboxMessageHandler(ILocalizationService localizationService, IMailMessageService mailMessageService, IPolicyEnforcementService pepService, ISecurityRepositoryService securityRepositoryService) : base(localizationService)
+        public MailboxResourceHandler(ILocalizationService localizationService, IMailMessageService mailMessageService, IPolicyEnforcementService pepService, ISecurityRepositoryService securityRepositoryService) : base(localizationService)
         {
             this.m_mailMessageService = mailMessageService;
             this.m_securityRepository = securityRepositoryService;

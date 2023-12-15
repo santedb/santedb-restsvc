@@ -59,14 +59,8 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Gets the name of the resource
         /// </summary>
-        public override string ResourceName
-        {
-            get
-            {
-                return "AppletSolution";
-            }
-        }
-
+        public override string ResourceName => "AppletSolution";
+            
         /// <summary>
         /// Get the scope of this object
         /// </summary>
