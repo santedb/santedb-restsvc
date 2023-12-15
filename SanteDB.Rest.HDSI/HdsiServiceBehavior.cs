@@ -782,33 +782,34 @@ namespace SanteDB.Rest.HDSI
                     var results = handler.Query(query) as IOrderableQueryResultSet;
 
                     // Now apply controls
-                    var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<IdentifiedData>().ToArray();
-
-                    // Last modified object
-                    if (this.m_configuration?.IncludeMetadataHeadersOnSearch == true)
+                    using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
                     {
-                        var modifiedOnSelector = QueryExpressionParser.BuildPropertySelector(handler.Type, "modifiedOn", convertReturn: typeof(object));
-                        var lastModified = (DateTime)results.OrderByDescending(modifiedOnSelector).Select<DateTimeOffset>(modifiedOnSelector).AsResultSet().FirstOrDefault().DateTime;
+                        var retVal = results.ApplyResultInstructions(query, out int offset, out int totalCount).OfType<IdentifiedData>().ToArray();
 
-                        if (lastModified != default(DateTime))
+                        // Last modified object
+                        if (this.m_configuration?.IncludeMetadataHeadersOnSearch == true)
                         {
-                            RestOperationContext.Current.OutgoingResponse.SetLastModified(lastModified);
+                            var modifiedOnSelector = QueryExpressionParser.BuildPropertySelector(handler.Type, "modifiedOn", convertReturn: typeof(object));
+                            var lastModified = (DateTime)results.OrderByDescending(modifiedOnSelector).Select<DateTimeOffset>(modifiedOnSelector).AsResultSet().FirstOrDefault().DateTime;
+
+                            if (lastModified != default(DateTime))
+                            {
+                                RestOperationContext.Current.OutgoingResponse.SetLastModified(lastModified);
+                            }
                         }
-                    }
 
-                    audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success);
-                    // Last modification time and not modified conditions
-                    if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||
-                        RestOperationContext.Current.IncomingRequest.GetIfNoneMatch() != null) &&
-                        !retVal.Any())
-                    {
-                        RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
-                        return null;
-                    }
-                    else
-                    {
-                        using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
+                        audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success);
+                        // Last modification time and not modified conditions
+                        if ((RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null ||
+                            RestOperationContext.Current.IncomingRequest.GetIfNoneMatch() != null) &&
+                            !retVal.Any())
                         {
+                            RestOperationContext.Current.OutgoingResponse.StatusCode = 304;
+                            return null;
+                        }
+                        else
+                        {
+
                             if (RestOperationContext.Current.IncomingRequest.HttpMethod.Equals("head", StringComparison.OrdinalIgnoreCase))
                             {
                                 return null;
@@ -2512,7 +2513,8 @@ namespace SanteDB.Rest.HDSI
 
                                     return incResults.Select(o => new DataUpdate() { Element = o.NullifyProperties(excludeProperties), InsertIfNotExists = true });
                                 });
-                            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString["_includesFirst"], out var incFirst) && incFirst) {
+                            if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString["_includesFirst"], out var incFirst) && incFirst)
+                            {
                                 retVal.Action.InsertRange(0, includes);
                             }
                             else
