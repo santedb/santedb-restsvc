@@ -58,7 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.30.1" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.35.0" />
     <PackageReference Include="MimeTypesMap" Version="1.0.8" />
   </ItemGroup>
   <ItemGroup>
