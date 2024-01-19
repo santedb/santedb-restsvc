@@ -70,7 +70,7 @@ namespace SanteDB.Rest.AppService
             }
 
             var userSid = this.m_securityRepositoryService.GetSid(AuthenticationContext.Current.Principal.Identity);
-            return this.m_tickleService.GetTickles(o => o.Expiry > DateTime.Now && (o.Target == userSid || o.Target == null)).OrderByDescending(o => o.Created).Take(10).ToList();
+            return this.m_tickleService.GetTickles(o => o.Expiry > DateTime.Now && (o.Target == userSid || o.Target == null || o.Target == Guid.Empty)).OrderByDescending(o => o.Created).Take(10).ToList();
         }
 
     }
