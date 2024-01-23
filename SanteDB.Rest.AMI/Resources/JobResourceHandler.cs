@@ -182,7 +182,15 @@ namespace SanteDB.Rest.AMI.Resources
                 var jobs = this.m_jobManager.Jobs;
                 if (queryParameters.TryGetValue("name", out var data))
                 {
-                    jobs = jobs.Where(o => o.Name.Contains(data.First()));
+                    var query = data.First();
+                    if (query.StartsWith("~"))
+                    {
+                        jobs = jobs.Where(o => o.Name.ToLowerInvariant().Contains(query.Substring(1).ToLowerInvariant()));
+                    }
+                    else
+                    {
+                        jobs = jobs.Where(o => o.Name.Equals(query, StringComparison.OrdinalIgnoreCase));
+                    }
                 }
 
                 return new MemoryQueryResultSet(jobs.Select(o => new JobInfo(this.m_jobStateService.GetJobState(o), this.m_jobScheduleManager.Get(o))).ToArray());
