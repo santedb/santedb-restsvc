@@ -63,7 +63,7 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else if(id.Equals("classes"))
             {
-                return this.m_backupService.GetBackupAssetClasses().ToList();
+                return this.m_backupService.GetBackupAssetClasses().ToDictionary(o=>o.Key.ToString(), o=>o.Value.Name);
             }
             else
             {
