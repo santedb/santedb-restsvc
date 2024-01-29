@@ -61,6 +61,10 @@ namespace SanteDB.Rest.AMI.Resources
             {
                 return this.m_backupService.GetBackupDescriptors(media).Select(o => new BackupDescriptorInfo(o, media));
             }
+            else if(id.Equals("classes"))
+            {
+                return this.m_backupService.GetBackupAssetClasses().ToList();
+            }
             else
             {
                 throw new KeyNotFoundException(id.ToString());

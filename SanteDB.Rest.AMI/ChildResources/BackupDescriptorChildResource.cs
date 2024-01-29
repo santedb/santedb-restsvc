@@ -39,7 +39,7 @@ namespace SanteDB.Rest.AMI.ChildResources
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Search | ResourceCapabilityType.Get | ResourceCapabilityType.Delete;
 
         /// <inheritdoc/>
-        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Instance;
+        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Instance | ChildObjectScopeBinding.Class;
 
         /// <inheritdoc/>
         public Type[] ParentTypes => new Type[] { typeof(BackupMedia) };
@@ -57,6 +57,11 @@ namespace SanteDB.Rest.AMI.ChildResources
             if(scopingType == typeof(BackupMedia) && Enum.TryParse<BackupMedia>(scopingKey.ToString(), out var media))
             {
                 var backupSet = this.m_backupService.GetBackup(media, key.ToString());
+                return new BackupDescriptorInfo(backupSet, media);
+            }
+            else if (scopingKey.Equals("Any"))
+            {
+                var backupSet = this.m_backupService.GetBackup(key.ToString(), out media);
                 return new BackupDescriptorInfo(backupSet, media);
             }
             else
