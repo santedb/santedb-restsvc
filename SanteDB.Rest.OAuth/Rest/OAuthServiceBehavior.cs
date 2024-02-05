@@ -43,6 +43,7 @@ using SanteDB.Rest.Common.Security;
 using SanteDB.Rest.OAuth.Abstractions;
 using SanteDB.Rest.OAuth.Configuration;
 using SanteDB.Rest.OAuth.Model;
+using SharpCompress;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -452,7 +453,27 @@ namespace SanteDB.Rest.OAuth.Rest
             {
                 foreach (var mappedClaim in mappers.SelectMany(o => o.MapToExternalIdentityClaims(claimsPrincipal.Claims)))
                 {
-                    claims.AddClaim(mappedClaim.Key, mappedClaim.Value);
+                    // We fold in the value to any existing claim value for example for the "extensions" element we want the claim to be:
+                    //  "extensions" : {
+                    //      "some_value": {
+                    //                  ...
+                    //      },
+                    //      "some_other": {
+                    //                  ...
+                    //      }
+                    //  }
+                    // and not 
+                    //  "extensions": [
+                    //      {
+                    //          "some_value": {
+                    if (mappedClaim.Value is IDictionary<String, Object> claimValue && claims.TryGetValue(mappedClaim.Key, out var currentClaimValue) && currentClaimValue is IDictionary<String, Object> currentValue)
+                    {
+                        claimValue.ForEach(kv => currentValue.Add(kv.Key, kv.Value));
+                    }
+                    else
+                    {
+                        claims.AddClaim(mappedClaim.Key, mappedClaim.Value);
+                    }
                 }
             }
             else
