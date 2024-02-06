@@ -38,7 +38,9 @@ namespace SanteDB.Rest.OAuth.Token
         public const string MustChangePasswordJwtClaim = "pwd_reset";
         public const string X509CertificateSubjectJwtClaim = "x509sub";
         public const string ApplicationSubjectJwtClaim = "appid";
+        public const string ApplicationNameJwtClaim = "appname";
         public const string DeviceSubjectJwtClaim = "devid";
+        public const string DeviceNameJwtClaim = "devname";
         public const string UserSubjectJwtClaim = "usrid";
 #pragma warning restore CS1591
 
@@ -53,7 +55,9 @@ namespace SanteDB.Rest.OAuth.Token
             { SanteDBClaimTypes.AuthenticationCertificateSubject, X509CertificateSubjectJwtClaim },
             { SanteDBClaimTypes.SanteDBApplicationIdentifierClaim, ApplicationSubjectJwtClaim  },
             { SanteDBClaimTypes.SanteDBDeviceIdentifierClaim, DeviceSubjectJwtClaim  },
-            { SanteDBClaimTypes.SanteDBUserIdentifierClaim, UserSubjectJwtClaim  }
+            { SanteDBClaimTypes.SanteDBUserIdentifierClaim, UserSubjectJwtClaim  },
+            { SanteDBClaimTypes.SanteDBApplicationNameClaim, ApplicationNameJwtClaim },
+            { SanteDBClaimTypes.SanteDBDeviceNameClaim, DeviceNameJwtClaim }
         };
 
         /// <inheritdoc/>

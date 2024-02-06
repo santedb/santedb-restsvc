@@ -92,10 +92,7 @@ namespace SanteDB.Rest.OAuth.Token
 
             return new Dictionary<String, Object>()
             {
-                {  "extensions", new Dictionary<String, Object>()
-                    {
-                        { "ihe_iua", iuaClaims }
-                    }
+                {  "extensions", new Dictionary<String, Object>() { { "ihe_iua", iuaClaims }  }
                 }
             };
         }

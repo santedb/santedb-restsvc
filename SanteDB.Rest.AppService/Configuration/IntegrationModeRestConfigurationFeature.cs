@@ -95,15 +95,16 @@ namespace SanteDB.Rest.AppService.Configuration
                 {
                     appSetting.ServiceProviders.RemoveAll(s => oldMode.Contains(s.Type));
                 }
-                var newMode = this.m_integrationPatterns.First(o => o.Name == modeRaw.ToString())?.GetServices();
+                var newMode = this.m_integrationPatterns.First(o => o.Name == modeRaw.ToString());
                 if (newMode == null)
                 {
                     throw new InvalidOperationException(String.Format(ErrorMessages.TYPE_NOT_FOUND, modeRaw));
                 }
                 else
                 {
-                    appSetting.ServiceProviders.AddRange(newMode.Select(o => new TypeReferenceConfiguration(o)));
+                    appSetting.ServiceProviders.AddRange(newMode.GetServices().Select(o => new TypeReferenceConfiguration(o)));
                 }
+                newMode.SetDefaults(configuration);
 
                 appSetting.AddAppSetting("integration-mode", modeRaw.ToString());
             }

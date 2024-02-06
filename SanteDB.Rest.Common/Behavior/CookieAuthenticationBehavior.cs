@@ -111,7 +111,6 @@ namespace SanteDB.Rest.Common.Behavior
                 RestOperationContext.Current.OutgoingResponse.SetCookie(new System.Net.Cookie(ExtendedCookieNames.SessionCookieName, "")
                 {
                     Discard = true,
-                    Expired = true,
                     Expires = DateTime.Now
                 });
                 throw;

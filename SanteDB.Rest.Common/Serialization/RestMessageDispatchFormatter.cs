@@ -366,159 +366,164 @@ namespace SanteDB.Rest.Common.Serialization
                     }
                     contentTypeMime = (accepts ?? contentType).Split(',').Select(o => new ContentType(o)).First();
                 }
-                
+
                 // Result is serializable
-                if (result == null)
-                {
+                if (result == null) {
                     if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Created)
                     {
                         response.StatusCode = HttpStatusCode.NoContent;
                     }
                 }
-                else if (result is XmlSchema xs)
-                {
-                    MemoryStream ms = new MemoryStream();
-                    xs.Write(ms);
-                    ms.Seek(0, SeekOrigin.Begin);
-                    contentTypeMime = new ContentType("text/xml");
-                    response.Body = ms;
-                }
-                else if (result is Stream str) // TODO: This is messy, clean it up
-                {
-                    // Did the returner explicitly set the content type mime
-                    if (RestOperationContext.Current.OutgoingResponse.ContentType == null)
+                else {
+                    switch (result)
                     {
-                        contentTypeMime = new ContentType("application/octet-stream");
-                    }
-                    response.Body = str;
-                }
-                else
-                {
-                    switch (contentTypeMime.MediaType)
-                    {
-                        case "application/json+sdb-viewmodel":
-                        case SanteDBExtendedMimeTypes.JsonViewModel:
-
-
-                            if (result is IdentifiedData id)
+                        case Stream str:
                             {
-#if DEBUG
-                                this.m_traceSource.TraceVerbose("Serializing {0} as view model result", result);
-#endif
-                                var viewModel = httpRequest.Headers[ExtendedHttpHeaderNames.ViewModelHeaderName] ?? httpRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName];
-
-                                // Create the view model serializer
-                                var viewModelSerializer = new JsonViewModelSerializer();
-
-#if DEBUG
-                                this.m_traceSource.TraceVerbose("Will load serialization assembly {0}", typeof(ActExtensionViewModelSerializer).Assembly);
-#endif
-                                viewModelSerializer.LoadSerializerAssembly(typeof(ActExtensionViewModelSerializer).Assembly);
-
-                                if (!String.IsNullOrEmpty(viewModel))
+                                // Did the returner explicitly set the content type mime
+                                if (RestOperationContext.Current.OutgoingResponse.ContentType == null)
                                 {
-                                    var viewModelDescription = ApplicationServiceContext.Current.GetService<IAppletManagerService>()?.Applets.GetViewModelDescription(viewModel);
-                                    viewModelSerializer.ViewModel = viewModelDescription ?? viewModelSerializer.ViewModel;
+                                    contentTypeMime = new ContentType("application/octet-stream");
                                 }
-                                else
-                                {
-                                    viewModelSerializer.ViewModel = m_defaultViewModel;
-                                }
-
-#if DEBUG
-                                this.m_traceSource.TraceVerbose("Using view model {0}", viewModelSerializer.ViewModel?.Name);
-#endif
-                                using (var tms = new MemoryStream())
-                                using (StreamWriter sw = new StreamWriter(tms, new UTF8Encoding(false)))
-                                using (JsonWriter jsw = new JsonTextWriter(sw))
-                                {
-                                    viewModelSerializer.Serialize(jsw, id);
-                                    jsw.Flush();
-                                    sw.Flush();
-                                    response.Body = new MemoryStream(tms.ToArray());
-                                }
-
-#if DEBUG
-                                this.m_traceSource.TraceVerbose("Serialized body of  {0}", result);
-#endif
-                                contentTypeMime = new ContentType("application/json+sdb-viewmodel");
-                            }
-                            else
-                            {
-                                goto case "application/json"; // HACK: C# doesn't do fallthrough so we have to push it
-                            }
-                            break;
-
-                        case "application/json":
-                        case SanteDBExtendedMimeTypes.JsonRimModel:
-                            {
-                                // Prepare the serializer
-                                JsonSerializer jsz = new JsonSerializer();
-                                jsz.Converters.Add(new StringEnumConverter());
-
-                                // Write json data
-                                using (MemoryStream ms = new MemoryStream())
-                                using (StreamWriter sw = new StreamWriter(ms, new UTF8Encoding(false)))
-                                using (JsonWriter jsw = new JsonTextWriter(sw))
-                                {
-                                    jsz.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-                                    jsz.NullValueHandling = NullValueHandling.Ignore;
-                                    jsz.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-
-                                    if (result is IDictionary)
-                                    {
-                                        jsz.TypeNameHandling = TypeNameHandling.None;
-                                    }
-                                    else
-                                    {
-                                        jsz.TypeNameHandling = result.GetType().GetCustomAttribute<JsonObjectAttribute>()?.ItemTypeNameHandling ?? TypeNameHandling.Auto;
-                                    }
-                                    jsz.Converters.Add(new StringEnumConverter());
-                                    jsz.Serialize(jsw, result);
-                                    jsw.Flush();
-                                    sw.Flush();
-                                    response.Body = new MemoryStream(ms.ToArray());
-                                }
-
-                                // Prepare reply for the WCF pipeline
-                                contentTypeMime = new ContentType("application/json");
+                                response.Body = str;
                                 break;
                             }
-                        case "application/xml":
-                        case SanteDBExtendedMimeTypes.XmlRimModel:
+                        case XmlSchema xs:
                             {
-                                XmlSerializer xsz = XmlModelSerializerFactory.Current.CreateSerializer(result.GetType());
                                 MemoryStream ms = new MemoryStream();
-                                try
-                                {
-                                    if (xsz == null)
-                                    {
-                                        xsz = XmlModelSerializerFactory.Current.CreateSerializer(result.GetType());
-                                    }
-
-                                    xsz.Serialize(ms, result);
-                                }
-                                // No longer needed
-                                //catch (InvalidOperationException e) when (e.Message.Contains("XML document") && result is Bundle bundle)
-                                //{
-                                //    this.m_traceSource.TraceWarning("Will create a new serializer because of XML error {0}", e.Message);
-                                //    xsz = XmlModelSerializerFactory.Current.CreateSerializer(typeof(Bundle), bundle.Item?.Select(o => o.GetType()).Distinct().ToArray());
-                                //    ms.Seek(0, SeekOrigin.Begin);
-                                //    xsz.Serialize(ms, result);
-                                //}
-                                catch (Exception e)
-                                {
-                                    this.m_traceSource.TraceError("Error serializing response: {0}", e);
-                                    throw new Exception($"Could not serialize response message {result}", e);
-                                }
-                                contentTypeMime = new ContentType("application/xml");
+                                xs.Write(ms);
                                 ms.Seek(0, SeekOrigin.Begin);
+                                contentTypeMime = new ContentType("text/xml");
                                 response.Body = ms;
                                 break;
                             }
                         default:
-                            contentTypeMime = new ContentType("text/plain");
-                            response.Body = new MemoryStream(Encoding.UTF8.GetBytes(result.ToString()));
+                            switch (contentTypeMime.MediaType)
+                            {
+                                case "application/json+sdb-viewmodel":
+                                case SanteDBExtendedMimeTypes.JsonViewModel:
+
+
+                                    if (result is IdentifiedData id)
+                                    {
+#if DEBUG
+                                        this.m_traceSource.TraceVerbose("Serializing {0} as view model result", result);
+#endif
+                                        var viewModel = httpRequest.Headers[ExtendedHttpHeaderNames.ViewModelHeaderName] ?? httpRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName];
+
+                                        // Create the view model serializer
+                                        var viewModelSerializer = new JsonViewModelSerializer();
+
+#if DEBUG
+                                        this.m_traceSource.TraceVerbose("Will load serialization assembly {0}", typeof(ActExtensionViewModelSerializer).Assembly);
+#endif
+                                        viewModelSerializer.LoadSerializerAssembly(typeof(ActExtensionViewModelSerializer).Assembly);
+
+                                        if (!String.IsNullOrEmpty(viewModel))
+                                        {
+                                            var viewModelDescription = ApplicationServiceContext.Current.GetService<IAppletManagerService>()?.Applets.GetViewModelDescription(viewModel);
+                                            viewModelSerializer.ViewModel = viewModelDescription ?? viewModelSerializer.ViewModel;
+                                        }
+                                        else
+                                        {
+                                            viewModelSerializer.ViewModel = m_defaultViewModel;
+                                        }
+
+#if DEBUG
+                                        this.m_traceSource.TraceVerbose("Using view model {0}", viewModelSerializer.ViewModel?.Name);
+#endif
+                                        using (var tms = new MemoryStream())
+                                        using (StreamWriter sw = new StreamWriter(tms, new UTF8Encoding(false)))
+                                        using (JsonWriter jsw = new JsonTextWriter(sw))
+                                        {
+                                            viewModelSerializer.Serialize(jsw, id);
+                                            jsw.Flush();
+                                            sw.Flush();
+                                            response.Body = new MemoryStream(tms.ToArray());
+                                        }
+
+#if DEBUG
+                                        this.m_traceSource.TraceVerbose("Serialized body of  {0}", result);
+#endif
+                                        contentTypeMime = new ContentType("application/json+sdb-viewmodel");
+                                    }
+                                    else
+                                    {
+                                        goto case "application/json"; // HACK: C# doesn't do fallthrough so we have to push it
+                                    }
+                                    break;
+
+                                case "application/json":
+                                case SanteDBExtendedMimeTypes.JsonRimModel:
+                                    {
+                                        // Prepare the serializer
+                                        JsonSerializer jsz = new JsonSerializer();
+                                        jsz.Converters.Add(new StringEnumConverter());
+
+                                        // Write json data
+                                        using (MemoryStream ms = new MemoryStream())
+                                        using (StreamWriter sw = new StreamWriter(ms, new UTF8Encoding(false)))
+                                        using (JsonWriter jsw = new JsonTextWriter(sw))
+                                        {
+                                            jsz.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+                                            jsz.NullValueHandling = NullValueHandling.Ignore;
+                                            jsz.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+
+                                            if (result is IDictionary)
+                                            {
+                                                jsz.TypeNameHandling = TypeNameHandling.None;
+                                            }
+                                            else
+                                            {
+                                                jsz.TypeNameHandling = result.GetType().GetCustomAttribute<JsonObjectAttribute>()?.ItemTypeNameHandling ?? TypeNameHandling.Auto;
+                                            }
+                                            jsz.Converters.Add(new StringEnumConverter());
+                                            jsz.Serialize(jsw, result);
+                                            jsw.Flush();
+                                            sw.Flush();
+                                            response.Body = new MemoryStream(ms.ToArray());
+                                        }
+
+                                        // Prepare reply for the WCF pipeline
+                                        contentTypeMime = new ContentType("application/json");
+                                        break;
+                                    }
+                                case "application/xml":
+                                case SanteDBExtendedMimeTypes.XmlRimModel:
+                                    {
+                                        XmlSerializer xsz = XmlModelSerializerFactory.Current.CreateSerializer(result.GetType());
+                                        MemoryStream ms = new MemoryStream();
+                                        try
+                                        {
+                                            if (xsz == null)
+                                            {
+                                                xsz = XmlModelSerializerFactory.Current.CreateSerializer(result.GetType());
+                                            }
+
+                                            xsz.Serialize(ms, result);
+                                        }
+                                        // No longer needed
+                                        //catch (InvalidOperationException e) when (e.Message.Contains("XML document") && result is Bundle bundle)
+                                        //{
+                                        //    this.m_traceSource.TraceWarning("Will create a new serializer because of XML error {0}", e.Message);
+                                        //    xsz = XmlModelSerializerFactory.Current.CreateSerializer(typeof(Bundle), bundle.Item?.Select(o => o.GetType()).Distinct().ToArray());
+                                        //    ms.Seek(0, SeekOrigin.Begin);
+                                        //    xsz.Serialize(ms, result);
+                                        //}
+                                        catch (Exception e)
+                                        {
+                                            this.m_traceSource.TraceError("Error serializing response: {0}", e);
+                                            throw new Exception($"Could not serialize response message {result}", e);
+                                        }
+                                        contentTypeMime = new ContentType("application/xml");
+                                        ms.Seek(0, SeekOrigin.Begin);
+                                        response.Body = ms;
+                                        break;
+                                    }
+                                default:
+                                    contentTypeMime = new ContentType("text/plain");
+                                    response.Body = new MemoryStream(Encoding.UTF8.GetBytes(result.ToString()));
+                                    break;
+                            }
                             break;
                     }
                 }

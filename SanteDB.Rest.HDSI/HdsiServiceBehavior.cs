@@ -425,8 +425,8 @@ namespace SanteDB.Rest.HDSI
                         audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retVal);
                     }
 
-                    if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[QueryControlParameterNames.HttpBundleRelatedParameterName], out var bundle)
-                        && bundle)
+                    if ((Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpBundleRelatedParameterName], out var bundle)
+                        || Boolean.TryParse(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.IncludeRelatedObjectsHeader], out bundle) && bundle))
                     {
                         return Bundle.CreateBundle(retVal);
                     }
