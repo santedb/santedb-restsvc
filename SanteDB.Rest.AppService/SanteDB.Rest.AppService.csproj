@@ -28,19 +28,7 @@
   </PropertyGroup>
 
   <Choose>
-    <When Condition="$(SolutionName.Contains('-ext'))">
-      <ItemGroup>
-        <ProjectReference Include="..\..\santedb-api\SanteDB.Core.Api\SanteDB.Core.Api.csproj" />
-        <ProjectReference Include="..\..\santedb-applets\SanteDB.Core.Applets\SanteDB.Core.Applets.csproj" />
-        <ProjectReference Include="..\..\restsrvr\RestSrvr\RestSrvr.csproj" />
-        <ProjectReference Include="..\..\santedb-docker\SanteDB.Docker.Core\SanteDB.Docker.Core.csproj" />
-        <ProjectReference Include="..\..\santedb-i18n\SanteDB.Core.i18n\SanteDB.Core.i18n.csproj" />
-        <ProjectReference Include="..\..\santedb-dc-core\SanteDB.Client\SanteDB.Client.csproj" />
-        <ProjectReference Include="..\SanteDB.Rest.Common\SanteDB.Rest.Common.csproj" />
-
-      </ItemGroup>
-    </When>
-    <Otherwise>
+    <When Condition="$(SolutionName.Contains('-nuget'))">
       <ItemGroup>
         <PackageReference Include="RestSrvr" Version="$(VersionNumber)" />
         <PackageReference Include="SanteDB.Core.Applets" Version="$(VersionNumber)" />
@@ -49,6 +37,17 @@
         <PackageReference Include="SanteDB.Core.i18n" Version="$(VersionNumber)" />
         <PackageReference Include="SanteDB.Docker.Core" Version="$(VersionNumber)" />
         <PackageReference Include="SanteDB.Client" Version="$(VersionNumber)" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <ProjectReference Include="..\..\santedb-api\SanteDB.Core.Api\SanteDB.Core.Api.csproj" />
+        <ProjectReference Include="..\..\santedb-applets\SanteDB.Core.Applets\SanteDB.Core.Applets.csproj" />
+        <ProjectReference Include="..\..\restsrvr\RestSrvr\RestSrvr.csproj" />
+        <ProjectReference Include="..\..\santedb-docker\SanteDB.Docker.Core\SanteDB.Docker.Core.csproj" />
+        <ProjectReference Include="..\..\santedb-i18n\SanteDB.Core.i18n\SanteDB.Core.i18n.csproj" />
+        <ProjectReference Include="..\..\santedb-dc-core\SanteDB.Client\SanteDB.Client.csproj" />
+        <ProjectReference Include="..\SanteDB.Rest.Common\SanteDB.Rest.Common.csproj" />
       </ItemGroup>
     </Otherwise>
   </Choose>
