@@ -22,6 +22,7 @@ using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security.Services;
+using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
 using System.Collections.Specialized;
@@ -32,58 +33,58 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// TFA mechanism resource handler
     /// </summary>
-    public class TfaMechanismResourceHandler : IApiResourceHandler
+    public class TfaMechanismResourceHandler : ChainedResourceHandlerBase
     {
         private readonly ITfaService m_tfaRelayService;
 
         /// <summary>
         /// Gets the resource name
         /// </summary>
-        public string ResourceName => "Tfa";
+        public override string ResourceName => "Tfa";
 
         /// <summary>
         /// Get the for this resource
         /// </summary>
-        public Type Type => typeof(TfaMechanismInfo);
+        public override Type Type => typeof(TfaMechanismInfo);
 
         /// <summary>
         /// Gets the scope of the api
         /// </summary>
-        public Type Scope => typeof(IAmiServiceContract);
+        public override Type Scope => typeof(IAmiServiceContract);
 
         /// <summary>
         /// Get the capabilities
         /// </summary>
-        public ResourceCapabilityType Capabilities => ResourceCapabilityType.Search | ResourceCapabilityType.Get;
+        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Search | ResourceCapabilityType.Get;
 
         /// <summary>
         /// TFA mechanism resource handler
         /// </summary>
-        public TfaMechanismResourceHandler(ITfaService tfaRelay)
+        public TfaMechanismResourceHandler(ITfaService tfaRelay, ILocalizationService localizationService) : base(localizationService)
         {
             this.m_tfaRelayService = tfaRelay;
         }
 
         /// <inheritdoc/>
-        public object Create(object data, bool updateIfExists)
+        public override object Create(object data, bool updateIfExists)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
-        public object Delete(object key)
+        public override object Delete(object key)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
-        public object Get(object id, object versionId)
+        public override object Get(object id, object versionId)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
-        public IQueryResultSet Query(NameValueCollection queryParameters)
+        public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             IQueryable<TfaMechanismInfo> query = this.m_tfaRelayService.Mechanisms.Select(o => new TfaMechanismInfo(o)).AsQueryable();
 
@@ -96,7 +97,7 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <inheritdoc/>
-        public object Update(object data)
+        public override object Update(object data)
         {
             throw new NotSupportedException();
         }

@@ -31409,11 +31409,11 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "title", _strong.Title, context);
                 }
             }
-            if (context.ShouldSerialize("program")) {
-                if ((_strong.ProgramIdentifier == null)) {
+            if (context.ShouldSerialize("pathway")) {
+                if ((_strong.CarePathwayIdentifier == null)) {
                 }
                 else {
-                    context.JsonContext.WritePropertyUtil(w, "program", _strong.ProgramIdentifier, context);
+                    context.JsonContext.WritePropertyUtil(w, "pathway", _strong.CarePathwayIdentifier, context);
                 }
             }
             if (context.ShouldSerialize("isNegated")) {
@@ -32171,11 +32171,11 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                             }
                                                                                                                                                                         }
                                                                                                                                                                         else {
-                                                                                                                                                                            if ("program".Equals(r.Value)) {
+                                                                                                                                                                            if ("pathway".Equals(r.Value)) {
                                                                                                                                                                                 r.Read();
-                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("program", context.JsonContext, _retVal, context));
+                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("pathway", context.JsonContext, _retVal, context));
                                                                                                                                                                                 if ((_instance != null)) {
-                                                                                                                                                                                    _retVal.ProgramIdentifier = ((string)(_instance));
+                                                                                                                                                                                    _retVal.CarePathwayIdentifier = ((string)(_instance));
                                                                                                                                                                                 }
                                                                                                                                                                             }
                                                                                                                                                                             else {
