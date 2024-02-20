@@ -91,12 +91,16 @@ namespace SanteDB.Rest.AppService
         [Demand(PermissionPolicyIdentifiers.Login)]
         public List<AppSettingKeyValuePair> GetAppSettings(string scope)
         {
-            if (scope != AuthenticationContext.Current.Principal.Identity.Name)
+            if(scope.Equals("me", StringComparison.OrdinalIgnoreCase))
+            {
+                return this.m_userPreferenceManager?.GetUserSettings(AuthenticationContext.Current.Principal.Identity.Name).ToList();
+            }   
+            else if (scope != AuthenticationContext.Current.Principal.Identity.Name)
             {
                 this.m_policyEnforcementService.Demand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
             }
 
-            return this.m_userPreferenceManager?.GetUserSettings(scope);
+            return this.m_userPreferenceManager?.GetUserSettings(scope).ToList();
         }
 
         /// <inheritdoc/>
@@ -124,7 +128,16 @@ namespace SanteDB.Rest.AppService
         /// <inheritdoc/>
         public void SetAppSettings(string scope, List<AppSettingKeyValuePair> settings)
         {
-            throw new NotImplementedException();
+            if (scope.Equals("me", StringComparison.OrdinalIgnoreCase))
+            {
+                this.m_userPreferenceManager?.SetUserSettings(AuthenticationContext.Current.Principal.Identity.Name, settings);
+            }
+            else if (scope != AuthenticationContext.Current.Principal.Identity.Name)
+            {
+                this.m_policyEnforcementService.Demand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
+            }
+
+            this.m_userPreferenceManager?.SetUserSettings(scope, settings);
         }
 
         /// <inheritdoc/>

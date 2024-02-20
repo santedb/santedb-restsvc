@@ -80,7 +80,7 @@ namespace SanteDB.Rest.AMI.Operation
                     var challengeQuestions = this.m_securityChallenge.Get(user.UserName, AuthenticationContext.Current.Principal);
                     if (this.m_tfaService.Mechanisms.Any() && (user.TwoFactorEnabled || !challengeQuestions.Any()))
                     {
-                        var mechanism = user.TwoFactorMechnaismKey;
+                        var mechanism = user.TwoFactorMechnaismKey.GetValueOrDefault();
                         if (mechanism == Guid.Empty)
                         {
                             mechanism = TfaEmailMechanism.MechanismId;

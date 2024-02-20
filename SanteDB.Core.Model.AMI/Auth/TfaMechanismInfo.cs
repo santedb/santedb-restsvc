@@ -49,7 +49,22 @@ namespace SanteDB.Core.Model.AMI.Auth
         {
             this.Id = tfaMechanism.Id;
             this.Name = tfaMechanism.Name;
+            this.Classification = tfaMechanism.Classification;
+            this.RequiresSetup = true;
+            this.HelpText = tfaMechanism.SetupHelpText;
         }
+
+        /// <summary>
+        /// Flag indicating the the TFA mechanism requires setup
+        /// </summary>
+        [XmlElement("setup"), JsonProperty("setup")]
+        public bool RequiresSetup { get; set; }
+
+        /// <summary>
+        /// Gets the classification of the TFA mechanism
+        /// </summary>
+        [XmlElement("class"), JsonProperty("class")]
+        public TfaMechanismClassification Classification { get; set; }
 
         /// <summary>
         /// Gets or sets the identifier
@@ -64,5 +79,11 @@ namespace SanteDB.Core.Model.AMI.Auth
         [XmlElement("name")]
         [JsonProperty("name")]
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets the help text for users to setup the shared secret
+        /// </summary>
+        [XmlElement("helpText"), JsonProperty("helpText")]
+        public string HelpText { get; set; }
     }
 }
