@@ -20,42 +20,28 @@
  */
 using SanteDB.Core;
 using SanteDB.Core.Configuration;
-using SanteDB.Core.Data.Management.Jobs;
 using SanteDB.Core.Interop;
-using SanteDB.Core.Jobs;
-using SanteDB.Core.Matching;
-using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Collection;
-using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Parameters;
-using SanteDB.Core.Model.Roles;
-using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace SanteDB.Rest.HDSI.Operation
 {
     /// <summary>
-    /// Represents a match operation
+    /// MDM Clear operation
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class MatchOperation : IApiChildOperation
+    [ExcludeFromCodeCoverage] // REST operations require a REST client to test
+    public class ResetMatchOperation : IApiChildOperation
     {
-        // Job manager
-        private IJobManagerService m_jobManager;
-
-        /// <inheritdoc/>
-        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Class | ChildObjectScopeBinding.Instance;
-
         /// <summary>
-        /// Creates a new configuration match operation
+        /// Clear operation
         /// </summary>
-        public MatchOperation(IConfigurationManager configurationManager, IJobManagerService jobManager) 
+        public ResetMatchOperation(IConfigurationManager configurationManager) 
         {
-            this.m_jobManager = jobManager;
             var configuration = configurationManager.GetSection<ResourceManagementConfigurationSection>();
             this.ParentTypes = configuration?.ResourceTypes.Select(o => o.Type).ToArray() ?? Type.EmptyTypes;
         }
@@ -64,42 +50,66 @@ namespace SanteDB.Rest.HDSI.Operation
         public Type[] ParentTypes { get; }
 
         /// <inheritdoc/>
-        public string Name => "match";
+        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Class | ChildObjectScopeBinding.Instance;
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Get the name of the operation
+        /// </summary>
+        public string Name => "match-reset";
+
+        /// <summary>
+        /// Invoke the specified operation
+        /// </summary>
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
             var merger = ApplicationServiceContext.Current.GetService(typeof(IRecordMergingService<>).MakeGenericType(scopingType)) as IRecordMergingService;
             if (merger == null)
             {
-                throw new InvalidOperationException($"Cannot find merging service for {scopingType.Name}. Is it under matching control?");
+                throw new InvalidOperationException($"Cannot find merging service for {scopingType.Name}. Is it under MDM control?");
             }
 
+            parameters.TryGet("globalReset", out bool globalReset);
+            parameters.TryGet("linksOnly", out bool linksOnly);
+            parameters.TryGet("includeVerified", out bool includeVerified);
+
+            // Is this scoped call?
             if (scopingKey == null)
             {
-                parameters.TryGet<bool>("clear", out bool clear);
-                this.m_jobManager.StartJob(typeof(MatchJob<>).MakeGenericType(scopingType), new object[] { clear });
-                return null;
+                if (globalReset)
+                {
+                    merger.Reset(includeVerified, linksOnly);
+                }
+                else
+                {
+                    merger.ClearGlobalMergeCanadidates();
+                    if (includeVerified)
+                    {
+                        merger.ClearGlobalIgnoreFlags();
+                    }
+                }
             }
             else if (scopingKey is Guid scopingObjectKey)
             {
-                
-                // Now - we want to prepare a transaction
-                Bundle retVal = new Bundle();
-
-                if (parameters.TryGet<bool>("clear", out bool clear) && clear)
+                if (globalReset)
+                {
+                    merger.Reset(scopingObjectKey, includeVerified, linksOnly);
+                }
+                else
                 {
                     merger.ClearMergeCandidates(scopingObjectKey);
-                    merger.ClearIgnoreFlags(scopingObjectKey);
+                    if (includeVerified)
+                    {
+                        merger.ClearIgnoreFlags(scopingObjectKey);
+                    }
                 }
-
-                merger.DetectMergeCandidates(scopingObjectKey);
-                return null;
             }
             else
             {
                 throw new InvalidOperationException("Cannot determine the operation");
             }
+
+            // No result
+            return null;
         }
     }
 }
