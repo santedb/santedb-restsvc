@@ -48,25 +48,23 @@ namespace SanteDB.Cdss.Xml.Ami
         /// <inheritdoc/>
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
-            var objectPayload = parameters.Parameters.Find(o => o.Name == "object")?.Value;
-            if(objectPayload == null)
-            {
-                throw new ArgumentNullException("object");
-            }
-            else if(objectPayload is String str)
-            {
-                using (var jvu = new JsonViewModelSerializer())
-                {
-                    objectPayload = jvu.DeSerialize<IdentifiedData>(str);
-                }
-            }
-
             if (String.IsNullOrEmpty(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.ViewModelHeaderName]))
             {
                 RestOperationContext.Current.IncomingRequest.Headers.Add(ExtendedHttpHeaderNames.ViewModelHeaderName, "full");
             }
             RestOperationContext.Current.OutgoingResponse.ContentType = "application/json+sdb-viewmodel";
-            return objectPayload;
+
+            if (parameters.TryGet("object", out object objectPayload))
+            {
+                return objectPayload;
+            }
+            else 
+            {
+                throw new ArgumentNullException("object");
+            }
+
+
+            
         }
     }
 }
