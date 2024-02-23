@@ -11468,8 +11468,8 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "holder", _strong.HolderKey, context);
                 }
             }
-            if (context.ShouldSerialize("inversionInd")) {
-                context.JsonContext.WritePropertyUtil(w, "inversionInd", _strong.InversionIndicator, context);
+            if (context.ShouldSerialize("negationInd")) {
+                context.JsonContext.WritePropertyUtil(w, "negationInd", _strong.NegationIndicator, context);
             }
             if (context.ShouldSerialize("strength")) {
                 if ((_strong.Strength == null)) {
@@ -11778,11 +11778,11 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                     }
                                                                                 }
                                                                                 else {
-                                                                                    if ("inversionInd".Equals(r.Value)) {
+                                                                                    if ("negationInd".Equals(r.Value)) {
                                                                                         r.Read();
                                                                                         object _instance = context.JsonContext.ReadElementUtil(r, typeof(bool), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("inversionInd", context.JsonContext, _retVal, context));
                                                                                         if ((_instance != null)) {
-                                                                                            _retVal.InversionIndicator = ((bool)(_instance));
+                                                                                            _retVal.NegationIndicator = ((bool)(_instance));
                                                                                         }
                                                                                     }
                                                                                     else {
