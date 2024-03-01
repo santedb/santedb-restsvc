@@ -329,6 +329,15 @@ namespace SanteDB.Rest.Common.Serialization
                                 ide.AddAnnotation(SanteDBModelConstants.NoDynamicLoadAnnotation);
                                 break;
                         }
+
+                        // If the parameters is an IdentifiedData instance - we want to wipe out collections that are empty
+                        // since the serializer populates all lists with no items - meanwhile the persistence interprets this 
+                        // as clearing data from the collection.
+                        if (parameters[pNumber] is IdentifiedData identifiedData)
+                        {
+                            identifiedData.NullifyEmptyCollections();
+                        }
+
                     }
                 }
             }
