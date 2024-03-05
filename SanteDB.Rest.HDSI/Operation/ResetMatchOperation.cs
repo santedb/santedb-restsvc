@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -16,12 +16,11 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2024-2-21
  */
 using SanteDB.Core;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Interop;
-using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
@@ -40,7 +39,7 @@ namespace SanteDB.Rest.HDSI.Operation
         /// <summary>
         /// Clear operation
         /// </summary>
-        public ResetMatchOperation(IConfigurationManager configurationManager) 
+        public ResetMatchOperation(IConfigurationManager configurationManager)
         {
             var configuration = configurationManager.GetSection<ResourceManagementConfigurationSection>();
             this.ParentTypes = configuration?.ResourceTypes.Select(o => o.Type).ToArray() ?? Type.EmptyTypes;

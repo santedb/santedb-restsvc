@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -16,24 +16,18 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using SanteDB.Core;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Data.Management.Jobs;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Jobs;
-using SanteDB.Core.Matching;
-using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Collection;
-using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Parameters;
-using SanteDB.Core.Model.Roles;
-using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace SanteDB.Rest.HDSI.Operation
@@ -53,7 +47,7 @@ namespace SanteDB.Rest.HDSI.Operation
         /// <summary>
         /// Creates a new configuration match operation
         /// </summary>
-        public MatchOperation(IConfigurationManager configurationManager, IJobManagerService jobManager) 
+        public MatchOperation(IConfigurationManager configurationManager, IJobManagerService jobManager)
         {
             this.m_jobManager = jobManager;
             var configuration = configurationManager.GetSection<ResourceManagementConfigurationSection>();
@@ -83,7 +77,7 @@ namespace SanteDB.Rest.HDSI.Operation
             }
             else if (scopingKey is Guid scopingObjectKey)
             {
-                
+
                 // Now - we want to prepare a transaction
                 Bundle retVal = new Bundle();
 
