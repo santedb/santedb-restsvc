@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  *
@@ -16,7 +16,7 @@
  * the License.
  *
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using RestSrvr;
 using SanteDB.Core.Applets.Model;
@@ -129,9 +129,15 @@ namespace SanteDB.Rest.AppService
                             sw.WriteLine($"{{ name: '{viewState.Name}', url: '{viewState.Route}', abstract: {viewState.IsAbstract.ToString().ToLower()}");
                             var displayName = htmlContent.GetTitle(AuthenticationContext.Current.Principal.GetClaimValue(SanteDBClaimTypes.Language) ?? CultureInfo.CurrentUICulture.TwoLetterISOLanguageName);
                             if (!String.IsNullOrEmpty(displayName))
+                            {
                                 sw.Write($", displayName: '{displayName}'");
+                            }
+
                             if (itm.Policies.Count > 0)
+                            {
                                 sw.Write($", demand: [{String.Join(",", itm.Policies.Select(o => $"'{o}'"))}] ");
+                            }
+
                             if (viewState.View.Count > 0)
                             {
                                 sw.Write(", views: {");
@@ -167,10 +173,13 @@ namespace SanteDB.Rest.AppService
             var widget = this.m_appletManagerService.Applets.WidgetAssets.Select(o => new { W = (o.Content ?? this.m_appletManagerService.Applets.Resolver(o)) as AppletWidget, A = o }).Where(o => o.W.Name == widgetId).ToArray();
 
             if (widget.Length == 0)
+            {
                 throw new KeyNotFoundException(widgetId.ToString());
+            }
             else
+            {
                 return new MemoryStream(this.m_appletManagerService.Applets.RenderAssetContent(widget.OrderByDescending(o => o.W.Priority).First().A, AuthenticationContext.Current.Principal.GetClaimValue(SanteDBClaimTypes.Language) ?? CultureInfo.CurrentUICulture.TwoLetterISOLanguageName));
-
+            }
         }
 
         /// <inheritdoc/>
