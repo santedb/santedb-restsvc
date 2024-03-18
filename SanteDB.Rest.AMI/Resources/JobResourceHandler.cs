@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  *
@@ -16,7 +16,7 @@
  * the License.
  *
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using SanteDB.Core;
 using SanteDB.Core.Configuration;
@@ -99,7 +99,7 @@ namespace SanteDB.Rest.AMI.Resources
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Update | // start
             ResourceCapabilityType.Search | // find
             ResourceCapabilityType.Get |
-            ResourceCapabilityType.Create | 
+            ResourceCapabilityType.Create |
             ResourceCapabilityType.Delete;
 
         /// <summary>
@@ -119,12 +119,12 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.AlterSystemConfiguration)]
         public object Create(object data, bool updateIfExists)
         {
-            if(data is TypeReferenceConfiguration trc)
+            if (data is TypeReferenceConfiguration trc)
             {
                 var job = this.m_jobManager.RegisterJob(trc.Type);
                 return new JobInfo(this.m_jobStateService.GetJobState(job), null);
             }
-            else if(data is JobInfo ji)
+            else if (data is JobInfo ji)
             {
                 var job = this.m_jobManager.RegisterJob(Type.GetType(ji.JobType));
                 return new JobInfo(this.m_jobStateService.GetJobState(job), null);
@@ -169,8 +169,9 @@ namespace SanteDB.Rest.AMI.Resources
             // Is the user looking for unconfigured jobs?
             if (Boolean.TryParse(queryParameters["_unconfigured"], out var b) && b)
             {
-                return new MemoryQueryResultSet(this.m_jobManager.GetAvailableJobs().Select(o => {
-                    if(!this.m_jobManager.IsJobRegistered(o))
+                return new MemoryQueryResultSet(this.m_jobManager.GetAvailableJobs().Select(o =>
+                {
+                    if (!this.m_jobManager.IsJobRegistered(o))
                     {
                         return new TypeReferenceConfiguration(o);
                     }

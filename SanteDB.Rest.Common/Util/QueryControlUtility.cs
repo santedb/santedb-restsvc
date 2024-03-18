@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -16,12 +16,13 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using SanteDB.Core.Model.Query;
 using System;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace SanteDB.Rest.Common
 {
@@ -45,12 +46,14 @@ namespace SanteDB.Rest.Common
             }
 
             // Next sort
+            Expression sortExpr = null;
+            bool sortAsc = true;
             if (query.TryGetValue(QueryControlParameterNames.HttpOrderByParameterName, out var queryList) && me is IOrderableQueryResultSet orderable)
             {
                 foreach (var itm in queryList)
                 {
                     var sortParts = itm.Split(':');
-                    var sortExpr = QueryExpressionParser.BuildPropertySelector(me.ElementType, sortParts[0], false, typeof(Object));
+                    sortExpr = QueryExpressionParser.BuildPropertySelector(me.ElementType, sortParts[0], false, typeof(Object));
                     if (sortParts.Length == 1 || sortParts[1].Equals("ASC", StringComparison.OrdinalIgnoreCase))
                     {
                         me = orderable.OrderBy(sortExpr);
@@ -58,6 +61,7 @@ namespace SanteDB.Rest.Common
                     else
                     {
                         me = orderable.OrderByDescending(sortExpr);
+                        sortAsc = false;
                     }
                 }
             }
@@ -65,6 +69,8 @@ namespace SanteDB.Rest.Common
             if (query.TryGetValue(QueryControlParameterNames.HttpQueryStateParameterName, out queryList) && Guid.TryParse(queryList.First(), out Guid queryId) && queryId != Guid.Empty)
             {
                 me = me.AsStateful(queryId);
+                // HACK: AsStateful() uses an IN() function so we need to resort
+
             }
 
             // Include total count?

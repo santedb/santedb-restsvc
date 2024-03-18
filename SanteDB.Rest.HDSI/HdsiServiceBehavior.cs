@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -16,9 +16,8 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
-using Microsoft.Win32.SafeHandles;
 using RestSrvr;
 using RestSrvr.Attributes;
 using RestSrvr.Exceptions;
@@ -51,13 +50,10 @@ using SanteDB.Rest.HDSI.Configuration;
 using SanteDB.Rest.HDSI.Vrp;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Security;
 using System.Text;
 using System.Xml;
@@ -2432,7 +2428,9 @@ namespace SanteDB.Rest.HDSI
                     {
                         throw new SecurityException(ErrorMessages.UNABLE_TO_DETERMINE_EXPORT_POLICY);
                     }
-                    else switch (exportPolicyAttribute.Classification)
+                    else
+                    {
+                        switch (exportPolicyAttribute.Classification)
                         {
                             case ResourceSensitivityClassification.PersonalHealthInformation:
                                 this.m_pepService.Demand(PermissionPolicyIdentifiers.ExportClinicalData);
@@ -2444,6 +2442,7 @@ namespace SanteDB.Rest.HDSI
                             default:
                                 throw new SecurityException(ErrorMessages.UNABLE_TO_DETERMINE_EXPORT_POLICY);
                         }
+                    }
 
                     using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
                     {

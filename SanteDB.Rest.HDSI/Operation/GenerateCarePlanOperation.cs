@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -16,8 +16,9 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
+using SanteDB.Core.Cdss;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Acts;
@@ -25,7 +26,6 @@ using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Constants;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Roles;
-using SanteDB.Core.Cdss;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
@@ -52,9 +52,9 @@ namespace SanteDB.Rest.HDSI.Operation
         /// <summary>
         /// DI constructor for care plan
         /// </summary>
-        public GenerateCarePlanOperation(IDecisionSupportService carePlanService, 
-            ICdssLibraryRepository clinicalProtocolRepository, 
-            IConceptRepositoryService conceptRepositoryService, 
+        public GenerateCarePlanOperation(IDecisionSupportService carePlanService,
+            ICdssLibraryRepository clinicalProtocolRepository,
+            IConceptRepositoryService conceptRepositoryService,
             IRepositoryService<Patient> patientRepository,
             ILocalizationService localizationService)
         {
@@ -88,12 +88,12 @@ namespace SanteDB.Rest.HDSI.Operation
             // Target - of the operation
             var hasIdentifiedTarget = scopingKey is Guid targetUuid || Guid.TryParse(scopingKey?.ToString(), out targetUuid);
             Patient target = null;
-            if(!hasIdentifiedTarget && !parameters.TryGet("targetPatient", out target))
+            if (!hasIdentifiedTarget && !parameters.TryGet("targetPatient", out target))
             {
                 throw new ArgumentNullException("targetPatient", this.m_localizationService.GetString(ErrorMessageStrings.MISSING_ARGUMENT));
             }
 
-            if(hasIdentifiedTarget)
+            if (hasIdentifiedTarget)
             {
                 target = this.m_patientRepository.Get(targetUuid);
             }
@@ -113,7 +113,7 @@ namespace SanteDB.Rest.HDSI.Operation
             var cpParameters = parameters.Parameters.ToDictionary(o => o.Name, p => p.Value);
 
             CarePlan plan = null;
-            if(libraryToApply != null)
+            if (libraryToApply != null)
             {
                 plan = this.m_carePlanService.CreateCarePlan(target, asEncounters, cpParameters, libraryToApply);
             }
@@ -121,7 +121,7 @@ namespace SanteDB.Rest.HDSI.Operation
             {
                 plan = this.m_carePlanService.CreateCarePlan(target, asEncounters, cpParameters);
             }
-            
+
             // Expand the participation roles form the care planner
             foreach (var p in plan.Relationships.Where(o => o.RelationshipTypeKey == ActRelationshipTypeKeys.HasComponent).Select(o => o.TargetAct))
             {

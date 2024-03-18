@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -16,9 +16,8 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
-using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Interfaces;
@@ -62,7 +61,7 @@ namespace SanteDB.Rest.Common
         /// Constructs the resource handler base
         /// </summary>
         public ResourceHandlerBase(ILocalizationService localizationService, IRepositoryService<TResource> repositoryService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null)
-            : base (localizationService)
+            : base(localizationService)
         {
             this.m_repository = repositoryService;
             this.m_freetextSearch = freetextSearchService;
@@ -241,7 +240,7 @@ namespace SanteDB.Rest.Common
                 {
                     return this.HandleFreeTextSearch(terms);
                 }
-                else if(queryParameters.TryGetValue("_subscription", out var subscription) &&
+                else if (queryParameters.TryGetValue("_subscription", out var subscription) &&
                     Guid.TryParse(subscription[0], out var subId))
                 {
                     return this.m_subscriptionExecutor.Execute(subId, queryParameters);
