@@ -133,7 +133,7 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                auditData.Audit.ForEach(o =>
+                auditData.Audit?.ForEach(o =>
                 {
                     this.m_repository.Insert(o);
                     this.m_auditDispatch?.SendAudit(o);

@@ -50,6 +50,7 @@ using System.Net;
 using System.Reflection;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using ZXing.OneD;
 
 namespace SanteDB.Rest.AMI
 {
@@ -453,12 +454,8 @@ namespace SanteDB.Rest.AMI
                     serviceOptions.Resources.Add(svc);
                 }
             }
-            serviceOptions.Settings = config.PublicSettings.ToList();
-
-            if (this.m_pepService.SoftDemand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction, AuthenticationContext.Current.Principal))
-            {
-                serviceOptions.Settings.AddRange(this.m_configurationManager.GetSection<SecurityConfigurationSection>().ForDisclosure());
-            }
+            serviceOptions.Settings = config?.PublicSettings?.ToList() ?? new List<Core.Configuration.AppSettingKeyValuePair>();
+            serviceOptions.Settings.AddRange(this.m_configurationManager.GetSection<SecurityConfigurationSection>().ForDisclosure());
             return serviceOptions;
         }
 

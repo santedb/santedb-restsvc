@@ -74,12 +74,12 @@ namespace SanteDB.Rest.AppService.Configuration
         /// <summary>
         /// Read cofiguration policy
         /// </summary>
-        public string ReadPolicy => PermissionPolicyIdentifiers.AccessClientAdministrativeFunction;
+        public string ReadPolicy => PermissionPolicyIdentifiers.AlterSystemConfiguration;
 
         /// <summary>
         /// Write policy
         /// </summary>
-        public string WritePolicy => PermissionPolicyIdentifiers.AccessClientAdministrativeFunction;
+        public string WritePolicy => PermissionPolicyIdentifiers.AlterSystemConfiguration;
 
         /// <summary>
         /// Configure the section

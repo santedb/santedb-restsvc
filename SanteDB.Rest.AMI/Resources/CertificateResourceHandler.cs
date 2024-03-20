@@ -222,14 +222,18 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <inheritdoc/>
-        [Demand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction)]
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
         public IQueryResultSet Query(NameValueCollection queryParameters)
         {
-            this.m_pepService.Demand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction); // require direct calls to pass validation as well
             // Attempt to get the parameters
             if (!this.TryParseRestParameters(out var storeName, out var password, out bool privateKey))
             {
                 throw new ArgumentOutOfRangeException();
+            }
+
+            if(privateKey)
+            {
+                this.m_pepService.Demand(PermissionPolicyIdentifiers.UnrestrictedCertificate); // require direct calls to pass validation as well
             }
 
             IEnumerable<X509Certificate2> certificates = null;
