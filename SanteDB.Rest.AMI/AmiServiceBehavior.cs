@@ -455,6 +455,10 @@ namespace SanteDB.Rest.AMI
                 }
             }
             serviceOptions.Settings = config?.PublicSettings?.ToList() ?? new List<Core.Configuration.AppSettingKeyValuePair>();
+
+            if (!String.IsNullOrEmpty(config?.RealmWelcomeMessage)) {
+                serviceOptions.Settings.Add(new Core.Configuration.AppSettingKeyValuePair("$welcome", config.RealmWelcomeMessage));
+            }
             serviceOptions.Settings.AddRange(this.m_configurationManager.GetSection<SecurityConfigurationSection>().ForDisclosure());
             return serviceOptions;
         }
