@@ -74,7 +74,7 @@ namespace SanteDB.Rest.AppService.Configuration
         /// <summary>
         /// Read cofiguration policy
         /// </summary>
-        public string ReadPolicy => PermissionPolicyIdentifiers.AlterSystemConfiguration;
+        public string ReadPolicy => PermissionPolicyIdentifiers.Login;
 
         /// <summary>
         /// Write policy
