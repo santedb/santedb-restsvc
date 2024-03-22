@@ -408,14 +408,14 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     retVal.Accept = "application/xml";
                     break;
                 default:
-                    retVal.Accept = RestOperationContext.Current.IncomingRequest.ContentType;
+                    retVal.Accept = RestOperationContext.Current.IncomingRequest.AcceptTypes.FirstOrDefault() ?? RestOperationContext.Current.IncomingRequest.ContentType;
                     break;
             }
             //}
 
             retVal.Requesting += (o, e) =>
             {
-                var inboundHeaders = RestOperationContext.Current.IncomingRequest.Headers;
+                var inboundHeaders = RestOperationContext.Current?.IncomingRequest.Headers;
                 if (!String.IsNullOrEmpty(inboundHeaders[ExtendedHttpHeaderNames.ViewModelHeaderName]))
                 {
                     e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ViewModelHeaderName, inboundHeaders[ExtendedHttpHeaderNames.ViewModelHeaderName]);
