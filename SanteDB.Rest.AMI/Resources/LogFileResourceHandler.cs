@@ -82,7 +82,7 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <inheritdoc/>
-        [Demand(PermissionPolicyIdentifiers.AlterSystemConfiguration)]
+        [Demand(PermissionPolicyIdentifiers.ReadServiceLogs)]
         public object Get(object id, object versionId)
         {
             var logFile = this.m_logManagerService.GetLogFile(id.ToString());
@@ -128,7 +128,7 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <inheritdoc/>
-        [Demand(PermissionPolicyIdentifiers.AlterSystemConfiguration)]
+        [Demand(PermissionPolicyIdentifiers.ReadServiceLogs)]
         public IQueryResultSet Query(NameValueCollection queryParameters)
         {
             return this.m_logManagerService.GetLogFiles().Select(o => new LogFileInfo()

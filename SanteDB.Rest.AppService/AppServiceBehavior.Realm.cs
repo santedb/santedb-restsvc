@@ -116,7 +116,7 @@ namespace SanteDB.Rest.AppService
             {
                 if (this.m_upstreamManagementService.IsConfigured())
                 {
-                    this.m_policyEnforcementService.Demand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
+                    this.m_policyEnforcementService.Demand(PermissionPolicyIdentifiers.AlterSystemConfiguration);
                 }
 
                 var defaultClientSettings = this.m_configurationManager.GetSection<UpstreamConfigurationSection>().Credentials.Find(o => o.CredentialType == UpstreamCredentialType.Application);
@@ -142,14 +142,14 @@ namespace SanteDB.Rest.AppService
         }
 
         /// <inheritdoc/>
-        [Demand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction)]
+        [Demand(PermissionPolicyIdentifiers.AlterSystemConfiguration)]
         public ParameterCollection UnJoinRealm(ParameterCollection parameters)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        [Demand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction)]
+        [Demand(PermissionPolicyIdentifiers.AlterSystemConfiguration)]
         public ParameterCollection PerformUpdate(ParameterCollection parameters)
         {
             throw new NotImplementedException();

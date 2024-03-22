@@ -50,6 +50,7 @@ using System.Net;
 using System.Reflection;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using ZXing.OneD;
 
 namespace SanteDB.Rest.AMI
 {
@@ -453,12 +454,12 @@ namespace SanteDB.Rest.AMI
                     serviceOptions.Resources.Add(svc);
                 }
             }
-            serviceOptions.Settings = config.PublicSettings.ToList();
+            serviceOptions.Settings = config?.PublicSettings?.ToList() ?? new List<Core.Configuration.AppSettingKeyValuePair>();
 
-            if (this.m_pepService.SoftDemand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction, AuthenticationContext.Current.Principal))
-            {
-                serviceOptions.Settings.AddRange(this.m_configurationManager.GetSection<SecurityConfigurationSection>().ForDisclosure());
+            if (!String.IsNullOrEmpty(config?.RealmWelcomeMessage)) {
+                serviceOptions.Settings.Add(new Core.Configuration.AppSettingKeyValuePair("$welcome", config.RealmWelcomeMessage));
             }
+            serviceOptions.Settings.AddRange(this.m_configurationManager.GetSection<SecurityConfigurationSection>().ForDisclosure());
             return serviceOptions;
         }
 

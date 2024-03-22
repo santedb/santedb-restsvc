@@ -83,10 +83,10 @@ namespace SanteDB.Rest.AppService.Configuration
             };
 
         /// <inheritdoc/>
-        public string ReadPolicy => PermissionPolicyIdentifiers.AccessClientAdministrativeFunction;
+        public string ReadPolicy => PermissionPolicyIdentifiers.AlterSystemConfiguration;
 
         /// <inheritdoc/>
-        public string WritePolicy => PermissionPolicyIdentifiers.AccessClientAdministrativeFunction;
+        public string WritePolicy => PermissionPolicyIdentifiers.AlterSystemConfiguration;
 
         /// <inheritdoc/>
         public bool Configure(SanteDBConfiguration configuration, IDictionary<string, object> featureConfiguration)

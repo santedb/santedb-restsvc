@@ -63,12 +63,18 @@ namespace SanteDB.Rest.AMI.Configuration
         public List<String> ResourceHandlerXml { get; set; }
 
         /// <summary>
+        /// Welcome message for the realm
+        /// </summary>
+        [XmlElement("welcomeMessage")]
+        [DisplayName("Welcome Message"), Description("The message that is displayed to dCDR clients after they successfully join the realm")]
+        public String RealmWelcomeMessage { get; set; }
+
+        /// <summary>
         /// Gets or sets the public settings
         /// </summary>
         [XmlArray("publicSettings"), XmlArrayItem("add")]
         [DisplayName("Public Settings"), Description("Settings which are to be disclosed to clients which they can use for configuration")]
         public List<AppSettingKeyValuePair> PublicSettings { get; set; }
-
 
         /// <summary>
         /// Extra endpoints

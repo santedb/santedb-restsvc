@@ -57,7 +57,7 @@ namespace SanteDB.Rest.AppService.Configuration
         /// <summary>
         /// Write policy
         /// </summary>
-        public string WritePolicy => PermissionPolicyIdentifiers.AccessClientAdministrativeFunction;
+        public string WritePolicy => PermissionPolicyIdentifiers.AlterSystemConfiguration;
 
         /// <summary>
         /// Configure this feature
