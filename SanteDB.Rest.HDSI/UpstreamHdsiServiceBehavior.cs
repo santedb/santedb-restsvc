@@ -395,7 +395,8 @@ namespace SanteDB.Messaging.HDSI.Wcf
             //}
             //else // For posts - we don't want the ViewModel data going up - we want an XML sync representation going up so delay loading on upbound objects is not performed
             //{
-            switch (RestOperationContext.Current.IncomingRequest.ContentType)
+            var accept = RestOperationContext.Current.IncomingRequest.AcceptTypes.FirstOrDefault();
+            switch (accept)
             {
                 case SanteDBExtendedMimeTypes.JsonPatch:
                 case SanteDBExtendedMimeTypes.JsonRimModel:

@@ -75,6 +75,10 @@ namespace SanteDB.Rest.Common.Behavior
             {
                 fault = rcf;
             }
+            else if(error is RestClientException<Object> rce && rce.Result is RestServiceFault rcef)
+            {
+                fault = rcef;
+            }
             else
             {
                 fault = new RestServiceFault(error);
@@ -89,7 +93,8 @@ namespace SanteDB.Rest.Common.Behavior
                     break;
                 case HttpStatusCode.Unauthorized:
                     var authService = RestOperationContext.Current.AppliedPolicies.OfType<IAuthorizationServicePolicy>().FirstOrDefault();
-                    authService.AddAuthenticateChallengeHeader(faultMessage, error);
+
+                    authService.AddAuthenticateChallengeHeader(faultMessage, rootCause);
                     break;
                 case HttpStatusCode.NotModified:
                     return true;
