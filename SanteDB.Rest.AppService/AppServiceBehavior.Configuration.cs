@@ -137,7 +137,6 @@ namespace SanteDB.Rest.AppService
                 this.m_policyEnforcementService.Demand(PermissionPolicyIdentifiers.AlterSystemConfiguration);
             }
 
-            this.m_userPreferenceManager?.SetUserSettings(scope, settings);
         }
 
         /// <inheritdoc/>
