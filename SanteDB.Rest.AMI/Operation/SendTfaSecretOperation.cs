@@ -70,11 +70,11 @@ namespace SanteDB.Rest.AMI.Operation
                 if (parameters.TryGet<String>("userName", out var user))
                 {
                     var identity = this.m_identityProvider.GetIdentity(user);
-                    this.m_tfaService.SendSecret(mechainsmId, identity);
+                    return new ParameterCollection(new Parameter("challenge", this.m_tfaService.SendSecret(mechainsmId, identity)));
                 }
                 else
                 {
-                    this.m_tfaService.SendSecret(mechainsmId, AuthenticationContext.Current.Principal.Identity);
+                    return new ParameterCollection(new Parameter("challenge", this.m_tfaService.SendSecret(mechainsmId, AuthenticationContext.Current.Principal.Identity)));
                 }
                 return null;
             }
