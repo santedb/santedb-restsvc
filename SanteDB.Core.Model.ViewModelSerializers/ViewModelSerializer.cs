@@ -7626,8 +7626,8 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "formConcept", _strong.FormConceptKey, context);
                 }
             }
-            if (context.ShouldSerialize("isAdministrative")) {
-                context.JsonContext.WritePropertyUtil(w, "isAdministrative", _strong.IsAdministrative, context);
+            if (context.ShouldSerialize("isAdministrable")) {
+                context.JsonContext.WritePropertyUtil(w, "isAdministrable", _strong.IsAdministrable, context);
             }
             if (context.ShouldSerialize("quantity")) {
                 if ((_strong.Quantity == null)) {
@@ -8438,11 +8438,11 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                 }
                                                                                                                                                                             }
                                                                                                                                                                             else {
-                                                                                                                                                                                if ("isAdministrative".Equals(r.Value)) {
+                                                                                                                                                                                if ("isAdministrable".Equals(r.Value)) {
                                                                                                                                                                                     r.Read();
-                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(bool), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("isAdministrative", context.JsonContext, _retVal, context));
+                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(bool), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("isAdministrable", context.JsonContext, _retVal, context));
                                                                                                                                                                                     if ((_instance != null)) {
-                                                                                                                                                                                        _retVal.IsAdministrative = ((bool)(_instance));
+                                                                                                                                                                                        _retVal.IsAdministrable = ((bool)(_instance));
                                                                                                                                                                                     }
                                                                                                                                                                                 }
                                                                                                                                                                                 else {
@@ -12242,8 +12242,8 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "formConcept", _strong.FormConceptKey, context);
                 }
             }
-            if (context.ShouldSerialize("isAdministrative")) {
-                context.JsonContext.WritePropertyUtil(w, "isAdministrative", _strong.IsAdministrative, context);
+            if (context.ShouldSerialize("isAdministrable")) {
+                context.JsonContext.WritePropertyUtil(w, "isAdministrable", _strong.IsAdministrable, context);
             }
             if (context.ShouldSerialize("quantity")) {
                 if ((_strong.Quantity == null)) {
@@ -13054,11 +13054,11 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                 }
                                                                                                                                                                             }
                                                                                                                                                                             else {
-                                                                                                                                                                                if ("isAdministrative".Equals(r.Value)) {
+                                                                                                                                                                                if ("isAdministrable".Equals(r.Value)) {
                                                                                                                                                                                     r.Read();
-                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(bool), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("isAdministrative", context.JsonContext, _retVal, context));
+                                                                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(bool), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("isAdministrable", context.JsonContext, _retVal, context));
                                                                                                                                                                                     if ((_instance != null)) {
-                                                                                                                                                                                        _retVal.IsAdministrative = ((bool)(_instance));
+                                                                                                                                                                                        _retVal.IsAdministrable = ((bool)(_instance));
                                                                                                                                                                                     }
                                                                                                                                                                                 }
                                                                                                                                                                                 else {
@@ -13236,8 +13236,8 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "formConcept", _strong.FormConceptKey, context);
                 }
             }
-            if (context.ShouldSerialize("isAdministrative")) {
-                context.JsonContext.WritePropertyUtil(w, "isAdministrative", _strong.IsAdministrative, context);
+            if (context.ShouldSerialize("isAdministrable")) {
+                context.JsonContext.WritePropertyUtil(w, "isAdministrable", _strong.IsAdministrable, context);
             }
             if (context.ShouldSerialize("quantity")) {
                 if ((_strong.Quantity == null)) {
@@ -14040,11 +14040,11 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                             }
                                                                                                                                                                         }
                                                                                                                                                                         else {
-                                                                                                                                                                            if ("isAdministrative".Equals(r.Value)) {
+                                                                                                                                                                            if ("isAdministrable".Equals(r.Value)) {
                                                                                                                                                                                 r.Read();
-                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(bool), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("isAdministrative", context.JsonContext, _retVal, context));
+                                                                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(bool), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("isAdministrable", context.JsonContext, _retVal, context));
                                                                                                                                                                                 if ((_instance != null)) {
-                                                                                                                                                                                    _retVal.IsAdministrative = ((bool)(_instance));
+                                                                                                                                                                                    _retVal.IsAdministrable = ((bool)(_instance));
                                                                                                                                                                                 }
                                                                                                                                                                             }
                                                                                                                                                                             else {
