@@ -67,6 +67,13 @@ namespace SanteDB.Core.Model.AMI.Auth
         public bool PasswordOnly { get; set; }
 
         /// <summary>
+        /// Force an expiration of the password
+        /// </summary>
+        [XmlElement("expirePassword")]
+        [JsonProperty("expirePassword")]
+        public bool ExpirePassword { get; set; }
+
+        /// <summary>
         /// Gets or sets the role this user belongs to
         /// </summary>
         [XmlElement("role")]

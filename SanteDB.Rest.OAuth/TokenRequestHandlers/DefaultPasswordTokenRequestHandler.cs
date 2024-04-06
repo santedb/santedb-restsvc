@@ -21,6 +21,8 @@
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
+using SanteDB.Core.i18n;
+using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
 using SanteDB.Core.Security.Principal;
 using SanteDB.Core.Security.Services;
@@ -132,6 +134,14 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                 context.ErrorMessage = tfareqex.Message;
                 context.ErrorType = OAuthErrorType.mfa_required;
                 return false;
+            }
+            catch(PasswordExpiredException)
+            {
+                _Tracer.TraceWarning("User password is expired");
+                context.ErrorMessage = ErrorMessages.PASSWORD_EXPIRED;
+                context.ErrorType = OAuthErrorType.password_expired;
+                return false;
+
             }
             catch (AuthenticationException authnex)
             {
