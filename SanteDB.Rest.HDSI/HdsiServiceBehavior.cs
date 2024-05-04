@@ -2525,6 +2525,13 @@ namespace SanteDB.Rest.HDSI
                         var filename = $"{resourceType}-{DateTime.Now:yyyyMMddHHmmSS}.dataset";
                         RestOperationContext.Current.OutgoingResponse.AddHeader("Content-Disposition", $"attachment; filename={filename}");
 
+                        retVal.Action.ForEach(o =>
+                        {
+                            if (o.Element is IVersionedData ive)
+                            {
+                                ive.VersionSequence = null;
+                            }
+                        });
                         audit.WithOutcome(OutcomeIndicator.Success)
                             .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Export, retVal.Action.Select(o => o.Element).ToArray())
                             .WithAuditableObjects(new AuditableObject()
