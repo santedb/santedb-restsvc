@@ -92,7 +92,7 @@ namespace SanteDB.Rest.AMI.Resources
             {
                 try
                 {
-                    PubSubChannelDefinition retVal = this.m_manager.RegisterChannel(definition.Name, definition.DispatcherFactoryId, new Uri(definition.Endpoint), definition.Settings.ToDictionary(o => o.Name, o => o.Value));
+                    PubSubChannelDefinition retVal = this.m_manager.RegisterChannel(definition.Name, definition.DispatcherFactoryId, new Uri(definition.Endpoint), definition.Settings?.ToDictionary(o => o.Name, o => o.Value));
 
                     return retVal;
                 }
