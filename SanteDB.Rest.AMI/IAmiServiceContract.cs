@@ -119,8 +119,8 @@ namespace SanteDB.Rest.AMI
         /// <summary>
         /// Get the schema for this service
         /// </summary>
-        [Get("/?xsd={schemaId}")]
-        XmlSchema GetSchema(int schemaId);
+        [Get("/xsd")]
+        XmlSchema GetSchema();
 
         #region Diagnostic / Ad-Hoc interfaces
 

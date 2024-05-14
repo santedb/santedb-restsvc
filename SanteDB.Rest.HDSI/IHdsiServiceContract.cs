@@ -111,9 +111,9 @@ namespace SanteDB.Rest.HDSI
         /// <remarks>
         /// This method can be used to retrieve individual numbered schemas from the service
         /// </remarks>
-        [Get("/?xsd={schemaId}")]
+        [Get("/xsd")]
         [ServiceProduces("text/xml")]
-        XmlSchema GetSchema(int schemaId);
+        XmlSchema GetSchema();
 
         /// <summary>
         /// Returns a service capability statement of the HDSI

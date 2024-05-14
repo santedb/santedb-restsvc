@@ -86,6 +86,7 @@ namespace SanteDB.Rest.Common.Fault
                 if (ex is PolicyViolationException polViolation)
                 {
                     this.PolicyId = polViolation.PolicyId;
+                    this.PolicyName = polViolation.PolicyName;
                     this.PolicyOutcome = polViolation.PolicyDecision;
                 }
 
@@ -139,6 +140,12 @@ namespace SanteDB.Rest.Common.Fault
         /// </summary>
         [XmlElement("policyId"), JsonProperty("policyId")]
         public String PolicyId { get; set; }
+
+        /// <summary>
+        /// Policy name that was violated
+        /// </summary>
+        [XmlElement("policyName"), JsonProperty("policyName")]
+        public String PolicyName { get; set; }
 
         /// <summary>
         /// Policy ID was violated
