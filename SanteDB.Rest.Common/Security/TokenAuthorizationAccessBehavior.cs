@@ -161,27 +161,7 @@ namespace SanteDB.Rest.Common.Security
         /// <inheritdoc cref="IAuthorizationServicePolicy.AddAuthenticateChallengeHeader(RestResponseMessage, Exception)"/>
         public void AddAuthenticateChallengeHeader(RestResponseMessage faultMessage, Exception error)
         {
-            // Map error codes to headers according to https://www.rfc-editor.org/rfc/rfc6750#section-3
-            switch (error)
-            {
-                case PolicyViolationException pve:
-                    faultMessage.AddAuthenticateHeader("bearer", RestOperationContext.Current.IncomingRequest.Url.Host, "insufficient_scope", pve.PolicyId, pve.Message);
-                    break;
-                case SecuritySessionException sse:
-                    switch (sse.Type)
-                    {
-                        case SessionExceptionType.Scope:
-                            faultMessage.AddAuthenticateHeader("bearer", RestOperationContext.Current.IncomingRequest.Url.Host, "invalid_scope", description: sse.Message);
-                            break;
-                        default:
-                            faultMessage.AddAuthenticateHeader("bearer", RestOperationContext.Current.IncomingRequest.Url.Host, "invalid_token", description: sse.Message);
-                            break;
-                    }
-                    break;
-                default:
-                    faultMessage.AddAuthenticateHeader("bearer", RestOperationContext.Current.IncomingRequest.Url.Host, "invalid_request", description: error.Message);
-                    break;
-            }
+            this.AddWwwAuthenticateHeader("bearer", error, faultMessage);
         }
     }
 }

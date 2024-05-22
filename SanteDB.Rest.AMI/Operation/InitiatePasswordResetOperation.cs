@@ -78,20 +78,21 @@ namespace SanteDB.Rest.AMI.Operation
 
                     // TFA setup?
                     var challengeQuestions = this.m_securityChallenge.Get(user.UserName, AuthenticationContext.Current.Principal);
-                    if (this.m_tfaService.Mechanisms.Any() && (user.TwoFactorEnabled || !challengeQuestions.Any()))
-                    {
-                        var mechanism = user.TwoFactorMechnaismKey.GetValueOrDefault();
-                        if (mechanism == Guid.Empty)
-                        {
-                            mechanism = TfaEmailMechanism.MechanismId;
-                        }
+                    //if (this.m_tfaService.Mechanisms.Any() && (user.TwoFactorEnabled || !challengeQuestions.Any()))
+                    //{
+                    //    var mechanism = user.TwoFactorMechnaismKey.GetValueOrDefault();
+                    //    if (mechanism == Guid.Empty)
+                    //    {
+                    //        mechanism = TfaEmailMechanism.MechanismId;
+                    //    }
 
-                        return new ParameterCollection(
-                            new Parameter("text", this.m_tfaService.SendSecret(mechanism, this.m_identityProvider.GetIdentity(userName))),
-                            new Parameter("challenge", mechanism)
-                        );
-                    }
-                    else if (challengeQuestions.Any())
+                    //    return new ParameterCollection(
+                    //        new Parameter("text", this.m_tfaService.SendSecret(mechanism, this.m_identityProvider.GetIdentity(userName))),
+                    //        new Parameter("challenge", mechanism)
+                    //    );
+                    //}
+                    //else
+                    if (challengeQuestions.Any())
                     {
                         var challenge = challengeQuestions.First();
                         return new ParameterCollection(

@@ -67,7 +67,11 @@ namespace SanteDB.Rest.OAuth.Model
         /// <summary>
         /// The requested resource requires mfa.
         /// </summary>
-        mfa_required
+        mfa_required,
+        /// <summary>
+        /// Password is expired
+        /// </summary>
+        password_expired
     }
 
     /// <summary>

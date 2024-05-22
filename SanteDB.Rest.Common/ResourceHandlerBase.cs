@@ -144,7 +144,7 @@ namespace SanteDB.Rest.Common
 
             bundle?.Reconstitute();
 
-            var processData = bundle?.GetFocalObject() ?? data;
+            var processData = typeof(TResource) == typeof(Bundle) ? bundle : bundle?.GetFocalObject() ?? data;
 
             try
             {
