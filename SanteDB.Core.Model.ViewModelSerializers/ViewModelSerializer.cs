@@ -23666,11 +23666,37 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "handlerClass", _strong.ExtensionHandlerXml, context);
                 }
             }
+            if (context.ShouldSerialize("uri")) {
+                if ((_strong.Uri == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "uri", _strong.Uri, context);
+                }
+            }
             if (context.ShouldSerialize("name")) {
                 if ((_strong.Name == null)) {
                 }
                 else {
                     context.JsonContext.WritePropertyUtil(w, "name", _strong.Name, context);
+                }
+            }
+            if (context.ShouldSerialize("scope")) {
+                if (((_strong.ScopeXml == null) 
+                            || (_strong.ScopeXml.Count == 0))) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "scope", _strong.ScopeXml, context);
+                }
+            }
+            if (context.ShouldSerialize("scopeModel")) {
+                if (((_strong.Scope == null) 
+                            || (_strong.Scope.Count == 0))) {
+                    if ((_strong.Key.HasValue && context.ShouldForceLoad("scopeModel", _strong.Key.Value))) {
+                        System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.Concept> _delay = null;
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "scopeModel", _strong.Scope, context);
                 }
             }
             if (context.ShouldSerialize("updatedTime")) {
@@ -23906,32 +23932,59 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                         }
                                                                     }
                                                                     else {
-                                                                        if ("name".Equals(r.Value)) {
+                                                                        if ("scopeModel".Equals(r.Value)) {
                                                                             r.Read();
-                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("name", context.JsonContext, _retVal, context));
+                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.Concept>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("scopeModel", context.JsonContext, _retVal, context));
                                                                             if ((_instance != null)) {
-                                                                                _retVal.Name = ((string)(_instance));
+                                                                                _retVal.Scope = ((System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.Concept>)(_instance));
                                                                             }
                                                                         }
                                                                         else {
-                                                                            if ("handlerClass".Equals(r.Value)) {
+                                                                            if ("scope".Equals(r.Value)) {
                                                                                 r.Read();
-                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("handlerClass", context.JsonContext, _retVal, context));
+                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("scope", context.JsonContext, _retVal, context));
                                                                                 if ((_instance != null)) {
-                                                                                    _retVal.ExtensionHandlerXml = ((string)(_instance));
+                                                                                    _retVal.ScopeXml = ((System.Collections.Generic.List<System.Guid>)(_instance));
                                                                                 }
                                                                             }
                                                                             else {
-                                                                                if ("$type".Equals(r.Value)) {
-                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1500.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
-                                                                                    if ((_type != typeof(SanteDB.Core.Model.DataTypes.ExtensionType))) {
-                                                                                        SanteDB.Core.Model.DataTypes.ExtensionType _nretVal = ((SanteDB.Core.Model.DataTypes.ExtensionType)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
-                                                                                        _nretVal.CopyObjectData(_retVal);
-                                                                                        return _nretVal;
+                                                                                if ("name".Equals(r.Value)) {
+                                                                                    r.Read();
+                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("name", context.JsonContext, _retVal, context));
+                                                                                    if ((_instance != null)) {
+                                                                                        _retVal.Name = ((string)(_instance));
                                                                                     }
                                                                                 }
                                                                                 else {
-                                                                                    r.Skip();
+                                                                                    if ("uri".Equals(r.Value)) {
+                                                                                        r.Read();
+                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("uri", context.JsonContext, _retVal, context));
+                                                                                        if ((_instance != null)) {
+                                                                                            _retVal.Uri = ((string)(_instance));
+                                                                                        }
+                                                                                    }
+                                                                                    else {
+                                                                                        if ("handlerClass".Equals(r.Value)) {
+                                                                                            r.Read();
+                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("handlerClass", context.JsonContext, _retVal, context));
+                                                                                            if ((_instance != null)) {
+                                                                                                _retVal.ExtensionHandlerXml = ((string)(_instance));
+                                                                                            }
+                                                                                        }
+                                                                                        else {
+                                                                                            if ("$type".Equals(r.Value)) {
+                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1500.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                if ((_type != typeof(SanteDB.Core.Model.DataTypes.ExtensionType))) {
+                                                                                                    SanteDB.Core.Model.DataTypes.ExtensionType _nretVal = ((SanteDB.Core.Model.DataTypes.ExtensionType)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
+                                                                                                    _nretVal.CopyObjectData(_retVal);
+                                                                                                    return _nretVal;
+                                                                                                }
+                                                                                            }
+                                                                                            else {
+                                                                                                r.Skip();
+                                                                                            }
+                                                                                        }
+                                                                                    }
                                                                                 }
                                                                             }
                                                                         }
@@ -25045,14 +25098,6 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "url", _strong.Url, context);
                 }
             }
-            if (context.ShouldSerialize("scope")) {
-                if (((_strong.AuthorityScopeXml == null) 
-                            || (_strong.AuthorityScopeXml.Count == 0))) {
-                }
-                else {
-                    context.JsonContext.WritePropertyUtil(w, "scope", _strong.AuthorityScopeXml, context);
-                }
-            }
             if (context.ShouldSerialize("assigningAuthority")) {
                 if (((_strong.AssigningAuthority == null) 
                             || (_strong.AssigningAuthority.Count == 0))) {
@@ -25119,6 +25164,14 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
                 else {
                     context.JsonContext.WritePropertyUtil(w, "checkDigitAlgorithm", _strong.CheckDigitAlgorithm, context);
+                }
+            }
+            if (context.ShouldSerialize("scope")) {
+                if (((_strong.AuthorityScopeXml == null) 
+                            || (_strong.AuthorityScopeXml.Count == 0))) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "scope", _strong.AuthorityScopeXml, context);
                 }
             }
             if (context.ShouldSerialize("scopeModel")) {
@@ -25373,67 +25426,67 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                             }
                                                                         }
                                                                         else {
-                                                                            if ("checkDigitAlgorithm".Equals(r.Value)) {
+                                                                            if ("scope".Equals(r.Value)) {
                                                                                 r.Read();
-                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("checkDigitAlgorithm", context.JsonContext, _retVal, context));
+                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("scope", context.JsonContext, _retVal, context));
                                                                                 if ((_instance != null)) {
-                                                                                    _retVal.CheckDigitAlgorithm = ((string)(_instance));
+                                                                                    _retVal.AuthorityScopeXml = ((System.Collections.Generic.List<System.Guid>)(_instance));
                                                                                 }
                                                                             }
                                                                             else {
-                                                                                if ("customValidator".Equals(r.Value)) {
+                                                                                if ("checkDigitAlgorithm".Equals(r.Value)) {
                                                                                     r.Read();
-                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("customValidator", context.JsonContext, _retVal, context));
+                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("checkDigitAlgorithm", context.JsonContext, _retVal, context));
                                                                                     if ((_instance != null)) {
-                                                                                        _retVal.CustomValidator = ((string)(_instance));
+                                                                                        _retVal.CheckDigitAlgorithm = ((string)(_instance));
                                                                                     }
                                                                                 }
                                                                                 else {
-                                                                                    if ("isUnique".Equals(r.Value)) {
+                                                                                    if ("customValidator".Equals(r.Value)) {
                                                                                         r.Read();
-                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(bool), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("isUnique", context.JsonContext, _retVal, context));
+                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("customValidator", context.JsonContext, _retVal, context));
                                                                                         if ((_instance != null)) {
-                                                                                            _retVal.IsUnique = ((bool)(_instance));
+                                                                                            _retVal.CustomValidator = ((string)(_instance));
                                                                                         }
                                                                                     }
                                                                                     else {
-                                                                                        if ("validation".Equals(r.Value)) {
+                                                                                        if ("isUnique".Equals(r.Value)) {
                                                                                             r.Read();
-                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("validation", context.JsonContext, _retVal, context));
+                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(bool), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("isUnique", context.JsonContext, _retVal, context));
                                                                                             if ((_instance != null)) {
-                                                                                                _retVal.ValidationRegex = ((string)(_instance));
+                                                                                                _retVal.IsUnique = ((bool)(_instance));
                                                                                             }
                                                                                         }
                                                                                         else {
-                                                                                            if ("policy".Equals(r.Value)) {
+                                                                                            if ("validation".Equals(r.Value)) {
                                                                                                 r.Read();
-                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("policy", context.JsonContext, _retVal, context));
+                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("validation", context.JsonContext, _retVal, context));
                                                                                                 if ((_instance != null)) {
-                                                                                                    _retVal.PolicyKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                    _retVal.ValidationRegex = ((string)(_instance));
                                                                                                 }
                                                                                             }
                                                                                             else {
-                                                                                                if ("policyModel".Equals(r.Value)) {
+                                                                                                if ("policy".Equals(r.Value)) {
                                                                                                     r.Read();
-                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.Security.SecurityPolicy), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("policyModel", context.JsonContext, _retVal, context));
+                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("policy", context.JsonContext, _retVal, context));
                                                                                                     if ((_instance != null)) {
-                                                                                                        _retVal.Policy = ((SanteDB.Core.Model.Security.SecurityPolicy)(_instance));
+                                                                                                        _retVal.PolicyKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                     }
                                                                                                 }
                                                                                                 else {
-                                                                                                    if ("assigningAuthority".Equals(r.Value)) {
+                                                                                                    if ("policyModel".Equals(r.Value)) {
                                                                                                         r.Read();
-                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.AssigningAuthority>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("assigningAuthority", context.JsonContext, _retVal, context));
+                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.Security.SecurityPolicy), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("policyModel", context.JsonContext, _retVal, context));
                                                                                                         if ((_instance != null)) {
-                                                                                                            _retVal.AssigningAuthority = ((System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.AssigningAuthority>)(_instance));
+                                                                                                            _retVal.Policy = ((SanteDB.Core.Model.Security.SecurityPolicy)(_instance));
                                                                                                         }
                                                                                                     }
                                                                                                     else {
-                                                                                                        if ("scope".Equals(r.Value)) {
+                                                                                                        if ("assigningAuthority".Equals(r.Value)) {
                                                                                                             r.Read();
-                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("scope", context.JsonContext, _retVal, context));
+                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.AssigningAuthority>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("assigningAuthority", context.JsonContext, _retVal, context));
                                                                                                             if ((_instance != null)) {
-                                                                                                                _retVal.AuthorityScopeXml = ((System.Collections.Generic.List<System.Guid>)(_instance));
+                                                                                                                _retVal.AssigningAuthority = ((System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.AssigningAuthority>)(_instance));
                                                                                                             }
                                                                                                         }
                                                                                                         else {
