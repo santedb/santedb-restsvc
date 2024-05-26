@@ -2532,6 +2532,7 @@ namespace SanteDB.Rest.HDSI
                             if (o.Element is IVersionedData ive)
                             {
                                 ive.VersionSequence = null;
+                                ive.PreviousVersionKey = null;
                             }
                         });
                         audit.WithOutcome(OutcomeIndicator.Success)
