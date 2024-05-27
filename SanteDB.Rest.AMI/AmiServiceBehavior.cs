@@ -357,7 +357,7 @@ namespace SanteDB.Rest.AMI
         /// </summary>
         /// <param name="schemaId">The id of the schema to be retrieved.</param>
         /// <returns>Returns the administrative interface schema.</returns>
-        public XmlSchema GetSchema(int schemaId)
+        public XmlSchema GetSchema()
         {
             try
             {
@@ -370,6 +370,8 @@ namespace SanteDB.Rest.AMI
                 {
                     exporter.ExportTypeMapping(importer.ImportTypeMapping(cls, "http://santedb.org/ami"));
                 }
+
+                _ = Int32.TryParse(RestOperationContext.Current.IncomingRequest.QueryString["id"], out var schemaId);
 
                 if (schemaId > schemaCollection.Count)
                 {

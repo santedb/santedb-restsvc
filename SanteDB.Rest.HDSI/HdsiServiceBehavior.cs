@@ -617,7 +617,7 @@ namespace SanteDB.Rest.HDSI
         }
 
         /// <inheritdoc/>
-        public XmlSchema GetSchema(int schemaId)
+        public XmlSchema GetSchema()
         {
             this.ThrowIfNotReady();
             try
@@ -631,6 +631,8 @@ namespace SanteDB.Rest.HDSI
                 {
                     exporter.ExportTypeMapping(importer.ImportTypeMapping(cls, "http://santedb.org/model"));
                 }
+
+                _ = Int32.TryParse(RestOperationContext.Current.IncomingRequest.QueryString["id"], out var schemaId);
 
                 if (schemaId > schemaCollection.Count)
                 {
@@ -2453,7 +2455,7 @@ namespace SanteDB.Rest.HDSI
                         {
                             results = new Object[] { handler.Get(uuid, Guid.Empty) }.AsResultSet();
                         }
-                        else if (!RestOperationContext.Current.IncomingRequest.QueryString.ToArray().Any(o => !o.Key.StartsWith("_"))) // no global exports
+                        else if (exportPolicyAttribute.Classification == ResourceSensitivityClassification.PersonalHealthInformation && !RestOperationContext.Current.IncomingRequest.QueryString.ToArray().Any(o => !o.Key.StartsWith("_"))) // no global exports
                         {
                             throw new ArgumentException(ErrorMessages.OPERATION_REQUIRES_QUERY_PARAMETER);
                         }
@@ -2530,6 +2532,7 @@ namespace SanteDB.Rest.HDSI
                             if (o.Element is IVersionedData ive)
                             {
                                 ive.VersionSequence = null;
+                                ive.PreviousVersionKey = null;
                             }
                         });
                         audit.WithOutcome(OutcomeIndicator.Success)
