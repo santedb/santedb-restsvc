@@ -116,7 +116,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Create a new job instance - registers it with the job manager
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.AlterSystemConfiguration)]
+        [Demand(PermissionPolicyIdentifiers.RegisterSystemJob)]
         public object Create(object data, bool updateIfExists)
         {
             if (data is TypeReferenceConfiguration trc)
@@ -138,9 +138,10 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Get the specified job
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.ReadSystemJobs)]
         public object Get(object id, object versionId)
         {
-            ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
+            ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(PermissionPolicyIdentifiers.ReadSystemJobs);
             var job = this.m_jobManager.GetJobInstance(Guid.Parse(id.ToString()));
             if (job == null)
             {
@@ -154,6 +155,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Cancels a job
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.UnrestrictedJobManagement)]
         public object Delete(object key)
         {
             throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
@@ -162,9 +164,10 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Query for all jobs
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.ReadSystemJobs)]
         public IQueryResultSet Query(NameValueCollection queryParameters)
         {
-            ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
+            ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(PermissionPolicyIdentifiers.ReadSystemJobs);
 
             // Is the user looking for unconfigured jobs?
             if (Boolean.TryParse(queryParameters["_unconfigured"], out var b) && b)
@@ -201,12 +204,13 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Update a job
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.AlterSystemJobSchedule)]
         public object Update(object data)
         {
             // First try to cast data as JobInfo
             if (data is JobInfo)
             {
-                ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
+                ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(PermissionPolicyIdentifiers.AlterSystemJobSchedule);
 
                 var jobInfo = data as JobInfo;
                 var job = this.m_jobManager.GetJobInstance(jobInfo.Key.GetValueOrDefault());

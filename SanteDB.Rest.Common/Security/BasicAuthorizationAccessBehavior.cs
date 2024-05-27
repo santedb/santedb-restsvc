@@ -169,7 +169,8 @@ namespace SanteDB.Rest.Common.Security
         /// </summary>
         public void AddAuthenticateChallengeHeader(RestResponseMessage faultMessage, Exception error)
         {
-            faultMessage.AddAuthenticateHeader("basic", this.m_configuration.Realm, description: error.Message);
+            this.AddWwwAuthenticateHeader("basic", error, faultMessage);
+
         }
     }
 }

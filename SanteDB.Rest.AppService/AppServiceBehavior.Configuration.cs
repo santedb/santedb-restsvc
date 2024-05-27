@@ -97,7 +97,7 @@ namespace SanteDB.Rest.AppService
             }
             else if (scope != AuthenticationContext.Current.Principal.Identity.Name)
             {
-                this.m_policyEnforcementService.Demand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
+                this.m_policyEnforcementService.Demand(PermissionPolicyIdentifiers.AlterIdentity);
             }
 
             return this.m_userPreferenceManager?.GetUserSettings(scope).ToList();
@@ -134,14 +134,13 @@ namespace SanteDB.Rest.AppService
             }
             else if (scope != AuthenticationContext.Current.Principal.Identity.Name)
             {
-                this.m_policyEnforcementService.Demand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
+                this.m_policyEnforcementService.Demand(PermissionPolicyIdentifiers.AlterSystemConfiguration);
             }
 
-            this.m_userPreferenceManager?.SetUserSettings(scope, settings);
         }
 
         /// <inheritdoc/>
-        [Demand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction)]
+        [Demand(PermissionPolicyIdentifiers.AlterSystemConfiguration)]
         public ConfigurationViewModel UpdateConfiguration(ConfigurationViewModel configuration)
         {
             // Run through the configuration model and configure the objects

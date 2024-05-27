@@ -20,14 +20,17 @@
  */
 using RestSrvr;
 using RestSrvr.Exceptions;
+using RestSrvr.Message;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Http;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
+using SanteDB.Rest.Common.Fault;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Security;
 using System.Security.Authentication;
@@ -41,6 +44,57 @@ namespace SanteDB.Rest.Common
     {
 
 
+        /// <summary>
+        /// Add a WWW authenticate behavior
+        /// </summary>
+        public static void AddWwwAuthenticateHeader(this IAuthorizationServicePolicy me, string challengeMode, Exception error, RestResponseMessage faultMessage)
+        {
+            // Map error codes to headers according to https://www.rfc-editor.org/rfc/rfc6750#section-3
+            switch (error)
+            {
+                case PolicyViolationException pve:
+                    faultMessage.AddAuthenticateHeader(challengeMode, RestOperationContext.Current.IncomingRequest.Url.Host, "insufficient_scope", pve.PolicyId, pve.Message);
+                    break;
+                case RestClientException<Object> rco: // came from an upstream
+                    var pvd = rco.Result as RestServiceFault;
+                    while (pvd != null)
+                    {
+                        if (pvd.Type == nameof(PolicyViolationException))
+                        {
+                            faultMessage.AddAuthenticateHeader(challengeMode, RestOperationContext.Current.IncomingRequest.Url.Host, "insufficient_scope", pvd.PolicyId, pvd.Message);
+                            return;
+                        }
+                        pvd = pvd.CausedBy;
+                    }
+
+                    // Did the server send anything of note?
+                    var upstreamAuthHeader = rco.Response.Headers[System.Net.HttpResponseHeader.WwwAuthenticate];
+                    if (!String.IsNullOrEmpty(upstreamAuthHeader))
+                    {
+                        var tokens = upstreamAuthHeader.Split(' ').Skip(1).Where(t => !t.StartsWith("realm")).ToArray();
+                        faultMessage.Headers.Add("WWW-Authenticate", $"{challengeMode} realm=\"{RestOperationContext.Current.IncomingRequest.Url.Host}\" {String.Join(" ", tokens)}");
+                    }
+                    else
+                    {
+                        faultMessage.AddAuthenticateHeader(challengeMode, RestOperationContext.Current.IncomingRequest.Url.Host, "invalid_request", description: error.Message);
+                    }
+                    break;
+                case SecuritySessionException sse:
+                    switch (sse.Type)
+                    {
+                        case SessionExceptionType.Scope:
+                            faultMessage.AddAuthenticateHeader(challengeMode, RestOperationContext.Current.IncomingRequest.Url.Host, "invalid_scope", description: sse.Message);
+                            break;
+                        default:
+                            faultMessage.AddAuthenticateHeader(challengeMode, RestOperationContext.Current.IncomingRequest.Url.Host, "invalid_token", description: sse.Message);
+                            break;
+                    }
+                    break;
+                default:
+                    faultMessage.AddAuthenticateHeader(challengeMode, RestOperationContext.Current.IncomingRequest.Url.Host, "invalid_request", description: error.Message);
+                    break;
+            }
+        }
         /// <summary>
         /// Get the HTTP status code for <paramref name="exception"/>
         /// </summary>

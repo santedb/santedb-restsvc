@@ -72,7 +72,7 @@ namespace SanteDB.Rest.AppService.Configuration
         public String ReadPolicy => PermissionPolicyIdentifiers.Login;
 
         /// <inheritdoc/>
-        public String WritePolicy => PermissionPolicyIdentifiers.AccessClientAdministrativeFunction;
+        public String WritePolicy => PermissionPolicyIdentifiers.AlterSystemConfiguration;
 
         /// <summary>
         /// Refresh the configuration

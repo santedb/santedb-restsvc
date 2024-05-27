@@ -25,10 +25,15 @@ using SanteDB.Core.Applets;
 using SanteDB.Core.Applets.Configuration;
 using SanteDB.Core.Applets.Services;
 using SanteDB.Core.Diagnostics;
+using SanteDB.Core.Exceptions;
+using SanteDB.Core.Http;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
+using SanteDB.Rest.Common.Fault;
 using System;
+using System.Linq;
+using System.Net;
 
 namespace SanteDB.Rest.Common.Behavior
 {
@@ -83,7 +88,7 @@ namespace SanteDB.Rest.Common.Behavior
             }
             else
             {
-                faultMessage.AddAuthenticateHeader("cookie", RestOperationContext.Current.IncomingRequest.Url.Host);
+                this.AddWwwAuthenticateHeader("cookie", error, faultMessage);
             }
         }
 

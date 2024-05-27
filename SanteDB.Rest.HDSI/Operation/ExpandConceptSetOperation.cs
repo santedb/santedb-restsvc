@@ -26,13 +26,15 @@ using SanteDB.Core.Model.Query;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace SanteDB.Rest.HDSI.Operation
 {
     /// <summary>
     /// Expand a concept set into a dropdown
     /// </summary>
-    public class ExpandConceptSetOperation : IApiChildOperation
+    public class ExpandConceptSetOperation : IApiChildOperation, IApiChildResourceHandler
     {
         // Concept repository service
         private readonly IConceptRepositoryService m_conceptRepository;
@@ -53,6 +55,34 @@ namespace SanteDB.Rest.HDSI.Operation
 
         /// <inheritdoc/>
         public string Name => "expand";
+
+        /// <inheritdoc/>
+        string IApiChildResourceHandler.Name => "_members";
+
+        /// <inheritdoc/>
+        public Type PropertyType => typeof(Concept);
+
+        /// <inheritdoc/>
+        public ResourceCapabilityType Capabilities => ResourceCapabilityType.Search | ResourceCapabilityType.Get;
+
+        /// <inheritdoc/>
+        public object Add(Type scopingType, object scopingKey, object item)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
+        public object Get(Type scopingType, object scopingKey, object key)
+        {
+            if ((scopingKey is Guid scopeUuid || Guid.TryParse(scopingKey.ToString(), out scopeUuid)) && 
+                (key is Guid keyUuid || Guid.TryParse(key.ToString(), out keyUuid))) {
+                return this.m_conceptRepository.ExpandConceptSet(scopeUuid).Where(o => o.Key == keyUuid).FirstOrDefault() ?? throw new KeyNotFoundException($"/ConceptSet/{scopeUuid}/_members/{key}");
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+        }
 
         /// <inheritdoc/>
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
@@ -77,6 +107,26 @@ namespace SanteDB.Rest.HDSI.Operation
             var linq = QueryExpressionParser.BuildLinqExpression<Concept>(filter);
             var outputResults = results.Where(linq).ApplyResultInstructions(filter, out var offset, out var count).OfType<Concept>();
             return new Bundle(outputResults, offset, count);
+        }
+
+        /// <inheritdoc/>
+        public IQueryResultSet Query(Type scopingType, object scopingKey, NameValueCollection filter)
+        {
+            if (scopingKey is Guid scopeUuid || Guid.TryParse(scopingKey.ToString(), out scopeUuid))
+            {
+                var filterLinq = QueryExpressionParser.BuildLinqExpression<Concept>(filter);
+                return this.m_conceptRepository.ExpandConceptSet(scopeUuid).Where(filterLinq);
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        /// <inheritdoc/>
+        public object Remove(Type scopingType, object scopingKey, object key)
+        {
+            throw new NotSupportedException();
         }
     }
 }

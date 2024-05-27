@@ -320,6 +320,12 @@ namespace SanteDB.Rest.OAuth.Rest
             else if (context.AuthenticationContext?.Principal is IClaimsPrincipal cp && cp.Identities.OfType<IApplicationIdentity>().Any())
             {
                 context.ApplicationIdentity = cp.Identities.OfType<IApplicationIdentity>().First() as IClaimsIdentity;
+                // Authenticate the client principal using the current principal if the current identity equals the application that's being requested
+                if (context.ApplicationIdentity.Name == context.ClientId)
+                {
+                    m_traceSource.TraceVerbose("Authenticating as {0}  using authenticated principal {1}", context.ClientId, cp.Identity.Name);
+                    context.ApplicationPrincipal = m_AppIdentityProvider.Authenticate(context.ClientId, cp) as IClaimsPrincipal;
+                }
                 m_traceSource.TraceVerbose("Found application identity from {1} (composite identity): {0}.", context.ApplicationIdentity, nameof(AuthenticationContext));
                 return true;
             }

@@ -111,6 +111,9 @@ namespace SanteDB.Rest.AMI.ChildResources
                     case nameof(SecurityDevice):
                         identityToMap = this.m_deviceIdentityProvider.GetIdentity(sid);
                         break;
+                    default:
+                        m_tracer.TraceWarning("Adding a certificate to object type {0} is not permitted.", scopingType.Name);
+                        break;
                 }
                 if (identityToMap == null)
                 {
