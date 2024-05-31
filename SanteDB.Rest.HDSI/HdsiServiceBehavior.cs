@@ -773,7 +773,7 @@ namespace SanteDB.Rest.HDSI
                     // Modified on?
                     if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null)
                     {
-                        query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince()?.ToString("o"));
+                        query.Add("$self", $":(lastModified)>{RestOperationContext.Current.IncomingRequest.GetIfModifiedSince()?.ToString("o")}");
                     }
 
                     // Query for results
@@ -1351,7 +1351,7 @@ namespace SanteDB.Rest.HDSI
                     // Modified on?
                     if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null)
                     {
-                        query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince()?.ToString("o"));
+                        query.Add("$self", $":(lastModified)>{RestOperationContext.Current.IncomingRequest.GetIfModifiedSince()?.ToString("o")}");
                     }
 
                     // Query for results
@@ -2338,7 +2338,7 @@ namespace SanteDB.Rest.HDSI
                     // Modified on?
                     if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null)
                     {
-                        query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince()?.ToString("o"));
+                        query.Add("$self", $":(lastModified)>{RestOperationContext.Current.IncomingRequest.GetIfModifiedSince()?.ToString("o")}");
                     }
 
                     // Query for results
@@ -2464,7 +2464,7 @@ namespace SanteDB.Rest.HDSI
                             // Modified on?
                             if (RestOperationContext.Current.IncomingRequest.GetIfModifiedSince() != null)
                             {
-                                query.Add("modifiedOn", ">" + RestOperationContext.Current.IncomingRequest.GetIfModifiedSince()?.ToString("o"));
+                                query.Add("$self", $":(lastModified)>{RestOperationContext.Current.IncomingRequest.GetIfModifiedSince()?.ToString("o")}");
                             }
 
                             // Query for results
@@ -2492,28 +2492,28 @@ namespace SanteDB.Rest.HDSI
                         if (query[QueryControlParameterNames.HttpIncludePathParameterName] != null)
                         {
                             var includes = query.GetValues(QueryControlParameterNames.HttpIncludePathParameterName).SelectMany(inc =>
+                            {
+                                // Is this a direct property reference or another query?
+                                if (!inc.Contains(':'))
                                 {
-                                    // Is this a direct property reference or another query?
-                                    if (!inc.Contains(':'))
-                                    {
-                                        throw new ArgumentException(String.Format(ErrorMessages.INVALID_FORMAT, inc, "Type:Query"));
-                                    }
+                                    throw new ArgumentException(String.Format(ErrorMessages.INVALID_FORMAT, inc, "Type:Query"));
+                                }
 
-                                    var incParts = inc.Split(':');
-                                    var repositoryType = new ModelSerializationBinder().BindToType(null, incParts[0]);
-                                    if (repositoryType == null)
-                                    {
-                                        throw new ArgumentException(String.Format(ErrorMessages.TYPE_NOT_FOUND, incParts[0]));
-                                    }
-                                    var incQuery = incParts[1].ParseQueryString();
-                                    var subQuery = QueryExpressionParser.BuildLinqExpression(repositoryType, incQuery);
-                                    var incHandlerType = typeof(IRepositoryService<>).MakeGenericType(repositoryType);
-                                    var incHandler = ApplicationServiceContext.Current.GetService(incHandlerType) as IRepositoryService;
-                                    var incResults = incHandler.Find(subQuery).OfType<IdentifiedData>();
-                                    var excludeProperties = incQuery.GetValues(QueryControlParameterNames.HttpExcludePathParameterName)?.Select(o => this.ResolvePropertyInfo(repositoryType, o)).ToArray();
+                                var incParts = inc.Split(':');
+                                var repositoryType = new ModelSerializationBinder().BindToType(null, incParts[0]);
+                                if (repositoryType == null)
+                                {
+                                    throw new ArgumentException(String.Format(ErrorMessages.TYPE_NOT_FOUND, incParts[0]));
+                                }
+                                var incQuery = incParts[1].ParseQueryString();
+                                var subQuery = QueryExpressionParser.BuildLinqExpression(repositoryType, incQuery);
+                                var incHandlerType = typeof(IRepositoryService<>).MakeGenericType(repositoryType);
+                                var incHandler = ApplicationServiceContext.Current.GetService(incHandlerType) as IRepositoryService;
+                                var incResults = incHandler.Find(subQuery).OfType<IdentifiedData>();
+                                var excludeProperties = incQuery.GetValues(QueryControlParameterNames.HttpExcludePathParameterName)?.Select(o => this.ResolvePropertyInfo(repositoryType, o)).ToArray();
 
-                                    return incResults.Select(o => new DataUpdate() { Element = o.NullifyProperties(excludeProperties), InsertIfNotExists = true });
-                                });
+                                return incResults.Select(o => new DataUpdate() { Element = o.NullifyProperties(excludeProperties), InsertIfNotExists = true });
+                            });
                             if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString["_includesFirst"], out var incFirst) && incFirst)
                             {
                                 retVal.Action.InsertRange(0, includes);
