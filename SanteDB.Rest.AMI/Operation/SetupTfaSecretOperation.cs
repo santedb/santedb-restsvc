@@ -23,8 +23,10 @@ using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.AMI.Auth;
 using SanteDB.Core.Model.Parameters;
+using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
+using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
 using System.Collections.Generic;
@@ -44,14 +46,21 @@ namespace SanteDB.Rest.AMI.Operation
     {
         private readonly IIdentityProviderService m_identityProviderService;
         private readonly ITfaService m_tfaService;
+        private readonly ISecurityRepositoryService m_securityRepositoryService;
+        private readonly IRepositoryService<SecurityUser> m_securityUserRepository;
 
         /// <summary>
         /// DI constructor
         /// </summary>
-        public SetupTfaSecretOperation(IIdentityProviderService identityProviderService, ITfaService tfaService)
+        public SetupTfaSecretOperation(IIdentityProviderService identityProviderService, 
+            ITfaService tfaService, 
+            ISecurityRepositoryService securityRepositoryService,
+            IRepositoryService<SecurityUser> securityUserRepository)
         {
             this.m_identityProviderService = identityProviderService;
             this.m_tfaService = tfaService;
+            this.m_securityRepositoryService = securityRepositoryService;
+            this.m_securityUserRepository = securityUserRepository;
         }
 
         /// <inheritdoc/>
@@ -80,6 +89,10 @@ namespace SanteDB.Rest.AMI.Operation
                     {
                         throw new ArgumentException("code");
                     }
+                    var user = this.m_securityRepositoryService.GetUser(AuthenticationContext.Current.Principal.Identity);
+                    user.TwoFactorEnabled = true;
+                    user.TwoFactorMechnaismKey = mechanism.Id;
+                    this.m_securityUserRepository.Save(user);
                     return null;
                 }
                 else
