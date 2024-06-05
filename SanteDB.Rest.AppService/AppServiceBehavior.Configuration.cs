@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  *
@@ -16,7 +16,7 @@
  * the License.
  *
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using RestSrvr.Exceptions;
 using SanteDB.Client.Configuration;
@@ -91,12 +91,16 @@ namespace SanteDB.Rest.AppService
         [Demand(PermissionPolicyIdentifiers.Login)]
         public List<AppSettingKeyValuePair> GetAppSettings(string scope)
         {
-            if (scope != AuthenticationContext.Current.Principal.Identity.Name)
+            if (scope.Equals("me", StringComparison.OrdinalIgnoreCase))
             {
-                this.m_policyEnforcementService.Demand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
+                return this.m_userPreferenceManager?.GetUserSettings(AuthenticationContext.Current.Principal.Identity.Name).ToList();
+            }
+            else if (scope != AuthenticationContext.Current.Principal.Identity.Name)
+            {
+                this.m_policyEnforcementService.Demand(PermissionPolicyIdentifiers.AlterIdentity);
             }
 
-            return this.m_userPreferenceManager?.GetUserSettings(scope);
+            return this.m_userPreferenceManager?.GetUserSettings(scope).ToList();
         }
 
         /// <inheritdoc/>
@@ -124,11 +128,19 @@ namespace SanteDB.Rest.AppService
         /// <inheritdoc/>
         public void SetAppSettings(string scope, List<AppSettingKeyValuePair> settings)
         {
-            throw new NotImplementedException();
+            if (scope.Equals("me", StringComparison.OrdinalIgnoreCase))
+            {
+                this.m_userPreferenceManager?.SetUserSettings(AuthenticationContext.Current.Principal.Identity.Name, settings);
+            }
+            else if (scope != AuthenticationContext.Current.Principal.Identity.Name)
+            {
+                this.m_policyEnforcementService.Demand(PermissionPolicyIdentifiers.AlterSystemConfiguration);
+            }
+
         }
 
         /// <inheritdoc/>
-        [Demand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction)]
+        [Demand(PermissionPolicyIdentifiers.AlterSystemConfiguration)]
         public ConfigurationViewModel UpdateConfiguration(ConfigurationViewModel configuration)
         {
             // Run through the configuration model and configure the objects

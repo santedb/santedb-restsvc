@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using RestSrvr;
 using RestSrvr.Message;
@@ -25,10 +25,15 @@ using SanteDB.Core.Applets;
 using SanteDB.Core.Applets.Configuration;
 using SanteDB.Core.Applets.Services;
 using SanteDB.Core.Diagnostics;
+using SanteDB.Core.Exceptions;
+using SanteDB.Core.Http;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
+using SanteDB.Rest.Common.Fault;
 using System;
+using System.Linq;
+using System.Net;
 
 namespace SanteDB.Rest.Common.Behavior
 {
@@ -83,7 +88,7 @@ namespace SanteDB.Rest.Common.Behavior
             }
             else
             {
-                faultMessage.AddAuthenticateHeader("cookie", RestOperationContext.Current.IncomingRequest.Url.Host);
+                this.AddWwwAuthenticateHeader("cookie", error, faultMessage);
             }
         }
 
@@ -111,7 +116,6 @@ namespace SanteDB.Rest.Common.Behavior
                 RestOperationContext.Current.OutgoingResponse.SetCookie(new System.Net.Cookie(ExtendedCookieNames.SessionCookieName, "")
                 {
                     Discard = true,
-                    Expired = true,
                     Expires = DateTime.Now
                 });
                 throw;

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
@@ -47,7 +47,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <param name="data">The entity to be created.</param>
         /// <param name="updateIfExists">Whether to update the entity if it exits.</param>
         /// <returns>Returns the created entity.s</returns>
-        [Demand(PermissionPolicyIdentifiers.Login)]
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public override Object Create(Object data, bool updateIfExists)
         {
             return base.Create(data, updateIfExists);
@@ -59,7 +59,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <param name="id">The id of the entity.</param>
         /// <param name="versionId">The version id of the entity.</param>
         /// <returns>Returns the entity.</returns>
-        [Demand(PermissionPolicyIdentifiers.Login)]
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public override Object Get(object id, object versionId)
         {
             return base.Get(id, versionId);
@@ -70,7 +70,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// </summary>
         /// <param name="key">The key of the entity to be obsoleted.</param>
         /// <returns>Returns the obsoleted entity.</returns>
-        [Demand(PermissionPolicyIdentifiers.Login)]
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public override Object Delete(object key)
         {
             return base.Delete(key);
@@ -81,7 +81,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// </summary>
         /// <param name="queryParameters">The query parameters to use to search for the entity.</param>
         /// <returns>Returns a list of entities.</returns>
-        [Demand(PermissionPolicyIdentifiers.Login)]
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             return base.Query(queryParameters);
@@ -92,7 +92,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// </summary>
         /// <param name="data">The entity to be updated.</param>
         /// <returns>Returns the updated entity.</returns>
-        [Demand(PermissionPolicyIdentifiers.Login)]
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public override Object Update(Object data)
         {
             return base.Update(data);

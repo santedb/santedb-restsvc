@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using RestSrvr;
 using RestSrvr.Message;
@@ -161,27 +161,7 @@ namespace SanteDB.Rest.Common.Security
         /// <inheritdoc cref="IAuthorizationServicePolicy.AddAuthenticateChallengeHeader(RestResponseMessage, Exception)"/>
         public void AddAuthenticateChallengeHeader(RestResponseMessage faultMessage, Exception error)
         {
-            // Map error codes to headers according to https://www.rfc-editor.org/rfc/rfc6750#section-3
-            switch (error)
-            {
-                case PolicyViolationException pve:
-                    faultMessage.AddAuthenticateHeader("bearer", RestOperationContext.Current.IncomingRequest.Url.Host, "insufficient_scope", pve.PolicyId, pve.Message);
-                    break;
-                case SecuritySessionException sse:
-                    switch (sse.Type)
-                    {
-                        case SessionExceptionType.Scope:
-                            faultMessage.AddAuthenticateHeader("bearer", RestOperationContext.Current.IncomingRequest.Url.Host, "invalid_scope", description: sse.Message);
-                            break;
-                        default:
-                            faultMessage.AddAuthenticateHeader("bearer", RestOperationContext.Current.IncomingRequest.Url.Host, "invalid_token", description: sse.Message);
-                            break;
-                    }
-                    break;
-                default:
-                    faultMessage.AddAuthenticateHeader("bearer", RestOperationContext.Current.IncomingRequest.Url.Host, "invalid_request", description: error.Message);
-                    break;
-            }
+            this.AddWwwAuthenticateHeader("bearer", error, faultMessage);
         }
     }
 }

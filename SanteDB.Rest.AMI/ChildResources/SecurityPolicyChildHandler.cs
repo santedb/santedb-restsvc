@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  *
@@ -16,7 +16,7 @@
  * the License.
  *
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Auth;
@@ -167,7 +167,7 @@ namespace SanteDB.Rest.AMI.ChildResources
 
                 var rd = item as SecurityPolicyInfo;
                 this.m_pip.AddPolicies(scope, rd.Grant, AuthenticationContext.Current.Principal, rd.Oid);
-                m_auditService.Audit().ForSecurityAttributeAction(new object[] { scope }, true, $"added policy={rd.Oid}:{rd.Policy}").Send();
+                m_auditService.Audit().ForSecurityAttributeAction(new object[] { scope }, true, $"alter policy ({rd.Grant})={rd.Oid} ({rd.Policy?.Name ?? this.m_pip.GetPolicy(rd.Oid)?.Name})").Send();
                 return rd;
             }
             catch
@@ -224,7 +224,7 @@ namespace SanteDB.Rest.AMI.ChildResources
             {
                 this.DemandFor(scopingType);
                 this.m_pip.RemovePolicies(scope, AuthenticationContext.Current.Principal, policy.Oid);
-                m_auditService.Audit().ForSecurityAttributeAction(new object[] { scope }, true, $"removed policy={policy.Oid}").Send();
+                m_auditService.Audit().ForSecurityAttributeAction(new object[] { scope }, true, $"remove policy={policy.Oid} ({this.m_pip.GetPolicy(policy.Oid)?.Name})").Send();
                 return null;
             }
             catch

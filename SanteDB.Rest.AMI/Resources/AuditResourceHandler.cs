@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  *
@@ -16,7 +16,7 @@
  * the License.
  *
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using SanteDB.Core;
 using SanteDB.Core.Configuration;
@@ -34,6 +34,24 @@ using System.Collections.Specialized;
 
 namespace SanteDB.Rest.AMI.Resources
 {
+    /// <summary>
+    /// Audit submission resource
+    /// </summary>
+    public class AuditSubmissionResourceHandler : AuditResourceHandler
+    {
+        /// <inheritdoc/>
+        public AuditSubmissionResourceHandler(ILocalizationService localizationService, IRepositoryService<AuditEventData> repositoryService, IAuditDispatchService dispatchService = null) : base(localizationService, repositoryService, dispatchService)
+        {
+        }
+
+        /// <inheritdoc/>
+        public override string ResourceName => "AuditSubmission";
+
+        /// <inheritdoc/>
+        public override Type Type => typeof(AuditSubmission);
+
+    }
+
     /// <summary>
     /// Represents a resource handler which can persist and forward audits
     /// </summary>
@@ -76,7 +94,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// The name of the resource
         /// </summary>
-        public string ResourceName => "Audit";
+        public virtual string ResourceName => "Audit";
 
         /// <summary>
         /// Get the scope
@@ -86,7 +104,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Get the type this persists
         /// </summary>
-        public Type Type => typeof(AuditEventData);
+        public virtual Type Type => typeof(AuditEventData);
 
         /// <summary>
         /// Get the service name
@@ -115,7 +133,7 @@ namespace SanteDB.Rest.AMI.Resources
             }
             else
             {
-                auditData.Audit.ForEach(o =>
+                auditData.Audit?.ForEach(o =>
                 {
                     this.m_repository.Insert(o);
                     this.m_auditDispatch?.SendAudit(o);

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using RestSrvr;
 using RestSrvr.Attributes;
@@ -64,7 +64,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
         private readonly IUpstreamAvailabilityProvider m_availabilityProvider;
         private readonly IRestClientFactory m_restClientFactory;
         private readonly IAdhocCacheService m_adhocCache;
-
+        
         /// <summary>
         /// Fired when progress changes
         /// </summary>
@@ -395,27 +395,28 @@ namespace SanteDB.Messaging.HDSI.Wcf
             //}
             //else // For posts - we don't want the ViewModel data going up - we want an XML sync representation going up so delay loading on upbound objects is not performed
             //{
-            switch (RestOperationContext.Current.IncomingRequest.ContentType)
+            var accept = RestOperationContext.Current.IncomingRequest.AcceptTypes.FirstOrDefault();
+            switch (accept)
             {
+                case "application/json+sdb-viewmodel":
+                case SanteDBExtendedMimeTypes.JsonViewModel:
                 case SanteDBExtendedMimeTypes.JsonPatch:
                 case SanteDBExtendedMimeTypes.JsonRimModel:
-                case SanteDBExtendedMimeTypes.JsonViewModel:
                 case SanteDBExtendedMimeTypes.XmlPatch:
                 case SanteDBExtendedMimeTypes.XmlRimModel:
                 case "application/json":
-                case "application/json+sdb-viewmodel":
                 case "application/xml": // We want to use the XML format for serialization
                     retVal.Accept = "application/xml";
                     break;
                 default:
-                    retVal.Accept = RestOperationContext.Current.IncomingRequest.ContentType;
+                    retVal.Accept = RestOperationContext.Current.IncomingRequest.AcceptTypes.FirstOrDefault() ?? RestOperationContext.Current.IncomingRequest.ContentType;
                     break;
             }
             //}
 
             retVal.Requesting += (o, e) =>
             {
-                var inboundHeaders = RestOperationContext.Current.IncomingRequest.Headers;
+                var inboundHeaders = RestOperationContext.Current?.IncomingRequest.Headers;
                 if (!String.IsNullOrEmpty(inboundHeaders[ExtendedHttpHeaderNames.ViewModelHeaderName]))
                 {
                     e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ViewModelHeaderName, inboundHeaders[ExtendedHttpHeaderNames.ViewModelHeaderName]);
@@ -451,22 +452,44 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     // Fetch all missing relationships
                     if (remote is Entity entity)
                     {
-                        var targetKeys = entity.Relationships.Select(t => t.TargetEntityKey.Value).Where(s => !this.m_entityPersistence.Query(e => e.Key == s, AuthenticationContext.SystemPrincipal).Any()).ToArray(); // Related entities which are not in this
-                        insertBundle.AddRange(this.m_upstreamIntegrationService.Query<Entity>(o => targetKeys.Contains(o.Key.Value)).Item.OfType<IdentifiedData>());
+                        var targetKeys = entity.Relationships.Where(t=>t.RelationshipTypeKey != EntityRelationshipTypeKeys.Duplicate).Select(t => t.TargetEntityKey.Value).Where(s => !this.m_entityPersistence.Query(e => e.Key == s, AuthenticationContext.SystemPrincipal).Any()).ToArray(); // Related entities which are not in this
+                        insertBundle.AddRange(this.m_upstreamIntegrationService.Query<Entity>(o => targetKeys.Contains(o.Key.Value), new UpstreamIntegrationQueryControlOptions()
+                        {
+                            Count = targetKeys.Length,
+                            Offset = 0, 
+                            IncludeRelatedInformation = false
+                        }).Item.OfType<IdentifiedData>());
 
                         if (remote is Patient patient)
                         {
                             var localKeys = this.m_actPersistence.Query(a => a.Participations.Any(p => p.PlayerEntityKey == patient.Key), AuthenticationContext.SystemPrincipal).Select(k => k.Key.Value).ToArray();
-                            // We want to update the patient so that this SDL is linked
-                            insertBundle.Item.AddRange(this.m_upstreamIntegrationService.Query<Act>(o => o.Participations.Any(p => p.PlayerEntityKey == patient.Key) && !localKeys.Contains(o.Key.Value)).Item.OfType<IdentifiedData>());
+                            // Download all the acts which are not included
+                            var queryOptions = new UpstreamIntegrationQueryControlOptions()
+                            {
+                                Count = 100,
+                                Offset = 0,
+                                QueryId = Guid.NewGuid()
+                            };
+                            while(true)
+                            {
+                                var upstreamResults = this.m_upstreamIntegrationService.Query<Act>(o => o.Participations.Any(p => p.PlayerEntityKey == patient.Key) && !localKeys.Contains(o.Key.Value), queryOptions);
+                                if(upstreamResults.Item.Any())
+                                {
+                                    insertBundle.Item.AddRange(upstreamResults.Item.OfType<IdentifiedData>());
+                                    queryOptions.Offset += upstreamResults.Item.Count();
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
                             // Handle MDM just in case
                             insertBundle.Item.AddRange(this.m_upstreamIntegrationService.Query<Act>(o => o.Participations.Any(p => p.PlayerEntity.Relationships.Where(r => r.RelationshipType.Mnemonic == "MDM-Master").Any(r => r.SourceEntityKey == patient.Key))).Item.OfType<IdentifiedData>());
                         }
-
                     }
                     else if (remote is Act act)
                     {
-                        var targetKeys = act.Relationships.Select(t => t.TargetActKey.Value).Where(s => !this.m_actPersistence.Query(e => e.Key == s, AuthenticationContext.SystemPrincipal).Any()).ToArray(); // Related acts which are not in this act
+                        var targetKeys = act.Relationships.Where(t=>t.RelationshipTypeKey != ActRelationshipTypeKeys.Duplicate).Select(t => t.TargetActKey.Value).Where(s => !this.m_actPersistence.Query(e => e.Key == s, AuthenticationContext.SystemPrincipal).Any()).ToArray(); // Related acts which are not in this act
                         insertBundle.AddRange(this.m_upstreamIntegrationService.Query<Act>(o => targetKeys.Contains(o.Key.Value)).Item.OfType<IdentifiedData>());
                         targetKeys = act.Participations.Select(t => t.PlayerEntityKey.Value).Where(s => !this.m_entityPersistence.Query(e => e.Key == s, AuthenticationContext.SystemPrincipal).Any()).ToArray(); // Related players which are not in this act
                         insertBundle.AddRange(this.m_upstreamIntegrationService.Query<Entity>(o => targetKeys.Contains(o.Key.Value)).Item.OfType<IdentifiedData>());
@@ -474,12 +497,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
 
                     this.ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(nameof(UpstreamHdsiServiceBehavior), 0.5f, UserMessages.FETCH_FROM_UPSTREAM));
 
-                    // Now we want to fetch all participations which have a relationship with the downloaded object if the object is a patient
-
                     // Insert
                     ApplicationServiceContext.Current.GetService<IDataPersistenceService<Bundle>>()?.Insert(insertBundle, TransactionMode.Commit, AuthenticationContext.Current.Principal);
-
                     this.ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(nameof(UpstreamHdsiServiceBehavior), 1f, UserMessages.FETCH_FROM_UPSTREAM));
+                    
                     // Clear cache
                     this.m_dataCachingService.Clear();
                     return remote;

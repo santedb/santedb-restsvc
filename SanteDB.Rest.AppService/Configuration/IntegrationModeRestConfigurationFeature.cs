@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  *
@@ -16,7 +16,7 @@
  * the License.
  *
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using SanteDB.Client.Configuration;
 using SanteDB.Core.Configuration;
@@ -74,12 +74,12 @@ namespace SanteDB.Rest.AppService.Configuration
         /// <summary>
         /// Read cofiguration policy
         /// </summary>
-        public string ReadPolicy => PermissionPolicyIdentifiers.AccessClientAdministrativeFunction;
+        public string ReadPolicy => PermissionPolicyIdentifiers.Login;
 
         /// <summary>
         /// Write policy
         /// </summary>
-        public string WritePolicy => PermissionPolicyIdentifiers.AccessClientAdministrativeFunction;
+        public string WritePolicy => PermissionPolicyIdentifiers.AlterSystemConfiguration;
 
         /// <summary>
         /// Configure the section
@@ -95,15 +95,16 @@ namespace SanteDB.Rest.AppService.Configuration
                 {
                     appSetting.ServiceProviders.RemoveAll(s => oldMode.Contains(s.Type));
                 }
-                var newMode = this.m_integrationPatterns.First(o => o.Name == modeRaw.ToString())?.GetServices();
+                var newMode = this.m_integrationPatterns.First(o => o.Name == modeRaw.ToString());
                 if (newMode == null)
                 {
                     throw new InvalidOperationException(String.Format(ErrorMessages.TYPE_NOT_FOUND, modeRaw));
                 }
                 else
                 {
-                    appSetting.ServiceProviders.AddRange(newMode.Select(o => new TypeReferenceConfiguration(o)));
+                    appSetting.ServiceProviders.AddRange(newMode.GetServices().Select(o => new TypeReferenceConfiguration(o)));
                 }
+                newMode.SetDefaults(configuration);
 
                 appSetting.AddAppSetting("integration-mode", modeRaw.ToString());
             }

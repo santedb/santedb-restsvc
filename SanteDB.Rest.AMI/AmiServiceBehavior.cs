@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  *
@@ -16,7 +16,7 @@
  * the License.
  *
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using RestSrvr;
 using RestSrvr.Attributes;
@@ -50,6 +50,7 @@ using System.Net;
 using System.Reflection;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using ZXing.OneD;
 
 namespace SanteDB.Rest.AMI
 {
@@ -356,7 +357,7 @@ namespace SanteDB.Rest.AMI
         /// </summary>
         /// <param name="schemaId">The id of the schema to be retrieved.</param>
         /// <returns>Returns the administrative interface schema.</returns>
-        public XmlSchema GetSchema(int schemaId)
+        public XmlSchema GetSchema()
         {
             try
             {
@@ -369,6 +370,8 @@ namespace SanteDB.Rest.AMI
                 {
                     exporter.ExportTypeMapping(importer.ImportTypeMapping(cls, "http://santedb.org/ami"));
                 }
+
+                _ = Int32.TryParse(RestOperationContext.Current.IncomingRequest.QueryString["id"], out var schemaId);
 
                 if (schemaId > schemaCollection.Count)
                 {
@@ -453,12 +456,12 @@ namespace SanteDB.Rest.AMI
                     serviceOptions.Resources.Add(svc);
                 }
             }
-            serviceOptions.Settings = config.PublicSettings.ToList();
+            serviceOptions.Settings = config?.PublicSettings?.ToList() ?? new List<Core.Configuration.AppSettingKeyValuePair>();
 
-            if (this.m_pepService.SoftDemand(PermissionPolicyIdentifiers.AccessClientAdministrativeFunction, AuthenticationContext.Current.Principal))
-            {
-                serviceOptions.Settings.AddRange(this.m_configurationManager.GetSection<SecurityConfigurationSection>().ForDisclosure());
+            if (!String.IsNullOrEmpty(config?.RealmWelcomeMessage)) {
+                serviceOptions.Settings.Add(new Core.Configuration.AppSettingKeyValuePair("$welcome", config.RealmWelcomeMessage));
             }
+            serviceOptions.Settings.AddRange(this.m_configurationManager.GetSection<SecurityConfigurationSection>().ForDisclosure());
             return serviceOptions;
         }
 
@@ -1553,7 +1556,7 @@ namespace SanteDB.Rest.AMI
                     }
                     else
                     {
-                       audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.PermanentErasure, retVal);
+                        audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.PermanentErasure, retVal);
                     }
 
                     return retVal;

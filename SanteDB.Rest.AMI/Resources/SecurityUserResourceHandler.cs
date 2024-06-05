@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  *
@@ -16,7 +16,7 @@
  * the License.
  *
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using RestSrvr.Exceptions;
 using SanteDB.Core;
@@ -48,6 +48,7 @@ namespace SanteDB.Rest.AMI.Resources
 
         // Identity provider
         private IIdentityProviderService m_identityProvider;
+        private readonly IPolicyEnforcementService m_pepService;
 
         /// <summary>
         /// Wrapper type
@@ -57,11 +58,20 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Create security repository
         /// </summary>
-        public SecurityUserResourceHandler(IIdentityProviderService identityProvider, ILocalizationService localizationService, IRoleProviderService roleProvider, ISecurityRepositoryService securityRepository, IPolicyInformationService policyInformationService, IAuditService auditService, IDataCachingService cachingService = null, IRepositoryService<SecurityUser> repository = null) : base(auditService, policyInformationService, localizationService, cachingService, repository)
+        public SecurityUserResourceHandler(IIdentityProviderService identityProvider, 
+            ILocalizationService localizationService, 
+            IRoleProviderService roleProvider, 
+            ISecurityRepositoryService securityRepository, 
+            IPolicyInformationService policyInformationService, 
+            IPolicyEnforcementService policyEnforcementService,
+            IAuditService auditService, 
+            IDataCachingService cachingService = null, 
+            IRepositoryService<SecurityUser> repository = null) : base(auditService, policyInformationService, localizationService, cachingService, repository)
         {
             this.m_securityRepository = securityRepository;
             this.m_roleProvider = roleProvider;
             this.m_identityProvider = identityProvider;
+            this.m_pepService = policyEnforcementService;
         }
 
         /// <summary>
@@ -77,8 +87,6 @@ namespace SanteDB.Rest.AMI.Resources
 
             var td = data as SecurityUserInfo;
 
-            // Don't allow callers to overwrite expiration
-            td.Entity.PasswordExpiration = null;
             // Insert the user
             var retVal = base.Create(data, updateIfExists) as SecurityUserInfo;
 
@@ -86,6 +94,10 @@ namespace SanteDB.Rest.AMI.Resources
             if (td.Roles.Count > 0)
             {
                 this.m_roleProvider.AddUsersToRoles(new string[] { retVal.Entity.UserName }, td.Roles.ToArray(), AuthenticationContext.Current.Principal);
+            }
+            if(td.ExpirePassword)
+            {
+                this.m_identityProvider.ExpirePassword(retVal.Entity.UserName, AuthenticationContext.Current.Principal);
             }
 
             return new SecurityUserInfo(retVal.Entity)
@@ -155,10 +167,15 @@ namespace SanteDB.Rest.AMI.Resources
             }
 
             var td = data as SecurityUserInfo;
-            // Don't allow callers to overwrite expiration
+            // Don't allow callers to overwrite expiration explicitly
             td.Entity.PasswordExpiration = null;
 
             // Update the user
+            if (td.ExpirePassword)
+            {
+                this.m_identityProvider.ExpirePassword(td.Entity.UserName, AuthenticationContext.Current.Principal);
+                this.FireSecurityAttributesChanged(td.Entity, true, "PasswordExpiration");
+            }
             if (td.PasswordOnly)
             {
                 // Validate that the user name matches the SID
@@ -187,7 +204,7 @@ namespace SanteDB.Rest.AMI.Resources
 
                 return null;
             }
-            else
+            else if(!td.PasswordOnly && !td.ExpirePassword)
             {
                 // We're doing a general update, so we have to demand access
                 ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(PermissionPolicyIdentifiers.LoginAsService);
@@ -209,6 +226,7 @@ namespace SanteDB.Rest.AMI.Resources
                     Roles = td.Roles
                 };
             }
+            return null;
         }
     }
 }

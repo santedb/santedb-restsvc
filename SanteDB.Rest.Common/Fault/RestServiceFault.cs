@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using Newtonsoft.Json;
 using SanteDB.Core.BusinessRules;
@@ -86,6 +86,7 @@ namespace SanteDB.Rest.Common.Fault
                 if (ex is PolicyViolationException polViolation)
                 {
                     this.PolicyId = polViolation.PolicyId;
+                    this.PolicyName = polViolation.PolicyName;
                     this.PolicyOutcome = polViolation.PolicyDecision;
                 }
 
@@ -139,6 +140,12 @@ namespace SanteDB.Rest.Common.Fault
         /// </summary>
         [XmlElement("policyId"), JsonProperty("policyId")]
         public String PolicyId { get; set; }
+
+        /// <summary>
+        /// Policy name that was violated
+        /// </summary>
+        [XmlElement("policyName"), JsonProperty("policyName")]
+        public String PolicyName { get; set; }
 
         /// <summary>
         /// Policy ID was violated

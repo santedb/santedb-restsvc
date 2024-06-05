@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  *
@@ -16,7 +16,7 @@
  * the License.
  *
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Interop;
@@ -63,12 +63,18 @@ namespace SanteDB.Rest.AMI.Configuration
         public List<String> ResourceHandlerXml { get; set; }
 
         /// <summary>
+        /// Welcome message for the realm
+        /// </summary>
+        [XmlElement("welcomeMessage")]
+        [DisplayName("Welcome Message"), Description("The message that is displayed to dCDR clients after they successfully join the realm")]
+        public String RealmWelcomeMessage { get; set; }
+
+        /// <summary>
         /// Gets or sets the public settings
         /// </summary>
         [XmlArray("publicSettings"), XmlArrayItem("add")]
         [DisplayName("Public Settings"), Description("Settings which are to be disclosed to clients which they can use for configuration")]
         public List<AppSettingKeyValuePair> PublicSettings { get; set; }
-
 
         /// <summary>
         /// Extra endpoints

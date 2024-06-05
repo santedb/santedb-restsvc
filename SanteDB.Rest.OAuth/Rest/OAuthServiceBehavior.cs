@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
@@ -43,6 +43,7 @@ using SanteDB.Rest.Common.Security;
 using SanteDB.Rest.OAuth.Abstractions;
 using SanteDB.Rest.OAuth.Configuration;
 using SanteDB.Rest.OAuth.Model;
+using SharpCompress;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -319,6 +320,12 @@ namespace SanteDB.Rest.OAuth.Rest
             else if (context.AuthenticationContext?.Principal is IClaimsPrincipal cp && cp.Identities.OfType<IApplicationIdentity>().Any())
             {
                 context.ApplicationIdentity = cp.Identities.OfType<IApplicationIdentity>().First() as IClaimsIdentity;
+                // Authenticate the client principal using the current principal if the current identity equals the application that's being requested
+                if (context.ApplicationIdentity.Name == context.ClientId)
+                {
+                    m_traceSource.TraceVerbose("Authenticating as {0}  using authenticated principal {1}", context.ClientId, cp.Identity.Name);
+                    context.ApplicationPrincipal = m_AppIdentityProvider.Authenticate(context.ClientId, cp) as IClaimsPrincipal;
+                }
                 m_traceSource.TraceVerbose("Found application identity from {1} (composite identity): {0}.", context.ApplicationIdentity, nameof(AuthenticationContext));
                 return true;
             }
@@ -452,7 +459,27 @@ namespace SanteDB.Rest.OAuth.Rest
             {
                 foreach (var mappedClaim in mappers.SelectMany(o => o.MapToExternalIdentityClaims(claimsPrincipal.Claims)))
                 {
-                    claims.AddClaim(mappedClaim.Key, mappedClaim.Value);
+                    // We fold in the value to any existing claim value for example for the "extensions" element we want the claim to be:
+                    //  "extensions" : {
+                    //      "some_value": {
+                    //                  ...
+                    //      },
+                    //      "some_other": {
+                    //                  ...
+                    //      }
+                    //  }
+                    // and not 
+                    //  "extensions": [
+                    //      {
+                    //          "some_value": {
+                    if (mappedClaim.Value is IDictionary<String, Object> claimValue && claims.TryGetValue(mappedClaim.Key, out var currentClaimValue) && currentClaimValue is IDictionary<String, Object> currentValue)
+                    {
+                        claimValue.ForEach(kv => currentValue.Add(kv.Key, kv.Value));
+                    }
+                    else
+                    {
+                        claims.AddClaim(mappedClaim.Key, mappedClaim.Value);
+                    }
                 }
             }
             else

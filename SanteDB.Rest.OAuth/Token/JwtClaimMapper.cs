@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
@@ -38,7 +38,7 @@ namespace SanteDB.Rest.OAuth.Token
         /// </summary>
         private Dictionary<string, string> m_claimTypeMapping = new Dictionary<string, string>()
         {
-            { ClaimTypes.Sid, OAuthConstants.ClaimType_Sid },
+            { SanteDBClaimTypes.SanteDBSessionIdClaim, OAuthConstants.ClaimType_Sid },
             { ClaimTypes.Email, OAuthConstants.ClaimType_Email },
             { SanteDBClaimTypes.DefaultRoleClaimType, OAuthConstants.ClaimType_Role },
             { SanteDBClaimTypes.DefaultNameClaimType, OAuthConstants.ClaimType_Name },
@@ -46,6 +46,7 @@ namespace SanteDB.Rest.OAuth.Token
             { SanteDBClaimTypes.Telephone, OAuthConstants.ClaimType_Telephone },
             { SanteDBClaimTypes.Actor, OAuthConstants.ClaimType_Actor },
             { SanteDBClaimTypes.SanteDBScopeClaim, SanteDBClaimTypes.SanteDBScopeClaim },
+            { SanteDBClaimTypes.SecurityId, OAuthConstants.ClaimType_Subject },
             { SanteDBClaimTypes.NameIdentifier, OAuthConstants.ClaimType_Subject }
         };
 
@@ -93,6 +94,12 @@ namespace SanteDB.Rest.OAuth.Token
         {
             foreach (var claim in externalClaims)
             {
+                // Audience is a one way claim so it doesn't appear in the map
+                if (claim.Key.Equals("aud", StringComparison.OrdinalIgnoreCase))
+                {
+                    yield return new SanteDBClaim(SanteDBClaimTypes.AudienceClaim, claim.Value.ToString());
+                }
+
                 var internalClaim = this.m_claimTypeMapping.FirstOrDefault(o => o.Value == claim.Key);
                 if (internalClaim.Key == null)
                 {

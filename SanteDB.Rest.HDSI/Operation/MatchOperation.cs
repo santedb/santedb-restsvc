@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -16,18 +16,18 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using SanteDB.Core;
+using SanteDB.Core.Configuration;
+using SanteDB.Core.Data.Management.Jobs;
 using SanteDB.Core.Interop;
-using SanteDB.Core.Matching;
-using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Jobs;
+using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Parameters;
-using SanteDB.Core.Model.Roles;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace SanteDB.Rest.HDSI.Operation
@@ -38,76 +38,62 @@ namespace SanteDB.Rest.HDSI.Operation
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class MatchOperation : IApiChildOperation
     {
-        // Matching service
-        private IRecordMatchingService m_matchingService;
+        // Job manager
+        private IJobManagerService m_jobManager;
 
-        // Match configuration
-        private IRecordMatchingConfigurationService m_matchConfiguration;
+        /// <inheritdoc/>
+        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Class | ChildObjectScopeBinding.Instance;
 
         /// <summary>
-        /// Matching service
+        /// Creates a new configuration match operation
         /// </summary>
-        public MatchOperation(IRecordMatchingService matchingService = null, IRecordMatchingConfigurationService matchConfigService = null)
+        public MatchOperation(IConfigurationManager configurationManager, IJobManagerService jobManager)
         {
-            this.m_matchingService = matchingService;
-            this.m_matchConfiguration = matchConfigService;
+            this.m_jobManager = jobManager;
+            var configuration = configurationManager.GetSection<ResourceManagementConfigurationSection>();
+            this.ParentTypes = configuration?.ResourceTypes.Select(o => o.Type).ToArray() ?? Type.EmptyTypes;
         }
 
-        /// <summary>
-        /// Gets all the types that this is exposed on
-        /// </summary>
-        public Type[] ParentTypes => new Type[]
-        {
-            typeof(Patient),
-            typeof(Entity),
-            typeof(Provider),
-            typeof(Place),
-            typeof(Organization),
-            typeof(Material),
-            typeof(ManufacturedMaterial)
-        };
+        /// <inheritdoc/>
+        public Type[] ParentTypes { get; }
 
-        /// <summary>
-        /// Property name
-        /// </summary>
+        /// <inheritdoc/>
         public string Name => "match";
 
-        /// <summary>
-        /// Binding for this operation
-        /// </summary>
-        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Instance;
-
-        /// <summary>
-        /// Get the match report for the specified object
-        /// </summary>
+        /// <inheritdoc/>
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
-            if (!(scopingKey is Guid uuid) && !Guid.TryParse(scopingKey.ToString(), out uuid))
+            var merger = ApplicationServiceContext.Current.GetService(typeof(IRecordMergingService<>).MakeGenericType(scopingType)) as IRecordMergingService;
+            if (merger == null)
             {
-                throw new ArgumentException(nameof(scopingKey), "Must be UUID");
+                throw new InvalidOperationException($"Cannot find merging service for {scopingType.Name}. Is it under matching control?");
             }
 
-            if (this.m_matchingService is IMatchReportFactory reportFactory)
+            if (scopingKey == null)
             {
-                var repoService = ApplicationServiceContext.Current.GetService(typeof(IRepositoryService<>).MakeGenericType(scopingType)) as IRepositoryService;
-                var source = repoService.Get(uuid);
-                if (source == null)
-                {
-                    throw new KeyNotFoundException($"{uuid} not found");
-                }
-
-                // key of match configuration
-                if (parameters.TryGet<String>("configuration", out String configuration))
-                {
-                    return reportFactory.CreateMatchReport(scopingType, source, this.m_matchingService.Match(source, configuration, null));
-                }
-                else
-                {
-                    return reportFactory.CreateMatchReport(scopingType, source, this.m_matchConfiguration.Configurations.Where(o => o.Metadata.Status == MatchConfigurationStatus.Active).SelectMany(c => this.m_matchingService.Match(source, configuration, null)));
-                }
+                parameters.TryGet<bool>("clear", out bool clear);
+                this.m_jobManager.StartJob(typeof(MatchJob<>).MakeGenericType(scopingType), new object[] { clear });
+                return null;
             }
+            else if (scopingKey is Guid scopingObjectKey)
+            {
 
-            return null;
+                // Now - we want to prepare a transaction
+                Bundle retVal = new Bundle();
+
+                if (parameters.TryGet<bool>("clear", out bool clear) && clear)
+                {
+                    merger.ClearMergeCandidates(scopingObjectKey);
+                    merger.ClearIgnoreFlags(scopingObjectKey);
+                }
+
+                merger.DetectMergeCandidates(scopingObjectKey);
+                return null;
+            }
+            else
+            {
+                throw new InvalidOperationException("Cannot determine the operation");
+            }
         }
     }
 }

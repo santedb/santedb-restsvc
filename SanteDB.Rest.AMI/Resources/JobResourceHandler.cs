@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  *
@@ -16,7 +16,7 @@
  * the License.
  *
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using SanteDB.Core;
 using SanteDB.Core.Configuration;
@@ -99,7 +99,7 @@ namespace SanteDB.Rest.AMI.Resources
         public ResourceCapabilityType Capabilities => ResourceCapabilityType.Update | // start
             ResourceCapabilityType.Search | // find
             ResourceCapabilityType.Get |
-            ResourceCapabilityType.Create | 
+            ResourceCapabilityType.Create |
             ResourceCapabilityType.Delete;
 
         /// <summary>
@@ -116,15 +116,15 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Create a new job instance - registers it with the job manager
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.AlterSystemConfiguration)]
+        [Demand(PermissionPolicyIdentifiers.RegisterSystemJob)]
         public object Create(object data, bool updateIfExists)
         {
-            if(data is TypeReferenceConfiguration trc)
+            if (data is TypeReferenceConfiguration trc)
             {
                 var job = this.m_jobManager.RegisterJob(trc.Type);
                 return new JobInfo(this.m_jobStateService.GetJobState(job), null);
             }
-            else if(data is JobInfo ji)
+            else if (data is JobInfo ji)
             {
                 var job = this.m_jobManager.RegisterJob(Type.GetType(ji.JobType));
                 return new JobInfo(this.m_jobStateService.GetJobState(job), null);
@@ -138,9 +138,10 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Get the specified job
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.ReadSystemJobs)]
         public object Get(object id, object versionId)
         {
-            ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
+            ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(PermissionPolicyIdentifiers.ReadSystemJobs);
             var job = this.m_jobManager.GetJobInstance(Guid.Parse(id.ToString()));
             if (job == null)
             {
@@ -154,6 +155,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Cancels a job
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.UnrestrictedJobManagement)]
         public object Delete(object key)
         {
             throw new NotSupportedException(this.m_localizationService.GetString("error.type.NotSupportedException"));
@@ -162,15 +164,17 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Query for all jobs
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.ReadSystemJobs)]
         public IQueryResultSet Query(NameValueCollection queryParameters)
         {
-            ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
+            ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(PermissionPolicyIdentifiers.ReadSystemJobs);
 
             // Is the user looking for unconfigured jobs?
             if (Boolean.TryParse(queryParameters["_unconfigured"], out var b) && b)
             {
-                return new MemoryQueryResultSet(this.m_jobManager.GetAvailableJobs().Select(o => {
-                    if(!this.m_jobManager.IsJobRegistered(o))
+                return new MemoryQueryResultSet(this.m_jobManager.GetAvailableJobs().Select(o =>
+                {
+                    if (!this.m_jobManager.IsJobRegistered(o))
                     {
                         return new TypeReferenceConfiguration(o);
                     }
@@ -182,7 +186,15 @@ namespace SanteDB.Rest.AMI.Resources
                 var jobs = this.m_jobManager.Jobs;
                 if (queryParameters.TryGetValue("name", out var data))
                 {
-                    jobs = jobs.Where(o => o.Name.Contains(data.First()));
+                    var query = data.First();
+                    if (query.StartsWith("~"))
+                    {
+                        jobs = jobs.Where(o => o.Name.ToLowerInvariant().Contains(query.Substring(1).ToLowerInvariant()));
+                    }
+                    else
+                    {
+                        jobs = jobs.Where(o => o.Name.Equals(query, StringComparison.OrdinalIgnoreCase));
+                    }
                 }
 
                 return new MemoryQueryResultSet(jobs.Select(o => new JobInfo(this.m_jobStateService.GetJobState(o), this.m_jobScheduleManager.Get(o))).ToArray());
@@ -192,12 +204,13 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Update a job
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.AlterSystemJobSchedule)]
         public object Update(object data)
         {
             // First try to cast data as JobInfo
             if (data is JobInfo)
             {
-                ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(ApplicationServiceContext.Current.HostType == SanteDBHostType.Server ? PermissionPolicyIdentifiers.UnrestrictedAdministration : PermissionPolicyIdentifiers.AccessClientAdministrativeFunction);
+                ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(PermissionPolicyIdentifiers.AlterSystemJobSchedule);
 
                 var jobInfo = data as JobInfo;
                 var job = this.m_jobManager.GetJobInstance(jobInfo.Key.GetValueOrDefault());

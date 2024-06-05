@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  *
@@ -16,7 +16,7 @@
  * the License.
  *
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-12-15
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Mail;
@@ -36,7 +36,7 @@ namespace SanteDB.Rest.AMI.Resources
     /// Represents an alert resource handler which can store / retrieve alerts
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class MailboxMessageHandler : ChainedResourceHandlerBase
+    public class MailboxResourceHandler : ChainedResourceHandlerBase
     {
         private readonly IMailMessageService m_mailMessageService;
         private readonly ISecurityRepositoryService m_securityRepository;
@@ -45,7 +45,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// DI Constructor
         /// </summary>
-        public MailboxMessageHandler(ILocalizationService localizationService, IMailMessageService mailMessageService, IPolicyEnforcementService pepService, ISecurityRepositoryService securityRepositoryService) : base(localizationService)
+        public MailboxResourceHandler(ILocalizationService localizationService, IMailMessageService mailMessageService, IPolicyEnforcementService pepService, ISecurityRepositoryService securityRepositoryService) : base(localizationService)
         {
             this.m_mailMessageService = mailMessageService;
             this.m_securityRepository = securityRepositoryService;

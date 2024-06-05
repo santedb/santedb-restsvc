@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -16,7 +16,7 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using RestSrvr;
 using RestSrvr.Exceptions;
@@ -61,7 +61,10 @@ namespace SanteDB.Rest.Common.Behavior
 
             // Root cause 
             var rootCause = error;
-            while (rootCause.InnerException != null) rootCause = rootCause.InnerException;
+            while (rootCause.InnerException != null)
+            {
+                rootCause = rootCause.InnerException;
+            }
 
             RestServiceFault fault = null;
             if (rootCause is DetectedIssueException dte) // Relay the detected issue first 
@@ -71,6 +74,10 @@ namespace SanteDB.Rest.Common.Behavior
             else if (rootCause is RestClientException<Object> rco && rco.Result is RestServiceFault rcf)
             {
                 fault = rcf;
+            }
+            else if(error is RestClientException<Object> rce && rce.Result is RestServiceFault rcef)
+            {
+                fault = rcef;
             }
             else
             {
@@ -86,7 +93,8 @@ namespace SanteDB.Rest.Common.Behavior
                     break;
                 case HttpStatusCode.Unauthorized:
                     var authService = RestOperationContext.Current.AppliedPolicies.OfType<IAuthorizationServicePolicy>().FirstOrDefault();
-                    authService.AddAuthenticateChallengeHeader(faultMessage, error);
+
+                    authService.AddAuthenticateChallengeHeader(faultMessage, rootCause);
                     break;
                 case HttpStatusCode.NotModified:
                     return true;

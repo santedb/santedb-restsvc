@@ -76,21 +76,22 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <Choose>
-    <When Condition="$(SolutionName.Contains('-ext'))">
-      <ItemGroup>
-        <ProjectReference Include="..\..\santedb-model\SanteDB.Core.Model\SanteDB.Core.Model.csproj">
-        </ProjectReference>
-        <ProjectReference Include="..\..\santedb-api\SanteDB.Core.Api\SanteDB.Core.Api.csproj">
-        </ProjectReference>
-      </ItemGroup>
-    </When>
-    <Otherwise>
+    <When Condition="$(SolutionName.Contains('-nuget'))">
       <ItemGroup>
         <PackageReference Include="SanteDB.Core.Api" Version="$(VersionNumber)">
         </PackageReference>
         <PackageReference Include="SanteDB.Core.Model" Version="$(VersionNumber)">
         </PackageReference>
       </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <ProjectReference Include="..\..\santedb-model\SanteDB.Core.Model\SanteDB.Core.Model.csproj">
+        </ProjectReference>
+        <ProjectReference Include="..\..\santedb-api\SanteDB.Core.Api\SanteDB.Core.Api.csproj">
+        </ProjectReference>
+      </ItemGroup>
+      
     </Otherwise>
   </Choose>
 </Project>

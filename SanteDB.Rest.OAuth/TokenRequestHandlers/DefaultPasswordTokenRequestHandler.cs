@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -16,11 +16,13 @@
  * the License.
  * 
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
+using SanteDB.Core.i18n;
+using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
 using SanteDB.Core.Security.Principal;
 using SanteDB.Core.Security.Services;
@@ -132,6 +134,14 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                 context.ErrorMessage = tfareqex.Message;
                 context.ErrorType = OAuthErrorType.mfa_required;
                 return false;
+            }
+            catch(PasswordExpiredException)
+            {
+                _Tracer.TraceWarning("User password is expired");
+                context.ErrorMessage = ErrorMessages.PASSWORD_EXPIRED;
+                context.ErrorType = OAuthErrorType.password_expired;
+                return false;
+
             }
             catch (AuthenticationException authnex)
             {

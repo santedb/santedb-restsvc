@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2023, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  *
@@ -16,24 +16,27 @@
  * the License.
  *
  * User: fyfej
- * Date: 2023-5-19
+ * Date: 2023-6-21
  */
 using RestSrvr;
 using SanteDB.Core;
 using SanteDB.Core.Applets.Model;
 using SanteDB.Core.Applets.Services;
+using SanteDB.Core.Http;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Applet;
-using SanteDB.Core.Model.AMI.Security;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 
 namespace SanteDB.Rest.AMI.Resources
@@ -59,13 +62,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Gets the name of the resource
         /// </summary>
-        public override string ResourceName
-        {
-            get
-            {
-                return "AppletSolution";
-            }
-        }
+        public override string ResourceName => "AppletSolution";
 
         /// <summary>
         /// Get the scope of this object
@@ -91,7 +88,27 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.AdministerApplet)]
         public override object Create(object data, bool updateIfExists)
         {
-            var pkg = AppletPackage.Load((Stream)data) as AppletSolution;
+            AppletSolution pkg = null;
+            switch(data)
+            {
+                case Stream str:
+                    pkg = AppletPackage.Load(str) as AppletSolution;
+                    break;
+                case IEnumerable<MultiPartFormData> multiPartData:
+                    var source = multiPartData.FirstOrDefault(o => o.Name == "solution");
+                    if (source?.IsFile == true)
+                    {
+                        pkg = AppletPackage.Load(source.Data) as AppletSolution;
+                        break;
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Expected certificate file", nameof(data));
+                    }
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
             if (pkg == null)
             {
                 this.m_tracer.TraceError("Package does not appear to be a solution");
