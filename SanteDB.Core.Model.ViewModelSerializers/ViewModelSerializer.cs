@@ -21,6 +21,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(NonVersionedEntityDataViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.NonVersionedEntityData);
@@ -37,6 +40,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.NonVersionedEntityData)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.NonVersionedEntityData)));
             }
             if (context.ShouldSerialize("updatedTime")) {
@@ -329,6 +333,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(SubscriptionDefinitionViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Subscription.SubscriptionDefinition);
@@ -345,6 +352,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Subscription.SubscriptionDefinition)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Subscription.SubscriptionDefinition)));
             }
             if (context.ShouldSerialize("uuid")) {
@@ -492,6 +500,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(SecurityApplicationViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Security.SecurityApplication);
@@ -508,6 +519,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Security.SecurityApplication)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Security.SecurityApplication)));
             }
             if (context.ShouldSerialize("applicationSecret")) {
@@ -912,6 +924,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(SecurityChallengeViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Security.SecurityChallenge);
@@ -928,6 +943,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Security.SecurityChallenge)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Security.SecurityChallenge)));
             }
             if (context.ShouldSerialize("text")) {
@@ -1236,6 +1252,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(SecurityDeviceViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Security.SecurityDevice);
@@ -1252,6 +1271,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Security.SecurityDevice)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Security.SecurityDevice)));
             }
             if (context.ShouldSerialize("deviceSecret")) {
@@ -1656,6 +1676,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(SecurityEntityViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Security.SecurityEntity);
@@ -1672,6 +1695,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Security.SecurityEntity)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Security.SecurityEntity)));
             }
             if (context.ShouldSerialize("updatedTime")) {
@@ -1964,6 +1988,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(SecurityPolicyViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Security.SecurityPolicy);
@@ -1980,6 +2007,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Security.SecurityPolicy)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Security.SecurityPolicy)));
             }
             if (context.ShouldSerialize("handler")) {
@@ -2276,6 +2304,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = o.ToString();
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 return null;
             }
             SanteDB.Core.Model.Security.SecurityPolicy _retVal = new SanteDB.Core.Model.Security.SecurityPolicy();
@@ -2293,6 +2322,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Security.SecurityPolicy)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 return null;
             }
             return _strong.Oid;
@@ -2305,6 +2335,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         
         /// <inheritdoc/>
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
+        
+        /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(SecurityPolicyInstanceViewModelSerializer));
         
         /// <inheritdoc/>
         public System.Type HandlesType {
@@ -2323,6 +2356,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Security.SecurityPolicyInstance)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Security.SecurityPolicyInstance)));
             }
             if (context.ShouldSerialize("policy")) {
@@ -2511,6 +2545,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(SecurityProvenanceViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Security.SecurityProvenance);
@@ -2527,6 +2564,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Security.SecurityProvenance)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Security.SecurityProvenance)));
             }
             if (context.ShouldSerialize("modifiedOn")) {
@@ -2822,6 +2860,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(SecurityRoleViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Security.SecurityRole);
@@ -2838,6 +2879,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Security.SecurityRole)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Security.SecurityRole)));
             }
             if (context.ShouldSerialize("name")) {
@@ -3162,6 +3204,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(SecurityUserViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Security.SecurityUser);
@@ -3178,6 +3223,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Security.SecurityUser)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Security.SecurityUser)));
             }
             if (context.ShouldSerialize("email")) {
@@ -3738,6 +3784,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(PatientViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Roles.Patient);
@@ -3754,6 +3803,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Roles.Patient)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Roles.Patient)));
             }
             if (context.ShouldSerialize("multipleBirthOrder")) {
@@ -5084,6 +5134,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ProviderViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Roles.Provider);
@@ -5100,6 +5153,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Roles.Provider)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Roles.Provider)));
             }
             if (context.ShouldSerialize("providerSpecialty")) {
@@ -6242,6 +6296,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(PatchViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Patch.Patch);
@@ -6258,6 +6315,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Patch.Patch)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Patch.Patch)));
             }
             if (context.ShouldSerialize("version")) {
@@ -6540,6 +6598,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ApplicationEntityViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Entities.ApplicationEntity);
@@ -6556,6 +6617,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Entities.ApplicationEntity)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Entities.ApplicationEntity)));
             }
             if (context.ShouldSerialize("securityApplicationModel")) {
@@ -7482,6 +7544,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ContainerViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Entities.Container);
@@ -7498,6 +7563,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Entities.Container)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Entities.Container)));
             }
             if (context.ShouldSerialize("lotNumber")) {
@@ -8527,6 +8593,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(DeviceEntityViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Entities.DeviceEntity);
@@ -8543,6 +8612,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Entities.DeviceEntity)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Entities.DeviceEntity)));
             }
             if (context.ShouldSerialize("manufacturerModelName")) {
@@ -9453,6 +9523,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(EntityViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Entities.Entity);
@@ -9469,6 +9542,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Entities.Entity)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Entities.Entity)));
             }
             if (context.ShouldSerialize("address")) {
@@ -10304,6 +10378,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(EntityAddressViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Entities.EntityAddress);
@@ -10320,6 +10397,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Entities.EntityAddress)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Entities.EntityAddress)));
             }
             if (context.ShouldSerialize("useModel")) {
@@ -10540,6 +10618,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(AddressComponentViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Entities.EntityAddressComponent);
@@ -10556,6 +10637,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Entities.EntityAddressComponent)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Entities.EntityAddressComponent)));
             }
             if (context.ShouldSerialize("type")) {
@@ -10751,6 +10833,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = o.ToString();
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 return null;
             }
             SanteDB.Core.Model.Entities.EntityAddressComponent _retVal = new SanteDB.Core.Model.Entities.EntityAddressComponent();
@@ -10768,6 +10851,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Entities.EntityAddressComponent)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 return null;
             }
             return _strong.Value;
@@ -10780,6 +10864,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         
         /// <inheritdoc/>
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
+        
+        /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(EntityNameViewModelSerializer));
         
         /// <inheritdoc/>
         public System.Type HandlesType {
@@ -10798,6 +10885,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Entities.EntityName)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Entities.EntityName)));
             }
             if (context.ShouldSerialize("externId")) {
@@ -11018,6 +11106,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(EntityNameComponentViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Entities.EntityNameComponent);
@@ -11034,6 +11125,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Entities.EntityNameComponent)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Entities.EntityNameComponent)));
             }
             if (context.ShouldSerialize("type")) {
@@ -11229,6 +11321,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = o.ToString();
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 return null;
             }
             SanteDB.Core.Model.Entities.EntityNameComponent _retVal = new SanteDB.Core.Model.Entities.EntityNameComponent();
@@ -11246,6 +11339,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Entities.EntityNameComponent)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 return null;
             }
             return _strong.Value;
@@ -11258,6 +11352,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         
         /// <inheritdoc/>
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
+        
+        /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(EntityRelationshipViewModelSerializer));
         
         /// <inheritdoc/>
         public System.Type HandlesType {
@@ -11276,6 +11373,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Entities.EntityRelationship)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Entities.EntityRelationship)));
             }
             if (context.ShouldSerialize("holderModel")) {
@@ -11684,6 +11782,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(EntityTelecomAddressViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Entities.EntityTelecomAddress);
@@ -11700,6 +11801,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Entities.EntityTelecomAddress)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Entities.EntityTelecomAddress)));
             }
             if (context.ShouldSerialize("useModel")) {
@@ -11951,6 +12053,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ManufacturedMaterialViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Entities.ManufacturedMaterial);
@@ -11967,6 +12072,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Entities.ManufacturedMaterial)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Entities.ManufacturedMaterial)));
             }
             if (context.ShouldSerialize("lotNumber")) {
@@ -12948,6 +13054,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(MaterialViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Entities.Material);
@@ -12964,6 +13073,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Entities.Material)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Entities.Material)));
             }
             if (context.ShouldSerialize("expiryDate")) {
@@ -13929,6 +14039,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(NonPersonLivingSubjectViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Entities.NonPersonLivingSubject);
@@ -13945,6 +14058,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Entities.NonPersonLivingSubject)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Entities.NonPersonLivingSubject)));
             }
             if (context.ShouldSerialize("strain")) {
@@ -14823,6 +14937,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(OrganizationViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Entities.Organization);
@@ -14839,6 +14956,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Entities.Organization)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Entities.Organization)));
             }
             if (context.ShouldSerialize("industryConceptModel")) {
@@ -15717,6 +15835,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(PersonViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Entities.Person);
@@ -15733,6 +15854,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Entities.Person)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Entities.Person)));
             }
             if (context.ShouldSerialize("dateOfBirthPrecision")) {
@@ -16832,6 +16954,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(PersonLanguageCommunicationViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Entities.PersonLanguageCommunication);
@@ -16848,6 +16973,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Entities.PersonLanguageCommunication)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Entities.PersonLanguageCommunication)));
             }
             if (context.ShouldSerialize("externId")) {
@@ -17025,6 +17151,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(PlaceViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Entities.Place);
@@ -17041,6 +17170,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Entities.Place)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Entities.Place)));
             }
             if (context.ShouldSerialize("isMobile")) {
@@ -17916,6 +18046,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(PlaceServiceViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Entities.PlaceService);
@@ -17932,6 +18065,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Entities.PlaceService)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Entities.PlaceService)));
             }
             if (context.ShouldSerialize("serviceConceptModel")) {
@@ -18140,6 +18274,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(UserEntityViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Entities.UserEntity);
@@ -18156,6 +18293,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Entities.UserEntity)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Entities.UserEntity)));
             }
             if (context.ShouldSerialize("securityUserModel")) {
@@ -19298,6 +19436,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(AssigningAuthorityViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.DataTypes.AssigningAuthority);
@@ -19314,6 +19455,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.AssigningAuthority)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.AssigningAuthority)));
             }
             if (context.ShouldSerialize("assigningApplication")) {
@@ -19645,6 +19787,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(CodeSystemViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.DataTypes.CodeSystem);
@@ -19661,6 +19806,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.CodeSystem)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.CodeSystem)));
             }
             if (context.ShouldSerialize("name")) {
@@ -20049,6 +20195,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ConceptViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.DataTypes.Concept);
@@ -20065,6 +20214,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.Concept)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.Concept)));
             }
             if (context.ShouldSerialize("mnemonic")) {
@@ -20569,6 +20719,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ConceptClassViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.DataTypes.ConceptClass);
@@ -20585,6 +20738,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.ConceptClass)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.ConceptClass)));
             }
             if (context.ShouldSerialize("name")) {
@@ -20909,6 +21063,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ConceptNameViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.DataTypes.ConceptName);
@@ -20925,6 +21082,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.ConceptName)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.ConceptName)));
             }
             if (context.ShouldSerialize("language")) {
@@ -21081,6 +21239,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = o.ToString();
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 return null;
             }
             SanteDB.Core.Model.DataTypes.ConceptName _retVal = new SanteDB.Core.Model.DataTypes.ConceptName();
@@ -21098,6 +21257,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.ConceptName)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 return null;
             }
             return _strong.Name;
@@ -21110,6 +21270,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         
         /// <inheritdoc/>
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
+        
+        /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ConceptReferenceTermViewModelSerializer));
         
         /// <inheritdoc/>
         public System.Type HandlesType {
@@ -21128,6 +21291,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.ConceptReferenceTerm)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.ConceptReferenceTerm)));
             }
             if (context.ShouldSerialize("term")) {
@@ -21347,6 +21511,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ConceptRelationshipViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.DataTypes.ConceptRelationship);
@@ -21363,6 +21530,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.ConceptRelationship)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.ConceptRelationship)));
             }
             if (context.ShouldSerialize("targetConcept")) {
@@ -21582,6 +21750,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ConceptRelationshipTypeViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.DataTypes.ConceptRelationshipType);
@@ -21598,6 +21769,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.ConceptRelationshipType)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.ConceptRelationshipType)));
             }
             if (context.ShouldSerialize("name")) {
@@ -21922,6 +22094,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ConceptSetViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.DataTypes.ConceptSet);
@@ -21938,6 +22113,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.ConceptSet)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.ConceptSet)));
             }
             if (context.ShouldSerialize("name")) {
@@ -22339,6 +22515,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ConceptSetCompositionViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.DataTypes.ConceptSetComposition);
@@ -22355,6 +22534,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.ConceptSetComposition)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.ConceptSetComposition)));
             }
             if (context.ShouldSerialize("instruction")) {
@@ -22543,6 +22723,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(EntityExtensionViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.DataTypes.EntityExtension);
@@ -22559,6 +22742,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.EntityExtension)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.EntityExtension)));
             }
             if (context.ShouldSerialize("value")) {
@@ -22777,6 +22961,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                         _str = o.ToString();
                     }
                     catch (System.Exception e) {
+                        this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                         return null;
                     }
                     _strong = System.Convert.FromBase64String(_str);
@@ -22786,6 +22971,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 return null;
             }
             SanteDB.Core.Model.DataTypes.EntityExtension _retVal = new SanteDB.Core.Model.DataTypes.EntityExtension();
@@ -22803,6 +22989,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.EntityExtension)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 return null;
             }
             return _strong.ExtensionValueData;
@@ -22815,6 +23002,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         
         /// <inheritdoc/>
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
+        
+        /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ActExtensionViewModelSerializer));
         
         /// <inheritdoc/>
         public System.Type HandlesType {
@@ -22833,6 +23023,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.ActExtension)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.ActExtension)));
             }
             if (context.ShouldSerialize("value")) {
@@ -23051,6 +23242,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                         _str = o.ToString();
                     }
                     catch (System.Exception e) {
+                        this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                         return null;
                     }
                     _strong = System.Convert.FromBase64String(_str);
@@ -23060,6 +23252,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 return null;
             }
             SanteDB.Core.Model.DataTypes.ActExtension _retVal = new SanteDB.Core.Model.DataTypes.ActExtension();
@@ -23077,6 +23270,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.ActExtension)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 return null;
             }
             return _strong.ExtensionValueData;
@@ -23089,6 +23283,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         
         /// <inheritdoc/>
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
+        
+        /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ExtensionTypeViewModelSerializer));
         
         /// <inheritdoc/>
         public System.Type HandlesType {
@@ -23107,6 +23304,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.ExtensionType)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.ExtensionType)));
             }
             if (context.ShouldSerialize("handlerClass")) {
@@ -23484,6 +23682,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(GeoTagViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.DataTypes.GeoTag);
@@ -23500,6 +23701,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.GeoTag)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.GeoTag)));
             }
             if (context.ShouldSerialize("modifiedOn")) {
@@ -23638,6 +23840,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ReferenceViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.DataTypes.IdentifiedDataReference);
@@ -23654,6 +23859,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.IdentifiedDataReference)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.IdentifiedDataReference)));
             }
             if (context.ShouldSerialize("refType")) {
@@ -23757,6 +23963,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(EntityIdentifierViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.DataTypes.EntityIdentifier);
@@ -23773,6 +23982,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.EntityIdentifier)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.EntityIdentifier)));
             }
             if (context.ShouldSerialize("value")) {
@@ -24084,6 +24294,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ActIdentifierViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.DataTypes.ActIdentifier);
@@ -24100,6 +24313,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.ActIdentifier)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.ActIdentifier)));
             }
             if (context.ShouldSerialize("value")) {
@@ -24411,6 +24625,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(IdentityDomainViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.DataTypes.IdentityDomain);
@@ -24427,6 +24644,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.IdentityDomain)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.IdentityDomain)));
             }
             if (context.ShouldSerialize("name")) {
@@ -24508,6 +24726,13 @@ namespace SanteDB.Core.Model.Json.Formatter {
                     context.JsonContext.WritePropertyUtil(w, "policy", _strong.PolicyKey, context);
                 }
             }
+            if (context.ShouldSerialize("identifierClass")) {
+                if ((_strong.IdentifierClassificationKey == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "identifierClass", _strong.IdentifierClassificationKey, context);
+                }
+            }
             if (context.ShouldSerialize("validation")) {
                 if ((_strong.ValidationRegex == null)) {
                 }
@@ -24549,6 +24774,24 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
                 else {
                     context.JsonContext.WritePropertyUtil(w, "scopeModel", _strong.AuthorityScope, context);
+                }
+            }
+            if (context.ShouldSerialize("identifierClassModel")) {
+                if ((_strong.IdentifierClassification == null)) {
+                    if ((_strong.IdentifierClassificationKey.HasValue && context.ShouldForceLoad("identifierClassModel", _strong.Key))) {
+                        SanteDB.Core.Model.DataTypes.Concept _delay = null;
+                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "IdentifierClassification");
+                        if ((_delay != null)) {
+                            _strong.IdentifierClassification = _delay;
+                            context.JsonContext.WritePropertyUtil(w, "identifierClassModel", _strong.IdentifierClassification, context);
+                        }
+                        else {
+                            context.RegisterMissTarget("identifierClassModel", _strong.Key.GetValueOrDefault());
+                        }
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "identifierClassModel", _strong.IdentifierClassification, context);
                 }
             }
             if (context.ShouldSerialize("updatedTime")) {
@@ -24784,128 +25027,146 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                         }
                                                                     }
                                                                     else {
-                                                                        if ("scopeModel".Equals(r.Value)) {
+                                                                        if ("identifierClassModel".Equals(r.Value)) {
                                                                             r.Read();
-                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.Concept>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("scopeModel", context.JsonContext, _retVal, context));
+                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("identifierClassModel", context.JsonContext, _retVal, context));
                                                                             if ((_instance != null)) {
-                                                                                _retVal.AuthorityScope = ((System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.Concept>)(_instance));
+                                                                                _retVal.IdentifierClassification = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
                                                                             }
                                                                         }
                                                                         else {
-                                                                            if ("scope".Equals(r.Value)) {
+                                                                            if ("scopeModel".Equals(r.Value)) {
                                                                                 r.Read();
-                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("scope", context.JsonContext, _retVal, context));
+                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.Concept>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("scopeModel", context.JsonContext, _retVal, context));
                                                                                 if ((_instance != null)) {
-                                                                                    _retVal.AuthorityScopeXml = ((System.Collections.Generic.List<System.Guid>)(_instance));
+                                                                                    _retVal.AuthorityScope = ((System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.Concept>)(_instance));
                                                                                 }
                                                                             }
                                                                             else {
-                                                                                if ("checkDigitAlgorithm".Equals(r.Value)) {
+                                                                                if ("scope".Equals(r.Value)) {
                                                                                     r.Read();
-                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("checkDigitAlgorithm", context.JsonContext, _retVal, context));
+                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("scope", context.JsonContext, _retVal, context));
                                                                                     if ((_instance != null)) {
-                                                                                        _retVal.CheckDigitAlgorithm = ((string)(_instance));
+                                                                                        _retVal.AuthorityScopeXml = ((System.Collections.Generic.List<System.Guid>)(_instance));
                                                                                     }
                                                                                 }
                                                                                 else {
-                                                                                    if ("customValidator".Equals(r.Value)) {
+                                                                                    if ("checkDigitAlgorithm".Equals(r.Value)) {
                                                                                         r.Read();
-                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("customValidator", context.JsonContext, _retVal, context));
+                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("checkDigitAlgorithm", context.JsonContext, _retVal, context));
                                                                                         if ((_instance != null)) {
-                                                                                            _retVal.CustomValidator = ((string)(_instance));
+                                                                                            _retVal.CheckDigitAlgorithm = ((string)(_instance));
                                                                                         }
                                                                                     }
                                                                                     else {
-                                                                                        if ("isUnique".Equals(r.Value)) {
+                                                                                        if ("customValidator".Equals(r.Value)) {
                                                                                             r.Read();
-                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(bool), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("isUnique", context.JsonContext, _retVal, context));
+                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("customValidator", context.JsonContext, _retVal, context));
                                                                                             if ((_instance != null)) {
-                                                                                                _retVal.IsUnique = ((bool)(_instance));
+                                                                                                _retVal.CustomValidator = ((string)(_instance));
                                                                                             }
                                                                                         }
                                                                                         else {
-                                                                                            if ("validation".Equals(r.Value)) {
+                                                                                            if ("isUnique".Equals(r.Value)) {
                                                                                                 r.Read();
-                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("validation", context.JsonContext, _retVal, context));
+                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(bool), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("isUnique", context.JsonContext, _retVal, context));
                                                                                                 if ((_instance != null)) {
-                                                                                                    _retVal.ValidationRegex = ((string)(_instance));
+                                                                                                    _retVal.IsUnique = ((bool)(_instance));
                                                                                                 }
                                                                                             }
                                                                                             else {
-                                                                                                if ("policy".Equals(r.Value)) {
+                                                                                                if ("validation".Equals(r.Value)) {
                                                                                                     r.Read();
-                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("policy", context.JsonContext, _retVal, context));
+                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("validation", context.JsonContext, _retVal, context));
                                                                                                     if ((_instance != null)) {
-                                                                                                        _retVal.PolicyKey = ((System.Nullable<System.Guid>)(_instance));
+                                                                                                        _retVal.ValidationRegex = ((string)(_instance));
                                                                                                     }
                                                                                                 }
                                                                                                 else {
-                                                                                                    if ("policyModel".Equals(r.Value)) {
+                                                                                                    if ("identifierClass".Equals(r.Value)) {
                                                                                                         r.Read();
-                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.Security.SecurityPolicy), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("policyModel", context.JsonContext, _retVal, context));
+                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("identifierClass", context.JsonContext, _retVal, context));
                                                                                                         if ((_instance != null)) {
-                                                                                                            _retVal.Policy = ((SanteDB.Core.Model.Security.SecurityPolicy)(_instance));
+                                                                                                            _retVal.IdentifierClassificationKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                         }
                                                                                                     }
                                                                                                     else {
-                                                                                                        if ("assigningAuthority".Equals(r.Value)) {
+                                                                                                        if ("policy".Equals(r.Value)) {
                                                                                                             r.Read();
-                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.AssigningAuthority>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("assigningAuthority", context.JsonContext, _retVal, context));
+                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("policy", context.JsonContext, _retVal, context));
                                                                                                             if ((_instance != null)) {
-                                                                                                                _retVal.AssigningAuthority = ((System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.AssigningAuthority>)(_instance));
+                                                                                                                _retVal.PolicyKey = ((System.Nullable<System.Guid>)(_instance));
                                                                                                             }
                                                                                                         }
                                                                                                         else {
-                                                                                                            if ("url".Equals(r.Value)) {
+                                                                                                            if ("policyModel".Equals(r.Value)) {
                                                                                                                 r.Read();
-                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("url", context.JsonContext, _retVal, context));
+                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.Security.SecurityPolicy), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("policyModel", context.JsonContext, _retVal, context));
                                                                                                                 if ((_instance != null)) {
-                                                                                                                    _retVal.Url = ((string)(_instance));
+                                                                                                                    _retVal.Policy = ((SanteDB.Core.Model.Security.SecurityPolicy)(_instance));
                                                                                                                 }
                                                                                                             }
                                                                                                             else {
-                                                                                                                if ("oid".Equals(r.Value)) {
+                                                                                                                if ("assigningAuthority".Equals(r.Value)) {
                                                                                                                     r.Read();
-                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("oid", context.JsonContext, _retVal, context));
+                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.AssigningAuthority>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("assigningAuthority", context.JsonContext, _retVal, context));
                                                                                                                     if ((_instance != null)) {
-                                                                                                                        _retVal.Oid = ((string)(_instance));
+                                                                                                                        _retVal.AssigningAuthority = ((System.Collections.Generic.List<SanteDB.Core.Model.DataTypes.AssigningAuthority>)(_instance));
                                                                                                                     }
                                                                                                                 }
                                                                                                                 else {
-                                                                                                                    if ("description".Equals(r.Value)) {
+                                                                                                                    if ("url".Equals(r.Value)) {
                                                                                                                         r.Read();
-                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("description", context.JsonContext, _retVal, context));
+                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("url", context.JsonContext, _retVal, context));
                                                                                                                         if ((_instance != null)) {
-                                                                                                                            _retVal.Description = ((string)(_instance));
+                                                                                                                            _retVal.Url = ((string)(_instance));
                                                                                                                         }
                                                                                                                     }
                                                                                                                     else {
-                                                                                                                        if ("domainName".Equals(r.Value)) {
+                                                                                                                        if ("oid".Equals(r.Value)) {
                                                                                                                             r.Read();
-                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("domainName", context.JsonContext, _retVal, context));
+                                                                                                                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("oid", context.JsonContext, _retVal, context));
                                                                                                                             if ((_instance != null)) {
-                                                                                                                                _retVal.DomainName = ((string)(_instance));
+                                                                                                                                _retVal.Oid = ((string)(_instance));
                                                                                                                             }
                                                                                                                         }
                                                                                                                         else {
-                                                                                                                            if ("name".Equals(r.Value)) {
+                                                                                                                            if ("description".Equals(r.Value)) {
                                                                                                                                 r.Read();
-                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("name", context.JsonContext, _retVal, context));
+                                                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("description", context.JsonContext, _retVal, context));
                                                                                                                                 if ((_instance != null)) {
-                                                                                                                                    _retVal.Name = ((string)(_instance));
+                                                                                                                                    _retVal.Description = ((string)(_instance));
                                                                                                                                 }
                                                                                                                             }
                                                                                                                             else {
-                                                                                                                                if ("$type".Equals(r.Value)) {
-                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1500.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
-                                                                                                                                    if ((_type != typeof(SanteDB.Core.Model.DataTypes.IdentityDomain))) {
-                                                                                                                                        SanteDB.Core.Model.DataTypes.IdentityDomain _nretVal = ((SanteDB.Core.Model.DataTypes.IdentityDomain)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
-                                                                                                                                        _nretVal.CopyObjectData(_retVal);
-                                                                                                                                        return _nretVal;
+                                                                                                                                if ("domainName".Equals(r.Value)) {
+                                                                                                                                    r.Read();
+                                                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("domainName", context.JsonContext, _retVal, context));
+                                                                                                                                    if ((_instance != null)) {
+                                                                                                                                        _retVal.DomainName = ((string)(_instance));
                                                                                                                                     }
                                                                                                                                 }
                                                                                                                                 else {
-                                                                                                                                    r.Skip();
+                                                                                                                                    if ("name".Equals(r.Value)) {
+                                                                                                                                        r.Read();
+                                                                                                                                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("name", context.JsonContext, _retVal, context));
+                                                                                                                                        if ((_instance != null)) {
+                                                                                                                                            _retVal.Name = ((string)(_instance));
+                                                                                                                                        }
+                                                                                                                                    }
+                                                                                                                                    else {
+                                                                                                                                        if ("$type".Equals(r.Value)) {
+                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1500.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                            if ((_type != typeof(SanteDB.Core.Model.DataTypes.IdentityDomain))) {
+                                                                                                                                                SanteDB.Core.Model.DataTypes.IdentityDomain _nretVal = ((SanteDB.Core.Model.DataTypes.IdentityDomain)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
+                                                                                                                                                _nretVal.CopyObjectData(_retVal);
+                                                                                                                                                return _nretVal;
+                                                                                                                                            }
+                                                                                                                                        }
+                                                                                                                                        else {
+                                                                                                                                            r.Skip();
+                                                                                                                                        }
+                                                                                                                                    }
                                                                                                                                 }
                                                                                                                             }
                                                                                                                         }
@@ -24967,6 +25228,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(EntityNoteViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.DataTypes.EntityNote);
@@ -24983,6 +25247,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.EntityNote)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.EntityNote)));
             }
             if (context.ShouldSerialize("text")) {
@@ -25175,6 +25440,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ActNoteViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.DataTypes.ActNote);
@@ -25191,6 +25459,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.ActNote)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.ActNote)));
             }
             if (context.ShouldSerialize("text")) {
@@ -25383,6 +25652,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ReferenceTermViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.DataTypes.ReferenceTerm);
@@ -25399,6 +25671,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.ReferenceTerm)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.ReferenceTerm)));
             }
             if (context.ShouldSerialize("mnemonic")) {
@@ -25778,6 +26051,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ReferenceTermNameViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.DataTypes.ReferenceTermName);
@@ -25794,6 +26070,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.ReferenceTermName)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.ReferenceTermName)));
             }
             if (context.ShouldSerialize("language")) {
@@ -26066,6 +26343,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = o.ToString();
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 return null;
             }
             SanteDB.Core.Model.DataTypes.ReferenceTermName _retVal = new SanteDB.Core.Model.DataTypes.ReferenceTermName();
@@ -26083,6 +26361,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.ReferenceTermName)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 return null;
             }
             return _strong.Name;
@@ -26095,6 +26374,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         
         /// <inheritdoc/>
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
+        
+        /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(RelationshipValidationRuleViewModelSerializer));
         
         /// <inheritdoc/>
         public System.Type HandlesType {
@@ -26113,6 +26395,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.RelationshipValidationRule)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.RelationshipValidationRule)));
             }
             if (context.ShouldSerialize("sourceClass")) {
@@ -26503,6 +26786,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(EntityTagViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.DataTypes.EntityTag);
@@ -26519,6 +26805,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.EntityTag)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.EntityTag)));
             }
             if (context.ShouldSerialize("key")) {
@@ -26818,6 +27105,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = o.ToString();
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 return null;
             }
             SanteDB.Core.Model.DataTypes.EntityTag _retVal = new SanteDB.Core.Model.DataTypes.EntityTag();
@@ -26835,6 +27123,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.EntityTag)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 return null;
             }
             return _strong.Value;
@@ -26847,6 +27136,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         
         /// <inheritdoc/>
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
+        
+        /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ActTagViewModelSerializer));
         
         /// <inheritdoc/>
         public System.Type HandlesType {
@@ -26865,6 +27157,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.ActTag)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.ActTag)));
             }
             if (context.ShouldSerialize("key")) {
@@ -27164,6 +27457,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = o.ToString();
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 return null;
             }
             SanteDB.Core.Model.DataTypes.ActTag _retVal = new SanteDB.Core.Model.DataTypes.ActTag();
@@ -27181,6 +27475,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.ActTag)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 return null;
             }
             return _strong.Value;
@@ -27193,6 +27488,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         
         /// <inheritdoc/>
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
+        
+        /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(TemplateDefinitionViewModelSerializer));
         
         /// <inheritdoc/>
         public System.Type HandlesType {
@@ -27211,6 +27509,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.DataTypes.TemplateDefinition)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.DataTypes.TemplateDefinition)));
             }
             if (context.ShouldSerialize("mnemonic")) {
@@ -27567,6 +27866,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(BundleViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Collection.Bundle);
@@ -27583,6 +27885,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Collection.Bundle)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Collection.Bundle)));
             }
             if (context.ShouldSerialize("modifiedOn")) {
@@ -27750,6 +28053,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(AuditEventDataViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Audit.AuditEventData);
@@ -27766,6 +28072,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Audit.AuditEventData)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Audit.AuditEventData)));
             }
             if (context.ShouldSerialize("action")) {
@@ -27975,6 +28282,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(AccountViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Acts.Account);
@@ -27991,6 +28301,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Acts.Account)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Acts.Account)));
             }
             if (context.ShouldSerialize("balance")) {
@@ -28913,6 +29224,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ActViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Acts.Act);
@@ -28929,6 +29243,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Acts.Act)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Acts.Act)));
             }
             if (context.ShouldSerialize("isNegated")) {
@@ -29768,6 +30083,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ActParticipationViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Acts.ActParticipation);
@@ -29784,6 +30102,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Acts.ActParticipation)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Acts.ActParticipation)));
             }
             if (context.ShouldSerialize("classificationModel")) {
@@ -30121,6 +30440,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ActProtocolViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Acts.ActProtocol);
@@ -30137,6 +30459,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Acts.ActProtocol)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Acts.ActProtocol)));
             }
             if (context.ShouldSerialize("protocol")) {
@@ -30357,6 +30680,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ActRelationshipViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Acts.ActRelationship);
@@ -30373,6 +30699,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Acts.ActRelationship)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Acts.ActRelationship)));
             }
             if (context.ShouldSerialize("classificationModel")) {
@@ -30663,6 +30990,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(CarePlanViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Acts.CarePlan);
@@ -30679,6 +31009,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Acts.CarePlan)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Acts.CarePlan)));
             }
             if (context.ShouldSerialize("title")) {
@@ -31550,6 +31881,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ControlActViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Acts.ControlAct);
@@ -31566,6 +31900,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Acts.ControlAct)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Acts.ControlAct)));
             }
             if (context.ShouldSerialize("isNegated")) {
@@ -32405,6 +32740,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(FinancialContractViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Acts.FinancialContract);
@@ -32421,6 +32759,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Acts.FinancialContract)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Acts.FinancialContract)));
             }
             if (context.ShouldSerialize("paymentTerms")) {
@@ -33303,6 +33642,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(FinancialTransactionViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Acts.FinancialTransaction);
@@ -33319,6 +33661,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Acts.FinancialTransaction)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Acts.FinancialTransaction)));
             }
             if (context.ShouldSerialize("amount")) {
@@ -34241,6 +34584,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(InvoiceElementViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Acts.InvoiceElement);
@@ -34257,6 +34603,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Acts.InvoiceElement)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Acts.InvoiceElement)));
             }
             if (context.ShouldSerialize("modifier")) {
@@ -35246,6 +35593,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(NarrativeViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Acts.Narrative);
@@ -35262,6 +35612,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Acts.Narrative)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Acts.Narrative)));
             }
             if (context.ShouldSerialize("versionCode")) {
@@ -36181,6 +36532,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ObservationViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Acts.Observation);
@@ -36197,6 +36551,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Acts.Observation)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Acts.Observation)));
             }
             if (context.ShouldSerialize("interpretationConcept")) {
@@ -37095,6 +37450,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(QuantityObservationViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Acts.QuantityObservation);
@@ -37111,6 +37469,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Acts.QuantityObservation)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Acts.QuantityObservation)));
             }
             if (context.ShouldSerialize("value")) {
@@ -38068,6 +38427,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(TextObservationViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Acts.TextObservation);
@@ -38084,6 +38446,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Acts.TextObservation)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Acts.TextObservation)));
             }
             if (context.ShouldSerialize("valueType")) {
@@ -38998,6 +39361,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(CodedObservationViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Acts.CodedObservation);
@@ -39014,6 +39380,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Acts.CodedObservation)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Acts.CodedObservation)));
             }
             if (context.ShouldSerialize("valueType")) {
@@ -39955,6 +40322,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(PatientEncounterViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Acts.PatientEncounter);
@@ -39971,6 +40341,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Acts.PatientEncounter)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Acts.PatientEncounter)));
             }
             if (context.ShouldSerialize("dischargeDisposition")) {
@@ -40924,6 +41295,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(PatientEncounterArrangementViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Acts.PatientEncounterArrangement);
@@ -40940,6 +41314,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Acts.PatientEncounterArrangement)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Acts.PatientEncounterArrangement)));
             }
             if (context.ShouldSerialize("type")) {
@@ -41148,6 +41523,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ProcedureViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Acts.Procedure);
@@ -41164,6 +41542,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Acts.Procedure)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Acts.Procedure)));
             }
             if (context.ShouldSerialize("method")) {
@@ -42132,6 +42511,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(ProtocolViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Acts.Protocol);
@@ -42148,6 +42530,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Acts.Protocol)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Acts.Protocol)));
             }
             if (context.ShouldSerialize("name")) {
@@ -42413,6 +42796,9 @@ namespace SanteDB.Core.Model.Json.Formatter {
         private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
         
         /// <inheritdoc/>
+        private SanteDB.Core.Diagnostics.Tracer m_tracer = SanteDB.Core.Diagnostics.Tracer.GetTracer(typeof(SubstanceAdministrationViewModelSerializer));
+        
+        /// <inheritdoc/>
         public System.Type HandlesType {
             get {
                 return typeof(SanteDB.Core.Model.Acts.SubstanceAdministration);
@@ -42429,6 +42815,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 _strong = ((SanteDB.Core.Model.Acts.SubstanceAdministration)(o));
             }
             catch (System.Exception e) {
+                this.m_tracer.TraceError(string.Format("Casting Error: {0}", e));
                 throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Acts.SubstanceAdministration)));
             }
             if (context.ShouldSerialize("route")) {
