@@ -22,6 +22,7 @@ using RestSrvr;
 using RestSrvr.Attributes;
 using RestSrvr.Exceptions;
 using SanteDB.Core;
+using SanteDB.Core.Configuration;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Interop;
@@ -461,7 +462,7 @@ namespace SanteDB.Rest.AMI
             if (!String.IsNullOrEmpty(config?.RealmWelcomeMessage)) {
                 serviceOptions.Settings.Add(new Core.Configuration.AppSettingKeyValuePair("$welcome", config.RealmWelcomeMessage));
             }
-            serviceOptions.Settings.AddRange(this.m_configurationManager.GetSection<SecurityConfigurationSection>().ForDisclosure());
+            serviceOptions.Settings.AddRange(this.m_configurationManager.Configuration.Sections.OfType<IDisclosedConfigurationSection>().SelectMany(o=>o.ForDisclosure()));
             return serviceOptions;
         }
 
