@@ -22,6 +22,7 @@ using Newtonsoft.Json.Linq;
 using SanteDB.Client.Configuration;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Http;
+using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Constants;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Security;
@@ -142,14 +143,22 @@ namespace SanteDB.Rest.AppService.Configuration
             }
 
             // HACK: Find a better way
+            var deviceEntityId = section.GetSecurityPolicy<Guid>(SecurityPolicyIdentification.AssignedDeviceEntityId);
             if (featureConfiguration.TryGetValue(ASSIGNED_FACILITY_SETTING, out var assignedFacilityRaw) && Guid.TryParse(assignedFacilityRaw?.ToString(), out var assignedFacility))
             {
                 section.SetPolicy(SecurityPolicyIdentification.AssignedFacilityUuid, assignedFacility);
                 using (var client = this.m_restClientFactory.GetRestClientFor(Core.Interop.ServiceEndpointType.HealthDataService))
                 {
-                    client.Post<EntityRelationship, EntityRelationship>($"EntityRelationship", new EntityRelationship()
+                    var existingAssignedFacilty = client.Get<Bundle>(typeof(EntityRelationship).GetSerializationName(), $"source={deviceEntityId}&relationshipType={EntityRelationshipTypeKeys.DedicatedServiceDeliveryLocation}&_includeTotal=false".ParseQueryString());
+
+                    foreach(var itm in existingAssignedFacilty.Item)
                     {
-                        SourceEntityKey = section.GetSecurityPolicy<Guid>(SecurityPolicyIdentification.AssignedDeviceEntityId),
+                        client.Delete<EntityRelationship>($"{typeof(EntityRelationship).GetSerializationName()}/{itm.Key}");
+                    }
+
+                    client.Post<EntityRelationship, EntityRelationship>(typeof(EntityRelationship).GetSerializationName(), new EntityRelationship()
+                    {
+                        SourceEntityKey = deviceEntityId,
                         TargetEntityKey = assignedFacility,
                         RelationshipTypeKey = EntityRelationshipTypeKeys.DedicatedServiceDeliveryLocation
                     });
@@ -160,9 +169,17 @@ namespace SanteDB.Rest.AppService.Configuration
                 section.SetPolicy(SecurityPolicyIdentification.AssignedOwnerUuid, assignedOwner);
                 using (var client = this.m_restClientFactory.GetRestClientFor(Core.Interop.ServiceEndpointType.HealthDataService))
                 {
-                    client.Post<EntityRelationship, EntityRelationship>($"EntityRelationship", new EntityRelationship()
+                    var existingAssignedFacilty = client.Get<Bundle>(typeof(EntityRelationship).GetSerializationName(), $"source={deviceEntityId}&relationshipType={EntityRelationshipTypeKeys.AssignedEntity}&_includeTotal=false".ParseQueryString());
+
+                    foreach (var itm in existingAssignedFacilty.Item)
                     {
-                        SourceEntityKey = section.GetSecurityPolicy<Guid>(SecurityPolicyIdentification.AssignedDeviceEntityId),
+                        client.Delete<EntityRelationship>($"{typeof(EntityRelationship).GetSerializationName()}/{itm.Key}");
+                    }
+
+
+                    client.Post<EntityRelationship, EntityRelationship>(typeof(EntityRelationship).GetSerializationName(), new EntityRelationship()
+                    {
+                        SourceEntityKey = deviceEntityId,
                         TargetEntityKey = assignedOwner,
                         RelationshipTypeKey = EntityRelationshipTypeKeys.AssignedEntity
                     });

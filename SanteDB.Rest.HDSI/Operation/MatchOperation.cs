@@ -23,7 +23,9 @@ using SanteDB.Core.Configuration;
 using SanteDB.Core.Data.Management.Jobs;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Jobs;
+using SanteDB.Core.Matching;
 using SanteDB.Core.Model.Collection;
+using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
@@ -40,6 +42,9 @@ namespace SanteDB.Rest.HDSI.Operation
     {
         // Job manager
         private IJobManagerService m_jobManager;
+        private readonly IRecordMatchingConfigurationService m_configurationService;
+        private readonly IRecordMatchingService m_matchingService;
+        private readonly IMatchReportFactory m_matchReportFactory;
 
         /// <inheritdoc/>
         public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Class | ChildObjectScopeBinding.Instance;
@@ -47,9 +52,14 @@ namespace SanteDB.Rest.HDSI.Operation
         /// <summary>
         /// Creates a new configuration match operation
         /// </summary>
-        public MatchOperation(IConfigurationManager configurationManager, IJobManagerService jobManager)
+        public MatchOperation(IConfigurationManager configurationManager, IJobManagerService jobManager, IRecordMatchingConfigurationService matchConfigurationService, 
+            IRecordMatchingService recordMatchingService, 
+            IMatchReportFactory matchReportFactory)
         {
             this.m_jobManager = jobManager;
+            this.m_configurationService = matchConfigurationService;
+            this.m_matchingService = recordMatchingService;
+            this.m_matchReportFactory = matchReportFactory;
             var configuration = configurationManager.GetSection<ResourceManagementConfigurationSection>();
             this.ParentTypes = configuration?.ResourceTypes.Select(o => o.Type).ToArray() ?? Type.EmptyTypes;
         }
@@ -71,9 +81,28 @@ namespace SanteDB.Rest.HDSI.Operation
 
             if (scopingKey == null)
             {
-                parameters.TryGet<bool>("clear", out bool clear);
-                this.m_jobManager.StartJob(typeof(MatchJob<>).MakeGenericType(scopingType), new object[] { clear });
-                return null;
+                if (parameters.TryGet("target", out Entity targetEntity))
+                {
+
+                    var configBase = this.m_configurationService.Configurations.Where(c => c.AppliesTo.Contains(targetEntity.GetType()) && c.Metadata.Status == MatchConfigurationStatus.Active);
+                    if (!configBase.Any())
+                    {
+                        return new ParameterCollection();
+                    }
+
+                    var results = configBase.SelectMany(o => this.m_matchingService.Match(targetEntity, o.Id, new Guid[0])).ToArray();
+
+                    // Iterate through the resources and convert them to a result
+                    var distinctResults = results.GroupBy(o => o.Record.Key).Select(o => o.OrderByDescending(m => m.Strength).First());
+
+                    return this.m_matchReportFactory.CreateMatchReport(targetEntity.GetType(), targetEntity, distinctResults);
+                }
+                else
+                {
+                    parameters.TryGet<bool>("clear", out bool clear);
+                    this.m_jobManager.StartJob(typeof(MatchJob<>).MakeGenericType(scopingType), new object[] { clear });
+                    return null;
+                }
             }
             else if (scopingKey is Guid scopingObjectKey)
             {
