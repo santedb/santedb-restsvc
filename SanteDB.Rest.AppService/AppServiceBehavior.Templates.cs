@@ -25,6 +25,7 @@ using SanteDB.Core.Model;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
+using SanteDB.Core.Security.Configuration;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
@@ -58,6 +59,11 @@ namespace SanteDB.Rest.AppService
                     cp.TryGetClaimValue(SanteDBClaimTypes.XspaFacilityClaim, out var facilityId))
                 {
                     parameters.Add("facilityId", facilityId);
+                }
+                else
+                {
+                    parameters.Add("facilityId", this.m_configurationManager.GetSection<
+                        SecurityConfigurationSection>().GetSecurityPolicy<Guid>(Core.Configuration.SecurityPolicyIdentification.AssignedFacilityUuid).ToString());
                 }
             }
 

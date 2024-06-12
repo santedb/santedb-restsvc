@@ -24,6 +24,7 @@ using SanteDB.Core.Data.Management.Jobs;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Jobs;
 using SanteDB.Core.Matching;
+using SanteDB.Core.Model;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Parameters;
@@ -81,7 +82,7 @@ namespace SanteDB.Rest.HDSI.Operation
 
             if (scopingKey == null)
             {
-                if (parameters.TryGet("target", out Entity targetEntity))
+                if (parameters.TryGet("target", out IdentifiedData targetEntity))
                 {
 
                     var configBase = this.m_configurationService.Configurations.Where(c => c.AppliesTo.Contains(targetEntity.GetType()) && c.Metadata.Status == MatchConfigurationStatus.Active);

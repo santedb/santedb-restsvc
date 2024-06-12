@@ -20,9 +20,11 @@
  */
 using RestSrvr;
 using SanteDB.Core.Applets.Model;
+using SanteDB.Core.Configuration;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
+using SanteDB.Core.Security.Configuration;
 using SanteDB.Rest.AppService.Model;
 using SanteDB.Rest.Common.Attributes;
 using SanteDB.Rest.Common.Behavior;
@@ -81,15 +83,30 @@ namespace SanteDB.Rest.AppService
         /// <inheritdoc/>
         public Dictionary<string, object> GetState()
         {
-            return new Dictionary<String, object>()
+            if (RestOperationContext.Current.IncomingRequest.QueryString.Get("_full") == "true")
+            {
+                var securitySection = this.m_configurationManager.GetSection<SecurityConfigurationSection>();
+                return new Dictionary<String, object>()
                     {
                         { "online", this.m_onlineState },
                         { "hdsi", this.m_hdsiState },
                         { "ami", this.m_amiState },
                         { "client_id", this.m_upstreamSettings?.LocalClientName },
                         { "device_id", this.m_upstreamSettings?.LocalDeviceName },
+                        {  "facility_id", securitySection.GetSecurityPolicy<Guid>(SecurityPolicyIdentification.AssignedFacilityUuid)},
+                        { "owner_id",  securitySection.GetSecurityPolicy<Guid>(SecurityPolicyIdentification.AssignedOwnerUuid) },
                         { "realm", this.m_upstreamSettings?.Realm.Host }
                     };
+            }
+            else
+            {
+                return new Dictionary<String, object>()
+                    {
+                        { "online", this.m_onlineState },
+                        { "hdsi", this.m_hdsiState },
+                        { "ami", this.m_amiState },
+                    };
+            }
         }
 
         /// <inheritdoc/>

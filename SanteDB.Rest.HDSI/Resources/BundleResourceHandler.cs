@@ -40,6 +40,6 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Get capabilities
         /// </summary>
-        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Update | ResourceCapabilityType.Create;
+        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Update | ResourceCapabilityType.Create | ResourceCapabilityType.Delete | ResourceCapabilityType.CreateOrUpdate;
     }
 }
