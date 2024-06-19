@@ -27,6 +27,9 @@
     <PackageProjectUrl>http://santesuite.org</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="ChildResources\ConceptRelationshipChildResource.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Configuration\Default.xml" />
   </ItemGroup>
   <ItemGroup>
