@@ -86,6 +86,12 @@ namespace SanteDB.Rest.HDSI.Operation
                 if (parameters.TryGet("target", out IdentifiedData targetEntity))
                 {
 
+                    if(targetEntity is Bundle bdl && bdl.FocalObjects.Count == 1)
+                    {
+                        bdl.Reconstitute();
+                        targetEntity = bdl.GetFocalObject();
+                    }
+
                     var configBase = this.m_configurationService.Configurations.Where(c => c.AppliesTo.Contains(targetEntity.GetType()) && c.Metadata.Status == MatchConfigurationStatus.Active);
                     if (!configBase.Any())
                     {
