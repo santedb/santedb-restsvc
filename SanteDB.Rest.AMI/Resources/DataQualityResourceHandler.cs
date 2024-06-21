@@ -18,8 +18,12 @@
  * User: fyfej
  * Date: 2024-1-5
  */
+using RestSrvr;
+using SanteDB.Core.Applets.Model;
+using SanteDB.Core.Cdss;
 using SanteDB.Core.Data.Quality;
 using SanteDB.Core.Data.Quality.Configuration;
+using SanteDB.Core.Http;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
@@ -28,7 +32,11 @@ using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -69,14 +77,30 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.AlterSystemConfiguration)]
         public override object Create(object data, bool updateIfExists)
         {
-            if (data is DataQualityRulesetConfiguration dqrc)
+            switch(data)
             {
-                return this.m_dataQualityConfigurationProvider.SaveRuleSet(dqrc);
+                case DataQualityRulesetConfiguration dqrc:
+                    return this.m_dataQualityConfigurationProvider.SaveRuleSet(dqrc);
+                case Stream str:
+                    return this.m_dataQualityConfigurationProvider.SaveRuleSet(DataQualityRulesetConfiguration.Load(str));
+                    break;
+                case IEnumerable<MultiPartFormData> multiPartData:
+                    var source = multiPartData.FirstOrDefault(o => o.Name == "ruleset");
+                    if (source?.IsFile == true)
+                    {
+                        using (var ms = new MemoryStream(source.Data))
+                        {
+                            return this.m_dataQualityConfigurationProvider.SaveRuleSet(DataQualityRulesetConfiguration.Load(ms));
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Expected a ruleset form value", nameof(data));
+                    }
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            else
-            {
-                throw new ArgumentOutOfRangeException(String.Format(ErrorMessages.ARGUMENT_INCOMPATIBLE_TYPE, typeof(DataQualityRulesetConfiguration), data.GetType()));
-            }
+           
         }
 
         /// <inheritdoc/>
@@ -91,7 +115,17 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
         public override object Get(object id, object versionId)
         {
-            return this.m_dataQualityConfigurationProvider.GetRuleSet(id.ToString());
+
+            var library = this.m_dataQualityConfigurationProvider.GetRuleSet(id.ToString());
+            switch (RestOperationContext.Current.IncomingRequest.QueryString["_format"])
+            {
+                case "xml":
+                    RestOperationContext.Current.OutgoingResponse.AddHeader("Content-Disposition", $"attachment;filename=\"{id}.xml\"");
+                    RestOperationContext.Current.OutgoingResponse.ContentType = "application/xml";
+                    return library;
+                default:
+                    return library;
+            }
         }
 
         /// <inheritdoc/>

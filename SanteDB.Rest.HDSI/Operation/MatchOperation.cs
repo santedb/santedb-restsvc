@@ -24,9 +24,11 @@ using SanteDB.Core.Data.Management.Jobs;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Jobs;
 using SanteDB.Core.Matching;
+using SanteDB.Core.Model;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Parameters;
+using SanteDB.Core.Model.Query;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
@@ -81,8 +83,14 @@ namespace SanteDB.Rest.HDSI.Operation
 
             if (scopingKey == null)
             {
-                if (parameters.TryGet("target", out Entity targetEntity))
+                if (parameters.TryGet("target", out IdentifiedData targetEntity))
                 {
+
+                    if(targetEntity is Bundle bdl && bdl.FocalObjects.Count == 1)
+                    {
+                        bdl.Reconstitute();
+                        targetEntity = bdl.GetFocalObject();
+                    }
 
                     var configBase = this.m_configurationService.Configurations.Where(c => c.AppliesTo.Contains(targetEntity.GetType()) && c.Metadata.Status == MatchConfigurationStatus.Active);
                     if (!configBase.Any())
@@ -90,10 +98,23 @@ namespace SanteDB.Rest.HDSI.Operation
                         return new ParameterCollection();
                     }
 
-                    var results = configBase.SelectMany(o => this.m_matchingService.Match(targetEntity, o.Id, new Guid[0])).ToArray();
+                    var results = configBase.SelectMany(o => this.m_matchingService.Match(targetEntity, o.Id, new Guid[0]));
+
+                    // Filter parameters 
+                    int offset = 0, count = 5;
+                    string filter = String.Empty;
+                    _ = parameters.TryGet("_offset", out offset);
+                    _ = parameters.TryGet("_count", out count);
+                    _ = parameters.TryGet("_any", out filter);
 
                     // Iterate through the resources and convert them to a result
-                    var distinctResults = results.GroupBy(o => o.Record.Key).Select(o => o.OrderByDescending(m => m.Strength).First());
+                    if(!String.IsNullOrEmpty(filter))
+                    {
+                        var filterExpr = QueryExpressionParser.BuildLinqExpression(scopingType, filter.ParseQueryString()).Compile();
+                        results = results.Where(o => filterExpr.DynamicInvoke(o.Record).Equals(true));
+                    }
+                    var distinctResults = results.GroupBy(o => o.Record.Key).Select(o => o.OrderByDescending(m => m.Strength).First()).Skip(offset).Take(count);
+
 
                     return this.m_matchReportFactory.CreateMatchReport(targetEntity.GetType(), targetEntity, distinctResults);
                 }

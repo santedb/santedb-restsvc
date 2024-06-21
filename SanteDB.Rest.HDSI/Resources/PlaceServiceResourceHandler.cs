@@ -1,0 +1,90 @@
+﻿using SanteDB.Core.Exceptions;
+using SanteDB.Core.Model.Constants;
+using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
+using SanteDB.Core.Services;
+using SanteDB.Rest.Common.Attributes;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace SanteDB.Rest.HDSI.Resources
+{
+    /// <summary>
+    /// Place service resource handler
+    /// </summary>
+    public class PlaceServiceResourceHandler : HdsiResourceHandlerBase<PlaceService>
+    {
+        private readonly ISecurityRepositoryService m_securityRepository;
+        private readonly IPolicyEnforcementService m_pepService;
+
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        public PlaceServiceResourceHandler(ILocalizationService localizationService, ISecurityRepositoryService securityRepository, IPolicyEnforcementService pepService, IRepositoryService<PlaceService> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
+        {
+            this.m_securityRepository = securityRepository;
+            this.m_pepService = pepService;
+        }
+
+        /// <inheritdoc/>
+        public override object Create(object data, bool updateIfExists)
+        {
+            if (data is PlaceService ps)
+            {
+                this.DemandAlterPlace(ps);
+                return base.Create(data, updateIfExists);
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        /// <summary>
+        /// Demands that the user either be associated with the facility in some manner or the user has permission to alter a place service
+        /// </summary>
+        private void DemandAlterPlace(PlaceService ps)
+        {
+            // TODO: Allow for the classification of a facility administrative user
+            var thisUser = this.m_securityRepository.GetCdrEntity(AuthenticationContext.Current.Principal);
+            if (thisUser?.LoadProperty(o => o.Relationships).Any(r => r.RelationshipTypeKey == EntityRelationshipTypeKeys.MaintainedEntity && r.TargetEntityKey == ps.SourceEntityKey) != true)
+            {
+                this.m_pepService.Demand(PermissionPolicyIdentifiers.WritePlacesAndOrgs);
+            }
+            
+        }
+
+        /// <inheritdoc/>
+        public override object Update(object data)
+        {
+            if (data is PlaceService ps)
+            {
+                this.DemandAlterPlace(ps);
+                return base.Update(data);
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+        }
+
+
+        /// <inheritdoc/>
+        public override object Delete(object key)
+        {
+            if (key is Guid uuidKey)
+            {
+                var placeService = this.m_repository.Get(uuidKey);
+                this.DemandAlterPlace(placeService);
+                return base.Delete(key);
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+        }
+    }
+}
