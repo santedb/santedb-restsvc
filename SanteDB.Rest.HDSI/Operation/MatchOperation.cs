@@ -113,7 +113,7 @@ namespace SanteDB.Rest.HDSI.Operation
                         var filterExpr = QueryExpressionParser.BuildLinqExpression(scopingType, filter.ParseQueryString()).Compile();
                         results = results.Where(o => filterExpr.DynamicInvoke(o.Record).Equals(true));
                     }
-                    var distinctResults = results.GroupBy(o => o.Record.Key).Select(o => o.OrderByDescending(m => m.Strength).First()).OrderByDescending(o=>o.Strength).Skip(offset).Take(count);
+                    var distinctResults = results.Where(o=>o.Classification != RecordMatchClassification.NonMatch).GroupBy(o => o.Record.Key).Select(o => o.OrderByDescending(m => m.Strength).First()).OrderByDescending(o=>o.Strength).Skip(offset).Take(count);
 
 
                     return this.m_matchReportFactory.CreateMatchReport(targetEntity.GetType(), targetEntity, distinctResults);
