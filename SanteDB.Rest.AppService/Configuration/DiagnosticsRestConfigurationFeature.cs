@@ -75,7 +75,7 @@ namespace SanteDB.Rest.AppService.Configuration
         private ConfigurationDictionary<String, Object> GetConfiguration() =>
             new ConfigurationDictionary<string, object>()
             {
-                { LOG_DETAIL_SETTING, this.m_configurationSection?.Sources?.FirstOrDefault()?.Filter ?? System.Diagnostics.Tracing.EventLevel.Warning },
+                { LOG_DETAIL_SETTING, this.m_configurationSection?.Sources?.Min(o=>o.Filter) ?? System.Diagnostics.Tracing.EventLevel.Warning },
                 { LOG_WRITER_SETTING, Tracer
                     .GetAvailableWriters()
                     .Select(o=> new { name = o.Name, aqn = o.AssemblyQualifiedName, mode = this.m_configurationSection?.TraceWriter.FirstOrDefault(w=>w.TraceWriter == o)?.Filter  })
