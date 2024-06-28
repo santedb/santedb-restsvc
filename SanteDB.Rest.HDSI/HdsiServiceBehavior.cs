@@ -1803,7 +1803,8 @@ namespace SanteDB.Rest.HDSI
                 }
 
                 bool validate = true;
-                if (String.IsNullOrEmpty(parms["code"]))
+                var code = parms["code"];
+                if (String.IsNullOrEmpty(code))
                 {
                     throw new ArgumentException("SEARCH have url-form encoded payload with parameter code");
                 }
@@ -1812,7 +1813,11 @@ namespace SanteDB.Rest.HDSI
                     Boolean.TryParse(parms["validate"], out validate);
                 }
 
-                var result = this.m_resourcePointerService.ResolveResource(parms["code"], validate);
+                if(code.Contains("://"))
+                {
+                    code = code.Substring(code.IndexOf("://") + 3);
+                }
+                var result = this.m_resourcePointerService.ResolveResource(code, validate);
 
                 // Create a 303 see other
                 if (result != null)

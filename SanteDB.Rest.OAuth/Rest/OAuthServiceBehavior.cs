@@ -139,6 +139,7 @@ namespace SanteDB.Rest.OAuth.Rest
         readonly IAuditService _AuditService;
 
         readonly IRoleProviderService _RoleProvider;
+        private readonly IDataSigningCertificateManagerService _SigningCertificateManager;
 
 
 
@@ -149,10 +150,6 @@ namespace SanteDB.Rest.OAuth.Rest
         /// </summary>
         protected readonly Dictionary<string, ITokenRequestHandler> _TokenRequestHandlers;
         private readonly Dictionary<string, Func<OAuthAuthorizeRequestContext, object>> _AuthorizeResponseModeHandlers;
-
-
-
-
 
         /// <summary>
         /// Policy enforcement service
@@ -172,7 +169,7 @@ namespace SanteDB.Rest.OAuth.Rest
             m_DeviceIdentityProvider = ApplicationServiceContext.Current.GetService<IDeviceIdentityProviderService>();
             _SymmetricProvider = ApplicationServiceContext.Current.GetService<ISymmetricCryptographicProvider>() ?? throw new ApplicationException($"Cannot find instance of {nameof(ISymmetricCryptographicProvider)} in {nameof(ApplicationServiceContext)}.");
             _RoleProvider = ApplicationServiceContext.Current.GetService<IRoleProviderService>() ?? throw new ApplicationException($"Cannot find instance of {nameof(IRoleProviderService)} in {nameof(ApplicationServiceContext)}.");
-
+            _SigningCertificateManager = ApplicationServiceContext.Current.GetService<IDataSigningCertificateManagerService>();
             //Optimization - try to resolve from the same session provider. 
             m_SessionIdentityProvider = m_SessionProvider as ISessionIdentityProviderService;
 
@@ -1731,6 +1728,15 @@ namespace SanteDB.Rest.OAuth.Rest
                 if (null != jwk && !keyset.Keys.Any(k => k.KeyId == jwk?.KeyId))
                 {
                     keyset.Keys.Add(jwk);
+                }
+            }
+
+            // Include all for SYSTEM
+            foreach(var cert in this._SigningCertificateManager.GetSigningCertificates(AuthenticationContext.SystemPrincipal.Identity))
+            {
+                if(!keyset.Keys.Any(k=>cert.GetCertHash().HexEncode().Equals(k.KeyId, StringComparison.OrdinalIgnoreCase)))
+                {
+                    keyset.Keys.Add(JsonWebKeyConverter.ConvertFromX509SecurityKey(new X509SecurityKey(cert)));
                 }
             }
 
