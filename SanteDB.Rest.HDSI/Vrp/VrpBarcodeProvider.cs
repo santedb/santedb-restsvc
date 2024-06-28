@@ -54,7 +54,7 @@ namespace SanteDB.Rest.HDSI.Vrp
         }
 
         /// <inheritdoc/>
-        public Stream Generate(IHasIdentifiers entity)
+        public Stream Generate(IHasIdentifiers entity, params string[] identityDomains)
         {
             try
             {

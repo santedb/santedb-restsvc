@@ -1692,7 +1692,7 @@ namespace SanteDB.Rest.HDSI
                         {
                             audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
                                 .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Access, data);
-                            return barcodeGenerator.Generate(data);
+                            return barcodeGenerator.Generate(data, RestOperationContext.Current.IncomingRequest.QueryString.GetValues("_domain"));
                         }
                     }
                 }
