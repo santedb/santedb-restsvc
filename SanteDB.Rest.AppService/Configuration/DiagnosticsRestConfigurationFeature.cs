@@ -18,6 +18,7 @@
  * User: fyfej
  * Date: 2023-6-21
  */
+using ClosedXML;
 using Newtonsoft.Json.Linq;
 using SanteDB.Client;
 using SanteDB.Client.Configuration;
@@ -74,7 +75,7 @@ namespace SanteDB.Rest.AppService.Configuration
         private ConfigurationDictionary<String, Object> GetConfiguration() =>
             new ConfigurationDictionary<string, object>()
             {
-                { LOG_DETAIL_SETTING, this.m_configurationSection?.Mode ?? System.Diagnostics.Tracing.EventLevel.Warning },
+                { LOG_DETAIL_SETTING, this.m_configurationSection?.Sources?.Min(o=>o.Filter) ?? System.Diagnostics.Tracing.EventLevel.Warning },
                 { LOG_WRITER_SETTING, Tracer
                     .GetAvailableWriters()
                     .Select(o=> new { name = o.Name, aqn = o.AssemblyQualifiedName, mode = this.m_configurationSection?.TraceWriter.FirstOrDefault(w=>w.TraceWriter == o)?.Filter  })
@@ -108,9 +109,23 @@ namespace SanteDB.Rest.AppService.Configuration
                 };
             }
 
+            // HACK: Previous versions would not set the sources so let's add the default
+            if(section.Sources?.Any() != true)
+            {
+                section.Sources = section.Sources ?? new List<TraceSourceConfiguration>();
+                section.Sources.Add(
+                    new TraceSourceConfiguration()
+                    {
+                        Filter = EventLevel.LogAlways,
+                        SourceName = "SanteDB"
+                    }
+                );
+            }
+
             if (Enum.TryParse<EventLevel>(featureConfiguration[LOG_DETAIL_SETTING]?.ToString(), out var mode))
             {
                 section.Mode = mode;
+                section.Sources.ForEach(o => o.Filter = mode);
             }
 
             if (featureConfiguration[LOG_WRITER_SETTING] is IEnumerable enu)
