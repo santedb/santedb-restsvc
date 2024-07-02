@@ -35,6 +35,7 @@ namespace SanteDB.Rest.OAuth.Token
     {
         private readonly Dictionary<String, String> m_tokenMapping = new Dictionary<string, string>()
         {
+            { SanteDBClaimTypes.XspaFacilityClaim, OAuthConstants.IUA_Claim_FacilityId },
             { SanteDBClaimTypes.XspaOrganizationIdClaim, OAuthConstants.IUA_Claim_SubjectOrganizationId },
             { SanteDBClaimTypes.XspaOrganizationNameClaim, OAuthConstants.IUA_Claim_SubjectOrganization },
             { SanteDBClaimTypes.XspaUserNpi, OAuthConstants.IUA_Claim_NationalProviderId },

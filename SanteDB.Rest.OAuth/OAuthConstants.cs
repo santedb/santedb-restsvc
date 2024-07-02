@@ -311,6 +311,10 @@ namespace SanteDB.Rest.OAuth
         /// </summary>
         public const string IUA_Claim_SubjectName = "subject_name";
         /// <summary>
+        /// Facility id
+        /// </summary>
+        public const string IUA_Claim_FacilityId = "subject_facility_id";
+        /// <summary>
         /// IUA Subject Organization ID
         /// </summary>
         public const string IUA_Claim_SubjectOrganizationId = "subject_organization_id";

@@ -33,6 +33,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace SanteDB.Rest.AppService.Configuration
 {
@@ -75,7 +76,7 @@ namespace SanteDB.Rest.AppService.Configuration
         private ConfigurationDictionary<String, Object> GetConfiguration() =>
             new ConfigurationDictionary<string, object>()
             {
-                { LOG_DETAIL_SETTING, this.m_configurationSection?.Sources?.Min(o=>o.Filter) ?? System.Diagnostics.Tracing.EventLevel.Warning },
+                { LOG_DETAIL_SETTING, this.m_configurationSection?.Sources?.Any() == true ? this.m_configurationSection.Sources.Min(o=>o.Filter) : System.Diagnostics.Tracing.EventLevel.Warning },
                 { LOG_WRITER_SETTING, Tracer
                     .GetAvailableWriters()
                     .Select(o=> new { name = o.Name, aqn = o.AssemblyQualifiedName, mode = this.m_configurationSection?.TraceWriter.FirstOrDefault(w=>w.TraceWriter == o)?.Filter  })
