@@ -39,7 +39,6 @@ namespace SanteDB.Rest.OAuth.Configuration
         /// </summary>
         public OAuthConfigurationSection()
         {
-            AllowedClientClaims = new List<string>();
         }
 
         /// <summary>
@@ -47,12 +46,6 @@ namespace SanteDB.Rest.OAuth.Configuration
         /// </summary>
         [XmlAttribute("jwtSigningKey")]
         public string JwtSigningKey { get; set; }
-
-        /// <summary>
-        /// Gets or sets whether the ACS will validate client claims
-        /// </summary>
-        [XmlArray("allowedClaims"), XmlArrayItem("add")]
-        public List<string> AllowedClientClaims { get; set; }
 
         /// <summary>
         /// Issuer name. This corresponds to the iss claim in any issued tokens.

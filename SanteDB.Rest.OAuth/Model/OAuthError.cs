@@ -20,6 +20,8 @@
  */
 using Newtonsoft.Json;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace SanteDB.Rest.OAuth.Model
 {
@@ -71,7 +73,11 @@ namespace SanteDB.Rest.OAuth.Model
         /// <summary>
         /// Password is expired
         /// </summary>
-        password_expired
+        password_expired,
+        /// <summary>
+        /// User has attempted to establish a session but has not provided a required claim - error_description contains the missing claim
+        /// </summary>
+        missing_claim
     }
 
     /// <summary>
@@ -105,5 +111,11 @@ namespace SanteDB.Rest.OAuth.Model
         /// </summary>
         [JsonProperty("error_detail")]
         public String ErrorDetail { get; set; }
+
+        /// <summary>
+        /// Error data
+        /// </summary>
+        [JsonProperty("data")]
+        public IDictionary<String, Object> ErrorData { get; set; }
     }
 }

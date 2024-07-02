@@ -39,10 +39,6 @@ namespace SanteDB.Rest.OAuth.Docker
     public class OauthDockerFeature : IDockerFeature
     {
         /// <summary>
-        /// Claims which can be set by the client
-        /// </summary>
-        public const string ClientClaimSetting = "CLAIMS";
-        /// <summary>
         /// Token type
         /// </summary>
         public const string TokenTypeSetting = "TOKEN";
@@ -73,7 +69,6 @@ namespace SanteDB.Rest.OAuth.Docker
         /// </summary>
         public IEnumerable<string> Settings => new string[]
         {
-            ClientClaimSetting ,
             TokenTypeSetting ,
             NodelessClientAuthSetting ,
             IssuerIdSetting ,
@@ -128,12 +123,6 @@ namespace SanteDB.Rest.OAuth.Docker
                     throw new ArgumentException($"{listenStr} is not a valid URI");
                 }
                 oauthRestConfiguration.Endpoints.ForEach(ep => ep.Address = listenStr);
-            }
-
-            // Client claims?
-            if (settings.TryGetValue(ClientClaimSetting, out string claim))
-            {
-                oauthConf.AllowedClientClaims = claim.Split(';').ToList();
             }
 
             // Token type?

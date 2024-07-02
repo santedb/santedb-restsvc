@@ -47,6 +47,7 @@ using SharpCompress;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -822,7 +823,7 @@ namespace SanteDB.Rest.OAuth.Rest
         /// <summary>
         /// Create error condition
         /// </summary>
-        private OAuthError CreateErrorResponse(OAuthErrorType errorType, string message, string state = null)
+        private OAuthError CreateErrorResponse(OAuthErrorType errorType, string message, string detail = null, string state = null, IDictionary<String, Object> errorData = null)
         {
             m_traceSource.TraceInfo("Returning OAuthError: Type: {0} , Message: {1}, State: {2}", errorType.ToString(), message, state ?? "(null)");
             RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.BadRequest;
@@ -830,7 +831,9 @@ namespace SanteDB.Rest.OAuth.Rest
             {
                 Error = errorType,
                 ErrorDescription = message,
-                State = state
+                ErrorDetail = detail,
+                State = state,
+                ErrorData = errorData
             };
         }
 
@@ -1016,7 +1019,7 @@ namespace SanteDB.Rest.OAuth.Rest
             _ = TryGetApplicationIdentity(context);
 
 
-            var clientClaims = context.IncomingRequest.Headers.ExtractClientClaims();
+            var clientClaims = context.IncomingRequest.Headers.ExtractClientClaims().ToList();
             // Set the language claim?
             if (!string.IsNullOrEmpty(formFields[OAuthConstants.FormField_UILocales]) &&
                 !clientClaims.Any(o => o.Type == SanteDBClaimTypes.Language))
@@ -1025,6 +1028,9 @@ namespace SanteDB.Rest.OAuth.Rest
             }
 
             context.AdditionalClaims = clientClaims;
+
+            // Add demanded sopes from the request
+            context.Scopes = formFields[OAuthConstants.FormField_Scope]?.Split(' ').ToList();
 
             var handler = _TokenRequestHandlers[context.GrantType];
 
@@ -1042,7 +1048,7 @@ namespace SanteDB.Rest.OAuth.Rest
                 if (!success)
                 {
                     m_traceSource.TraceVerbose("Handler returned error. Type: {1}, Message: {2}", context.ErrorType ?? OAuthErrorType.unspecified_error, context.ErrorMessage);
-                    return CreateErrorResponse(context.ErrorType ?? OAuthErrorType.unspecified_error, context.ErrorMessage ?? "unspecified error");
+                    return CreateErrorResponse(context.ErrorType ?? OAuthErrorType.unspecified_error, context.ErrorMessage ?? "unspecified error", context.ErrorDetail);
                 }
 
                 if (null == context.Session) //If the session is null, the handler is delegating session initialization back to us.
@@ -1082,6 +1088,13 @@ namespace SanteDB.Rest.OAuth.Rest
                 BeforeSendTokenResponse(context, response);
 
                 return response;
+            }
+            // Error establishing the session
+            catch (SecuritySessionException sessionException) when (sessionException.Type == SessionExceptionType.MissingRequiredClaim)
+            {
+                this.m_traceSource.TraceWarning("Attempted to login but policy requires a claim be provided");
+
+                return this.CreateErrorResponse(OAuthErrorType.missing_claim, sessionException.Message, errorData: sessionException.Data.Keys.OfType<String>().ToDictionary(o=>o, o=> sessionException.Data[o]));
             }
             catch (Exception ex) when (!(ex is StackOverflowException || ex is OutOfMemoryException))
             {

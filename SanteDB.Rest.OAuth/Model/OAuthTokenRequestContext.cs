@@ -89,7 +89,9 @@ namespace SanteDB.Rest.OAuth.Model
         /// </summary>
         public List<IClaim> AdditionalClaims { get; set; }
 
-
-
+        /// <summary>
+        /// Gets or sets the error detail
+        /// </summary>
+        public string ErrorDetail { get; set; }
     }
 }
