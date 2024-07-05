@@ -33,6 +33,7 @@ namespace SanteDB.Rest.WWW.Behaviors
     /// <summary>
     /// A service behavior that dictates browser caching controls
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class WebCachingBehavior : IEndpointBehavior, IMessageInspector
     {
         // Extensions which may be cached

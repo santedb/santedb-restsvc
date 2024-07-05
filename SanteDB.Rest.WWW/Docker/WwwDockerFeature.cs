@@ -35,6 +35,7 @@ namespace SanteDB.Rest.WWW.Docker
     /// <summary>
     /// Web hosting docker feature
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class WwwDockerFeature : IDockerFeature
     {
 

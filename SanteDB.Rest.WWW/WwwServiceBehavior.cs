@@ -44,6 +44,7 @@ namespace SanteDB.Rest.WWW
     /// Service behavior which renders WWW content from the the applets installed on the server
     /// </summary>
     [ServiceBehavior(Name = WwwMessageHandler.ConfigurationName)]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class WwwServiceBehavior : IWwwServiceContract
     {
         // Cached applets

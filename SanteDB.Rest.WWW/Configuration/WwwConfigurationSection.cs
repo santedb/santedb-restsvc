@@ -30,6 +30,7 @@ namespace SanteDB.Rest.WWW.Configuration
     /// Web configuration section
     /// </summary>
     [XmlType(nameof(WwwConfigurationSection), Namespace = "http://santedb.org/configuration")]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class WwwConfigurationSection : IConfigurationSection
     {
 

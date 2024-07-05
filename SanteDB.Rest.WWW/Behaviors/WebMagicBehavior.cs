@@ -42,6 +42,7 @@ namespace SanteDB.Rest.WWW.Behaviors
     /// that process is accessing data</para>
     /// <para>The data is passed in the HTTP header <c>X-SanteDB-Magic</c> or in the UserAgent of <c>SanteDB-MAGIC</c></para>
     /// </remarks>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class WebMagicBehavior : IServiceBehavior, IServicePolicy
     {
 

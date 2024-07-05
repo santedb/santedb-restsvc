@@ -38,6 +38,7 @@ namespace SanteDB.Rest.WWW
     /// The world wide web message handler is responsible for serving HTTP requests for web pages 
     /// </remarks>
     [ApiServiceProvider("WWW Interface", typeof(WwwServiceBehavior), ServiceEndpointType.WebUserInterfaceService, Required = false, Configuration = typeof(WwwConfigurationSection))]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class WwwMessageHandler : IDaemonService, IApiEndpointProvider
     {
         /// <summary>

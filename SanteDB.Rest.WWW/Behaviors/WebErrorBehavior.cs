@@ -41,6 +41,7 @@ namespace SanteDB.Rest.WWW.Behaviors
     /// <summary>
     /// A <see cref="IServiceBehavior"/> which provides error pages via HTML
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class WebErrorBehavior : IServiceBehavior, IServiceErrorHandler
     {
 
