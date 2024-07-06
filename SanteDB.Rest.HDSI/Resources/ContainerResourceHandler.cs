@@ -18,7 +18,7 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a resource handler that interacts with containers
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class ContainerResourceHandler : EntityResourceHandlerBase<Entity>
+    public class ContainerResourceHandler : EntityResourceHandlerBase<Container>
     {
         private readonly IRepositoryService<EntityRelationship> m_entityRelationshipRepository;
         private readonly ISecurityRepositoryService m_securityRepository;
