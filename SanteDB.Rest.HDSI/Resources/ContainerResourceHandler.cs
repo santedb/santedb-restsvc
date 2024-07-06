@@ -27,7 +27,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        public ContainerResourceHandler(ILocalizationService localizationService, IRepositoryService<Entity> repositoryService, IRepositoryService<EntityRelationship> entityRelationshipRepository, IPolicyEnforcementService pepService, ISecurityRepositoryService securityRepositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
+        public ContainerResourceHandler(ILocalizationService localizationService, IRepositoryService<Container> repositoryService, IRepositoryService<EntityRelationship> entityRelationshipRepository, IPolicyEnforcementService pepService, ISecurityRepositoryService securityRepositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
         {
             this.m_entityRelationshipRepository = entityRelationshipRepository;
             this.m_securityRepository = securityRepositoryService;
