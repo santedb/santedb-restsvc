@@ -4,11 +4,14 @@ using SanteDB.Core.Exceptions;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Model.Constants;
 using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
+using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 
@@ -20,85 +23,42 @@ namespace SanteDB.Rest.HDSI.Resources
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class ContainerResourceHandler : EntityResourceHandlerBase<Container>
     {
-        private readonly IRepositoryService<EntityRelationship> m_entityRelationshipRepository;
-        private readonly ISecurityRepositoryService m_securityRepository;
-        private readonly IPolicyEnforcementService m_pepService;
 
         /// <summary>
         /// DI constructor
         /// </summary>
-        public ContainerResourceHandler(ILocalizationService localizationService, IRepositoryService<Container> repositoryService, IRepositoryService<EntityRelationship> entityRelationshipRepository, IPolicyEnforcementService pepService, ISecurityRepositoryService securityRepositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
+        public ContainerResourceHandler(ILocalizationService localizationService, IRepositoryService<Container> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
         {
-            this.m_entityRelationshipRepository = entityRelationshipRepository;
-            this.m_securityRepository = securityRepositoryService;
-            this.m_pepService = pepService;
         }
 
-        /// <summary>
-        /// Demand the altering of a container - either a manager of the facility to which the container belongs, or AlterPlacesAndOrgs
-        /// </summary>
-        private void DemandAlterContainer(Container cont)
-        {
-
-            var containedFacilityRel = cont.Relationships?.FirstOrDefault(o => o.RelationshipTypeKey == EntityRelationshipTypeKeys.LocatedEntity) ??
-                this.m_entityRelationshipRepository.Find(o => o.TargetEntityKey == cont.Key && o.RelationshipTypeKey == EntityRelationshipTypeKeys.LocatedEntity).FirstOrDefault();
-
-            if(containedFacilityRel == null )
-            {
-                throw new DetectedIssueException(Core.BusinessRules.DetectedIssuePriorityType.Error, "santedb.container.locatedEntity", String.Format(ErrorMessages.DEPENDENT_PROPERTY_NULL, nameof(EntityRelationshipTypeKeys.LocatedEntity)), DetectedIssueKeys.InvalidDataIssue, null);
-            }
-
-            // TODO: Allow for the classification of a facility administrative user
-            var thisUser = this.m_securityRepository.GetCdrEntity(AuthenticationContext.Current.Principal);
-            if (thisUser?.LoadProperty(o => o.Relationships).Any(r => r.RelationshipTypeKey == EntityRelationshipTypeKeys.MaintainedEntity && r.TargetEntityKey == containedFacilityRel.SourceEntityKey) != true)
-            {
-                this.m_pepService.Demand(PermissionPolicyIdentifiers.WritePlacesAndOrgs);
-            }
-
-
-        }
-
-        /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public override object Create(object data, bool updateIfExists)
         {
-            if (data is Container cont)
-            {
-                this.DemandAlterContainer(cont);
-                return base.Create(cont, updateIfExists);
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException(nameof(data), String.Format(ErrorMessages.ARGUMENT_INCOMPATIBLE_TYPE, typeof(Container), data.GetType()));
-            }
+            return base.Create(data, updateIfExists);
         }
 
-        /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public override object Update(object data)
         {
-            if (data is Container cont)
-            {
-                this.DemandAlterContainer(cont);
-                return base.Update(cont);
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException(nameof(data), String.Format(ErrorMessages.ARGUMENT_INCOMPATIBLE_TYPE, typeof(Container), data.GetType()));
-            }
+            return base.Update(data);
         }
 
-        /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public override object Delete(object key)
         {
-            if (key is Guid uuid)
-            {
-                var cont = base.Get(key, null) as Container;
-                this.DemandAlterContainer(cont);
-                return base.Delete(uuid);
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException(nameof(key), String.Format(ErrorMessages.ARGUMENT_INCOMPATIBLE_TYPE, typeof(Guid), key.GetType()));
-            }
+            return base.Delete(key);
+        }
+
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
+        public override IQueryResultSet Query(NameValueCollection queryParameters)
+        {
+            return base.Query(queryParameters);
+        }
+
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
+        public override object Get(object id, object versionId)
+        {
+            return base.Get(id, versionId);
         }
     }
 }
