@@ -39,7 +39,8 @@ namespace SanteDB.Rest.HDSI.Operation
     public class GenerateCarePlanOperation : IApiChildOperation
     {
         // Care plan service
-        private IDecisionSupportService m_carePlanService;
+        private IDecisionSupportService m_cdssService;
+        private readonly IRepositoryService<CarePlan> m_careplanRepository;
         private readonly ICdssLibraryRepository m_clinicalProtocolRepository;
 
         // Repo service
@@ -52,13 +53,15 @@ namespace SanteDB.Rest.HDSI.Operation
         /// <summary>
         /// DI constructor for care plan
         /// </summary>
-        public GenerateCarePlanOperation(IDecisionSupportService carePlanService,
+        public GenerateCarePlanOperation(IDecisionSupportService cdssService,
             ICdssLibraryRepository clinicalProtocolRepository,
             IConceptRepositoryService conceptRepositoryService,
             IRepositoryService<Patient> patientRepository,
+            IRepositoryService<CarePlan> careplanRepository,
             ILocalizationService localizationService)
         {
-            this.m_carePlanService = carePlanService;
+            this.m_cdssService = cdssService;
+            this.m_careplanRepository = careplanRepository;
             this.m_clinicalProtocolRepository = clinicalProtocolRepository;
             this.m_conceptRepositoryService = conceptRepositoryService;
             this.m_localizationService = localizationService;
@@ -115,20 +118,26 @@ namespace SanteDB.Rest.HDSI.Operation
             CarePlan plan = null;
             if (libraryToApply != null)
             {
-                plan = this.m_carePlanService.CreateCarePlan(target, asEncounters, cpParameters, libraryToApply);
+                plan = this.m_cdssService.CreateCarePlan(target, asEncounters, cpParameters, libraryToApply);
             }
             else
             {
-                plan = this.m_carePlanService.CreateCarePlan(target, asEncounters, cpParameters);
+                plan = this.m_cdssService.CreateCarePlan(target, asEncounters, cpParameters);
             }
 
-            // Expand the participation roles form the care planner
-            foreach (var p in plan.Relationships.Where(o => o.RelationshipTypeKey == ActRelationshipTypeKeys.HasComponent).Select(o => o.TargetAct))
+            // If there is a stored plan for this pathway - we want to update and store it 
+            if(parameters.TryGet("pathway", out string carePathwayId) && target.VersionKey.HasValue)
             {
-                p.Participations.ForEach(o => o.ParticipationRoleKey = o.ParticipationRoleKey ?? this.m_conceptRepositoryService.GetConcept(o.ParticipationRole?.Mnemonic).Key);
+                
+                var existingPlan = this.m_careplanRepository.Find(o => o.CarePathwayIdentifier == carePathwayId && o.Participations.Where(p => p.ParticipationRoleKey == ActParticipationKeys.RecordTarget).Any(p => p.PlayerEntityKey == target.Key) && o.StatusConceptKey == StatusKeys.Active).FirstOrDefault();
+                if(existingPlan != null)
+                {
+                    plan.HarmonizeComponents(existingPlan);
+                }
             }
+            
 
-            return Bundle.CreateBundle(plan);
+            return plan;
         }
     }
 }
