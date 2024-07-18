@@ -79,7 +79,11 @@ namespace SanteDB.Rest.AppService
             {
                 throw new KeyNotFoundException(this.m_localizationService.GetString(ErrorMessageStrings.NOT_FOUND, new { type = "Template", id = templateId }));
             }
-            RestOperationContext.Current.OutgoingResponse.Redirect(template.Form);
+            if (!String.IsNullOrEmpty(template.Form))
+            {
+                RestOperationContext.Current.OutgoingResponse.Redirect(template.Form);
+            }
+            
         }
 
         /// <inheritdoc/>
@@ -103,7 +107,10 @@ namespace SanteDB.Rest.AppService
             {
                 throw new KeyNotFoundException(this.m_localizationService.GetString(ErrorMessageStrings.NOT_FOUND, new { type = "Template", id = templateId }));
             }
-            RestOperationContext.Current.OutgoingResponse.Redirect(template.View);
+            if (!String.IsNullOrEmpty(template.View))
+            {
+                RestOperationContext.Current.OutgoingResponse.Redirect(template.View);
+            }
         }
 
     }
