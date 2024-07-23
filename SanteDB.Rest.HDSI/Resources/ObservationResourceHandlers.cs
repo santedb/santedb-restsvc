@@ -71,6 +71,20 @@ namespace SanteDB.Rest.HDSI.Resources
     }
 
     /// <summary>
+    /// Handler OBS
+    /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
+    public class ObservationResourceHandler : ObservationResourceHandler<Observation>
+    {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        public ObservationResourceHandler(ILocalizationService localizationService, IRepositoryService<Observation> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
+        {
+        }
+    }
+
+    /// <summary>
     /// Handler for observations (handles permissions)
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes

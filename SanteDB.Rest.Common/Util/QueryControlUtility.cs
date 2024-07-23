@@ -74,7 +74,7 @@ namespace SanteDB.Rest.Common
             }
 
             // Include total count?
-            if (query.TryGetValue(QueryControlParameterNames.HttpIncludeTotalParameterName, out queryList) && Boolean.TryParse(queryList.First(), out bool includeTotal) == true)
+            if (query.TryGetValue(QueryControlParameterNames.HttpIncludeTotalParameterName, out queryList) && Boolean.TryParse(queryList.First(), out bool includeTotal) && includeTotal)
             {
                 totalCount = me.Count();
             }
