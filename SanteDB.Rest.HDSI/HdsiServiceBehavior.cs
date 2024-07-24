@@ -1113,13 +1113,7 @@ namespace SanteDB.Rest.HDSI
 
             try
             {
-                // Validate
-                var match = RestOperationContext.Current.IncomingRequest.Headers["If-Match"];
-                if (match == null)
-                {
-                    throw new InvalidOperationException("Missing If-Match header");
-                }
-
+                
                 // First we load
                 var handler = this.GetResourceHandler(resourceType);
 
