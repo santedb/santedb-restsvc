@@ -1128,7 +1128,10 @@ namespace SanteDB.Rest.HDSI
                 var objectId = Guid.Parse(id);
                 var force = Convert.ToBoolean(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.ForceApplyPatchHeaderName] ?? "false");
 
-                this.ThrowIfPreConditionFails(handler, objectId);
+                if (!force)
+                {
+                    this.ThrowIfPreConditionFails(handler, objectId);
+                }
 
                 using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
                 {

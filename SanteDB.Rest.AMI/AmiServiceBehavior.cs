@@ -500,13 +500,12 @@ namespace SanteDB.Rest.AMI
                     throw new FileNotFoundException(resourceType);
                 }
 
-                // Validate
-                var match = RestOperationContext.Current.IncomingRequest.Headers["If-Match"];
-                if (match == null && typeof(IVersionedData).IsAssignableFrom(handler.Type))
-                {
-                    throw new InvalidOperationException("Missing If-Match header for versioned objects");
-                }
-
+                //// Validate
+                //var match = RestOperationContext.Current.IncomingRequest.Headers["If-Match"];
+                //if (match == null && typeof(IVersionedData).IsAssignableFrom(handler.Type))
+                //{
+                //    throw new InvalidOperationException("Missing If-Match header for versioned objects");
+                //}
                 // Next we get the current version
                 this.AclCheck(handler, nameof(IApiResourceHandler.Get));
 
@@ -519,18 +518,15 @@ namespace SanteDB.Rest.AMI
                     throw new NotSupportedException();
                 }
 
-                var force = Convert.ToBoolean(RestOperationContext.Current.IncomingRequest.Headers["X-Patch-Force"] ?? "false");
+                var force = Convert.ToBoolean(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.ForceApplyPatchHeaderName] ?? "false");
+                if (!force)
+                {
+                    this.ThrowIfPreConditionFails(handler, id);
+                }
 
                 if (existing == null)
                 {
                     throw new FileNotFoundException($"/{resourceType}/{id}");
-                }
-                else if (!String.IsNullOrEmpty(match) && (existing as IdentifiedData)?.Tag != match && !force)
-                {
-                    this.m_traceSource.TraceError("Object {0} ETAG is {1} but If-Match specified {2}", existing.Key, existing.Tag, match);
-                    RestOperationContext.Current.OutgoingResponse.StatusCode = 409;
-                    RestOperationContext.Current.OutgoingResponse.StatusDescription = "Conflict";
-                    return;
                 }
                 else if (body == null)
                 {
