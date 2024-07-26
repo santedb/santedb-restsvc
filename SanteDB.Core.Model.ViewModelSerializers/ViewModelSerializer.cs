@@ -23866,7 +23866,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((_strong.ReferencedType == null)) {
                 }
                 else {
-                    context.JsonContext.WritePropertyUtil(w, "refType", _strong.ReferencedType, context);
+                    context.JsonContext.WritePropertyUtil(w, "refType", _strong.ReferencedTypeXml, context);
                 }
             }
             if (context.ShouldSerialize("id")) {
@@ -23912,7 +23912,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                 r.Read();
                                 object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("refType", context.JsonContext, _retVal, context));
                                 if ((_instance != null)) {
-                                    _retVal.ReferencedType = ((string)(_instance));
+                                    _retVal.ReferencedTypeXml = ((string)(_instance));
                                 }
                             }
                             else {
