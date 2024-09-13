@@ -111,7 +111,7 @@ namespace SanteDB.Rest.HDSI.Operation
             {
                 libraryToApply = this.m_clinicalProtocolRepository.Get(libraryId, null);
             }
-            parameters.TryGet("asEncounter", out bool asEncounters);
+            parameters.TryGet("asEncounters", out bool asEncounters);
 
             var cpParameters = parameters.Parameters.ToDictionary(o => o.Name, p => p.Value);
 
@@ -126,10 +126,10 @@ namespace SanteDB.Rest.HDSI.Operation
             }
 
             // If there is a stored plan for this pathway - we want to update and store it 
-            if(parameters.TryGet("pathway", out string carePathwayId) && target.VersionKey.HasValue)
+            if(parameters.TryGet("pathway", out Guid carePathwayId) && target.VersionKey.HasValue)
             {
                 
-                var existingPlan = this.m_careplanRepository.Find(o => o.CarePathwayIdentifier == carePathwayId && o.Participations.Where(p => p.ParticipationRoleKey == ActParticipationKeys.RecordTarget).Any(p => p.PlayerEntityKey == target.Key) && o.StatusConceptKey == StatusKeys.Active).FirstOrDefault();
+                var existingPlan = this.m_careplanRepository.Find(o => o.CarePathwayKey == carePathwayId && o.Participations.Where(p => p.ParticipationRoleKey == ActParticipationKeys.RecordTarget).Any(p => p.PlayerEntityKey == target.Key) && o.StatusConceptKey == StatusKeys.Active).FirstOrDefault();
                 if(existingPlan != null)
                 {
                     plan.HarmonizeComponents(existingPlan);
