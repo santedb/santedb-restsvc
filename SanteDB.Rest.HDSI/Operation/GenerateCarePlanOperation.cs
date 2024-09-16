@@ -123,10 +123,10 @@ namespace SanteDB.Rest.HDSI.Operation
             }
 
             // If there is a stored plan for this pathway - we want to update and store it 
-            if(parameters.TryGet("pathway", out Guid carePathwayId) && target.VersionKey.HasValue)
+            if(parameters.TryGet("pathway", out String carePathwayId) && target.VersionKey.HasValue)
             {
                 
-                var existingPlan = this.m_careplanRepository.Find(o => o.CarePathwayKey == carePathwayId && o.Participations.Where(p => p.ParticipationRoleKey == ActParticipationKeys.RecordTarget).Any(p => p.PlayerEntityKey == target.Key) && o.StatusConceptKey == StatusKeys.Active).FirstOrDefault();
+                var existingPlan = this.m_careplanRepository.Find(o => o.CarePathway.Mnemonic == carePathwayId && o.Participations.Where(p => p.ParticipationRoleKey == ActParticipationKeys.RecordTarget).Any(p => p.PlayerEntityKey == target.Key) && o.StatusConceptKey == StatusKeys.Active).FirstOrDefault();
                 if(existingPlan != null)
                 {
                     plan.HarmonizeComponents(existingPlan);
