@@ -15,8 +15,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  *
- * User: fyfej
- * Date: 2023-6-21
  */
 using RestSrvr;
 using SanteDB.Core.Applets.Model;
@@ -288,7 +286,7 @@ namespace SanteDB.Rest.AppService
                 {
                     if (o.Count() == 1)
                     {
-                        return (object)o.First();
+                        return (object)o.First().Value;
                     }
                     else
                     {
