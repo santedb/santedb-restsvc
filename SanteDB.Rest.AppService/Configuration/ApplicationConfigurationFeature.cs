@@ -97,7 +97,7 @@ namespace SanteDB.Rest.AppService.Configuration
             }
 
             section.AppSettings = ((IEnumerable)featureConfiguration[APPSETTING_SETTING])?.OfType<JObject>().Select(o => new AppSettingKeyValuePair(o["key"].ToString(), o["value"]?.ToString())).ToList();
-            //section.ServiceProviders = ((IEnumerable)featureConfiguration[SERVICES_SETTING])?.OfType<JObject>().Select(o => new TypeReferenceConfiguration(o["type"].ToString())).ToList();
+            section.ServiceProviders = ((IEnumerable)featureConfiguration[SERVICES_SETTING])?.OfType<JToken>().Select(o => new TypeReferenceConfiguration(o.ToString())).ToList();
             return true;
 
         }
