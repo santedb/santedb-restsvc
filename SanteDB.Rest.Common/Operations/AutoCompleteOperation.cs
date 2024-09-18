@@ -280,8 +280,12 @@ namespace SanteDB.Rest.Common.Operations
         /// TODO: Clean this up
         private object FollowPath(Type scopingType, string propertyPath, JObject variables)
         {
-            // Get rid f the .
-            if (propertyPath.StartsWith("."))
+            // Get rid f the
+            if(String.IsNullOrEmpty(propertyPath))
+            {
+                return new AutoCompleteTypeInfo(scopingType);
+            }
+            else if (propertyPath.StartsWith("."))
             {
                 propertyPath = propertyPath.Substring(1);
             }

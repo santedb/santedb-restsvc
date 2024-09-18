@@ -10,8 +10,9 @@
 
 namespace SanteDB.Core.Model.Json.Formatter {
     using SanteDB.Core.Model;
-    
-    
+    using System;
+
+
     /// <summary>Serializes <see cref="SanteDB.Core.Model.NonVersionedEntityData"/> to or from JSON View Model Format</summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class NonVersionedEntityDataViewModelSerializer : SanteDB.Core.Applets.ViewModel.Json.IJsonViewModelTypeFormatter {
@@ -26216,7 +26217,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
             }
             if (context.ShouldSerialize("relationshipTypeModel")) {
                 if ((_strong.RelationshipType == null)) {
-                    if ((_strong.RelationshipTypeKey != System.Guid.Empty && context.ShouldForceLoad("relationshipTypeModel", _strong.Key))) {
+                    if ((_strong.RelationshipTypeKey != Guid.Empty && context.ShouldForceLoad("relationshipTypeModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.Concept _delay = null;
                         _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.Concept>(_strong, "RelationshipType");
                         if ((_delay != null)) {
