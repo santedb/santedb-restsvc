@@ -15,6 +15,7 @@
  * License for the specific language governing permissions and limitations under 
  * the License.
  */
+using SanteDB.Core;
 using SanteDB.Core.Cdss;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
@@ -122,19 +123,7 @@ namespace SanteDB.Rest.HDSI.Operation
                 plan = this.m_cdssService.CreateCarePlan(target, asEncounters, cpParameters);
             }
 
-            // If there is a stored plan for this pathway - we want to update and store it 
-            if(parameters.TryGet("pathway", out String carePathwayId) && target.VersionKey.HasValue)
-            {
-                
-                var existingPlan = this.m_careplanRepository.Find(o => o.CarePathway.Mnemonic == carePathwayId && o.Participations.Where(p => p.ParticipationRoleKey == ActParticipationKeys.RecordTarget).Any(p => p.PlayerEntityKey == target.Key) && o.StatusConceptKey == StatusKeys.Active).FirstOrDefault();
-                if(existingPlan != null)
-                {
-                    plan.HarmonizeComponents(existingPlan);
-                }
-            }
-            
-
-            return plan;
+            return plan.HarmonizeCarePlan(); // Harmonize with stored careplan
         }
     }
 }
