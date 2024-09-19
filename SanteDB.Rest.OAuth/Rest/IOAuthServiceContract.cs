@@ -14,13 +14,11 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
  * License for the specific language governing permissions and limitations under 
  * the License.
- * 
- * User: fyfej
- * Date: 2023-6-21
  */
 using RestSrvr.Attributes;
 using SanteDB.Core.Security.OAuth;
 using SanteDB.Rest.OAuth.Model;
+using System.Collections;
 using System.Collections.Specialized;
 using System.IO;
 
@@ -98,8 +96,6 @@ namespace SanteDB.Rest.OAuth.Rest
         [UrlParameter("nonce", typeof(string), "Number ONCE that is returned when the authorization code is exchanged by the token service.", Required = false)]
         [return: MessageFormat(MessageFormatType.Json)]
         object Authorize_Post(NameValueCollection formFields);
-
-
 
         /// <summary>
         /// Invoke a ping

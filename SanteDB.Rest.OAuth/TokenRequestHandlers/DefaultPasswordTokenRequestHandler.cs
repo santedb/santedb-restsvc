@@ -14,9 +14,6 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
  * License for the specific language governing permissions and limitations under 
  * the License.
- * 
- * User: fyfej
- * Date: 2023-6-21
  */
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
@@ -80,11 +77,11 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
 
                 if (!string.IsNullOrEmpty(context.TfaSecret))
                 {
-                    context.UserPrincipal = identityprovider.Authenticate(context.Username, context.Password, context.TfaSecret) as IClaimsPrincipal;
+                    context.UserPrincipal = identityprovider.Authenticate(context.Username, context.Password, context.TfaSecret, context.AdditionalClaims, context.Scopes) as IClaimsPrincipal;
                 }
                 else
                 {
-                    context.UserPrincipal = identityprovider.Authenticate(context.Username, context.Password) as IClaimsPrincipal;
+                    context.UserPrincipal = identityprovider.Authenticate(context.Username, context.Password, context.AdditionalClaims, context.Scopes) as IClaimsPrincipal;
                 }
 
                 // The principal is already a token based principal - so we may have gotten it from an upstream - we just have to relay this token back to the caller 
@@ -135,7 +132,7 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                 context.ErrorType = OAuthErrorType.mfa_required;
                 return false;
             }
-            catch(PasswordExpiredException)
+            catch (PasswordExpiredException)
             {
                 _Tracer.TraceWarning("User password is expired");
                 context.ErrorMessage = ErrorMessages.PASSWORD_EXPIRED;

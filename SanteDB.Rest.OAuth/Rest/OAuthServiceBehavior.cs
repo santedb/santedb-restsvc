@@ -14,9 +14,6 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
  * License for the specific language governing permissions and limitations under 
  * the License.
- * 
- * User: fyfej
- * Date: 2023-6-21
  */
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
@@ -47,6 +44,7 @@ using SharpCompress;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -139,6 +137,7 @@ namespace SanteDB.Rest.OAuth.Rest
         readonly IAuditService _AuditService;
 
         readonly IRoleProviderService _RoleProvider;
+        private readonly IDataSigningCertificateManagerService _SigningCertificateManager;
 
 
 
@@ -149,10 +148,6 @@ namespace SanteDB.Rest.OAuth.Rest
         /// </summary>
         protected readonly Dictionary<string, ITokenRequestHandler> _TokenRequestHandlers;
         private readonly Dictionary<string, Func<OAuthAuthorizeRequestContext, object>> _AuthorizeResponseModeHandlers;
-
-
-
-
 
         /// <summary>
         /// Policy enforcement service
@@ -172,7 +167,7 @@ namespace SanteDB.Rest.OAuth.Rest
             m_DeviceIdentityProvider = ApplicationServiceContext.Current.GetService<IDeviceIdentityProviderService>();
             _SymmetricProvider = ApplicationServiceContext.Current.GetService<ISymmetricCryptographicProvider>() ?? throw new ApplicationException($"Cannot find instance of {nameof(ISymmetricCryptographicProvider)} in {nameof(ApplicationServiceContext)}.");
             _RoleProvider = ApplicationServiceContext.Current.GetService<IRoleProviderService>() ?? throw new ApplicationException($"Cannot find instance of {nameof(IRoleProviderService)} in {nameof(ApplicationServiceContext)}.");
-
+            _SigningCertificateManager = ApplicationServiceContext.Current.GetService<IDataSigningCertificateManagerService>();
             //Optimization - try to resolve from the same session provider. 
             m_SessionIdentityProvider = m_SessionProvider as ISessionIdentityProviderService;
 
@@ -822,7 +817,7 @@ namespace SanteDB.Rest.OAuth.Rest
         /// <summary>
         /// Create error condition
         /// </summary>
-        private OAuthError CreateErrorResponse(OAuthErrorType errorType, string message, string state = null)
+        private OAuthError CreateErrorResponse(OAuthErrorType errorType, string message, string detail = null, string state = null, IDictionary<String, Object> errorData = null)
         {
             m_traceSource.TraceInfo("Returning OAuthError: Type: {0} , Message: {1}, State: {2}", errorType.ToString(), message, state ?? "(null)");
             RestOperationContext.Current.OutgoingResponse.StatusCode = (int)HttpStatusCode.BadRequest;
@@ -830,7 +825,9 @@ namespace SanteDB.Rest.OAuth.Rest
             {
                 Error = errorType,
                 ErrorDescription = message,
-                State = state
+                ErrorDetail = detail,
+                State = state,
+                ErrorData = errorData
             };
         }
 
@@ -1016,7 +1013,7 @@ namespace SanteDB.Rest.OAuth.Rest
             _ = TryGetApplicationIdentity(context);
 
 
-            var clientClaims = context.IncomingRequest.Headers.ExtractClientClaims();
+            var clientClaims = context.IncomingRequest.Headers.ExtractClientClaims().ToList();
             // Set the language claim?
             if (!string.IsNullOrEmpty(formFields[OAuthConstants.FormField_UILocales]) &&
                 !clientClaims.Any(o => o.Type == SanteDBClaimTypes.Language))
@@ -1025,6 +1022,9 @@ namespace SanteDB.Rest.OAuth.Rest
             }
 
             context.AdditionalClaims = clientClaims;
+
+            // Add demanded sopes from the request
+            context.Scopes = formFields[OAuthConstants.FormField_Scope]?.Split(' ').ToList();
 
             var handler = _TokenRequestHandlers[context.GrantType];
 
@@ -1042,7 +1042,7 @@ namespace SanteDB.Rest.OAuth.Rest
                 if (!success)
                 {
                     m_traceSource.TraceVerbose("Handler returned error. Type: {1}, Message: {2}", context.ErrorType ?? OAuthErrorType.unspecified_error, context.ErrorMessage);
-                    return CreateErrorResponse(context.ErrorType ?? OAuthErrorType.unspecified_error, context.ErrorMessage ?? "unspecified error");
+                    return CreateErrorResponse(context.ErrorType ?? OAuthErrorType.unspecified_error, context.ErrorMessage ?? "unspecified error", context.ErrorDetail);
                 }
 
                 if (null == context.Session) //If the session is null, the handler is delegating session initialization back to us.
@@ -1082,6 +1082,13 @@ namespace SanteDB.Rest.OAuth.Rest
                 BeforeSendTokenResponse(context, response);
 
                 return response;
+            }
+            // Error establishing the session
+            catch (SecuritySessionException sessionException) when (sessionException.Type == SessionExceptionType.MissingRequiredClaim)
+            {
+                this.m_traceSource.TraceWarning("Attempted to login but policy requires a claim be provided");
+
+                return this.CreateErrorResponse(OAuthErrorType.missing_claim, sessionException.Message, errorData: sessionException.Data.Keys.OfType<String>().ToDictionary(o=>o, o=> sessionException.Data[o]));
             }
             catch (Exception ex) when (!(ex is StackOverflowException || ex is OutOfMemoryException))
             {
@@ -1731,6 +1738,15 @@ namespace SanteDB.Rest.OAuth.Rest
                 if (null != jwk && !keyset.Keys.Any(k => k.KeyId == jwk?.KeyId))
                 {
                     keyset.Keys.Add(jwk);
+                }
+            }
+
+            // Include all for SYSTEM
+            foreach(var cert in this._SigningCertificateManager.GetSigningCertificates(AuthenticationContext.SystemPrincipal.Identity))
+            {
+                if(!keyset.Keys.Any(k=>cert.GetCertHash().HexEncode().Equals(k.KeyId, StringComparison.OrdinalIgnoreCase)))
+                {
+                    keyset.Keys.Add(JsonWebKeyConverter.ConvertFromX509SecurityKey(new X509SecurityKey(cert)));
                 }
             }
 

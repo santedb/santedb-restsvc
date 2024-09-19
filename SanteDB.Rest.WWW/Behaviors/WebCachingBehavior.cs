@@ -15,8 +15,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  *
- * User: fyfej
- * Date: 2023-6-21
  */
 using RestSrvr;
 using RestSrvr.Message;
@@ -33,6 +31,7 @@ namespace SanteDB.Rest.WWW.Behaviors
     /// <summary>
     /// A service behavior that dictates browser caching controls
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class WebCachingBehavior : IEndpointBehavior, IMessageInspector
     {
         // Extensions which may be cached

@@ -14,9 +14,6 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
  * License for the specific language governing permissions and limitations under 
  * the License.
- * 
- * User: fyfej
- * Date: 2023-6-21
  */
 using SanteDB;
 using SanteDB.Core.Configuration;
@@ -39,10 +36,6 @@ namespace SanteDB.Rest.OAuth.Docker
     [ExcludeFromCodeCoverage]
     public class OauthDockerFeature : IDockerFeature
     {
-        /// <summary>
-        /// Claims which can be set by the client
-        /// </summary>
-        public const string ClientClaimSetting = "CLAIMS";
         /// <summary>
         /// Token type
         /// </summary>
@@ -74,7 +67,6 @@ namespace SanteDB.Rest.OAuth.Docker
         /// </summary>
         public IEnumerable<string> Settings => new string[]
         {
-            ClientClaimSetting ,
             TokenTypeSetting ,
             NodelessClientAuthSetting ,
             IssuerIdSetting ,
@@ -133,12 +125,6 @@ namespace SanteDB.Rest.OAuth.Docker
                     throw new ArgumentException($"{listenStr} is not a valid URI");
                 }
                 oauthRestConfiguration.Endpoints.ForEach(ep => ep.Address = listenStr);
-            }
-
-            // Client claims?
-            if (settings.TryGetValue(ClientClaimSetting, out string claim))
-            {
-                oauthConf.AllowedClientClaims = claim.Split(';').ToList();
             }
 
             // Token type?

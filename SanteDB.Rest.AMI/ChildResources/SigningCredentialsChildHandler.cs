@@ -15,8 +15,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  *
- * User: fyfej
- * Date: 2023-7-22
  */
 using RestSrvr;
 using SanteDB.Core;
@@ -28,6 +26,7 @@ using SanteDB.Core.Model.AMI.Security;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Security;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Principal;
 using SanteDB.Core.Security.Services;
 using SanteDB.Rest.Common;
 using System;
@@ -83,7 +82,7 @@ namespace SanteDB.Rest.AMI.ChildResources
             ResourceCapabilityType.Get;
 
         /// <inheritdoc/>
-        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Instance;
+        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Instance | ChildObjectScopeBinding.Class;
 
         /// <inheritdoc/>
         public Type[] ParentTypes => new Type[]
@@ -207,6 +206,12 @@ namespace SanteDB.Rest.AMI.ChildResources
                 var searchFilter = QueryExpressionParser.BuildLinqExpression<X509Certificate2Info>(filter, null).Compile();
                 // Find the certificate
                 return new MemoryQueryResultSet<X509Certificate2Info>(this.m_dataSigningCertificateManager.GetSigningCertificates(identityToMap).Select(o => new X509Certificate2Info(o)).Where(searchFilter));
+            }
+            else if(scopingKey == null)
+            {
+                // Find the certificate
+                return this.m_dataSigningCertificateManager.GetSigningCertificates(scopingType, filter).Select((a) => new X509Certificate2Info(a)).AsResultSet();
+
             }
             else
             {

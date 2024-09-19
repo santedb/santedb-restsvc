@@ -15,8 +15,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  *
- * User: fyfej
- * Date: 2023-7-26
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Types;

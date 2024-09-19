@@ -14,10 +14,8 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
  * License for the specific language governing permissions and limitations under 
  * the License.
- * 
- * User: fyfej
- * Date: 2023-6-21
  */
+using SanteDB.Core;
 using SanteDB.Core.Cdss;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
@@ -39,7 +37,8 @@ namespace SanteDB.Rest.HDSI.Operation
     public class GenerateCarePlanOperation : IApiChildOperation
     {
         // Care plan service
-        private IDecisionSupportService m_carePlanService;
+        private IDecisionSupportService m_cdssService;
+        private readonly IRepositoryService<CarePlan> m_careplanRepository;
         private readonly ICdssLibraryRepository m_clinicalProtocolRepository;
 
         // Repo service
@@ -52,13 +51,15 @@ namespace SanteDB.Rest.HDSI.Operation
         /// <summary>
         /// DI constructor for care plan
         /// </summary>
-        public GenerateCarePlanOperation(IDecisionSupportService carePlanService,
+        public GenerateCarePlanOperation(IDecisionSupportService cdssService,
             ICdssLibraryRepository clinicalProtocolRepository,
             IConceptRepositoryService conceptRepositoryService,
             IRepositoryService<Patient> patientRepository,
+            IRepositoryService<CarePlan> careplanRepository,
             ILocalizationService localizationService)
         {
-            this.m_carePlanService = carePlanService;
+            this.m_cdssService = cdssService;
+            this.m_careplanRepository = careplanRepository;
             this.m_clinicalProtocolRepository = clinicalProtocolRepository;
             this.m_conceptRepositoryService = conceptRepositoryService;
             this.m_localizationService = localizationService;
@@ -108,27 +109,21 @@ namespace SanteDB.Rest.HDSI.Operation
             {
                 libraryToApply = this.m_clinicalProtocolRepository.Get(libraryId, null);
             }
-            parameters.TryGet("asEncounter", out bool asEncounters);
+            parameters.TryGet("asEncounters", out bool asEncounters);
 
             var cpParameters = parameters.Parameters.ToDictionary(o => o.Name, p => p.Value);
 
             CarePlan plan = null;
             if (libraryToApply != null)
             {
-                plan = this.m_carePlanService.CreateCarePlan(target, asEncounters, cpParameters, libraryToApply);
+                plan = this.m_cdssService.CreateCarePlan(target, asEncounters, cpParameters, libraryToApply);
             }
             else
             {
-                plan = this.m_carePlanService.CreateCarePlan(target, asEncounters, cpParameters);
+                plan = this.m_cdssService.CreateCarePlan(target, asEncounters, cpParameters);
             }
 
-            // Expand the participation roles form the care planner
-            foreach (var p in plan.Relationships.Where(o => o.RelationshipTypeKey == ActRelationshipTypeKeys.HasComponent).Select(o => o.TargetAct))
-            {
-                p.Participations.ForEach(o => o.ParticipationRoleKey = o.ParticipationRoleKey ?? this.m_conceptRepositoryService.GetConcept(o.ParticipationRole?.Mnemonic).Key);
-            }
-
-            return Bundle.CreateBundle(plan);
+            return plan.HarmonizeCarePlan(); // Harmonize with stored careplan
         }
     }
 }

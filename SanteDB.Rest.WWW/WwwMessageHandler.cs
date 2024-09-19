@@ -15,8 +15,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  *
- * User: fyfej
- * Date: 2023-6-21
  */
 using RestSrvr;
 using SanteDB.Core;
@@ -38,6 +36,7 @@ namespace SanteDB.Rest.WWW
     /// The world wide web message handler is responsible for serving HTTP requests for web pages 
     /// </remarks>
     [ApiServiceProvider("WWW Interface", typeof(WwwServiceBehavior), ServiceEndpointType.WebUserInterfaceService, Required = false, Configuration = typeof(WwwConfigurationSection))]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class WwwMessageHandler : IDaemonService, IApiEndpointProvider
     {
         /// <summary>

@@ -15,8 +15,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  *
- * User: fyfej
- * Date: 2023-6-21
  */
 using RestSrvr;
 using SanteDB.Core.Applets.Model;
@@ -284,7 +282,17 @@ namespace SanteDB.Rest.AppService
                 retVal.Add("lang", ses.Claims.FirstOrDefault(o => o.Type == SanteDBClaimTypes.Language)?.Value);
                 retVal.Add("scope", ses.Claims.Where(o => o.Type == SanteDBClaimTypes.SanteDBGrantedPolicyClaim).Select(o => o.Value).ToArray());
                 retVal.Add("method", ses.Claims.FirstOrDefault(o => o.Type == SanteDBClaimTypes.AuthenticationMethod)?.Value);
-                retVal.Add("claims", ses.Claims.GroupBy(o => o.Type).ToDictionary(o => o.Key, o => o.Select(a => a.Value).ToArray()));
+                retVal.Add("claims", ses.Claims.GroupBy(o => o.Type).ToDictionary(o => o.Key, o =>
+                {
+                    if (o.Count() == 1)
+                    {
+                        return (object)o.First().Value;
+                    }
+                    else
+                    {
+                        return o.Select(a => a.Value).ToArray();
+                    }
+                }));
                 retVal.Add("exp", ses.NotAfter);
                 retVal.Add("nbf", ses.NotBefore);
 

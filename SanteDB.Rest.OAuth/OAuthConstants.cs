@@ -14,9 +14,6 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
  * License for the specific language governing permissions and limitations under 
  * the License.
- * 
- * User: fyfej
- * Date: 2023-6-21
  */
 using SanteDB.Core.Security;
 
@@ -310,6 +307,10 @@ namespace SanteDB.Rest.OAuth
         /// IUA Subject Name
         /// </summary>
         public const string IUA_Claim_SubjectName = "subject_name";
+        /// <summary>
+        /// Facility id
+        /// </summary>
+        public const string IUA_Claim_FacilityId = "subject_facility_id";
         /// <summary>
         /// IUA Subject Organization ID
         /// </summary>

@@ -15,8 +15,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  *
- * User: fyfej
- * Date: 2024-1-5
  */
 using RestSrvr;
 using SanteDB.Core.Applets.Model;
@@ -132,7 +130,7 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
         public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
-            var allResults = this.m_dataQualityConfigurationProvider.GetRuleSets();
+            var allResults = this.m_dataQualityConfigurationProvider.GetRuleSets(true);
             var filter = QueryExpressionParser.BuildLinqExpression<DataQualityRulesetConfiguration>(queryParameters);
             return new MemoryQueryResultSet<DataQualityRulesetConfiguration>(allResults).Where(filter);
         }

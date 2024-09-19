@@ -15,8 +15,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  *
- * User: fyfej
- * Date: 2023-6-21
  */
 using RestSrvr;
 using RestSrvr.Attributes;
@@ -44,6 +42,7 @@ namespace SanteDB.Rest.WWW
     /// Service behavior which renders WWW content from the the applets installed on the server
     /// </summary>
     [ServiceBehavior(Name = WwwMessageHandler.ConfigurationName)]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class WwwServiceBehavior : IWwwServiceContract
     {
         // Cached applets

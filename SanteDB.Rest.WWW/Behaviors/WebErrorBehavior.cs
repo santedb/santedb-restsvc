@@ -15,8 +15,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  *
- * User: fyfej
- * Date: 2023-6-21
  */
 using RestSrvr;
 using RestSrvr.Message;
@@ -41,6 +39,7 @@ namespace SanteDB.Rest.WWW.Behaviors
     /// <summary>
     /// A <see cref="IServiceBehavior"/> which provides error pages via HTML
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class WebErrorBehavior : IServiceBehavior, IServiceErrorHandler
     {
 

@@ -14,9 +14,6 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
  * License for the specific language governing permissions and limitations under 
  * the License.
- * 
- * User: fyfej
- * Date: 2023-6-21
  */
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Query;
@@ -66,6 +63,20 @@ namespace SanteDB.Rest.HDSI.Resources
         /// DI constructor
         /// </summary>
         public TextObservationResourceHandler(ILocalizationService localizationService, IRepositoryService<TextObservation> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
+        {
+        }
+    }
+
+    /// <summary>
+    /// Handler OBS
+    /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
+    public class ObservationResourceHandler : ObservationResourceHandler<Observation>
+    {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        public ObservationResourceHandler(ILocalizationService localizationService, IRepositoryService<Observation> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
         {
         }
     }

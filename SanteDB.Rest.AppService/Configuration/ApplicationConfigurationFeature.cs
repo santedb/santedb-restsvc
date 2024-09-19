@@ -15,8 +15,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  *
- * User: fyfej
- * Date: 2023-6-21
  */
 using Newtonsoft.Json.Linq;
 using SanteDB.Client.Configuration;
@@ -99,7 +97,7 @@ namespace SanteDB.Rest.AppService.Configuration
             }
 
             section.AppSettings = ((IEnumerable)featureConfiguration[APPSETTING_SETTING])?.OfType<JObject>().Select(o => new AppSettingKeyValuePair(o["key"].ToString(), o["value"]?.ToString())).ToList();
-            //section.ServiceProviders = ((IEnumerable)featureConfiguration[SERVICES_SETTING])?.OfType<JObject>().Select(o => new TypeReferenceConfiguration(o["type"].ToString())).ToList();
+            section.ServiceProviders = ((IEnumerable)featureConfiguration[SERVICES_SETTING])?.OfType<JToken>().Select(o => new TypeReferenceConfiguration(o.ToString())).ToList();
             return true;
 
         }

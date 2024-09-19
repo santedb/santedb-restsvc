@@ -14,12 +14,11 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
  * License for the specific language governing permissions and limitations under 
  * the License.
- * 
- * User: fyfej
- * Date: 2023-6-21
  */
 using Newtonsoft.Json;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace SanteDB.Rest.OAuth.Model
 {
@@ -71,7 +70,11 @@ namespace SanteDB.Rest.OAuth.Model
         /// <summary>
         /// Password is expired
         /// </summary>
-        password_expired
+        password_expired,
+        /// <summary>
+        /// User has attempted to establish a session but has not provided a required claim - error_description contains the missing claim
+        /// </summary>
+        missing_claim
     }
 
     /// <summary>
@@ -105,5 +108,11 @@ namespace SanteDB.Rest.OAuth.Model
         /// </summary>
         [JsonProperty("error_detail")]
         public String ErrorDetail { get; set; }
+
+        /// <summary>
+        /// Error data
+        /// </summary>
+        [JsonProperty("data")]
+        public IDictionary<String, Object> ErrorData { get; set; }
     }
 }

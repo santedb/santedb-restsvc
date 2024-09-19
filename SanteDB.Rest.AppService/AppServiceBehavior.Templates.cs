@@ -15,8 +15,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  *
- * User: fyfej
- * Date: 2023-6-21
  */
 using RestSrvr;
 using SanteDB.Core.Applets.Model;
@@ -79,7 +77,11 @@ namespace SanteDB.Rest.AppService
             {
                 throw new KeyNotFoundException(this.m_localizationService.GetString(ErrorMessageStrings.NOT_FOUND, new { type = "Template", id = templateId }));
             }
-            RestOperationContext.Current.OutgoingResponse.Redirect(template.Form);
+            if (!String.IsNullOrEmpty(template.Form))
+            {
+                RestOperationContext.Current.OutgoingResponse.Redirect(template.Form);
+            }
+            
         }
 
         /// <inheritdoc/>
@@ -103,7 +105,10 @@ namespace SanteDB.Rest.AppService
             {
                 throw new KeyNotFoundException(this.m_localizationService.GetString(ErrorMessageStrings.NOT_FOUND, new { type = "Template", id = templateId }));
             }
-            RestOperationContext.Current.OutgoingResponse.Redirect(template.View);
+            if (!String.IsNullOrEmpty(template.View))
+            {
+                RestOperationContext.Current.OutgoingResponse.Redirect(template.View);
+            }
         }
 
     }

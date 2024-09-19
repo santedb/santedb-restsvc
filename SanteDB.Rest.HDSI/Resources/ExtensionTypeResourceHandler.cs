@@ -14,13 +14,12 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
  * License for the specific language governing permissions and limitations under 
  * the License.
- * 
- * User: fyfej
- * Date: 2023-6-21
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.DataTypes;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
+using SanteDB.Rest.Common.Attributes;
 
 namespace SanteDB.Rest.HDSI.Resources
 {
@@ -40,6 +39,28 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// Get capabilities of this handler
         /// </summary>
-        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Get | ResourceCapabilityType.Search;
+        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Get | ResourceCapabilityType.Search | ResourceCapabilityType.Create | ResourceCapabilityType.Update | ResourceCapabilityType.Delete | ResourceCapabilityType.CreateOrUpdate;
+
+        /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.UnrestrictedMetadata)]
+        public override object Create(object data, bool updateIfExists)
+        {
+            return base.Create(data, updateIfExists);
+        }
+
+        /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.UnrestrictedMetadata)]
+        public override object Update(object data)
+        {
+            return base.Update(data);
+        }
+
+        /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.UnrestrictedMetadata)]
+        public override object Delete(object key)
+        {
+            return base.Delete(key);
+        }
+
     }
 }

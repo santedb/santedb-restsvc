@@ -14,9 +14,6 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
  * License for the specific language governing permissions and limitations under 
  * the License.
- * 
- * User: fyfej
- * Date: 2023-6-21
  */
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -283,8 +280,12 @@ namespace SanteDB.Rest.Common.Operations
         /// TODO: Clean this up
         private object FollowPath(Type scopingType, string propertyPath, JObject variables)
         {
-            // Get rid f the .
-            if (propertyPath.StartsWith("."))
+            // Get rid f the
+            if(String.IsNullOrEmpty(propertyPath))
+            {
+                return new AutoCompleteTypeInfo(scopingType);
+            }
+            else if (propertyPath.StartsWith("."))
             {
                 propertyPath = propertyPath.Substring(1);
             }

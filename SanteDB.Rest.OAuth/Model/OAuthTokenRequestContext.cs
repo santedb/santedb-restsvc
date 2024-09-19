@@ -14,9 +14,6 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
  * License for the specific language governing permissions and limitations under 
  * the License.
- * 
- * User: fyfej
- * Date: 2023-6-21
  */
 using RestSrvr;
 using SanteDB.Core.Security.Claims;
@@ -89,7 +86,9 @@ namespace SanteDB.Rest.OAuth.Model
         /// </summary>
         public List<IClaim> AdditionalClaims { get; set; }
 
-
-
+        /// <summary>
+        /// Gets or sets the error detail
+        /// </summary>
+        public string ErrorDetail { get; set; }
     }
 }

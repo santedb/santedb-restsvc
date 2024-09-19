@@ -14,9 +14,6 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
  * License for the specific language governing permissions and limitations under 
  * the License.
- * 
- * User: fyfej
- * Date: 2023-6-21
  */
 using RestSrvr;
 using RestSrvr.Attributes;
@@ -1113,13 +1110,7 @@ namespace SanteDB.Rest.HDSI
 
             try
             {
-                // Validate
-                var match = RestOperationContext.Current.IncomingRequest.Headers["If-Match"];
-                if (match == null)
-                {
-                    throw new InvalidOperationException("Missing If-Match header");
-                }
-
+                
                 // First we load
                 var handler = this.GetResourceHandler(resourceType);
 
@@ -1134,7 +1125,10 @@ namespace SanteDB.Rest.HDSI
                 var objectId = Guid.Parse(id);
                 var force = Convert.ToBoolean(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.ForceApplyPatchHeaderName] ?? "false");
 
-                this.ThrowIfPreConditionFails(handler, objectId);
+                if (!force)
+                {
+                    this.ThrowIfPreConditionFails(handler, objectId);
+                }
 
                 using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
                 {
@@ -1692,7 +1686,7 @@ namespace SanteDB.Rest.HDSI
                         {
                             audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
                                 .WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Access, data);
-                            return barcodeGenerator.Generate(data);
+                            return barcodeGenerator.Generate(data, RestOperationContext.Current.IncomingRequest.QueryString.GetValues("_domain"));
                         }
                     }
                 }
@@ -1803,7 +1797,8 @@ namespace SanteDB.Rest.HDSI
                 }
 
                 bool validate = true;
-                if (String.IsNullOrEmpty(parms["code"]))
+                var code = parms["code"];
+                if (String.IsNullOrEmpty(code))
                 {
                     throw new ArgumentException("SEARCH have url-form encoded payload with parameter code");
                 }
@@ -1812,7 +1807,11 @@ namespace SanteDB.Rest.HDSI
                     Boolean.TryParse(parms["validate"], out validate);
                 }
 
-                var result = this.m_resourcePointerService.ResolveResource(parms["code"], validate);
+                if(code.Contains("://"))
+                {
+                    code = code.Substring(code.IndexOf("://") + 3);
+                }
+                var result = this.m_resourcePointerService.ResolveResource(code, validate);
 
                 // Create a 303 see other
                 if (result != null)

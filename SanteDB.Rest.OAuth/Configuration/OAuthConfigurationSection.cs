@@ -14,9 +14,6 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
  * License for the specific language governing permissions and limitations under 
  * the License.
- * 
- * User: fyfej
- * Date: 2023-6-21
  */
 using SanteDB.Core.Configuration;
 using System.Collections.Generic;
@@ -39,7 +36,6 @@ namespace SanteDB.Rest.OAuth.Configuration
         /// </summary>
         public OAuthConfigurationSection()
         {
-            AllowedClientClaims = new List<string>();
         }
 
         /// <summary>
@@ -47,12 +43,6 @@ namespace SanteDB.Rest.OAuth.Configuration
         /// </summary>
         [XmlAttribute("jwtSigningKey")]
         public string JwtSigningKey { get; set; }
-
-        /// <summary>
-        /// Gets or sets whether the ACS will validate client claims
-        /// </summary>
-        [XmlArray("allowedClaims"), XmlArrayItem("add")]
-        public List<string> AllowedClientClaims { get; set; }
 
         /// <summary>
         /// Issuer name. This corresponds to the iss claim in any issued tokens.

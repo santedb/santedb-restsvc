@@ -14,9 +14,6 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
  * License for the specific language governing permissions and limitations under 
  * the License.
- * 
- * User: fyfej
- * Date: 2023-6-21
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.DataTypes;
@@ -38,6 +35,6 @@ namespace SanteDB.Rest.HDSI.Resources
         }
 
         /// <inheritdoc/>
-        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Search;
+        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Search | ResourceCapabilityType.Get;
     }
 }

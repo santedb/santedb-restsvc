@@ -14,9 +14,6 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
  * License for the specific language governing permissions and limitations under 
  * the License.
- * 
- * User: fyfej
- * Date: 2023-6-21
  */
 using SanteDB.Core.Model.Query;
 using System;
@@ -74,7 +71,7 @@ namespace SanteDB.Rest.Common
             }
 
             // Include total count?
-            if (query.TryGetValue(QueryControlParameterNames.HttpIncludeTotalParameterName, out queryList) && Boolean.TryParse(queryList.First(), out bool includeTotal) == true)
+            if (query.TryGetValue(QueryControlParameterNames.HttpIncludeTotalParameterName, out queryList) && Boolean.TryParse(queryList.First(), out bool includeTotal) && includeTotal)
             {
                 totalCount = me.Count();
             }

@@ -65,6 +65,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\..\SanteDB.licenseheader" Link="SanteDB.licenseheader" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resources\GenericError.html" />
   </ItemGroup>
   <ItemGroup>
