@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
@@ -47,7 +48,7 @@ namespace SanteDB.Rest.HDSI.Operation
             {
                 // Determine eligibilty on one patient
                 var target = this.m_patientRepository.Get(uuid);
-                return this.m_cpEnrolmentService.GetEligibleCarePaths(target);
+                return this.m_cpEnrolmentService.GetEligibleCarePaths(target).ToList();
             }
             else
             {
