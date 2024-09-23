@@ -36,6 +36,7 @@ namespace SanteDB.Rest.Common.Configuration
 
         // Address
         private string m_address;
+        private Type m_contractType;
 
         /// <summary>
         /// AGS Endpoint CTOR
@@ -83,8 +84,18 @@ namespace SanteDB.Rest.Common.Configuration
         [Browsable(true)]
         public Type Contract
         {
-            get => this.ContractXml != null ? Type.GetType(this.ContractXml) : null;
-            set => this.ContractXml = value?.AssemblyQualifiedName;
+            get
+            {
+                if (this.m_contractType == null)
+                {
+                    this.m_contractType = Type.GetType(this.ContractXml) ?? AppDomain.CurrentDomain.GetAllTypes().FirstOrDefault(o => o.AssemblyQualifiedNameWithoutVersion().Equals(this.ContractXml));
+                }
+                return this.m_contractType;
+            }
+            set
+            {
+                this.ContractXml = value?.AssemblyQualifiedNameWithoutVersion();
+            }
         }
 
         /// <summary>

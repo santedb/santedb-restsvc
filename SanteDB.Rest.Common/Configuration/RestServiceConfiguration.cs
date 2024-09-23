@@ -40,6 +40,7 @@ namespace SanteDB.Rest.Common.Configuration
     {
         // Configuration
         private static XmlSerializer s_serializer;
+        private Type m_serviceType = null;
 
         /// <summary>
         /// AGS Service Configuration
@@ -96,7 +97,20 @@ namespace SanteDB.Rest.Common.Configuration
         [XmlIgnore, JsonIgnore]
         [DisplayName("Behavior"), Description("Sets the implementation behavior of this service")]
         [Browsable(false)]
-        public Type ServiceType { get => this.ServiceTypeXml != null ? Type.GetType(this.ServiceTypeXml) : null; set => this.ServiceTypeXml = value?.AssemblyQualifiedName; }
+        public Type ServiceType { 
+            get 
+            {
+                if (this.m_serviceType == null)
+                {
+                    this.m_serviceType = Type.GetType(this.ServiceTypeXml) ?? AppDomain.CurrentDomain.GetAllTypes().FirstOrDefault(o => o.AssemblyQualifiedNameWithoutVersion().Equals(this.ServiceTypeXml));
+                }
+                return this.m_serviceType;
+            }
+            set
+            {
+                this.ServiceTypeXml = value?.AssemblyQualifiedNameWithoutVersion();
+            }
+        }
 
         /// <summary>
         /// Gets or sets the behavior of the AGS endpoint
