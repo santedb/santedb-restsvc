@@ -36,9 +36,9 @@ namespace SanteDB.Rest.AppService
     /// </summary>
     [ServiceContract(Name = "APP")]
     [ServiceProduces("application/json")]
-    [ServiceProduces("application/json+sdb-viewmodel")]
+    [ServiceProduces(SanteDBExtendedMimeTypes.JsonViewModel)]
+    [ServiceConsumes(SanteDBExtendedMimeTypes.JsonViewModel)]
     [ServiceConsumes("application/json")]
-    [ServiceConsumes("application/json+sdb-viewmodel")]
     [ServiceKnownResource(typeof(Menu))]
     [ServiceKnownResource(typeof(Client.Tickles.Tickle))]
     [RestServiceFault(400, "The provided resource was in an incorrect format")]

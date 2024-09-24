@@ -20,6 +20,7 @@ using RestSrvr.Attributes;
 using SanteDB.Core.Applets.Model;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Mail;
+using SanteDB.Core.Model;
 using SanteDB.Core.Model.AMI.Alien;
 using SanteDB.Core.Model.AMI.Applet;
 using SanteDB.Core.Model.AMI.Auth;
@@ -98,10 +99,10 @@ namespace SanteDB.Rest.AMI
     [ServiceKnownResource(typeof(PubSubChannelDefinition))]
     [ServiceProduces("application/json")]
     [ServiceProduces("application/xml")]
-    [ServiceProduces("application/json+sdb-viewmodel")]
+    [ServiceProduces(SanteDBExtendedMimeTypes.JsonViewModel)]
     [ServiceConsumes("application/json")]
     [ServiceConsumes("application/xml")]
-    [ServiceConsumes("application/json+sdb-viewmodel")]
+    [ServiceConsumes(SanteDBExtendedMimeTypes.JsonViewModel)]
     [RestServiceFault(400, "The provided resource was in an incorrect format")]
     [RestServiceFault(401, "The principal is unauthorized and needs to either elevate or authenticate themselves")]
     [RestServiceFault(403, "The principal is not permitted (cannot elevate) to perform the operation")]

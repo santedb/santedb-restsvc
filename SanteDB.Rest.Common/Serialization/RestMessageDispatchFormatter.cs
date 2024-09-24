@@ -452,7 +452,8 @@ namespace SanteDB.Rest.Common.Serialization
 #if DEBUG
                                         this.m_traceSource.TraceVerbose("Serialized body of  {0}", result);
 #endif
-                                        contentTypeMime = new ContentType("application/json+sdb-viewmodel");
+                                        //contentTypeMime = new ContentType("application/json+sdb-viewmodel");
+                                        contentTypeMime = new ContentType(SanteDBExtendedMimeTypes.JsonViewModel);
                                     }
                                     else
                                     {
