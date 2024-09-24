@@ -169,7 +169,7 @@ namespace SanteDB.Rest.AMI.Resources
             {
                 try
                 {
-                    return this.m_manager.UpdateChannel(definition.Key.Value, definition.Name, new Uri(definition.Endpoint), definition.Settings.ToDictionary(o => o.Name, o => o.Value));
+                    return this.m_manager.UpdateChannel(definition.Key.Value, definition.Name, new Uri(definition.Endpoint), definition.Settings?.ToDictionary(o => o.Name, o => o.Value));
                 }
                 catch (Exception e)
                 {
