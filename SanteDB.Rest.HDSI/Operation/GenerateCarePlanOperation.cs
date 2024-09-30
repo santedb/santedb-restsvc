@@ -124,17 +124,7 @@ namespace SanteDB.Rest.HDSI.Operation
                 plan = this.m_cdssService.CreateCarePlan(target, asEncounters, cpParameters);
             }
 
-            // Filter
-            if(parameters.TryGet("period", out DateTime date))
-            {
-                plan.Relationships = plan.Relationships.Where(rel =>
-                {
-                    var targAct = rel.LoadProperty(o => o.TargetAct);
-                    return (targAct.StartTime.HasValue && targAct.StartTime <= date.Date || !targAct.StartTime.HasValue) &&
-                        (targAct.StopTime.HasValue && targAct.StopTime >= date.Date || !targAct.StopTime.HasValue) ||
-                        (Math.Abs(targAct.ActTime.Value.Subtract(date).TotalDays) < 5);
-                }).ToList();
-            }
+           
             return plan.HarmonizeCarePlan(); // Harmonize with stored careplan
 
         }
