@@ -28,6 +28,7 @@ using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
 using System.Linq;
+using System.Runtime;
 
 namespace SanteDB.Rest.HDSI.Operation
 {
@@ -123,7 +124,9 @@ namespace SanteDB.Rest.HDSI.Operation
                 plan = this.m_cdssService.CreateCarePlan(target, asEncounters, cpParameters);
             }
 
+           
             return plan.HarmonizeCarePlan(); // Harmonize with stored careplan
+
         }
     }
 }

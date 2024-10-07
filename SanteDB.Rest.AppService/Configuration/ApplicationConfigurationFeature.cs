@@ -36,7 +36,7 @@ namespace SanteDB.Rest.AppService.Configuration
         /// <summary>
         /// The setting for services
         /// </summary>
-        public const string SERVICES_SETTING = "service";
+        public const string SERVICES_SETTING = "addService";
         /// <summary>
         /// The appsetting setting name in the property grid
         /// </summary>
@@ -77,7 +77,7 @@ namespace SanteDB.Rest.AppService.Configuration
         /// </summary>
         private ConfigurationDictionary<string, object> Refresh() => new ConfigurationDictionary<string, object>()
             {
-                { SERVICES_SETTING, m_configurationSection.ServiceProviders.Select(o=> o.TypeXml).ToArray() },
+                { SERVICES_SETTING, new String[0] },
                 { APPSETTING_SETTING, m_configurationSection.AppSettings },
                 { INSTANCE_NAME_SETTING, m_configurationSection.InstanceName }
             };
@@ -97,7 +97,11 @@ namespace SanteDB.Rest.AppService.Configuration
             }
 
             section.AppSettings = ((IEnumerable)featureConfiguration[APPSETTING_SETTING])?.OfType<JObject>().Select(o => new AppSettingKeyValuePair(o["key"].ToString(), o["value"]?.ToString())).ToList();
-            section.ServiceProviders = ((IEnumerable)featureConfiguration[SERVICES_SETTING])?.OfType<JToken>().Select(o => new TypeReferenceConfiguration(o.ToString())).ToList();
+            var newServices = ((IEnumerable)featureConfiguration[SERVICES_SETTING])?.OfType<JToken>().Select(o => new TypeReferenceConfiguration(o.ToString())).ToList();
+            if(newServices.Any())
+            {
+                section.ServiceProviders.AddRange(newServices);
+            }
             return true;
 
         }

@@ -17,6 +17,7 @@
  */
 using RestSrvr;
 using SanteDB.Core.Interop;
+using SanteDB.Core.Model;
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Parameters;
@@ -63,7 +64,7 @@ namespace SanteDB.Cdss.Xml.Ami
             {
                 RestOperationContext.Current.IncomingRequest.Headers.Add(ExtendedHttpHeaderNames.ViewModelHeaderName, "full");
             }
-            RestOperationContext.Current.OutgoingResponse.ContentType = "application/json+sdb-viewmodel";
+            RestOperationContext.Current.OutgoingResponse.ContentType = SanteDBExtendedMimeTypes.JsonViewModel; // "application/json+sdb-viewmodel";
 
             if (parameters.TryGet("object", out object objectPayload))
             {
