@@ -1090,6 +1090,87 @@ namespace SanteDB.Rest.HDSI
         }
 
         /// <inheritdoc/>
+        public virtual void PatchAll(PatchCollection body)
+        {
+            this.ThrowIfNotReady();
+
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
+
+            var audit = this.m_auditService.Audit()
+             .WithEventIdentifier(Core.Model.Audit.EventIdentifierType.Import)
+             .WithAction(Core.Model.Audit.ActionType.Update)
+             .WithEventType("PATCH", "http://santedb.org/conceptset/SecurityAuditCode#Rest", "PatchAll")
+                .WithPrincipal()
+             .WithHttpInformation(RestOperationContext.Current.IncomingRequest)
+             .WithLocalDestination()
+             .WithRemoteSource(RemoteEndpointUtil.Current.GetRemoteClient());
+
+            try
+            {
+                var force = Convert.ToBoolean(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.ForceApplyPatchHeaderName] ?? "false");
+
+                using (DataPersistenceControlContext.Create(LoadMode.SyncLoad))
+                {
+                    var perssitenceBundle = new Bundle(body.Patches.Select(o =>
+                    {
+                        var handler = this.GetResourceHandler(o.AppliesTo.TypeXml);
+                        if (handler == null)
+                        {
+                            throw new KeyNotFoundException(o.AppliesTo.TypeXml);
+                        }
+                        var existing = handler.Get(o.AppliesTo.Key, null) as IdentifiedData;
+                        if (existing == null)
+                        {
+                            throw new FileNotFoundException($"/{o.AppliesTo.TypeXml}/{o.AppliesTo.Key}");
+                        }
+                        else
+                        {
+                            var applied = this.m_patchService.Patch(o, existing, force);
+                            applied.BatchOperation = BatchOperationType.Update;
+                            return applied;
+                        }
+                    }));
+
+                    var bundleHandler = this.GetResourceHandler(typeof(Bundle).GetSerializationName());
+                    this.AclCheck(bundleHandler, nameof(IApiResourceHandler.Update));
+                    bundleHandler.Update(perssitenceBundle);
+                }
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success);
+            }
+            catch (PreconditionFailedException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw;
+            }
+            catch (FaultException)
+            {
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw;
+            }
+            catch (PatchAssertionException e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceWarning(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.MinorFail);
+                throw new Exception($"Assertion failed while patching", e);
+            }
+            catch (Exception e)
+            {
+                var remoteEndpoint = RestOperationContext.Current.IncomingRequest.RemoteEndPoint;
+                this.m_traceSource.TraceError(String.Format("{0} - {1}", remoteEndpoint?.Address, e.ToString()));
+                audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.SeriousFail);
+                throw new Exception($"Error patching", e);
+            }
+            finally
+            {
+                audit.WithTimestamp().Send();
+            }
+        }
+
+        /// <inheritdoc/>
         public virtual void Patch(string resourceType, string id, Patch body)
         {
             this.ThrowIfNotReady();

@@ -611,6 +611,40 @@ namespace SanteDB.Messaging.HDSI.Wcf
 
         /// <inheritdoc/>
         [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
+        public override void PatchAll(PatchCollection body)
+        {
+            // Perform only on the external server
+            if (this.ShouldForwardRequest())
+            {
+                if (ApplicationServiceContext.Current.GetService<INetworkInformationService>().IsNetworkAvailable)
+                {
+                    try
+                    {
+                        var restClient = this.CreateProxyClient();
+                        var patchId = restClient.Patch<PatchCollection>($"/", "application/xml", null, body);
+                        RestOperationContext.Current.OutgoingResponse.SetETag(patchId);
+
+                        body.Patches.ForEach(p => this.m_dataCachingService.Remove(p.AppliesTo.Key.Value));
+                    }
+                    catch (Exception e)
+                    {
+                        this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
+                        throw;
+                    }
+                }
+                else
+                {
+                    throw new FaultException(System.Net.HttpStatusCode.BadGateway);
+                }
+            }
+            else
+            {
+               base.PatchAll(body);
+            }
+        }
+
+        /// <inheritdoc/>
+        [UrlParameter(QueryControlParameterNames.HttpUpstreamParameterName, typeof(bool), "When true, forces this API to relay the caller's query to the configured upstream server")]
         public override void Patch(string resourceType, string id, Patch body)
         {
             // Perform only on the external server

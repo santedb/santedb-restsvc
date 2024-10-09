@@ -71,6 +71,7 @@ namespace SanteDB.Rest.HDSI
     [ServiceKnownResource(typeof(ConceptSet))]
     [ServiceKnownResource(typeof(ConceptReferenceTerm))]
     [ServiceKnownResource(typeof(Parameter))]
+    [ServiceKnownResource(typeof(PatchCollection))]
     [ServiceProduces("application/json")]
     [ServiceProduces(SanteDBExtendedMimeTypes.JsonViewModel)]
     [ServiceConsumes(SanteDBExtendedMimeTypes.JsonViewModel)]
@@ -239,6 +240,15 @@ namespace SanteDB.Rest.HDSI
         [RestInvoke("PATCH", "/{resourceType}/{id}")]
         [RestServiceFault(409, "The patch submitted does not match the current version of the object being patched")]
         void Patch(string resourceType, string id, Patch body);
+
+        /// <summary>
+        /// Performs a patch on all resources in the <paramref name="resourceType"/> collection
+        /// </summary>
+        /// <param name="resourceType">The type of resource being patched</param>
+        /// <param name="patchCollection">The collection of patches which are to be applied</param>
+        [RestInvoke("PATCH", "/")]
+        [RestServiceFault(409, "One or more of the patch instructions provided does not match the current version of the object being patched")]
+        void PatchAll(PatchCollection patchCollection);
 
         /// <summary>
         /// Retrieves a specific version of the specified resource
