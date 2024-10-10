@@ -109,6 +109,7 @@ namespace SanteDB.Rest.Common.Configuration
             set
             {
                 this.ServiceTypeXml = value?.AssemblyQualifiedNameWithoutVersion();
+                this.m_serviceType = value;
             }
         }
 

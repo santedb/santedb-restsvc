@@ -294,7 +294,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                     }
                                                                     else {
                                                                         if ("$type".Equals(r.Value)) {
-                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                             if ((_type != typeof(SanteDB.Core.Model.NonVersionedEntityData))) {
                                                                                 SanteDB.Core.Model.NonVersionedEntityData _nretVal = ((SanteDB.Core.Model.NonVersionedEntityData)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -464,7 +464,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                         }
                                         else {
                                             if ("$type".Equals(r.Value)) {
-                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                 if ((_type != typeof(SanteDB.Core.Model.Subscription.SubscriptionDefinition))) {
                                                     SanteDB.Core.Model.Subscription.SubscriptionDefinition _nretVal = ((SanteDB.Core.Model.Subscription.SubscriptionDefinition)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                     _nretVal.CopyObjectData(_retVal);
@@ -870,7 +870,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                 }
                                                                                                 else {
                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Security.SecurityApplication))) {
                                                                                                             SanteDB.Core.Model.Security.SecurityApplication _nretVal = ((SanteDB.Core.Model.Security.SecurityApplication)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -1200,7 +1200,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                         }
                                                                         else {
                                                                             if ("$type".Equals(r.Value)) {
-                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                 if ((_type != typeof(SanteDB.Core.Model.Security.SecurityChallenge))) {
                                                                                     SanteDB.Core.Model.Security.SecurityChallenge _nretVal = ((SanteDB.Core.Model.Security.SecurityChallenge)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -1614,7 +1614,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                 }
                                                                                                 else {
                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Security.SecurityDevice))) {
                                                                                                             SanteDB.Core.Model.Security.SecurityDevice _nretVal = ((SanteDB.Core.Model.Security.SecurityDevice)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -1929,7 +1929,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                     }
                                                                     else {
                                                                         if ("$type".Equals(r.Value)) {
-                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                             if ((_type != typeof(SanteDB.Core.Model.Security.SecurityEntity))) {
                                                                                 SanteDB.Core.Model.Security.SecurityEntity _nretVal = ((SanteDB.Core.Model.Security.SecurityEntity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -2248,7 +2248,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                             }
                                                                             else {
                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                     if ((_type != typeof(SanteDB.Core.Model.Security.SecurityPolicy))) {
                                                                                         SanteDB.Core.Model.Security.SecurityPolicy _nretVal = ((SanteDB.Core.Model.Security.SecurityPolicy)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -2482,7 +2482,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                             }
                                             else {
                                                 if ("$type".Equals(r.Value)) {
-                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                     if ((_type != typeof(SanteDB.Core.Model.Security.SecurityPolicyInstance))) {
                                                         SanteDB.Core.Model.Security.SecurityPolicyInstance _nretVal = ((SanteDB.Core.Model.Security.SecurityPolicyInstance)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                         _nretVal.CopyObjectData(_retVal);
@@ -2787,7 +2787,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                     }
                                                                     else {
                                                                         if ("$type".Equals(r.Value)) {
-                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                             if ((_type != typeof(SanteDB.Core.Model.Security.SecurityProvenance))) {
                                                                                 SanteDB.Core.Model.Security.SecurityProvenance _nretVal = ((SanteDB.Core.Model.Security.SecurityProvenance)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -3125,7 +3125,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                             }
                                                                             else {
                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                     if ((_type != typeof(SanteDB.Core.Model.Security.SecurityRole))) {
                                                                                         SanteDB.Core.Model.Security.SecurityRole _nretVal = ((SanteDB.Core.Model.Security.SecurityRole)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -3685,7 +3685,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                             }
                                                                                                                                             else {
                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Security.SecurityUser))) {
                                                                                                                                                         SanteDB.Core.Model.Security.SecurityUser _nretVal = ((SanteDB.Core.Model.Security.SecurityUser)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -5002,7 +5002,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                                                                                 }
                                                                                                                                                                                                                                                                 else {
                                                                                                                                                                                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Roles.Patient))) {
                                                                                                                                                                                                                                                                             SanteDB.Core.Model.Roles.Patient _nretVal = ((SanteDB.Core.Model.Roles.Patient)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -6169,7 +6169,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                                             }
                                                                                                                                                                                                                             else {
                                                                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Roles.Provider))) {
                                                                                                                                                                                                                                         SanteDB.Core.Model.Roles.Provider _nretVal = ((SanteDB.Core.Model.Roles.Provider)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -6226,6 +6226,132 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                             }
                                         }
                                     }
+                                }
+                            }
+                        }
+                    }
+                }
+                else {
+                    if (((r.TokenType == Newtonsoft.Json.JsonToken.EndObject) 
+                                && (r.Depth == _depth))) {
+                        return _retVal;
+                    }
+                    else {
+                        throw new Newtonsoft.Json.JsonSerializationException("JSON in invalid state");
+                    }
+                }
+            }
+            return _retVal;
+        }
+        
+        /// <inheritdoc/>
+        public object FromSimpleValue(object o) {
+            return null;
+        }
+        
+        /// <inheritdoc/>
+        public object GetSimpleValue(object o) {
+            return null;
+        }
+    }
+    
+    /// <summary>Serializes <see cref="SanteDB.Core.Model.Patch.PatchCollection"/> to or from JSON View Model Format</summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
+    public class PatchCollectionViewModelSerializer : SanteDB.Core.Applets.ViewModel.Json.IJsonViewModelTypeFormatter {
+        
+        /// <inheritdoc/>
+        private SanteDB.Core.Model.Serialization.ModelSerializationBinder m_binder = new SanteDB.Core.Model.Serialization.ModelSerializationBinder();
+        
+        /// <inheritdoc/>
+        public System.Type HandlesType {
+            get {
+                return typeof(SanteDB.Core.Model.Patch.PatchCollection);
+            }
+        }
+        
+        /// <inheritdoc/>
+        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext context) {
+            if ((o == null)) {
+                throw new System.ArgumentNullException("o");
+            }
+            SanteDB.Core.Model.Patch.PatchCollection _strong = null;
+            try {
+                _strong = ((SanteDB.Core.Model.Patch.PatchCollection)(o));
+            }
+            catch (System.Exception e) {
+                throw new System.ArgumentException(string.Format("Invalid type {0} provided, expected {1}", o.GetType(), typeof(SanteDB.Core.Model.Patch.PatchCollection)));
+            }
+            if (context.ShouldSerialize("patch")) {
+                if (((_strong.Patches == null) 
+                            || (_strong.Patches.Count == 0))) {
+                    if ((_strong.Key.HasValue && context.ShouldForceLoad("patch", _strong.Key.Value))) {
+                        System.Collections.Generic.List<SanteDB.Core.Model.Patch.Patch> _delay = null;
+                    }
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "patch", _strong.Patches, context);
+                }
+            }
+            if (context.ShouldSerialize("modifiedOn")) {
+                context.JsonContext.WritePropertyUtil(w, "modifiedOn", _strong.ModifiedOn, context);
+            }
+            if (context.ShouldSerialize("id")) {
+                if ((_strong.Key == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "id", _strong.Key, context);
+                }
+            }
+            if (context.ShouldSerialize("operation")) {
+                context.JsonContext.WritePropertyUtil(w, "operation", _strong.BatchOperation, context);
+            }
+        }
+        
+        /// <inheritdoc/>
+        public object Deserialize(Newtonsoft.Json.JsonReader r, System.Type asType, SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext context) {
+            SanteDB.Core.Model.Patch.PatchCollection _retVal = new SanteDB.Core.Model.Patch.PatchCollection();
+            int _depth = r.Depth;
+            if ((r.TokenType != Newtonsoft.Json.JsonToken.StartObject)) {
+                _depth = (_depth - 1);
+            }
+            for (
+            ; r.Read(); 
+            ) {
+                if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
+                    if ("operation".Equals(r.Value)) {
+                        r.Read();
+                        object _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.BatchOperationType), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("operation", context.JsonContext, _retVal, context));
+                        if ((_instance != null)) {
+                            _retVal.BatchOperation = ((SanteDB.Core.Model.DataTypes.BatchOperationType)(_instance));
+                        }
+                    }
+                    else {
+                        if ("id".Equals(r.Value)) {
+                            r.Read();
+                            object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<System.Guid>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("id", context.JsonContext, _retVal, context));
+                            if ((_instance != null)) {
+                                _retVal.Key = ((System.Nullable<System.Guid>)(_instance));
+                            }
+                        }
+                        else {
+                            if ("patch".Equals(r.Value)) {
+                                r.Read();
+                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Collections.Generic.List<SanteDB.Core.Model.Patch.Patch>), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("patch", context.JsonContext, _retVal, context));
+                                if ((_instance != null)) {
+                                    _retVal.Patches = ((System.Collections.Generic.List<SanteDB.Core.Model.Patch.Patch>)(_instance));
+                                }
+                            }
+                            else {
+                                if ("$type".Equals(r.Value)) {
+                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                    if ((_type != typeof(SanteDB.Core.Model.Patch.PatchCollection))) {
+                                        SanteDB.Core.Model.Patch.PatchCollection _nretVal = ((SanteDB.Core.Model.Patch.PatchCollection)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
+                                        _nretVal.CopyObjectData(_retVal);
+                                        return _nretVal;
+                                    }
+                                }
+                                else {
+                                    r.Skip();
                                 }
                             }
                         }
@@ -6505,7 +6631,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                     }
                                                                     else {
                                                                         if ("$type".Equals(r.Value)) {
-                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                             if ((_type != typeof(SanteDB.Core.Model.Patch.Patch))) {
                                                                                 SanteDB.Core.Model.Patch.Patch _nretVal = ((SanteDB.Core.Model.Patch.Patch)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -7419,7 +7545,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                     }
                                                                                                                                                                                     else {
                                                                                                                                                                                         if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                             if ((_type != typeof(SanteDB.Core.Model.Entities.ApplicationEntity))) {
                                                                                                                                                                                                 SanteDB.Core.Model.Entities.ApplicationEntity _nretVal = ((SanteDB.Core.Model.Entities.ApplicationEntity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -8458,7 +8584,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                             }
                                                                                                                                                                                                             else {
                                                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Entities.Container))) {
                                                                                                                                                                                                                         SanteDB.Core.Model.Entities.Container _nretVal = ((SanteDB.Core.Model.Entities.Container)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -9391,7 +9517,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                 }
                                                                                                                                                                                 else {
                                                                                                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Entities.DeviceEntity))) {
                                                                                                                                                                                             SanteDB.Core.Model.Entities.DeviceEntity _nretVal = ((SanteDB.Core.Model.Entities.DeviceEntity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -10246,7 +10372,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                 }
                                                                                                                                                                 else {
                                                                                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Entities.Entity))) {
                                                                                                                                                                             SanteDB.Core.Model.Entities.Entity _nretVal = ((SanteDB.Core.Model.Entities.Entity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -10510,7 +10636,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                 }
                                                 else {
                                                     if ("$type".Equals(r.Value)) {
-                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                         if ((_type != typeof(SanteDB.Core.Model.Entities.EntityAddress))) {
                                                             SanteDB.Core.Model.Entities.EntityAddress _nretVal = ((SanteDB.Core.Model.Entities.EntityAddress)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                             _nretVal.CopyObjectData(_retVal);
@@ -10730,7 +10856,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                 }
                                                 else {
                                                     if ("$type".Equals(r.Value)) {
-                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                         if ((_type != typeof(SanteDB.Core.Model.Entities.EntityAddressComponent))) {
                                                             SanteDB.Core.Model.Entities.EntityAddressComponent _nretVal = ((SanteDB.Core.Model.Entities.EntityAddressComponent)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                             _nretVal.CopyObjectData(_retVal);
@@ -10988,7 +11114,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                 }
                                                 else {
                                                     if ("$type".Equals(r.Value)) {
-                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                         if ((_type != typeof(SanteDB.Core.Model.Entities.EntityName))) {
                                                             SanteDB.Core.Model.Entities.EntityName _nretVal = ((SanteDB.Core.Model.Entities.EntityName)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                             _nretVal.CopyObjectData(_retVal);
@@ -11208,7 +11334,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                 }
                                                 else {
                                                     if ("$type".Equals(r.Value)) {
-                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                         if ((_type != typeof(SanteDB.Core.Model.Entities.EntityNameComponent))) {
                                                             SanteDB.Core.Model.Entities.EntityNameComponent _nretVal = ((SanteDB.Core.Model.Entities.EntityNameComponent)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                             _nretVal.CopyObjectData(_retVal);
@@ -11648,7 +11774,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                         }
                                                                                         else {
                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Entities.EntityRelationship))) {
                                                                                                     SanteDB.Core.Model.Entities.EntityRelationship _nretVal = ((SanteDB.Core.Model.Entities.EntityRelationship)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -11923,7 +12049,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                         }
                                                         else {
                                                             if ("$type".Equals(r.Value)) {
-                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                 if ((_type != typeof(SanteDB.Core.Model.Entities.EntityTelecomAddress))) {
                                                                     SanteDB.Core.Model.Entities.EntityTelecomAddress _nretVal = ((SanteDB.Core.Model.Entities.EntityTelecomAddress)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                     _nretVal.CopyObjectData(_retVal);
@@ -12886,7 +13012,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                 }
                                                                                                                                                                                                 else {
                                                                                                                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Entities.ManufacturedMaterial))) {
                                                                                                                                                                                                             SanteDB.Core.Model.Entities.ManufacturedMaterial _nretVal = ((SanteDB.Core.Model.Entities.ManufacturedMaterial)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -13868,7 +13994,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                             }
                                                                                                                                                                                             else {
                                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Entities.Material))) {
                                                                                                                                                                                                         SanteDB.Core.Model.Entities.Material _nretVal = ((SanteDB.Core.Model.Entities.Material)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -14767,7 +14893,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                         }
                                                                                                                                                                         else {
                                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Entities.NonPersonLivingSubject))) {
                                                                                                                                                                                     SanteDB.Core.Model.Entities.NonPersonLivingSubject _nretVal = ((SanteDB.Core.Model.Entities.NonPersonLivingSubject)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -15661,7 +15787,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                         }
                                                                                                                                                                         else {
                                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Entities.Organization))) {
                                                                                                                                                                                     SanteDB.Core.Model.Entities.Organization _nretVal = ((SanteDB.Core.Model.Entities.Organization)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -16765,7 +16891,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                                     }
                                                                                                                                                                                                                     else {
                                                                                                                                                                                                                         if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                                             if ((_type != typeof(SanteDB.Core.Model.Entities.Person))) {
                                                                                                                                                                                                                                 SanteDB.Core.Model.Entities.Person _nretVal = ((SanteDB.Core.Model.Entities.Person)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -17000,7 +17126,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                             }
                                             else {
                                                 if ("$type".Equals(r.Value)) {
-                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                     if ((_type != typeof(SanteDB.Core.Model.Entities.PersonLanguageCommunication))) {
                                                         SanteDB.Core.Model.Entities.PersonLanguageCommunication _nretVal = ((SanteDB.Core.Model.Entities.PersonLanguageCommunication)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                         _nretVal.CopyObjectData(_retVal);
@@ -17860,7 +17986,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                         }
                                                                                                                                                                         else {
                                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Entities.Place))) {
                                                                                                                                                                                     SanteDB.Core.Model.Entities.Place _nretVal = ((SanteDB.Core.Model.Entities.Place)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -18114,7 +18240,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                 }
                                                 else {
                                                     if ("$type".Equals(r.Value)) {
-                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                         if ((_type != typeof(SanteDB.Core.Model.Entities.PlaceService))) {
                                                             SanteDB.Core.Model.Entities.PlaceService _nretVal = ((SanteDB.Core.Model.Entities.PlaceService)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                             _nretVal.CopyObjectData(_retVal);
@@ -19229,7 +19355,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                                             }
                                                                                                                                                                                                                             else {
                                                                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Entities.UserEntity))) {
                                                                                                                                                                                                                                         SanteDB.Core.Model.Entities.UserEntity _nretVal = ((SanteDB.Core.Model.Entities.UserEntity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -19612,7 +19738,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                             }
                                                                             else {
                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.AssigningAuthority))) {
                                                                                         SanteDB.Core.Model.DataTypes.AssigningAuthority _nretVal = ((SanteDB.Core.Model.DataTypes.AssigningAuthority)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -20012,7 +20138,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                             }
                                                                                             else {
                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.CodeSystem))) {
                                                                                                         SanteDB.Core.Model.DataTypes.CodeSystem _nretVal = ((SanteDB.Core.Model.DataTypes.CodeSystem)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -20528,7 +20654,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                             }
                                                                                                             else {
                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.Concept))) {
                                                                                                                         SanteDB.Core.Model.DataTypes.Concept _nretVal = ((SanteDB.Core.Model.DataTypes.Concept)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -20876,7 +21002,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                             }
                                                                             else {
                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptClass))) {
                                                                                         SanteDB.Core.Model.DataTypes.ConceptClass _nretVal = ((SanteDB.Core.Model.DataTypes.ConceptClass)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -21066,7 +21192,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                         }
                                         else {
                                             if ("$type".Equals(r.Value)) {
-                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                 if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptName))) {
                                                     SanteDB.Core.Model.DataTypes.ConceptName _nretVal = ((SanteDB.Core.Model.DataTypes.ConceptName)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                     _nretVal.CopyObjectData(_retVal);
@@ -21321,7 +21447,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                 }
                                                 else {
                                                     if ("$type".Equals(r.Value)) {
-                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                         if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptReferenceTerm))) {
                                                             SanteDB.Core.Model.DataTypes.ConceptReferenceTerm _nretVal = ((SanteDB.Core.Model.DataTypes.ConceptReferenceTerm)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                             _nretVal.CopyObjectData(_retVal);
@@ -21556,7 +21682,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                 }
                                                 else {
                                                     if ("$type".Equals(r.Value)) {
-                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                         if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptRelationship))) {
                                                             SanteDB.Core.Model.DataTypes.ConceptRelationship _nretVal = ((SanteDB.Core.Model.DataTypes.ConceptRelationship)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                             _nretVal.CopyObjectData(_retVal);
@@ -21889,7 +22015,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                             }
                                                                             else {
                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptRelationshipType))) {
                                                                                         SanteDB.Core.Model.DataTypes.ConceptRelationshipType _nretVal = ((SanteDB.Core.Model.DataTypes.ConceptRelationshipType)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -22302,7 +22428,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                             }
                                                                                             else {
                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptSet))) {
                                                                                                         SanteDB.Core.Model.DataTypes.ConceptSet _nretVal = ((SanteDB.Core.Model.DataTypes.ConceptSet)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -22518,7 +22644,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                             }
                                             else {
                                                 if ("$type".Equals(r.Value)) {
-                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptSetComposition))) {
                                                         SanteDB.Core.Model.DataTypes.ConceptSetComposition _nretVal = ((SanteDB.Core.Model.DataTypes.ConceptSetComposition)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                         _nretVal.CopyObjectData(_retVal);
@@ -22756,7 +22882,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                     }
                                                     else {
                                                         if ("$type".Equals(r.Value)) {
-                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                             if ((_type != typeof(SanteDB.Core.Model.DataTypes.EntityExtension))) {
                                                                 SanteDB.Core.Model.DataTypes.EntityExtension _nretVal = ((SanteDB.Core.Model.DataTypes.EntityExtension)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                 _nretVal.CopyObjectData(_retVal);
@@ -23030,7 +23156,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                     }
                                                     else {
                                                         if ("$type".Equals(r.Value)) {
-                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                             if ((_type != typeof(SanteDB.Core.Model.DataTypes.ActExtension))) {
                                                                 SanteDB.Core.Model.DataTypes.ActExtension _nretVal = ((SanteDB.Core.Model.DataTypes.ActExtension)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                 _nretVal.CopyObjectData(_retVal);
@@ -23448,7 +23574,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                         }
                                                                                         else {
                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                 if ((_type != typeof(SanteDB.Core.Model.DataTypes.ExtensionType))) {
                                                                                                     SanteDB.Core.Model.DataTypes.ExtensionType _nretVal = ((SanteDB.Core.Model.DataTypes.ExtensionType)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -23615,7 +23741,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                     }
                                     else {
                                         if ("$type".Equals(r.Value)) {
-                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                             if ((_type != typeof(SanteDB.Core.Model.DataTypes.GeoTag))) {
                                                 SanteDB.Core.Model.DataTypes.GeoTag _nretVal = ((SanteDB.Core.Model.DataTypes.GeoTag)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                 _nretVal.CopyObjectData(_retVal);
@@ -23736,7 +23862,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                             }
                             else {
                                 if ("$type".Equals(r.Value)) {
-                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.IdentifiedDataReference))) {
                                         SanteDB.Core.Model.DataTypes.IdentifiedDataReference _nretVal = ((SanteDB.Core.Model.DataTypes.IdentifiedDataReference)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                         _nretVal.CopyObjectData(_retVal);
@@ -24052,7 +24178,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                         }
                                                                         else {
                                                                             if ("$type".Equals(r.Value)) {
-                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                 if ((_type != typeof(SanteDB.Core.Model.DataTypes.EntityIdentifier))) {
                                                                                     SanteDB.Core.Model.DataTypes.EntityIdentifier _nretVal = ((SanteDB.Core.Model.DataTypes.EntityIdentifier)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -24379,7 +24505,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                         }
                                                                         else {
                                                                             if ("$type".Equals(r.Value)) {
-                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                 if ((_type != typeof(SanteDB.Core.Model.DataTypes.ActIdentifier))) {
                                                                                     SanteDB.Core.Model.DataTypes.ActIdentifier _nretVal = ((SanteDB.Core.Model.DataTypes.ActIdentifier)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -24963,7 +25089,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                     }
                                                                                                                                     else {
                                                                                                                                         if ("$type".Equals(r.Value)) {
-                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                             if ((_type != typeof(SanteDB.Core.Model.DataTypes.IdentityDomain))) {
                                                                                                                                                 SanteDB.Core.Model.DataTypes.IdentityDomain _nretVal = ((SanteDB.Core.Model.DataTypes.IdentityDomain)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -25193,7 +25319,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                             }
                                             else {
                                                 if ("$type".Equals(r.Value)) {
-                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.EntityNote))) {
                                                         SanteDB.Core.Model.DataTypes.EntityNote _nretVal = ((SanteDB.Core.Model.DataTypes.EntityNote)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                         _nretVal.CopyObjectData(_retVal);
@@ -25401,7 +25527,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                             }
                                             else {
                                                 if ("$type".Equals(r.Value)) {
-                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ActNote))) {
                                                         SanteDB.Core.Model.DataTypes.ActNote _nretVal = ((SanteDB.Core.Model.DataTypes.ActNote)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                         _nretVal.CopyObjectData(_retVal);
@@ -25786,7 +25912,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                     }
                                                                                     else {
                                                                                         if ("$type".Equals(r.Value)) {
-                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                             if ((_type != typeof(SanteDB.Core.Model.DataTypes.ReferenceTerm))) {
                                                                                                 SanteDB.Core.Model.DataTypes.ReferenceTerm _nretVal = ((SanteDB.Core.Model.DataTypes.ReferenceTerm)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -26087,7 +26213,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                     }
                                                                     else {
                                                                         if ("$type".Equals(r.Value)) {
-                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                             if ((_type != typeof(SanteDB.Core.Model.DataTypes.ReferenceTermName))) {
                                                                                 SanteDB.Core.Model.DataTypes.ReferenceTermName _nretVal = ((SanteDB.Core.Model.DataTypes.ReferenceTermName)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -26510,7 +26636,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                         }
                                                                                         else {
                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                 if ((_type != typeof(SanteDB.Core.Model.DataTypes.RelationshipValidationRule))) {
                                                                                                     SanteDB.Core.Model.DataTypes.RelationshipValidationRule _nretVal = ((SanteDB.Core.Model.DataTypes.RelationshipValidationRule)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -26838,7 +26964,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                         }
                                                                         else {
                                                                             if ("$type".Equals(r.Value)) {
-                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                 if ((_type != typeof(SanteDB.Core.Model.DataTypes.EntityTag))) {
                                                                                     SanteDB.Core.Model.DataTypes.EntityTag _nretVal = ((SanteDB.Core.Model.DataTypes.EntityTag)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -27184,7 +27310,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                         }
                                                                         else {
                                                                             if ("$type".Equals(r.Value)) {
-                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                 if ((_type != typeof(SanteDB.Core.Model.DataTypes.ActTag))) {
                                                                                     SanteDB.Core.Model.DataTypes.ActTag _nretVal = ((SanteDB.Core.Model.DataTypes.ActTag)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -27575,7 +27701,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                     }
                                                                                     else {
                                                                                         if ("$type".Equals(r.Value)) {
-                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                             if ((_type != typeof(SanteDB.Core.Model.DataTypes.TemplateDefinition))) {
                                                                                                 SanteDB.Core.Model.DataTypes.TemplateDefinition _nretVal = ((SanteDB.Core.Model.DataTypes.TemplateDefinition)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -27768,7 +27894,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                             }
                                             else {
                                                 if ("$type".Equals(r.Value)) {
-                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                     if ((_type != typeof(SanteDB.Core.Model.Collection.Bundle))) {
                                                         SanteDB.Core.Model.Collection.Bundle _nretVal = ((SanteDB.Core.Model.Collection.Bundle)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                         _nretVal.CopyObjectData(_retVal);
@@ -27990,7 +28116,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                         }
                                                         else {
                                                             if ("$type".Equals(r.Value)) {
-                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                 if ((_type != typeof(SanteDB.Core.Model.Audit.AuditEventData))) {
                                                                     SanteDB.Core.Model.Audit.AuditEventData _nretVal = ((SanteDB.Core.Model.Audit.AuditEventData)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                     _nretVal.CopyObjectData(_retVal);
@@ -28895,7 +29021,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                             }
                                                                                                                                                                                             else {
                                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Acts.Account))) {
                                                                                                                                                                                                         SanteDB.Core.Model.Acts.Account _nretVal = ((SanteDB.Core.Model.Acts.Account)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -29755,7 +29881,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                         }
                                                                                                                                                                         else {
                                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Acts.Act))) {
                                                                                                                                                                                     SanteDB.Core.Model.Acts.Act _nretVal = ((SanteDB.Core.Model.Acts.Act)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -30132,7 +30258,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                         }
                                                                         else {
                                                                             if ("$type".Equals(r.Value)) {
-                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                 if ((_type != typeof(SanteDB.Core.Model.Acts.ActParticipation))) {
                                                                                     SanteDB.Core.Model.Acts.ActParticipation _nretVal = ((SanteDB.Core.Model.Acts.ActParticipation)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -30373,7 +30499,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                     }
                                                     else {
                                                         if ("$type".Equals(r.Value)) {
-                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                             if ((_type != typeof(SanteDB.Core.Model.Acts.ActProtocol))) {
                                                                 SanteDB.Core.Model.Acts.ActProtocol _nretVal = ((SanteDB.Core.Model.Acts.ActProtocol)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                 _nretVal.CopyObjectData(_retVal);
@@ -30680,7 +30806,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                 }
                                                                 else {
                                                                     if ("$type".Equals(r.Value)) {
-                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                         if ((_type != typeof(SanteDB.Core.Model.Acts.ActRelationship))) {
                                                                             SanteDB.Core.Model.Acts.ActRelationship _nretVal = ((SanteDB.Core.Model.Acts.ActRelationship)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                             _nretVal.CopyObjectData(_retVal);
@@ -30758,6 +30884,13 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 }
                 else {
                     context.JsonContext.WritePropertyUtil(w, "mnemonic", _strong.Mnemonic, context);
+                }
+            }
+            if (context.ShouldSerialize("name")) {
+                if ((_strong.Name == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "name", _strong.Name, context);
                 }
             }
             if (context.ShouldSerialize("description")) {
@@ -31075,24 +31208,33 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                             }
                                                                                         }
                                                                                         else {
-                                                                                            if ("mnemonic".Equals(r.Value)) {
+                                                                                            if ("name".Equals(r.Value)) {
                                                                                                 r.Read();
-                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("mnemonic", context.JsonContext, _retVal, context));
+                                                                                                object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("name", context.JsonContext, _retVal, context));
                                                                                                 if ((_instance != null)) {
-                                                                                                    _retVal.Mnemonic = ((string)(_instance));
+                                                                                                    _retVal.Name = ((string)(_instance));
                                                                                                 }
                                                                                             }
                                                                                             else {
-                                                                                                if ("$type".Equals(r.Value)) {
-                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
-                                                                                                    if ((_type != typeof(SanteDB.Core.Model.Acts.CarePathwayDefinition))) {
-                                                                                                        SanteDB.Core.Model.Acts.CarePathwayDefinition _nretVal = ((SanteDB.Core.Model.Acts.CarePathwayDefinition)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
-                                                                                                        _nretVal.CopyObjectData(_retVal);
-                                                                                                        return _nretVal;
+                                                                                                if ("mnemonic".Equals(r.Value)) {
+                                                                                                    r.Read();
+                                                                                                    object _instance = context.JsonContext.ReadElementUtil(r, typeof(string), new SanteDB.Core.Applets.ViewModel.Json.JsonSerializationContext("mnemonic", context.JsonContext, _retVal, context));
+                                                                                                    if ((_instance != null)) {
+                                                                                                        _retVal.Mnemonic = ((string)(_instance));
                                                                                                     }
                                                                                                 }
                                                                                                 else {
-                                                                                                    r.Skip();
+                                                                                                    if ("$type".Equals(r.Value)) {
+                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                        if ((_type != typeof(SanteDB.Core.Model.Acts.CarePathwayDefinition))) {
+                                                                                                            SanteDB.Core.Model.Acts.CarePathwayDefinition _nretVal = ((SanteDB.Core.Model.Acts.CarePathwayDefinition)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
+                                                                                                            _nretVal.CopyObjectData(_retVal);
+                                                                                                            return _nretVal;
+                                                                                                        }
+                                                                                                    }
+                                                                                                    else {
+                                                                                                        r.Skip();
+                                                                                                    }
                                                                                                 }
                                                                                             }
                                                                                         }
@@ -31976,7 +32118,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                     }
                                                                                                                                                                                     else {
                                                                                                                                                                                         if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                             if ((_type != typeof(SanteDB.Core.Model.Acts.CarePlan))) {
                                                                                                                                                                                                 SanteDB.Core.Model.Acts.CarePlan _nretVal = ((SanteDB.Core.Model.Acts.CarePlan)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -32834,7 +32976,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                         }
                                                                                                                                                                         else {
                                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Acts.ControlAct))) {
                                                                                                                                                                                     SanteDB.Core.Model.Acts.ControlAct _nretVal = ((SanteDB.Core.Model.Acts.ControlAct)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -33730,7 +33872,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                 }
                                                                                                                                                                                 else {
                                                                                                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Acts.FinancialContract))) {
                                                                                                                                                                                             SanteDB.Core.Model.Acts.FinancialContract _nretVal = ((SanteDB.Core.Model.Acts.FinancialContract)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -34665,7 +34807,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                             }
                                                                                                                                                                                             else {
                                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Acts.FinancialTransaction))) {
                                                                                                                                                                                                         SanteDB.Core.Model.Acts.FinancialTransaction _nretVal = ((SanteDB.Core.Model.Acts.FinancialTransaction)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -35667,7 +35809,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                         }
                                                                                                                                                                                                         else {
                                                                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Acts.InvoiceElement))) {
                                                                                                                                                                                                                     SanteDB.Core.Model.Acts.InvoiceElement _nretVal = ((SanteDB.Core.Model.Acts.InvoiceElement)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -36605,7 +36747,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                             }
                                                                                                                                                                                             else {
                                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Acts.Narrative))) {
                                                                                                                                                                                                         SanteDB.Core.Model.Acts.Narrative _nretVal = ((SanteDB.Core.Model.Acts.Narrative)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -37521,7 +37663,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                     }
                                                                                                                                                                                     else {
                                                                                                                                                                                         if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                            System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                             if ((_type != typeof(SanteDB.Core.Model.Acts.Observation))) {
                                                                                                                                                                                                 SanteDB.Core.Model.Acts.Observation _nretVal = ((SanteDB.Core.Model.Acts.Observation)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                 _nretVal.CopyObjectData(_retVal);
@@ -38491,7 +38633,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                 }
                                                                                                                                                                                                 else {
                                                                                                                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Acts.QuantityObservation))) {
                                                                                                                                                                                                             SanteDB.Core.Model.Acts.QuantityObservation _nretVal = ((SanteDB.Core.Model.Acts.QuantityObservation)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -39423,7 +39565,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                         }
                                                                                                                                                                                         else {
                                                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Acts.TextObservation))) {
                                                                                                                                                                                                     SanteDB.Core.Model.Acts.TextObservation _nretVal = ((SanteDB.Core.Model.Acts.TextObservation)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
@@ -40379,7 +40521,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                             }
                                                                                                                                                                                             else {
                                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Acts.CodedObservation))) {
                                                                                                                                                                                                         SanteDB.Core.Model.Acts.CodedObservation _nretVal = ((SanteDB.Core.Model.Acts.CodedObservation)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -41348,7 +41490,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                             }
                                                                                                                                                                                             else {
                                                                                                                                                                                                 if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                     if ((_type != typeof(SanteDB.Core.Model.Acts.PatientEncounter))) {
                                                                                                                                                                                                         SanteDB.Core.Model.Acts.PatientEncounter _nretVal = ((SanteDB.Core.Model.Acts.PatientEncounter)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                         _nretVal.CopyObjectData(_retVal);
@@ -41607,7 +41749,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                 }
                                                 else {
                                                     if ("$type".Equals(r.Value)) {
-                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                         if ((_type != typeof(SanteDB.Core.Model.Acts.PatientEncounterArrangement))) {
                                                             SanteDB.Core.Model.Acts.PatientEncounterArrangement _nretVal = ((SanteDB.Core.Model.Acts.PatientEncounterArrangement)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                             _nretVal.CopyObjectData(_retVal);
@@ -42555,7 +42697,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                 }
                                                                                                                                                                                                 else {
                                                                                                                                                                                                     if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                         if ((_type != typeof(SanteDB.Core.Model.Acts.Procedure))) {
                                                                                                                                                                                                             SanteDB.Core.Model.Acts.Procedure _nretVal = ((SanteDB.Core.Model.Acts.Procedure)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                             _nretVal.CopyObjectData(_retVal);
@@ -42868,7 +43010,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                 }
                                                                 else {
                                                                     if ("$type".Equals(r.Value)) {
-                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                        System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                         if ((_type != typeof(SanteDB.Core.Model.Acts.Protocol))) {
                                                                             SanteDB.Core.Model.Acts.Protocol _nretVal = ((SanteDB.Core.Model.Acts.Protocol)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                             _nretVal.CopyObjectData(_retVal);
@@ -43846,7 +43988,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                                                                                                                                                                                                         }
                                                                                                                                                                                                         else {
                                                                                                                                                                                                             if ("$type".Equals(r.Value)) {
-                                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1965.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                                                                                                                                                                                                                System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.1982.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                                                                                                                                                                                                                 if ((_type != typeof(SanteDB.Core.Model.Acts.SubstanceAdministration))) {
                                                                                                                                                                                                                     SanteDB.Core.Model.Acts.SubstanceAdministration _nretVal = ((SanteDB.Core.Model.Acts.SubstanceAdministration)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                                                                                                                                                                                                                     _nretVal.CopyObjectData(_retVal);
