@@ -1,10 +1,13 @@
-﻿using SanteDB.Core.Diagnostics;
+﻿using SanteDB.Core.Cdss;
+using SanteDB.Core.Diagnostics;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Roles;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
+using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,7 +20,6 @@ namespace SanteDB.Rest.HDSI.Operation
     public class CarepathUnEnrollOperation : IApiChildOperation
     {
 
-        public const string CARE_PATHWAY_PARAMETER = "pathway";
 
         private readonly Tracer m_tracer = Tracer.GetTracer(typeof(CarepathUnEnrollOperation));
         private readonly ICarePathwayEnrollmentService m_enrollmentService;
@@ -42,13 +44,14 @@ namespace SanteDB.Rest.HDSI.Operation
         };
 
         /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.WriteClinicalData)]
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
             if(scopingKey is Guid uuid || Guid.TryParse(scopingKey.ToString(), out uuid))
             {
-                if(!parameters.TryGet(CARE_PATHWAY_PARAMETER, out Guid pathwayId))
+                if(!parameters.TryGet(CdssParameterNames.PATHWAY_SCOPE, out Guid pathwayId))
                 {
-                    throw new ArgumentNullException(CARE_PATHWAY_PARAMETER, ErrorMessages.ARGUMENT_NULL);
+                    throw new ArgumentNullException(CdssParameterNames.PATHWAY_SCOPE, ErrorMessages.ARGUMENT_NULL);
                 }
                 var patient = this.m_patientRepository.Get(uuid);
                 if(patient == null)

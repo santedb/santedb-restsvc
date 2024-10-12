@@ -4,10 +4,8 @@ using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Roles;
-using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
-using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,54 +13,55 @@ using System.Text;
 namespace SanteDB.Rest.HDSI.Operation
 {
     /// <summary>
-    /// An operation that can enroll patients into a care pathway
+    /// Represents an API operation that re-computes a carepathway and updates the dates/instructions on the care pathway
     /// </summary>
-    public class CarepathEnrollOperation : IApiChildOperation
+    public class CarepathRecomputeOperation : IApiChildOperation
     {
 
-
-        private readonly Tracer m_tracer = Tracer.GetTracer(typeof(CarepathEnrollOperation));
-        private readonly ICarePathwayEnrollmentService m_enrollmentService;
         private readonly IRepositoryService<Patient> m_patientRepository;
+        private readonly ICarePathwayEnrollmentService m_carePathwayService;
+        private readonly Tracer m_tracer = Tracer.GetTracer(typeof(CarepathRecomputeOperation));
 
-        public CarepathEnrollOperation(ICarePathwayEnrollmentService enrollmentService, IRepositoryService<Patient> patientRepository)
+        /// <summary>
+        /// DI ctor
+        /// </summary>
+        public CarepathRecomputeOperation(IRepositoryService<Patient> patientRepository, ICarePathwayEnrollmentService carePathwayEnrollmentService)
         {
-            this.m_enrollmentService = enrollmentService;
             this.m_patientRepository = patientRepository;
+            this.m_carePathwayService = carePathwayEnrollmentService;
         }
 
         /// <inheritdoc/>
-        public string Name => "carepath-enroll";
+        public string Name => "carepath-recompute";
 
         /// <inheritdoc/>
         public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Instance;
 
         /// <inheritdoc/>
-        public Type[] ParentTypes => new Type[]
-        {
-            typeof(Patient)
-        };
+        public Type[] ParentTypes => new Type[] { typeof(Patient) };
 
         /// <inheritdoc/>
-        [Demand(PermissionPolicyIdentifiers.WriteClinicalData)]
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
             if(scopingKey is Guid uuid || Guid.TryParse(scopingKey.ToString(), out uuid))
             {
+
                 if(!parameters.TryGet(CdssParameterNames.PATHWAY_SCOPE, out Guid pathwayId))
                 {
-                    throw new ArgumentNullException(CdssParameterNames.PATHWAY_SCOPE, ErrorMessages.ARGUMENT_NULL);
+                    throw new ArgumentNullException(CdssParameterNames.PATHWAY_SCOPE, String.Format(ErrorMessages.MISSING_VALUE, CdssParameterNames.PATHWAY_SCOPE));
                 }
+
                 var patient = this.m_patientRepository.Get(uuid);
                 if(patient == null)
                 {
-                    throw new KeyNotFoundException($"{scopingType.GetSerializationName()}/{scopingKey}");
+                    throw new KeyNotFoundException($"Patient/{uuid}");
                 }
-                return this.m_enrollmentService.Enroll(patient, pathwayId);
+
+                return this.m_carePathwayService.RecomputeOrEnroll(patient, pathwayId);
             }
             else
             {
-                throw new ArgumentOutOfRangeException(ErrorMessages.ARGUMENT_INCOMPATIBLE_TYPE);
+                throw new ArgumentOutOfRangeException(nameof(scopingKey), String.Format(ErrorMessages.ARGUMENT_INCOMPATIBLE_TYPE, typeof(Guid), scopingKey.GetType()));
             }
         }
     }
