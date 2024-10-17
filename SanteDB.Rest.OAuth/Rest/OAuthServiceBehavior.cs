@@ -497,6 +497,8 @@ namespace SanteDB.Rest.OAuth.Rest
             {
                 claims.AddClaim(OAuthConstants.ClaimType_Name, primaryidentity.Name);
                 claims.AddClaim(OAuthConstants.ClaimType_Actor, primaryidentity.FindFirst(SanteDBClaimTypes.Actor)?.Value);
+                // Remove sub
+                claims.Remove(OAuthConstants.ClaimType_Subject);
                 claims.AddClaim(OAuthConstants.ClaimType_Subject, primaryidentity.FindFirst(SanteDBClaimTypes.SecurityId)?.Value);
                 rawjtibuilder.Append(primaryidentity.Name);
             }
