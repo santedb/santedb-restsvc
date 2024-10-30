@@ -30,7 +30,7 @@ namespace SanteDB.Rest.Common.Security
         private BasicAuthorizationConfigurationSection m_configuration = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<BasicAuthorizationConfigurationSection>();
 
         // Trace source
-        private readonly Tracer m_traceSource = Tracer.GetTracer(typeof(BasicAuthorizationAccessBehavior));
+        private readonly Tracer m_traceSource = Tracer.GetTracer(typeof(BasicApplicationAuthorizationAccessBehavior));
 
         /// <summary>
         /// Apply the policy to the request

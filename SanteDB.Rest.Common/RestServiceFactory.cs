@@ -91,7 +91,7 @@ namespace SanteDB.Rest.Common
                 retVal |= ServiceEndpointCapabilities.CertificateAuth;
             }
 
-            if (me.ServiceBehaviors.OfType<BasicAuthorizationAccessBehavior>().Any())
+            if (me.ServiceBehaviors.OfType<BasicAuthorizationAccessBehavior>().Any() || me.ServiceBehaviors.OfType<BasicApplicationAuthorizationAccessBehavior>().Any())
             {
                 retVal |= ServiceEndpointCapabilities.BasicAuth;
             }
