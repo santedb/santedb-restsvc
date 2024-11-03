@@ -101,6 +101,7 @@ namespace SanteDB.Rest.HDSI
         /// </summary>
         protected readonly HdsiConfigurationSection m_configuration;
 
+        private readonly ModelSerializationBinder m_modelSerlizationBinder = new ModelSerializationBinder();
         /// <summary>
         /// Locale service
         /// </summary>
@@ -473,7 +474,7 @@ namespace SanteDB.Rest.HDSI
                     headerString = headerString.Substring(2);
                 }
                 var headerParts = headerString.Split('.');
-                if (resourceType.IsAssignableFrom(this.GetResourceHandler(headerParts[0]).Type))
+                if (resourceType.IsAssignableFrom(this.m_modelSerlizationBinder.BindToType(null, headerParts[0])))
                 {
                     return headerParts[1];
                 }
