@@ -55,6 +55,7 @@ namespace SanteDB.Rest.HDSI.Docker
         {
             { "TOKEN", typeof(TokenAuthorizationAccessBehavior) },
             { "BASIC", typeof(BasicAuthorizationAccessBehavior) },
+            { "APP_BASIC", typeof(BasicApplicationAuthorizationAccessBehavior) },
             { "NONE", null }
         };
 

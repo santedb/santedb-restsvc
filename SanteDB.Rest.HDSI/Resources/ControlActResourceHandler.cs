@@ -29,12 +29,12 @@ namespace SanteDB.Rest.HDSI.Resources
     /// Represents a resource handler for ACTs
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class ActResourceHandler : HdsiResourceHandlerBase<Act>
+    public class ControlActResourceHandler : HdsiResourceHandlerBase<ControlAct>
     {
         /// <summary>
         /// DI constructor
         /// </summary>
-        public ActResourceHandler(ILocalizationService localizationService, IRepositoryService<Act> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
+        public ControlActResourceHandler(ILocalizationService localizationService, IRepositoryService<ControlAct> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
         {
         }
 

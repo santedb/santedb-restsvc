@@ -17,22 +17,22 @@ namespace SanteDB.Rest.HDSI.Operation
     /// <summary>
     /// An operation that can enroll patients into a care pathway
     /// </summary>
-    public class CarepathEnrollOperation : IApiChildOperation
+    public class CarepathUnEnrollOperation : IApiChildOperation
     {
 
 
-        private readonly Tracer m_tracer = Tracer.GetTracer(typeof(CarepathEnrollOperation));
+        private readonly Tracer m_tracer = Tracer.GetTracer(typeof(CarepathUnEnrollOperation));
         private readonly ICarePathwayEnrollmentService m_enrollmentService;
         private readonly IRepositoryService<Patient> m_patientRepository;
 
-        public CarepathEnrollOperation(ICarePathwayEnrollmentService enrollmentService, IRepositoryService<Patient> patientRepository)
+        public CarepathUnEnrollOperation(ICarePathwayEnrollmentService enrollmentService, IRepositoryService<Patient> patientRepository)
         {
             this.m_enrollmentService = enrollmentService;
             this.m_patientRepository = patientRepository;
         }
 
         /// <inheritdoc/>
-        public string Name => "carepath-enroll";
+        public string Name => "carepath-unenroll";
 
         /// <inheritdoc/>
         public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Instance;
@@ -58,7 +58,7 @@ namespace SanteDB.Rest.HDSI.Operation
                 {
                     throw new KeyNotFoundException($"{scopingType.GetSerializationName()}/{scopingKey}");
                 }
-                return this.m_enrollmentService.Enroll(patient, pathwayId);
+                return this.m_enrollmentService.UnEnroll(patient, pathwayId);
             }
             else
             {

@@ -150,7 +150,9 @@ namespace SanteDB.Rest.AppService
         [Demand(PermissionPolicyIdentifiers.AlterSystemConfiguration)]
         public ParameterCollection PerformUpdate(ParameterCollection parameters)
         {
-            throw new NotImplementedException();
+            _ = parameters.TryGet("_apply", out bool apply);
+            this.m_updateManager.Update(apply);
+            return null;
         }
     }
 }

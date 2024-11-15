@@ -71,8 +71,8 @@ namespace SanteDB.Rest.HDSI.Operation
             }
             else if(scopingKey is Guid scopedUuid || Guid.TryParse(scopingKey.ToString(), out scopedUuid))
             {
-                var pType = typeof(IDataPersistenceService<>).MakeGenericType(scopingType);
-                var pInstance = this.m_serviceProvider.GetService(pType) as IDataPersistenceService;
+                var pType = typeof(IRepositoryService<>).MakeGenericType(scopingType);
+                var pInstance = this.m_serviceProvider.GetService(pType) as IRepositoryService;
                 var instance = pInstance.Get(scopedUuid) as IdentifiedData;
                 if(instance == null)
                 {

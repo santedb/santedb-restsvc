@@ -76,6 +76,7 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         [XmlElement("valueInt", typeof(int))]
         [XmlElement("valueLong", typeof(long))]
         [XmlElement("valueFloat", typeof(float))]
+        [XmlElement("valueDouble", typeof(double))]
         [XmlElement("valueList", typeof(DiagnosticsProbeReading[]))]
         [XmlElement("valueBool", typeof(bool))]
         [XmlElement("valueString", typeof(string))]
