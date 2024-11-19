@@ -234,6 +234,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler(resourceType);
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IApiResourceHandler.Create));
                     var retVal = handler.Create(body, false) as IdentifiedData;
                     var versioned = retVal as IVersionedData;
@@ -307,6 +308,7 @@ namespace SanteDB.Rest.HDSI
                 {
                     IdentifiedData retVal = null;
                     IVersionedData versioned = null;
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
 
                     if (!string.IsNullOrEmpty(id) && handler is IChainedApiResourceHandler chainedHandler &&
                         chainedHandler.TryGetChainedResource(id, ChildObjectScopeBinding.Class, out var childHandler))
@@ -389,6 +391,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler(resourceType);
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     if (handler is IChainedApiResourceHandler chainedHandler && chainedHandler.TryGetChainedResource(id, ChildObjectScopeBinding.Class, out IApiChildResourceHandler childHandler))
                     {
                         return this.AssociationSearch(resourceType, id) as IdentifiedData;
@@ -574,6 +577,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler(resourceType);
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IApiResourceHandler.Get));
 
                     var retVal = handler.Get(Guid.Parse(id), Guid.Parse(versionId)) as IdentifiedData;
@@ -677,6 +681,7 @@ namespace SanteDB.Rest.HDSI
                 if (handler != null)
                 {
 
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
 
                     String since = RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpSinceParameterName];
                     Guid sinceGuid = since != null ? Guid.Parse(since) : Guid.Empty;
@@ -763,6 +768,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler(resourceType);
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
                     // Send the query to the resource handler
@@ -914,6 +920,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler(resourceType);
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IApiResourceHandler.Update));
 
                     var objectId = Guid.Parse(id);
@@ -1002,6 +1009,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler(resourceType);
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IApiResourceHandler.Delete));
 
                     var objectId = Guid.Parse(id);
@@ -1122,6 +1130,7 @@ namespace SanteDB.Rest.HDSI
                         {
                             throw new KeyNotFoundException(o.AppliesTo.TypeXml);
                         }
+                        audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                         var existing = handler.Get(o.AppliesTo.Key, null) as IdentifiedData;
                         if (existing == null)
                         {
@@ -1136,6 +1145,7 @@ namespace SanteDB.Rest.HDSI
                     }));
 
                     var bundleHandler = this.GetResourceHandler(typeof(Bundle).GetSerializationName());
+                    audit.WithSensitivity(bundleHandler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(bundleHandler, nameof(IApiResourceHandler.Update));
                     bundleHandler.Update(perssitenceBundle);
                 }
@@ -1192,7 +1202,7 @@ namespace SanteDB.Rest.HDSI
 
             try
             {
-                
+
                 // First we load
                 var handler = this.GetResourceHandler(resourceType);
 
@@ -1202,6 +1212,7 @@ namespace SanteDB.Rest.HDSI
                 }
 
                 // Next we get the current version
+                audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                 this.AclCheck(handler, nameof(IApiResourceHandler.Get));
 
                 var objectId = Guid.Parse(id);
@@ -1419,6 +1430,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
                     // Send the query to the resource handler
@@ -1511,6 +1523,7 @@ namespace SanteDB.Rest.HDSI
                 IChainedApiResourceHandler handler = this.GetResourceHandler(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.AddChildObject));
                     var objectId = Guid.Parse(key);
                     this.ThrowIfPreConditionFails(handler, objectId);
@@ -1583,6 +1596,7 @@ namespace SanteDB.Rest.HDSI
                 IChainedApiResourceHandler handler = this.GetResourceHandler(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.RemoveChildObject));
 
                     var objectId = Guid.Parse(key);
@@ -1657,6 +1671,7 @@ namespace SanteDB.Rest.HDSI
                 IChainedApiResourceHandler handler = this.GetResourceHandler(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.GetChildObject));
 
                     var objectId = Guid.Parse(scopedEntityKey);
@@ -1744,6 +1759,7 @@ namespace SanteDB.Rest.HDSI
                     }
 
                     Guid objectId = Guid.Parse(id);
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
 
                     this.ThrowIfPreConditionFails(handler, objectId);
 
@@ -1822,6 +1838,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler(resourceType);
                 if (handler is IApiResourceHandlerEx exResourceHandler)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IApiResourceHandler.Update));
 
                     var objectId = Guid.Parse(id);
@@ -1889,7 +1906,7 @@ namespace SanteDB.Rest.HDSI
                     Boolean.TryParse(parms["validate"], out validate);
                 }
 
-                if(code.Contains("://"))
+                if (code.Contains("://"))
                 {
                     code = code.Substring(code.IndexOf("://") + 3);
                 }
@@ -1935,6 +1952,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler(resourceType);
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     if (this.m_resourcePointerService == null)
                     {
                         throw new InvalidOperationException("Cannot find resource pointer service");
@@ -2013,6 +2031,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler(resourceType) as IOperationalApiResourceHandler;
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IOperationalApiResourceHandler.InvokeOperation));
 
                     var objectId = Guid.Parse(id);
@@ -2081,6 +2100,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler(resourceType) as ICheckoutResourceHandler;
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(ICheckoutResourceHandler.CheckIn));
                     var objectId = Guid.Parse(key);
                     this.ThrowIfPreConditionFails(handler, objectId);
@@ -2137,6 +2157,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler(resourceType) as ICheckoutResourceHandler;
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(ICheckoutResourceHandler.CheckIn));
                     var objectId = Guid.Parse(key);
                     this.ThrowIfPreConditionFails(handler, objectId);
@@ -2197,6 +2218,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler(resourceType) as IOperationalApiResourceHandler;
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IOperationalApiResourceHandler.InvokeOperation));
 
                     object retValRaw = null;
@@ -2266,6 +2288,7 @@ namespace SanteDB.Rest.HDSI
                 IChainedApiResourceHandler handler = this.GetResourceHandler(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.GetChildObject));
                     var objectId = Guid.Parse(childResourceKey);
                     this.ThrowIfPreConditionFails(handler, objectId);
@@ -2338,6 +2361,7 @@ namespace SanteDB.Rest.HDSI
                 IChainedApiResourceHandler handler = this.GetResourceHandler(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.RemoveChildObject));
                     var objectId = Guid.Parse(childResourceKey);
                     this.ThrowIfPreConditionFails(handler, objectId);
@@ -2411,6 +2435,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
                     // Send the query to the resource handler
@@ -2503,6 +2528,7 @@ namespace SanteDB.Rest.HDSI
                 var handler = this.GetResourceHandler(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
                     // We want to also check the export permission
