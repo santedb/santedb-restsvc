@@ -17,6 +17,7 @@
  */
 using Newtonsoft.Json;
 using SanteDB.Core.Jobs;
+using SanteDB.Core.Model.Attributes;
 using SanteDB.Core.Model.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,7 @@ namespace SanteDB.Core.Model.AMI.Jobs
     [XmlType(nameof(JobInfo), Namespace = "http://santedb.org/ami")]
     [XmlRoot(nameof(JobInfo), Namespace = "http://santedb.org/ami")]
     [JsonObject(nameof(JobInfo))]
+    [ResourceSensitivity(ResourceSensitivityClassification.Administrative)]
     public class JobInfo : IAmiIdentified, IIdentifiedResource
     {
         /// <summary>

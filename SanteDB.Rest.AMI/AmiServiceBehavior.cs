@@ -457,10 +457,11 @@ namespace SanteDB.Rest.AMI
             }
             serviceOptions.Settings = config?.PublicSettings?.ToList() ?? new List<Core.Configuration.AppSettingKeyValuePair>();
 
-            if (!String.IsNullOrEmpty(config?.RealmWelcomeMessage)) {
+            if (!String.IsNullOrEmpty(config?.RealmWelcomeMessage))
+            {
                 serviceOptions.Settings.Add(new Core.Configuration.AppSettingKeyValuePair("$welcome", config.RealmWelcomeMessage));
             }
-            serviceOptions.Settings.AddRange(this.m_configurationManager.Configuration.Sections.OfType<IDisclosedConfigurationSection>().SelectMany(o=>o.ForDisclosure()));
+            serviceOptions.Settings.AddRange(this.m_configurationManager.Configuration.Sections.OfType<IDisclosedConfigurationSection>().SelectMany(o => o.ForDisclosure()));
             return serviceOptions;
         }
 
@@ -497,6 +498,8 @@ namespace SanteDB.Rest.AMI
                 {
                     throw new FileNotFoundException(resourceType);
                 }
+
+                audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
 
                 //// Validate
                 //var match = RestOperationContext.Current.IncomingRequest.Headers["If-Match"];
@@ -621,6 +624,8 @@ namespace SanteDB.Rest.AMI
                 IApiResourceHandler handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
+
                     this.AclCheck(handler, nameof(IApiResourceHandler.Create));
                     var retVal = handler.Create(data, false);
 
@@ -683,6 +688,8 @@ namespace SanteDB.Rest.AMI
                 var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
+
                     if (data is IdentifiedData)
                     {
                         (data as IdentifiedData).Key = Guid.Parse(key);
@@ -755,6 +762,8 @@ namespace SanteDB.Rest.AMI
                 var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
+
                     this.AclCheck(handler, nameof(IApiResourceHandler.Delete));
 
                     this.ThrowIfPreConditionFails(handler, key);
@@ -810,6 +819,7 @@ namespace SanteDB.Rest.AMI
                 var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     if (handler is IChainedApiResourceHandler chainedHandler && chainedHandler.TryGetChainedResource(key, ChildObjectScopeBinding.Class, out IApiChildResourceHandler childHandler))
                     {
                         return this.AssociationSearch(resourceType, null, key);
@@ -875,6 +885,7 @@ namespace SanteDB.Rest.AMI
                 var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
 
                     this.AclCheck(handler, nameof(IApiResourceHandler.Get));
                     this.ThrowIfPreConditionFails(handler, key);
@@ -934,6 +945,8 @@ namespace SanteDB.Rest.AMI
 
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
+
                     String since = RestOperationContext.Current.IncomingRequest.QueryString["_since"];
                     Guid sinceGuid = since != null ? Guid.Parse(since) : Guid.Empty;
 
@@ -1074,6 +1087,8 @@ namespace SanteDB.Rest.AMI
                 var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
+
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
                     // Send the query to the resource handler
@@ -1155,6 +1170,7 @@ namespace SanteDB.Rest.AMI
                 if (handler != null)
                 {
                     // Get target of update and ensure
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     switch (data)
                     {
                         case IdentifiedData iddata:
@@ -1266,6 +1282,7 @@ namespace SanteDB.Rest.AMI
                 var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null && handler is ILockableResourceHandler)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(ILockableResourceHandler.Lock));
                     this.ThrowIfPreConditionFails(handler, key);
                     var retVal = (handler as ILockableResourceHandler).Lock(Guid.TryParseExact(key, "D", out var guidKey) ? (object)guidKey : key);
@@ -1328,6 +1345,7 @@ namespace SanteDB.Rest.AMI
                 var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType);
                 if (handler != null && handler is ILockableResourceHandler)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(ILockableResourceHandler.Unlock));
                     this.ThrowIfPreConditionFails(handler, key);
                     var retVal = (handler as ILockableResourceHandler).Unlock(Guid.TryParseExact(key, "D", out var guidKey) ? (object)guidKey : key);
@@ -1393,6 +1411,7 @@ namespace SanteDB.Rest.AMI
                 var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));
 
                     // Send the query to the resource handler
@@ -1480,6 +1499,7 @@ namespace SanteDB.Rest.AMI
                 IChainedApiResourceHandler handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.AddChildObject));
                     this.ThrowIfPreConditionFails(handler, key);
                     var retVal = handler.AddChildObject(Guid.TryParseExact(key, "D", out var guidKey) ? (object)guidKey : key, childResourceType, body);
@@ -1534,6 +1554,7 @@ namespace SanteDB.Rest.AMI
                 IChainedApiResourceHandler handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.RemoveChildObject));
                     this.ThrowIfPreConditionFails(handler, key);
                     var retVal = handler.RemoveChildObject(Guid.TryParseExact(key, "D", out var uuid) ? (object)uuid : key, childResourceType, Guid.TryParseExact(scopedEntityKey, "D", out var scopedUuid) ? (object)scopedUuid : scopedEntityKey);
@@ -1597,6 +1618,7 @@ namespace SanteDB.Rest.AMI
                 IChainedApiResourceHandler handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType) as IChainedApiResourceHandler;
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IChainedApiResourceHandler.GetChildObject));
                     this.ThrowIfPreConditionFails(handler, scopedEntityKey);
                     var retVal = handler.GetChildObject(Guid.TryParseExact(key, "D", out var uuid) ? (object)uuid : key, childResourceType, Guid.TryParseExact(scopedEntityKey, "D", out var childUuid) ? (object)childUuid : scopedEntityKey);
@@ -1653,6 +1675,7 @@ namespace SanteDB.Rest.AMI
                 var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType) as IOperationalApiResourceHandler;
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IOperationalApiResourceHandler.InvokeOperation));
 
                     var retValRaw = handler.InvokeOperation(id, operationName, body);
@@ -1716,6 +1739,7 @@ namespace SanteDB.Rest.AMI
                 var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType) as ICheckoutResourceHandler;
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(ICheckoutResourceHandler.CheckIn));
                     var lockObj = handler.CheckIn(key);
                     audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
@@ -1763,6 +1787,7 @@ namespace SanteDB.Rest.AMI
                 var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType) as ICheckoutResourceHandler;
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(ICheckoutResourceHandler.CheckIn));
                     var lockObj = handler.CheckOut(key);
                     audit = audit.WithOutcome(Core.Model.Audit.OutcomeIndicator.Success)
@@ -1811,6 +1836,7 @@ namespace SanteDB.Rest.AMI
                 var handler = this.m_resourceHandler.GetResourceHandler<IAmiServiceContract>(resourceType) as IOperationalApiResourceHandler;
                 if (handler != null)
                 {
+                    audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IOperationalApiResourceHandler.InvokeOperation));
 
                     var retValRaw = handler.InvokeOperation(null, operationName, body);
