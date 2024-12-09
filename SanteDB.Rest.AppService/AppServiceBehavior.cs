@@ -26,6 +26,7 @@ using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
+using SanteDB.Core.Templates;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,8 @@ namespace SanteDB.Rest.AppService
     [ServiceBehavior(Name = AppServiceMessageHandler.ConfigurationName, InstanceMode = ServiceInstanceMode.Singleton)]
     public partial class AppServiceBehavior : IAppServiceContract, IDisposable
     {
+        private readonly IDataTemplateManagementService m_dataTemplateManagerService;
+
         /// <summary>
         /// The configuration manager
         /// </summary>
@@ -108,6 +111,7 @@ namespace SanteDB.Rest.AppService
                   ApplicationServiceContext.Current.GetService<IUserPreferencesManager>(),
                   ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>(),
                   ApplicationServiceContext.Current.GetService<ITickleService>(),
+                  ApplicationServiceContext.Current.GetService<IDataTemplateManagementService>(),
                   ApplicationServiceContext.Current.GetService<IPatchService>()
                   )
         { }
@@ -127,8 +131,10 @@ namespace SanteDB.Rest.AppService
             IUserPreferencesManager userPreferencesManager = null,
             ISecurityRepositoryService securityRepositoryService = null,
             ITickleService tickleService = null,
+            IDataTemplateManagementService dataTemplateManagementService = null,
             IPatchService patchService = null)
         {
+            this.m_dataTemplateManagerService = dataTemplateManagementService;
             this.m_configurationManager = configurationManager;
             this.m_serviceManager = serviceManager;
             this.m_policyEnforcementService = policyEnforcementService;

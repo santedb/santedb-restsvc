@@ -18,16 +18,24 @@
  */
 using RestSrvr;
 using SanteDB.Core.Applets.Model;
+using SanteDB.Core.Applets.ViewModel.Json;
+using SanteDB.Core.Data.Quality;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Model;
+using SanteDB.Core.Model.DataTypes;
+using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
 using SanteDB.Core.Security.Configuration;
+using SanteDB.Core.Templates.Definition;
+using SanteDB.Rest.AppService.Model;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace SanteDB.Rest.AppService
 {
@@ -39,7 +47,7 @@ namespace SanteDB.Rest.AppService
 
         /// <inheritdoc/>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public IdentifiedData GetTemplateDefinition(string templateId)
+        public IdentifiedData GetTemplateModel(string templateId)
         {
             // First, get the template definition
             var parameters = RestOperationContext.Current.IncomingRequest.QueryString;
@@ -65,50 +73,126 @@ namespace SanteDB.Rest.AppService
                 }
             }
 
-            return this.m_appletManagerService.Applets.GetTemplateInstance(templateId, parameters.ToList().GroupBy(o => o.Key).ToDictionary(o => o.Key, o => o.First().Value));
+            // get the template 
+            var tplDef = this.m_dataTemplateManagerService.Find(a => a.Mnemonic == templateId).FirstOrDefault();
+            if (tplDef == null)
+            {
+                throw new KeyNotFoundException($"template/{templateId}");
+            }
+
+            using (var ms = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(tplDef.Fill(parameters.ToList().ToDictionaryIgnoringDuplicates(o => o.Key, o => o.Value), (r) =>
+            {
+                var asset = this.m_appletManagerService.Applets.ResolveAsset(r);
+                if(asset == null)
+                {
+                    throw new FileNotFoundException(r);
+                }
+                return Encoding.UTF8.GetString(this.m_appletManagerService.Applets.RenderAssetContent(asset));
+            }))))
+            using (var json = new JsonViewModelSerializer())
+            {
+                var result = json.DeSerialize<IdentifiedData>(ms);
+                if (result is IHasTemplate template) // Correct any type-os in the JSON
+                {
+                    template.Template = new TemplateDefinition() { Key = tplDef.Key, Description = tplDef.Name, Mnemonic = templateId };
+                    template.TemplateKey = tplDef.Key;
+                }
+
+                return result;
+            }
+        }
+
+        /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        public TemplateDefinitionViewModel GetTemplate(string templateId)
+        {
+            var tpl = this.m_dataTemplateManagerService.Find(o => o.Mnemonic == templateId).FirstOrDefault();
+            if (tpl == null)
+            {
+                throw new KeyNotFoundException(this.m_localizationService.GetString(ErrorMessageStrings.NOT_FOUND, new { type = "Template", id = templateId }));
+            }
+            return new TemplateDefinitionViewModel(tpl);
         }
 
         /// <inheritdoc/>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
         public void GetTemplateForm(string templateId)
         {
-            var template = this.m_appletManagerService.Applets.GetTemplateDefinition(templateId);
-            if (template == null)
-            {
-                throw new KeyNotFoundException(this.m_localizationService.GetString(ErrorMessageStrings.NOT_FOUND, new { type = "Template", id = templateId }));
-            }
-            if (!String.IsNullOrEmpty(template.Form))
-            {
-                RestOperationContext.Current.OutgoingResponse.Redirect(template.Form);
-            }
-            
+            var template = this.GetTemplate(templateId);
+            RestOperationContext.Current.OutgoingResponse.Redirect(template.Form);
         }
 
         /// <inheritdoc/>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
-        public List<AppletTemplateDefinition> GetTemplates()
+        public List<TemplateDefinitionViewModel> GetTemplates()
         {
-            var query = QueryExpressionParser.BuildLinqExpression<AppletTemplateDefinition>(RestOperationContext.Current.IncomingRequest.QueryString, null, true);
-            return this.m_appletManagerService.Applets
-                .SelectMany(o => o.Templates)
-                .GroupBy(o => o.Mnemonic)
-                .Select(o => o.OrderByDescending(t => t.Priority).FirstOrDefault())
-                .Where(query.Compile()).ToList();
+            var query = QueryExpressionParser.BuildLinqExpression<TemplateDefinitionViewModel>(RestOperationContext.Current.IncomingRequest.QueryString, null, true);
+            return this.m_dataTemplateManagerService.Find(o=>o.IsActive).Select(r => new TemplateDefinitionViewModel(r)).Where(query.Compile()).ToList();
         }
 
         /// <inheritdoc/>
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
         public void GetTemplateView(string templateId)
         {
-            var template = this.m_appletManagerService.Applets.GetTemplateDefinition(templateId);
+            var template = this.GetTemplate(templateId);
+            RestOperationContext.Current.OutgoingResponse.Redirect(template.View);
+        }
+
+        /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        public Stream GetTemplateDefinition(string templateId)
+        {
+            var templateDefinition = this.m_dataTemplateManagerService.Find(t => t.Mnemonic == templateId).FirstOrDefault();
+            if(templateDefinition == null)
+            {
+                throw new KeyNotFoundException(this.m_localizationService.GetString(ErrorMessageStrings.NOT_FOUND, new { type = "Template", id = templateId }));
+            }
+            else if(templateDefinition.JsonTemplate.ContentType == DataTemplateContentType.reference)
+            {
+                RestOperationContext.Current.OutgoingResponse.Redirect(templateDefinition.JsonTemplate.Content);
+                return null;
+            }
+            else
+            {
+                RestOperationContext.Current.OutgoingResponse.ContentType = "text/json";
+                return new MemoryStream(System.Text.Encoding.UTF8.GetBytes(templateDefinition.JsonTemplate.Content));
+            }
+        }
+
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
+        public Stream GetTemplateView(String templateId, String viewType)
+        {
+            if(!Enum.TryParse<DataTemplateViewType>(viewType, out var viewTypeEnum))
+            {
+                throw new ArgumentOutOfRangeException(String.Format(ErrorMessages.ARGUMENT_OUT_OF_RANGE, viewType, $"BackEntry, Entry, View, SummaryView"));
+            }
+            var template = this.m_dataTemplateManagerService.Find(o => o.Mnemonic == templateId).FirstOrDefault();
             if (template == null)
             {
                 throw new KeyNotFoundException(this.m_localizationService.GetString(ErrorMessageStrings.NOT_FOUND, new { type = "Template", id = templateId }));
             }
-            if (!String.IsNullOrEmpty(template.View))
+            else
             {
-                RestOperationContext.Current.OutgoingResponse.Redirect(template.View);
+                var view = template.Views.Find(v => v.ViewType == viewTypeEnum);
+                if(view == null)
+                {
+                    throw new FileNotFoundException($"/Template/{templateId}/view/{viewType}.html");
+                }
+                else if(view.Content is String str)
+                {
+                    RestOperationContext.Current.OutgoingResponse.Redirect(str);
+                    return null;
+                }
+                else
+                {
+                    var memoryStream = new MemoryStream();
+                    RestOperationContext.Current.OutgoingResponse.ContentType = "text/html";
+                    view.Render(memoryStream);
+                    memoryStream.Seek(0, SeekOrigin.Begin);
+                    return memoryStream;
+                }
             }
+
         }
 
     }
