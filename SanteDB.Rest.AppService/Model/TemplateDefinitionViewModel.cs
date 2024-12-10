@@ -17,6 +17,8 @@ namespace SanteDB.Rest.AppService.Model
     public class TemplateDefinitionViewModel
     {
 
+        private readonly Dictionary<DataTemplateViewType, String> m_viewPaths;
+
         public TemplateDefinitionViewModel()
         {
             
@@ -37,6 +39,8 @@ namespace SanteDB.Rest.AppService.Model
             this.Icon = dataTemplateDefinition.Metadata.Icon;
             this.Mnemonic = dataTemplateDefinition.Mnemonic;
             this.Guard = dataTemplateDefinition.Guard;
+
+            this.m_viewPaths = dataTemplateDefinition.Views.ToDictionary(o => o.ViewType, o => $"/app/Template/{this.Mnemonic}/view/{o.ViewType}");
         }
 
         /// <summary>
@@ -77,31 +81,15 @@ namespace SanteDB.Rest.AppService.Model
         }
 
         [JsonProperty("form")]
-        public string Form
-        {
-            get => $"/app/Template/{this.Mnemonic}/view/{DataTemplateViewType.Entry}";
-            set { }
-        }
+        public string Form => this.m_viewPaths.TryGetValue(DataTemplateViewType.Entry, out var p) ? p : null;
 
         [JsonProperty("backEntry")]
-        public string BackEntry
-        {
-            get => $"/app/Template/{this.Mnemonic}/view/{DataTemplateViewType.BackEntry}";
-            set { }
-        }
+        public string BackEntry => this.m_viewPaths.TryGetValue(DataTemplateViewType.BackEntry, out var p) ? p : null;
 
         [JsonProperty("view")]
-        public string View
-        {
-            get => $"/app/Template/{this.Mnemonic}/view/{DataTemplateViewType.DetailView}";
-            set { }
-        }
+        public string View => this.m_viewPaths.TryGetValue(DataTemplateViewType.DetailView, out var p) ? p : null;
 
         [JsonProperty("summaryView")]
-        public string SummaryView
-        {
-            get => $"/app/Template/{this.Mnemonic}/view/{DataTemplateViewType.SummaryView}";
-            set { }
-        }
+        public string SummaryView => this.m_viewPaths.TryGetValue(DataTemplateViewType.SummaryView, out var p) ? p : null;
     }
 }
