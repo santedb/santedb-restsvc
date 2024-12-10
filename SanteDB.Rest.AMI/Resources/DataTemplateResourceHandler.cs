@@ -1,4 +1,6 @@
-﻿using SanteDB.Core.Http;
+﻿using RestSrvr;
+using SanteDB.Core.Exceptions;
+using SanteDB.Core.Http;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
@@ -20,16 +22,18 @@ namespace SanteDB.Rest.AMI.Resources
     /// <summary>
     /// Data template resource handler
     /// </summary>
-    public class DataTemplateResourceHandler : ChainedResourceHandlerBase
+    public class DataTemplateResourceHandler : ChainedResourceHandlerBase, ICheckoutResourceHandler
     {
         private readonly IDataTemplateManagementService m_dataTemplateManagementService;
+        private readonly IResourceCheckoutService m_checkoutService;
 
         /// <summary>
         /// DI constructor
         /// </summary>
-        public DataTemplateResourceHandler(IDataTemplateManagementService dataTemplateManagementService, ILocalizationService localizationService) : base(localizationService)
+        public DataTemplateResourceHandler(IDataTemplateManagementService dataTemplateManagementService, ILocalizationService localizationService, IResourceCheckoutService checkoutService) : base(localizationService)
         {
             this.m_dataTemplateManagementService = dataTemplateManagementService;
+            this.m_checkoutService = checkoutService;
         }
 
         /// <inheritdoc/>
@@ -43,6 +47,32 @@ namespace SanteDB.Rest.AMI.Resources
 
         /// <inheritdoc/>
         public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.CreateOrUpdate | ResourceCapabilityType.Update | ResourceCapabilityType.Delete | ResourceCapabilityType.Get | ResourceCapabilityType.GetVersion | ResourceCapabilityType.Search;
+        
+        /// <inheritdoc/>
+        public object CheckIn(object key)
+        {
+            if (key is Guid kuuid || Guid.TryParse(key.ToString(), out kuuid))
+            {
+                if(!this.m_checkoutService.Checkin<DataTemplateDefinition>(kuuid))
+                {
+                    throw new ObjectLockedException();
+                }
+            }
+            return null;
+        }
+
+        /// <inheritdoc/>
+        public object CheckOut(object key)
+        {
+            if (key is Guid kuuid || Guid.TryParse(key.ToString(), out kuuid))
+            {
+                if (!this.m_checkoutService.Checkout<DataTemplateDefinition>(kuuid))
+                {
+                    throw new ObjectLockedException();
+                }
+            }
+            return null;
+        }
 
         /// <inheritdoc/>
         [Demand(PermissionPolicyIdentifiers.AlterDataTemplates)]
@@ -87,7 +117,23 @@ namespace SanteDB.Rest.AMI.Resources
         {
             if(id is Guid keyUuid || Guid.TryParse(id.ToString(), out keyUuid))
             {
-                return this.m_dataTemplateManagementService.Get(keyUuid);
+                var retVal = this.m_dataTemplateManagementService.Get(keyUuid);
+                if(retVal == null)
+                {
+                    throw new KeyNotFoundException($"{this.ResourceName}/{id}");
+                }
+                if (Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString["_download"], out var download) && download)
+                {
+                    RestOperationContext.Current.OutgoingResponse.AddHeader("Content-Disposition", $"attachment; filename={retVal.Mnemonic}.xml");
+                    var ms = new MemoryStream();
+                    retVal.Save(ms);
+                    ms.Seek(0, SeekOrigin.Begin);
+                    return ms;
+                }
+                else
+                {
+                    return retVal;
+                }
             }
             else
             {
