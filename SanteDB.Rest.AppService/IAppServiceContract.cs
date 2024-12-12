@@ -22,7 +22,9 @@ using SanteDB.Core.Applets.Model;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.AMI.Diagnostics;
+using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Parameters;
+using SanteDB.Core.Templates.Definition;
 using SanteDB.Rest.AppService.Model;
 using SanteDB.Rest.Common.Attributes;
 using System;
@@ -135,25 +137,49 @@ namespace SanteDB.Rest.AppService
         /// Get all templates
         /// </summary>
         [Get("/Template")]
-        List<AppletTemplateDefinition> GetTemplates();
+        List<TemplateDefinitionViewModel> GetTemplates();
+
+        /// <summary>
+        /// Get template 
+        /// </summary>
+        [Get("/Template/{templateId}")]
+        TemplateDefinitionViewModel GetTemplate(string templateId);
 
         /// <summary>
         /// Gets the specified template identifier
         /// </summary>
-        [Get("/Template/{templateId}")]
-        IdentifiedData GetTemplateDefinition(String templateId);
+        [Get("/Template/{templateId}/skel")]
+        IdentifiedData GetTemplateModel(String templateId);
 
         /// <summary>
         /// Get the view for the specified template
         /// </summary>
         [Get("/Template/{templateId}/ui/view.html")]
+        [Obsolete("Kept for backwards compatibility")]
         void GetTemplateView(String templateId);
 
         /// <summary>
         /// Get the form for the specified template
         /// </summary>
         [Get("/Template/{templateId}/ui/form.html")]
+        [Obsolete("Kept for backwards compatibility")]
         void GetTemplateForm(String templateId);
+
+        /// <summary>
+        /// Get template view information
+        /// </summary>
+        /// <param name="templateId">The template identifier</param>
+        /// <param name="viewType">The view to obtain</param>
+        /// <returns>A stream representing the contents of the form view</returns>
+        [Get("/Template/{templateId}/view/{viewType}")]
+        Stream GetTemplateView(String templateId, String viewType);
+
+        /// <summary>
+        /// Gets the template definition
+        /// </summary>
+        [Get("/Template/{templateId}/definition.json")]
+        Stream GetTemplateDefinition(String templateId);
+
         #endregion
 
         #region Tickle
