@@ -36,7 +36,7 @@ namespace SanteDB.Rest.AppService.Model
             this.Name = dataTemplateDefinition.Name;
             this.Oid = dataTemplateDefinition.Oid;
             this.Scope = dataTemplateDefinition.Scopes?.Select(o => o.ToString()).ToList();
-            this.Icon = dataTemplateDefinition.Metadata.Icon;
+            this.Icon = dataTemplateDefinition.Icon;
             this.Mnemonic = dataTemplateDefinition.Mnemonic;
             this.Guard = dataTemplateDefinition.Guard;
 
