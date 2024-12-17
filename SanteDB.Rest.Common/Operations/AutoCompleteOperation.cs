@@ -105,6 +105,7 @@ namespace SanteDB.Rest.Common.Operations
         public void UpdateWith(PropertyInfo propertyInfo)
         {
             this.Name = propertyInfo.GetSerializationName();
+            this.IsDelayLoaded |= propertyInfo.DeclaringType.GetProperties().Any(p => p.GetCustomAttribute<SerializationReferenceAttribute>()?.RedirectProperty == propertyInfo.Name);
 
             // Is this just XML formatting?
             if (propertyInfo.Name.EndsWith("Xml"))
@@ -208,6 +209,12 @@ namespace SanteDB.Rest.Common.Operations
         /// </summary>
         [JsonProperty("classifierValues")]
         public String[] ClassifierValues { get; private set; }
+
+        /// <summary>
+        /// Delay loadable
+        /// </summary>
+        [JsonProperty("delayLoadable")]
+        public bool IsDelayLoaded { get; set; }
 
         /// <summary>
         /// Gets the possible values which are allowed
