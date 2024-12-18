@@ -56,14 +56,14 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Create security repository
         /// </summary>
-        public SecurityUserResourceHandler(IIdentityProviderService identityProvider, 
-            ILocalizationService localizationService, 
-            IRoleProviderService roleProvider, 
-            ISecurityRepositoryService securityRepository, 
-            IPolicyInformationService policyInformationService, 
+        public SecurityUserResourceHandler(IIdentityProviderService identityProvider,
+            ILocalizationService localizationService,
+            IRoleProviderService roleProvider,
+            ISecurityRepositoryService securityRepository,
+            IPolicyInformationService policyInformationService,
             IPolicyEnforcementService policyEnforcementService,
-            IAuditService auditService, 
-            IDataCachingService cachingService = null, 
+            IAuditService auditService,
+            IDataCachingService cachingService = null,
             IRepositoryService<SecurityUser> repository = null) : base(auditService, policyInformationService, localizationService, cachingService, repository)
         {
             this.m_securityRepository = securityRepository;
@@ -75,7 +75,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Creates the specified user
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.CreateLocalIdentity)]
+        [Demand(PermissionPolicyIdentifiers.LoginPasswordOnly, true)]
         public override object Create(object data, bool updateIfExists)
         {
             if (data is SecurityUser)
@@ -84,6 +84,10 @@ namespace SanteDB.Rest.AMI.Resources
             }
 
             var td = data as SecurityUserInfo;
+            if (!updateIfExists || td.Entity.UserName != AuthenticationContext.Current.Principal.Identity.Name)
+            {
+                this.m_pepService.Demand(PermissionPolicyIdentifiers.CreateLocalIdentity);
+            }
 
             // Insert the user
             var retVal = base.Create(data, updateIfExists) as SecurityUserInfo;
@@ -93,7 +97,7 @@ namespace SanteDB.Rest.AMI.Resources
             {
                 this.m_roleProvider.AddUsersToRoles(new string[] { retVal.Entity.UserName }, td.Roles.ToArray(), AuthenticationContext.Current.Principal);
             }
-            if(td.ExpirePassword)
+            if (td.ExpirePassword)
             {
                 this.m_identityProvider.ExpirePassword(retVal.Entity.UserName, AuthenticationContext.Current.Principal);
             }
@@ -202,7 +206,7 @@ namespace SanteDB.Rest.AMI.Resources
 
                 return null;
             }
-            else if(!td.PasswordOnly && !td.ExpirePassword)
+            else if (!td.PasswordOnly && !td.ExpirePassword)
             {
                 // We're doing a general update, so we have to demand access
                 ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>().Demand(PermissionPolicyIdentifiers.LoginAsService);

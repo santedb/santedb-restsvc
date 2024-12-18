@@ -16,6 +16,7 @@
  * the License.
  */
 using SanteDB.Core.Diagnostics;
+using SanteDB.Core.Exceptions;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
 using SanteDB.Core.Security.Principal;
@@ -128,6 +129,13 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                         _PolicyService?.Demand(OAuthConstants.OAuthResetFlowPolicyWithoutDevice, context.ApplicationPrincipal);
                     }
                 }
+            }
+            catch (TfaRequiredAuthenticationException tfareqex)
+            {
+                _Tracer.TraceVerbose("Authentication failed due to Tfa configured on account.");
+                context.ErrorMessage = tfareqex.Message;
+                context.ErrorType = OAuthErrorType.mfa_required;
+                return false;
             }
             catch (AuthenticationException authnex)
             {

@@ -105,6 +105,7 @@ namespace SanteDB.Rest.Common.Operations
         public void UpdateWith(PropertyInfo propertyInfo)
         {
             this.Name = propertyInfo.GetSerializationName();
+            this.IsDelayLoaded |= propertyInfo.DeclaringType.GetProperties().Any(p => p.GetCustomAttribute<SerializationReferenceAttribute>()?.RedirectProperty == propertyInfo.Name);
 
             // Is this just XML formatting?
             if (propertyInfo.Name.EndsWith("Xml"))
@@ -210,6 +211,12 @@ namespace SanteDB.Rest.Common.Operations
         public String[] ClassifierValues { get; private set; }
 
         /// <summary>
+        /// Delay loadable
+        /// </summary>
+        [JsonProperty("delayLoadable")]
+        public bool IsDelayLoaded { get; set; }
+
+        /// <summary>
         /// Gets the possible values which are allowed
         /// </summary>
         [JsonProperty("values")]
@@ -294,15 +301,20 @@ namespace SanteDB.Rest.Common.Operations
             var propertyExtract = this.m_propertyExtractor.Match(propertyPath);
             if (propertyExtract.Success)
             {
-                var property = retVal.Properties.FirstOrDefault(o => o.Name == propertyExtract.Groups[1].Value);
+                var propertyName = propertyExtract.Groups[1].Value;
+                if(propertyName.EndsWith("Model"))
+                {
+                    propertyName = propertyName.Substring(0, propertyName.Length - 5);
+                }
+                var property = retVal.Properties.FirstOrDefault(o => o.Name == propertyName);
 
                 // Is the property path full?
                 if (property == null)
                 {
                     // Is it a variable?
-                    if (propertyExtract.Groups[1].Value.StartsWith("$"))
+                    if (propertyName.StartsWith("$"))
                     {
-                        var variable = variables[propertyExtract.Groups[1].Value];
+                        var variable = variables[propertyName];
                         if (variable != null)
                         {
                             return this.FollowPath(new ModelSerializationBinder().BindToType(null, variable.Value<String>()), propertyExtract.Groups[3].Value, variables);
@@ -312,7 +324,7 @@ namespace SanteDB.Rest.Common.Operations
                             return variables.Values().Select(o => o.Path.Substring(1)).ToArray();
                         }
                     }
-                    else if (propertyExtract.Groups[1].Value.StartsWith(":(")) // function
+                    else if (propertyName.StartsWith(":(")) // function
                     {
                         var functionMatch = this.m_functionExtractor.Match(propertyPath);
                         if (functionMatch.Success && (!String.IsNullOrEmpty(functionMatch.Groups[2].Value) || !String.IsNullOrEmpty(functionMatch.Groups[3].Value)))
