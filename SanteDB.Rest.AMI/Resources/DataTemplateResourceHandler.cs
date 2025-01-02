@@ -8,6 +8,7 @@ using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Core.Templates;
 using SanteDB.Core.Templates.Definition;
+using SanteDB.Core.Templates.View;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
@@ -16,6 +17,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -80,6 +82,7 @@ namespace SanteDB.Rest.AMI.Resources
         {
             if(data is DataTemplateDefinition dte)
             {
+               
                 return this.m_dataTemplateManagementService.AddOrUpdate(dte);
             }
             else if (data is IEnumerable<MultiPartFormData> multiForm)
