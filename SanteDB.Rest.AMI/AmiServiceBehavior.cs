@@ -1257,6 +1257,7 @@ namespace SanteDB.Rest.AMI
         {
             if (!ApplicationServiceContext.Current.IsRunning)
             {
+                throw new DomainStateException();
             }
         }
 
