@@ -230,7 +230,7 @@ namespace SanteDB.Rest.Common.Operations
     public class AutoCompleteOperation : IApiChildOperation
     {
         // Property extractor
-        private readonly Regex m_propertyExtractor = new Regex(@"^([\:\$]?\(?\w*)((?:\[[^\]]+?)\]|(?:\$\w+)|(?:@\w+)|(?::\(.*?\))|[\?\.\=]?)(.*)$");
+        private readonly Regex m_propertyExtractor = new Regex(@"^([\:\$]?\(?\w*)((?:\[[^\]]+?)\]|(?:\$\w+)|(?:@\w+)|(?::\(.*?\))|(?:[\?\.])|(?:\=[~\<\>!\^]?(?:%3[dD])?)?)(.*)$");
 
         private readonly Regex m_functionExtractor = new Regex(@"^:\((\w*)(?:\|(.*?)\)?|\)(.*?))?$");
 
@@ -272,7 +272,8 @@ namespace SanteDB.Rest.Common.Operations
         {
             if (parameters.TryGet("expression", out String propertyPath))
             {
-                parameters.TryGet("vars", out JObject variables);
+                
+                parameters.TryGet("vars", out object variables);
                 return this.FollowPath(scopingType, propertyPath, variables);
             }
             else
@@ -285,7 +286,7 @@ namespace SanteDB.Rest.Common.Operations
         /// Follow property path
         /// </summary>
         /// TODO: Clean this up
-        private object FollowPath(Type scopingType, string propertyPath, JObject variables)
+        private object FollowPath(Type scopingType, string propertyPath, object variables)
         {
             // Get rid f the
             if(String.IsNullOrEmpty(propertyPath))
@@ -314,14 +315,21 @@ namespace SanteDB.Rest.Common.Operations
                     // Is it a variable?
                     if (propertyName.StartsWith("$"))
                     {
-                        var variable = variables[propertyName];
-                        if (variable != null)
+                        if (variables is JObject complexVars)
                         {
-                            return this.FollowPath(new ModelSerializationBinder().BindToType(null, variable.Value<String>()), propertyExtract.Groups[3].Value, variables);
+                            var variable = complexVars[propertyName];
+                            if (variable != null)
+                            {
+                                return this.FollowPath(new ModelSerializationBinder().BindToType(null, variable.Value<String>()), propertyExtract.Groups[3].Value, variables);
+                            }
+                            else
+                            {
+                                return complexVars.Values().Select(o => o.Path.Substring(1)).ToArray();
+                            }
                         }
-                        else
+                        else if(variables is string[])
                         {
-                            return variables.Values().Select(o => o.Path.Substring(1)).ToArray();
+                            return variables;
                         }
                     }
                     else if (propertyName.StartsWith(":(")) // function
