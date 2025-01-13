@@ -66,7 +66,7 @@ namespace SanteDB.Rest.AppService.Configuration
         /// </summary>
         public ConfigurationDictionary<string, object> Configuration => new ConfigurationDictionary<string, object>()
         {
-            { MODE_SETTING, this.m_integrationPatterns.FirstOrDefault(p=>p.GetServices().All(s=>this.m_appConfiguration.ServiceProviders.Any(c=>c.Type == s)))?.Name }
+            { MODE_SETTING, this.m_integrationPatterns.FirstOrDefault(p=>p.GetServices().All(s=>this.m_appConfiguration.ServiceProviders.Any(c=>c.Type == s)))?.Name ?? this.m_appConfiguration.GetAppSetting("integration-mode") }
         };
 
         /// <summary>
@@ -102,8 +102,8 @@ namespace SanteDB.Rest.AppService.Configuration
                 {
                     appSetting.ServiceProviders.AddRange(newMode.GetServices().Select(o => new TypeReferenceConfiguration(o)));
                 }
-                newMode.SetDefaults(configuration);
 
+                newMode.SetDefaults(configuration);
                 appSetting.AddAppSetting("integration-mode", modeRaw.ToString());
             }
             return true;
