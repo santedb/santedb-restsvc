@@ -28,6 +28,7 @@ using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Services;
+using SanteDB.Core.Templates.Definition;
 using SanteDB.Rest.Common;
 using System;
 using System.Collections.Generic;
@@ -73,7 +74,8 @@ namespace SanteDB.Rest.HDSI.Operation
             typeof(ConceptClass),
             typeof(ExtensionType),
             typeof(DataQualityRulesetConfiguration),
-            typeof(ICdssLibraryRepositoryMetadata)
+            typeof(ICdssLibraryRepositoryMetadata),
+            typeof(DataTemplateDefinition)
         };
 
         /// <inheritdoc/>
