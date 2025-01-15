@@ -236,8 +236,11 @@ namespace SanteDB.Rest.AMI
                     cacheResult = this.m_dataCachingService.GetCacheItem(guidKey);
                 }
 
-                if (cacheResult != null && (ifNoneMatchHeader?.Contains(cacheResult.Tag) == true ||
-                    ifMatchHeader?.Contains(cacheResult.Tag) != true ||
+                var cacheHeader = this.ExtractValidateMatchHeader(cacheResult.GetType(), cacheResult.Tag);
+
+
+                if (cacheResult != null && (ifNoneMatchHeader?.Contains(cacheHeader) == true ||
+                    ifMatchHeader?.Contains(cacheHeader) != true ||
                         ifModifiedHeader.HasValue && cacheResult.ModifiedOn <= ifModifiedHeader ||
                         ifUnmodifiedHeader.HasValue && cacheResult.ModifiedOn >= ifUnmodifiedHeader))
                 {
