@@ -165,7 +165,7 @@ namespace SanteDB.Rest.WWW
 
             // Caching
             RestOperationContext.Current.OutgoingResponse.AddHeader("ETag", etag);
-            RestOperationContext.Current.OutgoingResponse.ContentType = navigateAsset.MimeType;
+            RestOperationContext.Current.OutgoingResponse.ContentType = $"{navigateAsset.MimeType}; charset=utf-8";
 
             // Write asset
             var content = this.m_serviceApplet.RenderAssetContent(navigateAsset, lang?.ToString(), bindingParameters: new Dictionary<String, String>()
