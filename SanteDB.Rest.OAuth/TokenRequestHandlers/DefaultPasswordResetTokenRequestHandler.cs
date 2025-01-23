@@ -87,10 +87,11 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                 return false;
             }
 
-            //Forcibly set the scope to be login only. This prevents the user from making any modifications to the system after they have updated the password.
+            //SECURITY CRITICAL: Forcibly set the scope to be login only. This prevents the user from making any modifications to the system after they have updated the password.
             context.Scopes = context.Scopes ?? new List<string>();
             context.Scopes.Clear();
             context.Scopes.Add(PermissionPolicyIdentifiers.LoginPasswordOnly);
+            //SECURITY CRITICAL
 
             try
             {

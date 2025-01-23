@@ -86,7 +86,9 @@ namespace SanteDB.Rest.AMI.Resources
             var td = data as SecurityUserInfo;
             if (!updateIfExists || td.Entity.UserName != AuthenticationContext.Current.Principal.Identity.Name)
             {
+                //SECURITY CRITICAL: This is required to prevent unauthenticated users from inserting new user records.
                 this.m_pepService.Demand(PermissionPolicyIdentifiers.CreateLocalIdentity);
+                //SECURITY CRITICAL
             }
 
             // Insert the user
