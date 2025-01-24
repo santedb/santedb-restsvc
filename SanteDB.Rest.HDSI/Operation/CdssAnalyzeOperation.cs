@@ -70,6 +70,12 @@ namespace SanteDB.Rest.HDSI.Operation
         [XmlElement("issue"), JsonProperty("issue")]
         public List<DetectedIssue> Issues { get; set; }
 
+        /// <summary>
+        /// Additional proposals made as part of the analysis
+        /// </summary>
+        [XmlElement("propose"), JsonProperty("propose")]
+        public List<Act> Propose { get; set; }
+
     }
 
     /// <summary>
@@ -107,23 +113,24 @@ namespace SanteDB.Rest.HDSI.Operation
                 throw new ArgumentNullException("target");
             }
 
-            var issues = new List<DetectedIssue>();
+            var results = new List<ICdssResult>();
             if (submission is Bundle bundle)
             {
                 foreach (var itm in bundle.Item.OfType<Act>())
                 {
-                    issues.AddRange(this.m_decisionSupportService.Analyze(itm));
+                    results.AddRange(this.m_decisionSupportService.Analyze(itm));
                 }
             }
             else if(submission is Act act)
             {
-                issues.AddRange(this.m_decisionSupportService.Analyze(act));
+                results.AddRange(this.m_decisionSupportService.Analyze(act));
             }
 
             return new CdssAnalyzeResult()
             {
-                Issues = issues,
-                Submission = submission
+                Issues = results.OfType<CdssDetectedIssueResult>().Select(o => o.Issue).ToList(),
+                Submission = submission,
+                Propose = results.OfType<CdssProposeResult>().Select(o => o.ProposedAction).ToList()
             };
         }
     }
