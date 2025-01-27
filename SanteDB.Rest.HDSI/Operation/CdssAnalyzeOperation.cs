@@ -16,12 +16,14 @@
  * the License.
  */
 using Newtonsoft.Json;
+using SanteDB.Core;
 using SanteDB.Core.BusinessRules;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.Parameters;
+using SanteDB.Core.Model.Roles;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
@@ -99,31 +101,41 @@ namespace SanteDB.Rest.HDSI.Operation
         public string Name => "analyze";
 
         /// <inheritdoc/>
-        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Class;
+        public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Class | ChildObjectScopeBinding.Instance;
 
         /// <inheritdoc/>
-        public Type[] ParentTypes => new Type[] { typeof(Bundle), typeof(Act) };
+        public Type[] ParentTypes => new Type[] { typeof(Bundle), typeof(Act), typeof(Patient) };
 
         /// <inheritdoc/>
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
             // Find the parameter for the submission
-            if(!parameters.TryGet("target", out IdentifiedData submission))
+            IdentifiedData submission = null;
+            if(scopingKey != null && (scopingKey is Guid scopingUuid || Guid.TryParse(scopingKey.ToString(), out scopingUuid)))
+            {
+                var repoType = typeof(IRepositoryService<>).MakeGenericType(scopingType);
+                var repo = ApplicationServiceContext.Current.GetService(repoType) as IRepositoryService;
+                submission = repo?.Get(scopingUuid);
+            }
+            else if(!parameters.TryGet("target", out submission))
             {
                 throw new ArgumentNullException("target");
             }
+            parameters.Parameters.RemoveAll(o => o.Name == "target");
+            var cpParameters = parameters.Parameters.ToDictionary(o => o.Name, o => o.Value);
 
             var results = new List<ICdssResult>();
-            if (submission is Bundle bundle)
+            switch (submission)
             {
-                foreach (var itm in bundle.Item.OfType<Act>())
-                {
-                    results.AddRange(this.m_decisionSupportService.Analyze(itm));
-                }
-            }
-            else if(submission is Act act)
-            {
-                results.AddRange(this.m_decisionSupportService.Analyze(act));
+                case Bundle bundle:
+                    foreach (var itm in bundle.Item.OfType<Act>())
+                    {
+                        results.AddRange(this.m_decisionSupportService.Analyze(itm, cpParameters));
+                    }
+                    break;
+                case IdentifiedData id:
+                    results.AddRange(this.m_decisionSupportService.Analyze(id, cpParameters));
+                    break;
             }
 
             return new CdssAnalyzeResult()
