@@ -140,9 +140,9 @@ namespace SanteDB.Rest.HDSI.Operation
 
             return new CdssAnalyzeResult()
             {
-                Issues = results.OfType<CdssDetectedIssueResult>().Select(o => o.Issue).ToList(),
+                Issues = results.OfType<CdssDetectedIssueResult>().Select(o => o.Issue).Distinct().ToList(),
                 Submission = submission,
-                Propose = results.OfType<CdssProposeResult>().Select(o => o.ProposedAction).ToList()
+                Propose = results.OfType<CdssProposeResult>().Select(o => o.ProposedAction).Distinct().ToList()
             };
         }
     }

@@ -44,6 +44,15 @@ namespace SanteDB.Rest.WWW
         Stream GetRobots();
 
         /// <summary>
+        /// Get dynamically generated HTML which is a combination of any declared collection of assets
+        /// across all applets installed in the context
+        /// </summary>
+        /// <param name="dynamicCollectionName">The dynamic collection range</param>
+        /// <returns>The combined HTML</returns>
+        [Get("_dynamic/{dynamicCollectionName}")]
+        Stream GetDynamic(string dynamicCollectionName);
+
+        /// <summary>
         /// Get specified object
         /// </summary>
         [Get("*")]
