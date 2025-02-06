@@ -99,7 +99,7 @@ namespace SanteDB.Rest.Common.Fault
 
                 if (ex.Data.Count > 0)
                 {
-                    this.Data = ex.Data.Values.OfType<object>().Select(o => o.ToString()).ToList();
+                    this.Data = ex.Data.OfType<object>().Select(o => o.ToString()).ToList();
                 }
                 else
                 {

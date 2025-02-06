@@ -39,7 +39,6 @@ namespace SanteDB.Rest.AppService.Model
             this.Icon = dataTemplateDefinition.Icon;
             this.Mnemonic = dataTemplateDefinition.Mnemonic;
             this.Guard = dataTemplateDefinition.Guard;
-
             this.m_viewPaths = dataTemplateDefinition.Views.ToDictionary(o => o.ViewType, o => $"/app/Template/{this.Mnemonic}/view/{o.ViewType}");
         }
 

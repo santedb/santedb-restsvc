@@ -16,6 +16,7 @@
  * the License.
  *
  */
+using DocumentFormat.OpenXml.Wordprocessing;
 using RestSrvr;
 using SanteDB.Core.Applets.Model;
 using SanteDB.Core.Configuration;
@@ -307,5 +308,6 @@ namespace SanteDB.Rest.AppService
             }
             return null;
         }
+
     }
 }

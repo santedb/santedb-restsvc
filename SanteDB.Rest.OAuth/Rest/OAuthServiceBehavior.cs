@@ -1105,7 +1105,7 @@ namespace SanteDB.Rest.OAuth.Rest
         /// </summary>
         /// <param name="context">The request context</param>
         /// <param name="response">The response object that is sent back to the clinet.</param>
-        protected virtual void BeforeSendTokenResponse(OAuthTokenRequestContext context, OAuthTokenResponse response)
+        protected virtual void BeforeSendTokenResponse(OAuthTokenRequestContext context, Model.OAuthTokenResponse response)
         {
 
         }
@@ -1115,7 +1115,7 @@ namespace SanteDB.Rest.OAuth.Rest
         /// </summary>
         /// <param name="context">The <see cref="OAuthRequestContextBase"/> that is used to create the response.</param>
         /// <returns>A completed response that can be provided to the caller.</returns>
-        protected OAuthTokenResponse CreateTokenResponse(OAuthTokenRequestContext context)
+        protected Model.OAuthTokenResponse CreateTokenResponse(OAuthTokenRequestContext context)
         {
             if (null == context)
             {
@@ -1127,7 +1127,7 @@ namespace SanteDB.Rest.OAuth.Rest
                 context.OutgoingResponse.ContentType = "application/json";
             }
 
-            var response = new OAuthTokenResponse();
+            var response = new Model.OAuthTokenResponse();
 
             response.IdToken = context.IdToken;
             response.ExpiresIn = unchecked((int)Math.Floor(context.ExpiresIn.TotalSeconds));

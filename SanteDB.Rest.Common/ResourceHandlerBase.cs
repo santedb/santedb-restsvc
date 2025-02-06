@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
+using System.Security;
 using System.Xml.Serialization;
 
 namespace SanteDB.Rest.Common
@@ -137,38 +138,40 @@ namespace SanteDB.Rest.Common
                 throw new NotSupportedException(this.LocalizationService.GetString("error.type.NotSupportedException"));
             }
 
-            var bundle = data as Bundle;
-
-            bundle?.Reconstitute();
-
-            var processData = typeof(TResource) == typeof(Bundle) ? bundle : bundle?.GetFocalObject() ?? data;
+            if (data is Bundle bundleData && !typeof(Bundle).IsAssignableFrom(typeof(TResource)))
+            {
+                bundleData.Reconstitute();
+                data = bundleData.GetFocalObject() ?? data;
+            }
 
             try
             {
-                if (!(processData is TResource))
+                if (data is TResource resourceData)
                 {
-                    this.m_tracer.TraceError($"Invalid data submission. Expected {typeof(TResource).FullName} but received {processData.GetType().FullName}. If you are submitting a bundle, ensure it has an entry point.");
+                    var retVal = updateIfExists ? this.m_repository.Save(resourceData) : this.m_repository.Insert(resourceData);
+                    return retVal;
+                }
+                else if (!(data is TResource))
+                {
+                    this.m_tracer.TraceError($"Invalid data submission. Expected {typeof(TResource).FullName} but received {data.GetType().FullName}. If you are submitting a bundle, ensure it has an entry point");
                     throw new ArgumentException(this.LocalizationService.GetString("error.rest.common.invalidDataSubmission", new
                     {
                         param = typeof(TResource).FullName,
-                        param1 = processData.GetType().FullName
+                        param1 = data.GetType().FullName
                     }));
                 }
-                else if (processData is TResource)
+                else
                 {
-                    var resourceData = processData as TResource;
-                    resourceData = updateIfExists ? this.m_repository.Save(resourceData) : this.m_repository.Insert(resourceData);
-
-                    return resourceData;
+                    this.m_tracer.TraceError("Invalid persistence type");
+                    throw new ArgumentException(this.LocalizationService.GetString("error.rest.common.invalidPersistentType"));
                 }
+
             }
             catch (Exception e)
             {
                 this.m_tracer.TraceError($"Error creating {data}");
                 throw new Exception(this.LocalizationService.GetString("error.rest.common.errorCreatingParam", new { param = nameof(data) }), e);
             }
-            this.m_tracer.TraceError($"Invalid data type: {nameof(data)}");
-            throw new ArgumentException(nameof(data), this.LocalizationService.GetString("error.rest.common.invalidDataType"));
         }
 
         /// <summary>
@@ -274,27 +277,27 @@ namespace SanteDB.Rest.Common
                 throw new NotSupportedException(this.LocalizationService.GetString("error.type.NotSupportedException"));
             }
 
-            Bundle bundleData = data as Bundle;
-            bundleData?.Reconstitute();
-            var processData = bundleData?.GetFocalObject() ?? data;
+            if (data is Bundle bundleData && !typeof(Bundle).IsAssignableFrom(typeof(TResource)))
+            {
+                bundleData.Reconstitute();
+                data = bundleData.GetFocalObject() ?? data;
+            }
 
             try
             {
-                if (!(processData is TResource))
+                if(data is TResource entityData)
                 {
-                    this.m_tracer.TraceError($"Invalid data submission. Expected {typeof(TResource).FullName} but received {processData.GetType().FullName}. If you are submitting a bundle, ensure it has an entry point");
+                    var retVal = this.m_repository.Save(entityData);
+                    return retVal;
+                }
+                else if (!(data is TResource))
+                {
+                    this.m_tracer.TraceError($"Invalid data submission. Expected {typeof(TResource).FullName} but received {data.GetType().FullName}. If you are submitting a bundle, ensure it has an entry point");
                     throw new ArgumentException(this.LocalizationService.GetString("error.rest.common.invalidDataSubmission", new
                     {
                         param = typeof(TResource).FullName,
-                        param1 = processData.GetType().FullName
+                        param1 = data.GetType().FullName
                     }));
-                }
-                else if (processData is TResource)
-                {
-                    var entityData = processData as TResource;
-
-                    var retVal = this.m_repository.Save(entityData);
-                    return retVal;
                 }
                 else
                 {

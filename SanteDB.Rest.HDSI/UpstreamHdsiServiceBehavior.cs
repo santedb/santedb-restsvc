@@ -443,7 +443,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     ApplicationServiceContext.Current.GetService<IDataCachingService>().Remove(remote.Key.Value);
                     this.ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(nameof(UpstreamHdsiServiceBehavior), 0.25f, UserMessages.FETCH_FROM_UPSTREAM));
 
-                    Bundle insertBundle = new Bundle();
+                    Bundle insertBundle = new Bundle() { CorrelationKey = idGuid };
                     insertBundle.Add(remote);
 
                     // Fetch all missing relationships
@@ -480,6 +480,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                                     break;
                                 }
                             }
+
                             // Handle MDM just in case
                             insertBundle.Item.AddRange(this.m_upstreamIntegrationService.Query<Act>(o => o.Participations.Any(p => p.PlayerEntity.Relationships.Where(r => r.RelationshipType.Mnemonic == "MDM-Master").Any(r => r.SourceEntityKey == patient.Key))).Item.OfType<IdentifiedData>());
                         }

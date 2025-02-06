@@ -23,6 +23,7 @@ using SanteDB.Core.Applets;
 using SanteDB.Core.Applets.Configuration;
 using SanteDB.Core.Applets.Model;
 using SanteDB.Core.Applets.Services;
+using SanteDB.Core.Data;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
@@ -165,7 +166,7 @@ namespace SanteDB.Rest.WWW
 
             // Caching
             RestOperationContext.Current.OutgoingResponse.AddHeader("ETag", etag);
-            RestOperationContext.Current.OutgoingResponse.ContentType = navigateAsset.MimeType;
+            RestOperationContext.Current.OutgoingResponse.ContentType = $"{navigateAsset.MimeType}; charset=utf-8";
 
             // Write asset
             var content = this.m_serviceApplet.RenderAssetContent(navigateAsset, lang?.ToString(), bindingParameters: new Dictionary<String, String>()
@@ -199,6 +200,21 @@ namespace SanteDB.Rest.WWW
                 ms.Seek(0, SeekOrigin.Begin);
                 return ms;
             }
+        }
+
+
+        /// <inheritdoc/>
+        public Stream GetDynamic(string dynamicCollectionName)
+        {
+            var ms = new MemoryStream();
+            foreach (var itm in this.m_serviceApplet.GetDynamicHtmlAssets(dynamicCollectionName))
+            {
+                var content = this.m_serviceApplet.RenderAssetContent(itm);
+                ms.Write(content, 0, content.Length);
+            }
+            ms.Seek(0, SeekOrigin.Begin);
+            RestOperationContext.Current.OutgoingResponse.ContentType = "text/html; charset=utf-8";
+            return ms;
         }
     }
 }
