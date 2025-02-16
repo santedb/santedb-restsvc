@@ -65,14 +65,15 @@ namespace SanteDB.Rest.HDSI.Vrp
                 Format = BarcodeFormat.CODE_128,
                 Options = new ZXing.Common.EncodingOptions()
                 {
-                    Width = 300,
-                    Height = 50,
+                    Width = 600,
+                    Height = 100,
                     PureBarcode = false,
-                    NoPadding = true
+                    NoPadding = true,
+                    
                 },
                 Renderer = new ZXing.Windows.Compatibility.BitmapRenderer()
             };
-
+            
             using (var bmp = writer.Write(Encoding.UTF8.GetString(rawData)))
             {
                 var retVal = new MemoryStream();
