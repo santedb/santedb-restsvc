@@ -53,11 +53,11 @@ namespace SanteDB.Rest.Common
                     sortExpr = QueryExpressionParser.BuildPropertySelector(me.ElementType, sortParts[0], false, typeof(Object));
                     if (sortParts.Length == 1 || sortParts[1].Equals("ASC", StringComparison.OrdinalIgnoreCase))
                     {
-                        me = orderable.OrderBy(sortExpr);
+                        me = orderable = orderable.OrderBy(sortExpr);
                     }
                     else
                     {
-                        me = orderable.OrderByDescending(sortExpr);
+                        me = orderable = orderable.OrderByDescending(sortExpr);
                         sortAsc = false;
                     }
                 }
