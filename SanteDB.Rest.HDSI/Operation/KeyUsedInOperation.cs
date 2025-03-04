@@ -68,7 +68,7 @@ namespace SanteDB.Rest.HDSI.Operation
             var resourceType = this.m_serializationBinder.BindToType(null, resourceName);
             // Get Build the XREF query 
             var xrefLinq = QueryExpressionParser.BuildLinqExpression(resourceType, xrefQuery.ParseQueryString());
-            var keySelector = QueryExpressionParser.BuildPropertySelector(resourceType, selector, forceLoad: false, returnNewObjectOnNull: false);
+            var keySelector = QueryExpressionParser.BuildPropertySelector(resourceType, selector, forceLoad: false, returnNewObjectOnNull: false, convertReturn: typeof(Guid?));
 
             // Get the repo
             var repoType = typeof(IRepositoryService<>).MakeGenericType(resourceType);
