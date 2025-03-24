@@ -361,6 +361,15 @@ namespace SanteDB.Rest.Common.Serialization
                 {
                     contentTypeMime = new ContentType(RestOperationContext.Current.OutgoingResponse.ContentType);
                 }
+                // Does the user not want an echo on success
+                else if(httpRequest.Headers.TryGetValue(ExtendedHttpHeaderNames.NoResponse, out var noResponseRaw) && 
+                    Boolean.TryParse(noResponseRaw[0], out var noResponseVal) && 
+                    noResponseVal &&
+                    (int)response.StatusCode > 200 && 
+                    (int)response.StatusCode < 400)
+                {
+                    result = null; // client instructed us not to send back data
+                }
                 else // let client decide
                 {
                     string accepts = httpRequest.Headers["Accept"],
@@ -541,7 +550,7 @@ namespace SanteDB.Rest.Common.Serialization
 #if DEBUG
                 this.m_traceSource.TraceVerbose("Setting response headers");
 #endif
-                RestOperationContext.Current.OutgoingResponse.ContentType = contentTypeMime.ToString();
+                RestOperationContext.Current.OutgoingResponse.ContentType = contentTypeMime?.ToString();
                 RestOperationContext.Current.OutgoingResponse.AppendHeader("X-GeneratedOn", DateTime.Now.ToString("o"));
             }
             catch (Exception e)

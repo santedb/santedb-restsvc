@@ -75,5 +75,9 @@ namespace SanteDB.Rest.Common
         /// Two-factor authentication secret value in HTTP header.
         /// </summary>
         public const string TfaSecret = "X-SanteDB-TfaSecret";
+        /// <summary>
+        /// Does not echo back the updated, inserted or deleted object
+        /// </summary>
+        public const string NoResponse = "X-SanteDB-NoEcho";
     }
 }

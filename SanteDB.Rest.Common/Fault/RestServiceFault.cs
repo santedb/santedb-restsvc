@@ -19,10 +19,12 @@ using Newtonsoft.Json;
 using SanteDB.Core.BusinessRules;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Http;
+using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Xml.Serialization;
 
 namespace SanteDB.Rest.Common.Fault
@@ -34,7 +36,7 @@ namespace SanteDB.Rest.Common.Fault
     [XmlRoot(nameof(RestServiceFault), Namespace = "http://santedb.org/fault")]
     [JsonObject(nameof(RestServiceFault))]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // Model class provides no functions
-    public class RestServiceFault
+    public class RestServiceFault : IHasToDisplay
     {
         /// <summary>
         /// Default service fault ctor
@@ -174,6 +176,21 @@ namespace SanteDB.Rest.Common.Fault
         public override string ToString()
         {
             return JsonConvert.SerializeObject(this);
+        }
+
+        /// <inheritdoc/>
+        public string ToDisplay()
+        {
+            var stringBuilder = new StringBuilder("\r\n-- START SERVER ERRORS --\r\n");
+            var o = this;
+            int i = 0;
+            while (o != null)
+            {
+                stringBuilder.AppendFormat("\t{0}: {1}\r\n", i++, o.Message);
+                o = o.CausedBy;
+            }
+            stringBuilder.Append("-- END SERVER ERRORS --\r\n");
+            return stringBuilder.ToString();
         }
     }
 }
