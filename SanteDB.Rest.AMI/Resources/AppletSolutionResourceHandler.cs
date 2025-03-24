@@ -113,7 +113,7 @@ namespace SanteDB.Rest.AMI.Resources
                 throw new InvalidOperationException(this.LocalizationService.GetString("error.rest.ami.packageNotASolution"));
             }
 
-            ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().Install(pkg);
+            ApplicationServiceContext.Current.GetService<IAppletSolutionManagerService>().Install(pkg, true);
             X509Certificate2 cert = null;
             if (pkg.PublicKey != null)
             {
