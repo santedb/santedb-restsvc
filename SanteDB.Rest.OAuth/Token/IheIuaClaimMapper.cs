@@ -22,6 +22,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.Json;
 
 namespace SanteDB.Rest.OAuth.Token
 {
@@ -98,34 +99,30 @@ namespace SanteDB.Rest.OAuth.Token
         /// <inheritdoc/>
         public IEnumerable<IClaim> MapToInternalIdentityClaims(IDictionary<string, object> externalClaims)
         {
-            if (externalClaims.TryGetValue("extensions", out var extValue) && extValue is ICustomTypeDescriptor extensionClaims)
+            if (externalClaims.TryGetValue("extensions", out var extValue) && extValue is JsonElement extensionElement)
             {
-                var iheProperty = extensionClaims.GetProperties().Find("ihe_iua", true);
-                var iuaClaimValue = iheProperty?.GetValue(extValue);
-                if (iuaClaimValue is ICustomTypeDescriptor iuaClaims)
+                var iheProperty = extensionElement.EnumerateObject().FirstOrDefault(o => o.Name == "ihe_iua");
+                if (iheProperty.Value.ValueKind == JsonValueKind.Object)
                 {
-                    foreach (object claimPropertyObject in iuaClaims.GetProperties())
+                    foreach (var claimPropertyObject in iheProperty.Value.EnumerateObject().OfType<JsonProperty>())
                     {
-                        if (claimPropertyObject is PropertyDescriptor claimProperty)
+                        var internalClaim = this.m_tokenMapping.FirstOrDefault(o => o.Value == claimPropertyObject.Name);
+                        if (internalClaim.Key == null)
                         {
-                            var internalClaim = this.m_tokenMapping.FirstOrDefault(o => o.Value == claimProperty.Name);
-                            if (internalClaim.Key == null)
-                            {
-                                continue;
-                            }
+                            continue;
+                        }
 
-                            var value = claimProperty.GetValue(iuaClaimValue);
-                            if (value is IList list)
+                        var value = claimPropertyObject.Value;
+                        if (value.ValueKind == JsonValueKind.Array)
+                        {
+                            foreach (var listValue in value.EnumerateArray())
                             {
-                                foreach (var listValue in list)
-                                {
-                                    yield return new SanteDBClaim(internalClaim.Key, this.InterpretValue(listValue));
-                                }
+                                yield return new SanteDBClaim(internalClaim.Key, this.InterpretValue(listValue));
                             }
-                            else
-                            {
-                                yield return new SanteDBClaim(internalClaim.Key, this.InterpretValue(value));
-                            }
+                        }
+                        else
+                        {
+                            yield return new SanteDBClaim(internalClaim.Key, this.InterpretValue(value));
                         }
                     }
                 }
@@ -135,31 +132,34 @@ namespace SanteDB.Rest.OAuth.Token
         /// <summary>
         /// Stringify a complex value from IUA like a FHIR code 
         /// </summary>
-        private string InterpretValue(Object value)
+        private string InterpretValue(JsonElement value)
         {
-            if (value is ICustomTypeDescriptor descriptor)
+            switch(value.ValueKind)
             {
-                var systemProperty = descriptor.GetProperties().Find("system", true);
-                var codeProperty = descriptor.GetProperties().Find("code", true);
-                var valueProperty = descriptor.GetProperties().Find("value", true);
-                if (systemProperty != null && codeProperty != null) // we have a coding or identifier
-                {
-                    return $"{codeProperty.GetValue(value)}^{systemProperty.GetValue(value)}";
-                }
-                else if (systemProperty != null && valueProperty != null) // we have a coding or identifier
-                {
-                    return $"{valueProperty.GetValue(value)}^{systemProperty.GetValue(value)}";
-                }
-                else
-                {
-                    throw new ArgumentOutOfRangeException(String.Format(ErrorMessages.ARGUMENT_OUT_OF_RANGE, value, new { system = "x", code = "y" }));
-                }
+                case JsonValueKind.String:
+                    return value.ToString().Replace("urn:uuid:", "").Replace("urn:oid:", "");
+                case JsonValueKind.Number:
+                    return value.ToString();
+                case JsonValueKind.Object:
+                    var systemValue = value.EnumerateObject().FirstOrDefault(o => o.Name == "system");
+                    var codeValue = value.EnumerateObject().FirstOrDefault(o => o.Name == "code");
+                    var valueValue = value.EnumerateObject().FirstOrDefault(o => o.Name == "value");
+                    if (systemValue.Name != null && codeValue.Name != null) // we have a coding or identifier
+                    {
+                        return $"{codeValue.Value.GetString()}^{systemValue.Value.GetString()}";
+                    }
+                    else if (systemValue.Name != null && valueValue.Name != null) // we have a coding or identifier
+                    {
+                        return $"{valueValue.Value.GetString()}^{systemValue.Value.GetString()}";
+                    }
+                    else
+                    {
+                        throw new ArgumentOutOfRangeException(String.Format(ErrorMessages.ARGUMENT_OUT_OF_RANGE, value, new { system = "x", code = "y" }));
+                    }
+                default:
+                    throw new InvalidOperationException();
             }
-            else
-            {
-                return value.ToString().Replace("urn:uuid:", "").Replace("urn:oid:", "");
-
-            }
+            
         }
     }
 }
