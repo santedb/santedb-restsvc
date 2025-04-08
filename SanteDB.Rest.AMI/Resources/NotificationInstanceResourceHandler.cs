@@ -4,10 +4,10 @@ using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.AMI.Resources
 {
-    public class NotificationResourceHandler : ResourceHandlerBase<Notification>
+    public class NotificationInstanceResourceHandler : ResourceHandlerBase<NotificationInstance>
     {
         /// <inheritdoc />
-        public NotificationResourceHandler(ILocalizationService localizationService, IRepositoryService<Notification> repositoryService, ISubscriptionExecutor subscriptionExecutor, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, subscriptionExecutor, freetextSearchService)
+        public NotificationInstanceResourceHandler(ILocalizationService localizationService, IRepositoryService<NotificationInstance> repositoryService, ISubscriptionExecutor subscriptionExecutor, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, subscriptionExecutor, freetextSearchService)
         {
         }
 
