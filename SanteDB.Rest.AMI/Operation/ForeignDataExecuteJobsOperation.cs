@@ -16,6 +16,7 @@
  * the License.
  *
  */
+using SanteDB.Core;
 using SanteDB.Core.Data.Import;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.i18n;
@@ -47,7 +48,7 @@ namespace SanteDB.Rest.AMI.Operation
 
             try
             {
-                if (jobManagerService.GetJobInstance(ForeignDataImportJob.JOB_ID) == null)
+                if (ApplicationServiceContext.Current.HostType == SanteDBHostType.Server && jobManagerService.GetJobInstance(ForeignDataImportJob.JOB_ID) == null)
                 {
                     var importJob = serviceManager.CreateInjected<ForeignDataImportJob>();
                     jobManagerService.AddJob(importJob, JobStartType.Never);
