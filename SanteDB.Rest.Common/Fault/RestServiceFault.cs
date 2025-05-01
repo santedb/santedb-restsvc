@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2025, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -14,15 +14,20 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
  * License for the specific language governing permissions and limitations under 
  * the License.
+ * 
+ * User: fyfej
+ * Date: 2023-6-21
  */
 using Newtonsoft.Json;
 using SanteDB.Core.BusinessRules;
 using SanteDB.Core.Exceptions;
 using SanteDB.Core.Http;
+using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Xml.Serialization;
 
 namespace SanteDB.Rest.Common.Fault
@@ -34,7 +39,7 @@ namespace SanteDB.Rest.Common.Fault
     [XmlRoot(nameof(RestServiceFault), Namespace = "http://santedb.org/fault")]
     [JsonObject(nameof(RestServiceFault))]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // Model class provides no functions
-    public class RestServiceFault
+    public class RestServiceFault : IHasToDisplay
     {
         /// <summary>
         /// Default service fault ctor
@@ -174,6 +179,21 @@ namespace SanteDB.Rest.Common.Fault
         public override string ToString()
         {
             return JsonConvert.SerializeObject(this);
+        }
+
+        /// <inheritdoc/>
+        public string ToDisplay()
+        {
+            var stringBuilder = new StringBuilder("\r\n-- START SERVER ERRORS --\r\n");
+            var o = this;
+            int i = 0;
+            while (o != null)
+            {
+                stringBuilder.AppendFormat("\t{0}: {1}\r\n", i++, o.Message);
+                o = o.CausedBy;
+            }
+            stringBuilder.Append("-- END SERVER ERRORS --\r\n");
+            return stringBuilder.ToString();
         }
     }
 }

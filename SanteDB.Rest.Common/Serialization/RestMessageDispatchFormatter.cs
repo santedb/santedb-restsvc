@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2025, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -14,6 +14,9 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
  * License for the specific language governing permissions and limitations under 
  * the License.
+ * 
+ * User: fyfej
+ * Date: 2023-6-21
  */
 using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
@@ -361,6 +364,15 @@ namespace SanteDB.Rest.Common.Serialization
                 {
                     contentTypeMime = new ContentType(RestOperationContext.Current.OutgoingResponse.ContentType);
                 }
+                // Does the user not want an echo on success
+                else if(httpRequest.Headers.TryGetValue(ExtendedHttpHeaderNames.NoResponse, out var noResponseRaw) && 
+                    Boolean.TryParse(noResponseRaw[0], out var noResponseVal) && 
+                    noResponseVal &&
+                    (int)response.StatusCode > 200 && 
+                    (int)response.StatusCode < 400)
+                {
+                    result = null; // client instructed us not to send back data
+                }
                 else // let client decide
                 {
                     string accepts = httpRequest.Headers["Accept"],
@@ -541,7 +553,7 @@ namespace SanteDB.Rest.Common.Serialization
 #if DEBUG
                 this.m_traceSource.TraceVerbose("Setting response headers");
 #endif
-                RestOperationContext.Current.OutgoingResponse.ContentType = contentTypeMime.ToString();
+                RestOperationContext.Current.OutgoingResponse.ContentType = contentTypeMime?.ToString();
                 RestOperationContext.Current.OutgoingResponse.AppendHeader("X-GeneratedOn", DateTime.Now.ToString("o"));
             }
             catch (Exception e)
