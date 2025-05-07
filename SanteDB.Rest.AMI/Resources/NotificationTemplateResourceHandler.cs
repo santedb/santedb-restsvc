@@ -20,6 +20,7 @@
 using SanteDB.Core.Interop;
 using SanteDB.Core.Notifications;
 using SanteDB.Core.Services;
+using System;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -28,12 +29,67 @@ namespace SanteDB.Rest.AMI.Resources
     /// </summary>
     public class NotificationTemplateResourceHandler : ResourceHandlerBase<NotificationTemplate>
     {
+
+        private readonly IRepositoryService<NotificationTemplate> m_repositoryService;
+        private readonly IRepositoryService<NotificationTemplateParameter> m_templateParameterRepositoryService;
+        private readonly IRepositoryService<NotificationTemplateContents> m_templateContentsRepositoryService;
+        private readonly IRepositoryService<NotificationInstance> m_notificationInstanceRepositoryService;
+
         /// <inheritdoc />
-        public NotificationTemplateResourceHandler(ILocalizationService localizationService, IRepositoryService<NotificationTemplate> repositoryService, ISubscriptionExecutor subscriptionExecutor, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, subscriptionExecutor, freetextSearchService)
+        public NotificationTemplateResourceHandler(ILocalizationService localizationService, IRepositoryService<NotificationTemplate> repositoryService, IRepositoryService<NotificationTemplateParameter> templateParameterRepositoryService, IRepositoryService<NotificationTemplateContents> templateContentsRepositoryService, IRepositoryService<NotificationInstance> notificationInstanceRepositoryService, ISubscriptionExecutor subscriptionExecutor, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, subscriptionExecutor, freetextSearchService)
         {
+            this.m_repositoryService = repositoryService;
+            this.m_templateParameterRepositoryService = templateParameterRepositoryService;
+            this.m_templateContentsRepositoryService = templateContentsRepositoryService;
+            this.m_notificationInstanceRepositoryService = notificationInstanceRepositoryService;
         }
 
         /// <inheritdoc />
-        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.CreateOrUpdate | ResourceCapabilityType.Delete | ResourceCapabilityType.Get | ResourceCapabilityType.Search | ResourceCapabilityType.GetVersion;
+        public override object Delete(object key)
+        {
+            if (key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            var template = this.m_repositoryService.Get((Guid)key);
+
+            if (!template.ObsoletionTime.HasValue && !template.ObsoletedByKey.HasValue)
+            {
+                // Soft Delete
+                return base.Delete(key);
+            }
+
+            // Check if the template is in use by any notification instance
+            var notificationInstances = this.m_notificationInstanceRepositoryService.Find(o => o.NotificationTemplateKey == (Guid)key);
+
+            if(notificationInstances.Any())
+            {
+                throw new InvalidOperationException($"Cannot delete template {template.Key} because it is in use by notification instances.");
+            }
+
+            // Permanent Delete
+            using (DataPersistenceControlContext.Create(DeleteMode.PermanentDelete))
+            {
+                template.Parameters.ForEach(templateParameter =>
+                {
+                    this.m_templateParameterRepositoryService.Delete((Guid)templateParameter.Key);
+                });
+
+                template.Contents.ForEach(templateContents =>
+                {
+                    this.m_templateContentsRepositoryService.Delete((Guid)templateContents.Key);
+                });
+
+                this.m_repositoryService.Delete((Guid)key);
+            }
+
+            return null;
+        }
+
+        /// <inheritdoc />
+        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.CreateOrUpdate | ResourceCapabilityType.Delete | ResourceCapabilityType.Get | ResourceCapabilityType.Search | ResourceCapabilityType.Update;
+
+
     }
 }
