@@ -52,5 +52,11 @@ namespace SanteDB.Rest.AppService.Model
         /// </summary>
         [JsonProperty("action")]
         public string Action { get; set; }
+
+        /// <summary>
+        /// Gets or sets the priority of the menu
+        /// </summary>
+        [JsonIgnore]
+        public int Priority { get; set; }
     }
 }

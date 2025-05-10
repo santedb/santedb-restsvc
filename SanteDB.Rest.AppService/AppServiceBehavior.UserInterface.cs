@@ -76,7 +76,15 @@ namespace SanteDB.Rest.AppService
         {
             var rootmenus = this.m_appletManagerService?.Applets.SelectMany(a => a.Menus).OrderBy(m => m.Order).ToArray();
             var context = RestOperationContext.Current.IncomingRequest.QueryString.Get("context");
-            return this.ProcessMenus(rootmenus, context).ToList();
+            return this
+                .ProcessMenus(rootmenus, context)
+                .GroupBy(o=>o.Text)
+                .Select(o=>
+                {
+                    var retVal = o.OrderByDescending(m => m.Priority).First();
+                    retVal.MenuItems = o.SelectMany(m => m.MenuItems).ToList();
+                    return retVal;
+                }).ToList();
         }
 
         /// <inheritdoc/>
@@ -264,7 +272,8 @@ namespace SanteDB.Rest.AppService
             {
                 Action = appletMenu.Launch,
                 Icon = appletMenu.Icon,
-                Text = menutext
+                Text = menutext,
+                Priority = appletMenu.Priority
             };
 
             menu.MenuItems = ProcessMenus(appletMenu.Menus, context).Distinct(m_menuEqualityComparer).ToList();
