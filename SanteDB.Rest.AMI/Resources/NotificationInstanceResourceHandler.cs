@@ -2,6 +2,7 @@
 using SanteDB.Core.Notifications;
 using SanteDB.Core.Services;
 using System;
+using System.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -49,5 +50,36 @@ namespace SanteDB.Rest.AMI.Resources
             return null;
         }
 
+        public override object Update(object data)
+        {
+            if (data == null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
+            var sentInstance = data as NotificationInstance;
+
+            var databaseInstance = this.m_repositoryService.Get((Guid)sentInstance.Key);
+
+            if (databaseInstance == null)
+            {
+                throw new ArgumentException($"Notification instance with key {((NotificationInstance)data).Key} not found");
+            }
+
+            if(databaseInstance.NotificationTemplateKey != sentInstance.NotificationTemplateKey)
+            {
+                var parameters = this.m_instanceParameterRepositoryService.Find(o => o.NotificationInstanceKey == ((NotificationInstance)data).Key).ToList();
+
+                using (DataPersistenceControlContext.Create(DeleteMode.PermanentDelete))
+                {
+                    parameters.ForEach(instanceParameter =>
+                    {
+                        this.m_instanceParameterRepositoryService.Delete((Guid)instanceParameter.Key);
+                    });
+                }
+            }
+
+            return base.Update(data);
+        }
     }
 }
