@@ -21,6 +21,7 @@ using SanteDB.Core.Interop;
 using SanteDB.Core.Notifications;
 using SanteDB.Core.Services;
 using System;
+using System.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -85,6 +86,40 @@ namespace SanteDB.Rest.AMI.Resources
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Perform an update
+        /// </summary>
+        public override object Update(object data)
+        {
+
+            if (data == null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
+            var sentTemplate = data as NotificationTemplate;
+
+            var databaseTemplate = this.m_repositoryService.Get((Guid)sentTemplate.Key);
+
+            if (databaseTemplate == null)
+            {
+                throw new ArgumentException($"Notification template with key {((NotificationTemplate)data).Key} not found");
+            }
+
+
+            var parameters = this.m_templateParameterRepositoryService.Find(o => o.NotificationTemplateKey == ((NotificationTemplate)data).Key).ToList();
+
+            using (DataPersistenceControlContext.Create(DeleteMode.PermanentDelete))
+            {
+                parameters.ForEach(param =>
+                {
+                    this.m_templateParameterRepositoryService.Delete((Guid)param.Key);
+                });
+            }
+
+            return base.Update(data);
         }
 
         /// <inheritdoc />
