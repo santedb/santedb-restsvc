@@ -17,6 +17,7 @@
  *
  */
 using SanteDB.Core.Interop;
+using SanteDB.Core.Model.Constants;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Notifications;
@@ -34,6 +35,16 @@ namespace SanteDB.Rest.AMI.Operation
     {
         private readonly IRepositoryService<NotificationInstance> m_notificationInstanceRepositoryService;
         private readonly IRepositoryService<Concept> m_conceptRepositoryService;
+
+        /// <summary>
+        /// Key values for the Disabled state for NotificationInstance
+        /// </summary>
+        public static readonly Guid DISABLED_STATE_KEY = Guid.Parse("1e029e45-734e-4514-9ca4-e1e487883562");
+
+        /// <summary>
+        /// Key value for the Not Yet Run state for NotificationInstance
+        /// </summary>
+        public static readonly Guid NOT_YET_RUN_STATE_KEY = Guid.Parse("ac843892-f7e0-47b6-8f84-11c14e7e96c6");
 
         /// <summary>
         /// Dependency injected constructor
@@ -60,29 +71,30 @@ namespace SanteDB.Rest.AMI.Operation
         public string Name => "configure";
 
         /// <summary>
-        /// Invoke the operation
+        /// Invoke the operation, updating the state value for a given notification instance
         /// </summary>
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
             if (parameters.TryGet("isEnableState", out bool isEnable))
             {
                 var instance = this.m_notificationInstanceRepositoryService.Get(Guid.Parse(scopingKey.ToString()));
-                var stateMnemonic = isEnable ? "NotificationState-NotYetRun" : "NotificationState-Disabled";
-                var stateConcept = this.m_conceptRepositoryService.Find(c => c.Mnemonic == stateMnemonic).FirstOrDefault();
+                
+                var newStateKey = isEnable ? NOT_YET_RUN_STATE_KEY : DISABLED_STATE_KEY;
+                var stateConcept = this.m_conceptRepositoryService.Find(c => c.Key == newStateKey).FirstOrDefault();
                 if (stateConcept == null)
                 {
-                    throw new NullReferenceException();
+                    throw new InvalidOperationException($"Concept {newStateKey} not found");
                 }
+                
                 instance.State = stateConcept;
-                instance.StateKey = (Guid)stateConcept.Key;
+                instance.StateKey = stateConcept.Key.Value;
+                
                 this.m_notificationInstanceRepositoryService.Save(instance);
+                
                 return null;
             }
-            else 
-            {
-                throw new ArgumentNullException("Required parameter 'isEnableState' missing");
-            }
 
+            throw new ArgumentNullException("Required parameter 'isEnableState' missing");
         }
     }
 }
