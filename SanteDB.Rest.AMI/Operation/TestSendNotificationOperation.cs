@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SanteDB.Core;
 using SanteDB.Core.Interop;
+using SanteDB.Core.Model.Attributes;
+using SanteDB.Core.Model;
 using SanteDB.Core.Model.Constants;
+using SanteDB.Core.Model.DataTypes;
+using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Notifications;
 using SanteDB.Core.Notifications.Email;
@@ -56,6 +62,16 @@ namespace SanteDB.Rest.AMI.Operation
             var template = this.m_notificationTemplateService.Get(instance.NotificationTemplateKey);
             instance.NotificationTemplate = template;
 
+            var entityTypeConcept = ApplicationServiceContext.Current.GetService<IRepositoryService<Concept>>().Get(Guid.Parse(parameters.Parameters.FirstOrDefault(c => c.Name == "entityType")?.Value?.ToString()));
+            if (entityTypeConcept != null)
+            {
+                var type = typeof(IdentifiedData).Assembly.ExportedTypes.FirstOrDefault(c => c.GetCustomAttributes<ClassConceptKeyAttribute>().Any(x => x.ClassConcept == entityTypeConcept.Key.ToString()));
+
+                var entityRepositoryService = ApplicationServiceContext.Current.GetService(typeof(IRepositoryService<>).MakeGenericType(type)) as IRepositoryService;
+                var entity = (Entity)entityRepositoryService.Get(Guid.Parse(parameters.Parameters.FirstOrDefault(c => c.Name == "selectedEntity")?.Value?.ToString()));
+                //var entityName = entity.Names.FirstOrDefault(c => c.NameUseKey == NameUseKeys.OfficialRecord || NameUseKeys.Assigned);
+            }
+
             if (instance == null)
             {
                 throw new KeyNotFoundException($"Notification instance with key {instanceId} not found");
@@ -81,7 +97,7 @@ namespace SanteDB.Rest.AMI.Operation
             var channelTypes = template.Tags.Split(',');
 
             var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", "");
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", "CLHM2PFCZS4873C4YLAFARGB4XAJCWDSJHLZSEXH");
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Fiddler");
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
