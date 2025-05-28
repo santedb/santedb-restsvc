@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Text;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Parameters;
@@ -17,14 +19,15 @@ namespace SanteDB.Rest.AMI.Operation
         private readonly IRepositoryService<NotificationTemplate> m_notificationTemplateService;
         private readonly IRepositoryService<NotificationTemplateParameter> m_notificationTemplateParametersService;
         private readonly INotificationTemplateRepository m_notificationTemplateRepository;
+        private readonly INotificationTemplateFiller m_notificationTemplateFiller;
 
-        public ValidateNotificationOperation(IRepositoryService<NotificationInstance> notificationInstanceRepositoryService, IRepositoryService<NotificationTemplate> notificationTemplateService, IRepositoryService<NotificationTemplateParameter> notificationTemplateParametersService, INotificationTemplateRepository notificationTemplateRepository)
+        public ValidateNotificationOperation(IRepositoryService<NotificationInstance> notificationInstanceRepositoryService, IRepositoryService<NotificationTemplate> notificationTemplateService, IRepositoryService<NotificationTemplateParameter> notificationTemplateParametersService, INotificationTemplateRepository notificationTemplateRepository, INotificationTemplateFiller notificationTemplateFiller)
         {
             this.m_notificationInstanceRepositoryService = notificationInstanceRepositoryService;
             this.m_notificationTemplateService = notificationTemplateService;
             this.m_notificationTemplateParametersService = notificationTemplateParametersService;
             this.m_notificationTemplateRepository = notificationTemplateRepository;
-
+            this.m_notificationTemplateFiller = notificationTemplateFiller;
         }
         public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Instance;
 
@@ -43,6 +46,7 @@ namespace SanteDB.Rest.AMI.Operation
 
             var instance = this.m_notificationInstanceRepositoryService.Get(instanceId);
             var template = this.m_notificationTemplateService.Get(instance.NotificationTemplateKey);
+
             instance.NotificationTemplate = template;
 
             if (instance == null)
@@ -63,10 +67,10 @@ namespace SanteDB.Rest.AMI.Operation
                 model.Add(templateParameter.Name, parameter.Expression);
             }
 
+            var language = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 
-            var templateFiller = new SimpleNotificationTemplateFiller(this.m_notificationTemplateRepository);
 
-            return templateFiller.FillTemplate(instance, "en", model);
+            return this.m_notificationTemplateFiller.FillTemplate(instance, language, model);
         }
     }
 }
