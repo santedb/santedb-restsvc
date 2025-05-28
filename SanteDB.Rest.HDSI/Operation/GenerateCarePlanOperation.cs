@@ -30,6 +30,7 @@ using SanteDB.Core.Model.Roles;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime;
 
@@ -101,6 +102,10 @@ namespace SanteDB.Rest.HDSI.Operation
             if (hasIdentifiedTarget)
             {
                 target = this.m_patientRepository.Get(targetUuid);
+                if(target == null)
+                {
+                    throw new KeyNotFoundException(String.Format(ErrorMessages.REFERENCE_NOT_FOUND, $"Patient/${targetUuid}"));
+                }
             }
             else if (parameters.TryGet("history", out Bundle history))
             {
