@@ -110,7 +110,7 @@ namespace SanteDB.Rest.AMI.Operation
                         Console.WriteLine("send a text message");
                         break;
                     case "facebook":
-                        var data = new
+                        var data = new RapidProMessage()
                         {
                             Contact = contactsResponse.Find(c => c.Name == "Jordan Webber").Uuid.ToString(),
                             Text = filledTemplate.Body,
