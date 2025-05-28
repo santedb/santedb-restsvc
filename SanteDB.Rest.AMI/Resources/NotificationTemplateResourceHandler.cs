@@ -53,7 +53,17 @@ namespace SanteDB.Rest.AMI.Resources
                 throw new ArgumentNullException(nameof(key));
             }
 
-            var template = this.m_repositoryService.Get((Guid)key);
+            NotificationTemplate template = null;
+
+            if (key is Guid workingKey)
+            {
+                template = this.m_repositoryService.Get(workingKey);
+            }
+            else
+            {
+                throw new ArgumentException(nameof(key));
+            }
+
 
             if (!template.ObsoletionTime.HasValue && !template.ObsoletedByKey.HasValue)
             {
@@ -62,7 +72,7 @@ namespace SanteDB.Rest.AMI.Resources
             }
 
             // Check if the template is in use by any notification instance
-            var notificationInstances = this.m_notificationInstanceRepositoryService.Find(o => o.NotificationTemplateKey == (Guid)key);
+            var notificationInstances = this.m_notificationInstanceRepositoryService.Find(o => o.NotificationTemplateKey == workingKey);
 
             if(notificationInstances.Any())
             {
@@ -74,15 +84,15 @@ namespace SanteDB.Rest.AMI.Resources
             {
                 template.Parameters.ForEach(templateParameter =>
                 {
-                    this.m_templateParameterRepositoryService.Delete((Guid)templateParameter.Key);
+                    this.m_templateParameterRepositoryService.Delete(templateParameter.Key.Value);
                 });
 
                 template.Contents.ForEach(templateContents =>
                 {
-                    this.m_templateContentsRepositoryService.Delete((Guid)templateContents.Key);
+                    this.m_templateContentsRepositoryService.Delete(templateContents.Key.Value);
                 });
 
-                this.m_repositoryService.Delete((Guid)key);
+                this.m_repositoryService.Delete(workingKey);
             }
 
             return null;
@@ -101,7 +111,12 @@ namespace SanteDB.Rest.AMI.Resources
 
             var sentTemplate = data as NotificationTemplate;
 
-            var databaseTemplate = this.m_repositoryService.Get((Guid)sentTemplate.Key);
+            if (sentTemplate.Key == null)
+            {
+                throw new InvalidOperationException("Notification template key must be provided for update.");
+            }
+
+            var databaseTemplate = this.m_repositoryService.Get(sentTemplate.Key.Value);
 
             if (databaseTemplate == null)
             {
@@ -115,7 +130,7 @@ namespace SanteDB.Rest.AMI.Resources
             {
                 parameters.ForEach(param =>
                 {
-                    this.m_templateParameterRepositoryService.Delete((Guid)param.Key);
+                    this.m_templateParameterRepositoryService.Delete(param.Key.Value);
                 });
             }
 
