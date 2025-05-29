@@ -41,7 +41,7 @@ namespace SanteDB.Rest.AMI.Resources
             {
                 instance.InstanceParameters.ForEach(instanceParameter =>
                 {
-                    this.m_instanceParameterRepositoryService.Delete((Guid)instanceParameter.Key);
+                    this.m_instanceParameterRepositoryService.Delete(instanceParameter.Key.Value);
                 });
 
                 this.m_repositoryService.Delete((Guid)key);
@@ -59,22 +59,22 @@ namespace SanteDB.Rest.AMI.Resources
 
             var sentInstance = data as NotificationInstance;
 
-            var databaseInstance = this.m_repositoryService.Get((Guid)sentInstance.Key);
+            var databaseInstance = this.m_repositoryService.Get(sentInstance.Key.Value);
 
             if (databaseInstance == null)
             {
-                throw new ArgumentException($"Notification instance with key {((NotificationInstance)data).Key} not found");
+                throw new ArgumentException($"Notification instance with key {sentInstance.Key} not found");
             }
 
             if(databaseInstance.NotificationTemplateKey != sentInstance.NotificationTemplateKey)
             {
-                var parameters = this.m_instanceParameterRepositoryService.Find(o => o.NotificationInstanceKey == ((NotificationInstance)data).Key).ToList();
+                var parameters = this.m_instanceParameterRepositoryService.Find(o => o.NotificationInstanceKey == sentInstance.Key).ToList();
 
                 using (DataPersistenceControlContext.Create(DeleteMode.PermanentDelete))
                 {
                     parameters.ForEach(instanceParameter =>
                     {
-                        this.m_instanceParameterRepositoryService.Delete((Guid)instanceParameter.Key);
+                        this.m_instanceParameterRepositoryService.Delete(instanceParameter.Key.Value);
                     });
                 }
             }
