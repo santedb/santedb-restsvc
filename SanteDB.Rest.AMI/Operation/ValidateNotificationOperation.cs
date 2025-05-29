@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Notifications;
-using SanteDB.Core.Notifications.Email;
-using SanteDB.Core.Notifications.Templating;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 
@@ -18,7 +14,6 @@ namespace SanteDB.Rest.AMI.Operation
         private readonly IRepositoryService<NotificationInstance> m_notificationInstanceRepositoryService;
         private readonly IRepositoryService<NotificationTemplate> m_notificationTemplateService;
         private readonly IRepositoryService<NotificationTemplateParameter> m_notificationTemplateParametersService;
-        private readonly INotificationTemplateRepository m_notificationTemplateRepository;
         private readonly INotificationTemplateFiller m_notificationTemplateFiller;
 
         public ValidateNotificationOperation(IRepositoryService<NotificationInstance> notificationInstanceRepositoryService, IRepositoryService<NotificationTemplate> notificationTemplateService, IRepositoryService<NotificationTemplateParameter> notificationTemplateParametersService, INotificationTemplateRepository notificationTemplateRepository, INotificationTemplateFiller notificationTemplateFiller)
@@ -26,9 +21,9 @@ namespace SanteDB.Rest.AMI.Operation
             this.m_notificationInstanceRepositoryService = notificationInstanceRepositoryService;
             this.m_notificationTemplateService = notificationTemplateService;
             this.m_notificationTemplateParametersService = notificationTemplateParametersService;
-            this.m_notificationTemplateRepository = notificationTemplateRepository;
             this.m_notificationTemplateFiller = notificationTemplateFiller;
         }
+
         public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Instance;
 
         public Type[] ParentTypes => new[] { typeof(NotificationInstance) };
@@ -68,7 +63,6 @@ namespace SanteDB.Rest.AMI.Operation
             }
 
             var language = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-
 
             return this.m_notificationTemplateFiller.FillTemplate(instance, language, model);
         }

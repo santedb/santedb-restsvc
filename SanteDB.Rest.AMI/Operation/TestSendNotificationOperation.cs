@@ -1,28 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using SanteDB.Core;
-using SanteDB.Core.Interop;
-using SanteDB.Core.Model.Attributes;
-using SanteDB.Core.Model;
-using SanteDB.Core.Model.Constants;
-using SanteDB.Core.Model.DataTypes;
+﻿using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Parameters;
+using SanteDB.Core.Model.Query;
 using SanteDB.Core.Notifications;
 using SanteDB.Core.Notifications.Email;
-using SanteDB.Core.Notifications.RapidPro;
 using SanteDB.Core.Notifications.Templating;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
-using SharpCompress;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace SanteDB.Rest.AMI.Operation
 {
@@ -31,16 +18,18 @@ namespace SanteDB.Rest.AMI.Operation
         private readonly IRepositoryService<NotificationInstance> m_notificationInstanceRepositoryService;
         private readonly IRepositoryService<NotificationTemplate> m_notificationTemplateService;
         private readonly IRepositoryService<NotificationTemplateParameter> m_notificationTemplateParametersService;
+        private readonly IRepositoryService<EntityTelecomAddress> m_entityTelecomAddressRepositoryService;
         private readonly INotificationTemplateRepository m_notificationTemplateRepository;
-        private readonly IEmailService m_emailService;
+        private readonly INotificationService m_notificationService;
 
-        public TestSendNotificationOperation(IRepositoryService<NotificationInstance> notificationInstanceRepositoryService, IRepositoryService<NotificationTemplate> notificationTemplateService, IRepositoryService<NotificationTemplateParameter> notificationTemplateParametersService, INotificationTemplateRepository notificationTemplateRepository, IEmailService emailService)
+        public TestSendNotificationOperation(IRepositoryService<NotificationInstance> notificationInstanceRepositoryService, IRepositoryService<NotificationTemplate> notificationTemplateService, IRepositoryService<NotificationTemplateParameter> notificationTemplateParametersService, INotificationTemplateRepository notificationTemplateRepository, IEmailService emailService, INotificationService notificationService, IRepositoryService<EntityTelecomAddress> entityTelecomAddressRepositoryService)
         {
             this.m_notificationInstanceRepositoryService = notificationInstanceRepositoryService;
             this.m_notificationTemplateService = notificationTemplateService;
             this.m_notificationTemplateParametersService = notificationTemplateParametersService;
             this.m_notificationTemplateRepository = notificationTemplateRepository;
-            this.m_emailService = emailService;
+            this.m_notificationService = notificationService;
+            this.m_entityTelecomAddressRepositoryService = entityTelecomAddressRepositoryService;
         }
 
         public ChildObjectScopeBinding ScopeBinding => ChildObjectScopeBinding.Instance;
@@ -60,17 +49,12 @@ namespace SanteDB.Rest.AMI.Operation
 
             var instance = this.m_notificationInstanceRepositoryService.Get(instanceId);
             var template = this.m_notificationTemplateService.Get(instance.NotificationTemplateKey);
+
             instance.NotificationTemplate = template;
 
-            var entityTypeConcept = ApplicationServiceContext.Current.GetService<IRepositoryService<Concept>>().Get(Guid.Parse(parameters.Parameters.FirstOrDefault(c => c.Name == "entityType")?.Value?.ToString()));
-            if (entityTypeConcept != null)
-            {
-                var type = typeof(IdentifiedData).Assembly.ExportedTypes.FirstOrDefault(c => c.GetCustomAttributes<ClassConceptKeyAttribute>().Any(x => x.ClassConcept == entityTypeConcept.Key.ToString()));
+            var targetExpression = QueryExpressionParser.BuildLinqExpression<EntityTelecomAddress>(instance.TargetExpression);
 
-                var entityRepositoryService = ApplicationServiceContext.Current.GetService(typeof(IRepositoryService<>).MakeGenericType(type)) as IRepositoryService;
-                var entity = (Entity)entityRepositoryService.Get(Guid.Parse(parameters.Parameters.FirstOrDefault(c => c.Name == "selectedEntity")?.Value?.ToString()));
-                //var entityName = entity.Names.FirstOrDefault(c => c.NameUseKey == NameUseKeys.OfficialRecord || NameUseKeys.Assigned);
-            }
+            var telecomAddress = this.m_entityTelecomAddressRepositoryService.Find(targetExpression).FirstOrDefault()?.IETFValue;
 
             if (instance == null)
             {
@@ -90,64 +74,11 @@ namespace SanteDB.Rest.AMI.Operation
                 model.Add(templateParameter.Name, parameter.Expression);
             }
 
-
             var templateFiller = new SimpleNotificationTemplateFiller(this.m_notificationTemplateRepository);
 
-            var filledTemplate = templateFiller.FillTemplate(instance, "en", model);
-            var channelTypes = template.Tags.Split(',');
+            var filledTemplate = templateFiller.FillTemplate(instance, CultureInfo.CurrentCulture.TwoLetterISOLanguageName, model);
 
-            var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", "CLHM2PFCZS4873C4YLAFARGB4XAJCWDSJHLZSEXH");
-            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Fiddler");
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            // Get the contact list from RapidPro
-            var contactList = httpClient.GetAsync("https://app.rapidpro.io/api/v2/contacts.json").GetAwaiter().GetResult();
-            var contacts = JObject.Parse(contactList.Content.ReadAsStringAsync().GetAwaiter().GetResult())["results"].ToString();
-            var contactsResponse = JsonConvert.DeserializeObject<List<RapidProContact>>(contacts);
-
-            Console.WriteLine(contacts);
-
-            foreach (var channel in channelTypes)
-            {
-                switch (channel)
-                {
-                    case "email":
-                        var emailMessage = new EmailMessage()
-                        {
-                            ToAddresses = new List<string>(),
-                            FromAddress = "example@example.com",
-                            Subject = filledTemplate.Body,
-                            Body = filledTemplate.Subject
-                        };
-                        this.m_emailService.SendEmail(emailMessage);
-                        break;
-                    case "sms":
-                        Console.WriteLine("send a text message");
-                        break;
-                    case "facebook":
-                        var data = new RapidProMessage()
-                        {
-                            Contact = contactsResponse.Find(c => c.Name == "Jordan Webber").Uuid.ToString(),
-                            Text = filledTemplate.Body,
-                        };
-                
-                        var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
-
-                        HttpResponseMessage response = httpClient.PostAsync("https://app.rapidpro.io/api/v2/messages.json", content).GetAwaiter().GetResult();
-                        var responseContent = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-
-                        if (response.IsSuccessStatusCode)
-                        {
-                            return response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-                        }
-
-                        break;
-                    default:
-                        Console.WriteLine("unknown channel");
-                        break;
-                }
-            }
+            this.m_notificationService.SendNotification(new String[]{ telecomAddress }, filledTemplate.Subject, filledTemplate.Body);
 
             return null;
         }
