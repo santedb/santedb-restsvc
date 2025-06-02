@@ -1,6 +1,6 @@
 ﻿/*
- * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
- * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
+ * Copyright (C) 2021 - 2025, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Portions Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you
@@ -16,6 +16,7 @@
  * the License.
  *
  */
+using SanteDB.Core;
 using SanteDB.Core.Data.Import;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.i18n;
@@ -47,7 +48,7 @@ namespace SanteDB.Rest.AMI.Operation
 
             try
             {
-                if (jobManagerService.GetJobInstance(ForeignDataImportJob.JOB_ID) == null)
+                if (ApplicationServiceContext.Current.HostType == SanteDBHostType.Server && jobManagerService.GetJobInstance(ForeignDataImportJob.JOB_ID) == null)
                 {
                     var importJob = serviceManager.CreateInjected<ForeignDataImportJob>();
                     jobManagerService.AddJob(importJob, JobStartType.Never);

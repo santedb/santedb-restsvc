@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Copyright (C) 2021 - 2025, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
  * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  * 
@@ -14,6 +14,9 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
  * License for the specific language governing permissions and limitations under 
  * the License.
+ * 
+ * User: fyfej
+ * Date: 2023-6-21
  */
 using SanteDB.Core;
 using SanteDB.Core.Cdss;
@@ -27,6 +30,7 @@ using SanteDB.Core.Model.Roles;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime;
 
@@ -98,6 +102,10 @@ namespace SanteDB.Rest.HDSI.Operation
             if (hasIdentifiedTarget)
             {
                 target = this.m_patientRepository.Get(targetUuid);
+                if(target == null)
+                {
+                    throw new KeyNotFoundException(String.Format(ErrorMessages.REFERENCE_NOT_FOUND, $"Patient/${targetUuid}"));
+                }
             }
             else if (parameters.TryGet("history", out Bundle history))
             {
