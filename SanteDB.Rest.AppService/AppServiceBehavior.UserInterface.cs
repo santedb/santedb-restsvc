@@ -1,6 +1,6 @@
 ﻿/*
- * Copyright (C) 2021 - 2024, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
- * Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
+ * Copyright (C) 2021 - 2025, SanteSuite Inc. and the SanteSuite Contributors (See NOTICE.md for full copyright notices)
+ * Portions Copyright (C) 2019 - 2021, Fyfe Software Inc. and the SanteSuite Contributors
  * Portions Copyright (C) 2015-2018 Mohawk College of Applied Arts and Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you
@@ -76,7 +76,15 @@ namespace SanteDB.Rest.AppService
         {
             var rootmenus = this.m_appletManagerService?.Applets.SelectMany(a => a.Menus).OrderBy(m => m.Order).ToArray();
             var context = RestOperationContext.Current.IncomingRequest.QueryString.Get("context");
-            return this.ProcessMenus(rootmenus, context).ToList();
+            return this
+                .ProcessMenus(rootmenus, context)
+                .GroupBy(o=>o.Text)
+                .Select(o=>
+                {
+                    var retVal = o.OrderByDescending(m => m.Priority).First();
+                    retVal.MenuItems = o.SelectMany(m => m.MenuItems).ToList();
+                    return retVal;
+                }).ToList();
         }
 
         /// <inheritdoc/>
@@ -264,7 +272,8 @@ namespace SanteDB.Rest.AppService
             {
                 Action = appletMenu.Launch,
                 Icon = appletMenu.Icon,
-                Text = menutext
+                Text = menutext,
+                Priority = appletMenu.Priority
             };
 
             menu.MenuItems = ProcessMenus(appletMenu.Menus, context).Distinct(m_menuEqualityComparer).ToList();
