@@ -115,7 +115,7 @@ namespace SanteDB.Rest.AMI
                 {
                     e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ViewModelHeaderName, RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName]);
                 }
-                e.Query?.Remove("_upstream"); // Don't cascade the upstream query to the upstream
+                e.Query?.Remove(QueryControlParameterNames.HttpUpstreamParameterName); // Don't cascade the upstream query to the upstream
 
             };
 
