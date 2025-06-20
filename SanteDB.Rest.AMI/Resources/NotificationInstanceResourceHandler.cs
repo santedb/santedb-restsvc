@@ -66,18 +66,18 @@ namespace SanteDB.Rest.AMI.Resources
                 throw new ArgumentException($"Notification instance with key {sentInstance.Key} not found");
             }
 
-            if(databaseInstance.NotificationTemplateKey != sentInstance.NotificationTemplateKey)
-            {
-                var parameters = this.m_instanceParameterRepositoryService.Find(o => o.NotificationInstanceKey == sentInstance.Key).ToList();
+            //if(databaseInstance.NotificationTemplateKey != sentInstance.NotificationTemplateKey)
+            //{
+            //    var parameters = this.m_instanceParameterRepositoryService.Find(o => o.NotificationInstanceKey == sentInstance.Key).ToList();
 
-                using (DataPersistenceControlContext.Create(DeleteMode.PermanentDelete))
-                {
-                    parameters.ForEach(instanceParameter =>
-                    {
-                        this.m_instanceParameterRepositoryService.Delete(instanceParameter.Key.Value);
-                    });
-                }
-            }
+            //    using (DataPersistenceControlContext.Create(DeleteMode.PermanentDelete))
+            //    {
+            //        parameters.ForEach(instanceParameter =>
+            //        {
+            //            this.m_instanceParameterRepositoryService.Delete(instanceParameter.Key.Value);
+            //        });
+            //    }
+            //}
 
             return base.Update(data);
         }

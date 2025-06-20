@@ -126,13 +126,13 @@ namespace SanteDB.Rest.AMI.Resources
 
             var parameters = this.m_templateParameterRepositoryService.Find(o => o.NotificationTemplateKey == ((NotificationTemplate)data).Key).ToList();
 
-            using (DataPersistenceControlContext.Create(DeleteMode.PermanentDelete))
-            {
-                parameters.ForEach(param =>
-                {
-                    this.m_templateParameterRepositoryService.Delete(param.Key.Value);
-                });
-            }
+            //using (DataPersistenceControlContext.Create(DeleteMode.PermanentDelete))
+            //{
+            //    parameters.ForEach(param =>
+            //    {
+            //        this.m_templateParameterRepositoryService.Delete(param.Key.Value);
+            //    });
+            //}
 
             return base.Update(data);
         }

@@ -98,8 +98,8 @@ namespace SanteDB.Rest.AMI.Operation
 
             foreach (var parameter in instance.InstanceParameters)
             {
-                var templateParameter = this.m_notificationTemplateParametersService.Get(parameter.TemplateParameterKey);
-                model.Add(templateParameter.Name, parameter.Expression);
+                //var templateParameter = this.m_notificationTemplateParametersService.Get(parameter.TemplateParameterKey);
+                model.Add(parameter.ParameterName, parameter.Expression);
             }
 
             var templateFiller = new SimpleNotificationTemplateFiller(this.m_notificationTemplateRepository);
