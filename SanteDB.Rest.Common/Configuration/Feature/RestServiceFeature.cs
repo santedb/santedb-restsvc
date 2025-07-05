@@ -472,7 +472,7 @@ namespace SanteDB.Rest.Common.Configuration.Features
             var appServiceSection = configuration.GetSection<ApplicationServiceContextConfigurationSection>();
             if (!appServiceSection.ServiceProviders.Any(o => o.Type == this.m_serviceType))
             {
-                appServiceSection.ServiceProviders.Add(new TypeReferenceConfiguration(this.m_serviceType));
+                appServiceSection.AddService(new TypeReferenceConfiguration(this.m_serviceType));
             }
             return true;
         }
@@ -710,7 +710,7 @@ namespace SanteDB.Rest.Common.Configuration.Features
             var appServiceSection = configuration.GetSection<ApplicationServiceContextConfigurationSection>();
             if (!appServiceSection.ServiceProviders.Any(o => o.Type == this.m_serviceType))
             {
-                appServiceSection.ServiceProviders.Add(new TypeReferenceConfiguration(this.m_serviceType));
+                appServiceSection.AddService(new TypeReferenceConfiguration(this.m_serviceType));
             }
             return true;
         }

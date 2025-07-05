@@ -100,7 +100,7 @@ namespace SanteDB.Rest.AppService.Configuration
             var newServices = ((IEnumerable)featureConfiguration[SERVICES_SETTING])?.OfType<JToken>().Select(o => new TypeReferenceConfiguration(o.ToString())).ToList();
             if(newServices.Any())
             {
-                section.ServiceProviders.AddRange(newServices);
+                section.AddServices(newServices);
             }
             return true;
 
