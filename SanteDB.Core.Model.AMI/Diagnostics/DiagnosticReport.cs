@@ -19,6 +19,7 @@
  * Date: 2023-6-21
  */
 using Newtonsoft.Json;
+using SanteDB.Core.Model.Attributes;
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Interfaces;
 using System;
@@ -31,7 +32,7 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
     /// <summary>
     /// Diagnostics report
     /// </summary>
-    [JsonObject(nameof(DiagnosticReport)), XmlType(nameof(DiagnosticReport), Namespace = "http://santedb.org/ami/diagnostics")]
+    [JsonObject(nameof(DiagnosticReport)), XmlType(nameof(DiagnosticReport), Namespace = "http://santedb.org/ami/diagnostics"), ResourceName("Sherlock")]
     [XmlRoot(nameof(DiagnosticReport), Namespace = "http://santedb.org/ami/diagnostics")]
     public class DiagnosticReport : BaseEntityData, ITaggable
     {

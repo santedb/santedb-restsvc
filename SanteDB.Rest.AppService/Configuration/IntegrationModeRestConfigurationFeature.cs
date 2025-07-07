@@ -100,7 +100,7 @@ namespace SanteDB.Rest.AppService.Configuration
                 }
                 else
                 {
-                    appSetting.ServiceProviders.AddRange(newMode.GetServices().Select(o => new TypeReferenceConfiguration(o)));
+                    appSetting.AddServices(newMode.GetServices().Select(o => new TypeReferenceConfiguration(o)));
                 }
 
                 newMode.SetDefaults(configuration);
