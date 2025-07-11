@@ -398,15 +398,19 @@ namespace SanteDB.Messaging.HDSI.Wcf
             var accept = RestOperationContext.Current.IncomingRequest.AcceptTypes.FirstOrDefault();
             switch (accept)
             {
-                case "application/json+sdb-viewmodel":
-                case SanteDBExtendedMimeTypes.JsonViewModel:
-                case SanteDBExtendedMimeTypes.JsonPatch:
                 case SanteDBExtendedMimeTypes.JsonRimModel:
+                    retVal.Accept = SanteDBExtendedMimeTypes.JsonRimModel;
+                    break;
+                case SanteDBExtendedMimeTypes.JsonPatch:
                 case SanteDBExtendedMimeTypes.XmlPatch:
                 case SanteDBExtendedMimeTypes.XmlRimModel:
                 case "application/json":
                 case "application/xml": // We want to use the XML format for serialization
                     retVal.Accept = "application/xml";
+                    break;
+                case SanteDBExtendedMimeTypes.JsonViewModel:
+                case "application/json+sdb-viewmodel":
+                    retVal.Accept = SanteDBExtendedMimeTypes.JsonViewModel;
                     break;
                 default:
                     retVal.Accept = RestOperationContext.Current.IncomingRequest.AcceptTypes.FirstOrDefault() ?? RestOperationContext.Current.IncomingRequest.ContentType;
