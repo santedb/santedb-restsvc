@@ -20,9 +20,10 @@
  */
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Services;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 using ZXing;
@@ -72,7 +73,7 @@ namespace SanteDB.Rest.HDSI.Vrp
         public Stream Generate(byte[] rawData)
         {
             // Now generate the token
-            var writer = new BarcodeWriter<Bitmap>()
+            var writer = new ZXing.ImageSharp.BarcodeWriter<Rgba32>()
             {
                 Format = BarcodeFormat.QR_CODE,
                 Options = new ZXing.Common.EncodingOptions()
@@ -82,13 +83,12 @@ namespace SanteDB.Rest.HDSI.Vrp
                     NoPadding = true,
                     PureBarcode = true
                 },
-                Renderer = new ZXing.Windows.Compatibility.BitmapRenderer()
             };
 
             using (var bmp = writer.Write($"svrp://{Encoding.UTF8.GetString(rawData)}"))
             {
                 var retVal = new MemoryStream();
-                bmp.Save(retVal, ImageFormat.Png);
+                bmp.Save(retVal, new PngEncoder());
                 retVal.Seek(0, SeekOrigin.Begin);
                 return retVal;
             }

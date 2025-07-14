@@ -49,7 +49,6 @@ using System.Net;
 using System.Reflection;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using ZXing.OneD;
 
 namespace SanteDB.Rest.AMI
 {

@@ -26,14 +26,16 @@ using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using ZXing;
+using ZXing.ImageSharp;
 
 namespace SanteDB.Rest.AMI.Operation
 {
@@ -102,7 +104,7 @@ namespace SanteDB.Rest.AMI.Operation
                         case TfaMechanismClassification.Application:
                             {
                                 // Now generate the token
-                                var writer = new BarcodeWriter<Bitmap>()
+                                var writer = new ZXing.ImageSharp.BarcodeWriter<Rgba32>()
                                 {
                                     Format = BarcodeFormat.QR_CODE,
                                     Options = new ZXing.Common.EncodingOptions()
@@ -111,15 +113,14 @@ namespace SanteDB.Rest.AMI.Operation
                                         Width = 150,
                                         NoPadding = true,
                                         PureBarcode = true
-                                    },
-                                    Renderer = new ZXing.Windows.Compatibility.BitmapRenderer()
+                                    }
                                 };
 
                                 using (var bmp = writer.Write(tfaSetupInstruction))
                                 {
                                     using (var ms = new MemoryStream())
                                     {
-                                        bmp.Save(ms, ImageFormat.Png);
+                                        bmp.Save(ms, new PngEncoder());
                                         ms.Seek(0, SeekOrigin.Begin);
                                         retVal = Narrative.DocumentFromStream("TFA", CultureInfo.CurrentCulture.TwoLetterISOLanguageName, "image/png", ms);
                                         break;
