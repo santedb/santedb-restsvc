@@ -17,6 +17,7 @@
  *
  */
 using RestSrvr;
+using RestSrvr.Exceptions;
 using RestSrvr.Message;
 using SanteDB.Core;
 using SanteDB.Core.Applets;
@@ -98,7 +99,11 @@ namespace SanteDB.Rest.WWW.Behaviors
                 };
 
                 Stream errorPageStream = null;
-                if (errorAsset != null)
+                if(error is FaultException<Stream> fsr)
+                {
+                    errorPageStream = fsr.Body;
+                }
+                else if (errorAsset != null)
                 {
                     errorPageStream = new MemoryStream(this.m_appletCollection.RenderAssetContent(errorAsset, bindingParameters: errorVariables));
                 }
