@@ -105,6 +105,16 @@ namespace SanteDB.Core.Model.AMI.Diagnostics
         }
 
         /// <summary>
+        /// Add a tag
+        /// </summary>
+        ITag ITaggable.AddTagUnchecked(string tagKey, string tagValue)
+        {
+            var tag = new DiagnosticReportTag(tagKey, tagValue);
+            this.Tags.Add(tag);
+            return tag;
+        }
+
+        /// <summary>
         /// Get the specified tag
         /// </summary>
         public string GetTag(string tagKey) => this.Tags.Find(o => o.TagKey == tagKey)?.Value;

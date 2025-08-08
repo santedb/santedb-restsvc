@@ -20,14 +20,16 @@
  */
 using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Services;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
 using ZXing;
+using ZXing.ImageSharp;
 
 namespace SanteDB.Rest.HDSI.Vrp
 {
@@ -63,7 +65,7 @@ namespace SanteDB.Rest.HDSI.Vrp
         /// <inheritdoc/>
         public Stream Generate(byte[] rawData)
         {
-            var writer = new BarcodeWriter<Bitmap>()
+            var writer = new ZXing.ImageSharp.BarcodeWriter<Rgba32>()
             {
                 Format = BarcodeFormat.CODE_128,
                 Options = new ZXing.Common.EncodingOptions()
@@ -73,14 +75,13 @@ namespace SanteDB.Rest.HDSI.Vrp
                     PureBarcode = false,
                     NoPadding = true,
                     
-                },
-                Renderer = new ZXing.Windows.Compatibility.BitmapRenderer()
+                }
             };
             
             using (var bmp = writer.Write(Encoding.UTF8.GetString(rawData)))
             {
                 var retVal = new MemoryStream();
-                bmp.Save(retVal, ImageFormat.Png);
+                bmp.Save(retVal, new PngEncoder());
                 retVal.Seek(0, SeekOrigin.Begin);
                 return retVal;
             }
