@@ -78,6 +78,8 @@ namespace SanteDB.Rest.AppService
         /// the update manager service injected into the instance
         /// </summary>
         protected readonly IUpdateManager m_updateManager;
+        private readonly IReferenceResolver m_referenceResolver;
+
         /// <summary>
         /// The security repository service injected into the instance
         /// </summary>
@@ -108,6 +110,7 @@ namespace SanteDB.Rest.AppService
                   ApplicationServiceContext.Current.GetService<IAppletManagerService>(),
                   ApplicationServiceContext.Current.GetService<ILocalizationService>(),
                   ApplicationServiceContext.Current.GetService<IUpdateManager>(),
+                  ApplicationServiceContext.Current.GetService<IReferenceResolver>(),
                   ApplicationServiceContext.Current.GetService<IUserPreferencesManager>(),
                   ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>(),
                   ApplicationServiceContext.Current.GetService<ITickleService>(),
@@ -128,6 +131,7 @@ namespace SanteDB.Rest.AppService
             IAppletManagerService appletManagerService,
             ILocalizationService localizationService,
             IUpdateManager updateManager,
+            IReferenceResolver referenceResolver,
             IUserPreferencesManager userPreferencesManager = null,
             ISecurityRepositoryService securityRepositoryService = null,
             ITickleService tickleService = null,
@@ -144,6 +148,7 @@ namespace SanteDB.Rest.AppService
             this.m_appletManagerService = appletManagerService;
             this.m_localizationService = localizationService;
             this.m_updateManager = updateManager;
+            this.m_referenceResolver = referenceResolver;
             this.m_securityRepositoryService = securityRepositoryService;
             this.m_userPreferenceManager = userPreferencesManager;
             this.m_integrationPatterns = serviceManager.CreateInjectedOfAll<IUpstreamIntegrationPattern>();

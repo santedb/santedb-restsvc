@@ -18,7 +18,7 @@
  */
 using RestSrvr;
 using SanteDB.Core.Applets.Model;
-using SanteDB.Core.Applets.ViewModel.Json;
+using SanteDB.Core.ViewModel.Json;
 using SanteDB.Core.Data.Quality;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Model;
@@ -80,26 +80,15 @@ namespace SanteDB.Rest.AppService
                 throw new KeyNotFoundException($"template/{templateId}");
             }
 
-            using (var ms = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(tplDef.Fill(parameters.ToList().ToDictionaryIgnoringDuplicates(o => o.Key, o => o.Value), (r) =>
-            {
-                var asset = this.m_appletManagerService.Applets.ResolveAsset(r);
-                if(asset == null)
-                {
-                    throw new FileNotFoundException(r);
-                }
-                return Encoding.UTF8.GetString(this.m_appletManagerService.Applets.RenderAssetContent(asset));
-            }))))
-            using (var json = new JsonViewModelSerializer())
-            {
-                var result = json.DeSerialize<IdentifiedData>(ms);
-                if (result is IHasTemplate template) // Correct any type-os in the JSON
-                {
-                    template.Template = new TemplateDefinition() { Key = tplDef.Key, Description = tplDef.Name, Mnemonic = templateId };
-                    template.TemplateKey = tplDef.Key;
-                }
+            var result = tplDef.FillObject(parameters.ToList().ToDictionaryIgnoringDuplicates(o => o.Key, o => o.Value), (o)=>this.m_referenceResolver.ResolveAsString(o));
 
-                return result;
+            if (result is IHasTemplate template) // Correct any type-os in the JSON
+            {
+                template.Template = new TemplateDefinition() { Key = tplDef.Key, Description = tplDef.Name, Mnemonic = templateId };
+                template.TemplateKey = tplDef.Key;
             }
+
+            return result;
         }
 
         /// <inheritdoc/>
@@ -127,7 +116,7 @@ namespace SanteDB.Rest.AppService
         public List<TemplateDefinitionViewModel> GetTemplates()
         {
             var query = QueryExpressionParser.BuildLinqExpression<TemplateDefinitionViewModel>(RestOperationContext.Current.IncomingRequest.QueryString, null, true);
-            return this.m_dataTemplateManagerService.Find(o=>o.IsActive).Select(r => new TemplateDefinitionViewModel(r)).Where(query.Compile()).ToList();
+            return this.m_dataTemplateManagerService.Find(o => o.IsActive).Select(r => new TemplateDefinitionViewModel(r)).Where(query.Compile()).ToList();
         }
 
         /// <inheritdoc/>
@@ -143,11 +132,11 @@ namespace SanteDB.Rest.AppService
         public Stream GetTemplateDefinition(string templateId)
         {
             var templateDefinition = this.m_dataTemplateManagerService.Find(t => t.Mnemonic == templateId).FirstOrDefault();
-            if(templateDefinition == null)
+            if (templateDefinition == null)
             {
                 throw new KeyNotFoundException(this.m_localizationService.GetString(ErrorMessageStrings.NOT_FOUND, new { type = "Template", id = templateId }));
             }
-            else if(templateDefinition.JsonTemplate.ContentType == DataTemplateContentType.reference)
+            else if (templateDefinition.JsonTemplate.ContentType == DataTemplateContentType.reference)
             {
                 RestOperationContext.Current.OutgoingResponse.Redirect(templateDefinition.JsonTemplate.Content);
                 return null;
@@ -162,7 +151,7 @@ namespace SanteDB.Rest.AppService
         [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
         public Stream GetTemplateView(String templateId, String viewType)
         {
-            if(!Enum.TryParse<DataTemplateViewType>(viewType, out var viewTypeEnum))
+            if (!Enum.TryParse<DataTemplateViewType>(viewType, out var viewTypeEnum))
             {
                 throw new ArgumentOutOfRangeException(String.Format(ErrorMessages.ARGUMENT_OUT_OF_RANGE, viewType, $"BackEntry, Entry, View, SummaryView"));
             }
@@ -174,11 +163,11 @@ namespace SanteDB.Rest.AppService
             else
             {
                 var view = template.Views.Find(v => v.ViewType == viewTypeEnum);
-                if(view == null)
+                if (view == null)
                 {
                     throw new FileNotFoundException($"/Template/{templateId}/view/{viewType}.html");
                 }
-                else if(view.Content is String str)
+                else if (view.Content is String str)
                 {
                     RestOperationContext.Current.OutgoingResponse.Redirect(str);
                     return null;
