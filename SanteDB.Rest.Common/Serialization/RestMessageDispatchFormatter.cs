@@ -58,6 +58,11 @@ namespace SanteDB.Rest.Common.Serialization
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Design a shim for testing REST context functions
     public abstract class RestMessageDispatchFormatter : IDispatchMessageFormatter
     {
+        /// <summary>
+        /// When this is added to a context, instructs the dispatch formatter to instruct the view model serializer to use the default view model
+        /// </summary>
+        public const string VIEW_MODEL_BYPASS_DELAY_LOAD = "$bypass-viewmodel-load";
+
         // Formatters
         private static ConcurrentDictionary<Type, RestMessageDispatchFormatter> m_formatters = new ConcurrentDictionary<Type, RestMessageDispatchFormatter>();
 
@@ -431,7 +436,9 @@ namespace SanteDB.Rest.Common.Serialization
                                         var viewModel = httpRequest.Headers[ExtendedHttpHeaderNames.ViewModelHeaderName] ?? httpRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName];
 
                                         // Create the view model serializer
-                                        var viewModelSerializer = new JsonViewModelSerializer();
+                                        var viewModelSerializer = new JsonViewModelSerializer(
+                                            noDelayLoad: RestOperationContext.Current.Data.ContainsKey(VIEW_MODEL_BYPASS_DELAY_LOAD)
+                                        );
 
 #if DEBUG
                                         this.m_traceSource.TraceVerbose("Will load serialization assembly {0}", typeof(ActExtensionViewModelSerializer).Assembly);

@@ -38,6 +38,7 @@ using SanteDB.Core.Security;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
+using SanteDB.Rest.Common.Serialization;
 using SanteDB.Rest.HDSI;
 using SanteDB.Rest.HDSI.Model;
 using SharpCompress;
@@ -113,24 +114,27 @@ namespace SanteDB.Messaging.HDSI.Wcf
         /// </summary>
         private void TagUpstream(IdentifiedData data)
         {
-            if (data is Entity entity &&
-                               this.m_entityPersistence?.Query(o => o.Key == data.Key, AuthenticationContext.SystemPrincipal).Any() != true)
+            if (this.m_entityPersistence != null || this.m_actPersistence != null) // No bother since we can't store anything anyways
             {
-                entity.AddTag(SystemTagNames.UpstreamDataTag, "true");
-            }
-            else if (data is Act act &&
-                this.m_actPersistence?.Query(o => o.Key == data.Key, AuthenticationContext.SystemPrincipal).Any() != true)
-            {
-                act.AddTag(SystemTagNames.UpstreamDataTag, "true");
-            }
-            else if (data is Bundle bundle)
-            {
-                bundle.Item
-                    .Select(o =>
-                    {
-                        this.TagUpstream(o);
-                        return o;
-                    }).ToList();
+                if (data is Entity entity &&
+                                   !this.m_entityPersistence.Query(o => o.Key == data.Key, AuthenticationContext.SystemPrincipal).Any())
+                {
+                    entity.AddTag(SystemTagNames.UpstreamDataTag, "true");
+                }
+                else if (data is Act act &&
+                    !this.m_actPersistence.Query(o => o.Key == data.Key, AuthenticationContext.SystemPrincipal).Any())
+                {
+                    act.AddTag(SystemTagNames.UpstreamDataTag, "true");
+                }
+                else if (data is Bundle bundle)
+                {
+                    bundle.Item
+                        .Select(o =>
+                        {
+                            this.TagUpstream(o);
+                            return o;
+                        }).ToList();
+                }
             }
         }
 
@@ -327,19 +331,19 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         var restClient = this.CreateProxyClient();
 
                         IdentifiedData cache = null;
-                        if (Guid.TryParse(id, out var idGuid))
-                        {
-                            cache = this.m_dataCachingService.GetCacheItem(idGuid);
-                            if (cache != null && cache.Type == resourceType)
-                            {
-                                // Only do a head if the ad-hoc cache for excessive HEAD checks is null
-                                if (this.m_adhocCache?.TryGet<DateTime>(cache.Tag, out var lastTimeChecked) == true)
-                                {
-                                    return cache; // we just got this in the cache
-                                }
-                                restClient.Requesting += (o, e) => e.AdditionalHeaders.Add(HttpRequestHeader.IfNoneMatch, cache.Tag);
-                            }
-                        }
+                        //if (Guid.TryParse(id, out var idGuid))
+                        //{
+                        //    cache = this.m_dataCachingService.GetCacheItem(idGuid);
+                        //    if (cache != null && cache.Type == resourceType)
+                        //    {
+                        //        // Only do a head if the ad-hoc cache for excessive HEAD checks is null
+                        //        if (this.m_adhocCache?.TryGet<DateTime>(cache.Tag, out var lastTimeChecked) == true)
+                        //        {
+                        //            return cache; // we just got this in the cache
+                        //        }
+                        //        restClient.Requesting += (o, e) => e.AdditionalHeaders.Add(HttpRequestHeader.IfNoneMatch, cache.Tag);
+                        //    }
+                        //}
 
                         restClient.Responded += this.CopyResponseHeaders;
                         //restClient.Accept = String.Join(",", RestOperationContext.Current.IncomingRequest.AcceptTypes);
@@ -395,6 +399,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
             //}
             //else // For posts - we don't want the ViewModel data going up - we want an XML sync representation going up so delay loading on upbound objects is not performed
             //{
+            RestOperationContext.Current.Data.Add(RestMessageDispatchFormatter.VIEW_MODEL_BYPASS_DELAY_LOAD, true);
             var accept = RestOperationContext.Current.IncomingRequest.AcceptTypes.FirstOrDefault();
             switch (accept)
             {
