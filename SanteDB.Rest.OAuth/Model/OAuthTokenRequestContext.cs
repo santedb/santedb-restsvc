@@ -41,7 +41,6 @@ namespace SanteDB.Rest.OAuth.Model
         public OAuthTokenRequestContext(RestOperationContext operationContext, NameValueCollection formFields)
             : base(operationContext, formFields)
         {
-
         }
 
 

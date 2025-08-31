@@ -24,6 +24,7 @@ using SanteDB.Core.Model;
 using System;
 using System.IO;
 using System.Net.Mime;
+using SanteDB.Core.Model.Json.Formatter;
 
 namespace SanteDB.Core.ViewModel
 {
@@ -41,6 +42,7 @@ namespace SanteDB.Core.ViewModel
             using (var sr = new StreamReader(requestOrResponseStream, System.Text.Encoding.GetEncoding(contentType.CharSet ?? "utf-8"), true, 2048, true))
             {
                 var serializer = new JsonViewModelSerializer();
+                serializer.LoadSerializerAssembly(typeof(EntityViewModelSerializer).Assembly);
                 return serializer.DeSerialize(sr, typeHint);
             }
         }
