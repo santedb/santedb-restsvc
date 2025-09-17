@@ -132,8 +132,8 @@ namespace SanteDB.Rest.HDSI.Operation
                 plan = this.m_cdssService.CreateCarePlan(target, asEncounters, cpParameters);
             }
 
-           
-            return plan.HarmonizeCarePlan(); // Harmonize with stored careplan
+
+            return plan; //.HarmonizeCarePlan(); // Harmonize with stored careplan
 
         }
     }
