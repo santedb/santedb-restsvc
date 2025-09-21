@@ -28,7 +28,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -191,7 +191,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -611,7 +611,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -935,7 +935,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -1355,7 +1355,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -1663,7 +1663,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -2006,7 +2006,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -2210,7 +2210,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -2521,7 +2521,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -2861,7 +2861,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -3437,7 +3437,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -4783,7 +4783,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -5941,7 +5941,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -6067,7 +6067,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -6365,7 +6365,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -7307,7 +7307,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -8352,7 +8352,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -9278,7 +9278,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -10129,7 +10129,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -10365,7 +10365,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -10607,7 +10607,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -10843,7 +10843,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -11085,7 +11085,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -11513,7 +11513,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -11780,7 +11780,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -12777,7 +12777,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -13758,7 +13758,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -14652,7 +14652,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -15546,7 +15546,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -16661,7 +16661,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -16854,7 +16854,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -17745,7 +17745,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -17969,7 +17969,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -19127,7 +19127,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -19474,7 +19474,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -19878,7 +19878,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -20454,7 +20454,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -20794,7 +20794,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -20997,7 +20997,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -21232,7 +21232,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -21467,7 +21467,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -21807,7 +21807,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -22224,7 +22224,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -22428,7 +22428,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -22702,7 +22702,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -22976,7 +22976,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -23250,7 +23250,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -23643,7 +23643,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -23797,7 +23797,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -23916,7 +23916,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -24243,7 +24243,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -24570,7 +24570,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -25169,7 +25169,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -25377,7 +25377,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -25585,7 +25585,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -25980,7 +25980,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -26299,7 +26299,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -26705,7 +26705,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -27051,7 +27051,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -27397,7 +27397,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -27743,7 +27743,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -28115,7 +28115,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -28330,7 +28330,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -28567,7 +28567,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -29548,7 +29548,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -30446,7 +30446,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -30799,7 +30799,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -31035,7 +31035,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -31345,7 +31345,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -31772,7 +31772,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -32729,7 +32729,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -33627,7 +33627,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -34568,7 +34568,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -35549,7 +35549,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -36597,7 +36597,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -37575,7 +37575,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -38532,7 +38532,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -39548,7 +39548,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -40521,7 +40521,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -41521,7 +41521,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -42510,7 +42510,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -43522,7 +43522,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -43746,7 +43746,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -44773,7 +44773,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }
@@ -45054,7 +45054,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
         }
         
         /// <inheritdoc/>
-        public void Serialize(Newtonsoft.Json.JsonWriter w, SanteDB.Core.Model.IdentifiedData o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
+        public void Serialize(Newtonsoft.Json.JsonWriter w, System.Object o, SanteDB.Core.ViewModel.Json.JsonSerializationContext context) {
             if ((o == null)) {
                 throw new System.ArgumentNullException("o");
             }

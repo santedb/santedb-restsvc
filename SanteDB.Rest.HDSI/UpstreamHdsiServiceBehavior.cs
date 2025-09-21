@@ -399,7 +399,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
             //}
             //else // For posts - we don't want the ViewModel data going up - we want an XML sync representation going up so delay loading on upbound objects is not performed
             //{
-            if (RestOperationContext.Current.IncomingRequest.HttpMethod.Equals("get", StringComparison.InvariantCultureIgnoreCase))
+            if (RestOperationContext.Current.IncomingRequest.HttpMethod.Equals("get", StringComparison.InvariantCultureIgnoreCase) || this.m_configuration.PreserveContentType)
             {
                 RestOperationContext.Current.Data.Add(RestMessageDispatchFormatter.VIEW_MODEL_BYPASS_DELAY_LOAD, true);
                 var accept = RestOperationContext.Current.IncomingRequest.AcceptTypes.FirstOrDefault();

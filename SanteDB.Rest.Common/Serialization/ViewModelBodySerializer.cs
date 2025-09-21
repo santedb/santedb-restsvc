@@ -55,16 +55,9 @@ namespace SanteDB.Core.ViewModel
         {
             using (var sw = new StreamWriter(requestOrResponseStream, System.Text.Encoding.UTF8, 2048, true))
             {
-                if (objectToSerialize is IdentifiedData identifiedData)
-                {
-                    var serializer = new JsonViewModelSerializer();
-                    contentType = new ContentType($"{this.ContentType}; charset=utf-8");
-                    serializer.Serialize(sw, identifiedData);
-                }
-                else
-                {
-                    base.Serialize(requestOrResponseStream, objectToSerialize, out contentType);
-                }
+                var serializer = new JsonViewModelSerializer();
+                contentType = new ContentType($"{this.ContentType}; charset=utf-8");
+                serializer.Serialize(sw, objectToSerialize);
             }
         }
     }
