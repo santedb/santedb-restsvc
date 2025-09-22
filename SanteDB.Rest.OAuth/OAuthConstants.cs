@@ -300,6 +300,12 @@ namespace SanteDB.Rest.OAuth
         /// Realm
         /// </summary>
         public const string ClaimType_Realm = "realm";
+
+        /// <summary>
+        /// The language of the session
+        /// </summary>
+        public const string ClaimType_Language = "lang";
+
         /// <summary>
         /// Phone Number
         /// </summary>

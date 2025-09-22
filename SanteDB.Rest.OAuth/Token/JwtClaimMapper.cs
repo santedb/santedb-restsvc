@@ -47,7 +47,8 @@ namespace SanteDB.Rest.OAuth.Token
             { SanteDBClaimTypes.Actor, OAuthConstants.ClaimType_Actor },
             { SanteDBClaimTypes.SanteDBScopeClaim, SanteDBClaimTypes.SanteDBScopeClaim },
             { SanteDBClaimTypes.SecurityId, OAuthConstants.ClaimType_Subject },
-            { SanteDBClaimTypes.NameIdentifier, OAuthConstants.ClaimType_Subject }
+            { SanteDBClaimTypes.NameIdentifier, OAuthConstants.ClaimType_Subject },
+            { SanteDBClaimTypes.Language, OAuthConstants.ClaimType_Language }
         };
 
         /// <inheritdoc/>

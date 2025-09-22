@@ -87,7 +87,6 @@ namespace SanteDB.Rest.AppService
                 template.Template = new TemplateDefinition() { Key = tplDef.Key, Description = tplDef.Name, Mnemonic = templateId };
                 template.TemplateKey = tplDef.Key;
             }
-
             return result;
         }
 

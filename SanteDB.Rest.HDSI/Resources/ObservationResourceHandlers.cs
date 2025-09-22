@@ -43,6 +43,21 @@ namespace SanteDB.Rest.HDSI.Resources
     }
 
     /// <summary>
+    /// Handler for DOBS
+    /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
+    public class DateObservationResourceHandler : ObservationResourceHandler<DateObservation>
+    {
+        /// <summary>
+        /// DI constructor
+        /// </summary>
+        public DateObservationResourceHandler(ILocalizationService localizationService, IRepositoryService<DateObservation> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
+        {
+        }
+    }
+
+
+    /// <summary>
     /// Handler for COBS
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes

@@ -399,42 +399,45 @@ namespace SanteDB.Messaging.HDSI.Wcf
             //}
             //else // For posts - we don't want the ViewModel data going up - we want an XML sync representation going up so delay loading on upbound objects is not performed
             //{
-            RestOperationContext.Current.Data.Add(RestMessageDispatchFormatter.VIEW_MODEL_BYPASS_DELAY_LOAD, true);
-            var accept = RestOperationContext.Current.IncomingRequest.AcceptTypes.FirstOrDefault();
-            switch (accept)
+            if (RestOperationContext.Current.IncomingRequest.HttpMethod.Equals("get", StringComparison.InvariantCultureIgnoreCase) || this.m_configuration.PreserveContentType)
             {
-                case SanteDBExtendedMimeTypes.JsonRimModel:
-                    retVal.Accept = SanteDBExtendedMimeTypes.JsonRimModel;
-                    break;
-                case SanteDBExtendedMimeTypes.JsonPatch:
-                case SanteDBExtendedMimeTypes.XmlPatch:
-                case SanteDBExtendedMimeTypes.XmlRimModel:
-                case "application/json":
-                case "application/xml": // We want to use the XML format for serialization
-                    retVal.Accept = "application/xml";
-                    break;
-                case SanteDBExtendedMimeTypes.JsonViewModel:
-                case "application/json+sdb-viewmodel":
-                    retVal.Accept = SanteDBExtendedMimeTypes.JsonViewModel;
-                    break;
-                default:
-                    retVal.Accept = RestOperationContext.Current.IncomingRequest.AcceptTypes.FirstOrDefault() ?? RestOperationContext.Current.IncomingRequest.ContentType;
-                    break;
-            }
-            //}
+                RestOperationContext.Current.Data.Add(RestMessageDispatchFormatter.VIEW_MODEL_BYPASS_DELAY_LOAD, true);
+                var accept = RestOperationContext.Current.IncomingRequest.AcceptTypes.FirstOrDefault();
+                switch (accept)
+                {
+                    case SanteDBExtendedMimeTypes.JsonRimModel:
+                        retVal.Accept = SanteDBExtendedMimeTypes.JsonRimModel;
+                        break;
+                    case SanteDBExtendedMimeTypes.JsonPatch:
+                    case SanteDBExtendedMimeTypes.XmlPatch:
+                    case SanteDBExtendedMimeTypes.XmlRimModel:
+                    case "application/json":
+                    case "application/xml": // We want to use the XML format for serialization
+                        retVal.Accept = "application/xml";
+                        break;
+                    case SanteDBExtendedMimeTypes.JsonViewModel:
+                    case "application/json+sdb-viewmodel":
+                        retVal.Accept = SanteDBExtendedMimeTypes.JsonViewModel;
+                        break;
+                    default:
+                        retVal.Accept = RestOperationContext.Current.IncomingRequest.AcceptTypes.FirstOrDefault() ?? RestOperationContext.Current.IncomingRequest.ContentType;
+                        break;
+                }
+                //}
 
-            retVal.Requesting += (o, e) =>
-            {
-                var inboundHeaders = RestOperationContext.Current?.IncomingRequest.Headers;
-                if (!String.IsNullOrEmpty(inboundHeaders[ExtendedHttpHeaderNames.ViewModelHeaderName]))
+                retVal.Requesting += (o, e) =>
                 {
-                    e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ViewModelHeaderName, inboundHeaders[ExtendedHttpHeaderNames.ViewModelHeaderName]);
-                }
-                else if (!String.IsNullOrEmpty(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName]))
-                {
-                    e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ViewModelHeaderName, RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName]);
-                }
-            };
+                    var inboundHeaders = RestOperationContext.Current?.IncomingRequest.Headers;
+                    if (!String.IsNullOrEmpty(inboundHeaders[ExtendedHttpHeaderNames.ViewModelHeaderName]))
+                    {
+                        e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ViewModelHeaderName, inboundHeaders[ExtendedHttpHeaderNames.ViewModelHeaderName]);
+                    }
+                    else if (!String.IsNullOrEmpty(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName]))
+                    {
+                        e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ViewModelHeaderName, RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName]);
+                    }
+                };
+            }
             return retVal;
         }
 

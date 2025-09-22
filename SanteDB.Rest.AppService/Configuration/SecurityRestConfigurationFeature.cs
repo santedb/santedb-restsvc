@@ -94,7 +94,7 @@ namespace SanteDB.Rest.AppService.Configuration
             {
                 { AUDIT_RETENTION_SETTING, this.m_configurationSection.GetSecurityPolicy(SecurityPolicyIdentification.AuditRetentionTime, new TimeSpan(30, 0, 0, 0)) },
                 { ALLOW_OFFLINE_LOGIN_SETTING, this.m_configurationSection.GetSecurityPolicy(SecurityPolicyIdentification.AllowCachingOfUserCredentials, true) },
-                { RESTRICT_LOGIN_POLICY_SETTING, this.m_configurationSection.GetSecurityPolicy(SecurityPolicyIdentification.AllowNonAssignedUsersToLogin, false) },
+                { RESTRICT_LOGIN_POLICY_SETTING, !this.m_configurationSection.GetSecurityPolicy(SecurityPolicyIdentification.AllowNonAssignedUsersToLogin, true) },
                 { ASSIGNED_FACILITY_SETTING, this.m_configurationSection.GetSecurityPolicy<Guid?>(SecurityPolicyIdentification.AssignedFacilityUuid, null) },
                 { ASSIGNED_OWNER_SETTING, this.m_configurationSection.GetSecurityPolicy<Guid?>(SecurityPolicyIdentification.AssignedOwnerUuid, null) },
                 { SECURITY_SIGN_KEYS_SETTING, this.m_configurationSection?.Signatures?.Select(o=> new Dictionary<String, Object>()
@@ -185,7 +185,7 @@ namespace SanteDB.Rest.AppService.Configuration
             }
             if (featureConfiguration.TryGetValue(RESTRICT_LOGIN_POLICY_SETTING, out var restrictLoginSettingRaw) && Boolean.TryParse(restrictLoginSettingRaw.ToString(), out var restrictLoginSetting))
             {
-                section.SetPolicy(SecurityPolicyIdentification.AllowNonAssignedUsersToLogin, restrictLoginSetting);
+                section.SetPolicy(SecurityPolicyIdentification.AllowNonAssignedUsersToLogin, !restrictLoginSetting);
             }
 
             // security signing keys

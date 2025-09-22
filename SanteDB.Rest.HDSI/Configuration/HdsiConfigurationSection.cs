@@ -66,5 +66,12 @@ namespace SanteDB.Rest.HDSI.Configuration
         [XmlAttribute("autoforwardToUpstream")]
         [DisplayName("Auto-Forward Requests"), Description("When true, automatically forwards all requests to the upstream")]
         public bool AutomaticallyForwardRequests { get; set; }
+
+        /// <summary>
+        /// PReserve contnet type
+        /// </summary>
+        [XmlAttribute("preserveContentType")]
+        [DisplayName("Preserve Content/Type"), Description("When true, all requests going to the upstream will use the original mime type")]
+        public bool PreserveContentType { get; set; }
     }
 }
