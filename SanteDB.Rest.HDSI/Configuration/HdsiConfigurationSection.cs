@@ -39,7 +39,7 @@ namespace SanteDB.Rest.HDSI.Configuration
         /// </summary>
         public HdsiConfigurationSection()
         {
-
+            this.ResourceHandlers = new List<TypeReferenceConfiguration>();
         }
 
         /// <summary>

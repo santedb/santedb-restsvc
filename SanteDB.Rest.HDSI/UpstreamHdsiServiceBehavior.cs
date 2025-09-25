@@ -331,19 +331,19 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         var restClient = this.CreateProxyClient();
 
                         IdentifiedData cache = null;
-                        //if (Guid.TryParse(id, out var idGuid))
-                        //{
-                        //    cache = this.m_dataCachingService.GetCacheItem(idGuid);
-                        //    if (cache != null && cache.Type == resourceType)
-                        //    {
-                        //        // Only do a head if the ad-hoc cache for excessive HEAD checks is null
-                        //        if (this.m_adhocCache?.TryGet<DateTime>(cache.Tag, out var lastTimeChecked) == true)
-                        //        {
-                        //            return cache; // we just got this in the cache
-                        //        }
-                        //        restClient.Requesting += (o, e) => e.AdditionalHeaders.Add(HttpRequestHeader.IfNoneMatch, cache.Tag);
-                        //    }
-                        //}
+                        if (Guid.TryParse(id, out var idGuid))
+                        {
+                            cache = this.m_dataCachingService.GetCacheItem(idGuid);
+                            if (cache != null && cache.Type == resourceType)
+                            {
+                                // Only do a head if the ad-hoc cache for excessive HEAD checks is null
+                                if (this.m_adhocCache?.TryGet<DateTime>(cache.Tag, out var lastTimeChecked) == true)
+                                {
+                                    return cache; // we just got this in the cache
+                                }
+                                restClient.Requesting += (o, e) => e.AdditionalHeaders.Add(HttpRequestHeader.IfNoneMatch, cache.Tag);
+                            }
+                        }
 
                         restClient.Responded += this.CopyResponseHeaders;
                         //restClient.Accept = String.Join(",", RestOperationContext.Current.IncomingRequest.AcceptTypes);
