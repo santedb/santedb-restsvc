@@ -329,6 +329,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     try
                     {
                         var restClient = this.CreateProxyClient();
+                        var viewModel = this.GetViewModelFromRequest();
 
                         IdentifiedData cache = null;
                         if (Guid.TryParse(id, out var idGuid))
@@ -337,11 +338,14 @@ namespace SanteDB.Messaging.HDSI.Wcf
                             if (cache != null && cache.Type == resourceType)
                             {
                                 // Only do a head if the ad-hoc cache for excessive HEAD checks is null
-                                if (this.m_adhocCache?.TryGet<DateTime>(cache.Tag, out var lastTimeChecked) == true)
+                                if (this.m_adhocCache?.TryGet<DateTime>($"{cache.Tag}#{viewModel}", out var lastTimeChecked) == true)
                                 {
                                     return cache; // we just got this in the cache
                                 }
-                                restClient.Requesting += (o, e) => e.AdditionalHeaders.Add(HttpRequestHeader.IfNoneMatch, cache.Tag);
+                                if ("full".Equals(viewModel))
+                                {
+                                    restClient.Requesting += (o, e) => e.AdditionalHeaders.Add(HttpRequestHeader.IfNoneMatch, cache.Tag);
+                                }
                             }
                         }
 
@@ -355,7 +359,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         }
                         else
                         {
-                            this.m_adhocCache?.Add(retVal.Tag, DateTime.Now, new TimeSpan(0, 1, 00));
+                            this.m_adhocCache?.Add($"{retVal.Tag}#{viewModel}", DateTime.Now, new TimeSpan(0, 1, 00));
                             this.m_dataCachingService.Add(retVal);
                             this.TagUpstream(retVal);
                             return retVal;
@@ -427,18 +431,29 @@ namespace SanteDB.Messaging.HDSI.Wcf
 
                 retVal.Requesting += (o, e) =>
                 {
-                    var inboundHeaders = RestOperationContext.Current?.IncomingRequest.Headers;
-                    if (!String.IsNullOrEmpty(inboundHeaders[ExtendedHttpHeaderNames.ViewModelHeaderName]))
-                    {
-                        e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ViewModelHeaderName, inboundHeaders[ExtendedHttpHeaderNames.ViewModelHeaderName]);
-                    }
-                    else if (!String.IsNullOrEmpty(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName]))
-                    {
-                        e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ViewModelHeaderName, RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName]);
-                    }
+                    e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ViewModelHeaderName, this.GetViewModelFromRequest());
                 };
             }
             return retVal;
+        }
+
+        /// <summary>
+        /// Get the desired view model definition from the request
+        /// </summary>
+        private string GetViewModelFromRequest()
+        {
+            if (!String.IsNullOrEmpty(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.ViewModelHeaderName]))
+            {
+                return RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.ViewModelHeaderName];
+            }
+            else if (!String.IsNullOrEmpty(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName]))
+            {
+                return RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName];
+            }
+            else
+            {
+                return null;
+            }
         }
 
         /// <inheritdoc/>

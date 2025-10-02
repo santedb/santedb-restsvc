@@ -19,6 +19,7 @@
  * Date: 2023-6-21
  */
 using SanteDB.Core.Interop;
+using SanteDB.Core.Model;
 using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Parameters;
@@ -103,10 +104,15 @@ namespace SanteDB.Rest.HDSI.Operation
             }
 
             // Is there a filter?
-            var filter = parameters.Parameters.ToDictionaryIgnoringDuplicates(o => o.Name, o => o.Value).ToNameValueCollection();
-            var linq = QueryExpressionParser.BuildLinqExpression<Concept>(filter);
-            var outputResults = results.Where(linq).ApplyResultInstructions(filter, out var offset, out var count).OfType<Concept>();
-            return new Bundle(outputResults, offset, count);
+            var filter = parameters.Parameters?.ToDictionaryIgnoringDuplicates(o => o.Name, o => o.Value).ToNameValueCollection();
+            IEnumerable<IdentifiedData> outputResults = results;
+            if (filter != null)
+            {
+                var linq = QueryExpressionParser.BuildLinqExpression<Concept>(filter);
+                outputResults = results.Where(linq).ApplyResultInstructions(filter, out var offset, out var count).OfType<Concept>();
+               return new Bundle(outputResults, offset, count);
+            }
+            return new Bundle(outputResults, 0, results.Count());
         }
 
         /// <inheritdoc/>
