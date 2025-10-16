@@ -78,7 +78,7 @@ namespace SanteDB.Rest.AMI.Operation
             }
             else
             {
-                throw new ArgumentNullException("mechanism and userName required");
+                throw new ArgumentNullException("mechanism required");
             }
         }
     }
