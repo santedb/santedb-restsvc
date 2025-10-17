@@ -72,9 +72,10 @@ namespace SanteDB.Rest.HDSI.Vrp
                 {
                     Width = 600,
                     Height = 100,
-                    PureBarcode = false,
+                    PureBarcode = true,
                     NoPadding = true,
-                    
+                    GS1Format = true,
+                    Margin = 0
                 }
             };
             
