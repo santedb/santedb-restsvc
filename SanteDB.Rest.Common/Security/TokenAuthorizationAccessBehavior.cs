@@ -110,6 +110,7 @@ namespace SanteDB.Rest.Common.Security
                 String authorization = httpMessage.Headers["Authorization"];
                 if (authorization == null)
                 {
+                    AuthenticationContext.Current?.Abandon();
                     this.m_traceSource.TraceVerbose("Request {0} has no authorization header - skipping", httpMessage.Url);
                     return;
                 }
