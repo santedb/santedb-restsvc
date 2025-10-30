@@ -106,8 +106,11 @@ namespace SanteDB.Rest.Common.Behavior
 
                         RestOperationContext.Current.Data.Add(RestDataItem_Session, session);
 
-                        var authContext = AuthenticationContext.EnterContext(m_sessionIdentityProvider.Authenticate(session));
-                        RestOperationContext.Current.Disposed += (o, e) => authContext.Dispose();
+                        AuthenticationContext.EnterContext(m_sessionIdentityProvider.Authenticate(session));
+                        RestOperationContext.Current.Disposed += (o, e) =>
+                        {
+                            AuthenticationContext.Current.Abandon();
+                        };
                     }
                 }
             }

@@ -23,6 +23,7 @@ using RestSrvr.Message;
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
+using SanteDB.Core.Matching;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Audit;
 using SanteDB.Core.Security.Services;
@@ -109,6 +110,7 @@ namespace SanteDB.Rest.Common.Security
                 String authorization = httpMessage.Headers["Authorization"];
                 if (authorization == null)
                 {
+                    this.m_traceSource.TraceVerbose("Request {0} has no authorization header - skipping", httpMessage.Url);
                     return;
                 }
 
@@ -118,7 +120,11 @@ namespace SanteDB.Rest.Common.Security
                 {
                     case "bearer":
                         var contextToken = this.CheckBearerAccess(auth[1]);
-                        RestOperationContext.Current.Disposed += (o, e) => contextToken.Dispose();
+                        RestOperationContext.Current.Disposed += (o, e) =>
+                        {
+                            contextToken.Dispose();
+                            AuthenticationContext.Current.Abandon();
+                        };
                         break;
 
                     default:

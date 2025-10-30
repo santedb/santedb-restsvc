@@ -215,8 +215,11 @@ namespace SanteDB.Rest.Common.Security
                                 }
                                 else
                                 {
-                                    var ac = AuthenticationContext.EnterContext(authenticationPrincipal);
-                                    RestOperationContext.Current.Disposed += (o, e) => ac.Dispose();
+                                    AuthenticationContext.EnterContext(authenticationPrincipal);
+                                    RestOperationContext.Current.Disposed += (o, e) =>
+                                    {
+                                        AuthenticationContext.Current.Abandon();
+                                    };
                                 }
                                 return;
                             }
