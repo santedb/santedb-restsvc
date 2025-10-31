@@ -110,7 +110,8 @@ namespace SanteDB.Rest.Common.Security
                 String authorization = httpMessage.Headers["Authorization"];
                 if (authorization == null)
                 {
-                    if (!RestOperationContext.Current.AppliedPolicies.OfType<IAuthorizationServicePolicy>().Any())
+                    if (!RestOperationContext.Current.AppliedPolicies.OfType<IAuthorizationServicePolicy>().Any() &&
+                        !AuthenticationContext.Current.Principal.Equals(AuthenticationContext.AnonymousPrincipal))
                     {
                         AuthenticationContext.Current?.Abandon();
                     }
