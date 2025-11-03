@@ -119,6 +119,7 @@ namespace SanteDB.Rest.Common
                             return HttpStatusCode.NotModified;
                         case "put":
                         case "patch":
+                        case "post":
                             return HttpStatusCode.Conflict;
                         default:
                             return HttpStatusCode.PreconditionFailed;
