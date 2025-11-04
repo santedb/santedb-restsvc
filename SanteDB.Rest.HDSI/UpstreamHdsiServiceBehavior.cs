@@ -171,6 +171,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                             throw new KeyNotFoundException();
                         }
                     }
+                    catch (WebException e) when (e is IRestException)
+                    {
+                        throw;
+                    }
                     catch (Exception e)
                     {
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
@@ -209,6 +213,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                             irc.Item.ForEach(o => this.m_dataCachingService.Remove(o.Key.GetValueOrDefault()));
                         }
                         return retVal;
+                    }
+                    catch (WebException e) when (e is IRestException)
+                    {
+                        throw;
                     }
                     catch (Exception e)
                     {
@@ -253,6 +261,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                             irc.Item.ForEach(o => this.m_dataCachingService.Remove(o.Key.GetValueOrDefault()));
                         }
                         return retVal;
+                    }
+                    catch (WebException e) when (e is IRestException)
+                    {
+                        throw;
                     }
                     catch (Exception e)
                     {
@@ -299,6 +311,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                             irc.Item.ForEach(o => this.m_dataCachingService.Remove(o.Key.GetValueOrDefault()));
                         }
                         return retVal;
+                    }
+                    catch (WebException e) when (e is IRestException)
+                    {
+                        throw;
                     }
                     catch (Exception e)
                     {
@@ -364,6 +380,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                             this.TagUpstream(retVal);
                             return retVal;
                         }
+                    }
+                    catch (WebException e) when (e is IRestException)
+                    {
+                        throw;
                     }
                     catch (Exception e)
                     {
@@ -432,6 +452,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                 retVal.Requesting += (o, e) =>
                 {
                     e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ViewModelHeaderName, this.GetViewModelFromRequest());
+                    e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ThrowOnPrivacyViolation, this.GetPrivacyViolationFromRequest());
                 };
             }
             return retVal;
@@ -449,6 +470,21 @@ namespace SanteDB.Messaging.HDSI.Wcf
             else if (!String.IsNullOrEmpty(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName]))
             {
                 return RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpViewModelParameterName];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+         /// <summary>
+        /// Get the desired view model definition from the request
+        /// </summary>
+        private string GetPrivacyViolationFromRequest()
+        {
+            if (!String.IsNullOrEmpty(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.ThrowOnPrivacyViolation]))
+            {
+                return RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.ThrowOnPrivacyViolation];
             }
             else
             {
@@ -533,6 +569,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     this.m_dataCachingService.Clear();
                     return remote;
                 }
+                catch(WebException e) when (e is IRestException)
+                {
+                    throw;
+                }
                 catch (Exception e)
                 {
                     this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
@@ -559,6 +599,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         var restClient = this.CreateProxyClient();
                         restClient.Responded += this.CopyResponseHeaders;
                         return restClient.Get<IdentifiedData>($"{resourceType}/{id}/_history/{versionId}");
+                    }
+                    catch (WebException e) when (e is IRestException)
+                    {
+                        throw;
                     }
                     catch (Exception e)
                     {
@@ -592,6 +636,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         restClient.Responded += this.CopyResponseHeaders;
                         return restClient.Get<IdentifiedData>($"{resourceType}/{id}/_history");
                     }
+                    catch (WebException e) when (e is IRestException)
+                    {
+                        throw;
+                    }
                     catch (Exception e)
                     {
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
@@ -622,6 +670,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     {
                         var restClient = this.CreateProxyClient();
                         return restClient.Options<ServiceOptions>("/");
+                    }
+                    catch (WebException e) when (e is IRestException)
+                    {
+                        throw;
                     }
                     catch (Exception e)
                     {
@@ -656,6 +708,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         RestOperationContext.Current.OutgoingResponse.SetETag(patchId);
 
                         body.Patches.ForEach(p => this.m_dataCachingService.Remove(p.AppliesTo.Key.Value));
+                    }
+                    catch (WebException e) when (e is IRestException)
+                    {
+                        throw;
                     }
                     catch (Exception e)
                     {
@@ -693,6 +749,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         {
                             this.m_dataCachingService.Remove(uuid);
                         }
+                    }
+                    catch (WebException e) when (e is IRestException)
+                    {
+                        throw;
                     }
                     catch (Exception e)
                     {
@@ -735,6 +795,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         var restClient = this.CreateProxyClient();
                         return restClient.Options<ServiceResourceOptions>($"/{resourceType}");
                     }
+                    catch (WebException e) when (e is IRestException)
+                    {
+                        throw;
+                    }
                     catch (Exception e)
                     {
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
@@ -772,6 +836,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         this.TagUpstream(retVal);
 
                         return retVal;
+                    }
+                    catch (WebException e) when (e is IRestException)
+                    {
+                        throw;
                     }
                     catch (Exception e)
                     {
@@ -811,6 +879,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
 
                         return restClient.Put<IdentifiedData, IdentifiedData>($"/{resourceType}/{id}", body);
                     }
+                    catch (WebException e) when (e is IRestException)
+                    {
+                        throw;
+                    }
                     catch (Exception e)
                     {
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
@@ -847,6 +919,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         this.TagUpstream(retVal);
 
                         return retVal;
+                    }
+                    catch (WebException e) when (e is IRestException)
+                    {
+                        throw;
                     }
                     catch (Exception e)
                     {
@@ -891,6 +967,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
 
                         return restClient.Delete<object>($"{resourceType}/{key}/{childResourceType}/{scopedEntityKey}");
                     }
+                    catch (WebException e) when (e is IRestException)
+                    {
+                        throw;
+                    }
                     catch (Exception e)
                     {
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
@@ -923,6 +1003,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         var retVal = restClient.Get<IdentifiedData>($"{resourceType}/{key}/{childResourceType}/{scopedEntityKey}", RestOperationContext.Current.IncomingRequest.QueryString);
                         this.TagUpstream(retVal);
                         return retVal;
+                    }
+                    catch (WebException e) when (e is IRestException)
+                    {
+                        throw;
                     }
                     catch (Exception e)
                     {
@@ -965,6 +1049,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
 
                         return restClient.Post<object, object>($"{resourceType}/{key}/{childResourceType}", body);
                     }
+                    catch (WebException e) when (e is IRestException)
+                    {
+                        throw;
+                    }
                     catch (Exception e)
                     {
                         this.m_traceSource.TraceError("Error performing online operation: {0}", e.InnerException);
@@ -1000,6 +1088,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                             retVal = new MemoryStream(ba);
                         }
                         return retVal;
+                    }
+                    catch (WebException e) when (e is IRestException)
+                    {
+                        throw;
                     }
                     catch (Exception e)
                     {
@@ -1039,6 +1131,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         {
                             return new MemoryStream(restClient.Get($"{resourceType}/{id}/_export", RestOperationContext.Current.IncomingRequest.QueryString));
                         }
+                    }
+                    catch (WebException e) when (e is IRestException)
+                    {
+                        throw;
                     }
                     catch (Exception e)
                     {
@@ -1081,6 +1177,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         }
 
                         return restClient.Post<object, object>($"{resourceType}/{id}/${operationName}", body);
+                    }
+                    catch (WebException e) when (e is IRestException)
+                    {
+                        throw;
                     }
                     catch (Exception e)
                     {

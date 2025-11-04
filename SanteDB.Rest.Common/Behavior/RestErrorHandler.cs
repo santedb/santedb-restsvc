@@ -18,6 +18,8 @@
  * User: fyfej
  * Date: 2023-6-21
  */
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestSrvr;
 using RestSrvr.Exceptions;
 using RestSrvr.Message;
@@ -29,6 +31,7 @@ using SanteDB.Core.Security.Audit;
 using SanteDB.Rest.Common.Fault;
 using SanteDB.Rest.Common.Serialization;
 using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 
@@ -75,9 +78,16 @@ namespace SanteDB.Rest.Common.Behavior
             {
                 fault = rcf;
             }
-            else if(error is RestClientException<Object> rce && rce.Result is RestServiceFault rcef)
+            else if(rootCause is RestClientException<Object> rce && rce.Result is JToken jtt)
             {
-                fault = rcef;
+                using (var sr = new StringReader(jtt.ToString()))
+                {
+                    using (var jr = new JsonTextReader(sr))
+                    {
+                        fault = new JsonSerializer().Deserialize<RestServiceFault>(jr);
+                        rootCause = new RestClientException<RestServiceFault>(fault, rootCause, rce.Status, rce.Response);
+                    }
+                }
             }
             else
             {
@@ -120,7 +130,6 @@ namespace SanteDB.Rest.Common.Behavior
 
             if (RestOperationContext.Current.ServiceEndpoint != null)
             {
-
                 RestMessageDispatchFormatter.CreateFormatter(RestOperationContext.Current.ServiceEndpoint.Description.Contract.Type).SerializeResponse(faultMessage, null, fault);
             }
             else

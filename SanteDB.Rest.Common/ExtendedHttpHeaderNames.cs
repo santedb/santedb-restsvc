@@ -82,6 +82,11 @@ namespace SanteDB.Rest.Common
         /// Does not echo back the updated, inserted or deleted object
         /// </summary>
         public const string NoResponse = "X-SanteDB-NoEcho";
+
+        /// <summary>
+        /// Emit a privacy error whenever the data is masked or otherwise restricted
+        /// </summary>
+        public const string ThrowOnPrivacyViolation = "X-SanteDB-EmitPrivacyError";
         
     }
 }

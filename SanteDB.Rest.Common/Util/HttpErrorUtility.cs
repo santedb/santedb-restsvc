@@ -18,6 +18,8 @@
  * User: fyfej
  * Date: 2023-6-21
  */
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestSrvr;
 using RestSrvr.Exceptions;
 using RestSrvr.Message;
@@ -45,6 +47,19 @@ namespace SanteDB.Rest.Common
 
 
         /// <summary>
+        /// Get fault data
+        /// </summary>
+        public static RestServiceFault GetFaultData(this RestServiceFault rsf, String nameOfType)
+        {
+            var seek = rsf;
+            while(seek != null && seek.Type != nameOfType)
+            {
+                seek = seek.CausedBy;
+            }
+            return seek;
+        }
+
+        /// <summary>
         /// Add a WWW authenticate behavior
         /// </summary>
         public static void AddWwwAuthenticateHeader(this IAuthorizationServicePolicy me, string challengeMode, Exception error, RestResponseMessage faultMessage)
@@ -55,24 +70,19 @@ namespace SanteDB.Rest.Common
                 case PolicyViolationException pve:
                     faultMessage.AddAuthenticateHeader(challengeMode, RestOperationContext.Current.IncomingRequest.Url.Host, "insufficient_scope", pve.PolicyId, pve.Message);
                     break;
-                case RestClientException<Object> rco: // came from an upstream
-                    var pvd = rco.Result as RestServiceFault;
-                    while (pvd != null)
+                case RestClientException<RestServiceFault> rco: // came from an upstream
+                    var pvd = rco.Result.GetFaultData(nameof(PolicyViolationException));
+                    if(pvd != null)
                     {
-                        if (pvd.Type == nameof(PolicyViolationException))
-                        {
-                            faultMessage.AddAuthenticateHeader(challengeMode, RestOperationContext.Current.IncomingRequest.Url.Host, "insufficient_scope", pvd.PolicyId, pvd.Message);
-                            return;
-                        }
-                        pvd = pvd.CausedBy;
+                        faultMessage.AddAuthenticateHeader(challengeMode, RestOperationContext.Current.IncomingRequest.Url.Host, "insufficient_scope", pvd.PolicyId, pvd.Message);
+                        return;
                     }
-
                     // Did the server send anything of note?
                     var upstreamAuthHeader = rco.Response.Headers[System.Net.HttpResponseHeader.WwwAuthenticate];
                     if (!String.IsNullOrEmpty(upstreamAuthHeader))
                     {
                         var tokens = upstreamAuthHeader.Split(' ').Skip(1).Where(t => !t.StartsWith("realm")).ToArray();
-                        faultMessage.Headers.Add("WWW-Authenticate", $"{challengeMode} realm=\"{RestOperationContext.Current.IncomingRequest.Url.Host}\" {String.Join(" ", tokens)}");
+                        faultMessage.AddAuthenticateHeader(challengeMode, RestOperationContext.Current.IncomingRequest.Url.Host);
                     }
                     else
                     {
