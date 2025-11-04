@@ -21,6 +21,7 @@
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
@@ -37,7 +38,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        public PersonResourceHandler(ILocalizationService localizationService, IRepositoryService<Person> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
+        public PersonResourceHandler(ILocalizationService localizationService, IRepositoryService<Person> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null, IPrivacyEnforcementService privacyEnforcement = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService, privacyEnforcement)
         {
         }
 

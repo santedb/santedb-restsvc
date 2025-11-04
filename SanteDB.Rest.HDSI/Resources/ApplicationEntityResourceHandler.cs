@@ -19,6 +19,7 @@
  * Date: 2023-6-21
  */
 using SanteDB.Core.Model.Entities;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 
 namespace SanteDB.Rest.HDSI.Resources
@@ -32,7 +33,7 @@ namespace SanteDB.Rest.HDSI.Resources
         /// <summary>
         /// DI constructor
         /// </summary>
-        public ApplicationEntityResourceHandler(ILocalizationService localizationService, IRepositoryService<ApplicationEntity> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
+        public ApplicationEntityResourceHandler(ILocalizationService localizationService, IRepositoryService<ApplicationEntity> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null, IPrivacyEnforcementService privacyEnforcement = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService, privacyEnforcement)
         {
         }
     }

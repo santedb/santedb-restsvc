@@ -42,6 +42,8 @@ using SanteDB.Core.Model.Query;
 using SanteDB.Core.Model.Serialization;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Audit;
+using SanteDB.Core.Security.Configuration;
+using SanteDB.Core.Security.Privacy;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
@@ -423,6 +425,18 @@ namespace SanteDB.Rest.HDSI
                     if (!RestOperationContext.Current.IncomingRequest.HttpMethod.Equals("head", StringComparison.OrdinalIgnoreCase))
                     {
                         audit = audit.WithObjects(Core.Model.Audit.AuditableObjectLifecycle.Disclosure, retVal);
+                    }
+
+                    // Did the client ask us to throw on a privacy violation
+                    if(retVal.GetAnnotations<PrivacyMaskingAnnotation>().Any(r => r.ActionTaken != Core.Security.Configuration.ResourceDataPolicyActionType.None) &&
+                        Enum.TryParse<ResourceDataPolicyActionType>(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.ThrowOnPrivacyViolation], out var actionsForThrow))
+                    {
+                        foreach (var itm in retVal.GetAnnotations<PrivacyMaskingAnnotation>()) {
+                            if (actionsForThrow.HasFlag(itm.ActionTaken))
+                            {
+                                throw new PolicyViolationException(AuthenticationContext.Current.Principal, itm.MaskingReason);
+                            }
+                        }
                     }
 
                     if ((Boolean.TryParse(RestOperationContext.Current.IncomingRequest.QueryString[QueryControlParameterNames.HttpBundleRelatedParameterName], out var bundle)

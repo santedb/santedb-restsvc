@@ -20,6 +20,8 @@
  */
 using SanteDB.Core.Model.Entities;
 using SanteDB.Core.Model.Query;
+using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,11 +35,14 @@ namespace SanteDB.Rest.HDSI.Resources
     public class EntityResourceHandlerBase<TData> : HdsiResourceHandlerBase<TData>
         where TData : Entity, new()
     {
+        private readonly IPrivacyEnforcementService m_privacyEnforcement;
+
         /// <summary>
         /// DI constructor
         /// </summary>
-        public EntityResourceHandlerBase(ILocalizationService localizationService, IRepositoryService<TData> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
+        public EntityResourceHandlerBase(ILocalizationService localizationService, IRepositoryService<TData> repositoryService, IResourceCheckoutService resourceCheckoutService, ISubscriptionExecutor subscriptionExecutor = null, IFreetextSearchService freetextSearchService = null, IPrivacyEnforcementService privacyEnforcement = null) : base(localizationService, repositoryService, resourceCheckoutService, subscriptionExecutor, freetextSearchService)
         {
+            this.m_privacyEnforcement = privacyEnforcement;
         }
 
         /// <summary>
@@ -45,7 +50,9 @@ namespace SanteDB.Rest.HDSI.Resources
         /// </summary>
         protected override IQueryResultSet HandleFreeTextSearch(IEnumerable<string> terms)
         {
-            return this.m_freetextSearch.SearchEntity<TData>(terms.ToArray());
+            var resultSet = this.m_freetextSearch.SearchEntity<TData>(terms.ToArray());
+            return this.m_privacyEnforcement?.Apply(resultSet, AuthenticationContext.Current.Principal) ?? resultSet;
         }
+
     }
 }

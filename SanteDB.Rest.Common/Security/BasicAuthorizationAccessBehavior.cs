@@ -143,7 +143,7 @@ namespace SanteDB.Rest.Common.Security
                     }
                 }
 
-                context = AuthenticationContext.EnterContext(principal);
+                AuthenticationContext.EnterContext(principal);
             }
             catch (Exception e)
             {
@@ -152,7 +152,7 @@ namespace SanteDB.Rest.Common.Security
             finally
             {
                 // Disposed context so reset the auth
-                RestOperationContext.Current.Disposed += (o, e) => context?.Dispose();
+                RestOperationContext.Current.Disposed += (o, e) => AuthenticationContext.Current.Abandon();
             }
         }
 

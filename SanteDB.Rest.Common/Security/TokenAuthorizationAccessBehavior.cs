@@ -23,8 +23,10 @@ using RestSrvr.Message;
 using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Exceptions;
+using SanteDB.Core.Matching;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Audit;
+using SanteDB.Core.Security.Claims;
 using SanteDB.Core.Security.Services;
 using System;
 using System.Collections.Generic;
@@ -88,7 +90,23 @@ namespace SanteDB.Rest.Common.Security
                 throw new SecuritySessionException(SessionExceptionType.Other, "Invalid bearer token", null);
             }
 
-            RestOperationContext.Current.Data.Add(RestPropertyNameSession, session);
+            if (RestOperationContext.Current.Data.TryGetValue(RestPropertyNameSession, out var otherSession))
+            {
+                // there is a session - this can occur when a cookie session and a token session exist
+                if(session.Claims.Any(o=>o.Type == SanteDBClaimTypes.SanteDBOverrideClaim && Boolean.TryParse(o.Value, out var ovr) && ovr))
+                {
+                    this.m_traceSource.TraceWarning("Overwriting existing session with temporary session");
+                    RestOperationContext.Current.Data[RestPropertyNameSession] = session;
+                }
+                else
+                {
+                    this.m_traceSource.TraceWarning("Cookie session overrides the token session");
+                }
+            }
+            else
+            {
+                RestOperationContext.Current.Data.Add(RestPropertyNameSession, session);
+            }
 
             this.m_traceSource.TraceVerbose("User {0} authenticated via SESSION BEARER", principal.Identity.Name);
             return AuthenticationContext.EnterContext(principal);
@@ -109,6 +127,12 @@ namespace SanteDB.Rest.Common.Security
                 String authorization = httpMessage.Headers["Authorization"];
                 if (authorization == null)
                 {
+                    if (!RestOperationContext.Current.AppliedPolicies.OfType<IAuthorizationServicePolicy>().Any() &&
+                        !AuthenticationContext.Current.Principal.Equals(AuthenticationContext.AnonymousPrincipal))
+                    {
+                        AuthenticationContext.Current?.Abandon();
+                    }
+                    this.m_traceSource.TraceVerbose("Request {0} has no authorization header - skipping", httpMessage.Url);
                     return;
                 }
 
@@ -118,7 +142,11 @@ namespace SanteDB.Rest.Common.Security
                 {
                     case "bearer":
                         var contextToken = this.CheckBearerAccess(auth[1]);
-                        RestOperationContext.Current.Disposed += (o, e) => contextToken.Dispose();
+                        RestOperationContext.Current.Disposed += (o, e) =>
+                        {
+                            contextToken.Dispose();
+                            AuthenticationContext.Current.Abandon();
+                        };
                         break;
 
                     default:

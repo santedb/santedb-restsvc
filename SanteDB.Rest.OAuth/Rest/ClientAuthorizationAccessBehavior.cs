@@ -128,8 +128,11 @@ namespace SanteDB.Rest.OAuth.Rest
             // If the current principal is set-up then add the identity if not then don't
             if (AuthenticationContext.Current.Principal == AuthenticationContext.AnonymousPrincipal)
             {
-                var contextToken = AuthenticationContext.EnterContext(principal);
-                RestOperationContext.Current.Disposed += (o, e) => contextToken.Dispose();
+                AuthenticationContext.EnterContext(principal);
+                RestOperationContext.Current.Disposed += (o, e) =>
+                {
+                    AuthenticationContext.Current.Abandon();
+                };
             }
             else
             {
