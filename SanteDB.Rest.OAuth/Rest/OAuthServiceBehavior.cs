@@ -1786,9 +1786,9 @@ namespace SanteDB.Rest.OAuth.Rest
             //    return null;
             //}
 
-            var cont = OnBeforeSignOut(context);
+            var @continue = OnBeforeSignOut(context);
 
-            if (!cont)
+            if (!@continue)
             {
                 return null;
             }
@@ -1825,7 +1825,6 @@ namespace SanteDB.Rest.OAuth.Rest
                     if (null != sessionobj)
                     {
                         ISession session = null;
-
                         if (Guid.TryParse(sessionobj, out var sessionidguid))
                         {
                             session = m_SessionProvider.Get(sessionidguid.ToByteArray(), allowExpired: false);
@@ -1841,16 +1840,18 @@ namespace SanteDB.Rest.OAuth.Rest
 
                             _AuditService.Audit().ForSessionStop(session, principal, true).Send();
                             m_SessionProvider.Abandon(session);
-                            OnAfterSignOut(context);
-                            return null;
+                            context.AbandonedSessions.Add(session);
                         }
-
-                        return CreateErrorResponse(OAuthErrorType.invalid_request, "invalid session");
+                        else
+                        {
+                            return CreateErrorResponse(OAuthErrorType.invalid_request, "invalid session");
+                        }
                     }
                 }
-
-
-                return CreateErrorResponse(OAuthErrorType.invalid_request, "invalid token");
+                else
+                {
+                    return CreateErrorResponse(OAuthErrorType.invalid_request, "invalid token");
+                }
             }
             else
             {

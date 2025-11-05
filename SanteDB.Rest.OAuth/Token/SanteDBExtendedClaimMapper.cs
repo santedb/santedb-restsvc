@@ -18,12 +18,14 @@
  * User: fyfej
  * Date: 2023-6-21
  */
+using SanteDB.Core.i18n;
 using SanteDB.Core.Security.Claims;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.Json;
 
 namespace SanteDB.Rest.OAuth.Token
 {
@@ -42,6 +44,8 @@ namespace SanteDB.Rest.OAuth.Token
         public const string DeviceSubjectJwtClaim = "devid";
         public const string DeviceNameJwtClaim = "devname";
         public const string UserSubjectJwtClaim = "usrid";
+        public const string OverrideJwtClaim = "isOverride";
+
 #pragma warning restore CS1591
 
         /// <summary>
@@ -50,6 +54,7 @@ namespace SanteDB.Rest.OAuth.Token
         private Dictionary<string, string> m_claimTypeMapping = new Dictionary<string, string>()
         {
             { SanteDBClaimTypes.TemporarySession, TemporarySessionJwtClaim },
+            { SanteDBClaimTypes.SanteDBOverrideClaim, OverrideJwtClaim },
             { SanteDBClaimTypes.Language, LanguageJwtClaim },
             { SanteDBClaimTypes.ForceResetPassword, MustChangePasswordJwtClaim },
             { SanteDBClaimTypes.AuthenticationCertificateSubject, X509CertificateSubjectJwtClaim },
@@ -80,58 +85,86 @@ namespace SanteDB.Rest.OAuth.Token
         /// <inheritdoc/>
         public IDictionary<string, object> MapToExternalIdentityClaims(IEnumerable<IClaim> internalClaims)
         {
-            var retVal = new Dictionary<String, Object>();
-            foreach (var itm in internalClaims)
+            var santedbClaims = new Dictionary<String, Object>();
+            foreach (var claim in internalClaims)
             {
-                if (this.m_claimTypeMapping.TryGetValue(itm.Type, out var jwtType))
+                if (this.m_claimTypeMapping.TryGetValue(claim.Type, out var jwtType))
                 {
-                    retVal.AddClaim(jwtType, itm.Value);
+                    santedbClaims.AddClaim(jwtType, claim.Value);
                 }
             }
+
             return new Dictionary<String, Object>()
             {
-                { "extensions", new Dictionary<String, Object>()
-                {
-                    {"santedb", retVal }
-                } }
+                {  "extensions", new Dictionary<String, Object>() { { "santedb", santedbClaims }  }
+                }
             };
         }
 
         /// <inheritdoc/>
         public IEnumerable<IClaim> MapToInternalIdentityClaims(IDictionary<string, object> externalClaims)
         {
-            if (externalClaims.TryGetValue("extensions", out var extValue) && extValue is ICustomTypeDescriptor extensionClaims)
+            if (externalClaims.TryGetValue("extensions", out var extValue) && extValue is JsonElement extensionElement)
             {
-                var santeDbProperty = extensionClaims.GetProperties().Find("santedb", true);
-                var santeDbPropertyValue = santeDbProperty?.GetValue(extValue);
-                if (santeDbPropertyValue is ICustomTypeDescriptor santeDbClaims)
+                var iheProperty = extensionElement.EnumerateObject().FirstOrDefault(o => o.Name == "santedb");
+                if (iheProperty.Value.ValueKind == JsonValueKind.Object)
                 {
-                    foreach (object claimPropertyObject in santeDbClaims.GetProperties())
+                    foreach (var claimPropertyObject in iheProperty.Value.EnumerateObject().OfType<JsonProperty>())
                     {
-                        if (claimPropertyObject is PropertyDescriptor claimProperty)
+                        var internalClaim = this.m_claimTypeMapping.FirstOrDefault(o => o.Value == claimPropertyObject.Name);
+                        if (internalClaim.Key == null)
                         {
-                            var internalClaim = this.m_claimTypeMapping.FirstOrDefault(o => o.Value == claimProperty.Name);
-                            if (internalClaim.Key == null)
-                            {
-                                continue;
-                            }
+                            continue;
+                        }
 
-                            var value = claimProperty.GetValue(santeDbPropertyValue);
-                            if (value is IList list)
+                        var value = claimPropertyObject.Value;
+                        if (value.ValueKind == JsonValueKind.Array)
+                        {
+                            foreach (var listValue in value.EnumerateArray())
                             {
-                                foreach (var listValue in list)
-                                {
-                                    yield return new SanteDBClaim(internalClaim.Key, listValue.ToString());
-                                }
+                                yield return new SanteDBClaim(internalClaim.Key, this.InterpretValue(listValue));
                             }
-                            else
-                            {
-                                yield return new SanteDBClaim(internalClaim.Key, value.ToString());
-                            }
+                        }
+                        else
+                        {
+                            yield return new SanteDBClaim(internalClaim.Key, this.InterpretValue(value));
                         }
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Stringify a complex value from IUA like a FHIR code 
+        /// </summary>
+        private string InterpretValue(JsonElement value)
+        {
+            switch (value.ValueKind)
+            {
+                case JsonValueKind.String:
+                    return value.ToString().Replace("urn:uuid:", "").Replace("urn:oid:", "");
+                case JsonValueKind.Number:
+                    return value.ToString();
+                case JsonValueKind.Object:
+                    var systemValue = value.EnumerateObject().FirstOrDefault(o => o.Name == "system");
+                    var codeValue = value.EnumerateObject().FirstOrDefault(o => o.Name == "code");
+                    var valueValue = value.EnumerateObject().FirstOrDefault(o => o.Name == "value");
+                    if (systemValue.Name != null && codeValue.Name != null) // we have a coding or identifier
+                    {
+                        return $"{codeValue.Value.GetString()}^{systemValue.Value.GetString()}";
+                    }
+                    else if (systemValue.Name != null && valueValue.Name != null) // we have a coding or identifier
+                    {
+                        return $"{valueValue.Value.GetString()}^{systemValue.Value.GetString()}";
+                    }
+                    else
+                    {
+                        throw new ArgumentOutOfRangeException(String.Format(ErrorMessages.ARGUMENT_OUT_OF_RANGE, value, new { system = "x", code = "y" }));
+                    }
+                default:
+                    throw new InvalidOperationException();
+            }
+
         }
     }
 }

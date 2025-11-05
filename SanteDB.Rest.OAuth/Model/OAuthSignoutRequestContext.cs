@@ -38,6 +38,7 @@ namespace SanteDB.Rest.OAuth.Model
         /// <inheritdoc />
         public OAuthSignoutRequestContext(RestOperationContext operationContext, NameValueCollection formFields) : base(operationContext, formFields)
         {
+            this.AbandonedSessions = new List<ISession>();
         }
 
         /// <summary>
@@ -56,7 +57,7 @@ namespace SanteDB.Rest.OAuth.Model
         /// <summary>
         /// A list of sessions that were abandoned. This allows derived implementations to do their own cleanup.
         /// </summary>
-        public List<ISession> AbandonedSessions => new List<ISession>();
+        public List<ISession> AbandonedSessions { get; private set; }
         /// <summary>
         /// The authorization cookie that exists as part of the user/app's authenticated context.
         /// </summary>

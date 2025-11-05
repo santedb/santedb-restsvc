@@ -79,11 +79,20 @@ namespace SanteDB.Rest.OAuth.Token
                             }
                             break;
                         case OAuthConstants.IUA_Claim_PurposeOfUse:
-                            iuaClaims.AddClaim(claimtype, new { system = "http://santedb.org/conceptset/PurposeOfUse", code = claim.Value });
+                            iuaClaims.AddClaim(claimtype, new Dictionary<String, object> {
+                                {
+                                    "system",  "http://santedb.org/conceptset/PurposeOfUse" }
+                                , {
+                                    "code", claim.Value
+                                }
+                            });
                             break;
                         case OAuthConstants.IUA_Claim_SubjectRole:
                             var parts = claim.Value.Split('^');
-                            iuaClaims.AddClaim(claimtype, new { system = parts[1], code = parts[0] });
+                            iuaClaims.AddClaim(claimtype, new Dictionary<String, Object> {
+                                { "system", parts[1] },
+                                { "code", parts[0] }
+                            });
                             break;
                         default:
                             iuaClaims.AddClaim(claimtype, claim.Value);
