@@ -348,7 +348,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         var viewModel = this.GetViewModelFromRequest();
 
                         IdentifiedData cache = null;
-                        if (Guid.TryParse(id, out var idGuid))
+                        if (Guid.TryParse(id, out var idGuid) && !AuthenticationContext.Current.Principal.IsElevatedPrincipal())
                         {
                             cache = this.m_dataCachingService.GetCacheItem(idGuid);
                             if (cache != null && cache.Type == resourceType)
@@ -373,13 +373,13 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         {
                             return cache;
                         }
-                        else
+                        else if(!AuthenticationContext.Current.Principal.IsElevatedPrincipal())
                         {
                             this.m_adhocCache?.Add($"{retVal.Tag}#{viewModel}", DateTime.Now, new TimeSpan(0, 1, 00));
                             this.m_dataCachingService.Add(retVal);
-                            this.TagUpstream(retVal);
-                            return retVal;
                         }
+                        this.TagUpstream(retVal);
+                        return retVal;
                     }
                     catch (WebException e) when (e is IRestException)
                     {
