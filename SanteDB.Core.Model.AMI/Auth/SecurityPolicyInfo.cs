@@ -71,6 +71,7 @@ namespace SanteDB.Core.Model.AMI.Auth
             this.Oid = o.Policy.Oid;
             this.CanOverride = o.Policy.CanOverride;
             this.Grant = o.Rule;
+            this.IsPublic = o.Policy.IsPublic;
             this.Policy = new SecurityPolicy
             {
                 Key = o.Policy.Key,
@@ -94,6 +95,13 @@ namespace SanteDB.Core.Model.AMI.Auth
         [XmlAttribute("canOverride")]
         [JsonProperty("canOverride")]
         public bool CanOverride { get; set; }
+
+        /// <summary>
+        /// True if the policy is public and can be queried
+        /// </summary>
+        [XmlAttribute("isPublic")]
+        [JsonProperty("isPublic")]
+        public bool IsPublic { get; set; }
 
         /// <summary>
         /// The outcome grant if an instance

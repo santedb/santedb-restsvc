@@ -77,6 +77,7 @@ namespace SanteDB.Rest.Common.Behavior
             else if (rootCause is RestClientException<Object> rco && rco.Result is RestServiceFault rcf)
             {
                 fault = rcf;
+                rootCause = new RestClientException<RestServiceFault>(rcf, rootCause, rco.Status, rco.Response);
             }
             else if(rootCause is RestClientException<Object> rce && rce.Result is JToken jtt)
             {
