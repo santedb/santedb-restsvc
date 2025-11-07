@@ -18,17 +18,20 @@
  * User: fyfej
  * Date: 2023-6-21
  */
+using SanteDB.Core;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Reflection;
 
 namespace SanteDB.Rest.Common
 {
@@ -41,6 +44,8 @@ namespace SanteDB.Rest.Common
         private ConcurrentDictionary<String, IApiChildResourceHandler> m_propertyProviders = new ConcurrentDictionary<string, IApiChildResourceHandler>();
         private ConcurrentDictionary<String, IApiChildOperation> m_operationProviders = new ConcurrentDictionary<string, IApiChildOperation>();
         private readonly ILocalizationService m_localizationService;
+        private readonly IPolicyEnforcementService m_pepService;
+
 
         /// <summary>
         /// Get the localization service
@@ -59,6 +64,7 @@ namespace SanteDB.Rest.Common
         {
             this.m_localizationService = localizationService;
             this.m_tracer = Tracer.GetTracer(this.GetType());
+            this.m_pepService = ApplicationServiceContext.Current.GetService<IPolicyEnforcementService>();
         }
 
         /// <inheritdoc/>
@@ -201,6 +207,7 @@ namespace SanteDB.Rest.Common
         {
             if (this.TryGetOperation(operationName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out var operationProvider))
             {
+                this.ValidateAcl(operationProvider);
                 return operationProvider.Invoke(this.Type, scopingEntityKey, parameters);
             }
             else
@@ -210,6 +217,14 @@ namespace SanteDB.Rest.Common
                 {
                     param = operationName
                 }));
+            }
+        }
+
+        private void ValidateAcl(IApiChildOperation operationProvider)
+        {
+            foreach(var itm in operationProvider.GetType().GetMethod(nameof(IApiChildOperation.Invoke)).GetCustomAttributes<DemandAttribute>())
+            {
+                this.m_pepService.Demand(itm.PolicyId);
             }
         }
 

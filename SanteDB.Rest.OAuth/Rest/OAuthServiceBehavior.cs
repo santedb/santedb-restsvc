@@ -39,6 +39,7 @@ using SanteDB.Core.Security.Principal;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
+using SanteDB.Rest.Common.Behavior;
 using SanteDB.Rest.Common.Security;
 using SanteDB.Rest.OAuth.Abstractions;
 using SanteDB.Rest.OAuth.Configuration;
@@ -69,6 +70,7 @@ namespace SanteDB.Rest.OAuth.Rest
     [ExcludeFromCodeCoverage]
     public class OAuthServiceBehavior : IOAuthServiceContract
     {
+
         private const string AUTHORIZATION_COOKIE_NAME = "_a";
 
         /// <summary>
@@ -1093,7 +1095,7 @@ namespace SanteDB.Rest.OAuth.Rest
             {
                 this.m_traceSource.TraceWarning("Attempted to login but policy requires a claim be provided");
 
-                return this.CreateErrorResponse(OAuthErrorType.missing_claim, sessionException.Message, errorData: sessionException.Data.Keys.OfType<String>().ToDictionary(o=>o, o=> sessionException.Data[o]));
+                return this.CreateErrorResponse(OAuthErrorType.missing_claim, sessionException.Message, errorData: sessionException.Data.Keys.OfType<String>().ToDictionary(o => o, o => sessionException.Data[o]));
             }
             catch (Exception ex) when (!(ex is StackOverflowException || ex is OutOfMemoryException))
             {
@@ -1747,9 +1749,9 @@ namespace SanteDB.Rest.OAuth.Rest
             }
 
             // Include all for SYSTEM
-            foreach(var cert in this._SigningCertificateManager.GetSigningCertificates(AuthenticationContext.SystemPrincipal.Identity))
+            foreach (var cert in this._SigningCertificateManager.GetSigningCertificates(AuthenticationContext.SystemPrincipal.Identity))
             {
-                if(!keyset.Keys.Any(k=>cert.GetCertHash().HexEncode().Equals(k.KeyId, StringComparison.OrdinalIgnoreCase)))
+                if (!keyset.Keys.Any(k => cert.GetCertHash().HexEncode().Equals(k.KeyId, StringComparison.OrdinalIgnoreCase)))
                 {
                     keyset.Keys.Add(JsonWebKeyConverter.ConvertFromX509SecurityKey(new X509SecurityKey(cert)));
                 }
@@ -1786,17 +1788,15 @@ namespace SanteDB.Rest.OAuth.Rest
             //    return null;
             //}
 
-            var cont = OnBeforeSignOut(context);
+            var @continue = OnBeforeSignOut(context);
 
-            if (!cont)
+            if (!@continue)
             {
                 return null;
             }
 
             if (context.IdTokenHint != null)
             {
-
-
                 context.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidIssuer = m_configuration.IssuerName,
@@ -1825,7 +1825,6 @@ namespace SanteDB.Rest.OAuth.Rest
                     if (null != sessionobj)
                     {
                         ISession session = null;
-
                         if (Guid.TryParse(sessionobj, out var sessionidguid))
                         {
                             session = m_SessionProvider.Get(sessionidguid.ToByteArray(), allowExpired: false);
@@ -1841,53 +1840,65 @@ namespace SanteDB.Rest.OAuth.Rest
 
                             _AuditService.Audit().ForSessionStop(session, principal, true).Send();
                             m_SessionProvider.Abandon(session);
-                            OnAfterSignOut(context);
-                            return null;
+                            context.AbandonedSessions.Add(session);
                         }
-
-                        return CreateErrorResponse(OAuthErrorType.invalid_request, "invalid session");
+                        else
+                        {
+                            return CreateErrorResponse(OAuthErrorType.invalid_request, "invalid session");
+                        }
                     }
                 }
-
-
-                return CreateErrorResponse(OAuthErrorType.invalid_request, "invalid token");
-            }
-            else
-            {
-                if (context.AuthCookie?.Users != null)
+                else
                 {
-                    var identityservice = ApplicationServiceContext.Current.GetService<IIdentityProviderService>();
+                    return CreateErrorResponse(OAuthErrorType.invalid_request, "invalid token");
+                }
+            }
+            else if (context.AuthCookie?.Users != null)
+            {
+                var identityservice = ApplicationServiceContext.Current.GetService<IIdentityProviderService>();
 
-                    if (null != identityservice)
+                if (null != identityservice)
+                {
+                    foreach (var user in context.AuthCookie.Users)
                     {
-                        foreach (var user in context.AuthCookie.Users)
+                        m_traceSource.TraceVerbose("Abandoning sessions for {0}", user);
+                        //Sign the users out of any sessions
+                        try
                         {
-                            m_traceSource.TraceVerbose("Abandoning sessions for {0}", user);
-                            //Sign the users out of any sessions
-                            try
+                            var userid = identityservice.GetSid(user);
+
+                            var identity = identityservice.GetIdentity(user) as IClaimsIdentity;
+                            var principal = new SanteDBClaimsPrincipal(identity);
+
+
+                            var sessions = m_SessionProvider.GetUserSessions(userid);
+
+                            foreach (var session in sessions)
                             {
-                                var userid = identityservice.GetSid(user);
-
-                                var identity = identityservice.GetIdentity(user) as IClaimsIdentity;
-                                var principal = new SanteDBClaimsPrincipal(identity);
-
-
-                                var sessions = m_SessionProvider.GetUserSessions(userid);
-
-                                foreach (var session in sessions)
-                                {
-                                    m_SessionProvider.Abandon(session);
-                                    _AuditService.Audit().ForSessionStop(session, principal, true).Send();
-                                    context.AbandonedSessions.Add(session);
-                                }
-                            }
-                            catch (Exception ex) when (!(ex is StackOverflowException || ex is OutOfMemoryException))
-                            {
-                                m_traceSource.TraceError("Exception abandoning session for user {0}", ex.ToString());
+                                m_SessionProvider.Abandon(session);
+                                _AuditService.Audit().ForSessionStop(session, principal, true).Send();
+                                context.AbandonedSessions.Add(session);
                             }
                         }
+                        catch (Exception ex) when (!(ex is StackOverflowException || ex is OutOfMemoryException))
+                        {
+                            m_traceSource.TraceError("Exception abandoning session for user {0}", ex.ToString());
+                        }
                     }
-
+                }
+            }
+            else if (RestOperationContext.Current.Data.TryGetValue(CookieAuthenticationBehavior.RestDataItem_Session, out var sessionRawData) && sessionRawData is ISession session)
+            {
+                try
+                {
+                    var principal = m_SessionIdentityProvider.Authenticate(session);
+                    m_SessionProvider.Abandon(session);
+                    _AuditService.Audit().ForSessionStop(session, principal, true).Send();
+                    context.AbandonedSessions.Add(session);
+                }
+                catch (Exception ex) when (!(ex is StackOverflowException || ex is OutOfMemoryException))
+                {
+                    m_traceSource.TraceError("Exception abandoning session for user {0}", ex.ToString());
                 }
             }
 
