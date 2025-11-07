@@ -347,7 +347,9 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         var viewModel = this.GetViewModelFromRequest();
 
                         IdentifiedData cache = null;
-                        if (Guid.TryParse(id, out var idGuid) && !AuthenticationContext.Current.Principal.IsElevatedPrincipal())
+                        if (Guid.TryParse(id, out var idGuid) && 
+                            !AuthenticationContext.Current.Principal.IsElevatedPrincipal() &&
+                            !this.ShouldBypassCache())
                         {
                             cache = this.m_dataCachingService.GetCacheItem(idGuid);
                             if (cache != null && cache.Type == resourceType)
@@ -372,7 +374,7 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         {
                             return cache;
                         }
-                        else if(!AuthenticationContext.Current.Principal.IsElevatedPrincipal())
+                        else if(!AuthenticationContext.Current.Principal.IsElevatedPrincipal() && !this.ShouldBypassCache())
                         {
                             this.m_adhocCache?.Add($"{retVal.Tag}#{viewModel}", DateTime.Now, new TimeSpan(0, 1, 00));
                             this.m_dataCachingService.Add(retVal);
@@ -400,6 +402,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                 return base.Get(resourceType, id);
             }
         }
+
+        /// <summary>
+        /// Should bypass cache
+        /// </summary>
+        private bool ShouldBypassCache() => RestOperationContext.Current.IncomingRequest.Headers["Cache-Control"] == "no-cache";
 
         /// <summary>
         /// Create a proxy client with appropriate headers
