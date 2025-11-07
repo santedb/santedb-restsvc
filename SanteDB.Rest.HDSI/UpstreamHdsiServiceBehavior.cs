@@ -90,7 +90,6 @@ namespace SanteDB.Messaging.HDSI.Wcf
                 ApplicationServiceContext.Current.GetService<IDataPersistenceService<Act>>(),
                 ApplicationServiceContext.Current.GetService<IAdhocCacheService>(),
                 ApplicationServiceContext.Current.GetService<IAuditService>()
-
                 )
         {
 
@@ -452,7 +451,11 @@ namespace SanteDB.Messaging.HDSI.Wcf
                 retVal.Requesting += (o, e) =>
                 {
                     e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ViewModelHeaderName, this.GetViewModelFromRequest());
-                    e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ThrowOnPrivacyViolation, this.GetPrivacyViolationFromRequest());
+                    var emitPrivacy = this.GetPrivacyViolationFromRequest();
+                    if (!String.IsNullOrEmpty(emitPrivacy))
+                    {
+                        e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ThrowOnPrivacyViolation, emitPrivacy);
+                    }
                 };
             }
             return retVal;
