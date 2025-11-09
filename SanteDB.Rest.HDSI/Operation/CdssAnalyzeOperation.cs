@@ -131,10 +131,7 @@ namespace SanteDB.Rest.HDSI.Operation
             switch (submission)
             {
                 case Bundle bundle:
-                    foreach (var itm in bundle.Item.OfType<Act>())
-                    {
-                        results.AddRange(this.m_decisionSupportService.Analyze(itm, cpParameters));
-                    }
+                    results.AddRange(bundle.Item.AsParallel().WithDegreeOfParallelism(4).SelectMany(itm => this.m_decisionSupportService.Analyze(itm, cpParameters)));
                     break;
                 case IdentifiedData id:
                     results.AddRange(this.m_decisionSupportService.Analyze(id, cpParameters));
