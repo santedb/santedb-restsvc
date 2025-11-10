@@ -197,11 +197,11 @@ namespace SanteDB.Rest.AMI
         /// <inheritdoc/>
         private string ExtractValidateMatchHeader(Type resourceType, String headerString)
         {
-            if (!headerString.Contains("."))
+            if (headerString?.Contains(".") != true)
             {
                 return headerString;
             }
-            else
+            else if(resourceType != null)
             {
                 var headerParts = headerString.Split('.');
                 if (resourceType.IsAssignableFrom(this.GetResourceHandler(headerParts[0]).Type))
@@ -212,6 +212,9 @@ namespace SanteDB.Rest.AMI
                 {
                     throw new PreconditionFailedException();
                 }
+            }
+            else {
+                return headerString;
             }
         }
 
@@ -234,8 +237,8 @@ namespace SanteDB.Rest.AMI
                 {
                     cacheResult = this.m_dataCachingService.GetCacheItem(guidKey);
                 }
-
-                var cacheHeader = this.ExtractValidateMatchHeader(cacheResult.GetType(), cacheResult.Tag);
+                
+                var cacheHeader = this.ExtractValidateMatchHeader(cacheResult?.GetType(), cacheResult?.Tag);
 
 
                 if (cacheResult != null && (ifNoneMatchHeader?.Contains(cacheHeader) == true ||
