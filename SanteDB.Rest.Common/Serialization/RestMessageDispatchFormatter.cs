@@ -437,7 +437,7 @@ namespace SanteDB.Rest.Common.Serialization
 
                                         // Create the view model serializer
                                         var viewModelSerializer = new JsonViewModelSerializer(
-                                            noDelayLoad: RestOperationContext.Current.Data.ContainsKey(VIEW_MODEL_BYPASS_DELAY_LOAD)
+                                            noDelayLoad: RestOperationContext.Current.Data.ContainsKey(VIEW_MODEL_BYPASS_DELAY_LOAD) || id.DelayLoadDisabled()
                                         );
 
 #if DEBUG

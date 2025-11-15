@@ -206,10 +206,13 @@ namespace SanteDB.Messaging.HDSI.Wcf
 
                         restClient.Responded += this.CopyResponseHeaders;
                         var retVal = restClient.Post<IdentifiedData, IdentifiedData>($"{resourceType}", body);
-                        this.m_dataCachingService.Remove(retVal.Key.GetValueOrDefault());
-                        if (retVal is IResourceCollection irc)
+                        if (retVal != null)
                         {
-                            irc.Item.ForEach(o => this.m_dataCachingService.Remove(o.Key.GetValueOrDefault()));
+                            this.m_dataCachingService.Remove(retVal.Key.GetValueOrDefault());
+                            if (retVal is IResourceCollection irc)
+                            {
+                                irc.Item.ForEach(o => this.m_dataCachingService.Remove(o.Key.GetValueOrDefault()));
+                            }
                         }
                         return retVal;
                     }
@@ -448,6 +451,13 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     case SanteDBExtendedMimeTypes.JsonViewModel:
                     case "application/json+sdb-viewmodel":
                         retVal.Accept = SanteDBExtendedMimeTypes.JsonViewModel;
+                        retVal.Responded += (o, e) =>
+                        {
+                            if (o is IdentifiedData id)
+                            {
+                                id.PreventDelayLoad();
+                            }
+                        };
                         break;
                     default:
                         retVal.Accept = RestOperationContext.Current.IncomingRequest.AcceptTypes.FirstOrDefault() ?? RestOperationContext.Current.IncomingRequest.ContentType;
@@ -463,7 +473,13 @@ namespace SanteDB.Messaging.HDSI.Wcf
                     {
                         e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.ThrowOnPrivacyViolation, emitPrivacy);
                     }
+                    var noEcho = RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.NoResponse];
+                    if(Boolean.TryParse(noEcho, out var noEchoBool))
+                    {
+                        e.AdditionalHeaders.Add(ExtendedHttpHeaderNames.NoResponse, noEchoBool.ToString());
+                    }
                 };
+
             }
             return retVal;
         }
