@@ -21,6 +21,7 @@
 using Newtonsoft.Json;
 using SanteDB.Core;
 using SanteDB.Core.BusinessRules;
+using SanteDB.Core.Cdss;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Acts;
@@ -127,6 +128,10 @@ namespace SanteDB.Rest.HDSI.Operation
             parameters.Parameters.RemoveAll(o => o.Name == "target");
             var cpParameters = parameters.Parameters.ToDictionary(o => o.Name, o => o.Value);
 
+            _ = parameters.TryGet(CdssParameterNames.EXCLUDE_PROPOSALS, out bool excludeProposals);
+            _ = parameters.TryGet(CdssParameterNames.EXCLUDE_SUBMITTED, out bool excludeSubmitted);
+            _ = parameters.TryGet(CdssParameterNames.EXCLUDE_ISSUES, out bool excludeIssues);
+
             var results = new List<ICdssResult>();
             switch (submission)
             {
@@ -140,9 +145,9 @@ namespace SanteDB.Rest.HDSI.Operation
 
             return new CdssAnalyzeResult()
             {
-                Issues = results.OfType<CdssDetectedIssueResult>().Select(o => o.Issue).Distinct().ToList(),
-                Submission = submission,
-                Propose = results.OfType<CdssProposeResult>().Select(o => o.ProposedAction).Distinct().ToList()
+                Issues = !excludeIssues ? results.OfType<CdssDetectedIssueResult>().Select(o => o.Issue).Distinct().ToList() : null,
+                Submission = !excludeSubmitted ? submission : null,
+                Propose =  !excludeProposals ? results.OfType<CdssProposeResult>().Select(o => o.ProposedAction).Distinct().ToList() : null
             };
         }
     }
