@@ -82,7 +82,7 @@ namespace SanteDB.Rest.AMI.Operation
                             CustomIdTypeCode = new AuditCode("BACKUPSET", "http://santedb.org/model"),
                             LifecycleType = AuditableObjectLifecycle.Creation,
                             ObjectId = label.Label,
-                            ObjectData = label.Assets.Select(o => new ObjectDataExtension(o.Name, o.AssetClassId.ToByteArray())).ToList(),
+                            ObjectData = label.Assets.Select(o => new ObjectDataExtension(o.Name, o.AssetClassId.ToString())).Union(new ObjectDataExtension[] { new ObjectDataExtension("IsEncrypted", label.IsEnrypted.ToString())}).ToList(),
                             Role = AuditableObjectRole.JobStream,
                             Type = AuditableObjectType.SystemObject
                         }, new AuditableObject()
