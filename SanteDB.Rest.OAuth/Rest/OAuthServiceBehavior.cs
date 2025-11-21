@@ -579,8 +579,12 @@ namespace SanteDB.Rest.OAuth.Rest
             descriptor.CompressionAlgorithm = CompressionAlgorithms.Deflate;
 
             // Creates signing credentials for the specified application key - the client will be requesting with client_id of the name rather than key
-            var appid = claimsPrincipal.Identities.OfType<IApplicationIdentity>().FirstOrDefault()?.Name ?? context.ClientId; // claimsPrincipal?.Claims?.FirstOrDefault(o => o.Type == SanteDBClaimTypes.SanteDBApplicationIdentifierClaim)?.Value;
-            descriptor.Audience = appid; //Audience should be the client id of the app.
+            var appid = claimsPrincipal.Identities.OfType<IApplicationIdentity>().FirstOrDefault()?.Name ?? context.ClientId;
+            descriptor.Audiences.Add(appid);
+            if (appid != context.ClientId)
+            {
+                descriptor.Audiences.Add(context.ClientId);
+            }
 
             descriptor.Issuer = m_configuration.IssuerName;
 
