@@ -16,6 +16,7 @@
  * the License.
  *
  */
+using SanteDB.Core;
 using SanteDB.Core.Applets.Services;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.AMI.Diagnostics;
@@ -105,7 +106,7 @@ namespace SanteDB.Rest.AMI.Resources
         {
             var retVal = new DiagnosticReport()
             {
-                ApplicationInfo = new DiagnosticApplicationInfo(Assembly.GetEntryAssembly()),
+                ApplicationInfo = new DiagnosticApplicationInfo(Assembly.GetEntryAssembly() ?? ApplicationServiceContext.Current.GetType().Assembly),
                 CreatedByKey = Guid.Parse(AuthenticationContext.SystemUserSid),
                 Threads = Process.GetCurrentProcess()?.Threads.OfType<ProcessThread>().Select(o => new DiagnosticThreadInfo()
                 {
