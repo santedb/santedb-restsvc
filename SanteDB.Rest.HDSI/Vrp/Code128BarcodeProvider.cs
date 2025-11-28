@@ -74,7 +74,7 @@ namespace SanteDB.Rest.HDSI.Vrp
                     Height = 100,
                     PureBarcode = true,
                     NoPadding = true,
-                    GS1Format = true,
+                    GS1Format = false,
                     Margin = 0
                 }
             };

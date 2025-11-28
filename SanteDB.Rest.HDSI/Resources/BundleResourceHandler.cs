@@ -41,5 +41,11 @@ namespace SanteDB.Rest.HDSI.Resources
         /// Get capabilities
         /// </summary>
         public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Update | ResourceCapabilityType.Create | ResourceCapabilityType.Delete | ResourceCapabilityType.CreateOrUpdate;
+
+        ///<inheritdoc/>
+        public override object Create(object data, bool updateIfExists)
+        {
+            return base.Create(data, updateIfExists);
+        }
     }
 }
