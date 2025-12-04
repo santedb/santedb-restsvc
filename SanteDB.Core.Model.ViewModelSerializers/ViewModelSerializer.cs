@@ -13,6 +13,7 @@ namespace SanteDB.Core.Model.Json.Formatter
     using SanteDB.Core.Model;
     using System;
 
+#pragma warning disable CS0168
 
     /// <summary>Serializes <see cref="SanteDB.Core.Model.Subscription.SubscriptionDefinition"/> to or from JSON View Model Format</summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
@@ -53731,3 +53732,4 @@ namespace SanteDB.Core.Model.Json.Formatter
         }
     }
 }
+#pragma warning restore CS0168
