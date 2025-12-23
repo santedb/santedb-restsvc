@@ -80,9 +80,9 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
             try
             {
 
-                var appidentity = context.GetApplicationIdentity();
+                var appPrincipal = context.ApplicationPrincipal;
 
-                if (null == appidentity)
+                if (null == appPrincipal)
                 {
                     _Tracer.TraceInfo("No application identity provided in the reuqest.");
                     context.ErrorType = OAuthErrorType.invalid_request;
@@ -90,33 +90,36 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                     return false;
                 }
 
-                context.Session = _SessionResolver.ExtendSessionWithRefreshToken(context.RefreshToken);
-
-                var principal = _SessionIdentityProvider.Authenticate(context.Session) as IClaimsPrincipal;
-
-                var sessionapp = principal?.Identities?.OfType<IApplicationIdentity>()?.FirstOrDefault() as IClaimsIdentity;
-
-                if (sessionapp.Name != appidentity.Name)
+                // Enter an authentication context as the application principal
+                using (AuthenticationContext.EnterContext(appPrincipal))
                 {
-                    //Abandon the session because the request is invalid.
-                    _SessionProvider.Abandon(context.Session);
-                    context.Session = null;
-                    _Tracer.TraceWarning("OAuth reuqest contains a refresh token for a different application than the request was sent from.");
-                    context.ErrorType = OAuthErrorType.invalid_client;
-                    context.ErrorMessage = "invalid refresh token";
-                    return false;
+                    context.Session = _SessionResolver.ExtendSessionWithRefreshToken(context.RefreshToken);
+
+                    var principal = _SessionIdentityProvider.Authenticate(context.Session) as IClaimsPrincipal;
+
+                    var sessionapp = principal?.Identities?.OfType<IApplicationIdentity>()?.FirstOrDefault() as IClaimsIdentity;
+
+                    if (sessionapp.Name != appPrincipal.Identity.Name)
+                    {
+                        //Abandon the session because the request is invalid.
+                        _SessionProvider.Abandon(context.Session);
+                        context.Session = null;
+                        _Tracer.TraceWarning("OAuth reuqest contains a refresh token for a different application than the request was sent from.");
+                        context.ErrorType = OAuthErrorType.invalid_client;
+                        context.ErrorMessage = "invalid refresh token";
+                        return false;
+                    }
+
+                    _AuditService.Audit().ForSessionStart(context.Session, principal, null != context.Session).Send();
+
+                    if (null == context.Session)
+                    {
+                        _Tracer.TraceInfo("Failed to initialize session from refresh token.");
+                        context.ErrorType = OAuthErrorType.invalid_grant;
+                        context.ErrorMessage = "invalid refresh token";
+                        return false;
+                    }
                 }
-
-                _AuditService.Audit().ForSessionStart(context.Session, principal, null != context.Session).Send();
-
-                if (null == context.Session)
-                {
-                    _Tracer.TraceInfo("Failed to initialize session from refresh token.");
-                    context.ErrorType = OAuthErrorType.invalid_grant;
-                    context.ErrorMessage = "invalid refresh token";
-                    return false;
-                }
-
                 return true;
             }
             catch (SecuritySessionException ex)
