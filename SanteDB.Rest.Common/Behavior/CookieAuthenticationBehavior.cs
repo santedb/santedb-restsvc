@@ -103,10 +103,8 @@ namespace SanteDB.Rest.Common.Behavior
                     var session = m_sessionTokenResolver.GetSessionFromBearerToken(authCookie.Value);
                     if (session != null)
                     {
-
-                        RestOperationContext.Current.Data.Add(RestDataItem_Session, session);
-
                         AuthenticationContext.EnterContext(m_sessionIdentityProvider.Authenticate(session));
+                        RestOperationContext.Current.Data.Add(RestDataItem_Session, session);
                         RestOperationContext.Current.Disposed += (o, e) =>
                         {
                             AuthenticationContext.Current.Abandon();
