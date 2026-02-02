@@ -16,8 +16,11 @@
  * the License.
  *
  */
+using DocumentFormat.OpenXml.Math;
+using RestSrvr;
 using RestSrvr.Exceptions;
 using SanteDB.Client.Configuration;
+using SanteDB.Client.Configuration.Upstream;
 using SanteDB.Core;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Configuration.Data;
@@ -28,9 +31,13 @@ using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.AppService.Model;
 using SanteDB.Rest.Common.Attributes;
+using SanteDB.Rest.Common.Configuration;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SanteDB.Rest.AppService
 {
@@ -43,6 +50,75 @@ namespace SanteDB.Rest.AppService
         public List<DiagnosticServiceInfo> GetServices()
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Get configuration QR code
+        /// </summary>
+        [Demand(PermissionPolicyIdentifiers.AlterSystemConfiguration)]
+        public Stream GetConfigurationQr()
+        {
+            try
+            {
+                // Get the network information where this data can be obtained
+                var restConfiguration = this.m_configurationManager.GetSection<RestConfigurationSection>();
+                var amiEndpoint = restConfiguration.Services.FirstOrDefault(o => o.ConfigurationName == "AMI")?.Endpoints.FirstOrDefault();
+                if (amiEndpoint == null)
+                {
+                    throw new InvalidOperationException("Could not find AMI configuration root");
+                }
+
+                var configurationToEncode = new UpstreamRealmConfiguration();
+
+                // Get the URI
+                if (!String.IsNullOrEmpty(restConfiguration.ExternalHostPort) &&
+                    Uri.TryCreate(restConfiguration.ExternalHostPort, UriKind.Absolute, out var parsedUri))
+                {
+                    configurationToEncode.PortNumber = parsedUri.Port;
+                    configurationToEncode.DomainName = parsedUri.Host;
+                    configurationToEncode.UseTls = parsedUri.Scheme == "https";
+                }
+                else if (Uri.TryCreate(amiEndpoint.Address, UriKind.Absolute, out parsedUri) &&
+                    parsedUri.HostNameType == UriHostNameType.IPv4 &&
+                    parsedUri.Host == "0.0.0.0")
+                {
+                    configurationToEncode.PortNumber = parsedUri.Port;
+                    // Has this been brought through a proxy? 
+                    if (RestOperationContext.Current.IncomingRequest.Headers.AllKeys.Contains("X-Forwarded-For"))
+                    {
+                        configurationToEncode.DomainName = this.m_networkInformationService.GetInterfaces().First(o => o.InterfaceType == System.Net.NetworkInformation.NetworkInterfaceType.Wireless80211 && o.IsActive && o.IpAddress != "127.0.0.1").IpAddress;
+                    }
+                    else
+                    {
+                        configurationToEncode.DomainName = RestOperationContext.Current.IncomingRequest.Url.Host; // incoming URI request directly 
+                    }
+                    configurationToEncode.UseTls = parsedUri.Scheme == "https";
+
+                }
+                else if (parsedUri != null)
+                {
+                    configurationToEncode.PortNumber = parsedUri.Port;
+                    configurationToEncode.DomainName = parsedUri.Host;
+                    configurationToEncode.UseTls = parsedUri.Scheme == "https";
+                }
+                else
+                {
+                    throw new InvalidOperationException("Missing appropriate configuration");
+                }
+
+                // Get the QR code 
+                var generator = this.m_barcodeGenerator.GetBarcodeGenerator("QR");
+                if (generator == null)
+                {
+                    throw new InvalidOperationException(ErrorMessages.DEPENDENT_CONFIGURATION_MISSING);
+                }
+                return generator.Generate(Encoding.UTF8.GetBytes($"{configurationToEncode.DomainName}:{configurationToEncode.PortNumber}?tls={configurationToEncode.UseTls}"));
+            }
+            catch (Exception e)
+            {
+                this.m_tracer.TraceError("Could not generate configuration code");
+                throw;
+            }
         }
 
         /// <inheritdoc/>
