@@ -84,7 +84,8 @@ namespace SanteDB.Rest.AppService
                 {
                     configurationToEncode.PortNumber = parsedUri.Port;
                     // Has this been brought through a proxy? 
-                    if (RestOperationContext.Current.IncomingRequest.Headers.AllKeys.Contains("X-Forwarded-For"))
+                    if (RestOperationContext.Current.IncomingRequest.Headers.AllKeys.Contains("X-Forwarded-For") ||
+                        "127.0.0.1".Equals(RestOperationContext.Current.IncomingRequest.Url.Host))
                     {
                         configurationToEncode.DomainName = this.m_networkInformationService.GetInterfaces().First(o => o.InterfaceType == System.Net.NetworkInformation.NetworkInterfaceType.Wireless80211 && o.IsActive && o.IpAddress != "127.0.0.1").IpAddress;
                     }
