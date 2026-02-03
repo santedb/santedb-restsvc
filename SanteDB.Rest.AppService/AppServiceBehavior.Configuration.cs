@@ -87,7 +87,13 @@ namespace SanteDB.Rest.AppService
                     if (RestOperationContext.Current.IncomingRequest.Headers.AllKeys.Contains("X-Forwarded-For") ||
                         "127.0.0.1".Equals(RestOperationContext.Current.IncomingRequest.Url.Host))
                     {
-                        configurationToEncode.DomainName = this.m_networkInformationService.GetInterfaces().First(o => o.InterfaceType == System.Net.NetworkInformation.NetworkInterfaceType.Wireless80211 && o.IsActive && o.IpAddress != "127.0.0.1").IpAddress;
+                        configurationToEncode.DomainName = this.m_networkInformationService.GetInterfaces().First(o => 
+                            (o.InterfaceType == System.Net.NetworkInformation.NetworkInterfaceType.Wireless80211 || 
+                            o.InterfaceType == System.Net.NetworkInformation.NetworkInterfaceType.Ethernet ||
+                            o.InterfaceType == System.Net.NetworkInformation.NetworkInterfaceType.GigabitEthernet ||
+                            o.InterfaceType == System.Net.NetworkInformation.NetworkInterfaceType.Ethernet3Megabit)  && 
+                            o.IsActive && 
+                            o.IpAddress != "127.0.0.1").IpAddress;
                     }
                     else
                     {
