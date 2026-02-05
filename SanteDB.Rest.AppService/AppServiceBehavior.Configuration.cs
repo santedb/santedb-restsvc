@@ -93,7 +93,8 @@ namespace SanteDB.Rest.AppService
                             o.InterfaceType == System.Net.NetworkInformation.NetworkInterfaceType.GigabitEthernet ||
                             o.InterfaceType == System.Net.NetworkInformation.NetworkInterfaceType.Ethernet3Megabit)  && 
                             o.IsActive && 
-                            o.IpAddress != "127.0.0.1").IpAddress;
+                            o.IpAddress != "127.0.0.1"
+                            ).IpAddress;
                     }
                     else
                     {

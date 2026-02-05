@@ -90,10 +90,11 @@ namespace SanteDB.Rest.OAuth.Rest
 
                 // Disposed context so reset the auth
             }
-            catch (Exception e)
+            catch(AuthenticationException)
             {
-                m_traceSource.TraceEvent(EventLevel.Error, e.ToString());
+                throw;
             }
+            
         }
 
         /// <summary>
