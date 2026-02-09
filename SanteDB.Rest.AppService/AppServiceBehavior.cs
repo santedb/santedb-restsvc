@@ -89,6 +89,8 @@ namespace SanteDB.Rest.AppService
         /// </summary>
         protected readonly IUserPreferencesManager m_userPreferenceManager;
         private readonly IEnumerable<IUpstreamIntegrationPattern> m_integrationPatterns;
+        private readonly INetworkInformationService m_networkInformationService;
+        private readonly IBarcodeProviderService m_barcodeGenerator;
         private readonly Tracer m_tracer = Tracer.GetTracer(typeof(AppServiceBehavior));
         private readonly Timer m_onlineStateTimer;
         private readonly IEnumerable<IClientConfigurationFeature> m_configurationFeatures;
@@ -111,11 +113,13 @@ namespace SanteDB.Rest.AppService
                   ApplicationServiceContext.Current.GetService<ILocalizationService>(),
                   ApplicationServiceContext.Current.GetService<IUpdateManager>(),
                   ApplicationServiceContext.Current.GetService<IReferenceResolver>(),
+                  ApplicationServiceContext.Current.GetService<INetworkInformationService>(),
                   ApplicationServiceContext.Current.GetService<IUserPreferencesManager>(),
                   ApplicationServiceContext.Current.GetService<ISecurityRepositoryService>(),
                   ApplicationServiceContext.Current.GetService<ITickleService>(),
                   ApplicationServiceContext.Current.GetService<IDataTemplateManagementService>(),
-                  ApplicationServiceContext.Current.GetService<IPatchService>()
+                  ApplicationServiceContext.Current.GetService<IPatchService>(),
+                  ApplicationServiceContext.Current.GetService<IBarcodeProviderService>()
                   )
         { }
 
@@ -132,11 +136,13 @@ namespace SanteDB.Rest.AppService
             ILocalizationService localizationService,
             IUpdateManager updateManager,
             IReferenceResolver referenceResolver,
+            INetworkInformationService networkInformationService,
             IUserPreferencesManager userPreferencesManager = null,
             ISecurityRepositoryService securityRepositoryService = null,
             ITickleService tickleService = null,
             IDataTemplateManagementService dataTemplateManagementService = null,
-            IPatchService patchService = null)
+            IPatchService patchService = null,
+            IBarcodeProviderService barcodeProviderService = null)
         {
             this.m_dataTemplateManagerService = dataTemplateManagementService;
             this.m_configurationManager = configurationManager;
@@ -152,6 +158,8 @@ namespace SanteDB.Rest.AppService
             this.m_securityRepositoryService = securityRepositoryService;
             this.m_userPreferenceManager = userPreferencesManager;
             this.m_integrationPatterns = serviceManager.CreateInjectedOfAll<IUpstreamIntegrationPattern>();
+            this.m_networkInformationService = networkInformationService;
+            this.m_barcodeGenerator = barcodeProviderService;
             // The online status timer refresh
             this.m_onlineStateTimer = new Timer((e) =>
             {

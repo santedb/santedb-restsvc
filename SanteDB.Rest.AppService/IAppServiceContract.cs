@@ -110,6 +110,12 @@ namespace SanteDB.Rest.AppService
         [Get("/IntegrationPatterns")]
         List<String> GetIntegrationPatterns();
 
+        /// <summary>
+        /// Get configuration / join credentials
+        /// </summary>
+        [Get("/ConfigQr")]
+        Stream GetConfigurationQr();
+
         #endregion
 
         #region Realm
