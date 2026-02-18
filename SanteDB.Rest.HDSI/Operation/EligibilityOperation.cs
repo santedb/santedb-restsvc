@@ -27,6 +27,7 @@ using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Acts;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Roles;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 
@@ -67,8 +68,11 @@ namespace SanteDB.Rest.HDSI.Operation
             if(scopingKey is Guid uuid)
             {
                 // Determine eligibilty on one patient
-                var target = this.m_patientRepository.Get(uuid);
-                return this.m_cpEnrolmentService.GetEligibleCarePaths(target).ToList();
+                using (AuthenticationContext.EnterSystemContext())
+                {
+                    var target = this.m_patientRepository.Get(uuid);
+                    return this.m_cpEnrolmentService.GetEligibleCarePaths(target).ToList();
+                }
             }
             else
             {
