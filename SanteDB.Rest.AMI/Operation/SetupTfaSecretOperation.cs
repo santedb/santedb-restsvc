@@ -92,8 +92,7 @@ namespace SanteDB.Rest.AMI.Operation
                     var user = this.m_securityRepositoryService.GetUser(AuthenticationContext.Current.Principal.Identity);
                     user.TwoFactorEnabled = true;
                     user.TwoFactorMechnaismKey = mechanism.Id;
-                    this.m_securityUserRepository.Save(user);
-                    return null;
+                    return new SecurityUserInfo(this.m_securityUserRepository.Save(user));
                 }
                 else
                 {
