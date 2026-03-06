@@ -460,13 +460,18 @@ namespace SanteDB.Rest.AMI
                     serviceOptions.Resources.Add(svc);
                 }
             }
-            serviceOptions.Settings = config?.PublicSettings?.ToList() ?? new List<Core.Configuration.AppSettingKeyValuePair>();
 
-            if (!String.IsNullOrEmpty(config?.RealmWelcomeMessage))
+            if (AuthenticationContext.Current.Principal.Identity.IsAuthenticated)
             {
-                serviceOptions.Settings.Add(new Core.Configuration.AppSettingKeyValuePair("$welcome", config.RealmWelcomeMessage));
+                serviceOptions.Settings = config?.PublicSettings?.ToList() ?? new List<Core.Configuration.AppSettingKeyValuePair>();
+
+                if (!String.IsNullOrEmpty(config?.RealmWelcomeMessage))
+                {
+                    serviceOptions.Settings.Add(new Core.Configuration.AppSettingKeyValuePair("$welcome", config.RealmWelcomeMessage));
+                }
+                serviceOptions.Settings.AddRange(this.m_configurationManager.Configuration.Sections.OfType<IDisclosedConfigurationSection>().SelectMany(o => o.ForDisclosure()));
             }
-            serviceOptions.Settings.AddRange(this.m_configurationManager.Configuration.Sections.OfType<IDisclosedConfigurationSection>().SelectMany(o => o.ForDisclosure()));
+
             return serviceOptions;
         }
 
