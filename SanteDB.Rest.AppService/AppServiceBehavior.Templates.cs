@@ -80,7 +80,8 @@ namespace SanteDB.Rest.AppService
                 throw new KeyNotFoundException($"template/{templateId}");
             }
 
-            var result = tplDef.FillObject(parameters.ToList().ToDictionaryIgnoringDuplicates(o => o.Key, o => o.Value), (o)=>this.m_referenceResolver.ResolveAsString(o));
+            var result = tplDef.FillObject(parameters.ToList().ToDictionaryIgnoringDuplicates(o => o.Key, o => o.Value), (o) => this.m_referenceResolver.ResolveAsString(o));
+
 
             if (result is IHasTemplate template) // Correct any type-os in the JSON
             {
