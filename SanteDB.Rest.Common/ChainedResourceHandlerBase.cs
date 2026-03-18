@@ -76,6 +76,7 @@ namespace SanteDB.Rest.Common
         public abstract Type Type { get; }
         /// <inheritdoc/>
         public abstract Type Scope { get; }
+
         /// <inheritdoc/>
         public abstract ResourceCapabilityType Capabilities { get; }
 
