@@ -74,10 +74,6 @@ namespace SanteDB.Rest.Common
         /// </summary>
         public virtual IRepositoryService Repository => this.m_repository as IRepositoryService;
 
-        /// <summary>
-        /// Gets the scope of the resource handler
-        /// </summary>
-        public override Type Scope { get; }
 
         /// <summary>
         /// Gets the resource name
