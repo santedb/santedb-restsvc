@@ -22,10 +22,12 @@ using RestSrvr;
 using SanteDB.Core;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Diagnostics;
+using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Matching;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.Collection;
+using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
 using SanteDB.Core.Services;
@@ -33,6 +35,7 @@ using SanteDB.Rest.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -45,6 +48,9 @@ namespace SanteDB.Persistence.MDM.Rest
     public class MatchCandidateChildResource : IApiChildResourceHandler
     {
         private readonly Tracer m_tracer = Tracer.GetTracer(typeof(MatchCandidateChildResource));
+        private readonly IRecordMergingService m_mergeService;
+        private readonly IMatchReportFactory m_matchReportFactory;
+        private readonly IRecordMatchingConfigurationService m_matchConfiguration;
 
         // Configuration
         private ResourceManagementConfigurationSection m_configuration;
@@ -52,16 +58,26 @@ namespace SanteDB.Persistence.MDM.Rest
         /// <summary>
         /// Candidate operations manager
         /// </summary>
-        public MatchCandidateChildResource(IConfigurationManager configurationManager)
+        public MatchCandidateChildResource(IConfigurationManager configurationManager, 
+            IRecordMatchingService matchingService, 
+            IRecordMergingService mergingService, 
+            IMatchReportFactory matchReportFactory,
+            IRecordMatchingConfigurationService matchingConfigurationService)
         {
             this.m_configuration = configurationManager.GetSection<ResourceManagementConfigurationSection>();
             this.ParentTypes = this.m_configuration?.ResourceTypes.Select(o => o.Type).ToArray() ?? Type.EmptyTypes;
+            this.m_matchService = matchingService;
+            this.m_mergeService = mergingService;
+            this.m_matchReportFactory = matchReportFactory;
+            this.m_matchConfiguration = matchingConfigurationService;
         }
 
         /// <summary>
         /// Gets the parent types
         /// </summary>
         public Type[] ParentTypes { get; }
+
+        private readonly IRecordMatchingService m_matchService;
 
         /// <summary>
         /// Gets the name of the resource
@@ -76,7 +92,7 @@ namespace SanteDB.Persistence.MDM.Rest
         /// <summary>
         /// Gets the capabilities of this
         /// </summary>
-        public ResourceCapabilityType Capabilities => ResourceCapabilityType.Search | ResourceCapabilityType.Get | ResourceCapabilityType.Delete;
+        public ResourceCapabilityType Capabilities => ResourceCapabilityType.Search | ResourceCapabilityType.Get | ResourceCapabilityType.Delete | ResourceCapabilityType.Create | ResourceCapabilityType.CreateOrUpdate;
 
         /// <summary>
         /// Binding for this operation
@@ -88,7 +104,15 @@ namespace SanteDB.Persistence.MDM.Rest
         /// </summary>
         public object Add(Type scopingType, object scopingKey, object item)
         {
-            throw new NotSupportedException();
+            // Validate parameters
+            if (scopingKey is Guid survivor && item is IdentifiedDataReference idr)
+            {
+                return this.m_mergeService.Merge(survivor, new Guid[] { idr.Key.Value });
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException(String.Format(ErrorMessages.ARGUMENT_INCOMPATIBLE_TYPE, typeof(IdentifiedDataReference), item.GetType()));
+            }
         }
 
         /// <summary>
@@ -96,25 +120,6 @@ namespace SanteDB.Persistence.MDM.Rest
         /// </summary>
         public object Get(Type scopingType, object scopingKey, object key)
         {
-            var matcher = ApplicationServiceContext.Current.GetService<IRecordMatchingService>();
-            if (matcher == null)
-            {
-                throw new InvalidOperationException("No matching service configuration");
-            }
-
-            // Match report factory
-            var matchReportFactory = ApplicationServiceContext.Current.GetService<IMatchReportFactory>();
-            if (matchReportFactory == null)
-            {
-                throw new InvalidOperationException("No match report factory");
-            }
-
-            // Configuration provider
-            var matchConfiguration = ApplicationServiceContext.Current.GetService<IRecordMatchingConfigurationService>();
-            if (matchConfiguration == null)
-            {
-                throw new InvalidOperationException("No match configuration factory");
-            }
 
             // Validate parameters
             if (scopingKey is Guid objectAKey && key is Guid objectBKey)
@@ -133,20 +138,20 @@ namespace SanteDB.Persistence.MDM.Rest
                     }
 
                     var configId = RestOperationContext.Current.IncomingRequest.QueryString["_configuration"];
-                    IEnumerable<IRecordMatchingConfiguration> matchConfigurations = matchConfiguration.Configurations.Where(o => o.AppliesTo.Contains(scopingType) && o.Metadata.Status == MatchConfigurationStatus.Active);
+                    IEnumerable<IRecordMatchingConfiguration> matchConfigurations = this.m_matchConfiguration.Configurations.Where(o => o.AppliesTo.Contains(scopingType) && o.Metadata.Status == MatchConfigurationStatus.Active);
                     if (!String.IsNullOrEmpty(configId))
                     {
-                        matchConfigurations = matchConfiguration.Configurations.Where(o => o.AppliesTo.Contains(scopingType) && o.Id == configId).Union(matchConfigurations);
+                        matchConfigurations = this.m_matchConfiguration.Configurations.Where(o => o.AppliesTo.Contains(scopingType) && o.Id == configId).Union(matchConfigurations);
                     }
 
-                    if (matchConfiguration == null)
+                    if (this.m_matchConfiguration == null)
                     {
                         throw new InvalidOperationException("No configuration for type exists");
                     }
 
                     // Match result
-                    var matchResult = matchConfigurations.SelectMany(c => matcher.Classify(recordA, new IdentifiedData[] { recordB }, c.Id));
-                    return matchReportFactory.CreateMatchReport(scopingType, recordA, matchResult);
+                    var matchResult = matchConfigurations.SelectMany(c => this.m_matchService.Classify(recordA, new IdentifiedData[] { recordB }, c.Id));
+                    return this.m_matchReportFactory.CreateMatchReport(scopingType, recordA, matchResult);
                 }
             }
             else
@@ -160,20 +165,15 @@ namespace SanteDB.Persistence.MDM.Rest
         /// </summary>
         public IQueryResultSet Query(Type scopingType, object scopingKey, NameValueCollection filter)
         {
-            var merger = ApplicationServiceContext.Current.GetService(typeof(IRecordMergingService<>).MakeGenericType(scopingType)) as IRecordMergingService;
-            if (merger == null)
-            {
-                throw new InvalidOperationException("No merging service configuration");
-            }
 
             IQueryResultSet result = null;
             if (scopingKey == null) // class call
             {
-                result = merger.GetGlobalMergeCandidates();
+                result = this.m_mergeService.GetGlobalMergeCandidates();
             }
             else
             {
-                result = merger.GetMergeCandidates((Guid)scopingKey);
+                result = this.m_mergeService.GetMergeCandidates((Guid)scopingKey);
             }
 
             return result;
@@ -184,15 +184,10 @@ namespace SanteDB.Persistence.MDM.Rest
         /// </summary>
         public object Remove(Type scopingType, object scopingKey, object key)
         {
-            var merger = ApplicationServiceContext.Current.GetService(typeof(IRecordMergingService<>).MakeGenericType(scopingType)) as IRecordMergingService;
-            if (merger == null)
-            {
-                throw new InvalidOperationException("No merging service configuration");
-            }
-
+           
             if (scopingKey is Guid scopingId && key is Guid keyId)
             {
-                return merger.Ignore(scopingId, new Guid[] { keyId });
+                return this.m_mergeService.Ignore(scopingId, new Guid[] { keyId });
             }
             else
             {
