@@ -30,6 +30,7 @@ using SanteDB.Core.Model.Collection;
 using SanteDB.Core.Model.DataTypes;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
+using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using System;
@@ -50,6 +51,7 @@ namespace SanteDB.Persistence.MDM.Rest
         private readonly Tracer m_tracer = Tracer.GetTracer(typeof(MatchCandidateChildResource));
         private readonly IRecordMergingService m_mergeService;
         private readonly IMatchReportFactory m_matchReportFactory;
+        private readonly IPrivacyEnforcementService m_privacyEnforcement;
         private readonly IRecordMatchingConfigurationService m_matchConfiguration;
 
         // Configuration
@@ -62,6 +64,7 @@ namespace SanteDB.Persistence.MDM.Rest
             IRecordMatchingService matchingService, 
             IRecordMergingService mergingService, 
             IMatchReportFactory matchReportFactory,
+            IPrivacyEnforcementService privacyEnforcement,
             IRecordMatchingConfigurationService matchingConfigurationService)
         {
             this.m_configuration = configurationManager.GetSection<ResourceManagementConfigurationSection>();
@@ -69,6 +72,7 @@ namespace SanteDB.Persistence.MDM.Rest
             this.m_matchService = matchingService;
             this.m_mergeService = mergingService;
             this.m_matchReportFactory = matchReportFactory;
+            this.m_privacyEnforcement = privacyEnforcement;
             this.m_matchConfiguration = matchingConfigurationService;
         }
 
@@ -126,17 +130,16 @@ namespace SanteDB.Persistence.MDM.Rest
             {
                 var repository = ApplicationServiceContext.Current.GetService(typeof(IRepositoryService<>).MakeGenericType(scopingType)) as IRepositoryService;
 
+                IdentifiedData recordA = repository.Get(objectAKey),
+                    recordB = repository.Get(objectBKey);
+                if (recordA == null || recordB == null)
+                {
+                    throw new KeyNotFoundException($"Source or target not found");
+                }
+
                 // Produce a match report
                 using (AuthenticationContext.EnterSystemContext())
                 {
-                    IdentifiedData recordA = repository.Get(objectAKey),
-                        recordB = repository.Get(objectBKey);
-
-                    if (recordA == null || recordB == null)
-                    {
-                        throw new KeyNotFoundException($"Source or target not found");
-                    }
-
                     var configId = RestOperationContext.Current.IncomingRequest.QueryString["_configuration"];
                     IEnumerable<IRecordMatchingConfiguration> matchConfigurations = this.m_matchConfiguration.Configurations.Where(o => o.AppliesTo.Contains(scopingType) && o.Metadata.Status == MatchConfigurationStatus.Active);
                     if (!String.IsNullOrEmpty(configId))
