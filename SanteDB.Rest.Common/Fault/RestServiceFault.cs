@@ -87,6 +87,7 @@ namespace SanteDB.Rest.Common.Fault
 
                 if (ex is PolicyViolationException polViolation)
                 {
+                    this.Data = polViolation.Detail.Details?.Select(o => $"{o.Policy.Oid}:{o.Policy.Name}").ToList();
                     this.PolicyId = polViolation.PolicyId;
                     this.PolicyName = polViolation.PolicyName;
                     this.PolicyOutcome = polViolation.PolicyDecision;
@@ -106,7 +107,7 @@ namespace SanteDB.Rest.Common.Fault
                 {
                     this.Data = ex.Data.OfType<object>().Select(o => o.ToString()).ToList();
                 }
-                else
+                else if(this.Data == null)
                 {
                     this.Data = new List<string>();
                 }
