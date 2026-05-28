@@ -87,7 +87,7 @@ namespace SanteDB.Rest.Common.Fault
 
                 if (ex is PolicyViolationException polViolation)
                 {
-                    this.Data = polViolation.Detail.Details?.Select(o => $"{o.Policy.Oid}:{o.Policy.Name}").ToList();
+                    this.Data = polViolation.Detail?.Details?.Select(o => $"{o.Policy.Oid}:{o.Policy.Name}").ToList();
                     this.PolicyId = polViolation.PolicyId;
                     this.PolicyName = polViolation.PolicyName;
                     this.PolicyOutcome = polViolation.PolicyDecision;
