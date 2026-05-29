@@ -68,7 +68,7 @@ namespace SanteDB.Rest.Common
             switch (error)
             {
                 case PolicyViolationException pve:
-                    faultMessage.AddAuthenticateHeader(challengeMode, RestOperationContext.Current.IncomingRequest.Url.Host, "insufficient_scope", pve.PolicyId, pve.Message);
+                    faultMessage.AddAuthenticateHeader(challengeMode, RestOperationContext.Current.IncomingRequest.Url.Host, "insufficient_scope", pve.Detail?.Details != null ? String.Join(";", pve.Detail.Details.Select(o=>o.Policy.Oid)) : pve.PolicyId, pve.Message);
                     break;
                 case RestClientException<RestServiceFault> rco: // came from an upstream
                     var pvd = rco.Result.GetFaultData(nameof(PolicyViolationException));
