@@ -89,7 +89,7 @@ namespace SanteDB.Core.Model.Json.Formatter {
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Subscription.SubscriptionDefinition))) {
                         return ((SanteDB.Core.Model.Subscription.SubscriptionDefinition)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -372,7 +372,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Security.SecurityApplication))) {
                         return ((SanteDB.Core.Model.Security.SecurityApplication)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -711,7 +711,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Security.SecurityChallenge))) {
                         return ((SanteDB.Core.Model.Security.SecurityChallenge)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -1050,7 +1050,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Security.SecurityDevice))) {
                         return ((SanteDB.Core.Model.Security.SecurityDevice)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -1382,7 +1382,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Security.SecurityEntity))) {
                         return ((SanteDB.Core.Model.Security.SecurityEntity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -1660,7 +1660,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Security.SecurityPolicy))) {
                         return ((SanteDB.Core.Model.Security.SecurityPolicy)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -1929,7 +1929,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Security.SecurityPolicyInstance))) {
                         return ((SanteDB.Core.Model.Security.SecurityPolicyInstance)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -2173,7 +2173,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Security.SecurityProvenance))) {
                         return ((SanteDB.Core.Model.Security.SecurityProvenance)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -2470,7 +2470,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Security.SecurityRole))) {
                         return ((SanteDB.Core.Model.Security.SecurityRole)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -2873,7 +2873,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Security.SecurityUser))) {
                         return ((SanteDB.Core.Model.Security.SecurityUser)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -3477,7 +3477,7 @@ default:
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct"));
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
@@ -3897,7 +3897,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Roles.Patient))) {
                         return ((SanteDB.Core.Model.Roles.Patient)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -4622,7 +4622,7 @@ default:
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct"));
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
@@ -5042,7 +5042,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Roles.Provider))) {
                         return ((SanteDB.Core.Model.Roles.Provider)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -5513,7 +5513,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Patch.PatchCollection))) {
                         return ((SanteDB.Core.Model.Patch.PatchCollection)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -5716,7 +5716,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Patch.Patch))) {
                         return ((SanteDB.Core.Model.Patch.Patch)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -5961,7 +5961,7 @@ default:
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct"));
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
@@ -6381,7 +6381,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Entities.ApplicationEntity))) {
                         return ((SanteDB.Core.Model.Entities.ApplicationEntity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -6871,7 +6871,7 @@ default:
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct"));
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
@@ -7291,7 +7291,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Entities.Container))) {
                         return ((SanteDB.Core.Model.Entities.Container)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -7767,7 +7767,7 @@ default:
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct"));
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
@@ -8187,7 +8187,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Entities.DeviceEntity))) {
                         return ((SanteDB.Core.Model.Entities.DeviceEntity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -8575,7 +8575,7 @@ default:
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct"));
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
@@ -8995,7 +8995,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Entities.Entity))) {
                         return ((SanteDB.Core.Model.Entities.Entity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -9372,7 +9372,7 @@ default:
                 if ((_strong.SourceEntity == null)) {
                     if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Entities.Entity>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity"));
                         if ((_delay != null)) {
                             _strong.SourceEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
@@ -9412,7 +9412,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Entities.EntityAddress))) {
                         return ((SanteDB.Core.Model.Entities.EntityAddress)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -9617,7 +9617,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Entities.EntityAddressComponent))) {
                         return ((SanteDB.Core.Model.Entities.EntityAddressComponent)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -9820,7 +9820,7 @@ default:
                 if ((_strong.SourceEntity == null)) {
                     if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Entities.Entity>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity"));
                         if ((_delay != null)) {
                             _strong.SourceEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
@@ -9860,7 +9860,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Entities.EntityName))) {
                         return ((SanteDB.Core.Model.Entities.EntityName)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -10065,7 +10065,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Entities.EntityNameComponent))) {
                         return ((SanteDB.Core.Model.Entities.EntityNameComponent)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -10207,7 +10207,7 @@ default:
                 if ((_strong.Holder == null)) {
                     if ((_strong.HolderKey.HasValue && context.ShouldForceLoad("holderModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "Holder");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Entities.Entity>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "Holder"));
                         if ((_delay != null)) {
                             _strong.Holder = _delay;
                             context.JsonContext.WritePropertyUtil(w, "holderModel", _strong.Holder, context);
@@ -10335,7 +10335,7 @@ default:
                 if ((_strong.TargetEntity == null)) {
                     if ((_strong.TargetEntityKey.HasValue && context.ShouldForceLoad("targetModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "TargetEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Entities.Entity>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "TargetEntity"));
                         if ((_delay != null)) {
                             _strong.TargetEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "targetModel", _strong.TargetEntity, context);
@@ -10370,7 +10370,7 @@ default:
                 if ((_strong.SourceEntity == null)) {
                     if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Entities.Entity>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity"));
                         if ((_delay != null)) {
                             _strong.SourceEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
@@ -10410,7 +10410,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Entities.EntityRelationship))) {
                         return ((SanteDB.Core.Model.Entities.EntityRelationship)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -10674,7 +10674,7 @@ default:
                 if ((_strong.SourceEntity == null)) {
                     if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Entities.Entity>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity"));
                         if ((_delay != null)) {
                             _strong.SourceEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
@@ -10714,7 +10714,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Entities.EntityTelecomAddress))) {
                         return ((SanteDB.Core.Model.Entities.EntityTelecomAddress)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -10966,7 +10966,7 @@ default:
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct"));
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
@@ -11386,7 +11386,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Entities.ManufacturedMaterial))) {
                         return ((SanteDB.Core.Model.Entities.ManufacturedMaterial)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -11869,7 +11869,7 @@ default:
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct"));
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
@@ -12289,7 +12289,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Entities.Material))) {
                         return ((SanteDB.Core.Model.Entities.Material)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -12723,7 +12723,7 @@ default:
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct"));
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
@@ -13143,7 +13143,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Entities.NonPersonLivingSubject))) {
                         return ((SanteDB.Core.Model.Entities.NonPersonLivingSubject)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -13542,7 +13542,7 @@ default:
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct"));
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
@@ -13962,7 +13962,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Entities.Organization))) {
                         return ((SanteDB.Core.Model.Entities.Organization)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -14508,7 +14508,7 @@ default:
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct"));
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
@@ -14928,7 +14928,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Entities.Person))) {
                         return ((SanteDB.Core.Model.Entities.Person)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -15376,7 +15376,7 @@ default:
                 if ((_strong.SourceEntity == null)) {
                     if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Entities.Entity>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity"));
                         if ((_delay != null)) {
                             _strong.SourceEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
@@ -15416,7 +15416,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Entities.PersonLanguageCommunication))) {
                         return ((SanteDB.Core.Model.Entities.PersonLanguageCommunication)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -15595,7 +15595,7 @@ default:
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct"));
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
@@ -16015,7 +16015,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Entities.Place))) {
                         return ((SanteDB.Core.Model.Entities.Place)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -16394,7 +16394,7 @@ default:
                 if ((_strong.SourceEntity == null)) {
                     if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Entities.Entity>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity"));
                         if ((_delay != null)) {
                             _strong.SourceEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
@@ -16434,7 +16434,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Entities.PlaceService))) {
                         return ((SanteDB.Core.Model.Entities.PlaceService)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -16795,7 +16795,7 @@ default:
                 if ((_strong.CreationAct == null)) {
                     if ((_strong.CreationActKey.HasValue && context.ShouldForceLoad("creationActModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "CreationAct"));
                         if ((_delay != null)) {
                             _strong.CreationAct = _delay;
                             context.JsonContext.WritePropertyUtil(w, "creationActModel", _strong.CreationAct, context);
@@ -17215,7 +17215,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Entities.UserEntity))) {
                         return ((SanteDB.Core.Model.Entities.UserEntity)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -17685,7 +17685,7 @@ default:
                 if ((_strong.SourceEntity == null)) {
                     if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.IdentityDomain _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.IdentityDomain>(_strong, "SourceEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.DataTypes.IdentityDomain>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.IdentityDomain>(_strong, "SourceEntity"));
                         if ((_delay != null)) {
                             _strong.SourceEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
@@ -17799,7 +17799,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.AssigningAuthority))) {
                         return ((SanteDB.Core.Model.DataTypes.AssigningAuthority)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -18138,7 +18138,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.CodeSystem))) {
                         return ((SanteDB.Core.Model.DataTypes.CodeSystem)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -18623,7 +18623,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.Concept))) {
                         return ((SanteDB.Core.Model.DataTypes.Concept)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -19004,7 +19004,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptClass))) {
                         return ((SanteDB.Core.Model.DataTypes.ConceptClass)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -19237,7 +19237,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptName))) {
                         return ((SanteDB.Core.Model.DataTypes.ConceptName)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -19465,7 +19465,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptReferenceTerm))) {
                         return ((SanteDB.Core.Model.DataTypes.ConceptReferenceTerm)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -19685,7 +19685,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptRelationship))) {
                         return ((SanteDB.Core.Model.DataTypes.ConceptRelationship)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -19947,7 +19947,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptRelationshipType))) {
                         return ((SanteDB.Core.Model.DataTypes.ConceptRelationshipType)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -20299,7 +20299,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptSet))) {
                         return ((SanteDB.Core.Model.DataTypes.ConceptSet)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -20574,7 +20574,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptSetComposition))) {
                         return ((SanteDB.Core.Model.DataTypes.ConceptSetComposition)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -20783,7 +20783,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptExtension))) {
                         return ((SanteDB.Core.Model.DataTypes.ConceptExtension)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -21000,7 +21000,7 @@ default:
                 if ((_strong.SourceEntity == null)) {
                     if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Entities.Entity>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity"));
                         if ((_delay != null)) {
                             _strong.SourceEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
@@ -21040,7 +21040,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.EntityExtension))) {
                         return ((SanteDB.Core.Model.DataTypes.EntityExtension)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -21257,7 +21257,7 @@ default:
                 if ((_strong.SourceEntity == null)) {
                     if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity"));
                         if ((_delay != null)) {
                             _strong.SourceEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
@@ -21297,7 +21297,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ActExtension))) {
                         return ((SanteDB.Core.Model.DataTypes.ActExtension)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -21626,7 +21626,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ExtensionType))) {
                         return ((SanteDB.Core.Model.DataTypes.ExtensionType)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -21862,7 +21862,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.GeoTag))) {
                         return ((SanteDB.Core.Model.DataTypes.GeoTag)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -21990,7 +21990,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.IdentifiedDataReference))) {
                         return ((SanteDB.Core.Model.DataTypes.IdentifiedDataReference)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -22142,7 +22142,7 @@ default:
                 if ((_strong.IdentityDomain == null)) {
                     if ((_strong.IdentityDomainKey.HasValue && context.ShouldForceLoad("domainModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.IdentityDomain _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.IdentityDomain>(_strong, "IdentityDomain");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.DataTypes.IdentityDomain>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.IdentityDomain>(_strong, "IdentityDomain"));
                         if ((_delay != null)) {
                             _strong.IdentityDomain = _delay;
                             context.JsonContext.WritePropertyUtil(w, "domainModel", _strong.IdentityDomain, context);
@@ -22173,7 +22173,7 @@ default:
                 if ((_strong.SourceEntity == null)) {
                     if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Entities.Entity>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity"));
                         if ((_delay != null)) {
                             _strong.SourceEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
@@ -22213,7 +22213,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.EntityIdentifier))) {
                         return ((SanteDB.Core.Model.DataTypes.EntityIdentifier)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -22442,7 +22442,7 @@ default:
                 if ((_strong.IdentityDomain == null)) {
                     if ((_strong.IdentityDomainKey.HasValue && context.ShouldForceLoad("domainModel", _strong.Key))) {
                         SanteDB.Core.Model.DataTypes.IdentityDomain _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.IdentityDomain>(_strong, "IdentityDomain");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.DataTypes.IdentityDomain>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.DataTypes.IdentityDomain>(_strong, "IdentityDomain"));
                         if ((_delay != null)) {
                             _strong.IdentityDomain = _delay;
                             context.JsonContext.WritePropertyUtil(w, "domainModel", _strong.IdentityDomain, context);
@@ -22473,7 +22473,7 @@ default:
                 if ((_strong.SourceEntity == null)) {
                     if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity"));
                         if ((_delay != null)) {
                             _strong.SourceEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
@@ -22513,7 +22513,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ActIdentifier))) {
                         return ((SanteDB.Core.Model.DataTypes.ActIdentifier)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -22950,7 +22950,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.IdentityDomain))) {
                         return ((SanteDB.Core.Model.DataTypes.IdentityDomain)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -23231,7 +23231,7 @@ default:
                 if ((_strong.Author == null)) {
                     if ((_strong.AuthorKey.HasValue && context.ShouldForceLoad("authorModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "Author");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Entities.Entity>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "Author"));
                         if ((_delay != null)) {
                             _strong.Author = _delay;
                             context.JsonContext.WritePropertyUtil(w, "authorModel", _strong.Author, context);
@@ -23259,7 +23259,7 @@ default:
                 if ((_strong.SourceEntity == null)) {
                     if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Entities.Entity>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity"));
                         if ((_delay != null)) {
                             _strong.SourceEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
@@ -23299,7 +23299,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.EntityNote))) {
                         return ((SanteDB.Core.Model.DataTypes.EntityNote)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -23426,7 +23426,7 @@ default:
                 if ((_strong.Author == null)) {
                     if ((_strong.AuthorKey.HasValue && context.ShouldForceLoad("authorModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "Author");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Entities.Entity>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "Author"));
                         if ((_delay != null)) {
                             _strong.Author = _delay;
                             context.JsonContext.WritePropertyUtil(w, "authorModel", _strong.Author, context);
@@ -23454,7 +23454,7 @@ default:
                 if ((_strong.SourceEntity == null)) {
                     if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity"));
                         if ((_delay != null)) {
                             _strong.SourceEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
@@ -23494,7 +23494,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ActNote))) {
                         return ((SanteDB.Core.Model.DataTypes.ActNote)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -23786,7 +23786,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ReferenceTerm))) {
                         return ((SanteDB.Core.Model.DataTypes.ReferenceTerm)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -24086,7 +24086,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ReferenceTermName))) {
                         return ((SanteDB.Core.Model.DataTypes.ReferenceTermName)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -24444,7 +24444,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.RelationshipValidationRule))) {
                         return ((SanteDB.Core.Model.DataTypes.RelationshipValidationRule)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -24655,7 +24655,7 @@ default:
                 if ((_strong.SourceEntity == null)) {
                     if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Entities.Entity>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity"));
                         if ((_delay != null)) {
                             _strong.SourceEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
@@ -24769,7 +24769,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ConceptTag))) {
                         return ((SanteDB.Core.Model.DataTypes.ConceptTag)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -24974,7 +24974,7 @@ default:
                 if ((_strong.SourceEntity == null)) {
                     if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Entities.Entity>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "SourceEntity"));
                         if ((_delay != null)) {
                             _strong.SourceEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
@@ -25088,7 +25088,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.EntityTag))) {
                         return ((SanteDB.Core.Model.DataTypes.EntityTag)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -25293,7 +25293,7 @@ default:
                 if ((_strong.SourceEntity == null)) {
                     if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity"));
                         if ((_delay != null)) {
                             _strong.SourceEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
@@ -25407,7 +25407,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.ActTag))) {
                         return ((SanteDB.Core.Model.DataTypes.ActTag)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -25747,7 +25747,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.DataTypes.TemplateDefinition))) {
                         return ((SanteDB.Core.Model.DataTypes.TemplateDefinition)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -26001,7 +26001,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Collection.Bundle))) {
                         return ((SanteDB.Core.Model.Collection.Bundle)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -26203,7 +26203,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Audit.AuditEventData))) {
                         return ((SanteDB.Core.Model.Audit.AuditEventData)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -26857,7 +26857,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.Account))) {
                         return ((SanteDB.Core.Model.Acts.Account)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -27711,7 +27711,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.Act))) {
                         return ((SanteDB.Core.Model.Acts.Act)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -28101,7 +28101,7 @@ default:
                 if ((_strong.PlayerEntity == null)) {
                     if ((_strong.PlayerEntityKey.HasValue && context.ShouldForceLoad("playerModel", _strong.Key))) {
                         SanteDB.Core.Model.Entities.Entity _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "PlayerEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Entities.Entity>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Entities.Entity>(_strong, "PlayerEntity"));
                         if ((_delay != null)) {
                             _strong.PlayerEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "playerModel", _strong.PlayerEntity, context);
@@ -28144,7 +28144,7 @@ default:
                 if ((_strong.Act == null)) {
                     if ((_strong.ActKey.HasValue && context.ShouldForceLoad("actModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "Act");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "Act"));
                         if ((_delay != null)) {
                             _strong.Act = _delay;
                             context.JsonContext.WritePropertyUtil(w, "actModel", _strong.Act, context);
@@ -28179,7 +28179,7 @@ default:
                 if ((_strong.SourceEntity == null)) {
                     if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity"));
                         if ((_delay != null)) {
                             _strong.SourceEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
@@ -28219,7 +28219,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.ActParticipation))) {
                         return ((SanteDB.Core.Model.Acts.ActParticipation)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -28447,7 +28447,7 @@ default:
                 if ((_strong.SourceEntity == null)) {
                     if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity"));
                         if ((_delay != null)) {
                             _strong.SourceEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
@@ -28487,7 +28487,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.ActProtocol))) {
                         return ((SanteDB.Core.Model.Acts.ActProtocol)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -28674,7 +28674,7 @@ default:
                 if ((_strong.TargetAct == null)) {
                     if ((_strong.TargetActKey.HasValue && context.ShouldForceLoad("targetModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "TargetAct");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "TargetAct"));
                         if ((_delay != null)) {
                             _strong.TargetAct = _delay;
                             context.JsonContext.WritePropertyUtil(w, "targetModel", _strong.TargetAct, context);
@@ -28713,6 +28713,13 @@ default:
                     context.JsonContext.WritePropertyUtil(w, "relationshipTypeModel", _strong.RelationshipType, context);
                 }
             }
+            if (context.ShouldSerialize("sequence")) {
+                if ((_strong.Sequence == null)) {
+                }
+                else {
+                    context.JsonContext.WritePropertyUtil(w, "sequence", _strong.Sequence, context);
+                }
+            }
             if (context.ShouldSerialize("modifiedOn")) {
                 context.JsonContext.WritePropertyUtil(w, "modifiedOn", _strong.ModifiedOn, context);
             }
@@ -28727,7 +28734,7 @@ default:
                 if ((_strong.SourceEntity == null)) {
                     if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity"));
                         if ((_delay != null)) {
                             _strong.SourceEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
@@ -28767,7 +28774,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.ActRelationship))) {
                         return ((SanteDB.Core.Model.Acts.ActRelationship)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -28826,6 +28833,13 @@ case "relationshipTypeModel":
                     _instance = context.JsonContext.ReadElementUtil(r, typeof(SanteDB.Core.Model.DataTypes.Concept), new SanteDB.Core.ViewModel.Json.JsonSerializationContext("relationshipTypeModel", context.JsonContext, _retVal, context));
                     if ((_instance != null)) {
                         _retVal.RelationshipType = ((SanteDB.Core.Model.DataTypes.Concept)(_instance));
+                    }
+                    break;
+case "sequence":
+                    r.Read();
+                    _instance = context.JsonContext.ReadElementUtil(r, typeof(System.Nullable<long>), new SanteDB.Core.ViewModel.Json.JsonSerializationContext("sequence", context.JsonContext, _retVal, context));
+                    if ((_instance != null)) {
+                        _retVal.Sequence = ((System.Nullable<long>)(_instance));
                     }
                     break;
 case "source":
@@ -29099,7 +29113,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.CarePathwayDefinition))) {
                         return ((SanteDB.Core.Model.Acts.CarePathwayDefinition)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -29810,7 +29824,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.CarePlan))) {
                         return ((SanteDB.Core.Model.Acts.CarePlan)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -30650,7 +30664,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.ControlAct))) {
                         return ((SanteDB.Core.Model.Acts.ControlAct)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -31494,7 +31508,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.FinancialContract))) {
                         return ((SanteDB.Core.Model.Acts.FinancialContract)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -32365,7 +32379,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.FinancialTransaction))) {
                         return ((SanteDB.Core.Model.Acts.FinancialTransaction)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -33297,7 +33311,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.InvoiceElement))) {
                         return ((SanteDB.Core.Model.Acts.InvoiceElement)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -34207,7 +34221,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.Narrative))) {
                         return ((SanteDB.Core.Model.Acts.Narrative)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -35093,7 +35107,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.Observation))) {
                         return ((SanteDB.Core.Model.Acts.Observation)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -35997,7 +36011,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.QuantityObservation))) {
                         return ((SanteDB.Core.Model.Acts.QuantityObservation)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -36897,7 +36911,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.TextObservation))) {
                         return ((SanteDB.Core.Model.Acts.TextObservation)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -37801,7 +37815,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.CodedObservation))) {
                         return ((SanteDB.Core.Model.Acts.CodedObservation)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -38701,7 +38715,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.DateObservation))) {
                         return ((SanteDB.Core.Model.Acts.DateObservation)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -39624,7 +39638,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.PatientEncounter))) {
                         return ((SanteDB.Core.Model.Acts.PatientEncounter)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -40052,7 +40066,7 @@ default:
                 if ((_strong.SourceEntity == null)) {
                     if ((_strong.SourceEntityKey.HasValue && context.ShouldForceLoad("sourceModel", _strong.Key))) {
                         SanteDB.Core.Model.Acts.Act _delay = null;
-                        _delay = SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity");
+                        _delay = SanteDB.Core.ExtensionMethods.ApplyPrivacyPolicies<SanteDB.Core.Model.Acts.Act>(SanteDB.ExtensionMethods.LoadProperty<SanteDB.Core.Model.Acts.Act>(_strong, "SourceEntity"));
                         if ((_delay != null)) {
                             _strong.SourceEntity = _delay;
                             context.JsonContext.WritePropertyUtil(w, "sourceModel", _strong.SourceEntity, context);
@@ -40092,7 +40106,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.PatientEncounterArrangement))) {
                         return ((SanteDB.Core.Model.Acts.PatientEncounterArrangement)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -40762,7 +40776,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.Procedure))) {
                         return ((SanteDB.Core.Model.Acts.Procedure)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -41258,7 +41272,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.Protocol))) {
                         return ((SanteDB.Core.Model.Acts.Protocol)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }
@@ -41966,7 +41980,7 @@ default:
                 if ((r.TokenType == Newtonsoft.Json.JsonToken.PropertyName)) {
 switch (r.Value) {
 case "$type":
-                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2053.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
+                    System.Type _type = this.m_binder.BindToType("SanteDB.Core.Model, Version=3.0.2076.0, Culture=neutral, PublicKeyToken=null", r.ReadAsString());
                     if ((_type != typeof(SanteDB.Core.Model.Acts.SubstanceAdministration))) {
                         return ((SanteDB.Core.Model.Acts.SubstanceAdministration)(context.JsonContext.GetFormatter(_type).Deserialize(r, _type, context)));
                     }

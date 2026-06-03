@@ -90,6 +90,8 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
                     return false;
                 }
 
+                //TODO: If appPrincipal is not authenticated, we should be entering a system context instead.
+
                 // Enter an authentication context as the application principal
                 using (AuthenticationContext.EnterContext(appPrincipal))
                 {
@@ -97,17 +99,20 @@ namespace SanteDB.Rest.OAuth.TokenRequestHandlers
 
                     var principal = _SessionIdentityProvider.Authenticate(context.Session) as IClaimsPrincipal;
 
-                    var sessionapp = principal?.Identities?.OfType<IApplicationIdentity>()?.FirstOrDefault() as IClaimsIdentity;
-
-                    if (sessionapp.Name != appPrincipal.Identity.Name)
+                    if (context?.Configuration?.ValidateAppNameOnRefresh == true)
                     {
-                        //Abandon the session because the request is invalid.
-                        _SessionProvider.Abandon(context.Session);
-                        context.Session = null;
-                        _Tracer.TraceWarning("OAuth reuqest contains a refresh token for a different application than the request was sent from.");
-                        context.ErrorType = OAuthErrorType.invalid_client;
-                        context.ErrorMessage = "invalid refresh token";
-                        return false;
+                        var sessionapp = principal?.Identities?.OfType<IApplicationIdentity>()?.FirstOrDefault() as IClaimsIdentity;
+
+                        if (sessionapp.Name != appPrincipal.Identity.Name)
+                        {
+                            //Abandon the session because the request is invalid.
+                            _SessionProvider.Abandon(context.Session);
+                            context.Session = null;
+                            _Tracer.TraceWarning("OAuth reuqest contains a refresh token for a different application than the request was sent from.");
+                            context.ErrorType = OAuthErrorType.invalid_client;
+                            context.ErrorMessage = "invalid refresh token";
+                            return false;
+                        }
                     }
 
                     _AuditService.Audit().ForSessionStart(context.Session, principal, null != context.Session).Send();

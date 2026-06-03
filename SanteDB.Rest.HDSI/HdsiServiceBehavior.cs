@@ -1439,13 +1439,17 @@ namespace SanteDB.Rest.HDSI
 
             try
             {
-                if (!Guid.TryParse(key, out Guid keyGuid))
+
+                var handler = this.GetResourceHandler(resourceType) as IChainedApiResourceHandler;
+                if (!Guid.TryParse(key, out Guid keyGuid) && !Guid.TryParse(childResourceType, out var childUuid)) // may be a query
                 {
                     throw new ArgumentException(nameof(key));
                 }
-
-                var handler = this.GetResourceHandler(resourceType) as IChainedApiResourceHandler;
-                if (handler != null)
+                else if(childUuid != Guid.Empty)
+                {
+                    return this.AssociationGet(resourceType, key, childResourceType);
+                }
+                else if (handler != null)
                 {
                     audit.WithSensitivity(handler.Type.GetResourceSensitivityClassification());
                     this.AclCheck(handler, nameof(IApiResourceHandler.Query));

@@ -17,6 +17,7 @@
  *
  */
 using SanteDB.Core;
+using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.AMI.Auth;
@@ -28,6 +29,7 @@ using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
@@ -178,8 +180,11 @@ namespace SanteDB.Rest.AMI.Resources
         public override object Get(object id, object versionId)
         {
             // Get the object
-
             var data = this.GetRepository().Get((Guid)id, (Guid)versionId);
+            if(data == null)
+            {
+                throw new KeyNotFoundException(String.Format(ErrorMessages.OBJECT_NOT_FOUND, id));
+            }
 
             var retVal = Activator.CreateInstance(this.WrapperType, data) as ISecurityEntityInfo<TSecurityEntity>;
             retVal.Policies = this.m_policyInformationService.GetPolicies(data).Select(o => new SecurityPolicyInfo(o)).ToList();

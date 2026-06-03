@@ -190,6 +190,9 @@ namespace SanteDB.Rest.OAuth.Rest
                 TokenAuthorizationAccessBehavior.SetSessionResolverDelegate(GetSessionFromIdToken);
             }
 
+            //Default the setting to false.
+            m_configuration.ValidateAppNameOnRefresh = m_configuration.ValidateAppNameOnRefresh ?? false;
+
             //Wire up token request handlers.
             var servicemanager = ApplicationServiceContext.Current.GetService<IServiceManager>();
 

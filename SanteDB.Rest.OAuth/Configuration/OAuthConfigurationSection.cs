@@ -83,5 +83,11 @@ namespace SanteDB.Rest.OAuth.Configuration
         /// </summary>
         [XmlElement("encodeScopes"), DisplayName("Encode Scopes"), Description("When true, scopes will be encoded with a ua. prefix to reduce the overall size of the issued JWT. Set this to false to provide the full unencoded oid in the scope.")]
         public bool EncodeScopes { get; set; }
+
+        /// <summary>
+        /// When true, a refresh token grant based token request will validate that the app name in the original grant matches the app name (client_id) of the request. The default is false.
+        /// </summary>
+        [XmlElement("validateAppNameOnRefresh"), DisplayName("Validate App Name on Refresh"), Description("When enabled, the client id of a refresh_token based request must match the issued app name of the original grant.")]
+        public bool? ValidateAppNameOnRefresh { get; set; }
     }
 }

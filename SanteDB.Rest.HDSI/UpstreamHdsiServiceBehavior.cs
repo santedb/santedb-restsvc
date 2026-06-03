@@ -307,7 +307,10 @@ namespace SanteDB.Messaging.HDSI.Wcf
                         }
 
                         var retVal = restClient.Delete<IdentifiedData>($"{resourceType}/{id}");
-                        this.m_dataCachingService.Remove(retVal.Key.GetValueOrDefault());
+                        if (retVal != null)
+                        {
+                            this.m_dataCachingService.Remove(retVal.Key.GetValueOrDefault());
+                        }
                         if (retVal is IResourceCollection irc)
                         {
                             irc.Item.ForEach(o => this.m_dataCachingService.Remove(o.Key.GetValueOrDefault()));

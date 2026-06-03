@@ -166,24 +166,6 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <summary>
-        /// Set applet headers
-        /// </summary>
-        private void SetAppletHeaders(AppletInfo package)
-        {
-            RestOperationContext.Current.OutgoingResponse.SetETag(package.Version);
-            RestOperationContext.Current.OutgoingResponse.Headers.Add(ExtendedHttpHeaderNames.PackageIdentifierHeaderName, package.Id);
-            if (package.Hash != null)
-            {
-                RestOperationContext.Current.OutgoingResponse.AppendHeader(ExtendedHttpHeaderNames.PackageHashHeaderName, Convert.ToBase64String(package.Hash));
-            }
-
-            RestOperationContext.Current.OutgoingResponse.AppendHeader("Content-Type", "application/octet-stream");
-            RestOperationContext.Current.OutgoingResponse.ContentType = "application/octet-stream";
-            RestOperationContext.Current.OutgoingResponse.AppendHeader("Content-Disposition", $"attachment; filename=\"{package.Id}.pak.gz\"");
-            RestOperationContext.Current.OutgoingResponse.AppendHeader("Location", $"/ami/Applet/{package.Id}");
-        }
-
-        /// <summary>
         /// Obsoletes the specified applet
         /// </summary>
         /// <param name="solutionId">The identifier of the applet to uninstall</param>
