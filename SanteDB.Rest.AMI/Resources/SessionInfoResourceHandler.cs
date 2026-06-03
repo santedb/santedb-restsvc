@@ -96,13 +96,18 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.UnrestrictedAdministration)]
         public object Get(object id, object versionId)
         {
+            string sessionidentifier = null; //TODO: This is only used for logging. We may be able to refactor this to avoid a heap allocation.
+
             byte[] sessionId = null;
             if (id is Guid uuid)
             {
                 sessionId = uuid.ToByteArray();
+                sessionidentifier = uuid.ToString();    
             }
             else if (id is String str)
             {
+                sessionidentifier = str;
+
                 try
                 {
                     sessionId = str.HexDecode();
@@ -111,15 +116,17 @@ namespace SanteDB.Rest.AMI.Resources
                 {
                     sessionId = Convert.FromBase64String(str);
                 }
+
+                
             }
 
             var session = this.m_sessionProvider.Get(sessionId, true);
             if (session == null)
             {
-                this.m_tracer.TraceError($"Session {uuid} not found");
+                this.m_tracer.TraceError($"Session {sessionidentifier} not found");
                 throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.ami.sessionNotFound", new
                 {
-                    param = uuid
+                    param = sessionidentifier
                 }));
             }
             return new SecuritySessionInfo(session);
@@ -131,13 +138,17 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.UnrestrictedAdministration)]
         public object Delete(object key)
         {
+            string sessionidentifier = null; //TODO: This is only used for logging. We may be able to refactor this to avoid a heap allocation.
             byte[] sessionId = null;
             if (key is Guid uuid)
             {
                 sessionId = uuid.ToByteArray();
+                sessionidentifier = uuid.ToString();
             }
             else if (key is String str)
             {
+                sessionidentifier = str;
+
                 try
                 {
                     sessionId = str.HexDecode();
@@ -146,15 +157,17 @@ namespace SanteDB.Rest.AMI.Resources
                 {
                     sessionId = Convert.FromBase64String(str);
                 }
+
+
             }
 
             var session = this.m_sessionProvider.Get(sessionId, false);
             if (session == null)
             {
-                this.m_tracer.TraceError($"Session {uuid} not found");
+                this.m_tracer.TraceError($"Session {sessionidentifier} not found");
                 throw new KeyNotFoundException(this.m_localizationService.GetString("error.rest.ami.sessionNotFound", new
                 {
-                    param = uuid
+                    param = sessionidentifier
                 }));
             }
             this.m_sessionProvider.Abandon(session);

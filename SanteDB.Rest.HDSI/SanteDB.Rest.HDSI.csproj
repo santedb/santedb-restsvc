@@ -1,97 +1,71 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(VersionNumber)' == ''">
-    <VersionNumber>3.0-debug</VersionNumber>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PackageId>SanteDB.Rest.HDSI</PackageId>
-    <Title>SanteDB.Rest.HDSI</Title>
-    <Version>$(VersionNumber)</Version>
-    <Description>Health Data Services Interface (HDSI) REST interface implementation, used by various SanteDB execution environment to provide access to health related data.</Description>
-    <Authors>SanteSuite Contributors</Authors>
-    <PackageTags>SanteDB</PackageTags>
-    <RepositoryUrl>https://github.com/santedb/santedb-restsvc</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <IncludeSymbols>true</IncludeSymbols>
-        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-	    <Product>SanteDB</Product>
-    <Copyright>Copyright (C) 2015-2026 SanteSuite Contributors (See: NOTICES)</Copyright>
-    <Company>SanteSuite Contributors</Company>
-    <PackageIconUrl>http://santesuite.org/assets/img/logo.png</PackageIconUrl>
-    <PackageProjectUrl>http://santesuite.org</PackageProjectUrl>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="ChildResources\ConceptRelationshipChildResource.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Configuration\Default.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Configuration\Default.xml" />
-  </ItemGroup>  
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="ZXing.Net" Version="0.16.10" />
-    <PackageReference Include="ZXing.Net.Bindings.ImageSharp.V2" Version="0.16.17" />
-  </ItemGroup>     
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\SanteDB.Rest.HDSI.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>portable</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\SanteDB.Rest.HDSI.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-    <DebugType>portable</DebugType>
-  </PropertyGroup>
-  <Choose>
-    <When Condition="$(SolutionName.Contains('-nuget'))">
-      <ItemGroup>
-        <PackageReference Include="RestSrvr" Version="$(VersionNumber)" />
-        <PackageReference Include="SanteDB.Core.Applets" Version="$(VersionNumber)" />
-        <PackageReference Include="SanteDB.Core.Api" Version="$(VersionNumber)" />
-        <PackageReference Include="SanteDB.Core.Model" Version="$(VersionNumber)" />
-        <PackageReference Include="SanteDB.Core.i18n" Version="$(VersionNumber)" />
-        <PackageReference Include="SanteDB.Docker.Core" Version="$(VersionNumber)" />
-      </ItemGroup>
-    </When>
-    <Otherwise>
-      <ItemGroup>
-        <ProjectReference Include="..\..\santedb-model\SanteDB.Core.Model\SanteDB.Core.Model.csproj" />
-        <ProjectReference Include="..\..\santedb-api\SanteDB.Core.Api\SanteDB.Core.Api.csproj" />
-        <ProjectReference Include="..\..\santedb-applets\SanteDB.Core.Applets\SanteDB.Core.Applets.csproj" />
-        <ProjectReference Include="..\..\restsrvr\RestSrvr\RestSrvr.csproj" />
-        <ProjectReference Include="..\..\santedb-docker\SanteDB.Docker.Core\SanteDB.Docker.Core.csproj" />
-        <ProjectReference Include="..\..\santedb-i18n\SanteDB.Core.i18n\SanteDB.Core.i18n.csproj" />
-      </ItemGroup>
-
-    </Otherwise>
-  </Choose>
-  <ItemGroup>
-    <ProjectReference Include="..\SanteDB.Rest.Common\SanteDB.Rest.Common.csproj">
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\SanteDB.licenseheader">
-      <Link>SanteDB.licenseheader</Link>
-    </None>
-  </ItemGroup>
+	<PropertyGroup Condition="'$(VersionNumber)' == ''">
+		<VersionNumber>3.0-debug</VersionNumber>
+	</PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net10.0;net48;netstandard2.0</TargetFrameworks>
+	</PropertyGroup>
+	<PropertyGroup>
+		<PackageId>SanteDB.Rest.HDSI</PackageId>
+		<Title>SanteDB.Rest.HDSI</Title>
+		<Version>$(VersionNumber)</Version>
+		<Description>Health Data Services Interface (HDSI) REST interface implementation, used by various SanteDB execution environment to provide access to health related data.</Description>
+		<Authors>SanteSuite Contributors</Authors>
+		<PackageTags>SanteDB</PackageTags>
+		<RepositoryUrl>https://github.com/santedb/santedb-restsvc</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<IncludeSymbols>true</IncludeSymbols>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<Product>SanteDB</Product>
+		<Copyright>Copyright (C) 2015-2026 SanteSuite Contributors (See: NOTICES)</Copyright>
+		<Company>SanteSuite Contributors</Company>
+		<PackageIconUrl>http://santesuite.org/assets/img/logo.png</PackageIconUrl>
+		<PackageProjectUrl>http://santesuite.org</PackageProjectUrl>
+	</PropertyGroup>
+	<ItemGroup>
+		<Compile Remove="ChildResources\ConceptRelationshipChildResource.cs" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="Configuration\Default.xml" />
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="Configuration\Default.xml" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+		<PackageReference Include="ZXing.Net" Version="[0.16.11,0.17)" />
+		<PackageReference Include="ZXing.Net.Bindings.ImageSharp.V2" Version="[0.16.18,0.17)" />
+	</ItemGroup>
+	<Choose>
+		<When Condition="$(SolutionName.Contains('-nuget'))">
+			<ItemGroup>
+				<PackageReference Include="RestSrvr" Version="$(VersionNumber)" />
+				<PackageReference Include="SanteDB.Core.Applets" Version="$(VersionNumber)" />
+				<PackageReference Include="SanteDB.Core.Api" Version="$(VersionNumber)" />
+				<PackageReference Include="SanteDB.Core.Model" Version="$(VersionNumber)" />
+				<PackageReference Include="SanteDB.Core.i18n" Version="$(VersionNumber)" />
+				<PackageReference Include="SanteDB.Docker.Core" Version="$(VersionNumber)" />
+				<PackageReference Include="SanteDB.Rest.Common" Version="$(VersionNumber)" />
+			</ItemGroup>
+		</When>
+		<Otherwise>
+			<ItemGroup>
+				<ProjectReference Include="..\..\santedb-model\SanteDB.Core.Model\SanteDB.Core.Model.csproj" />
+				<ProjectReference Include="..\..\santedb-api\SanteDB.Core.Api\SanteDB.Core.Api.csproj" />
+				<ProjectReference Include="..\..\santedb-applets\SanteDB.Core.Applets\SanteDB.Core.Applets.csproj" />
+				<ProjectReference Include="..\..\restsrvr\RestSrvr\RestSrvr.csproj" />
+				<ProjectReference Include="..\..\santedb-docker\SanteDB.Docker.Core\SanteDB.Docker.Core.csproj" />
+				<ProjectReference Include="..\..\santedb-i18n\SanteDB.Core.i18n\SanteDB.Core.i18n.csproj" />
+				<ProjectReference Include="..\SanteDB.Rest.Common\SanteDB.Rest.Common.csproj" />
+			</ItemGroup>
+		</Otherwise>
+	</Choose>
+	<ItemGroup>
+		<None Include="..\SanteDB.licenseheader">
+			<Link>SanteDB.licenseheader</Link>
+		</None>
+	</ItemGroup>
 </Project>

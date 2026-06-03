@@ -1,124 +1,53 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(VersionNumber)' == ''">
-    <VersionNumber>3.0-debug</VersionNumber>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PackageId>SanteDB.Core.Model.AMI</PackageId>
-    <Title>SanteDB.Core.Model.AMI</Title>
-    <Version>$(VersionNumber)</Version>
-    <Description>SanteDB Supporting Models for the Administrative Management Interface</Description>
-    <Authors>SanteSuite Contributors</Authors>
-    <PackageTags>SanteDB</PackageTags>
-    <RepositoryUrl>https://github.com/santedb/santedb-restsvc</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <IncludeSymbols>true</IncludeSymbols>
-        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-	    <Product>SanteDB</Product>
-    <Copyright>Copyright (C) 2015-2026 SanteSuite Contributors (See: NOTICES)</Copyright>
-    <Company>SanteSuite Contributors</Company>
-    <PackageIconUrl>http://santesuite.org/assets/img/logo.png</PackageIconUrl>
-    <PackageProjectUrl>http://santesuite.org</PackageProjectUrl>
-  </PropertyGroup>  
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-  </ItemGroup>        
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\bin\Debug\SanteDB.Core.Model.AMI.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>portable</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\bin\Release\SanteDB.Core.Model.AMI.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-    <DebugType>portable</DebugType>
-  </PropertyGroup>
-  <!-- <ItemGroup> -->
-    <!-- <Compile Include="AmiCollection.cs" /> -->
-    <!-- <Compile Include="Applet\AppletManifestInfo.cs" /> -->
-    <!-- <Compile Include="Applet\AppletSolutionInfo.cs" /> -->
-    <!-- <Compile Include="Auth\ISecurityEntityInfo.cs" /> -->
-    <!-- <Compile Include="Auth\SecurityApplicationInfo.cs" /> -->
-    <!-- <Compile Include="Auth\SecurityDeviceInfo.cs" /> -->
-    <!-- <Compile Include="Auth\SecurityPolicyInfo.cs" /> -->
-    <!-- <Compile Include="Auth\SecurityRoleInfo.cs" /> -->
-    <!-- <Compile Include="Auth\SecurityUserChallenge.cs" /> -->
-    <!-- <Compile Include="Auth\SecurityUserInfo.cs" /> -->
-    <!-- <Compile Include="Auth\TfaMechanismInfo.cs" /> -->
-    <!-- <Compile Include="Diagnostics\DiagnosticReportTag.cs" /> -->
-    <!-- <Compile Include="Diagnostics\DiagnosticApplicationInfo.cs" /> -->
-    <!-- <Compile Include="Diagnostics\DiagnosticEnvironmentInfo.cs" /> -->
-    <!-- <Compile Include="Diagnostics\DiagnosticAttachmentInfo.cs" /> -->
-    <!-- <Compile Include="Diagnostics\DiagnosticAttachments.cs" /> -->
-    <!-- <Compile Include="Diagnostics\DiagnosticReport.cs" /> -->
-    <!-- <Compile Include="Diagnostics\DiagnosticServiceInfo.cs" /> -->
-    <!-- <Compile Include="Diagnostics\DiagnosticSyncInfo.cs" /> -->
-    <!-- <Compile Include="Diagnostics\DiagnosticThreadInfo.cs" /> -->
-    <!-- <Compile Include="Diagnostics\DiagnosticVersionInfo.cs" /> -->
-    <!-- <Compile Include="Diagnostics\DiagnosticsProbe.cs" /> -->
-    <!-- <Compile Include="Diagnostics\DiagnosticsProbeReading.cs" /> -->
-    <!-- <Compile Include="ExtensionMethods.cs" /> -->
-    <!-- <Compile Include="IAmiIdentified.cs" /> -->
-    <!-- <Compile Include="Jobs\JobInfo.cs" /> -->
-    <!-- <Compile Include="Jobs\JobParameter.cs" /> -->
-    <!-- <Compile Include="Logging\LogFileInfo.cs" /> -->
-    <!-- <Compile Include="Properties\AssemblyInfo.cs" /> -->
-    <!-- <Compile Include="Security\AuditSubmission.cs" /> -->
-    <!-- <Compile Include="Security\RevokeReason.cs" /> -->
-    <!-- <Compile Include="Security\SecuritySessionInfo.cs" /> -->
-    <!-- <Compile Include="Security\SubmissionInfo.cs" /> -->
-    <!-- <Compile Include="Security\SubmissionRequest.cs" /> -->
-    <!-- <Compile Include="Security\SubmissionResult.cs" /> -->
-    <!-- <Compile Include="Security\SubmissionStatus.cs" /> -->
-    <!-- <Compile Include="Security\X509Certificate2Info.cs" /> -->
-  <!-- </ItemGroup> -->
-  <ItemGroup>
-    <None Include="..\SanteDB.licenseheader">
-      <Link>SanteDB.licenseheader</Link>
-    </None>
-    <None Include="app.config" />
-  </ItemGroup>
-  <ItemGroup>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-  </ItemGroup>
-  <Choose>
-    <When Condition="$(SolutionName.Contains('-nuget'))">
-      <ItemGroup>
-        <PackageReference Include="SanteDB.Core.Api" Version="$(VersionNumber)">
-        </PackageReference>
-        <PackageReference Include="SanteDB.Core.Applets" Version="$(VersionNumber)">
-        </PackageReference>
-        <PackageReference Include="SanteDB.Core.Model" Version="$(VersionNumber)">
-        </PackageReference>
-      </ItemGroup>
-    </When>
-    <Otherwise>
-      <ItemGroup>
-        <ProjectReference Include="..\..\santedb-model\SanteDB.Core.Model\SanteDB.Core.Model.csproj">
-        </ProjectReference>
-        <ProjectReference Include="..\..\santedb-api\SanteDB.Core.Api\SanteDB.Core.Api.csproj">
-        </ProjectReference>
-        <ProjectReference Include="..\..\santedb-applets\SanteDB.Core.Applets\SanteDB.Core.Applets.csproj">
-        </ProjectReference>
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
+	<PropertyGroup Condition="'$(VersionNumber)' == ''">
+		<VersionNumber>3.0-debug</VersionNumber>
+	</PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net10.0;net48;netstandard2.0</TargetFrameworks>
+	</PropertyGroup>
+	<PropertyGroup>
+		<PackageId>SanteDB.Core.Model.AMI</PackageId>
+		<Title>SanteDB.Core.Model.AMI</Title>
+		<Version>$(VersionNumber)</Version>
+		<Description>SanteDB Supporting Models for the Administrative Management Interface</Description>
+		<Authors>SanteSuite Contributors</Authors>
+		<PackageTags>SanteDB</PackageTags>
+		<RepositoryUrl>https://github.com/santedb/santedb-restsvc</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<IncludeSymbols>true</IncludeSymbols>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<Product>SanteDB</Product>
+		<Copyright>Copyright (C) 2015-2026 SanteSuite Contributors (See: NOTICES)</Copyright>
+		<Company>SanteSuite Contributors</Company>
+		<PackageIconUrl>http://santesuite.org/assets/img/logo.png</PackageIconUrl>
+		<PackageProjectUrl>http://santesuite.org</PackageProjectUrl>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Include="..\SanteDB.licenseheader">
+			<Link>SanteDB.licenseheader</Link>
+		</None>
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="[13.0.4,13.1)" />
+		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+	</ItemGroup>
+	<Choose>
+		<When Condition="$(SolutionName.Contains('-nuget'))">
+			<ItemGroup>
+				<PackageReference Include="SanteDB.Core.Api" Version="$(VersionNumber)" />
+				<PackageReference Include="SanteDB.Core.Applets" Version="$(VersionNumber)" />
+				<PackageReference Include="SanteDB.Core.Model" Version="$(VersionNumber)" />
+			</ItemGroup>
+		</When>
+		<Otherwise>
+			<ItemGroup>
+				<ProjectReference Include="..\..\santedb-model\SanteDB.Core.Model\SanteDB.Core.Model.csproj" />
+				<ProjectReference Include="..\..\santedb-api\SanteDB.Core.Api\SanteDB.Core.Api.csproj" />
+				<ProjectReference Include="..\..\santedb-applets\SanteDB.Core.Applets\SanteDB.Core.Applets.csproj" />
+			</ItemGroup>
+		</Otherwise>
+	</Choose>
 </Project>

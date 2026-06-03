@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(VersionNumber)' == ''">
-    <VersionNumber>3.0-debug</VersionNumber>
-  </PropertyGroup>
-  <PropertyGroup>
+	<PropertyGroup Condition="'$(VersionNumber)' == ''">
+		<VersionNumber>3.0-debug</VersionNumber>
+	</PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net10.0;net48;netstandard2.0</TargetFrameworks>
+	</PropertyGroup>
+	<PropertyGroup>
     <PackageId>SanteDB.Rest.AMI</PackageId>
     <Title>SanteDB.Rest.AMI</Title>
     <Version>$(VersionNumber)</Version>
@@ -19,16 +19,12 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <IncludeSymbols>true</IncludeSymbols>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 	    <Product>SanteDB</Product>
     <Copyright>Copyright (C) 2015-2026 SanteSuite Contributors (See: NOTICES)</Copyright>
     <Company>SanteSuite Contributors</Company>
     <PackageIconUrl>http://santesuite.org/assets/img/logo.png</PackageIconUrl>
     <PackageProjectUrl>http://santesuite.org</PackageProjectUrl>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="Resources\ExtensionTypeResourceHandler.cs" />
-  </ItemGroup>
   <ItemGroup>
     <None Remove="Configuration\Default.xml" />
   </ItemGroup>
@@ -39,39 +35,19 @@
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="SharpCompress" Version="0.40.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.1" />
-    <PackageReference Include="ZXing.Net" Version="0.16.10" />
-    <PackageReference Include="ZXing.Net.Bindings.ImageSharp.V2" Version="0.16.17" />
+    <PackageReference Include="ZXing.Net" Version="[0.16.11,0.17)" />
+    <PackageReference Include="ZXing.Net.Bindings.ImageSharp.V2" Version="[0.16.18,0.17)" />
   </ItemGroup>     
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\SanteDB.Rest.AMI.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>portable</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\SanteDB.Rest.AMI.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-    <DebugType>portable</DebugType>
-  </PropertyGroup>
   <Choose>
     <When Condition="$(SolutionName.Contains('-nuget'))">
       <ItemGroup>
-        <PackageReference Include="RestSrvr" Version="$(VersionNumber)" />
-        <PackageReference Include="SanteDB.Core.Applets" Version="$(VersionNumber)" />
-        <PackageReference Include="SanteDB.Core.Api" Version="$(VersionNumber)" />
-        <PackageReference Include="SanteDB.Core.Model" Version="$(VersionNumber)" />
-        <PackageReference Include="SanteDB.Docker.Core" Version="$(VersionNumber)" />
+				<PackageReference Include="SanteDB.Core.Model" Version="$(VersionNumber)" />
+				<PackageReference Include="SanteDB.Core.Api" Version="$(VersionNumber)" />
+				<PackageReference Include="SanteDB.Core.Applets" Version="$(VersionNumber)" />
+				<PackageReference Include="RestSrvr" Version="$(VersionNumber)" />
+				<PackageReference Include="SanteDB.Docker.Core" Version="$(VersionNumber)" />
+				<PackageReference Include="SanteDB.Core.Model.AMI" Version="$(VersionNumber)" />
+				<PackageReference Include="SanteDB.Rest.Common" Version="$(VersionNumber)" />
       </ItemGroup>
     </When>
     <Otherwise>
@@ -81,18 +57,11 @@
         <ProjectReference Include="..\..\santedb-applets\SanteDB.Core.Applets\SanteDB.Core.Applets.csproj" />
         <ProjectReference Include="..\..\restsrvr\RestSrvr\RestSrvr.csproj" />
         <ProjectReference Include="..\..\santedb-docker\SanteDB.Docker.Core\SanteDB.Docker.Core.csproj" />
+				<ProjectReference Include="..\SanteDB.Core.Model.AMI\SanteDB.Core.Model.AMI.csproj" />
+				<ProjectReference Include="..\SanteDB.Rest.Common\SanteDB.Rest.Common.csproj" />
       </ItemGroup>
-      
     </Otherwise>
   </Choose>
-  <ItemGroup>
-    <ProjectReference Include="..\SanteDB.Core.Model.AMI\SanteDB.Core.Model.AMI.csproj">
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SanteDB.Rest.Common\SanteDB.Rest.Common.csproj">
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup>
     <None Include="..\..\SanteDB.licenseheader">
       <Link>SanteDB.licenseheader</Link>
