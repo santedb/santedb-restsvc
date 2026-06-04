@@ -1439,9 +1439,10 @@ namespace SanteDB.Rest.HDSI
 
             try
             {
-
+                Guid childUuid = Guid.Empty;
+                
                 var handler = this.GetResourceHandler(resourceType) as IChainedApiResourceHandler;
-                if (!Guid.TryParse(key, out Guid keyGuid) && !Guid.TryParse(childResourceType, out var childUuid)) // may be a query
+                if (!Guid.TryParse(key, out Guid keyGuid) && !Guid.TryParse(childResourceType, out childUuid)) // may be a query
                 {
                     throw new ArgumentException(nameof(key));
                 }

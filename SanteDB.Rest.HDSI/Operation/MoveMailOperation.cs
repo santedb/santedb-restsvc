@@ -58,10 +58,15 @@ namespace SanteDB.Rest.HDSI.Operation
 
             _ = parameters.TryGet(COPY_PARAMETER_NAME, out bool isCopy);
 
-            // Source mailbox
-            if(!(scopingKey is Guid sourceMailboxKey) && scopingKey is String str)
+            Guid sourceMailboxKey = Guid.Empty;
+
+            if (scopingKey is Guid smk)
             {
-                sourceMailboxKey = this.m_mailMessageService.GetMailboxByName(str)?.Key ?? throw new KeyNotFoundException(String.Format(ErrorMessages.OBJECT_NOT_FOUND, $"{typeof(Mailbox).GetSerializationName()}/{sourceMailboxKey}")); 
+                sourceMailboxKey = smk;
+            }
+            else if (scopingKey is String str)
+            {
+                sourceMailboxKey = this.m_mailMessageService.GetMailboxByName(str)?.Key ?? throw new KeyNotFoundException(String.Format(ErrorMessages.OBJECT_NOT_FOUND, $"{typeof(Mailbox).GetSerializationName()}/{str}")); 
             }
 
             return this.m_mailMessageService.MoveMessage(sourceMailboxKey, messageId, targetMailbox, isCopy);
