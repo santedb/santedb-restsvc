@@ -594,7 +594,6 @@ namespace SanteDB.Rest.OAuth.Rest
 
 
             // Signing credentials for the application
-            // TODO: Expose this as a configuration option - which key to use other than default
             descriptor.SigningCredentials = CreateSigningCredentials($"SA.{appid}", m_configuration.JwtSigningKey, "default");
 
             // Is the default an HMAC256 key?
@@ -663,7 +662,14 @@ namespace SanteDB.Rest.OAuth.Rest
         /// <returns>The related <see cref="ISession"/> session for the idtoken.</returns>
         protected virtual ISession GetSessionFromIdToken(string idToken)
         {
+            // Scope creep on the part of the JWT library. They appear to be pushing towards async
+            // so their config can reload asynchronously. The validation is still
+            // synchronous as of 2026-07-13. If their library removes the sync method we should
+            // move to a new library instead. TD
+
+#pragma warning disable CS0618 // Type or member is obsolete
             var result = m_JwtHandler.ValidateToken(idToken, GetTokenValidationParameters());
+#pragma warning restore CS0618 // Type or member is obsolete
 
             if (result?.IsValid != true)
             {
