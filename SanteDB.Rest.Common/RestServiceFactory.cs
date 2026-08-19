@@ -71,7 +71,7 @@ namespace SanteDB.Rest.Common
                 return new RemoteEndpointInfo()
                 {
                     OriginalRequestUrl = requestUrl.ToString(),
-                    RemoteAddress = realIp ?? RestOperationContext.Current?.IncomingRequest.RemoteEndPoint.Address.ToString(),
+                    RemoteAddress = realIp ?? fwdHeader?.Split(',')?.FirstOrDefault() ?? RestOperationContext.Current?.IncomingRequest.RemoteEndPoint.Address.ToString(),
                     ForwardInformation = fwdHeader,
                     CorrelationToken = RestOperationContext.Current?.Data["uuid"]?.ToString()
                 };

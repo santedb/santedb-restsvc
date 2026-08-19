@@ -84,7 +84,7 @@ namespace SanteDB.Rest.OAuth.Rest
                         }
 
                         this.AppendPrincipalToAuthContext(principal);
-                        RestOperationContext.Current.Data.Add("symm_secret", secret);
+                        RestOperationContext.Current.Data.Add(OAuthConstants.DataKey_SymmetricSecret, secret);
                     }
                 }
 

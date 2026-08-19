@@ -176,7 +176,7 @@ namespace SanteDB.Rest.Common.Configuration.Features
         public FeatureInstallState QueryState(SanteDBConfiguration configuration)
         {
             // First, is the REST service enabled?
-            if (!configuration.SectionTypes.Any(o => typeof(SanteDB.Rest.Common.Configuration.RestConfigurationSection).IsAssignableFrom(o.Type)))
+            if (!configuration.Sections.Any(o => typeof(SanteDB.Rest.Common.Configuration.RestConfigurationSection).IsAssignableFrom(o.GetType())))
             {
                 configuration.AddSection(new SanteDB.Rest.Common.Configuration.RestConfigurationSection());
             }

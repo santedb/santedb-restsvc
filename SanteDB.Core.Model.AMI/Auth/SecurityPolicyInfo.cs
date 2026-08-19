@@ -59,7 +59,7 @@ namespace SanteDB.Core.Model.AMI.Auth
             this.Name = o.Name;
             this.Oid = o.Oid;
             this.CanOverride = o.CanOverride;
-            this.Policy = new SecurityPolicy(o.Name, o.Oid, o.IsActive, o.CanOverride);
+            this.Policy = new SecurityPolicy(o.Name, o.Oid, o.IsActive, o.CanOverride, o.Classification);
         }
 
         /// <summary>
