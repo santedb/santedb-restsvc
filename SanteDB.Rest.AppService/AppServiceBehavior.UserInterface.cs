@@ -266,7 +266,8 @@ namespace SanteDB.Rest.AppService
                 return null;
             }
 
-            var menutext = appletMenu.GetText(principal.GetClaimValue(SanteDBClaimTypes.Language) ?? CultureInfo.CurrentUICulture.TwoLetterISOLanguageName);
+            var menutext = appletMenu.GetText(principal.GetClaimValue(SanteDBClaimTypes.Language) ?? CultureInfo.CurrentUICulture.TwoLetterISOLanguageName) ??
+                appletMenu.Text[0].Value;
 
             var menu = new Menu
             {
