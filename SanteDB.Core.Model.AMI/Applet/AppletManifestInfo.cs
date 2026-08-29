@@ -42,6 +42,19 @@ namespace SanteDB.Core.Model.AMI.Applet
         }
 
         /// <summary>
+        /// Applet manifest information
+        /// </summary>
+        public AppletManifestInfo(AppletInfo appletInfo)
+        {
+            this.AppletInfo = appletInfo; ;
+            if (AppletInfo.PublicKeyToken != null &&
+                X509CertificateUtils.GetPlatformServiceOrDefault().TryGetCertificate(System.Security.Cryptography.X509Certificates.X509FindType.FindByThumbprint, appletInfo.PublicKeyToken, out var cert))
+            {
+                this.PublisherData = new X509Certificate2Info(cert);
+            }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="AppletManifestInfo"/> class
         /// with a specific applet manifest instance.
         /// </summary>
