@@ -19,6 +19,7 @@
 using DocumentFormat.OpenXml.Wordprocessing;
 using RestSrvr;
 using SanteDB.Core.Applets.Model;
+using SanteDB.Core.Applets.Model.Extern.SanteDB.Core.Applets.Model;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Security;
@@ -68,6 +69,17 @@ namespace SanteDB.Rest.AppService
                         .GroupBy(o => o.Code)
                         .ToDictionary(o => o.Key, o => o.SelectMany(a => a.Assets)
                         .ToArray());
+        }
+
+        /// <inheritdoc/>
+        public void SetLocaleAsset(String locale, ExternalStringResource resource)
+        {
+            if(this.m_localizationService.IsReadonly)
+            {
+                throw new NotSupportedException();
+            }
+
+            this.m_localizationService.SetString(locale, resource.Key, resource.Value);
         }
 
         /// <inheritdoc/>
