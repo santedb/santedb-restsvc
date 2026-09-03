@@ -9,9 +9,6 @@
     <VersionNumber>3.1-debug</VersionNumber>
   </PropertyGroup>
 
-  <!-- Test Framework via Nuget does this automagically -->
-  <Import Condition="$(SolutionName.Contains('-nuget'))==False" Project="$(MSBuildThisFileDirectory)..\..\santedb-data\SanteDB.Core.TestFramework.FirebirdSQL\SanteDB.Core.TestFramework.FirebirdSQL.targets" />
-
   <ItemGroup>
     <PackageReference Include="NUnit" Version="[4.5.0,5)" />
     <PackageReference Include="NUnit3TestAdapter" Version="[6.1.0,7)" />
