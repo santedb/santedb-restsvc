@@ -16,7 +16,9 @@
  * the License.
  *
  */
+using SanteDB.Core.Data.Quality.Configuration;
 using SanteDB.Core.Exceptions;
+using SanteDB.Core.Http;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Matching;
 using SanteDB.Core.Model.Parameters;
@@ -26,7 +28,9 @@ using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.Common.Attributes;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
@@ -78,13 +82,32 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.AlterMatchConfiguration)]
         public override object Create(object data, bool updateIfExists)
         {
-            if (data is IRecordMatchingConfiguration configMatch)
+            switch (data)
             {
-                return this.m_configurationService.SaveConfiguration(configMatch);
-            }
-            else
-            {
-                throw new ArgumentException("Incorrect match configuration type");
+                case IRecordMatchingConfiguration configMatch:
+                    return this.m_configurationService.SaveConfiguration(configMatch);
+                case IEnumerable<MultiPartFormData> multiPartData:
+                    var source = multiPartData.FirstOrDefault(o => o.Name == "config");
+                    if (source?.IsFile == true)
+                    {
+                        using (var ms = new MemoryStream(source.Data))
+                        {
+                            if(this.m_configurationService.TryLoadConfigurationFromStream(ms, out var rms))
+                            {
+                                return this.m_configurationService.SaveConfiguration(rms);
+                            }
+                            else
+                            {
+                                throw new ArgumentException("Incorrect match configuration type");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Expected a configuration form value", nameof(data));
+                    }
+                default:
+                    throw new ArgumentException("Incorrect match configuration type");
             }
         }
 
