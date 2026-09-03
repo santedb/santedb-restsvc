@@ -48,7 +48,6 @@
         <ProjectReference Include="..\..\santedb-data\SanteDB.Persistence.Data\SanteDB.Persistence.Data.csproj" />
         <ProjectReference Include="..\..\santedb-api\SanteDB.Core.TestFramework\SanteDB.Core.TestFramework.csproj">
         </ProjectReference>
-        <ProjectReference Include="..\..\santedb-data\SanteDB.Core.TestFramework.FirebirdSQL\SanteDB.Core.TestFramework.FirebirdSQL.csproj" />
         <ProjectReference Include="..\SanteDB.Rest.OAuth\SanteDB.Rest.OAuth.csproj" />
       </ItemGroup>
     </Otherwise>

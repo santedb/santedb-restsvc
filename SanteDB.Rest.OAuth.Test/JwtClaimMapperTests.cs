@@ -33,7 +33,6 @@ namespace SanteDB.Rest.OAuth.Test
         [OneTimeSetUp]
         public void Initialize()
         {
-            _ = FirebirdSql.Data.FirebirdClient.FbCharset.Ascii.ToString();
             TestApplicationContext.TestAssembly = typeof(JwtClaimMapperTests).Assembly;
             TestApplicationContext.Initialize(TestContext.CurrentContext.TestDirectory);
 

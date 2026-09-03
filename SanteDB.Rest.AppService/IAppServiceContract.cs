@@ -19,6 +19,7 @@
 using RestSrvr.Attributes;
 using SanteDB.Client.Tickles;
 using SanteDB.Core.Applets.Model;
+using SanteDB.Core.Applets.Model.Extern.SanteDB.Core.Applets.Model;
 using SanteDB.Core.Configuration;
 using SanteDB.Core.Model;
 using SanteDB.Core.Model.AMI.Diagnostics;
@@ -220,6 +221,12 @@ namespace SanteDB.Rest.AppService
         /// </summary>
         [Get("/Locale")]
         Dictionary<String, String[]> GetLocaleAssets();
+
+        /// <summary>
+        /// Set a locale asset
+        /// </summary>
+        [Put("/Locale/{locale}")]
+        void SetLocaleAsset(String locale, ExternalStringResource data);
 
         /// <summary>
         /// Gets menus
