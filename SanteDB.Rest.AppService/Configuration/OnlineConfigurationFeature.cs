@@ -62,27 +62,27 @@ namespace SanteDB.Rest.AppService.Configuration
         /// </summary>
         public bool Configure(SanteDBConfiguration configuration, IDictionary<string, object> featureConfiguration)
         {
+            var amiSection = configuration.GetSection<AmiConfigurationSection>();
+            var hdsiSection = configuration.GetSection<HdsiConfigurationSection>();
+            var bisSection = configuration.GetSection<BisServiceConfigurationSection>();
+            if (amiSection == null)
+            {
+                amiSection = new AmiConfigurationSection();
+                configuration.AddSection(amiSection);
+            }
+            if (hdsiSection == null)
+            {
+                hdsiSection = new HdsiConfigurationSection();
+                configuration.AddSection(hdsiSection);
+            }
+            if (bisSection == null)
+            {
+                bisSection = new BisServiceConfigurationSection();
+                configuration.AddSection(bisSection);
+            }
+
             if (configuration.GetSection<ApplicationServiceContextConfigurationSection>().AppSettings?.Any(p => p.Key == "integration-mode" && p.Value == "online") == true)
             {
-                var amiSection = configuration.GetSection<AmiConfigurationSection>();
-                var hdsiSection = configuration.GetSection<HdsiConfigurationSection>();
-                var bisSection = configuration.GetSection<BisServiceConfigurationSection>();
-                if (amiSection == null)
-                {
-                    amiSection = new AmiConfigurationSection();
-                    configuration.AddSection(amiSection);
-                }
-                if (hdsiSection == null)
-                {
-                    hdsiSection = new HdsiConfigurationSection();
-                    configuration.AddSection(hdsiSection);
-                }
-                if (bisSection == null)
-                {
-                    bisSection = new BisServiceConfigurationSection();
-                    configuration.AddSection(bisSection);
-                }
-
                 bisSection.AutomaticallyForwardRequests = hdsiSection.AutomaticallyForwardRequests = true;
                 amiSection.AutomaticallyForwardRequests = false;
             }
