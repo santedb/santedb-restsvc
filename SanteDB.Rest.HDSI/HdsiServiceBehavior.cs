@@ -67,7 +67,7 @@ namespace SanteDB.Rest.HDSI
     /// <summary>
     /// Health Data Service Interface (HDSI)
     /// </summary>
-    /// <remarks>Represents generic implementation of the the Health Data Service Interface (HDSI) contract</remarks>
+    /// <remarks>This service provides direct interaction with the underlying Clinical Data Repository (CDR) in the Reference Information Model (RIM) messaging format</remarks>
     [ServiceBehavior(Name = HdsiMessageHandler.ConfigurationName, InstanceMode = ServiceInstanceMode.Singleton)]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class HdsiServiceBehavior : IHdsiServiceContract

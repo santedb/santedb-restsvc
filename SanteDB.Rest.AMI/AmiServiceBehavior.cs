@@ -55,7 +55,7 @@ namespace SanteDB.Rest.AMI
     /// <summary>
     /// Administration Management Interface (AMI)
     /// </summary>
-    /// <remarks>Represents a generic implementation of the Administrative Management Interface (AMI) contract</remarks>
+    /// <remarks>Provides a direct interface over REST for functions related to the administration of the SanteDB iCDR/dCDR instance</remarks>
     [ServiceBehavior(Name = "AMI", InstanceMode = ServiceInstanceMode.Singleton)]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
     public class AmiServiceBehavior : IAmiServiceContract
