@@ -126,11 +126,7 @@ namespace SanteDB.Rest.HDSI
 
                 )
         {
-            this.m_auditDisclosureTypes = AppDomain.CurrentDomain.GetAllTypes()
-                .Where(t => typeof(IdentifiedData).IsAssignableFrom(t) && !t.IsAbstract && !t.IsGenericType)
-                .Where(t => t.GetResourceSensitivityClassification() == ResourceSensitivityClassification.PersonalHealthInformation)
-                .Select(t => t.Name)
-                .ToArray();
+            
         }
         /// <summary>
         /// HDSI Service Behavior
@@ -150,6 +146,11 @@ namespace SanteDB.Rest.HDSI
                         .Where(t => !t.IsAbstract && !t.IsInterface && typeof(IApiResourceHandler).IsAssignableFrom(t))
                         .ToList(), typeof(IHdsiServiceContract)
                     );
+            this.m_auditDisclosureTypes = AppDomain.CurrentDomain.GetAllTypes()
+                .Where(t => typeof(IdentifiedData).IsAssignableFrom(t) && !t.IsAbstract && !t.IsGenericType)
+                .Where(t => t.GetResourceSensitivityClassification() == ResourceSensitivityClassification.PersonalHealthInformation)
+                .Select(t => t.Name)
+                .ToArray();
         }
 
         /// <summary>
