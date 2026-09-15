@@ -39,6 +39,7 @@ using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Model.Parameters;
 using SanteDB.Core.Model.Patch;
 using SanteDB.Core.Model.Query;
+using SanteDB.Core.Model.Security;
 using SanteDB.Core.Model.Serialization;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Audit;
@@ -73,20 +74,7 @@ namespace SanteDB.Rest.HDSI
     public class HdsiServiceBehavior : IHdsiServiceContract
     {
 
-        private readonly String[] m_nonDisclosureAuditableResourceTypes =
-        {
-            nameof(ReferenceTerm),
-            nameof(ConceptSet),
-            nameof(Concept),
-            nameof(DeviceEntity),
-            nameof(ApplicationEntity),
-            nameof(ConceptName),
-            nameof(ConceptRelationship),
-            nameof(Place),
-            nameof(Material),
-            nameof(ManufacturedMaterial),
-            nameof(Organization)
-        };
+        private readonly String[] m_auditDisclosureTypes;
 
         /// <summary>
         /// The trace source for HDSI based implementations
@@ -138,7 +126,11 @@ namespace SanteDB.Rest.HDSI
 
                 )
         {
-
+            this.m_auditDisclosureTypes = AppDomain.CurrentDomain.GetAllTypes()
+                .Where(t => typeof(IdentifiedData).IsAssignableFrom(t) && !t.IsAbstract && !t.IsGenericType)
+                .Where(t => t.GetResourceSensitivityClassification() == ResourceSensitivityClassification.PersonalHealthInformation)
+                .Select(t => t.Name)
+                .ToArray();
         }
         /// <summary>
         /// HDSI Service Behavior
@@ -428,10 +420,11 @@ namespace SanteDB.Rest.HDSI
                     }
 
                     // Did the client ask us to throw on a privacy violation
-                    if(retVal.GetAnnotations<PrivacyMaskingAnnotation>().Any(r => r.ActionTaken != Core.Security.Configuration.ResourceDataPolicyActionType.None) &&
+                    if (retVal.GetAnnotations<PrivacyMaskingAnnotation>().Any(r => r.ActionTaken != Core.Security.Configuration.ResourceDataPolicyActionType.None) &&
                         Enum.TryParse<ResourceDataPolicyActionType>(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.ThrowOnPrivacyViolation], out var actionsForThrow))
                     {
-                        foreach (var itm in retVal.GetAnnotations<PrivacyMaskingAnnotation>()) {
+                        foreach (var itm in retVal.GetAnnotations<PrivacyMaskingAnnotation>())
+                        {
                             if (actionsForThrow.HasFlag(itm.ActionTaken))
                             {
                                 throw new PolicyViolationException(AuthenticationContext.Current.Principal, itm.MaskingReason);
@@ -473,7 +466,8 @@ namespace SanteDB.Rest.HDSI
             }
             finally
             {
-                if (!this.m_nonDisclosureAuditableResourceTypes.Contains(resourceType))
+                if (audit.Audit.Outcome != OutcomeIndicator.Success ||
+                    this.m_auditDisclosureTypes.Contains(resourceType))
                 {
                     audit.WithTimestamp().Send();
                 }
@@ -883,7 +877,8 @@ namespace SanteDB.Rest.HDSI
             }
             finally
             {
-                if (!this.m_nonDisclosureAuditableResourceTypes.Contains(resourceType))
+                if (audit.Audit.Outcome != OutcomeIndicator.Success ||
+                    this.m_auditDisclosureTypes.Contains(resourceType))
                 {
                     audit.WithTimestamp().Send();
                 }
@@ -1445,7 +1440,7 @@ namespace SanteDB.Rest.HDSI
                 {
                     throw new ArgumentException(nameof(key));
                 }
-                else if(childUuid != Guid.Empty)
+                else if (childUuid != Guid.Empty)
                 {
                     return this.AssociationGet(resourceType, key, childResourceType);
                 }
@@ -1517,7 +1512,8 @@ namespace SanteDB.Rest.HDSI
             }
             finally
             {
-                if (!this.m_nonDisclosureAuditableResourceTypes.Contains(resourceType))
+                if (audit.Audit.Outcome != OutcomeIndicator.Success ||
+                    this.m_auditDisclosureTypes.Contains(resourceType))
                 {
                     audit.WithTimestamp().Send();
                 }
@@ -1832,7 +1828,8 @@ namespace SanteDB.Rest.HDSI
             }
             finally
             {
-                if (!this.m_nonDisclosureAuditableResourceTypes.Contains(resourceType))
+                if (audit.Audit.Outcome != OutcomeIndicator.Success ||
+                    this.m_auditDisclosureTypes.Contains(resourceType))
                 {
                     audit.WithTimestamp().Send();
                 }
@@ -2523,7 +2520,8 @@ namespace SanteDB.Rest.HDSI
             finally
             {
                 // Only audit queries for things that are sensitive (codes and whatnot don't need to be audited)
-                if (!this.m_nonDisclosureAuditableResourceTypes.Contains(resourceType))
+                if (audit.Audit.Outcome != OutcomeIndicator.Success ||
+                    this.m_auditDisclosureTypes.Contains(resourceType))
                 {
                     audit.WithTimestamp().Send();
                 }
