@@ -380,14 +380,16 @@ namespace SanteDB.Rest.Common.Serialization
                 }
                 else // let client decide
                 {
-                    string accepts = httpRequest.Headers["Accept"],
-                        contentType = httpRequest.Headers["Content-Type"];
-
-                    if (String.IsNullOrEmpty(accepts) && String.IsNullOrEmpty(contentType))
-                    {
-                        accepts = "application/json";
-                    }
-                    contentTypeMime = (accepts ?? contentType).Split(',').Select(o => new ContentType(o)).First();
+                    contentTypeMime = httpRequest.GetMostPreferredResponseContentType(SanteDBExtendedMimeTypes.JsonViewModel,
+                        SanteDBExtendedMimeTypes.XmlRimModel,
+                        SanteDBExtendedMimeTypes.XmlPatch,
+                        SanteDBExtendedMimeTypes.JsonPatch,
+                        "application/json",
+                        "text/xml",
+                        SanteDBExtendedMimeTypes.CdssTextFormat,
+                        "application/json+sdb-viewmodel",
+                        "application/xml+sdb-viewmodel"
+                    ) ?? new ContentType("application/json");
                 }
 
                 // Result is serializable
