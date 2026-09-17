@@ -385,6 +385,7 @@ namespace SanteDB.Rest.Common.Serialization
                         SanteDBExtendedMimeTypes.XmlPatch,
                         SanteDBExtendedMimeTypes.JsonPatch,
                         "application/json",
+                        "application/xml",
                         "text/xml",
                         SanteDBExtendedMimeTypes.CdssTextFormat,
                         "application/json+sdb-viewmodel",
