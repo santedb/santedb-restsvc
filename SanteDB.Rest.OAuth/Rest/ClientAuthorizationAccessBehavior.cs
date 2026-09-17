@@ -52,7 +52,7 @@ namespace SanteDB.Rest.OAuth.Rest
     /// </remarks>
     [DisplayName("OAUTH: HTTP BASIC Client-Credentials")]
     [ExcludeFromCodeCoverage]
-    public class ClientAuthorizationAccessBehavior : IServicePolicy, IServiceBehavior
+    public class ClientAuthorizationAccessBehavior : IServicePolicy, IServiceBehavior, IAuthorizationServicePolicy
     {
         // Configuration from main SanteDB
         private ApplicationServiceContextConfigurationSection m_configuration = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<ApplicationServiceContextConfigurationSection>();
@@ -73,8 +73,13 @@ namespace SanteDB.Rest.OAuth.Rest
                 var appIdentityService = ApplicationServiceContext.Current.GetService<IApplicationIdentityProviderService>();
                 var deviceIdentityService = ApplicationServiceContext.Current.GetService<IDeviceIdentityProviderService>();
 
-                var authHeader = request.Headers["Authorization"] ??
-                    request.Headers[ExtendedHttpHeaderNames.HttpDeviceCredentialHeaderName]; // For backwards compatiblity with v2.x;
+                var authHeader = request.Headers["Authorization"];
+                // For backwards compatiblity with v2.x;
+                if (!String.IsNullOrEmpty(request.Headers[ExtendedHttpHeaderNames.HttpDeviceCredentialHeaderName]) && 
+                    String.IsNullOrEmpty(authHeader))
+                {
+                    authHeader = request.Headers[ExtendedHttpHeaderNames.HttpDeviceCredentialHeaderName];
+                }
                 if (!String.IsNullOrEmpty(authHeader))
                 {
                     if (this.ExtractBasicAuthorizationData(authHeader, out var identifier, out var secret))
@@ -85,8 +90,8 @@ namespace SanteDB.Rest.OAuth.Rest
                             throw new AuthenticationException("Invalid device credentials");
                         }
 
+                        this.m_traceSource.TraceInfo("Adding device principal for {0} to authentication path", principal.Identity.Name);
                         this.AppendPrincipalToAuthContext(principal);
-                        RestOperationContext.Current.Data.Add(OAuthConstants.DataKey_SymmetricSecret, secret);
                     }
                 }
 
@@ -149,6 +154,13 @@ namespace SanteDB.Rest.OAuth.Rest
         public void ApplyServiceBehavior(RestService service, ServiceDispatcher dispatcher)
         {
             dispatcher.AddServiceDispatcherPolicy(this);
+        }
+
+        /// <summary>
+        /// Not required
+        /// </summary>
+        public void AddAuthenticateChallengeHeader(RestResponseMessage faultMessage, Exception error)
+        {
         }
     }
 }
