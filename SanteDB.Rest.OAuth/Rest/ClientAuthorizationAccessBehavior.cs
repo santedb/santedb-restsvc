@@ -27,6 +27,7 @@ using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
 using SanteDB.Core.Security.Services;
 using SanteDB.Core.Services;
+using SanteDB.Rest.Common;
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -72,7 +73,8 @@ namespace SanteDB.Rest.OAuth.Rest
                 var appIdentityService = ApplicationServiceContext.Current.GetService<IApplicationIdentityProviderService>();
                 var deviceIdentityService = ApplicationServiceContext.Current.GetService<IDeviceIdentityProviderService>();
 
-                var authHeader = request.Headers["Authorization"];
+                var authHeader = request.Headers["Authorization"] ??
+                    request.Headers[ExtendedHttpHeaderNames.HttpDeviceCredentialHeaderName]; // For backwards compatiblity with v2.x;
                 if (!String.IsNullOrEmpty(authHeader))
                 {
                     if (this.ExtractBasicAuthorizationData(authHeader, out var identifier, out var secret))
