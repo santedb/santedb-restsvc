@@ -62,7 +62,7 @@ namespace SanteDB.Rest.AppService
             {
                 // Does the current principal have a facility claim?
                 if (AuthenticationContext.Current.Principal is IClaimsPrincipal cp &&
-                    cp.TryGetClaimValue(SanteDBClaimTypes.XspaFacilityClaim, out var facilityId))
+                    cp.TryGetClaimValue(SanteDBClaimTypes.XspaOrganizationIdClaim, out var facilityId))
                 {
                     parameters.Add("facilityId", facilityId);
                 }

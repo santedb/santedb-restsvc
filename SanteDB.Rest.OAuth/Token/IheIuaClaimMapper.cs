@@ -19,7 +19,10 @@
  * Date: 2023-6-21
  */
 using SanteDB.Core.i18n;
+using SanteDB.Core.Model.DataTypes;
+using SanteDB.Core.Security;
 using SanteDB.Core.Security.Claims;
+using SanteDB.Core.Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,9 +37,9 @@ namespace SanteDB.Rest.OAuth.Token
     /// </summary>
     public class IheIuaClaimMapper : IClaimMapper
     {
+
         private readonly Dictionary<String, String> m_tokenMapping = new Dictionary<string, string>()
         {
-            { SanteDBClaimTypes.XspaFacilityClaim, OAuthConstants.IUA_Claim_FacilityId },
             { SanteDBClaimTypes.XspaOrganizationIdClaim, OAuthConstants.IUA_Claim_SubjectOrganizationId },
             { SanteDBClaimTypes.XspaOrganizationNameClaim, OAuthConstants.IUA_Claim_SubjectOrganization },
             { SanteDBClaimTypes.XspaUserNpi, OAuthConstants.IUA_Claim_NationalProviderId },
@@ -45,6 +48,20 @@ namespace SanteDB.Rest.OAuth.Token
             { SanteDBClaimTypes.XspaUserRoleClaim, OAuthConstants.IUA_Claim_SubjectRole },
             { SanteDBClaimTypes.CdrEntityId, OAuthConstants.IUA_Claim_PersonId }
         };
+        private readonly IConceptRepositoryService m_conceptRepositoryService;
+        private readonly IRepositoryService<EntityIdentifier> m_eidService;
+
+
+        /// <summary>
+        /// DI CTOR
+        /// </summary>
+        public IheIuaClaimMapper(
+            IConceptRepositoryService conceptRepositoryService = null, 
+            IRepositoryService<EntityIdentifier> entityIdentifierService = null)
+        {
+            this.m_conceptRepositoryService = conceptRepositoryService;
+            this.m_eidService = entityIdentifierService;
+        }
 
         /// <inheritdoc/>
         public string ExternalTokenFormat => ClaimMapper.ExternalTokenTypeJwt;
@@ -65,76 +82,104 @@ namespace SanteDB.Rest.OAuth.Token
         /// <inheritdoc/>
         public IDictionary<string, object> MapToExternalIdentityClaims(IEnumerable<IClaim> internalClaims)
         {
-            var iuaClaims = new Dictionary<String, Object>();
-            foreach (var claim in internalClaims)
+            using (AuthenticationContext.EnterSystemContext())
             {
-                if (this.m_tokenMapping.TryGetValue(claim.Type, out var claimtype))
+                var iuaClaims = new Dictionary<String, Object>();
+                foreach (var claim in internalClaims)
                 {
-                    switch (claimtype)
+                    if (this.m_tokenMapping.TryGetValue(claim.Type, out var claimtype))
                     {
-                        case OAuthConstants.IUA_Claim_SubjectOrganizationId:
-                            if (Guid.TryParse(claim.Value, out var claimValue)) // format as urn:uuid:
-                            {
-                                iuaClaims.AddClaim(claimtype, $"urn:uuid:{claimValue}");
-                            }
-                            break;
-                        case OAuthConstants.IUA_Claim_PurposeOfUse:
-                            iuaClaims.AddClaim(claimtype, new Dictionary<String, object> {
+                        var parts = claim.Value.Split('^');
+
+                        switch (claimtype)
+                        {
+                            case OAuthConstants.IUA_Claim_SubjectOrganizationId:
+                                if (Guid.TryParse(claim.Value, out var claimValue)) // format as urn:uuid:
                                 {
-                                    "system",  "http://santedb.org/conceptset/PurposeOfUse" }
-                                , {
-                                    "code", claim.Value
+                                    // Attempt lookup 
+                                    var eidStd = this.m_eidService?.Find(o => o.SourceEntityKey == claimValue && o.ObsoleteVersionSequenceId == null && o.IdentityDomain.IsUnique).FirstOrDefault();
+                                    if (eidStd != null)
+                                    {
+                                        iuaClaims.AddClaim(claimtype, $"{eidStd.LoadProperty(o => o.IdentityDomain).Url}/{eidStd.Value}");
+                                    }
+                                    else
+                                    {
+                                        iuaClaims.AddClaim(claimtype, $"urn:uuid:{claimValue}");
+                                    }
                                 }
+                                break;
+                            case OAuthConstants.IUA_Claim_PurposeOfUse:
+                                var standardPouCode = this.m_conceptRepositoryService?.GetConceptReferenceTerm(parts[0], "http://terminology.hl7.org/ValueSet/v3-GeneralPurposeOfUse");
+                                var pouCodes = new List<Dictionary<String, Object>>();
+                                if (standardPouCode != null)
+                                {
+                                    pouCodes.Add(new Dictionary<String, object> {
+                                    { "system", "http://terminology.hl7.org/ValueSet/v3-GeneralPurposeOfUse" },
+                                    { "code", standardPouCode.Mnemonic },
+                                    { "display", standardPouCode.GetDisplayName("en") }
+                                });
+                                }
+
+                                // On WWW there may be no concept mapper - so this is necessary to preserve the original key/value pair
+                                pouCodes.Add(new Dictionary<string, object>()
+                            {
+                                { "system", parts.Length > 1 ? parts[1] : "http://santedb.org/concept" },
+                                {  "code", parts[0] }
                             });
-                            break;
-                        case OAuthConstants.IUA_Claim_SubjectRole:
-                            var parts = claim.Value.Split('^');
-                            iuaClaims.AddClaim(claimtype, new Dictionary<String, Object> {
+
+                                iuaClaims.AddClaim(claimtype, pouCodes);
+                                break;
+                            case OAuthConstants.IUA_Claim_SubjectRole:
+                                iuaClaims.AddClaim(claimtype, new Dictionary<String, Object> {
                                 { "system", parts[1] },
                                 { "code", parts[0] }
                             });
-                            break;
-                        default:
-                            iuaClaims.AddClaim(claimtype, claim.Value);
-                            break;
+                                break;
+                            default:
+                                iuaClaims.AddClaim(claimtype, claim.Value);
+                                break;
+                        }
                     }
                 }
-            }
 
-            return new Dictionary<String, Object>()
+                return new Dictionary<String, Object>()
             {
                 {  "extensions", new Dictionary<String, Object>() { { "ihe_iua", iuaClaims }  }
                 }
             };
+            }
         }
 
         /// <inheritdoc/>
         public IEnumerable<IClaim> MapToInternalIdentityClaims(IDictionary<string, object> externalClaims)
         {
-            if (externalClaims.TryGetValue("extensions", out var extValue) && extValue is JsonElement extensionElement)
+            using (AuthenticationContext.EnterSystemContext())
             {
-                var iheProperty = extensionElement.EnumerateObject().FirstOrDefault(o => o.Name == "ihe_iua");
-                if (iheProperty.Value.ValueKind == JsonValueKind.Object)
+                if (externalClaims.TryGetValue("extensions", out var extValue) && extValue is JsonElement extensionElement)
                 {
-                    foreach (var claimPropertyObject in iheProperty.Value.EnumerateObject().OfType<JsonProperty>())
+                    var iheProperty = extensionElement.EnumerateObject().FirstOrDefault(o => o.Name == "ihe_iua");
+                    if (iheProperty.Value.ValueKind == JsonValueKind.Object)
                     {
-                        var internalClaim = this.m_tokenMapping.FirstOrDefault(o => o.Value == claimPropertyObject.Name);
-                        if (internalClaim.Key == null)
+                        foreach (var claimPropertyObject in iheProperty.Value.EnumerateObject().OfType<JsonProperty>())
                         {
-                            continue;
-                        }
-
-                        var value = claimPropertyObject.Value;
-                        if (value.ValueKind == JsonValueKind.Array)
-                        {
-                            foreach (var listValue in value.EnumerateArray())
+                            var internalClaim = this.m_tokenMapping.FirstOrDefault(o => o.Value == claimPropertyObject.Name);
+                            if (internalClaim.Key == null)
                             {
-                                yield return new SanteDBClaim(internalClaim.Key, this.InterpretValue(listValue));
+                                continue;
                             }
-                        }
-                        else
-                        {
-                            yield return new SanteDBClaim(internalClaim.Key, this.InterpretValue(value));
+
+                            var value = claimPropertyObject.Value;
+                            if (value.ValueKind == JsonValueKind.Array)
+                            {
+                                foreach (var listValue in value.EnumerateArray())
+                                {
+                                    yield return new SanteDBClaim(internalClaim.Key, this.InterpretValue(listValue));
+                                }
+                            }
+                            else
+                            {
+                                yield return new SanteDBClaim(internalClaim.Key, this.InterpretValue(value));
+                            }
                         }
                     }
                 }
@@ -146,7 +191,7 @@ namespace SanteDB.Rest.OAuth.Token
         /// </summary>
         private string InterpretValue(JsonElement value)
         {
-            switch(value.ValueKind)
+            switch (value.ValueKind)
             {
                 case JsonValueKind.String:
                     return value.ToString().Replace("urn:uuid:", "").Replace("urn:oid:", "");
@@ -158,7 +203,20 @@ namespace SanteDB.Rest.OAuth.Token
                     var valueValue = value.EnumerateObject().FirstOrDefault(o => o.Name == "value");
                     if (systemValue.Name != null && codeValue.Name != null) // we have a coding or identifier
                     {
-                        return $"{codeValue.Value.GetString()}^{systemValue.Value.GetString()}";
+                        // Attempt lookup 
+                        if(systemValue.Value.GetString() == "http://santedb.org/concept")
+                        {
+                            return codeValue.Value.GetString();
+                        }
+                        else
+                        {
+                            var lookup = this.m_conceptRepositoryService?.GetConceptByReferenceTerm(codeValue.Value.GetString(), systemValue.Value.GetString());
+                            if(lookup == null)
+                            {
+                                return $"{codeValue.Value.GetString()}^{systemValue.Value.GetString()}";
+                            }
+                            return lookup.Mnemonic;
+                        }
                     }
                     else if (systemValue.Name != null && valueValue.Name != null) // we have a coding or identifier
                     {
@@ -171,7 +229,7 @@ namespace SanteDB.Rest.OAuth.Token
                 default:
                     throw new InvalidOperationException();
             }
-            
+
         }
     }
 }
