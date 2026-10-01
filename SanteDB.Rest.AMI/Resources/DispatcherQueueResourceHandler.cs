@@ -187,7 +187,7 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.ManageDispatcherQueues)]
         public override object GetChildObject(object scopingEntity, string propertyName, object subItemKey)
         {
-            return this.GetChildObject(scopingEntity, propertyName, subItemKey);
+            return base.GetChildObject(scopingEntity, propertyName, subItemKey);
         }
 
     }
