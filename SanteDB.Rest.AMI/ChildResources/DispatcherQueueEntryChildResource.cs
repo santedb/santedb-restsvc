@@ -20,6 +20,7 @@ using RestSrvr;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Audit;
 using SanteDB.Core.Model.Query;
+using SanteDB.Core.PubSub;
 using SanteDB.Core.Queue;
 using SanteDB.Core.Security;
 using SanteDB.Core.Security.Audit;
@@ -146,7 +147,11 @@ namespace SanteDB.Rest.AMI.ChildResources
                .WithSystemObjects(AuditableObjectRole.Resource, AuditableObjectLifecycle.PermanentErasure, entries.Select(o => new Uri($"urn:santedb:org:DispatcherQueueInfo/{scopingKey}/entry/{o.CorrelationId}")).ToArray())
                .Send();
 
-            return new MemoryQueryResultSet(entries);
+            return new NestedQueryResultSet<DispatcherQueueEntry>(entries.AsResultSet(), o=>
+            {
+                o.Body = null;
+                return o;
+            });
         }
 
         /// <summary>

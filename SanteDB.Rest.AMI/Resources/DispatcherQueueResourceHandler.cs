@@ -17,6 +17,7 @@
  *
  */
 using RestSrvr;
+using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Query;
 using SanteDB.Core.Queue;
@@ -89,7 +90,14 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.ManageDispatcherQueues)]
         public override object Get(object id, object versionId)
         {
-            throw new NotSupportedException();
+            if (id is String str)
+            {
+                return this.m_queueService.GetQueues().FirstOrDefault(o => o.Name == str);
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException(String.Format(ErrorMessages.ARGUMENT_INVALID_TYPE, typeof(String), id.GetType()));
+            }
         }
 
         /// <summary>
@@ -187,7 +195,7 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.ManageDispatcherQueues)]
         public override object GetChildObject(object scopingEntity, string propertyName, object subItemKey)
         {
-            return this.GetChildObject(scopingEntity, propertyName, subItemKey);
+            return base.GetChildObject(scopingEntity, propertyName, subItemKey);
         }
 
     }

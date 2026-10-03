@@ -100,6 +100,7 @@ namespace SanteDB.Rest.Common
         {
             if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
             {
+                this.ValidateAcl(propertyProvider, nameof(IApiChildResourceHandler.Remove));
                 return propertyProvider.Remove(this.Type, scopingEntityKey, subItemKey);
             }
             else
@@ -120,6 +121,8 @@ namespace SanteDB.Rest.Common
         {
             if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
             {
+                this.ValidateAcl(propertyProvider, nameof(IApiChildResourceHandler.Query));
+
                 return propertyProvider.Query(this.Type, scopingEntityKey, filter);
             }
             else
@@ -140,6 +143,8 @@ namespace SanteDB.Rest.Common
         {
             if (this.TryGetChainedResource(propertyName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
             {
+                this.ValidateAcl(propertyProvider, nameof(IApiChildResourceHandler.Add));
+
                 return propertyProvider.Add(this.Type, scopingEntityKey, scopedItem);
             }
             else
@@ -160,6 +165,7 @@ namespace SanteDB.Rest.Common
         {
             if (this.TryGetChainedResource(propertyName, scopingEntity == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildResourceHandler propertyProvider))
             {
+                this.ValidateAcl(propertyProvider, nameof(IApiChildResourceHandler.Get));
                 return propertyProvider.Get(this.Type, scopingEntity, subItemKey);
             }
             else
@@ -224,6 +230,14 @@ namespace SanteDB.Rest.Common
         private void ValidateAcl(IApiChildOperation operationProvider)
         {
             foreach(var itm in operationProvider.GetType().GetMethod(nameof(IApiChildOperation.Invoke)).GetCustomAttributes<DemandAttribute>())
+            {
+                this.m_pepService.Demand(itm.PolicyId);
+            }
+        }
+
+        private void ValidateAcl(IApiChildResourceHandler childResource, String operation)
+        {
+            foreach (var itm in childResource.GetType().GetMethod(operation).GetCustomAttributes<DemandAttribute>())
             {
                 this.m_pepService.Demand(itm.PolicyId);
             }

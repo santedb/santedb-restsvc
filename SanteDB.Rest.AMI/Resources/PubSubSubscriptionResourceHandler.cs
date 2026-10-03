@@ -37,48 +37,39 @@ namespace SanteDB.Rest.AMI.Resources
     /// Publish Subscribe Resource Handler
     /// </summary>
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage] // TODO: Find a manner to test REST classes
-    public class PubSubSubscriptionResourceHandler : IServiceImplementation, IApiResourceHandler, IOperationalApiResourceHandler
+    public class PubSubSubscriptionResourceHandler : ChainedResourceHandlerBase
     {
-        // Operations
-        private ConcurrentDictionary<String, IApiChildOperation> m_operations = new ConcurrentDictionary<string, IApiChildOperation>();
-
+       
         // The manager for the pub-sub service
         private IPubSubManagerService m_manager;
-
-        // Tracer
-        private readonly Tracer m_tracer = Tracer.GetTracer(typeof(PubSubSubscriptionDefinition));
-
-        // Localization service
-        private readonly ILocalizationService m_localizationService;
 
         /// <summary>
         /// Creates a new pub-sub manager resource hander
         /// </summary>
-        public PubSubSubscriptionResourceHandler(IPubSubManagerService manager, ILocalizationService localizationService)
+        public PubSubSubscriptionResourceHandler(IPubSubManagerService manager, ILocalizationService localizationService) : base(localizationService)
         {
             this.m_manager = manager;
-            this.m_localizationService = localizationService;
         }
 
         /// <summary>
         /// Gets the name of the resource
         /// </summary>
-        public string ResourceName => typeof(PubSubSubscriptionDefinition).GetSerializationName();
+        public override string ResourceName => typeof(PubSubSubscriptionDefinition).GetSerializationName();
 
         /// <summary>
         /// Gets the type this handles
         /// </summary>
-        public Type Type => typeof(PubSubSubscriptionDefinition);
+        public override Type Type => typeof(PubSubSubscriptionDefinition);
 
         /// <summary>
         /// Gets the scoped service
         /// </summary>
-        public Type Scope => typeof(IAmiServiceContract);
+        public override Type Scope => typeof(IAmiServiceContract);
 
         /// <summary>
         /// Get the capabilities of this resource handler
         /// </summary>
-        public ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.CreateOrUpdate
+        public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.CreateOrUpdate
             | ResourceCapabilityType.Delete | ResourceCapabilityType.Get | ResourceCapabilityType.Search | ResourceCapabilityType.Update;
 
         /// <summary>
@@ -87,15 +78,10 @@ namespace SanteDB.Rest.AMI.Resources
         public string ServiceName => "Pub Sub Subscription Resource Handler";
 
         /// <summary>
-        /// Gets the operations for the resource handler
-        /// </summary>
-        public IEnumerable<IApiChildOperation> Operations => this.m_operations.Values;
-
-        /// <summary>
         /// Creates a new object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.CreatePubSubSubscription)]
-        public object Create(object data, bool updateIfExists)
+        public override object Create(object data, bool updateIfExists)
         {
             if (data is PubSubSubscriptionDefinition definition)
             {
@@ -113,13 +99,13 @@ namespace SanteDB.Rest.AMI.Resources
                 catch (Exception e)
                 {
                     this.m_tracer.TraceError("Error creating subscription - {0}", e);
-                    throw new Exception(this.m_localizationService.GetString("error.rest.ami.creatingSubscription"), e);
+                    throw new Exception(this.LocalizationService.GetString("error.rest.ami.creatingSubscription"), e);
                 }
             }
             else
             {
                 this.m_tracer.TraceError("Payload must be of type PubSubSubscriptionDefinition");
-                throw new ArgumentException(this.m_localizationService.GetString("error.rest.ami.payloadMustBePubSubSubscription"));
+                throw new ArgumentException(this.LocalizationService.GetString("error.rest.ami.payloadMustBePubSubSubscription"));
             }
         }
 
@@ -127,7 +113,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Gets the specified definition
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadPubSubSubscription)]
-        public object Get(object id, object versionId)
+        public override object Get(object id, object versionId)
         {
             if (id is Guid uuid)
             {
@@ -138,13 +124,13 @@ namespace SanteDB.Rest.AMI.Resources
                 catch (Exception e)
                 {
                     this.m_tracer.TraceError("Error fetching subscription {0} - {1}", id, e);
-                    throw new Exception(this.m_localizationService.GetString("error.rest.ami.fetchingSubscription", new { param = uuid.ToString() }), e);
+                    throw new Exception(this.LocalizationService.GetString("error.rest.ami.fetchingSubscription", new { param = uuid.ToString() }), e);
                 }
             }
             else
             {
                 this.m_tracer.TraceError("ID must be a uuid");
-                throw new ArgumentException(this.m_localizationService.GetString("error.rest.ami.idMustBeUUID"));
+                throw new ArgumentException(this.LocalizationService.GetString("error.rest.ami.idMustBeUUID"));
             }
         }
 
@@ -152,7 +138,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Deletes the specified subscription
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.DeletePubSubSubscription)]
-        public object Delete(object key)
+        public override object Delete(object key)
         {
             if (key is Guid uuid)
             {
@@ -163,13 +149,13 @@ namespace SanteDB.Rest.AMI.Resources
                 catch (Exception e)
                 {
                     this.m_tracer.TraceError("Error obsoleting / deleting subscription {0} - {1}", uuid, e);
-                    throw new Exception(this.m_localizationService.GetString("error.rest.ami.obsoletingSubscription", new { param = uuid.ToString() }), e);
+                    throw new Exception(this.LocalizationService.GetString("error.rest.ami.obsoletingSubscription", new { param = uuid.ToString() }), e);
                 }
             }
             else
             {
                 this.m_tracer.TraceError("ID must be a uuid");
-                throw new ArgumentOutOfRangeException(this.m_localizationService.GetString("error.rest.ami.idMustBeUUID"));
+                throw new ArgumentOutOfRangeException(this.LocalizationService.GetString("error.rest.ami.idMustBeUUID"));
             }
         }
 
@@ -177,7 +163,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Find all subscriptions
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.ReadPubSubSubscription)]
-        public IQueryResultSet Query(NameValueCollection queryParameters)
+        public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             try
             {
@@ -187,7 +173,7 @@ namespace SanteDB.Rest.AMI.Resources
             catch (Exception e)
             {
                 this.m_tracer.TraceError("Error querying subscriptions - {0}", e);
-                throw new Exception(this.m_localizationService.GetString("error.rest.ami.subscriptionQuery"), e);
+                throw new Exception(this.LocalizationService.GetString("error.rest.ami.subscriptionQuery"), e);
             }
         }
 
@@ -195,7 +181,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// Update the specified object
         /// </summary>
         [Demand(PermissionPolicyIdentifiers.EnablePubSubSubscription)]
-        public object Update(object data)
+        public override object Update(object data)
         {
             if (data is PubSubSubscriptionDefinition definition)
             {
@@ -207,39 +193,15 @@ namespace SanteDB.Rest.AMI.Resources
                 catch (Exception e)
                 {
                     this.m_tracer.TraceError("Error updating subscription {0} - {1}", definition.Key, e);
-                    throw new Exception(this.m_localizationService.GetString("error.rest.ami.updatingSubscription", new { param = definition.Key.ToString() }), e);
+                    throw new Exception(this.LocalizationService.GetString("error.rest.ami.updatingSubscription", new { param = definition.Key.ToString() }), e);
                 }
             }
             else
             {
                 this.m_tracer.TraceError("Parameter must be of type PubSubSubscription");
-                throw new ArgumentException(this.m_localizationService.GetString("error.rest.ami.incorrectParameterType"));
+                throw new ArgumentException(this.LocalizationService.GetString("error.rest.ami.incorrectParameterType"));
             }
         }
 
-        /// <inheritdoc />
-        public void AddOperation(IApiChildOperation property)
-        {
-            this.m_operations.TryAdd(property.Name, property);
-        }
-
-        /// <inheritdoc/>
-        public object InvokeOperation(object scopingEntityKey, string operationName, ParameterCollection parameters)
-        {
-            if (this.TryGetOperation(operationName, scopingEntityKey == null ? ChildObjectScopeBinding.Class : ChildObjectScopeBinding.Instance, out IApiChildOperation operation))
-            {
-                return operation.Invoke(typeof(PubSubSubscriptionDefinition), scopingEntityKey, parameters);
-            }
-            else
-            {
-                throw new KeyNotFoundException($"{operationName} not registered");
-            }
-        }
-
-        /// <inheritdoc/>
-        public bool TryGetOperation(string propertyName, ChildObjectScopeBinding bindingType, out IApiChildOperation operationHandler)
-        {
-            return this.m_operations.TryGetValue(propertyName, out operationHandler);
-        }
     }
 }
