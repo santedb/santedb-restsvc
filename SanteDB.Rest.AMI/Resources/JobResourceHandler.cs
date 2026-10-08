@@ -18,6 +18,7 @@
  */
 using SanteDB.Core;
 using SanteDB.Core.Configuration;
+using SanteDB.Core.Configuration.Supplement;
 using SanteDB.Core.Diagnostics;
 using SanteDB.Core.i18n;
 using SanteDB.Core.Interop;
@@ -35,6 +36,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace SanteDB.Rest.AMI.Resources
 {
@@ -58,6 +60,7 @@ namespace SanteDB.Rest.AMI.Resources
         // Localization service
         private readonly ILocalizationService m_localizationService;
         private readonly IJobScheduleManager m_jobScheduleManager;
+        private readonly IConfigurationSupplementManager m_configurationSupplementManager;
 
         // Property providers
         private ConcurrentDictionary<String, IApiChildOperation> m_operationHandlers = new ConcurrentDictionary<string, IApiChildOperation>();
@@ -68,12 +71,14 @@ namespace SanteDB.Rest.AMI.Resources
         public JobResourceHandler(ILocalizationService localizationService,
             IJobManagerService jobManagerService,
             IJobStateManagerService jobStateManagerService,
-            IJobScheduleManager jobScheduleManager)
+            IJobScheduleManager jobScheduleManager,
+            IConfigurationSupplementManager configurationSupplementManager)
         {
             this.m_jobManager = jobManagerService;
             this.m_jobStateService = jobStateManagerService;
             this.m_localizationService = localizationService;
             this.m_jobScheduleManager = jobScheduleManager;
+            this.m_configurationSupplementManager = configurationSupplementManager;
         }
 
         /// <summary>
@@ -117,20 +122,51 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.RegisterSystemJob)]
         public object Create(object data, bool updateIfExists)
         {
+            IJob job = null;
+
             if (data is TypeReferenceConfiguration trc)
             {
-                var job = this.m_jobManager.RegisterJob(trc.Type);
-                return new JobInfo(this.m_jobStateService.GetJobState(job), null);
+                job = this.m_jobManager.RegisterJob(trc.Type);
             }
             else if (data is JobInfo ji)
             {
-                var job = this.m_jobManager.RegisterJob(Type.GetType(ji.JobType));
-                return new JobInfo(this.m_jobStateService.GetJobState(job), null);
+                job = this.m_jobManager.RegisterJob(Type.GetType(ji.JobType));
             }
             else
             {
                 throw new ArgumentOutOfRangeException(String.Format(ErrorMessages.ARGUMENT_INCOMPATIBLE_TYPE, typeof(TypeReferenceConfiguration), data.GetType()));
             }
+
+            if (job != null)
+            {
+                // Add the job to the configuration supplement
+                var currentSupplement = this.m_configurationSupplementManager.Supplements.FirstOrDefault(fc => fc.Id == nameof(JobResourceHandler))
+                    ?? new Core.Configuration.Supplement.ConfigurationSupplement()
+                    {
+                        Id = nameof(JobResourceHandler),
+                        SettingModifiers = new List<Core.Configuration.Supplement.ConfigurationSupplementModifier>()
+                    };
+                var whenCheck = $"not(//config:section[@xsi:type='JobConfigurationSection']/config:jobs/config:add[@type = '{job.GetType().AssemblyQualifiedNameWithoutVersion()}'])";
+                if (!currentSupplement.SettingModifiers.Any(s => s.WhenXPath == whenCheck))
+                {
+                    currentSupplement.SettingModifiers.Add(new Core.Configuration.Supplement.ConfigurationSupplementModifier()
+                    {
+                        WhenXPath = whenCheck,
+                        Description = $"User interface registered {job.Name}",
+                        Settings = new List<Core.Configuration.Supplement.ConfigurationSupplementSettingInstruction>()
+                    {
+                        new ConfigurationSupplementAddInstruction()
+                        {
+                            Path = "//config:section[@xsi:type='JobConfigurationSection']/config:jobs",
+                            Value = new XElement((XNamespace)"http://santedb.org/configuration" + "add", new XAttribute("type", job.GetType().AssemblyQualifiedNameWithoutVersion()))
+                        }
+                    }
+                    });
+                    this.m_configurationSupplementManager.AddConfigurationSupplement(currentSupplement);
+                }
+            }
+            return new JobInfo(this.m_jobStateService.GetJobState(job), null);
+
         }
 
         /// <summary>
