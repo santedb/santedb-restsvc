@@ -424,7 +424,7 @@ namespace SanteDB.Rest.HDSI
                     if (retVal.GetAnnotations<PrivacyMaskingAnnotation>().Any(r => r.ActionTaken != Core.Security.Configuration.ResourceDataPolicyActionType.None) &&
                         Enum.TryParse<ResourceDataPolicyActionType>(RestOperationContext.Current.IncomingRequest.Headers[ExtendedHttpHeaderNames.ThrowOnPrivacyViolation], out var actionsForThrow))
                     {
-                        foreach (var itm in retVal.GetAnnotations<PrivacyMaskingAnnotation>())
+                        foreach (var itm in retVal.GetAnnotations<PrivacyMaskingAnnotation>().Reverse()) // Grab the last of the privacy annotations
                         {
                             if (actionsForThrow.HasFlag(itm.ActionTaken))
                             {
