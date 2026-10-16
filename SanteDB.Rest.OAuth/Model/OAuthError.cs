@@ -55,6 +55,10 @@ namespace SanteDB.Rest.OAuth.Model
         /// </summary>
         invalid_scope,
         /// <summary>
+        /// Scope is insufficient for current action
+        /// </summary>
+        insufficient_scope,
+        /// <summary>
         /// The type of error was not specified by a handler.
         /// </summary>
         unspecified_error,

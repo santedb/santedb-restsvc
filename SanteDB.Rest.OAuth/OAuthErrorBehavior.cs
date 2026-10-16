@@ -87,7 +87,7 @@ namespace SanteDB.Rest.OAuth
             {
                 result = new OAuthError()
                 {
-                    Error = OAuthErrorType.invalid_scope,
+                    Error = OAuthErrorType.insufficient_scope,
                     ErrorDescription = error.Message,
                     ErrorData = new Dictionary<String, Object>()
                     {
