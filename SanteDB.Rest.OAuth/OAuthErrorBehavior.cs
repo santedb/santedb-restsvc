@@ -22,10 +22,12 @@ using Newtonsoft.Json;
 using RestSrvr;
 using RestSrvr.Message;
 using SanteDB.Core.Diagnostics;
+using SanteDB.Core.Exceptions;
 using SanteDB.Core.Http;
 using SanteDB.Rest.Common;
 using SanteDB.Rest.OAuth.Model;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Tracing;
 using System.IO;
@@ -80,6 +82,20 @@ namespace SanteDB.Rest.OAuth
             else if (rootCause is RestClientException<OAuthError> rce)
             {
                 result = rce.Result;
+            }
+            else if(rootCause is PolicyViolationException pve)
+            {
+                result = new OAuthError()
+                {
+                    Error = OAuthErrorType.insufficient_scope,
+                    ErrorDescription = error.Message,
+                    ErrorData = new Dictionary<String, Object>()
+                    {
+                        { "policy", pve.PolicyId },
+                        { "policy_name", pve.PolicyName },
+                        { "pdp_decision", pve.PolicyDecision.ToString() }
+                    }
+                };
             }
             else
             {
