@@ -22,6 +22,7 @@ using SanteDB.Core.Model.Interfaces;
 using SanteDB.Core.Services;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Drawing;
 using System.IO;
@@ -78,15 +79,24 @@ namespace SanteDB.Rest.HDSI.Vrp
                 Format = BarcodeFormat.QR_CODE,
                 Options = new ZXing.Common.EncodingOptions()
                 {
-                    Height = 300,
-                    Width = 300,
+                    //Height = 300,
+                    //Width = 300,
                     NoPadding = true,
-                    PureBarcode = true
+                    PureBarcode = true,
                 },
             };
 
             using (var bmp = writer.Write($"svrp://{Encoding.UTF8.GetString(rawData)}"))
             {
+                //Perform a 4x oversample for better quality.
+                bmp.Mutate(ix => ix.Resize(new ResizeOptions()
+                {
+                    Size = new SixLabors.ImageSharp.Size(bmp.Width * 4, 0),
+                    Mode = ResizeMode.Max,
+                    Position = AnchorPositionMode.Center,
+                    Sampler = KnownResamplers.NearestNeighbor,
+                    Compand = true
+                }));
                 var retVal = new MemoryStream();
                 bmp.Save(retVal, new PngEncoder());
                 retVal.Seek(0, SeekOrigin.Begin);
