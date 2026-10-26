@@ -73,7 +73,7 @@ namespace SanteDB.Rest.HDSI.Vrp
                 {
                     //Force to generate at native size, we'll oversample later.
                     //Width = 600,
-                    //Height = 100,
+                    Height = 25, //1D Barcodes generate at 1px high unless specified.
                     PureBarcode = true,
                     NoPadding = true,
                     GS1Format = false,
