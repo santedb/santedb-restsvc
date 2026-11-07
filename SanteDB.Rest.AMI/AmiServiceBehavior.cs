@@ -242,7 +242,7 @@ namespace SanteDB.Rest.AMI
 
 
                 if (cacheResult != null && (ifNoneMatchHeader?.Contains(cacheHeader) == true ||
-                    ifMatchHeader?.Contains(cacheHeader) != true ||
+                    ifMatchHeader?.Contains(cacheHeader) == false ||
                         ifModifiedHeader.HasValue && cacheResult.ModifiedOn <= ifModifiedHeader ||
                         ifUnmodifiedHeader.HasValue && cacheResult.ModifiedOn >= ifUnmodifiedHeader))
                 {
@@ -264,7 +264,7 @@ namespace SanteDB.Rest.AMI
                 }
                 else
                 {
-                    var checkQuery = $"_id={objectId}".ParseQueryString();
+                    var checkQuery = $"id={objectId}".ParseQueryString();
                     if (!handler.Query(checkQuery).Any()) // Object doesn't exist
                     {
                         throw new KeyNotFoundException();
@@ -274,13 +274,15 @@ namespace SanteDB.Rest.AMI
                     if (ifNoneMatchHeader?.Any() == true ||
                         ifMatchHeader?.Any() == true)
                     {
-                        checkQuery.Add("etag", ifNoneMatchHeader?.Where(c => Guid.TryParse(c, out _)).Select(o => $"{o}").ToArray());
-                        checkQuery.Add("etag", ifMatchHeader?.Where(c => Guid.TryParse(c, out _)).Select(o => $"{o}").ToArray());
+
+                        //checkQuery.Add("etag", ifNoneMatchHeader?.Select(o => $"{o}").ToArray());
+                        //checkQuery.Add("etag", ifMatchHeader?.Select(o => $"{o}").ToArray());
+
                         if (typeof(IVersionedData).IsAssignableFrom(handler.Type))
                         {
                             checkQuery.Add("obsoletionTime", "null", "!null");
                         }
-                        var matchingTags = handler.Query(checkQuery).Any();
+                        var matchingTags = handler.Query(checkQuery).OfType<IdentifiedData>().Select(o=>o.Tag).Where(t => ifNoneMatchHeader.Contains(t)).Any();
                         if ((ifNoneMatchHeader?.Any() == true && matchingTags) ^
                             (ifMatchHeader?.Any() == true && !matchingTags))
                         {
