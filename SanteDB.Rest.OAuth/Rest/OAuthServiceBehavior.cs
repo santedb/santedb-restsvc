@@ -1620,7 +1620,7 @@ namespace SanteDB.Rest.OAuth.Rest
                 if (!string.IsNullOrEmpty(mexConfig.ExternalHostPort))
                 {
                     var tUrl = new Uri(mexConfig.ExternalHostPort);
-                    boundHostPort = $"{tUrl.Scheme}://{tUrl.Host}:{tUrl.Port}";
+                    boundHostPort = $"{tUrl.Scheme}://{tUrl.Host}:{tUrl.Port}{tUrl.AbsolutePath}";
                 }
                 boundHostPort = $"{boundHostPort}{new Uri(authDiscovery.Url.First()).AbsolutePath}";
 
