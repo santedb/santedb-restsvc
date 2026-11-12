@@ -20,8 +20,10 @@
  */
 using SanteDB.Core.Interop;
 using SanteDB.Core.Model.Parameters;
+using SanteDB.Core.Security;
 using SanteDB.Core.Services;
 using SanteDB.Rest.Common;
+using SanteDB.Rest.Common.Attributes;
 using System;
 
 namespace SanteDB.Rest.HDSI.Operation
@@ -51,6 +53,7 @@ namespace SanteDB.Rest.HDSI.Operation
         public string Name => "tag";
 
         /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
             if (scopingKey is Guid scopeGuid || Guid.TryParse(scopingKey.ToString(), out scopeGuid))
