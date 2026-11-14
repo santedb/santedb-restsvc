@@ -20,7 +20,9 @@ using SanteDB.Core.Interop;
 using SanteDB.Core.Jobs;
 using SanteDB.Core.Model.AMI.Jobs;
 using SanteDB.Core.Model.Parameters;
+using SanteDB.Core.Security;
 using SanteDB.Rest.Common;
+using SanteDB.Rest.Common.Attributes;
 using System;
 using System.Collections.Generic;
 
@@ -62,6 +64,7 @@ namespace SanteDB.Rest.AMI.Operation
         /// <summary>
         /// Invoke the operation
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.StartSystemJob)]
         public object Invoke(Type scopingType, object scopingKey, ParameterCollection parameters)
         {
             if (Guid.TryParse(scopingKey.ToString(), out var value))
