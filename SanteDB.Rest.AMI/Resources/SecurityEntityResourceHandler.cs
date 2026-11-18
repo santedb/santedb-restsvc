@@ -220,7 +220,7 @@ namespace SanteDB.Rest.AMI.Resources
         [Demand(PermissionPolicyIdentifiers.LoginAsService)]
         public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
-            var query = QueryExpressionParser.BuildLinqExpression<TSecurityEntity>(queryParameters);
+            var query = QueryExpressionParser.BuildLinqExpression<TSecurityEntity>(queryParameters, safeNullable: false, lazyExpandVariables: false);
 
             try
             {
