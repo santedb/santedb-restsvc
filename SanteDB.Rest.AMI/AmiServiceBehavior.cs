@@ -282,7 +282,9 @@ namespace SanteDB.Rest.AMI
                         {
                             checkQuery.Add("obsoletionTime", "null", "!null");
                         }
-                        var matchingTags = handler.Query(checkQuery).OfType<IdentifiedData>().Select(o=>o.Tag).Where(t => ifNoneMatchHeader.Contains(t)).Any();
+                        var res = handler.Query(checkQuery).OfType<IIdentifiedResource>().ToArray();
+                        var tags = res.Select(o =>  this.ExtractValidateMatchHeader(handler.Type, o.Tag)).ToArray();
+                        var matchingTags = tags.Where(t => ifNoneMatchHeader?.Contains(t) == true || ifMatchHeader?.Contains(t) == true ).Any();
                         if ((ifNoneMatchHeader?.Any() == true && matchingTags) ^
                             (ifMatchHeader?.Any() == true && !matchingTags))
                         {

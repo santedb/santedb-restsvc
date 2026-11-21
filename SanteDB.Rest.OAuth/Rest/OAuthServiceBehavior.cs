@@ -1615,6 +1615,7 @@ namespace SanteDB.Rest.OAuth.Rest
                 var retVal = new OpenIdConnectDiscoveryDocument();
 
                 // mex configuration
+                // TODO: Refactor to URI builder
                 var mexConfig = ApplicationServiceContext.Current.GetService<IConfigurationManager>().GetSection<Common.Configuration.RestConfigurationSection>();
                 string boundHostPort = $"{RestOperationContext.Current.IncomingRequest.Url.Scheme}://{RestOperationContext.Current.IncomingRequest.Url.Host}:{RestOperationContext.Current.IncomingRequest.Url.Port}";
                 if (!string.IsNullOrEmpty(mexConfig.ExternalHostPort))
@@ -1622,7 +1623,11 @@ namespace SanteDB.Rest.OAuth.Rest
                     var tUrl = new Uri(mexConfig.ExternalHostPort);
                     boundHostPort = $"{tUrl.Scheme}://{tUrl.Host}:{tUrl.Port}{tUrl.AbsolutePath}";
                 }
-                boundHostPort = $"{boundHostPort}{new Uri(authDiscovery.Url.First()).AbsolutePath}";
+                if(!boundHostPort.EndsWith("/"))
+                {
+                    boundHostPort += "/";
+                }
+                boundHostPort = $"{boundHostPort}{new Uri(authDiscovery.Url.First()).AbsolutePath.Substring(1)}";
 
                 // Now get the settings
                 retVal.Issuer = m_configuration.IssuerName;
