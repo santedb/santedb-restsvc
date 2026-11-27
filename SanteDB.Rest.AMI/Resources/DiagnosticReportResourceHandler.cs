@@ -94,6 +94,7 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.Login)]
         public object Delete(object key)
         {
             throw new NotSupportedException();
