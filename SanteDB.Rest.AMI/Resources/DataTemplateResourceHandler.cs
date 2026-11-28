@@ -67,8 +67,9 @@ namespace SanteDB.Rest.AMI.Resources
 
         /// <inheritdoc/>
         public override ResourceCapabilityType Capabilities => ResourceCapabilityType.Create | ResourceCapabilityType.CreateOrUpdate | ResourceCapabilityType.Update | ResourceCapabilityType.Delete | ResourceCapabilityType.Get | ResourceCapabilityType.GetVersion | ResourceCapabilityType.Search;
-        
+
         /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.AlterDataTemplates)]
         public object CheckIn(object key)
         {
             if (key is Guid kuuid || Guid.TryParse(key.ToString(), out kuuid))
@@ -82,6 +83,7 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.AlterDataTemplates)]
         public object CheckOut(object key)
         {
             if (key is Guid kuuid || Guid.TryParse(key.ToString(), out kuuid))
@@ -163,6 +165,7 @@ namespace SanteDB.Rest.AMI.Resources
         }
 
         /// <inheritdoc/>
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
         public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             // Parse 

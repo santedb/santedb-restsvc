@@ -114,7 +114,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Get the specified match configuration identifier
         /// </summary>
-        [Demand(PermissionPolicyIdentifiers.UnrestrictedMetadata)]
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
         public override object Get(object id, object versionId)
         {
             return this.m_configurationService.GetConfiguration(id.ToString());
@@ -132,6 +132,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Query for match configurations
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.ReadMetadata)]
         public override IQueryResultSet Query(NameValueCollection queryParameters)
         {
             if (queryParameters.TryGetValue("name", out var values))
@@ -225,6 +226,7 @@ namespace SanteDB.Rest.AMI.Resources
         /// <summary>
         /// Checkout the specified object
         /// </summary>
+        [Demand(PermissionPolicyIdentifiers.AlterMatchConfiguration)]
         public object CheckIn(object key)
         {
             var match = this.Get(key, null) as IRecordMatchingConfiguration;
